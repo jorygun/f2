@@ -73,7 +73,6 @@ try {
 
 	#echo sqldate('time')  . BRNL;;
 
-
 	echo "days since Feb 30 " . days_ago('Feb 30, 2017') . BRNL;
 
 } catch (Exception $e ){

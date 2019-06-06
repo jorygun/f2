@@ -1,7 +1,7 @@
 <?php
 
-// ini_set('display_errors', 1);
-// ini_set('error_reporting', E_ALL);
+ ini_set('display_errors', 1);
+
 
 /**
     * This script does two things: it retrieves
@@ -24,8 +24,8 @@
 $mydir = dirname(__FILE__);
 
 
-require_once '/usr/home/digitalm/Sites/flames/f2/code/init.php';
-require_once 'asset_functions.php'; #in this dir
+require_once '/usr/home/digitalm/Sites/flames/f2/config/init.php';
+require_once SITEPATH . '/public/scripts/asset_functions.php'; #in this dir
 
 $pdo = MyPDO::instance();
 $test = 0;
