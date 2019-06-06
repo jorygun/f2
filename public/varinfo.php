@@ -33,17 +33,19 @@ if (file_exists($init_file)){
 	include "$init_file";
 	echo "site init done.<br>";
 
-} elseif (file_exists($old_init_file)){
-	echo "Begin Site init using old init ... ";
-	include "$old_init_file";
-	echo "site init-old 
-	done.<br>";
-}else {
-	echo "Init not found; skipped.";
-	function recho($var,$title=''){
-    	echo "<h4>$title:</h4>";
-    	echo "<pre>" .  print_r($var,true) . "</pre>\n";
-	}	
+} else {
+	echo ".. not found, looking for old init ... ";
+	if (file_exists($old_init_file)){
+		include "$old_init_file";
+		echo "site init-old done.<br>";
+	}
+	else {
+		echo "Init not found; skipped.";
+		function recho($var,$title=''){
+    		echo "<h4>$title:</h4>";
+    		echo "<pre>" .  print_r($var,true) . "</pre>\n";
+		}
+	}
 }
 
 
@@ -54,7 +56,7 @@ recho ($server_adds,'Added to $_SERVER');
 
 echo "<hr>";
 echo ".htaccess<br>:";
-echo ".htaccess";
+echo file_get_contents('.htaccess');
 echo '<hr>';
 
 if (! defined ('SITE')){die ("Init not run; stopping now.");}
