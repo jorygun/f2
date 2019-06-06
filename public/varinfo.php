@@ -56,9 +56,9 @@ recho ($server_changes,'Changed value in $_SERVER');
 recho ($server_adds,'Added to $_SERVER');
 
 echo "<hr>";
-echo ".htaccess<br>:";
+echo ".htaccess<br>:<pre>";
 echo file_get_contents('.htaccess');
-echo '<hr>';
+echo '</pre><hr>';
 
 if (! defined ('SITE')){die ("Init not run; stopping now.");}
 
