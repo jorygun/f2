@@ -28,7 +28,7 @@ foreach ($_SERVER as $k=>$v){
 
 #$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 
-$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'Not Found';
+$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
 $old_init_file = '../config/init.php';
 
 echo "Looking for $init_file <br>\n";
@@ -38,13 +38,13 @@ if (file_exists($init_file)){
 	echo "site init done.<br>";
 
 } else {
-	echo ".. not found, looking for old init ... ";
+	echo ".. not found, looking for old init ... <br>";
 	if (file_exists($old_init_file)){
 		include "$old_init_file";
 		echo "site init-old done.<br>";
 	}
 	else {
-		echo "Init not found; skipped.";
+		echo "Init not found; skipped.<br>";
 		function recho($var,$title=''){
     		echo "<h4>$title:</h4>";
     		echo "<pre>" .  print_r($var,true) . "</pre>\n";
@@ -59,14 +59,12 @@ recho ($server_changes,'Changed value in $_SERVER');
 recho ($server_adds,'Added to $_SERVER');
 
 echo "<hr>";
-echo ".htaccess<br>:<pre>";
+$htaccessm = date('d M H:i',filemtime('.htaccess'));
+
+echo ".htaccess ($htaccessm) :<br><pre>";
 echo file_get_contents('.htaccess');
 echo '</pre><hr>';
 
-if (! defined ('SITE')){die ("Init not run; stopping now.");}
-
-
-echo "<hr>";
 try {
 	echo "From Definitions<br>\n";
 	echo "seclevel ma: " . Definitions::get_seclevel('MA').BRNL;
