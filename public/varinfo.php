@@ -26,13 +26,14 @@ foreach ($_SERVER as $k=>$v){
 #$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 $init_file = $_SERVER['REDIRECT_SITE_INIT'];
 $old_init_file = '../../config/init.php';
+
 echo "Looking for $init_file <br>\n";
 if (file_exists($init_file)){
 	echo "Begin Site init ... ";
 	include "$init_file";
 	echo "site init done.<br>";
 
-}elsif (file_exists($old_init_file)){
+} elseif (file_exists($old_init_file)){
 	echo "Begin Site init using old init ... ";
 	include "$old_init_file";
 	echo "site init-old 
