@@ -1,0 +1,17 @@
+#ignore mac dir file
+.DS_Store
+
+#ignore site-specific config in .htaccess
+.htaccess
+
+#ignore backup files
+*~
+
+#ignore vendor directory - will be reconstruted on site
+
+#misc
+*.log
+logs/
+
+#don't alter normally
+public/jslib/

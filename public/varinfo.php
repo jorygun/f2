@@ -25,18 +25,23 @@ foreach ($_SERVER as $k=>$v){
 
 #$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 $init_file = $_SERVER['REDIRECT_SITE_INIT'];
+$old_init_file = '../../config/init.php';
 echo "Looking for $init_file <br>\n";
-
 if (file_exists($init_file)){
 	echo "Begin Site init ... ";
 	include "$init_file";
 	echo "site init done.<br>";
-}
-else {
+
+}elsif (file_exists($old_init_file)){
+	echo "Begin Site init using old init ... ";
+	include "$old_init_file";
+	echo "site init-old 
+	done.<br>";
+}else {
 	echo "Init not found; skipped.";
 	function recho($var,$title=''){
-    echo "<h4>$title:</h4>";
-    echo "<pre>" .  print_r($var,true) . "</pre>\n";
+    	echo "<h4>$title:</h4>";
+    	echo "<pre>" .  print_r($var,true) . "</pre>\n";
 	}	
 }
 
@@ -47,6 +52,10 @@ recho ($server_changes,'Changed value in $_SERVER');
 recho ($server_adds,'Added to $_SERVER');
 
 echo "<hr>";
+echo ".htaccess<br>:";
+echo ".htaccess";
+echo '<hr>';
+
 if (! defined ('SITE')){die ("Init not run; stopping now.");}
 
 $mtimet = date('d M H:i',filemtime(__FILE__));
