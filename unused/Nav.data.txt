@@ -1,0 +1,47 @@
+#  menu data file - tab delimited.
+# read by Nav.class to creat menus
+# menu seclevel item link
+
+# DO NOT EXPAND TABS!!
+
+Dev	5	News Form	/news_form/0
+Dev	5	Find Member	/member_find
+Dev	5	Asset Search	/asset_search
+Dev	5	News Articles	/news_search
+
+
+Admin	8	User Admin	/member_find
+Admin	8	Signup Admin	/signup_admin
+Admin	7	News Admin	/level7.php
+Admin	8	Site Info	/info
+Admin	7	Count of Views by Issue	/views.php
+
+Admin	7	Review Articles	/new_search
+Admin	7	Preview	/news/news_next/
+Admin	7	Asset Manager	/scripts/assets.php
+Admin	7	Web Stats	/WWW/amdflames.org.html
+
+
+Authoring	6	Add/View Pending Articles	/news_search
+Authoring	6	Add/Find Graphics	/asset_search
+Authoring	6	View Newsletter	/news_page
+
+
+Opportunities	0	:opp_rows: Listed	/opportunitiesE.php
+
+
+News	2	Latest Newsletter	/news/
+News	2	Newsletter Index	/newsletters/
+News	4	Search Newsletters	/scripts/search_news.php
+News	2	Photo Galleries	/galleries
+News	4	Search Graphics/Video	/asset_search
+News	2	Special Pages	/special.php
+
+Members	2	Search For a Member	/member_find
+Members	0	New User Signup	/signup
+Members	4	AMD Alumni on LinkedIn	http://www.linkedin.com/groups?gid=117629&trk=myg_ugrp_ovr
+
+
+user	0	About This Site	/about
+user	0	Email the admin	mailto:admin@amdflames.org
+user	1	Log out :user:	/logout

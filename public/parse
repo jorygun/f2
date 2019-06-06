@@ -1,0 +1,26 @@
+#!/usr/local/bin/php
+
+<?php
+
+error_reporting(E_ALL);
+ini_set ('display_errors',1);
+
+$file = $argv[1];
+$lev = $argv[2]; #security level
+
+#$_SESSION['level'] = $lev;
+
+if (empty($file)){
+	echo "Usaage: parse.php filename [security level]\n";
+	exit;
+}
+
+echo "running $file with errors displayed\n";
+
+if (is_file($file)){
+	include "$file";
+	echo "--------DONE---------\n\n";
+}
+else {echo "No such file $file\n";}
+
+?>

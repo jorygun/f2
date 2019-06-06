@@ -1,0 +1,99 @@
+body {padding:6px;
+	font-family: "New Times Roman",Times,serif;
+	font-size: 1em; color: black;
+    max-width:1000px;
+    width:100vw;
+    padding:3px;
+	}
+
+.main {
+  
+}
+
+h1,h2,h3,h4,h5,h6 {font-family:arial,helvetica,san-serif;}
+hr {
+	display: block;
+	height: 11px;
+	border: 0;
+	border-top: 3px solid #3c3;
+	margin: 1em ;
+	padding: 0;
+}
+hr.gray {
+display: block;
+	height: 11px;
+	border: 0;
+	border-top: 3px dotted #ccc;
+	margin: 1em ;
+	padding: 0;
+}
+
+code {white-space:nowrap;font-family: 'courier new',monospace; font-size:0.8em;}
+p {font-family:times,serif;font-size:1em;}
+
+.quo {padding-left:40px;padding-right:40px;}
+.small {font-size:small;}
+.instr {font-style:italic;font-size:0.9em;}
+.example {font-weight:bold;color:blue;font-style:normal;}
+
+.highgreen {background-color:#CF9;}
+
+.floatdiv
+{
+	float: left;
+	background-color: white;
+	margin:5px;
+}
+
+
+.hidden_pane {
+    display:none;
+}
+
+#adv img {margin-top:25px;margin-bottom:25px;}
+.nobreak {white-space:nowrap;}
+
+.indent {margin-left:25px;margin-right:25px;}
+
+.input, input {background-color:#eee; }
+.required {background-color:#ffffa0;}
+
+.album {float:left;width:340px;height:360px;display:block;margin:3px;}
+.album .caption {font-size:0.8em;text-align:center;}
+.album img {max-width:320px;max-height:320px;}
+
+.photo {max-width:640px;display:block;margin:3px;}
+.photo .caption {font-size:0.8em;text-align:center;font-style:italic;}
+
+#profile table {
+	table-layout:fixed;
+	margin-left:0;
+	width:75%;
+	}
+
+#profile form {
+	margin-left:6px; border:1px solid black; padding:4px;
+
+	}
+
+
+	table.bordered tr td,th {
+		border:1px solid black;
+		padding:3px;
+		border-collapse: collapse;
+	}
+	table td,th {
+		font-family: arial,helvetica,san-serif;
+		vertical-align:top;
+	}
+
+	table .y_row {background:#ff0;}
+	tr.condense {height:4em;}
+	td.h3 {font-weight:bold;border-top:1px solid black;}
+
+	form {margin-left:6px; border:1px solid black; padding:4px;}
+
+	.url {font-family: 'courier new',monospace; font-size:0.8em; line-height:1.5em;white-space:nowrap;}
+/* navbar stles */
+
+

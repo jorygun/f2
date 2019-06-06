@@ -1,0 +1,26 @@
+#Mac constants
+
+#site_prefix is whatever's between the server root and the 
+# site root.  I.e., going to top of site is /site_prefix, 
+# not just /.
+
+
+--HOST--
+SITE_URL = http://f4.local
+SITE_NAME = f4.local
+
+
+
+--DB--
+
+DB_SERVER = localhost
+DB_USER = root
+DB_PASSWORD = mysqlroot123
+DB_NAME = f3
+DB_CHAR = utf8mb4
+
+--PHP--
+
+display_errors = on
+
+

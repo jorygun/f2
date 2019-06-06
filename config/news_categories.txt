@@ -1,0 +1,51 @@
+# text file describing news topics and sections
+# file is organized into arrays in the New class construction.	#sections
+#section_code section_name section_topics
+#Listed in Order they appar in newsletter!
+SECTIONS
+opener	Opener	toon
+site	Site News	apology,flamesite,spec
+amd	AMD News	amd_news
+news	The News	biz,mfg
+technology	Engineering Dept.	ieee,tech_news
+remember	From the Past	nostalgia
+govt	Government and Politics	swamp,goodgov,badgov,people,hot
+know	Off Topic	cars,wot,cellar,notable
+mail	In The Mailbox	mailbox
+people	Friends	gatherings,flames
+sad	Sad News	sad
+none	Not Set	none	
+
+TOPICS
+#type status
+#	d=depracted	p=public	a = admin use only
+#type_code type_name type_status
+amd_news	AMD News	p
+tech_news	Technology	p
+mfg	Manufacturing	p
+cars	Down at the Car Lot	p
+notable	Notable	p
+biz	Business News	p
+nostalgia	Nostalgia	p
+gatherings	Gatherings	p
+flames	News About Flames	p
+sad	Sad News	p
+wot	WOT?	p
+ieee	From the IEEE	p
+badgov	Government Gone Bad	p
+goodgov	Thanks for Good Government	p
+hot	Might Be Controversial	p	
+mailbox	In the Mailbox	a
+apology	Apologia	a
+flamesite	Site Update	a
+gatherings	Gatherings	a
+cellar	Z's Wine Cellar	a
+spec	Special Topic	a
+toon	Opening Cartoon	a	
+thread	Conversations	d
+people	The people win	d
+swamp	From the Swamp	d
+none	None	d
+
+SEQUENCE
+amd

@@ -1,0 +1,13 @@
+Naming conventions
+
+ClassName
+methodName
+property_name
+
+functionName 
+$variable_name
+CONSTANT
+
+globals???
+G_??
+

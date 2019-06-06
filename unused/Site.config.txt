@@ -1,0 +1,40 @@
+#Site configuration
+
+--SITE--
+ARTICLE_WIDTH = 800px
+THUMB_WIDTH = 200
+MAX_UPLOAD_MB = 20
+
+
+
+--PATHS--
+#path relative to site root
+#will be set to constants
+
+sitecode = /src
+sitepath = /public
+templates = /src/twigplates
+includes = /src/includes
+config = /src/config
+data = /src/data
+logpath = /logs
+navdata = /src/config/Nav.data.txt
+
+
+
+--DB_TABLES--		
+
+memberTable = f3_members
+commentTable = f3_comments
+assetTable = f3_assets
+eventTable = f3_events
+linkTable = f3_links
+newsTable = f3_news_items
+oppTable = f3_opportunities
+readTable = f3_read_table
+specTable = spec_items
+voteTable = votes
+signupTable = signups
+actionTable = actions
+	
+

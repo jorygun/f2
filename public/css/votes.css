@@ -1,0 +1,29 @@
+.btn-votes {cursor:pointer; float:left;}
+.net-votes {float:left;}
+/*
+.btn-votes input[type="button"]{width:32px;height:32px;border:0;cursor:pointer;}
+*/
+.btn-votes button {border: 0; background: transparent;}
+/*
+.up {background:url('/graphics/up.png')}
+.down {background:url('/graphics/down.png')}
+.meh {background:url('/graphics/q-icon.png')}
+*/
+/*
+.meh:disabled {background:url('/graphics/meh_off.png')}
+.up:disabled {background:url('/graphics/up_off.png')}
+.down:disabled {background:url('/graphics/down_off.png')}
+*/
+/*
+.meh:disabled {background:none}
+.up:disabled {background:none}
+.down:disabled {background:none}
+*/
+
+.label-votes {font-weight:bold;margin-bottom:0;}
+.vpanel p {margin:4px;}
+
+/* used in news page to display both discussion and voting choices */
+table.voting {width:100%; border:0;}
+table.voting td {text-align:center;vertical-align:top;}
+div.vpanel {text-align:center;}

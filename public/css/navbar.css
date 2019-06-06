@@ -1,0 +1,90 @@
+/* new horizontal nav menu */
+nav {
+    background: #fff;
+    width: 100%;
+    font-family:helvtica,arial,san-serif;
+    border-top: 1px solid #396;
+    border-bottom: 1px solid #396;
+    text-align:center;
+    padding-bottom:3px;
+
+
+}
+#nav p {margin:0;}
+#nav a {font-size:0.9em;}
+#nav ul {
+    padding: 0;
+    margin: 0;
+    text-align:right;
+    margin-right:5em;
+}
+
+#nav ul li {
+    position: relative;
+    display: inline-block;
+    list-style-type: none;
+    margin: 0;
+    padding: 10px 0;
+    font-weight:bold;
+    color: #396;
+}
+#nav ul li:hover {
+    background: #cfc;
+}
+
+#nav ul li a {
+    color: #396;
+    text-decoration: none;
+    padding: 12px;
+}
+/*
+#nav ul li a:hover,
+#nav ul li a:focus-within{
+        color: #cfc;
+        text-decoration: none;
+ }
+ */
+
+/* child menues */
+#nav ul li ul {
+    display: none;
+}
+#nav ul li a:hover ul,
+#nav ul li:hover ul,
+#nav ul li:focus-within ul{
+    display: block;
+    position: absolute;
+    top: 36px;
+    background: #fff;
+    text-align:left;
+    border:1px solid green;
+    z-index:999;
+
+
+}
+
+#nav ul li ul li,
+#nav ul li ul li a{
+    width: 9em;
+    padding: 3px;
+    font-weight:normal;
+    color:#000;
+    background:#fff;
+    font-size:0.9em;
+}
+#nav ul li ul li:hover {
+    background: #fff;
+}
+
+#nav ul li ul li a:hover {
+    background: #cfc;
+}
+
+#nav .xbutton {
+	background-color:#fff;
+	border:1px solid #030;
+	border-radius: 8px;
+	color:red;
+	//box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2)
+
+}

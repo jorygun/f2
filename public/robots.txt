@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /scripts/*
+Disallow: /newsp/*
+Disallow: /assets/*
+
+Sitemap: /sitemap.txt
+
