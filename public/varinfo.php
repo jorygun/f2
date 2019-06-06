@@ -68,17 +68,17 @@ if (! defined ('SITE')){die ("Init not run; stopping now.");}
 
 echo "<hr>";
 try {
-echo "From Definitions<br>\n";
-echo "seclevel ma: " . Definitions::get_seclevel('MA').BRNL;
+	echo "From Definitions<br>\n";
+	echo "seclevel ma: " . Definitions::get_seclevel('MA').BRNL;
 
-#check code
+	#check code
 
-#echo sqldate('time')  . BRNL;;
+	#echo sqldate('time')  . BRNL;;
 
 
-echo "days since Feb 30 " . days_ago('Feb 30, 2017') . BRNL;
+	echo "days since Feb 30 " . days_ago('Feb 30, 2017') . BRNL;
 
-} catch Exception $e {
+} catch (Exception $e ){
 echo "Errors: functions could not run.<br>";
 echo $e;
 }
