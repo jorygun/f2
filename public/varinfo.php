@@ -1,11 +1,14 @@
 <?php
 ini_set('display_errors', 1);
+$mtimet = date('d M H:i',filemtime(__FILE__));
+$mtime = filemtime(__FILE__);
 
 
 echo <<<EOT
 <html>
 <head><title>Varinfo 3</title></head>
 <body>
+varinfo.php - last updated $mtimet
 EOT;
 
 
@@ -62,12 +65,9 @@ echo '</pre><hr>';
 
 if (! defined ('SITE')){die ("Init not run; stopping now.");}
 
-$mtimet = date('d M H:i',filemtime(__FILE__));
-$mtime = filemtime(__FILE__);
 
-$mage=days_ago($mtime);
-echo "<b>Me (__FILE__):</b>"  . __FILE__ . " -  $mtimet ($mage days ago) <br>\n";
 echo "<hr>";
+try {
 echo "From Definitions<br>\n";
 echo "seclevel ma: " . Definitions::get_seclevel('MA').BRNL;
 
@@ -76,6 +76,9 @@ echo "seclevel ma: " . Definitions::get_seclevel('MA').BRNL;
 #echo sqldate('time')  . BRNL;;
 
 
-echo "days ago " . days_ago('Feb 30, 2017') . BRNL;
+echo "days since Feb 30 " . days_ago('Feb 30, 2017') . BRNL;
 
-
+} catch Exception $e {
+echo "Errors: functions could not run.<br>";
+echo $e;
+}
