@@ -26,7 +26,7 @@ foreach ($_SERVER as $k=>$v){
 #$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 
 $init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'Not Found';
-$old_init_file = '../../config/init.php';
+$old_init_file = '../config/init.php';
 
 echo "Looking for $init_file <br>\n";
 if (file_exists($init_file)){
