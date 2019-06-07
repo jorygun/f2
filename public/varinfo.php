@@ -9,6 +9,9 @@ echo <<<EOT
 <head><title>Varinfo 3</title></head>
 <body>
 varinfo.php - last updated $mtimet
+<p>Known Issue: this outputs info before init runs, so it upsets the
+session_start in init.  No biggie.</p>
+
 EOT;
 
 
