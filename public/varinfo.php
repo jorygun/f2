@@ -3,7 +3,8 @@ ini_set('display_errors', 1);
 $mtimet = date('d M H:i',filemtime(__FILE__));
 $mtime = filemtime(__FILE__);
 
-$output = <<<EOT
+
+echo <<<EOT
 <html>
 <head><title>Varinfo 3</title></head>
 <body>
@@ -11,17 +12,16 @@ varinfo.php - last updated $mtimet
 EOT;
 
 
-$output .=  "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
+echo "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
 
 $sitedir = dirname(__DIR__); #...<repo>/
 $projdir = dirname($sitedir);
 
-$output .= <<<EOT
-<br>
-<b>sitedir:</b>  $sitedir  <br>
-<b>projdir:</b> $projdir<br>
-<br>
-EOT;
+echo "<br>";
+
+echo "<b>sitedir:</b> " . $sitedir . "<br>\n";
+echo "<b>projdir:</b> " . $projdir . "<br>";
+echo "<br>\n";
 
 ## show envir vars
 $server_adds = array();
@@ -41,20 +41,20 @@ foreach ($_SERVER as $k=>$v){
 $init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
 $old_init_file = '../config/init.php';
 
-$output .=  "Looking for init from htaccess: $init_file <br>\n";
+echo "Looking for init from htaccess: $init_file <br>\n";
 if (file_exists($init_file)){
-	$output .=  "Begin Site init from htaccess ... ";
+	echo "Begin Site init from htaccess ... ";
 	include "$init_file";
-	$output .=  "site init done.<br>";
+	echo "site init done.<br>";
 
 } else {
-	$output .=  ".. not found, looking for old init $old_init_file <br>";
+	echo ".. not found, looking for old init $old_init_file <br>";
 	if (file_exists($old_init_file)){
 		include "$old_init_file";
-		$output .=  "site init-old done.<br>";
+		echo "site init-old done.<br>";
 	}
 	else {
-		$output .=  "Init not found; skipped.<br>";
+		echo "Init not found; skipped.<br>";
 		function recho($var,$title=''){
     		echo "<h4>$title:</h4>";
     		echo "<pre>" .  print_r($var,true) . "</pre>\n";
@@ -62,9 +62,7 @@ if (file_exists($init_file)){
 	}
 }
 
-$output .=  "<br><b>post-init include_path: </b>" . get_include_path() ."<br><br>\n";
-
-echo $output;
+echo "<br><b>post-init include_path: </b>" . get_include_path() ."<br><br>\n";
 
 recho ($_ENV,'$_ENV');
 
