@@ -1,1 +1,1 @@
-model-index.php
+../model-index.php
