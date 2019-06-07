@@ -16,7 +16,7 @@ $projdir = dirname($sitedir);
 
  
 
-require_once ('f2_constants.php'); 
+
 
 $libphp = HOMEPATH . '/Sites/lib/php';
 
@@ -39,7 +39,7 @@ require_once ('MyPDO.class.php');
 require_once ('nav.class.php');
 require_once ($libphp . '/vendor/autoload.php');
 require_once ('setGlobals.php');
-
+require_once ('f2_constants.php'); 
 
 
 $pdo = MyPDO::instance();
