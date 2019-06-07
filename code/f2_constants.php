@@ -4,8 +4,10 @@ $mydir = dirname(__DIR__); #~/Sites/flames/<repo>
 
 	defined ('HOMEPATH') or
 		define ('HOMEPATH', '/usr/home/digitalm');
+	defined ('REPO') or
+		define ('REPO',$mydir);
 	defined ('SITEPATH') or
-		define ('SITEPATH', $mydir);
+		define ('SITEPATH', REPO . "/public");
 	defined ('SITE') or
 		define ('SITE','amdflames.org');
 	defined ('SITEURL') or
