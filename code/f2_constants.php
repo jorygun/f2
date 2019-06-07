@@ -1,8 +1,11 @@
 <?php
+
+$mydir = dirname(__DIR__); #~/Sites/flames/<repo>
+
 	defined ('HOMEPATH') or
 		define ('HOMEPATH', '/usr/home/digitalm');
 	defined ('SITEPATH') or
-		define ('SITEPATH', HOMEPATH . '/Sites/flames/f2/public');
+		define ('SITEPATH', $mydir);
 	defined ('SITE') or
 		define ('SITE','amdflames.org');
 	defined ('SITEURL') or
