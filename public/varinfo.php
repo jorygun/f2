@@ -17,10 +17,11 @@ echo "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
 $sitedir = dirname(__DIR__); #...<repo>/
 $projdir = dirname($sitedir);
 
+echo "<br>";
 
-
-echo "<br><b>sitedir:</b> " . $sitedir . "<br><br>\n";
-echo "<br><b>projdir:</b> " . $projdir . "<br><br>\n";
+echo "<b>sitedir:</b> " . $sitedir . "<br>\n";
+echo "<b>projdir:</b> " . $projdir . "<br>";
+echo "<br>\n";
 
 ## show envir vars
 $server_adds = array();
@@ -40,14 +41,14 @@ foreach ($_SERVER as $k=>$v){
 $init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
 $old_init_file = '../config/init.php';
 
-echo "Looking for $init_file <br>\n";
+echo "Looking for init from htaccess: $init_file <br>\n";
 if (file_exists($init_file)){
-	echo "Begin Site init ... ";
+	echo "Begin Site init from htaccess ... ";
 	include "$init_file";
 	echo "site init done.<br>";
 
 } else {
-	echo ".. not found, looking for old init ... <br>";
+	echo ".. not found, looking for old init $old_init_file <br>";
 	if (file_exists($old_init_file)){
 		include "$old_init_file";
 		echo "site init-old done.<br>";
