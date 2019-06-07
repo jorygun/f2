@@ -76,14 +76,14 @@ EOT;
 
    
     /* Now build the recent article and assets file */
-    echo "Updating recent article titles<br>\n";
+    echo "Updating recent article titles" . BRNL ;
         require 'recent.php';
 
     echo "Updating recent asset list" . BRNL;
         include "recent_assets.php";
      #copy recent assets from news to news_next so it gets retained
 
-
+    echo BRNL;
 
 	// copy the news_next to the news_latest directory
 	echo "Copying news_next to news_latest: <br>from  $nextnews_dir<br> to $latest_dir<br>";
