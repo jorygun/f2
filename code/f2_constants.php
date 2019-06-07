@@ -1,9 +1,8 @@
 <?php
-
 	defined ('HOMEPATH') or
 		define ('HOMEPATH', '/usr/home/digitalm');
 	defined ('SITEPATH') or
-		define ('SITEPATH', HOMEPATH . '/public_html/amdflames.org');
+		define ('SITEPATH', HOMEPATH . '/Sites/flames/f2/public');
 	defined ('SITE') or
 		define ('SITE','amdflames.org');
 	defined ('SITEURL') or

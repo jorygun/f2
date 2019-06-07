@@ -22,7 +22,7 @@
 */
 
 
-require_once '/usr/home/digitalm/Sites/flames/f2/code/f2_init.php';
+require_once '/usr/home/digitalm/Sites/flames/f2/config/init.php';
 
 $test = 0;
 $recent_articles = SITEPATH . '/news/recent_articles.html';
