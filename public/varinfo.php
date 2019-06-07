@@ -12,9 +12,15 @@ varinfo.php - last updated $mtimet
 EOT;
 
 
-echo "<br><b>include_path: </b>" . get_include_path() ."<br><br>\n";
+echo "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
 
-echo "<br><b>dir:</b> " . dirname(__DIR__) . "<br><br>\n";
+$sitedir = dirname(__DIR__); #...<repo>/
+$projdir = dirname($sitedir);
+
+
+
+echo "<br><b>sitedir:</b> " . $sitedir . "<br><br>\n";
+echo "<br><b>projdir:</b> " . $projdir . "<br><br>\n";
 
 ## show envir vars
 $server_adds = array();
@@ -55,6 +61,7 @@ if (file_exists($init_file)){
 	}
 }
 
+echo "<br><b>post-init include_path: </b>" . get_include_path() ."<br><br>\n";
 
 recho ($_ENV,'$_ENV');
 

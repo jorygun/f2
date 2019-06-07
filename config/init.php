@@ -4,14 +4,20 @@
 
 if (defined ('INIT')){ return; } #already ran
 
-session_start();
+if (empty($_SESSION)){session_start();}
+
 //ini_set('error_reporting',E_ALL);
 
-require_once ('f2_constants.php');
+$sitedir = dirname(__DIR__); #...<repo>/
+$projdir = dirname($sitedir);
+
+ 
+
+require_once ('f2_constants.php'); 
 
 $libphp = HOMEPATH . '/Sites/lib/php';
 
-$sitedir = dirname(__DIR__);
+
 #echo "sitedir $sitedir ";
 
 #initial include path set in .user.ini to include this folder.
