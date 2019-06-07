@@ -12,7 +12,10 @@ varinfo.php - last updated $mtimet
 EOT;
 
 
-echo "<b>include_path: </b>" . get_include_path() ."<br><br>\n";
+echo "<br><b>include_path: </b>" . get_include_path() ."<br><br>\n";
+
+echo "<br><b>dir:</b> " . dirname(__DIR__) . "<br><br>\n";
+
 ## show envir vars
 $server_adds = array();
 $server_changes = array();
