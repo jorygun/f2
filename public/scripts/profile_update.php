@@ -78,8 +78,8 @@ $pdo = MyPDO::instance();
 	 <link rel="stylesheet" href="../css/news3.css">
 
 	<script type="text/javascript" src="/js/f2js.js"></script>
-	<script src="/js/tinymce/tinymce.min.js"></script>
-    <script src="/js/tiny_init.js"></script>
+	<script src="/jsmx/tinymce/tinymce.min.js"></script>
+    <script src="/jsmx/tiny_init.js"></script>
 	<script type="text/javascript" >
     	function validate_profile(theForm) {
 		 var s = '';
