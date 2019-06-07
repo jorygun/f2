@@ -12,7 +12,7 @@ require_once ('f2_constants.php');
 $libphp = HOMEPATH . '/Sites/lib/php';
 
 $sitedir = dirname(__DIR__);
-echo "sitedir $sitedir ";
+#echo "sitedir $sitedir ";
 
 #initial include path set in .user.ini to include this folder.
 #add other paths here so can just call init.php for shell scripts.
