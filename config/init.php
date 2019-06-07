@@ -28,7 +28,7 @@ $libphp = HOMEPATH . '/Sites/lib/php';
 
 ini_set('include_path',
 	get_include_path()  
-	. ':' . "$libphp"
+	. ':' . $projdir . "/libmx/phpmx"
 	. ':' . $sitedir . '/public'
 	. ':' . $sitedir . '/public/scripts'
 	. ':' . $sitedir. '/config'
