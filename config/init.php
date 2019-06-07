@@ -4,6 +4,7 @@
 
 if (defined ('INIT')){ return; } #already ran
 
+#test if session already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
