@@ -4,7 +4,9 @@
 
 if (defined ('INIT')){ return; } #already ran
 
-if (empty($_SESSION)){session_start();}
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 //ini_set('error_reporting',E_ALL);
 
