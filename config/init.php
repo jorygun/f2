@@ -4,22 +4,25 @@
 
 if (defined ('INIT')){ return; } #already ran
 
-session_start();
+#test if session already started
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 //ini_set('error_reporting',E_ALL);
 
-require_once ('f2_constants.php');
+$sitedir = dirname(__DIR__); #...<repo>/
+$projdir = dirname($sitedir);
 
-$libphp = HOMEPATH . '/Sites/lib/php';
 
-$sitedir = dirname(__DIR__);
 #echo "sitedir $sitedir ";
 
 #initial include path set in .user.ini to include this folder.
 #add other paths here so can just call init.php for shell scripts.
 
 ini_set('include_path',
-	get_include_path()  
-	. ':' . "$libphp"
+	'/usr/local/lib/php'
+	. ':' . $projdir . "/libmx/phpmx"
 	. ':' . $sitedir . '/public'
 	. ':' . $sitedir . '/public/scripts'
 	. ':' . $sitedir. '/config'
@@ -30,7 +33,7 @@ require_once ('MyPDO.class.php');
 require_once ('nav.class.php');
 require_once ($libphp . '/vendor/autoload.php');
 require_once ('setGlobals.php');
-
+require_once ('f2_constants.php'); 
 
 
 $pdo = MyPDO::instance();
