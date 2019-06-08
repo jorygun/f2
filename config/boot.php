@@ -21,13 +21,16 @@ $projdir = dirname($sitedir); #---/flames
 #add other paths here so can just call init.php for shell scripts.
 
 ini_set('include_path',
-	'/usr/local/lib/php'
+	'.'
+	. ':' . '/usr/local/lib/php'
 	. ':' . $projdir . "/libmx/phpmx"
-	. ':' . $sitedir . '/public'
-	. ':' . $sitedir . '/public/scripts'
+	. ':' . $sitedir . '/lib'
 	. ':' . $sitedir. '/config'
 	. ':' . $sitedir. '/code'
-	. ':' . $projdir . '/lib'
+	. ':' . $sitedir . '/public'
+	. ':' . $sitedir . '/public/scripts'
+
+
 	);
 
 require_once  "f2_connect.php";
