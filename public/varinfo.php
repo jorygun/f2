@@ -41,19 +41,29 @@ foreach ($_SERVER as $k=>$v){
 
 #$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 
-$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
+#$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
+$init_file = '../config/boot.php';
 $old_init_file = '../config/init.php';
 
-echo "Looking for init from htaccess: $init_file <br>\n";
+echo "Looking for boot file: $init_file <br>\n";
 if (file_exists($init_file)){
-	echo "Begin Site init from htaccess ... ";
-	include "$init_file";
+	echo "Begin Site init from boot ... ";
+	try {
+		include "$init_file";
+	}catch (Exception $e){
+		echo "$init_file failed to execute" <br> $e->message();
+		
+	}
 	echo "site init done.<br>";
 
 } else {
 	echo ".. not found, looking for old init $old_init_file <br>";
 	if (file_exists($old_init_file)){
+		try {
 		include "$old_init_file";
+		}catch (Exception $e){
+		echo "$old_init_file failed to execute" <br> $e->message();
+		}
 		echo "site init-old done.<br>";
 	}
 	else {
