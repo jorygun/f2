@@ -1,21 +1,52 @@
 #!/usr/local/bin/php
 <?php
 
-/*
-    Script to review user records and monitor validation of
-    email addresses.  Sends out verification emails and
-    adjusts email status, according to a schedule defined below.
 
-    Script also runs the recent.php update to show comments on older articles.
+  /**
+   *  Script to review user records and monitor validation of                 *
+   *  email addresses.  Sends out verification emails and                     *
+   *  adjusts email status, according to a schedule defined below.            *
+   *  Script also runs the recent.php update to show comments on older articles.  
+   */
+
+/* outside things needed
+    MyPDO
+    G_member_status_set
+    ems codes, limits, sequence
+    age,date = age()
+    update_email_status
+    
+    thank_not_lost uses curl (!)
 
 */
 
-//BEGIN START
-	require_once '/usr/home/digitalm/Sites/flames/live/config/boot.php';
+
+  /**
+   *  one-line description                                                    *
+   *  Long descirption...                                                     *
+   *  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut id volutpat *
+   *  orci. Etiam pharetra eget turpis non ultrices. Pellentesque vitae risus *
+   *  sagittis, vehicula massa eget, tincidunt ligula.                        *
+   *  @access private                                                         *
+   *  @author Firstname Lastname                                              *
+   *  @global object $post                                                    *
+   *  @param int $id Author ID                                                *
+   *  @param string $type Type of photo                                       *
+   *  @param int $width Photo width in px                                     *
+   *  @param int $height Photo height in px                                   *
+   *  @return object Photo                                                    *
+   */
+
+
+
+}
+
+class SweepClass {
+	require_once '/usr/home/digitalm/Sites/flames/f2/live/config/boot.php';
 	include_once '/usr/home/digitalm/public_html/amdflames.org/scripts/email_status_messaging.php';
 
 
-//END START
+
 
 
 $pdo = MyPDO::instance();
@@ -32,14 +63,14 @@ $mode = '';
 // or by running from cli with sweep.php test
 //
 
-#$mode = 'Test';
+$mode = 'Test';
 $modes = array('Test','Real');
 if (empty($mode)){
    if(isset($argv) && sizeof($argv)==2){$mode = $argv[1];}
    elseif(isset($_GET['mode'])) {$mode = $_GET['mode'] ;}
     else{$mode = 'Real';}
 }
-#echo "Mode $mode<br>\n";
+echo "Mode $mode<br>\n";
 $testmode=($mode=='Test')?true:false;
 
 if (! in_array($mode,$modes)){die ("Sweeps did not receive a valid mode: $mode");}
@@ -59,14 +90,15 @@ set_time_limit(300); // 30sec. is default 0 is none;
 
 global $G_member_status_set;
 
-$sql_now = date('Y-m-d');
-$timestamp = date('Ymd_his');
-$english_now = date ("M j, h:i a");
-$now_obj = date_create();
+$dt = new DateTime();
+$sql_now = $dt->format('Y-m-d');
+$timestamp = $dt->format('Ymd_his');
+$english_now = $dt->format("M j, h:i a");
+
 
 #echo "Running Sweeps at $english_now\n";
 
-$sweep_log = SITEPATH . "/logs/sweep_logs/${mode}_${timestamp}.txt";
+$sweep_log = SITEPATH . "/logs/sweep_logs/${timestamp}-${mode}.txt";
 echo "Logging to $sweep_log" . BRNL;
 
 
@@ -414,6 +446,5 @@ curl_close($ch);
     return $log;
 }
 
-
-?>
+}
 

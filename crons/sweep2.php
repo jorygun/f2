@@ -1,18 +1,28 @@
 #!/usr/local/bin/php
 <?php
+ini_set('include_path',".:/usr/home/digitalm/Sites/flames/live/config:/usr/home/digitalm/Sites/flames/live/code:/usr/home/digitalm/Sites/flames/lib:/usr/home/digitalm/Sites/libmx/phpmx:/usr/local/lib/php");
 
-/*
-    Script to review user records and monitor validation of
-    email addresses.  Sends out verification emails and
-    adjusts email status, according to a schedule defined below.
+  /**
+   *  Script to review user records and monitor validation of                 *
+   *  email addresses.  Sends out verification emails and                     *
+   *  adjusts email status, according to a schedule defined below.            *
+   *  Script also runs the recent.php update to show comments on older articles.  
+   */
 
-    Script also runs the recent.php update to show comments on older articles.
+/* outside things needed
+    MyPDO
+    G_member_status_set
+    ems codes, limits, sequence
+    age,date = age()
+    update_email_status / rrequire scripts/email_status..
+    
+    thank_not_lost uses curl (!)
 
 */
 
 //BEGIN START
 	require_once '/usr/home/digitalm/Sites/flames/live/config/boot.php';
-	include_once '/usr/home/digitalm/public_html/amdflames.org/scripts/email_status_messaging.php';
+	include_once 'email_status_messaging.php';
 
 
 //END START
@@ -39,7 +49,7 @@ if (empty($mode)){
    elseif(isset($_GET['mode'])) {$mode = $_GET['mode'] ;}
     else{$mode = 'Real';}
 }
-#echo "Mode $mode<br>\n";
+echo "Mode $mode<br>\n";
 $testmode=($mode=='Test')?true:false;
 
 if (! in_array($mode,$modes)){die ("Sweeps did not receive a valid mode: $mode");}
@@ -59,14 +69,15 @@ set_time_limit(300); // 30sec. is default 0 is none;
 
 global $G_member_status_set;
 
-$sql_now = date('Y-m-d');
-$timestamp = date('Ymd_his');
-$english_now = date ("M j, h:i a");
-$now_obj = date_create();
+$dt = new DateTime();
+$sql_now = $dt->format('Y-m-d');
+$timestamp = $dt->format('Ymd_his');
+$english_now = $dt->format("M j, h:i a");
+
 
 #echo "Running Sweeps at $english_now\n";
 
-$sweep_log = SITEPATH . "/logs/sweep_logs/${mode}_${timestamp}.txt";
+$sweep_log = SITEPATH . "/logs/sweep_logs/${timestamp}-${mode}.txt";
 echo "Logging to $sweep_log" . BRNL;
 
 

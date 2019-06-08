@@ -2,7 +2,8 @@
 // ini_set('display_errors', 1);
 // ini_set('error_reporting', E_ALL);
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';require_once "../scripts/read_functions.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+require_once "../scripts/read_functions.php";
 
 if (security_below(1)){exit;}
 
