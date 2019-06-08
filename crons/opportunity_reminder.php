@@ -4,10 +4,9 @@
 
 //BEIN START
 // set ini because this file runs from cron so doesn't know .user.ini or shell
+$sitedir = dirname(__DIR__);
+require_once "$sitedir/config/boot.php";
 
-
-	require_once '/usr/home/digitalm/Sites/flames/live/code/f2_constants.php';
-	require_once '/usr/home/digitalm/Sites/flames/libmx/phpmx/MyPDO.class.php';
 
 //END START
 #ini_set('display_errors', 1);

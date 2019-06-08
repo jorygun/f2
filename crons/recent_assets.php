@@ -23,9 +23,9 @@
 
 $mydir = dirname(__FILE__);
 
-
-require_once '../config/boot.php';
-require_once '../public/scripts/asset_functions.php'; 
+$sitedir = dirname(__DIR__);
+require_once "$sitedir/config/boot.php";
+require_once '$sitedir/public/scripts/asset_functions.php'; 
 
 $pdo = MyPDO::instance();
 $test = 0;

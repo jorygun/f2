@@ -21,8 +21,8 @@
     * someone adds a comment. (in comment.class.php)
 */
 
-
-require_once '/usr/home/digitalm/Sites/flames/dev/config/boot.php';
+$sitedir = dirname(__DIR__);
+require_once "$sitedir/config/boot.php";
 
 $test = 0;
 $recent_articles = SITEPATH . '/news/recent_articles.html';
