@@ -51,7 +51,7 @@ if (file_exists($init_file)){
 	try {
 		include "$init_file";
 	}catch (Exception $e){
-		echo "$init_file failed to execute" <br> $e->message();
+		echo "$init_file failed to execute <br>" . $e->message();
 		
 	}
 	echo "site init done.<br>";
@@ -62,7 +62,7 @@ if (file_exists($init_file)){
 		try {
 		include "$old_init_file";
 		}catch (Exception $e){
-		echo "$old_init_file failed to execute" <br> $e->message();
+		echo "$old_init_file failed to execute <br>" . $e->message();
 		}
 		echo "site init-old done.<br>";
 	}
