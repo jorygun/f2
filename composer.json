@@ -24,14 +24,13 @@
     ],
     "autoload": { 
          "psr-4": {
-            "Digitalmx\\Lib\\": "libdmx/"  
+            "Digitalmx\\Lib\\": "libmx/libphp"  
             
             } 
         ,
         "files": [
-            
-            
+                        
         ]
-    
+
       } 
 }
