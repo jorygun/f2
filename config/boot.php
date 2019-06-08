@@ -32,7 +32,7 @@ ini_set('include_path',
 require_once  "f2_connect.php";
 require_once ('MyPDO.class.php');
 require_once ('nav.class.php');
-require_once ($sitedir . '/composer-autoload.php');
+require_once ($sitedir . '/composer-autoload');
 require_once ('setGlobals.php');
 require_once ('f2_constants.php'); 
 
