@@ -10,7 +10,7 @@
 	separate
 */
 
-require_once "/usr/home/digitalm/Sites/flames/f2/code/init.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 
 function define_lost_reasons(){
     $r = array(

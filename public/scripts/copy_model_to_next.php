@@ -1,7 +1,7 @@
 <?php
 // script to copy model news to news_next without doing anything else.
 //BEGIN START
-	require_once 'init.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(6)){exit;}
 //END START
 ?>

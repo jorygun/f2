@@ -1,5 +1,5 @@
 <?php
-require_once 'init.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 /*
 Show selected document with search string highlighted.
  e.g. showhigh.php?file=news/news-041126.html&sstr=Bob Harris

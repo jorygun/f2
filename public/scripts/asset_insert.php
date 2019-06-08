@@ -1,5 +1,5 @@
 <?php
-require "init.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 require "asset_functions.php";
 require "news_functions.php";
 

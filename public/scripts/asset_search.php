@@ -1,6 +1,6 @@
 <?php
 //BEGIN START
-	require_once "init.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 #	if (f2_security_below(2)){exit;}
 //END START
 

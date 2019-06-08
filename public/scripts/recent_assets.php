@@ -24,7 +24,7 @@
 $mydir = dirname(__FILE__);
 
 
-require_once '/usr/home/digitalm/Sites/flames/f2/config/init.php';
+	require_once '/usr/home/digitalm/Sites/flames/live/config/boot.php';
 require_once  SITEPATH . '/public/scripts/asset_functions.php'; #in this dir
 
 $pdo = MyPDO::instance();

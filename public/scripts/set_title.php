@@ -1,5 +1,5 @@
 <?php
-	require_once 'init.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 
 	// secript to set the title file in next next
 	$titlefile = SITEPATH . '/news/news_next/title.txt';

@@ -12,7 +12,7 @@
 // 	}
 
 
-// require_once "init.php";
+// require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
  require_once "Voting.class.php";
 #echo "Got to " . basename(__FILE__ ) . ' line ' .  __LINE__ . "<br />\n"; exit;
 $voting = new Voting();
