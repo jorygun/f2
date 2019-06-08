@@ -14,12 +14,6 @@ if (session_status() == PHP_SESSION_NONE) {
 $sitedir = dirname(__DIR__); #...<repo>/
 $projdir = dirname($sitedir);
 
- 
-
-
-
-$libphp = HOMEPATH . '/Sites/lib/php';
-
 
 #echo "sitedir $sitedir ";
 
@@ -27,7 +21,7 @@ $libphp = HOMEPATH . '/Sites/lib/php';
 #add other paths here so can just call init.php for shell scripts.
 
 ini_set('include_path',
-	get_include_path()  
+	'/usr/local/lib/php'
 	. ':' . $projdir . "/libmx/phpmx"
 	. ':' . $sitedir . '/public'
 	. ':' . $sitedir . '/public/scripts'
