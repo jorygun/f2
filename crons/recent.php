@@ -22,7 +22,7 @@
 */
 
 
-require_once '/usr/home/digitalm/Sites/flames/live/config/boot.php';
+require_once '/usr/home/digitalm/Sites/flames/dev/config/boot.php';
 
 $test = 0;
 $recent_articles = SITEPATH . '/news/recent_articles.html';

@@ -1,11 +1,25 @@
-#!/usr/local/bin/php
 <?php
+echo "starting \n";
 
 ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 
-ini_set('include_path',".:/usr/home/digitalm/Sites/flames/live/config:/usr/home/digitalm/Sites/flames/live/code:/usr/home/digitalm/Sites/flames/lib:/usr/home/digitalm/Sites/libmx/phpmx:/usr/local/lib/php");
-
+require_once '../config/boot.php';
+// ini_set(
+//     'include_path',
+//     '.'
+//     . ':/usr/home/digitalm/Sites/flames/live/config'
+//     . ':/usr/home/digitalm/Sites/flames/live/code'
+//     . ':/usr/home/digitalm/Sites/flames/lib'
+//     . ':/usr/home/digitalm/Sites/libmx/phpmx'
+//     . ':/usr/local/lib/php'
+//     );
+// 
+defined ('BRNL') ||
+    define ('BRNL',"<br>\n");
+defined ('NL') ||
+    define ('NL',"\n");
+    
   /**
    *  Script to review user records and monitor validation of                 *
    *  email addresses.  Sends out verification emails and                     *
@@ -24,16 +38,17 @@ ini_set('include_path',".:/usr/home/digitalm/Sites/flames/live/config:/usr/home/
 
 */
 
-echo "at line " . __LINE__ 
+
+
 //BEGIN START
-	require_once '/usr/home/digitalm/Sites/flames/live/config/boot.php';
-	include_once 'email_status_messaging.php';
+
+	include_once 'email_status_messaging.php'; #in flames/lib
 
 
 //END START
 
-echo "at line " . __LINE__ 
-exit;
+
+
 
 $pdo = MyPDO::instance();
 
@@ -48,7 +63,7 @@ $mode = '';
 // or by running from cli with sweep.php test
 //
 
-$mode = 'Test';
+#$mode = 'Test';
 $modes = array('Test','Real');
 if (empty($mode)){
    if(isset($argv) && sizeof($argv)==2){$mode = $argv[1];}

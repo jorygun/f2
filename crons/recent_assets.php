@@ -24,8 +24,8 @@
 $mydir = dirname(__FILE__);
 
 
-require_once '/usr/home/digitalm/Sites/flames/live/config/boot.php';
-require_once '/usr/home/digitalm/Sites/flames/live/public/scripts/asset_functions.php'; 
+require_once '../config/boot.php';
+require_once '../public/scripts/asset_functions.php'; 
 
 $pdo = MyPDO::instance();
 $test = 0;

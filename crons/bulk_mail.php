@@ -64,7 +64,7 @@ echo "Starting bulk mail.php\n";
 set_include_path(get_include_path() . ':/usr/home/digitalm/Sites/flames/libmx/phpmx:/usr/home/digitalm/Sites/flames/live/code');
 
 // Load Composer's autoloader
-require '/usr/home/digitalm/Sites/flames/live/vendor/autoload.php';
+require '../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
