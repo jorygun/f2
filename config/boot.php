@@ -15,7 +15,7 @@ $sitedir = dirname(__DIR__); #---/flames/<repo>/
 $projdir = dirname($sitedir); #---/flames
 
 
-#echo "sitedir $sitedir ";
+echo "bootp sitedir $sitedir ";
 
 #initial include path set in .user.ini to include this folder.
 #add other paths here so can just call init.php for shell scripts.
