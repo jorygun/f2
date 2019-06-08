@@ -49,10 +49,11 @@ echo "Looking for boot file: $init_file <br>\n";
 if (file_exists($init_file)){
 	echo "Begin Site init from boot ... ";
 	try {
-		include "$init_file";
+		if (! include "$init_file"){
+			throw new Exception ("$init_file failed to load");
+		}
 	}catch (Exception $e){
-		echo "$init_file failed to execute <br>" . $e->message();
-		
+		echo "$init_file failed to execute <br>" . $e->getMessage();
 	}
 	echo "site init done.<br>";
 
@@ -60,9 +61,11 @@ if (file_exists($init_file)){
 	echo ".. not found, looking for old init $old_init_file <br>";
 	if (file_exists($old_init_file)){
 		try {
-		include "$old_init_file";
+		if (! include "$old_init_file"){
+			throw new Exception ("$old_init_file did not load");
+		}
 		}catch (Exception $e){
-		echo "$old_init_file failed to execute <br>" . $e->message();
+		echo "$old_init_file failed to execute <br>" . $e->getMessage();
 		}
 		echo "site init-old done.<br>";
 	}

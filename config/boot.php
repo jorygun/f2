@@ -11,8 +11,8 @@ if (session_status() == PHP_SESSION_NONE) {
 
 //ini_set('error_reporting',E_ALL);
 
-$sitedir = dirname(__DIR__); #...<repo>/
-$projdir = dirname($sitedir);
+$sitedir = dirname(__DIR__); #---/flames/<repo>/
+$projdir = dirname($sitedir); #---/flames
 
 
 #echo "sitedir $sitedir ";
@@ -35,6 +35,8 @@ require_once ('nav.class.php');
 require_once ($sitedir . '/composer-autoload');
 require_once ('setGlobals.php');
 require_once ('f2_constants.php'); 
+require_once ('Definitions.php');
+
 
 
 $pdo = MyPDO::instance();
