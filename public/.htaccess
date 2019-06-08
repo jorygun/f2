@@ -1,6 +1,0 @@
-DirectoryIndex index.html index-down.php  index.php 
-
-Options +FollowSymLinks
-
-RewriteEngine on
-RewriteRule ^view_asset/([0-9]+)$ /scripts/asset_c.php?id=$1

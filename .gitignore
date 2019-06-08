@@ -3,6 +3,7 @@
 
 #ignore site-specific config in .htaccess
 .htaccess
+.user.ini
 
 #ignore backup files
 *~
