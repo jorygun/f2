@@ -4,7 +4,8 @@ echo "starting \n";
 ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 
-require_once '../config/boot.php';
+$sitedir = dirname(_)DIR__);
+require_once "$sitename/config/boot.php";
 // ini_set(
 //     'include_path',
 //     '.'
