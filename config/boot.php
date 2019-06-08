@@ -27,6 +27,7 @@ ini_set('include_path',
 	. ':' . $sitedir . '/public/scripts'
 	. ':' . $sitedir. '/config'
 	. ':' . $sitedir. '/code'
+	. ':' . $projdir . '/lib'
 	);
 
 require_once  "f2_connect.php";

@@ -27,10 +27,5 @@
             "Digitalmx\\Lib\\": "libmx/libphp" , 
 	   "Digitalmx\\flames\\": "code/"            
             } 
-        ,
-        "files": [
-                        
-        ]
-
       } 
 }
