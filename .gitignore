@@ -16,3 +16,6 @@ logs/
 
 #don't alter normally
 public/jslib/
+
+#news directory contains live info.  Don't disturb
+public/news/
