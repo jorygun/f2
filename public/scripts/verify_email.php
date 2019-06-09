@@ -32,9 +32,9 @@ $error_msg = "No record found. Please contact administrator at admin@digitalmx.c
 	elseif ($ident = $_GET['u'] ){
 		if (is_valid_uid($ident)){$row = get_member_by_uid($ident);}
 	}
-	else {die ("Cannot determine user id.")}
+	else {die ("Cannot determine user id.");}
 	
-	if (empty($row)){ die ("User not found."}
+	if (empty($row)){ die ("User not found.");}
 	
 	$sql_today = sql_now('date');
 	
