@@ -13,37 +13,41 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $sitedir = dirname(__DIR__); #---/flames/<repo>/
 $projdir = dirname($sitedir); #---/flames
+$projname = basename($sitedir); #repo
 
 
-echo "bootp sitedir $sitedir ";
+echo "boot: sitedir $sitedir ...  ";
+echo "projname $projname <br>\n";
+
 
 #initial include path set in .user.ini to include this folder.
 #add other paths here so can just call init.php for shell scripts.
 
 ini_set('include_path',
-	'.'
-	. ':' . '/usr/local/lib/php'
+	  '.'
 	. ':' . $projdir . "/libmx/phpmx"
 	. ':' . $sitedir . '/lib'
 	. ':' . $sitedir. '/config'
 	. ':' . $sitedir. '/code'
 	. ':' . $sitedir . '/public'
 	. ':' . $sitedir . '/public/scripts'
-
+	. ':' . '/usr/local/lib/php'
 
 	);
 
 require_once  "f2_connect.php";
-require_once ('MyPDO.class.php');
 require_once ('nav.class.php');
 require_once ($sitedir . '/composer-autoload');
 require_once ('setGlobals.php');
 require_once ('f2_constants.php'); 
 require_once ('Definitions.php');
 
-
-
+#build db
+$dbs = parse_ini_file('db.ini'); #gets all the connection params in an array
+require_once ('MyPDO.class.php');
 $pdo = MyPDO::instance();
+
+
 
 define ('INIT',1);
 
