@@ -23,7 +23,6 @@ $error_msg = "No record found. Please contact administrator at admin@digitalmx.c
 
 <?php
 	
-	
 	if ($ident = $_GET['s']){
   		if (is_valid_login($ident)){$row = get_row_for_login($ident);}
   	}
