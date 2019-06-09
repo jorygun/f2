@@ -13,7 +13,7 @@ ini_set('error_reporting', -1);
 	separate
 */
 
-require_once "/usr/home/digitalm/Sites/flames/f2/code/init.php";
+require_once "/usr/home/digitalm/Sites/flames/f2/config/init.php";
 
 function add_user($id,$new_status){
         $pdo = MyPDO::instance();
