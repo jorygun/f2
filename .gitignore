@@ -1,3 +1,9 @@
+#Files to leave out of git commits.
+#Note: symbolic links in directories are
+#all relative, and will retain their
+#correct linkage on transfer to remote.
+
+
 #ignore mac dir file
 .DS_Store
 
