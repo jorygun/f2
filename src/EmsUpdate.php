@@ -289,7 +289,6 @@ class EmsUpdate  {
 	}
 	
 	
-
 public function update_email_status($uid,$mstatus,$mode='Real'){
 	// mode = Real | Silent | or Test
     // update silently if mode = silent
