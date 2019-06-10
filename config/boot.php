@@ -40,8 +40,14 @@ ini_set('include_path',
 	);
 
 #add primary 
-require_once "mx-constants.php";
-require_once "mx-utilities.php";
+
+
+require_once $site_dir . '/composer-autoload';
+
+#require_once "mx-constants.php";
+#require_once "mx-utilities.php";
+
+
 
 #create container
 
@@ -51,13 +57,14 @@ require_once "mx-utilities.php";
 
 require_once  "f2_connect.php";
 require_once 'nav.class.php';
-require_once $site_dir . '/composer-autoload';
+
 require_once 'setGlobals.php';
 require_once 'f2_constants.php'; 
 require_once 'Definitions.php';
 
 #build db
 $dbs = parse_ini_file('db.ini'); #gets all the connection params in an array
+
 require_once 'MyPDO.class.php';
 $pdo = MyPDO::instance();
 
