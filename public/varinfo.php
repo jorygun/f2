@@ -88,7 +88,7 @@ if (file_exists($init_file)){
 	}
 }
 
-echo "<p><b>post-init include_path: </b><br>" . get_include_path() ."</p><br>\n";
+echo "<p><b>post-init include_path: </b><br>" . str_replace(':','<br>:',get_include_path()) ."</p><br>\n";
 
 recho ($_ENV,'$_ENV');
 
