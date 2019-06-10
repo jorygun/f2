@@ -9,7 +9,7 @@ $pre_out = '';
 echo <<<EOT
 <html>
 <head><title>Varinfo 3</title></head>
-<body>
+<body style='width:800px;'>
 varinfo.php - last updated $mtimet
 
 
