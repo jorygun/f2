@@ -11,9 +11,10 @@ echo <<<EOT
 <head>
 <title>Varinfo 3</title>
 <style>
-body {max-width:800px; 
-	overflow-wrap: break-word;
-}
+	body {max-width:800px; 
+		overflow-wrap: break-word;
+	}
+</style>
 </head>
 <body >
 varinfo.php - last updated $mtimet
