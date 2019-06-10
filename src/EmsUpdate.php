@@ -36,7 +36,7 @@ class EmsUpdate  {
 	'msg' => "
 
 	Thanks for signing up for the FLAMEs AMD Alumni News
-	site, $name.
+	site, _name_.
 
 	To confirm your signup and receive a temporary password,
 	click on the link below:
@@ -55,7 +55,7 @@ class EmsUpdate  {
 	'subj' => "Please Confirm Your Email for AMD FLAMEs",
 	'msg' => "
 
-	$name, a few days ago we sent you an email asking you
+	_name_, a few days ago we sent you an email asking you
 	to confirm this email for your signup on the AMD Alumni
 	FLAMEs site. We haven't heard back from you.
 
@@ -72,25 +72,25 @@ class EmsUpdate  {
 	'subj' => "Your AMD FLAMEs Email Bounced - Action Needed",
 	'msg' => "
 
-	$name,  The AMD Alumni FLAMES  site recently
+	_name_,  The AMD Alumni FLAMES  site recently
 	sent you an email at this address that bounced.
 	Can you please confirm that this email is correct for you?
 
 ***************************************************
-	If this email <$email> is correct, please just click on the
+	If this email <_email_> is correct, please just click on the
 	link below to confirm:
 		_verify_url_
 ***************************************************
 
-	$closing
+	
 	"),
 
 'B2'	=>	array(
 	'subj' => "AMD FLAMEs Email Bouncing - Second Request!",
 	'msg' => "
 
-	$name,  we recently sent you an email advising you that
-	email sent to this address <$email>
+	_name_,  we recently sent you an email advising you that
+	email sent to this address <_email_>
 	from the AMD FLAMEs site was bouncing.
 
 	We didn't hear back from you, we're trying again.
@@ -104,15 +104,15 @@ class EmsUpdate  {
 
 	Otherwise we will have to mark you as a Lost Member.
 
-	$closing
+	
 	"),
 
 'E1'	=>	array(
 	'subj' => "Confirm your new email on the AMD Alumni Site",
 	'msg' => "
 
-	$name, the email for your membership on the FLAMEs AMD Alumni
-	site has been updated from ${row['prior_email']} to ${row['user_email']}.
+	_name_, the email for your membership on the FLAMEs AMD Alumni
+	site has been updated from _prior_email_ to _email_.
 
 ***************************************************
 	YOU NEED TO CONFIRM THIS CHANGE BY CLICKING THE LINK BELOW NOW!
@@ -120,17 +120,14 @@ class EmsUpdate  {
 		_verify_url_
 ***************************************************
 
-	$profile_text
-
-	$closing
-
+	
 	"),
 
 'E2'	=>	array(
 	'subj' => "AMD FLAMEs Email Confirmation Required - Second Request",
 	'msg' => "
 
-	$name, about a week ago, your email
+	_name_, about a week ago, your email
 	on the AMD FLAMEs site was changed, and we sent
 	you an email asking you to verify the change.
 
@@ -144,9 +141,7 @@ class EmsUpdate  {
 		_verify_url_
 ***************************************************
 
-	$profile_text
-
-	$closing
+	
 
 	"),
 
@@ -159,13 +154,13 @@ class EmsUpdate  {
 
 ***************************************************
   JUST CLICK THE LINK BELOW NOW to confirm that
-  this ($email) is your email:
+  this (_email_) is your email:
 
        _verify_url_
 
 ***************************************************
 
-	$bulk_warn
+	
 
 	(Note: You can avoid these messages by logging into the web site
 	at least once a year.)
@@ -175,7 +170,7 @@ class EmsUpdate  {
 	'subj' => "Confirm your email for AMD Flames - Second Request",
 	'msg' => "
 
-	$name, about a week ago we sent you an email
+	_name_, about a week ago we sent you an email
 	asking you to confirm that this is still your correct email.
 	We haven't heard back from you, so we're giving it another shot.
 
@@ -184,17 +179,15 @@ class EmsUpdate  {
 
   	_verify_url_
 
-  	$bulk_warn
-
-	$closing
+  
 
   	"),
 
 'A3'	=>	array(
-	'subj' => "$name, please confirm your email address",
+	'subj' => "_name_, please confirm your email address",
 	'msg' => "
 
-		$name, about 2 weeks ago we sent you an email asking you to confirm
+		_name_, about 2 weeks ago we sent you an email asking you to confirm
 	that this is your correct email.  We still haven't heard back from you.
 
 ***************************************************************
@@ -203,9 +196,7 @@ class EmsUpdate  {
   	_verify_url_
 ***************************************************************
 
-  	$bulk_warn
-
-	$closing
+  
 
 	"),
 
@@ -214,7 +205,7 @@ class EmsUpdate  {
 	'subj' => "AMD FLAMEs Email confirmation - Final Request",
 	'msg' => "
 
-	$name, we have sent several emails over a few weeks
+	_name_, we have sent several emails over a few weeks
 	to confirm that your email address on the AMD Flames Alumni site
 	is correct.  This email isn't bouncing, but we haven't heard back
 	from you, so we think you may not be using this address.
@@ -234,7 +225,7 @@ class EmsUpdate  {
 	'subj' => "AMD Alumni FLAMEs Email Verification",
 	'msg' => "
 
-	$name, We have been trying to contact you for several weeks
+	_name_, We have been trying to contact you for several weeks
 	to confirm that your email address on the AMD Flames Alumni site
 	is correct.  This email isn't bouncing, but we haven't heard back
 	from you, so we aren't sure you are stilling using this address.
@@ -243,7 +234,7 @@ class EmsUpdate  {
 
   	_verify_url_
 
-	$closing
+	
 
 ")
 
