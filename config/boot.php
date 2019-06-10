@@ -1,43 +1,67 @@
 <?
-// ini_set('session.cookie_lifetime', 86400);
-// ini_set('session.gc_maxlifetime', 86400);
+// ini_set('error_reporting', E_ALL);
+// ini_set('display_errors', 1);
 
-if (defined ('INIT')){ return; } #already ran
+// set up for longer session lifes
+# ini_set('session.cookie_lifetime', 86400);
+# ini_set('session.gc_maxlifetime', 86400);
 
-#test if session already started
+if (defined ('INIT')){ return; } //some init has already run
+
+// test if session already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-//ini_set('error_reporting',E_ALL);
+   $site_dir = dirname(__DIR__); #---/flames/<repo>/ - where this repo is      *
+   $project_dir = dirname($site_dir); #---/flames - where shared stuff is          *
+   $repo_name = basename($site_dir); #-- repo name                              *
 
-$sitedir = dirname(__DIR__); #...<repo>/
-$projdir = dirname($sitedir);
 
-
-#echo "sitedir $sitedir ";
+echo nl2br("boot: 
+site_dir $site_dir. 
+repo_name $repo_name
+");
 
 #initial include path set in .user.ini to include this folder.
-#add other paths here so can just call init.php for shell scripts.
+#add other paths here so can just call <repo>/config/boot.php for shell scripts.
 
 ini_set('include_path',
-	'/usr/local/lib/php'
-	. ':' . $projdir . "/libmx/phpmx"
-	. ':' . $sitedir . '/public'
-	. ':' . $sitedir . '/public/scripts'
-	. ':' . $sitedir. '/config'
-	. ':' . $sitedir. '/code'
+	  '.'
+   . ':' . '/usr/local/lib/php'
+	. ':' . $project_dir . "/libmx/phpmx"
+	. ':' . $site_dir . '/lib'
+	. ':' . $site_dir. '/config'
+	. ':' . $site_dir. '/code'
+	. ':' . $site_dir . '/public'
+	. ':' . $site_dir . '/public/scripts'
+
+
 	);
 
+#add primary 
+require_once "mx-constants.php";
+require_once "mx-utilities.php"
+
+#create container
+
+// use Pimple\Container;
+// $container = new Container();
+
+
 require_once  "f2_connect.php";
-require_once ('MyPDO.class.php');
 require_once ('nav.class.php');
-require_once ($sitedir . '/composer-autoload');
+require_once ($site_dir . '/composer-autoload');
 require_once ('setGlobals.php');
 require_once ('f2_constants.php'); 
+require_once ('Definitions.php');
 
-
+#build db
+$dbs = parse_ini_file('db.ini'); #gets all the connection params in an array
+require_once ('MyPDO.class.php');
 $pdo = MyPDO::instance();
+
+
 
 define ('INIT',1);
 
