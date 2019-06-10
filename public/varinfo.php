@@ -2,15 +2,23 @@
 ini_set('display_errors', 1);
 $mtimet = date('d M H:i',filemtime(__FILE__));
 $mtime = filemtime(__FILE__);
-
+session_start();
+#collect initial data prior to session_start running
+$pre_out = '';
 
 echo <<<EOT
 <html>
-<head><title>Varinfo 3</title></head>
-<body>
+<head>
+<title>Varinfo 3</title>
+<style>
+	body {max-width:800px; 
+		overflow-wrap: break-word;
+	}
+</style>
+</head>
+<body >
 varinfo.php - last updated $mtimet
-<p>Known Issue: this outputs info before init runs, so it upsets the
-session_start in init.  No biggie.</p>
+
 
 EOT;
 
@@ -80,7 +88,7 @@ if (file_exists($init_file)){
 	}
 }
 
-echo "<br><b>post-init include_path: </b>" . get_include_path() ."<br><br>\n";
+echo "<p><b>post-init include_path: </b><br>" . str_replace(':','<br>:',get_include_path()) ."</p><br>\n";
 
 recho ($_ENV,'$_ENV');
 
