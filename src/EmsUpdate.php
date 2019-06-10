@@ -290,7 +290,7 @@ public function update_email_status($uid,$mstatus,$mode='Real'){
 
 		// get the existing user data
 		$sql = "SELECT username,email_status,user_email,prior_email,profile_updated from `members_f2` 
-			WHERE uid = '$uid'";
+			WHERE user_id = '$uid'";
 		if (! $row = $this->pdo->query($sql)->fetch()){
 			throw new Exception ("No such user: uid $uid");
 		}
