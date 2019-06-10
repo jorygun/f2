@@ -2,15 +2,16 @@
 ini_set('display_errors', 1);
 $mtimet = date('d M H:i',filemtime(__FILE__));
 $mtime = filemtime(__FILE__);
-
+session_start();
+#collect initial data prior to session_start running
+$pre_out = '';
 
 echo <<<EOT
 <html>
 <head><title>Varinfo 3</title></head>
 <body>
 varinfo.php - last updated $mtimet
-<p>Known Issue: this outputs info before init runs, so it upsets the
-session_start in init.  No biggie.</p>
+
 
 EOT;
 
