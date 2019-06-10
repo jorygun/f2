@@ -19,11 +19,13 @@ echo "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
 
 $sitedir = dirname(__DIR__); #...<repo>/
 $projdir = dirname($sitedir);
+$reponame = basename($sitedir);
 
 echo "<br>";
 
 echo "<b>sitedir:</b> " . $sitedir . "<br>\n";
 echo "<b>projdir:</b> " . $projdir . "<br>";
+echo "<b>repo:</b> " . $reponame . "<br>";
 echo "<br>\n";
 
 ## show envir vars
@@ -84,13 +86,15 @@ recho ($_ENV,'$_ENV');
 
 recho ($server_changes,'Changed value in $_SERVER');
 recho ($server_adds,'Added to $_SERVER');
+recho ($_SESSION,'$_SESSION');
+
 
 echo "<hr>";
 $htaccessm = date('d M H:i',filemtime('.htaccess'));
-
 echo ".htaccess ($htaccessm) :<br><pre>";
 echo file_get_contents('.htaccess');
 echo '</pre><hr>';
+
 
 try {
 	echo "From Definitions<br>\n";

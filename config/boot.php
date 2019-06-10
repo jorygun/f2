@@ -1,23 +1,25 @@
 <?
-// ini_set('session.cookie_lifetime', 86400);
-// ini_set('session.gc_maxlifetime', 86400);
+// ini_set('error_reporting', E_ALL);
+// ini_set('display_errors', 1);
 
-if (defined ('INIT')){ return; } #already ran
+// set up for longer session lifes
+# ini_set('session.cookie_lifetime', 86400);
+# ini_set('session.gc_maxlifetime', 86400);
 
-#test if session already started
+if (defined ('INIT')){ return; } //already ran
+
+// test if session already started
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-//ini_set('error_reporting',E_ALL);
-
-$sitedir = dirname(__DIR__); #---/flames/<repo>/
-$projdir = dirname($sitedir); #---/flames
-$projname = basename($sitedir); #repo
+   $sitedir = dirname(__DIR__); #---/flames/<repo>/ - where this repo is      *
+   $projdir = dirname($sitedir); #---/flames - where shared stuff is          *
+   $reponame = basename($sitedir); #-- repo name                              *
 
 
-echo "boot: sitedir $sitedir ...  ";
-echo "projname $projname <br>\n";
+echo "boot: sitedir $sitedir.  ";
+echo "reponame $reponame <br>\n";
 
 
 #initial include path set in .user.ini to include this folder.

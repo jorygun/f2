@@ -1,5 +1,13 @@
-#ignore mac dir file
+#Files to leave out of git commits.
+#Note: symbolic links in directories are
+#all relative, and will retain their
+#correct linkage on transfer to remote.
+
+
+#ignore mac files
 .DS_Store
+.AppleDouble
+.LSOverride
 
 #ignore site-specific config in .htaccess
 .htaccess
@@ -15,3 +23,6 @@
 logs/
 
 #don't alter normally
+
+#news directory contains live info.  Don't disturb
+public/news/
