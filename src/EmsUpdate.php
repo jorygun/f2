@@ -289,13 +289,14 @@ public function update_email_status($uid,$mstatus,$mode='Real'){
     	if (empty($mstatus)){throw new Exception ("No ems for update_emial_status");}
 
 		// get the existing user data
-		$sql = "SELECT username,email_status from `members_f2` 
+		$sql = "SELECT username,email_status,user_email,prior_email,profile_updated from `members_f2` 
 			WHERE uid = '$uid'";
 		if (! $row = $this->pdo->query($sql)->fetch()){
 			throw new Exception ("No such user: uid $uid");
 		}
 		
-
+echo "${row['username']} profile upate ${row['profile_updated']} <br>";
+exit;
     if (substr($mstatus,0,1) != 'L'){ #not lost
         $msg =  get_user_text($mstatus,$row);
         if(!$msg){echo "Error getting user message";exit;}
