@@ -8,8 +8,14 @@ $pre_out = '';
 
 echo <<<EOT
 <html>
-<head><title>Varinfo 3</title></head>
-<body style='width:800px;'>
+<head>
+<title>Varinfo 3</title>
+<style>
+body {max-width:800px; 
+	overflow-wrap: break-word;
+}
+</head>
+<body >
 varinfo.php - last updated $mtimet
 
 
