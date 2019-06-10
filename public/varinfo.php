@@ -19,11 +19,13 @@ echo "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
 
 $sitedir = dirname(__DIR__); #...<repo>/
 $projdir = dirname($sitedir);
+$reponame = basename($sitedir);
 
 echo "<br>";
 
 echo "<b>sitedir:</b> " . $sitedir . "<br>\n";
 echo "<b>projdir:</b> " . $projdir . "<br>";
+echo "<b>repo:</b> " . $reponame . "<br>";
 echo "<br>\n";
 
 ## show envir vars
@@ -41,19 +43,32 @@ foreach ($_SERVER as $k=>$v){
 
 #$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 
-$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
+#$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
+$init_file = '../config/boot.php';
 $old_init_file = '../config/init.php';
 
-echo "Looking for init from htaccess: $init_file <br>\n";
+echo "Looking for boot file: $init_file <br>\n";
 if (file_exists($init_file)){
-	echo "Begin Site init from htaccess ... ";
-	include "$init_file";
+	echo "Begin Site init from boot ... ";
+	try {
+		if (! include "$init_file"){
+			throw new Exception ("$init_file failed to load");
+		}
+	}catch (Exception $e){
+		echo "$init_file failed to execute <br>" . $e->getMessage();
+	}
 	echo "site init done.<br>";
 
 } else {
 	echo ".. not found, looking for old init $old_init_file <br>";
 	if (file_exists($old_init_file)){
-		include "$old_init_file";
+		try {
+		if (! include "$old_init_file"){
+			throw new Exception ("$old_init_file did not load");
+		}
+		}catch (Exception $e){
+		echo "$old_init_file failed to execute <br>" . $e->getMessage();
+		}
 		echo "site init-old done.<br>";
 	}
 	else {
@@ -71,13 +86,15 @@ recho ($_ENV,'$_ENV');
 
 recho ($server_changes,'Changed value in $_SERVER');
 recho ($server_adds,'Added to $_SERVER');
+recho ($_SESSION,'$_SESSION');
+
 
 echo "<hr>";
 $htaccessm = date('d M H:i',filemtime('.htaccess'));
-
 echo ".htaccess ($htaccessm) :<br><pre>";
 echo file_get_contents('.htaccess');
 echo '</pre><hr>';
+
 
 try {
 	echo "From Definitions<br>\n";
