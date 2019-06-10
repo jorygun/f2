@@ -40,7 +40,7 @@ class EmsUpdate  {
 
 	To confirm your signup and receive a temporary password,
 	click on the link below:
-		$verify_url
+		_verify_url_
 
 	You must confirm within 3 days to activate this signup.
 
@@ -62,7 +62,7 @@ class EmsUpdate  {
 **************************************************
 	To confirm this is your correct email, please click on the
 	link below:
-		$verify_url
+		_verify_url_
 ***************************************************
 
 	Otherwise, your signup will be cancelled.
@@ -79,7 +79,7 @@ class EmsUpdate  {
 ***************************************************
 	If this email <$email> is correct, please just click on the
 	link below to confirm:
-		$verify_url
+		_verify_url_
 ***************************************************
 
 	$closing
@@ -99,7 +99,7 @@ class EmsUpdate  {
 	If this message gets through to you, please click on
 	the link below to confirm:
 
-		$verify_url
+		_verify_url_
 ***************************************************
 
 	Otherwise we will have to mark you as a Lost Member.
@@ -117,7 +117,7 @@ class EmsUpdate  {
 ***************************************************
 	YOU NEED TO CONFIRM THIS CHANGE BY CLICKING THE LINK BELOW NOW!
 
-		$verify_url
+		_verify_url_
 ***************************************************
 
 	$profile_text
@@ -141,7 +141,7 @@ class EmsUpdate  {
 	If this is your correct new email, please
 	CLICK ON THE LINK BELOW to confirm:
 
-		$verify_url
+		_verify_url_
 ***************************************************
 
 	$profile_text
@@ -161,7 +161,7 @@ class EmsUpdate  {
   JUST CLICK THE LINK BELOW NOW to confirm that
   this ($email) is your email:
 
-       $verify_url
+       _verify_url_
 
 ***************************************************
 
@@ -182,7 +182,7 @@ class EmsUpdate  {
 	Please click on the link below to simply verify that this
 	email still works for you.
 
-  	$verify_url
+  	_verify_url_
 
   	$bulk_warn
 
@@ -200,7 +200,7 @@ class EmsUpdate  {
 ***************************************************************
 	IF YOU RECEIVE THIS EMAIL, please click on the link below:
 
-  	$verify_url
+  	_verify_url_
 ***************************************************************
 
   	$bulk_warn
@@ -221,7 +221,7 @@ class EmsUpdate  {
 
 **************************************************************************
   IF THIS IS YOUR CORRECT EMAIL, PLEASE CLICK ON THE LINK BELOW:
-  	$verify_url
+  	_verify_url_
 **************************************************************************
 
 	If you have any questions or concerns, please contact the administrator.
@@ -241,7 +241,7 @@ class EmsUpdate  {
 
 	If this is your correct email, please click on the link below:
 
-  	$verify_url
+  	_verify_url_
 
 	$closing
 
@@ -483,7 +483,7 @@ $admin_message =	array(
 
 
  Click to verify your email:
-    $verify_url
+    _verify_url_
 
 -----------------------------------------------------
 	Alert to FLAMES administrator :
