@@ -81,7 +81,7 @@ if (file_exists($init_file)){
 	}
 }
 
-echo "<br><b>post-init include_path: </b>" . get_include_path() ."<br><br>\n";
+echo "<p><b>post-init include_path: </b><br>" . get_include_path() ."</p><br>\n";
 
 recho ($_ENV,'$_ENV');
 
