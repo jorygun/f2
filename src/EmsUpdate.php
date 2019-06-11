@@ -311,7 +311,7 @@ class EmsUpdate  {
 				throw new Exception ("No such user: uid $uid");
 			}
 		
-	echo "${row['username']} profile upate ${row['profile_updated']} <br>";
+	echo "ems update for ${row['username']} profile upate ${row['profile_updated']} <br>";
 #exit;
 
 		if ($mode !== 'Test'){
