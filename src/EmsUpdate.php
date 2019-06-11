@@ -318,7 +318,9 @@ class EmsUpdate  {
 
 		if ($mode !== 'Test'){
 			echo "starting update_db. ";
-			$this->update_db($uid,$mstatus);
+			if (! $this->update_db($uid,$mstatus) ) {
+				throw new Exception ("DB update failed");
+			}
 		}
 	
 		 if (substr($mstatus,0,1) != 'L'){ #not lost
@@ -400,7 +402,10 @@ class EmsUpdate  {
          }
          $sql .= " WHERE user_id = '$uid';";
         
-        $result = $this->pdo->query($sql);
+       if ( $result = $this->pdo->query($sql) ){
+       	return true;
+       }
+       return false;
         
       }
 
