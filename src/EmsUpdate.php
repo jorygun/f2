@@ -386,7 +386,7 @@ class EmsUpdate  {
 	
      }
      
-	private function updatedb($uid,$ems) 
+	private function update_db($uid,$ems) 
 	{
 		//update the email status in the db.
          // also sets user status if ems = LD

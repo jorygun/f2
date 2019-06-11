@@ -12,4 +12,4 @@ require '../src/EmsUpdate.php';
 
 $emsu = new EmsUpdate();
 
-$result = $emsu->update_email_status(11602,'LX','Test');
+$result = $emsu->update_email_status(10117,'LX','');
