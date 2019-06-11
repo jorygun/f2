@@ -297,7 +297,8 @@ class EmsUpdate  {
 		// mode = null (Real) | Silent | or Test
 		 // update silently if mode = silent
 		 // do not update db if mode = Test
-		 #echo "Updating status for id $uid, status $mstatus\n";
+		 echo "ems_update: $uid, $mstatus, $mode <br>";
+		 
 			if (empty($uid)){throw new Exception ("No id for update_emial_status");}
 			if (empty($mstatus)){throw new Exception ("No ems for update_emial_status");}
 
@@ -310,9 +311,10 @@ class EmsUpdate  {
 			if (! $row = $this->pdo->query($sql)->fetch()){
 				throw new Exception ("No such user: uid $uid");
 			}
-		
+	
+	
 	echo "ems update for ${row['username']} profile upate ${row['profile_updated']} <br>";
-#exit;
+
 
 		if ($mode !== 'Test'){
 			echo "starting update_db. ";
