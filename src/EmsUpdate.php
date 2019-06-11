@@ -358,7 +358,7 @@ class EmsUpdate  {
 			$profile_text =';';
 
 
-			if (! $msg =  $self::user_messages[$mstatus] ){
+			if (empty($msg =  self::$user_messages[$mstatus] )){
 				echo "Error getting user message for status $mstatus";exit;
 			}
  
