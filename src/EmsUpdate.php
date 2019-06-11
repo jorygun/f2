@@ -383,8 +383,8 @@ class EmsUpdate  {
 			if (in_array($mstatus,$admin_list)){
 				$headers .= "Cc: admin@amdflames.org\r\n";
 			}
-			mail ('admin@amdflames.org',$em_subj,$message,$headers);
-			#mail ($email,$em_subj,$message,$headers);
+			#mail ('admin@amdflames.org',$em_subj,$message,$headers);
+			mail ($email,$em_subj,$message,$headers);
 	
      }
      
