@@ -315,10 +315,12 @@ class EmsUpdate  {
 #exit;
 
 		if ($mode !== 'Test'){
+			echo "starting update_db. ";
 			$this->update_db($uid,$mstatus);
 		}
 	
 		 if (substr($mstatus,0,1) != 'L'){ #not lost
+		 	echo "starting email_user";
 			$this->email_user($mstatus, $row);
 		 }
 	 	
