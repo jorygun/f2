@@ -375,7 +375,7 @@ class EmsUpdate  {
 			$substitutions = $this->define_subs($row);
 			
 			$message = 
-				str_replace(keys($substitutions),values($substitutions),$message);
+				str_replace(array_keys($substitutions),array_values($substitutions),$message);
 			
 			$headers = $this->em_headers;
 			
