@@ -304,7 +304,7 @@ class EmsUpdate  {
 
 			// get the existing user data
 			$sql = "SELECT 
-				username,email_status,user_email,prior_email,profile_updated,
+				username,user_id, email_status,user_email,prior_email,profile_updated,
 				last_login, email_last_validated, profile_validated, no_bulk
 				from `members_f2` 
 				WHERE user_id = '$uid'";
