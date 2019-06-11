@@ -312,7 +312,7 @@ class EmsUpdate  {
 			}
 		
 	echo "${row['username']} profile upate ${row['profile_updated']} <br>";
-exit;
+#exit;
 
 		if ($mode !== 'Test'){
 			$this->update_db($uid,$mstatus);
