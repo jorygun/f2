@@ -380,12 +380,23 @@ class EmsUpdate  {
 			$headers = $this->em_headers;
 			
 			$admin_list = ['A4'];
-			if (in_array($mstatus,$admin_list)){
-				$headers .= "Cc: admin@amdflames.org\r\n";
-			}
-			#mail ('admin@amdflames.org',$em_subj,$message,$headers);
+			
 			mail ($email,$em_subj,$message,$headers);
-	
+			
+			if (in_array($mstatus,$admin_list)){
+				$message = "Admin: $name is not responding.  Please try to contact.\n\n"
+				. "----------------------------\n"
+				.	$message
+				. "----------------------------\n"
+				.	$this->build_summary($row);
+				
+				$header = "From: $name <$email>\r\n";
+				$subject = "Please follow up with $name";
+				
+				mail ('admin@amdflames.org',$subject,$message,$headers);
+			}
+			
+				
      }
      
 	private function update_db($uid,$ems) 
