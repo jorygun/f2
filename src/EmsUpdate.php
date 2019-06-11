@@ -305,7 +305,7 @@ class EmsUpdate  {
 			// get the existing user data
 			$sql = "SELECT 
 				username,user_id, upw, email_status,user_email,prior_email,profile_updated,
-				last_login, email_last_validated, profile_validated, no_bulk
+				last_login, email_last_validated, email_chg_date, profile_validated, no_bulk
 				from `members_f2` 
 				WHERE user_id = '$uid'";
 			if (! $row = $this->pdo->query($sql)->fetch()){
