@@ -5,13 +5,23 @@
 	provides text for messages when email status is changed.
 	$code is new status code
 
-
+	requires
+		PDO
+		an init??
+	
 	Everything is done inside the function to keep namespace
 	separate
 */
 class EmsUpdate  {
-#require_once "/usr/home/digitalm/Sites/flames/f2/config/init.php";
-#require MyPDO
+
+/*
+	variables to b replace after messages retrieved:
+		_name_
+		_verify_url_
+		_prior_email_
+		_email_
+*/
+
 
 	private static $lost_reasons = array (
 		'A4' => "There has been no response to several requests to verify email address.",
@@ -269,6 +279,8 @@ class EmsUpdate  {
      Log in, edit profile, and UNCLICK 'Opt out of Weekly Update'.
      ";
     
+    private $em_headers = "From: admin@amdflames.org\r\nErrors-to:postmaster@amdflames.org\r\n";
+    
     private $pdo;
     
 ########################################################################
@@ -280,177 +292,119 @@ class EmsUpdate  {
 	}
 	
 	
-public function update_email_status($uid,$mstatus,$mode='Real'){
-	// mode = Real | Silent | or Test
-    // update silently if mode = silent
-    // do not update db if mode = Test
-    #echo "Updating status for id $uid, status $mstatus\n";
-    	if (empty($uid)){throw new Exception ("No id for update_emial_status");}
-    	if (empty($mstatus)){throw new Exception ("No ems for update_emial_status");}
+	public function update_email_status($uid,$mstatus,$mode='')
+	{
+		// mode = null (Real) | Silent | or Test
+		 // update silently if mode = silent
+		 // do not update db if mode = Test
+		 #echo "Updating status for id $uid, status $mstatus\n";
+			if (empty($uid)){throw new Exception ("No id for update_emial_status");}
+			if (empty($mstatus)){throw new Exception ("No ems for update_emial_status");}
 
-		// get the existing user data
-		$sql = "SELECT username,email_status,user_email,prior_email,profile_updated from `members_f2` 
-			WHERE user_id = '$uid'";
-		if (! $row = $this->pdo->query($sql)->fetch()){
-			throw new Exception ("No such user: uid $uid");
-		}
+			// get the existing user data
+			$sql = "SELECT 
+				username,email_status,user_email,prior_email,profile_updated,
+				last_login, email_last_validated, profile_validated, no_bulk
+				from `members_f2` 
+				WHERE user_id = '$uid'";
+			if (! $row = $this->pdo->query($sql)->fetch()){
+				throw new Exception ("No such user: uid $uid");
+			}
 		
-echo "${row['username']} profile upate ${row['profile_updated']} <br>";
+	echo "${row['username']} profile upate ${row['profile_updated']} <br>";
 exit;
-    if (substr($mstatus,0,1) != 'L'){ #not lost
-        $msg =  get_user_text($mstatus,$row);
-        if(!$msg){echo "Error getting user message";exit;}
-        #echo "Got user text for $mstatus. ";
-        $em_subj = $msg['subj'];
-        $em_msg = $msg['msg'];
-        $em_addr = $row['user_email'];
-        if (!empty($em_subj)){
-            if ($mode == 'Real'){
-                send_user($em_addr,$em_subj,$em_msg);
-            }
 
-         }
+		if ($mode !== 'Test'){
+			$this->update_db($uid,$mstatus);
+		}
+	
+		 if (substr($mstatus,0,1) != 'L'){ #not lost
+			$this->email_user($mstatus, $row);
+		 }
+	 	
+
+		if ($mode !== 'Silent'){
+			return "Your email has been verified";
+		}
+		return "";
+
+    }
+    private function define_subs($row)
+    	{
+    		$login = $row['upw'] . $row['user_id'];
+    		return array(
+				'_name_' => $row['username'],
+				'_email_' => $row['user_email'],
+				'_verify_url_' => SITEURL . "/scripts/verify_email.php?s=$login",
+				'_login_url_' => SITEURL . "/?s=$login",
+				'_prior_emai_' => $row['prior_email'],
+			);
+	}
+    private function email_user ($mstatus, $row)
+     {
+			// row has return from db fetch
+			// set user vars
+			
+			$name = $row['username'];
+			$email = $row['user_email'];
+
+			
+			$profile_text =';';
+
+
+			if (! $msg =  $self::user_messages[$mstatus] ){
+				echo "Error getting user message for status $mstatus";exit;
+			}
+ 
+			$em_subj = $msg['subj'];
+			$message = $msg['msg'];
+			
+			// add extra texts
+			if ($row['no_bulk']){
+				$message .= self::$bulk_warn;
+			}
+			
+			$message .= self::$closing;
+
+			$substitutions = $this->define_subs($row);
+			
+			$message = 
+				str_replace(keys($substitutions),values($substitutions),$message);
+			
+			$headers = $this->em_headers;
+			
+			$admin_list = ['A4'];
+			if (in_array($mstatus,$admin_list)){
+				$headers .= "Cc: admin@amdflames.org\r\n";
+			}
+			mail ('admin@amdflames.org',$em_subj,$message,$headers);
+			#mail ($email,$em_subj,$message,$headers);
+	
      }
-
-    if (in_array($mstatus, array_keys(self::$lost_reasons))) {
-        $msg =  get_admin_text($mstatus,$row);
-        $em_subj = $msg['subj'];
-        $em_msg = $msg['msg'];
-        $lost_reason = self::$lost_reasons[$mstatus];
-        
-        if (!empty($em_subj)){
-            send_admin($em_subj,$em_msg,$row['user_email']);
+     
+	private function updatedb($uid,$ems) 
+	{
+		//update the email status in the db.
+         // also sets user status if ems = LD
+        $sql = "UPDATE `members_f2`
+            SET email_status = '$ems' ";
+         if ($ems == 'LD'){
+         	$sql .= ", status = 'D' ";
          }
-    }
+         if ($ems == 'Y'){
+         	$sql .= ", email_validated = NOW() ";
+         }
+         $sql .= " WHERE user_id = '$uid';";
+        
+        $result = $this->pdo->query($sql);
+        
+      }
 
-        $sqla = array();
-        #update the email status in the db.
-            // also sets user status if second char on status
-        $sqla[] = "email_status = '$mstatus'";
-        if (!empty($ustatus)){ #second char
-            $sqla[] = "status = '$ustatus' ";
-        }
-        if ($mstatus == 'Y'){$sqla[] = "email_last_validated = NOW()";}
-
-        if (!empty($sqla)){
-            $sqlj = implode(',',$sqla);
-            $sql = "UPDATE `members_f2`
-            SET $sqlj
-            WHERE id = '$id';";
-            if ($mode=='Real'){
-             $result = mysqli_query($GLOBALS['DB_link'],$sql);
-            }
-        }
-
-	return $em_subj;
-}
-
-
-
-function get_user_text($code,$row){
-	#echo "starting get_user_text id $id, code $code. <br>";
-	/* returns array of subj,msg for this user for this code.
-	    returns empty array if no user message.
-	*/
-
-	$null_msg =  array(
-    'subj' => '',
-    'msg' => ''
-    );
-
-
-
-	#preset these variables
-
-	$login = get_login_from_row($row);
-	$verify_url = SITEURL . "/scripts/verify_email.php?s=$login";
-	$login_url = get_login_from_row($row,'link');
-	$name = $row['username'];
-
-
-	$profile_text = get_profile_message($row,'text');
-#echo "<br>retreiving profile message: $profile_text<br><br>";
-
-$subscriber = $row['no_bulk']?'No':'Yes';
-$email = $row['user_email'];
-
-if ($row['no_bulk']){$bulk_warn =	"
-	The FLAMEsite sends out an email whenever a new newsletter is
-    published, typically once a week.  YOU ARE NOT CURRENTLY RECEIVING
-    THIS.  If you'd like to keep informed about AMD alumni, go to your
-    profile using the link below, and UNcheck the box 'No Email Updates'.
-	";
-}
-else {$bulk_warn='';}
-
-$closing =  "
-	If you've already verified your email, or you think this message
-	is in error, please email the admin by replying to this email, so
-	I can fix the problem. This email was sent by a automated program
-	but your reply will be read by a human, namely me.
-
-	Also, if you want to change your email, just log into the site
-	and change it in your profile.
-
---
-	Regards,
-	AMD FLAME site administrator
-	admin@amdflames.org
-
-";
-
-
-############################################
-
-
-
-
-
-
-    #echo "<br>";
-    if (in_array($code, array_keys($user_messages))){
-        return $user_messages[$code];
-    }
-    else {
-    #echo "No user message";
-        send_admin('Unrecognized email code $code',"An unrecognized code $code was sent to get_user_text.");
-         return false;
-    }
-}
-
-function get_admin_text($code,$row){
-    // will only be lost status codes here
-$null_msg =  array(
-    'subj' => '',
-    'msg' => ''
-    );
-
-    
-    if (! in_array($code,array_keys($self::lost_reasons))){
-        return $null_msg;
-    }
-    #otherwise...
-
-	$login = get_login_from_row($row);
-	$verify_url = "${GLOBALS['siteurl']}/scripts/verify_email.php?s=$login";
-	$login_url = get_login_from_row($row,'link');
-	$name = $row['username'];
-	$profile_url = get_profile_message($row,'text');
-    $login_link = "https://amdflames.org?s=$login";
-
-$subscriber = $row['no_bulk']?
-    "No"
-    :
-    'Yes';
-
-
-$please_subscribe =  $row['no_bulk']?
- "   Please consider subscribing to the short weekly email update.
-     Log in, edit profile, and UNCLICK 'Opt out of Weekly Update'.\n"
-    :
-    '';
-
-$user_dataset = "
+	private function build_summary($row)
+	{
+		$subscriber = ($row['no_bulk'])?'no':'yes';
+		
+		return "
 User: ${row['username']}
 ---------------------
    Email: ${row['user_email']} (Previously: ${row['prior_email']})
@@ -465,33 +419,8 @@ Activity
 -----------------------
 ";
 
-$last = '';
-if (substr($code,0,1)=='L'){$last = "FINAL ATTEMPT";}
-
-$admin_message =	array(
-	'subj' => "Lost AMD Alumni ${row['username']} ($code)",
-	'msg' => "
-
-
-
- Click to verify your email:
-    _verify_url_
-
------------------------------------------------------
-	Alert to FLAMES administrator :
-
-    Email to FLAMES user ${row['username']} is apparently not getting through.
-	${lost_reasons[$code]}.  The user has been set to Lost Status $code.
-
-	Please attempt to manually reconnect with this user.
-
-	$user_dataset
-	"
-	);
-
-
-#same messsage for all L codes
- return $admin_message;
- }
+	}
+	
+	
 
 }
