@@ -28,7 +28,7 @@ $month = array(
 
 
 #$count_file = SITEPATH . "/views_data/reads.txt";
-$out_file = SITEPATH . "/graphics/views_2016.png";
+$out_file = "$proj/shared/graphics/views_2016.png";
 
 #update the access counts
 #get the last 52 entries, then reorder Ascending.
@@ -46,11 +46,6 @@ foreach($result as $row){
 }
 
 
-// file_put_contents($count_file,$dString);
-// 
-// 
-// #$file = fopen($count_file, 'r');
-// #while (($dline = fgetcsv($file,0,"\t")) !== FALSE) {
 foreach ($dArray as $dline){
   //$line is an array of the elements
     if ($dline[0]=='999999'){$dline[0]='Preview';}
