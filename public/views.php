@@ -1,7 +1,7 @@
 <?php
 require_once 'init.php';
 
-use \\davefx\phplot;
+use 'davefx\phplot';
 
 ?>
 <html>
