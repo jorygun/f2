@@ -85,6 +85,7 @@ if ($platform == 'pair'){
 	require_once  "f2_connect.php";
 	$DB_link = Connect_DB();
 	$GLOBALS['DB_link'] = $DB_link;
+	  require_once "f2_security.php";
 	
 	
 } else {
@@ -256,7 +257,7 @@ $G_departments = array (
 
 	
 define ('INIT',1);
-
+#################################################
 function get_platform(){
 	switch ($_SERVER['SERVER_ADDR']) {
 		case '216.146.219.142':
