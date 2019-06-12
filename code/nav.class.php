@@ -218,7 +218,7 @@ EOT;
 		<li><a href='/spec/Upward.php' target='upward'>Flames who later became CEOs</a>
 		<li><a href='/spec/hbwjs80.php' target='upward'>Members on Jerry Sanders' 80th Birthday</a>
 		<li><a href='/spec/anixter.php' target='upward'>Tributes to Ben Anixter</a>
-		<li><a href='/spec/McKean.php' target='upward'>Tribute to John McKean</a>
+		<li><a href='/spec/McKean.html' target='upward'>Tribute to John McKean</a>
 		 <li><a href='/special.php' target='special'>Other Special Pages</a>
 		 ");
 	$t .=  self::closeLine(2, $thisMenu);
