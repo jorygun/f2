@@ -37,10 +37,8 @@ $result = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 $dString = '';
 foreach($result as $row){
-	print_r ($row);
-	
-    $dString .= sprintf("%d\t%d\n",$row['issue'],$row['count']); 
-    $dArray[]=array($row['issue'],$row['count']);
+    $dString .= sprintf("%d\t%d\n",$row['issue'],$row['read_cnt']); 
+    $dArray[]=array($row['issue'],$row['read_cnt']);
 }
 print_r ($dArray);
 exit;
