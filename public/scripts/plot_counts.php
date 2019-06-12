@@ -5,7 +5,7 @@
 $me = __DIR__;
 $proj = dirname(dirname(dirname($me))); #flames
 echo "$proj";
-exit;
+
 
 require $proj . '/vendor/autoload.php';
 
