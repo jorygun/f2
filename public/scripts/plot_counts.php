@@ -7,7 +7,7 @@
 // echo "$proj";
 
 
-require dirname(dirname(__DIR__))) . '/composer-autoload';
+require dirname(dirname(__DIR__)) . '/composer-autoload';
 
 $proj = dirname(dirname(dirname(__DIR__))); #flames
 #use davefx\phplot;
