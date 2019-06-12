@@ -32,10 +32,12 @@ $sql = "SELECT * FROM (
     SELECT `issue`,`read_cnt` FROM `read_table` ORDER BY issue DESC LIMIT 60
     ) as t
     ORDER by t.issue;";
- $result = mysqli_query($GLOBALS['DB_link'],$sql);
-if (!$result){echo "Generating read file failed.";}
+$pdo = MyPDO::instance();
+
+ $result = $pdo->query($sql);
+
 $dString = '';
-while($row = mysqli_fetch_array($result)){
+foreach($result as $row){
     list($issue,$count) = $row;
    # echo "$issue -> $count<br>";
    #was saving as a file; now just continuing on.
