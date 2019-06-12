@@ -37,11 +37,11 @@ if (session_status() == PHP_SESSION_NONE) {
 	$con_msg = "boot.php:: \nplatform: $platform;\nsite_dir: $site_dir; \nrepo_name: $repo_name;\n\n";
 	
 if ($repo_name == 'live'){
-	ini_set(display_errors,0);
+	ini_set('display_errors',0);
 }
 else {
 	echo $con_msg;
-	ini_set(display_errors,1);
+	ini_set('display_errors',1);
 	
 }
 	
