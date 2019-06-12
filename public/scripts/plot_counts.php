@@ -32,7 +32,6 @@ $sql = "SELECT * FROM (
     ) as t
     ORDER by t.issue;";
 $pdo = MyPDO::instance();
-
 $result = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 $dString = '';
@@ -40,8 +39,7 @@ foreach($result as $row){
     $dString .= sprintf("%d\t%d\n",$row['issue'],$row['read_cnt']); 
     $dArray[]=array($row['issue'],$row['read_cnt']);
 }
-print_r ($dArray);
-exit;
+
 
 // file_put_contents($count_file,$dString);
 // 
