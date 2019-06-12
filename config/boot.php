@@ -16,8 +16,8 @@
 
 **/
 
-// ini_set('error_reporting', E_ALL);
-// ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', 1);
 
 // set up for longer session lifes
 # ini_set('session.cookie_lifetime', 86400);
