@@ -3,7 +3,7 @@
 	# and produces a graphic in the same directory.
 
 $me = __DIR__;
-$proj = dirname(dirname(dirname($me)));
+$proj = dirname(dirname($me)));
 echo "$proj";
 exit;
 
