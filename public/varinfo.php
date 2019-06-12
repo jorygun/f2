@@ -95,6 +95,8 @@ recho ($_ENV,'$_ENV');
 recho ($server_changes,'Changed value in $_SERVER');
 recho ($server_adds,'Added to $_SERVER');
 recho ($_SESSION,'$_SESSION');
+recho ($GLOBALS,'$GLOBALS');
+
 
 
 echo "<hr>";

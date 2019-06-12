@@ -3,7 +3,7 @@
 	# and produces a graphic in the same directory.
 
 
-require getenv('HOME') . '/Sites/flames/beta' . 'vendor/autoload.php';
+require getenv("HOME"). '/Sites/flames/beta' . 'vendor/autoload.php';
 
 use davefx\phplot;
 	
