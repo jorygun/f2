@@ -3,7 +3,7 @@
 	# and produces a graphic in the same directory.
 
 
-require '../../composer_autoload';
+require '../../composer-autoload';
 use davefx\phplot;
 	
 $month = array(
