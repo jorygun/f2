@@ -1,4 +1,21 @@
-<?
+<?php
+/**
+ Every script run from web must start by running this script
+	(scripts run from cron must take care of their own stuff)
+	
+	boot sets 
+		session lifetimes
+		include_path
+		autoload: vendor +
+			PSR4:
+			files: Definitions
+			
+		adds std constnats/utilities (mx)
+		requires Definitions
+
+
+**/
+
 // ini_set('error_reporting', E_ALL);
 // ini_set('display_errors', 1);
 
@@ -15,13 +32,12 @@ if (session_status() == PHP_SESSION_NONE) {
 
    $site_dir = dirname(__DIR__); #---/flames/<repo>/ - where this repo is      *
    $project_dir = dirname($site_dir); #---/flames - where shared stuff is          *
-   $repo_name = basename($site_dir); #-- repo name                              *
+   $repo_name = basename($site_dir); #-- repo name    
+   $platform = get_platform();
+	
 
 
-echo nl2br("boot: 
-site_dir $site_dir. 
-repo_name $repo_name
-");
+echo "boot.php: \nplatform: $platform\nsite_dir: $site_dir \nrepo_name: $repo_name\n\n";
 
 #initial include path set in .user.ini to include this folder.
 #add other paths here so can just call <repo>/config/boot.php for shell scripts.
@@ -41,36 +57,55 @@ ini_set('include_path',
 
 #add primary 
 
-
 require_once $site_dir . '/composer-autoload';
 
+#these are all namespaced
+#ns digitalmx\
 #require_once "mx-constants.php";
 #require_once "mx-utilities.php";
 
+#ns digitalmx\flames
+require_once 'Definitions.php';
 
+
+require_once 'f2_constants.php'; 
+require_once SITEPATH. "/scripts/utilities.php";
+
+#build db
+require_once 'MxPDO.php'; 
+$db_ini = $project_dir . '/config/db.ini'; # all the connection params 
+
+#old pdo
+
+if ($platform == 'pair'){
+	require_once 'setGlobals.php';
+	require_once 'MyPDO.class.php'; #uses envir constants for config
+	$pdo = MyPDO::instance();
+	$GV = $GLOBALS = setGlobals();
+	$DB_link = Connect_DB();
+	$GLOBALS['DB_link'] = $DB_link;
+	require_once  "f2_connect.php";
+	
+} else {
+	$pdo = new MxPDO('production',$platform,$db_ini);
+
+}
+
+require_once 'nav.class.php';
 
 #create container
 
-// use Pimple\Container;
-// $container = new Container();
+use Pimple\Container;
+$container = new Container();
 
+$container['pdo_dev'] = function ($c) use ($db_ini) {
+	return new MxPDO('dev','ayebook',$db_ini);
+};
+$container['pdo_prod'] = function ($c) use ($db_ini) {
+	return new MxPDO('production','ayebook',$db_ini);
+};
 
-require_once  "f2_connect.php";
-require_once 'nav.class.php';
-
-require_once 'setGlobals.php';
-require_once 'f2_constants.php'; 
-require_once 'Definitions.php';
-
-#build db
-$dbs = parse_ini_file('db.ini'); #gets all the connection params in an array
-
-require_once 'MyPDO.class.php';
-$pdo = MyPDO::instance();
-
-
-
-define ('INIT',1);
+###### everything below is suspect ######
 
 // set more global values
 		// date object
@@ -218,19 +253,19 @@ $G_departments = array (
 
 
 
+	
+define ('INIT',1);
 
-
-
-#set global value aarray:
-	$GV = $GLOBALS = setGlobals();
-
-		// sets up the old mysqli db connect
-
-		$DB_link = Connect_DB();
-		$GLOBALS['DB_link'] = $DB_link;
-
-		require_once SITEPATH. "/scripts/utilities.php";
-	#echo "utils loaded. ",im_here();
-
-		require_once "f2_security.php";
-
+function get_platform(){
+	switch ($_SERVER['SERVER_ADDR']) {
+		case '216.146.219.142':
+			$platform = 'pair';
+			break;
+		case '127.0.0.1':
+			$platform = 'ayebook';
+			break;
+		default:
+			$platform = 'ayebook';
+	}
+	return $platform;
+}

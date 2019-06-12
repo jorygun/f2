@@ -7,11 +7,14 @@
 
 	requires
 		PDO
-		an init??
+	
 	
 	Everything is done inside the function to keep namespace
 	separate
 */
+
+require_once $HOME . '/Sites/flames/libmx/phpmx' . '/MxPDO.php';
+
 class EmsUpdate  {
 
 /*
@@ -287,8 +290,13 @@ class EmsUpdate  {
 
 	public function __construct ()
 	{
-		$this->pdo = MyPDO::instance();
-	
+		$platform = (substr($_SERVER['DOCUMENT_ROOT'],0,10) == '/usr/home/')?
+			'pair':'ayebook';
+		$db_ini = $HOME . '/Sites/flames/config/db.ini';
+		$type = 'production';
+		
+		$this->pdo = new MxPDO($type,$platform,$db_ini);
+			
 	}
 	
 	
@@ -391,7 +399,7 @@ class EmsUpdate  {
 				.	$this->build_summary($row);
 				
 				$header = "From: $name <$email>\r\n";
-				$subject = "Please follow up with $name";
+				$subject = "Please follow up with $name ($mstatus)";
 				
 				mail ('admin@amdflames.org',$subject,$message,$headers);
 			}
