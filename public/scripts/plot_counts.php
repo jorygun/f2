@@ -6,7 +6,6 @@
 
 use davefx\phplot;
 	
-
 $month = array(
 	'01'=>'Jan',
 	'02'=>'Feb',
