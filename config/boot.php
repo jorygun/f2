@@ -82,9 +82,10 @@ if ($platform == 'pair'){
 	require_once 'MyPDO.class.php'; #uses envir constants for config
 	$pdo = MyPDO::instance();
 	$GV = $GLOBALS = setGlobals();
+	require_once  "f2_connect.php";
 	$DB_link = Connect_DB();
 	$GLOBALS['DB_link'] = $DB_link;
-	require_once  "f2_connect.php";
+	
 	
 } else {
 	$pdo = new MxPDO('production',$platform,$db_ini);
