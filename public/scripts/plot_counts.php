@@ -3,15 +3,16 @@
 	# and produces a graphic in the same directory.
 
 // $me = __DIR__;
-// $proj = dirname(dirname(dirname($me))); #flames
+
 // echo "$proj";
 
 
 require dirname(dirname(dirname(__DIR__))) . '/vendor/autoload.php';
 
-use davefx\phplot;
+$proj = dirname(dirname(dirname(__DIR__))); #flames
+#use davefx\phplot;
 
-
+// $proj = dirname(dirname(dirname($me))); #flames
 
 $month = array(
 	'01'=>'Jan',
