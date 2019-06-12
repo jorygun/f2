@@ -2,15 +2,17 @@
 	#Script reads the count file generated in /output
 	# and produces a graphic in the same directory.
 
-$me = __DIR__;
-$proj = dirname(dirname(dirname($me))); #flames
-echo "$proj";
+// $me = __DIR__;
+// $proj = dirname(dirname(dirname($me))); #flames
+// echo "$proj";
 
 
-require $proj . '/vendor/autoload.php';
+require dirname(dirname(dirname($__DIR__))) . '/vendor/autoload.php';
 
 use davefx\phplot;
-	
+
+
+
 $month = array(
 	'01'=>'Jan',
 	'02'=>'Feb',
