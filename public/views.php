@@ -1,7 +1,7 @@
 <?php
 require_once 'init.php';
 
-include "scripts/plot_counts.php";
+use \\davefx\phplot;
 
 ?>
 <html>

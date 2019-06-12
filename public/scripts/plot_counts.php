@@ -4,7 +4,8 @@
 
 
 
-	require "phplot-6.2.0/phplot.php";
+use davefx\phplot;
+	
 
 $month = array(
 	'01'=>'Jan',
