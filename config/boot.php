@@ -99,10 +99,10 @@ require_once 'nav.class.php';
 use Pimple\Container;
 $container = new Container();
 
-$container['pdo_dev'] = function ($c) use ($db_ini) {
+$container['pdo_dev'] = function ($c) use ($db_ini,$platform) {
 	return new MxPDO('dev',$platform,$db_ini);
 };
-$container['pdo_prod'] = function ($c) use ($db_ini) {
+$container['pdo_prod'] = function ($c) use ($db_ini,$platform) {
 	return new MxPDO('production',$platform,$db_ini);
 };
 
