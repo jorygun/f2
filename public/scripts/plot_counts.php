@@ -4,7 +4,7 @@
 
 
 
-user \davefx\phplot;
+use davefx\phplot;
 	
 $month = array(
 	'01'=>'Jan',
