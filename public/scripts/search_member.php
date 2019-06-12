@@ -90,16 +90,6 @@ function radio_choices($field,$array){
 <html lang="en">
 <head>
 	<meta charset="iso-8859-1" />
-
-	 <meta name="viewport" content="width=device-width, initial-scale=1">
-	 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	 <link rel="apple-touch-icon" href="apple-touch-icon.png">
-			<!-- Place favicon.ico in the root directory -->
-	 <link rel="stylesheet" href="../css/normalize.css">
-	 <link rel="stylesheet" href="../css/main.css">
-	 <link rel="stylesheet" href="../css/flames2.css">
-
-	<script src="../js/vendor/modernizr-2.8.3.min.js"></script>
 	<script src="../js/f2js.js"></script>
 
 	<style type="text/css">
@@ -166,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		    $rc = $st->rowCount();
             if ($rc > 0){
                 $found += $rc;
-			    $output .= show_found('No name: searching attributes only',$st);
+			    #$output .= show_found('No name: searching attributes only',$st);
 			}
 		}
 	}
@@ -183,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			if ($st2 = $pdo->query ($sql2)) {
 		        $rc = $st2->rowCount();
 		        $found += $rc;
-			    $output .= show_found("Searching on user name exactly matches $whole_name",$st2);
+			    #$output .= show_found("Searching on user name exactly matches $whole_name",$st2);
 			    if ($rc >49){
 		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
                  }
@@ -196,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($st3 = $pdo->query ($sql3)) {
 		        $rc = $st3->rowCount();
 		        $found += $rc;
-			    $output .= show_found("Searching on user name ends with $last_name ",$st3);
+			    #$output .= show_found("Searching on user name ends with $last_name ",$st3);
 			    if ($rc >49){
 		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
                  }
@@ -213,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($st4 = $pdo->query ($sql4)) {
 		        $rc = $st4->rowCount();
 		        $found += $rc;
-			    $output .= show_found("Searching on $last_name anywhere in user name ",$st4);
+			   # $output .= show_found("Searching on $last_name anywhere in user name ",$st4);
 			    if ($rc >49){
 		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
                  }
