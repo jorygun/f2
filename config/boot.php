@@ -34,10 +34,17 @@ if (session_status() == PHP_SESSION_NONE) {
    $project_dir = dirname($site_dir); #---/flames - where shared stuff is          *
    $repo_name = basename($site_dir); #-- repo name    
    $platform = get_platform();
+	$con_msg = "boot.php:: \nplatform: $platform;\nsite_dir: $site_dir; \nrepo_name: $repo_name;\n\n";
 	
-
-
-echo "boot.php:: \nplatform: $platform;\nsite_dir: $site_dir; \nrepo_name: $repo_name;\n\n";
+if ($repo_name == 'live'){
+	ini_set(display_errors,0);
+}
+else {
+	echo $con_msg;
+	ini_set(display_errors,1);
+	
+}
+	
 
 #initial include path set in .user.ini to include this folder.
 #add other paths here so can just call <repo>/config/boot.php for shell scripts.
