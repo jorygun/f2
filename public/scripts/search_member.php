@@ -31,9 +31,9 @@ function show_found ($title,$stobject){
 	 global $G_member_desc;
 	 $jurl = "window.open(this.href,'profile','height=700,width=1200,resizeable,scrollbars');return false";
     $fcount = $stobject->rowCount();
-
-	$o = "<tr><td colspan='5'><i>$title</i> ($fcount found)</td></tr>";
-
+	$o='';
+	#$o = "<tr><td colspan='5'><i>$title</i> ($fcount found)</td></tr>";
+	
 	foreach ($stobject as $row){
         $recid = $row[id];
         $username = $row['username'];
@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		    $rc = $st->rowCount();
             if ($rc > 0){
                 $found += $rc;
-			    #$output .= show_found('No name: searching attributes only',$st);
+			    $output .= show_found('No name: searching attributes only',$st);
 			}
 		}
 	}
@@ -173,7 +173,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			if ($st2 = $pdo->query ($sql2)) {
 		        $rc = $st2->rowCount();
 		        $found += $rc;
-			    #$output .= show_found("Searching on user name exactly matches $whole_name",$st2);
+			    $output .= show_found("Searching on user name exactly matches $whole_name",$st2);
 			    if ($rc >49){
 		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
                  }
@@ -186,7 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($st3 = $pdo->query ($sql3)) {
 		        $rc = $st3->rowCount();
 		        $found += $rc;
-			    #$output .= show_found("Searching on user name ends with $last_name ",$st3);
+			    $output .= show_found("Searching on user name ends with $last_name ",$st3);
 			    if ($rc >49){
 		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
                  }
@@ -203,7 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($st4 = $pdo->query ($sql4)) {
 		        $rc = $st4->rowCount();
 		        $found += $rc;
-			   # $output .= show_found("Searching on $last_name anywhere in user name ",$st4);
+			    $output .= show_found("Searching on $last_name anywhere in user name ",$st4);
 			    if ($rc >49){
 		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
                  }
