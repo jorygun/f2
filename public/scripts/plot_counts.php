@@ -40,6 +40,8 @@ foreach($result as $row){
     $dString .= sprintf("%d\t%d\n",$row['issue'],$row['count']); 
     $dArray[]=array($row['issue'],$row['count']);
 }
+print_r ($dArray);
+exit;
 
 // file_put_contents($count_file,$dString);
 // 
