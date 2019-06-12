@@ -8,7 +8,7 @@ ini_set('error_reporting', E_ALL);
 require_once '../config/boot.php';
 
 
-$thispdo = $container['pdo_prod'];
+$thispdo = $container['pdo_dev'];
 
 $sql = 'SELECT count(*) from `members_f2` ';
 $val = $thispdo->query($sql)->fetchColumn();
