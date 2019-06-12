@@ -34,13 +34,10 @@ $sql = "SELECT * FROM (
     ORDER by t.issue;";
 $pdo = MyPDO::instance();
 
- $result = $pdo->query($sql);
+ $result = $pdo->query($sql)->fetch();
 
 $dString = '';
 foreach($result as $row){
-    list($issue,$count) = $row;
-   # echo "$issue -> $count<br>";
-   #was saving as a file; now just continuing on.
     $dString .= sprintf("%d\t%d\n",$row['issue'],$row['count']); 
     $dArray[]=array($row['issue'],$row['count']);
 }
