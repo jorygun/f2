@@ -1,5 +1,5 @@
 <?php
-
+namespace digitalmx\flames;
 
 /* This file contains tables of names, lists, etc
 	used throughout the site and grouped into
