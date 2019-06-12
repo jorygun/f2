@@ -41,8 +41,8 @@ foreach($result as $row){
     list($issue,$count) = $row;
    # echo "$issue -> $count<br>";
    #was saving as a file; now just continuing on.
-    $dString .= sprintf("%d\t%d\n",$issue,$count);
-    $dArray[]=array($issue,$count);
+    $dString .= sprintf("%d\t%d\n",$row['issue'],$row['count']); 
+    $dArray[]=array($row['issue'],$row['count']);
 }
 
 // file_put_contents($count_file,$dString);
