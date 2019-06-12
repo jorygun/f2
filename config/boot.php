@@ -37,7 +37,7 @@ if (session_status() == PHP_SESSION_NONE) {
 	
 
 
-echo "boot.php: \nplatform: $platform\nsite_dir: $site_dir \nrepo_name: $repo_name\n\n";
+echo "boot.php:: \nplatform: $platform;\nsite_dir: $site_dir; \nrepo_name: $repo_name;\n\n";
 
 #initial include path set in .user.ini to include this folder.
 #add other paths here so can just call <repo>/config/boot.php for shell scripts.
@@ -100,10 +100,10 @@ use Pimple\Container;
 $container = new Container();
 
 $container['pdo_dev'] = function ($c) use ($db_ini) {
-	return new MxPDO('dev','ayebook',$db_ini);
+	return new MxPDO('dev',$platform,$db_ini);
 };
 $container['pdo_prod'] = function ($c) use ($db_ini) {
-	return new MxPDO('production','ayebook',$db_ini);
+	return new MxPDO('production',$platform,$db_ini);
 };
 
 ###### everything below is suspect ######
