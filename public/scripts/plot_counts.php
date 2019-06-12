@@ -33,7 +33,7 @@ $sql = "SELECT * FROM (
     ORDER by t.issue;";
 $pdo = MyPDO::instance();
 
- $result = $pdo->query($sql)->fetch();
+$result = $pdo->query($sql)->fetchAll();
 
 $dString = '';
 foreach($result as $row){
