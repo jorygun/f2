@@ -1,7 +1,7 @@
 <?php
 require_once 'init.php';
 
-use davefx\phplot;
+include 'scripts/plot_counts.php'; #to update chart
 
 ?>
 <html>
@@ -21,7 +21,7 @@ div.head {text-align:center;}
 <p>(started Jan 18, 2016)</p>
 </div>
 
-<img src="/views_data/views_2016.png">
+<img src="/graphics/views_2016.png">
 
 </body></html>
 
