@@ -52,8 +52,9 @@
     
 
 	$publish_file = $news_latest . "/publish.txt";
-   if ( $edition_name = get_publish_data('title',$publish_file) ){
-    $lastest_pointer = trim(file_get_contents(SITEPATH . "/news/latest_pointer.txt") );
+	if (file_exists($publish_file)){
+   	$edition_name = get_publish_data('title',$publish_file);
+   	 $lastest_pointer = trim(file_get_contents(SITEPATH . "/news/latest_pointer.txt") );
     }
     else {
     	echo "No publish file";
@@ -578,11 +579,11 @@ $sql = "SELECT $field_list FROM `members_f2` ";
 }
 
 function get_publish_data($var,$publish_file){
-	include $publish_file;
-    if (isset($$var)){return $$var;}
-    else {
-        die( "non-exitent variable $var requested from publish file");
-    }
+	
+    if (isset($$var)){
+    	return $$var;
+    } 
+   return '';
 }
 
 function ml_script($text){
