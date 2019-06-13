@@ -1,11 +1,14 @@
 <?php
 //BEGIN START
+ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
 
 	require_once 'init.php';
     if (f2_security_below(7)){exit;}
 	$nav = new navBar(1);
 	$navbar = $nav -> build_menu();
 	$pdo = MyPDO::instance();
+	
 	
 	require 'BulkMail.php';
 	$bulkmail = new BulkMail();
@@ -431,7 +434,7 @@ $message
 EOT;
 
 file_put_contents("$bmail_msg",$msg_file) or die ("Can't write message to $bmail_msg ");
-echo "Message written to $bmail_msg<br>\n";
+echo "Message saved .\n";
 
 
 #now build mail list
@@ -477,7 +480,9 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
   } // End of Loop
 
     fclose ($ml);
-	echo "Emails will be sent every $interval seconds.  This will take " . intval($row_count * $interval/60) . " minutes to complete.<br>\n";
+    echo "Mail list saved." ; 
+    
+	echo "Job $job: Emails will be sent every $interval seconds.  This will take " . intval($row_count * $interval/60) . " minutes to complete.<br>\n";
 
 
 
