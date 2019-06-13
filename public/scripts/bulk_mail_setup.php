@@ -471,7 +471,7 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
             $age_flag,
             $profile_validated
         ];
-        print_r ($mlarray); 
+       echo_r ($mlarray,'ML array'); 
 /*
 Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 */
