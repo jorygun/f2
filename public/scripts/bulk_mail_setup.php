@@ -10,6 +10,10 @@
 	require 'BulkMail.php';
 	$bulkmail = new BulkMail();
 	
+	$project_path = '/usr/home/digitalm/Sites/flames';
+	$bulk_processor = $project_path . "/crons/send_bulk.php";
+	$working = $project_path . "/bulk_jobs/job_" . date("YmdHi");
+
 
 //END START
 	global $G_member_status_set;
@@ -36,16 +40,13 @@
 	$calendar	= $news_latest . "/calendar.txt";
 	$opportunities = $news_latest . "/opportunities.txt";
 	$assets = $news_latest . "/assets.txt";
-	$bulk_processor = HOMEPATH . "/crons/send_bulk.php";
-	
 
-	$bulk_queue = HOME . "Sites/flames/bulk_queue"; #directory.  put jobs in here
+
+	$bulk_queue = $project_path . '/bulk_queue'; #directory.  put jobs in here
 
 	$mypid = time(); #unix time
 	$comments = $news_latest . "/current_comments.txt";
-
-    $working = HOMEPATH . "/bmail/working_$mypid";
-
+   
 
     $bmail_list = "$working/list.txt";
     $bmail_msg = "$working/message.txt";
