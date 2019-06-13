@@ -46,14 +46,14 @@ class BulkMail {
 					continue; #next job
 				}
 				
-				if (! file_exists("$working/list.txt") or
-					! file_exists("$working/message.txt") ){
+				if (! file_exists("$job_dir/list.txt") or
+					! file_exists("$job_dir/message.txt") ){
 						$joblist .= "<li class='error'>$jobid: no list or message files found";
 						continue;
 				}
 				
-				$jcnt = `wc -l "$working/list.txt" | awk '{print $1;}'` ;
-				$jmsg = "$working/message.txt";
+				$jcnt = `wc -l "$job_dir/list.txt" | awk '{print $1;}'` ;
+				$jmsg = "$job_dir/message.txt";
 				$jcancel = '';
 				$jsub = fgets(fopen("$jmsg", 'r')); #first line of message
 				if ($jstat == 'queued' or $jstat == 'running'){
