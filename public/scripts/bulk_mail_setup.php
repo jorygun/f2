@@ -412,21 +412,16 @@ else { #IS POST
 
 
 
-$starttime = $_POST['start'];
-#deal with time zone
-$notz = false;
-if (! preg_match('/ \w\w\w\s*$/',$starttime) ){
-	$no_tz = true;
-}
 
-$dt = new DateTime($starttime); #sets to MDT because user.ini set it.
+$starttimestamp = strtotime($_POST['start']);
+
+$dt = new DateTime(); #sets to MDT because server
+$dt->setTimestamp($starttimestamp);
 echo "start date set to " . $dt->format('M d H:i T') .';' ;
-$dt->setTimeZone(new DateTimeZone('America/Los_Angeles'));
+#$dt->setTimeZone(new DateTimeZone('America/Los_Angeles'));
 
-$schedtime =  $dt->format('M d H:i T');
-echo " scheduled for $schedtime" . BRNL;
+echo " scheduled for ". $dt->format('M d H:i T') . BRNL;
 
-$starttimestamp = (empty($_POST['start']))?time() : $dt->format('U');
 
 
 // Write message file
@@ -487,19 +482,19 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 
 
     if ($_POST['go'] == 'Run Now'){
-        touch ("$bulk_queue/$mypid"); #mtime = now
+        touch ("$bulk_queue/$job"); #mtime = now
 
         echo "Queued for now.  Starting bulk_mail_processor.<br>\n";
        shell_exec ("php " ."$bulk_processor");
        
     }
     elseif ($_POST['go'] == 'Schedule') {
-        touch ("$bulk_queue/$mypid",$starttimestamp);
-        echo "Added $mypid to bulk_queue after " . date('M d, Y H:i T',$starttimestamp). BRNL;;
+        touch ("$bulk_queue/$job",$starttimestamp);
+        echo "Added $job to bulk_queue after " . date('M d, Y H:i T',$starttimestamp). BRNL;;
        
     }
     elseif ($_POST['go'] == 'Setup Only') {
-        echo "Job $mypid created in bmail but not added to queue.";
+        echo "Job $job created in bmail but not added to queue.";
     }
     else {
         echo "Unknown run parameter ${_POST['go']}.";
