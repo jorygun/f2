@@ -414,7 +414,7 @@ function sql_now($format = 'time'){
 // 	else {
 // 		$t = $DT_now -> format('Y-m-d H:i:s');
 // 	}
-	$t = pretty_date($format,'sql','');
+	$t = pretty_date('sql',$format,'');
 	return $t;
 }
 function sql_today(){
