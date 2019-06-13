@@ -44,7 +44,7 @@ echo "Updating $url, $article_id, $my_name<br>";
 	update_link_db($url,$article_id,$my_name);
 
 
-header( "Location: $url");
+echo "<script>location.assign('$url')</script>";
 	exit;
 
 	#######################
