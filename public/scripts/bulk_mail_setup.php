@@ -51,11 +51,15 @@
     $bmail_msg = "$working/message.txt";
     
 
-	$publish_file = $news_latest . "/publish.txt";
-    
+	if ( $publish_file = $news_latest . "/publish.txt"){
     $edition_name = get_publish_data('title',$publish_file);
     $lastest_pointer = trim(file_get_contents(SITEPATH . "/news/latest_pointer.txt") );
-    
+    }
+    else {
+    	echo "No publish file";
+    	$edition_name = 'no name';
+    	$latest_pointer = 'news_';
+    }
   	$interval = 6;
 
 	
