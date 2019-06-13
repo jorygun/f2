@@ -373,22 +373,53 @@ function display_email(&$row){
 	}
 	return $v;
 }
+function pretty_date ($form='sql',$type = 'time',$when='' ){
+	/**
+		@form sql or human
+		@type = date or time
+		@when = text string of date
+		
+		@returns humsn or sql formated date or time, otherwise returns sql date and time
+	**/
+	
+	switch ($form){
+		case 'sql' :
+			$format = ($type == 'date')?
+		'Y-m-d' : 'Y-m-d H:i:s';
+			break;
+		case 'human' :
+			$format = ($type=='date')?
+		'M d, Y' : 'M d, Y H:m P';
+			break;
+		default :
+			throw new Exception ("unknown format $form for pretty_date");
+	}
+	
+	$dt = new DateTime($when) ;
+	
+	if (! $dt ){
+		echo "Cannot set date from $when in pretty_date";
+		return '??';
+	}
+	return $dt->format($format);  
+}
 
 function sql_now($format = 'time'){
-	#returns sql date if format requested, otherwise returns sql date and time
-	global $DT_now;
-
-	if ($format == 'date'){
-		$t = $DT_now -> format('Y-m-d');
-	}
-	else {
-		$t = $DT_now -> format('Y-m-d H:i:s');
-	}
+	// #returns sql date if format requested, otherwise returns sql date and time
+// 	global $DT_now;
+// 
+// 	if ($format == 'date'){
+// 		$t = $DT_now -> format('Y-m-d');
+// 	}
+// 	else {
+// 		$t = $DT_now -> format('Y-m-d H:i:s');
+// 	}
+	$t = pretty_date($format,'sql','');
 	return $t;
 }
 function sql_today(){
 	// returns current date in sql format
-	$t = sql_now('date');
+	$t = pretty_date('sql','date','');
 	return $t;
 }
 
@@ -1380,6 +1411,32 @@ function preecho($text){
 function recho($var,$title=''){
     echo "<h4>$title:</h4>";
     echo "<pre>" .  print_r($var,true) . "</pre>\n";
+}
+
+function days_ago ($date_str) {
+	//takes a date and returns the age from today in days 
+	
+	if (!$date_str){ #blank or NULL??
+		throw new Exception("no value to days_ago function");
+	}
+	$dt = new DateTime();
+	$t=$date_str; #may change
+	if (!is_numeric($date_str)){
+		if (! $t=strtotime($date_str) ){
+			echo "Cannot understand date $date_str";
+			return 0;
+		}
+
+	}#is unix time
+	$dt->setTimeStamp($t);
+	
+	$now = new DateTime();
+	
+	$diff = $dt -> diff($now);
+	$diff_str = $diff->format('%a');
+	
+	
+	return $diff_str;
 }
 
 function get_latest_pub_date($form='sql')
