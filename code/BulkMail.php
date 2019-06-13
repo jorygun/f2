@@ -3,7 +3,8 @@
 
 class BulkMail {
 
-	private $queue = '/usr/home/digitalm/Sites/flames/bulk_jobs';
+	private $queue = '/usr/home/digitalm/Sites/flames/bulk_queue';
+	private $working='/usr/home/digitalm/Sites/flames/bulk_jobs'
 	
 	
 	public function show_bulk_jobs(){
@@ -37,9 +38,9 @@ class BulkMail {
 					$jobid = $job;
 				}
 				
-				$working = HOMEPATH . "/bmail/working_$jobid";
-				if (!is_dir($working)){
-					$joblist .= "<li class='error'>$jobid dir not found in bmail";
+				$job_dir= "$working/$jobid";
+				if (!is_dir($job_dir)){
+					$joblist .= "<li class='error'>$job dir not found in bmail";
 					continue; #next job
 				}
 				

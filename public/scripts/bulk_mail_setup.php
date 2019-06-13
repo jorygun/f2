@@ -338,27 +338,31 @@ else { #IS POST
 	echo  "<HTML><head><title>Bulk Email Plan</title></head>";
 
 	#ge job id and set paths
-	$job = false; $c = 0;
+	$working = $project_path . "/bulk_jobs";
+	$queue = $project_path . "bulk_queue";
+	
 	
 	#set up job as datecode, and make sure it doesn't already exist
+	$job = false; $c = 0;
 	while (! $job){
 		$job = date("YmdHi");
-		$working = $project_path . "/bulk_jobs/$job";
-		if (file_exists($working)){
+		$job_dir = $project_path . "/bulk_jobs/$job";
+		if (file_exists($job_dir)){
 			$job = false;
 			sleep (2);
 			++$c;
 			if ($c>10){
-				throw new Exception ("exceeded 10 attempts to create $working");
+				throw new Exception ("exceeded 10 attempts to create $job_dir");
 			}
 		}
 		else {
-			mkdir ("$working",0777,1);
+			mkdir ("$job_dir",0777,1);
 		}
 
 	}
-	 $bmail_list = "$working/list.txt";
-    $bmail_msg = "$working/message.txt";
+	 $bmail_list = "$job_dir/list.txt";
+    $bmail_msg = "$job_dir/message.txt";
+   
     
    
 
@@ -487,19 +491,19 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 
 
     if ($_POST['go'] == 'Run Now'){
-        touch ("$bulk_queue/$job"); #mtime = now
+        touch ("$queue/$job"); #mtime = now
 
         echo "Queued for now.  Starting bulk_mail_processor.<br>\n";
        shell_exec ("php " ."$bulk_processor");
        
     }
     elseif ($_POST['go'] == 'Schedule') {
-        touch ("$bulk_queue/$job",$starttimestamp);
+        touch ("$queue/$job",$starttimestamp);
         echo "Added $job to bulk_queue after " . date('M d, Y H:i T',$starttimestamp). BRNL;;
        
     }
     elseif ($_POST['go'] == 'Setup Only') {
-        echo "Job $job created in bmail but not added to queue.";
+        echo "Job $job files created  but not added to queue.";
     }
     else {
         echo "Unknown run parameter ${_POST['go']}.";
