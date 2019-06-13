@@ -12,8 +12,8 @@
 	
 	$project_path = '/usr/home/digitalm/Sites/flames';
 	$bulk_processor = $project_path . "/crons/send_bulk.php";
-	$working = $project_path . "/bulk_jobs/job_" . date("YmdHi");
-
+	
+	
 
 //END START
 	global $G_member_status_set;
@@ -44,13 +44,11 @@
 
 	$bulk_queue = $project_path . '/bulk_queue'; #directory.  put jobs in here
 
-	$mypid = time(); #unix time
+	
 	$comments = $news_latest . "/current_comments.txt";
    
 
-    $bmail_list = "$working/list.txt";
-    $bmail_msg = "$working/message.txt";
-    
+   
 
 	$publish_file = $news_latest . "/publish.txt";
 	if (file_exists($publish_file)){
@@ -331,14 +329,35 @@ Create Abort File</button>
 EOT;
 
  }
-
+############## POST #####################
 else { #IS POST
  
 	echo  "<HTML><head><title>Bulk Email Plan</title></head>";
 
-#first build message
+	#ge job id and set paths
+	$job = false; $c = 0;
+	
+	#set up job as datecode, and make sure it doesn't already exist
+	while (! $job){
+		$job = date("YmdHi");
+		$working = $project_path . "/bulk_jobs/$job";
+		if (file_exists($working)){
+			$job = false;
+			sleep 2;
+			++$c;
+			if ($c>10){
+				throw new Exception ("exceeded 10 attempts to create $working");
+			}
+		}
+		else {
+			mkdir ("$working",0777,1);
+		}
 
-    if (!is_dir ("$working")){mkdir ("$working",0777,1) || die ("Failed to mkdir $working");}
+	}
+	 $bmail_list = "$working/list.txt";
+    $bmail_msg = "$working/message.txt";
+    
+   
 
     $subject = $_POST['subject'];
 
@@ -436,7 +455,8 @@ $ml = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
  //Loop over rows
  foreach ($result as $row) {
 	 // Assemble the list
-
+		$profile_age = days_ago($row['profile_updated']);
+		$last_profile_date = pretty_date('human','date',$row['profile_updated']);
 	  list($profile_age,$last_profile_date) = age($row['profile_updated']);
 	  list($p_val_age,$profile_validated) = age($row['profile_validated']);
 
@@ -453,6 +473,7 @@ $ml = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
             $age_flag,
             $profile_validated
         ];
+        print_r ($ml_array); exit;
 /*
 Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 */
