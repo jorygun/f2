@@ -3,7 +3,7 @@
 
 class BulkMail {
 
-	private $queue = '/usr/home/digitalm/Sites/flames/bulk_queue';
+	private $queue = '/usr/home/digitalm/Sites/flames/bulk_jobs';
 	
 	
 	public function show_bulk_jobs(){

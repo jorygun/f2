@@ -479,7 +479,7 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
     
   } // End of Loop
 
-    fclose ($ml);
+    fclose ($ml_handle);
     echo "Mail list saved." ; 
     
 	echo "Job $job: Emails will be sent every $interval seconds.  This will take " . intval($row_count * $interval/60) . " minutes to complete.<br>\n";
