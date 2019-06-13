@@ -448,7 +448,7 @@ if (!$result = $pdo->query($sql) ){
 $row_count = $result->rowCount();
 echo "$row_count records selected.<br>";
 
-$ml = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
+$ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
 
  //Loop over rows
  foreach ($result as $row) {
@@ -471,11 +471,11 @@ $ml = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
             $age_flag,
             $profile_validated
         ];
-        print_r ($ml_array); exit;
+        print_r ($mlarray); 
 /*
 Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 */
-    fprintf ($ml,"%s\n",implode("\t",$mlarray));
+    fprintf ($ml_handle,"%s\n",implode("\t",$mlarray));
     
   } // End of Loop
 
