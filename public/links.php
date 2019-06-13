@@ -79,18 +79,17 @@ function update_link_db($url,$article_id,$my_name){
 	;";
 
     if ($inc_user == 1){
-        $st = $pdo -> prepare($sql_user);
+        $st = $pdo -> query($sql_user);
       #  echo "Using user code<br>";
 
     }
     else {
-        $st = $pdo -> prepare($sql_nonuser);
+        $st = $pdo -> query($sql_nonuser);
        # echo "Non-user code<br>";
     }
 
 
-    $st -> execute();
-
+   
 
 
 	}
