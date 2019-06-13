@@ -1,4 +1,6 @@
 <?php
+use Digitalmx\flames\Definitions as Defs;
+
 ini_set('display_errors', 1);
 $mtimet = date('d M H:i',filemtime(__FILE__));
 $mtime = filemtime(__FILE__);
@@ -53,7 +55,7 @@ foreach ($_SERVER as $k=>$v){
 
 #$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
 $init_file = '../config/boot.php';
-$old_init_file = '../config/init.php';
+#	$old_init_file = '../config/init.php';
 
 echo "Looking for boot file: $init_file <br>\n";
 if (file_exists($init_file)){
@@ -100,23 +102,27 @@ recho ($GLOBALS,'$GLOBALS');
 
 
 echo "<hr>";
-$htaccessm = date('d M H:i',filemtime('.htaccess'));
-echo ".htaccess ($htaccessm) :<br><pre>";
-echo file_get_contents('.htaccess');
-echo '</pre><hr>';
-
-
-try {
-	echo "From Definitions<br>\n";
-	echo "seclevel ma: " . Definitions::get_seclevel('MA').BRNL;
-
-	#check code
-
-	#echo sqldate('time')  . BRNL;;
-
-	echo "days since Feb 30 " . days_ago('Feb 30, 2017') . BRNL;
-
-} catch (Exception $e ){
-echo "Errors: functions could not run.<br>";
-echo $e;
+if (file_exists('.htaccess')){
+	$htaccessm = date('d M H:i',filemtime('.htaccess'));
+	echo ".htaccess ($htaccessm) :<br><pre>";
+	echo file_get_contents('.htaccess');
+	echo '</pre><hr>';
+} else {
+echo "No .htaccess";
 }
+echo "<br>\n";
+
+
+if (class_exists('Definitions')){
+	echo "From Definitions<br>\n";
+	echo "seclevel ma: " . Defs::get_seclevel('MA').BRNL;
+} else {
+	echo "Defs not loaded" . BRNL;
+}
+
+if (function_exists('days_ago')){
+	echo "days since Feb 30 " . days_ago('Feb 30, 2017') . BRNL;
+} else {
+	echo "days ago function not available" . BRNL;;
+}
+

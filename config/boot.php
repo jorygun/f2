@@ -96,8 +96,11 @@ if ($platform == 'pair'){
 	
 	
 } else {
+	require_once 'setGlobals.php';
+	require_once 'MyPDO.class.php'; #uses envir constant
 	$pdo = new MxPDO('production',$platform,$db_ini);
-
+	$GV = $GLOBALS = setGlobals();
+	require_once "f2_security.php";
 }
 
 require_once 'nav.class.php';
