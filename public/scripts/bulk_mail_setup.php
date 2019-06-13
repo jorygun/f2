@@ -343,7 +343,7 @@ else { #IS POST
 		$working = $project_path . "/bulk_jobs/$job";
 		if (file_exists($working)){
 			$job = false;
-			sleep 2;
+			sleep (2);
 			++$c;
 			if ($c>10){
 				throw new Exception ("exceeded 10 attempts to create $working");
