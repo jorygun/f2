@@ -7,7 +7,7 @@
 	$navbar = $nav -> build_menu();
 	$pdo = MyPDO::instance();
 	
-	require 'BulkMail.class.php';
+	require 'BulkMail.php';
 	$bulkmail = new BulkMail();
 	
 
@@ -36,10 +36,10 @@
 	$calendar	= $news_latest . "/calendar.txt";
 	$opportunities = $news_latest . "/opportunities.txt";
 	$assets = $news_latest . "/assets.txt";
-	$bulk_processor = HOMEPATH . "/crons/bulk_mail.php";
+	$bulk_processor = HOMEPATH . "/crons/send_bulk.php";
 	
 
-	$bulk_queue = SITEPATH . "/bulk_queue"; #directory.  put jobs in here
+	$bulk_queue = HOME . "Sites/flames/bulk_queue"; #directory.  put jobs in here
 
 	$mypid = time(); #unix time
 	$comments = $news_latest . "/current_comments.txt";
@@ -161,9 +161,8 @@ $subj_periodic_lost = "AMD Flames Site Thinks You're Lost.";
   #####################################################
 
 
-header( 'Content-type: text/html; charset=utf-8' );
+
 echo <<<EOT
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">

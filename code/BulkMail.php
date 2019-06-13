@@ -3,7 +3,7 @@
 
 class BulkMail {
 
-	private $queue = SITEPATH . '/bulk_queue';
+	private $queue = '/usr/home/digitalm/Sites/flames/bulk_queue';
 	
 	
 	public function show_bulk_jobs(){
