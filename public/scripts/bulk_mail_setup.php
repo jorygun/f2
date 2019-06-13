@@ -339,14 +339,14 @@ else { #IS POST
 
 	#ge job id and set paths
 	$working = $project_path . "/bulk_jobs";
-	$queue = $project_path . "bulk_queue";
+	$queue = $project_path . "/bulk_queue";
 	
 	
 	#set up job as datecode, and make sure it doesn't already exist
 	$job = false; $c = 0;
 	while (! $job){
 		$job = date("YmdHi");
-		$job_dir = $project_path . "/bulk_jobs/$job";
+		$job_dir = "$working/$job";
 		if (file_exists($job_dir)){
 			$job = false;
 			sleep (2);
