@@ -11,11 +11,19 @@ $navbar = $nav -> build_menu();
 
     // get latest published update date
 	$ptime_file = SITEPATH . "/news/last_update_published.txt";
-	$p_time_s = trim(file_get_contents($ptime_file));
-	if(preg_match('/.*?([\d\:\-]+ [\d\:\-]+)/',$p_time_s,$m)){
-	    $last_ptime = ($m[1]);
+	if (file_exists($ptime_file)){
+		$p_time_s = trim(file_get_contents($ptime_file));
+		if(preg_match('/.*?([\d\:\-]+ [\d\:\-]+)/',$p_time_s,$m)){
+			 $last_ptime = ($m[1]);
+		}
 	}
-	else {die ("No valid p_time $p_time_s");}
+	else {
+		echo "No valid p_time file; setting time to never." . BRNL;
+		$last_ptime= '0000-00-00 00:00';
+		
+		
+		
+	}
 
     //get current title, if any
     $titlefile = SITEPATH . '/news/news_next/title.txt';
