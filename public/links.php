@@ -38,7 +38,7 @@ $root = $_SERVER['DOCUMENT_ROOT'];
         exit;
     }
 
-#echo "Updating $url, $article_id, $my_name<br>";
+echo "Updating $url, $article_id, $my_name<br>";
 
 
 	update_link_db($url,$article_id,$my_name);
