@@ -51,7 +51,7 @@
     $bmail_msg = "$working/message.txt";
     
 
-	if ( $publish_file = $news_latest . "/publish.txt";
+	$publish_file = $news_latest . "/publish.txt";
    if ( $edition_name = get_publish_data('title',$publish_file) ){
     $lastest_pointer = trim(file_get_contents(SITEPATH . "/news/latest_pointer.txt") );
     }
