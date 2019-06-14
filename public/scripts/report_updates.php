@@ -394,6 +394,7 @@ function prepare_opp_report ($ptimes){
         created desc
         ;";
 
+echo "opp sql: $sql <br>\n";
 
     $results = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     $opps = count($result);
