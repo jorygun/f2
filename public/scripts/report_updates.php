@@ -446,12 +446,12 @@ function prepare_headline_report () {
 	$arts = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 	$cont = '';
 	
-	$hl_report = 'News Articles' . "\n";
+	$hl_report = 'News Articles' . "\n------------------------\n";
 	foreach ($arts as $article){
 		if (! in_array($article['contributor'] , ['FLAMES_editor'])){
 			$cont = " (${article['contributor']})";
 		}
-		$hl_report .= $article['title'] . ' ' . $cont . "\n";
+		$hl_report .= '    ' . $article['title'] . ' ' . $cont . "\n";
 	}
 	
 	return $hl_report;
