@@ -405,7 +405,7 @@ function prepare_opp_report ($ptimes){
 //         ";
        
 
-        foreach ($results as $row){
+        foreach ($result as $row){
             $oppclass=''; $oppnew='';$opp_is_new=false;
    
                 $oppclass='yellow';
