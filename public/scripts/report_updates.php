@@ -206,7 +206,7 @@ echo "Saving member updates to $updates_html_file" . BRNL;
 // prepare teaser report
 	$teaser_report = prepare_headline_report($ptimex);
 	$teaser_report .=  prepare_name_report ($name_list);
-	$teaser_report .= prepare_opp_report($ptimex);
+	$teaser_report .= prepare_opp_report($ptimexs);
 	
 	
 	
@@ -378,7 +378,7 @@ function pickbest($val,$best,$alt){
 }
 
 //build opportunity report
-function prepare_opp_report ($ptimex){
+function prepare_opp_report ($ptimes){
 	#saves new opps  to news_opps.html; returns text version for teser.
     $newopp_report_h = "";
     $newopp_report_t = '';
@@ -390,6 +390,7 @@ function prepare_opp_report ($ptimex){
         FROM opportunities
         WHERE
         (expired = '0000-00-00' OR expired > NOW())
+        AND created > $ptimes
         ORDER BY
         created desc
         ;";
@@ -408,11 +409,11 @@ function prepare_opp_report ($ptimex){
             $oppclass=''; $oppnew='';$opp_is_new=false;
              $created_tics = strtotime($row['created']);
 
-            if ($created_tics > $ptimex) {
+            
                 $oppclass='yellow';
                 $oppnew='<b>New</b>';
                 $opp_is_new = true;
-            }
+            
             if ($opp_is_new){
                 $newopp_report_t .= "${row['title']} - ${row['location']}\n";
             }
@@ -432,7 +433,7 @@ function prepare_opp_report ($ptimex){
     }
 
     echo "Listed $new_opps opportunities<br>";
-    return $opportunities_text;
+    return $newopp_report_t;
 }
 
 ## NOW get headlines from articles
