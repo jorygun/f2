@@ -1436,7 +1436,6 @@ function days_ago ($date_str) {
 	$diff = $dt -> diff($now);
 	$diff_str = $diff->format('%a');
 	
-	
 	return $diff_str;
 }
 
