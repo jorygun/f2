@@ -453,7 +453,7 @@ function prepare_headline_report () {
 		}
 		$hl_report .= '    ' . $article['title'] . ' ' . $cont . "\n";
 	}
-	
+	$hl_report .= "\n";
 	return $hl_report;
 }
 
