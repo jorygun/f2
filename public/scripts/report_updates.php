@@ -99,7 +99,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	$q = "SELECT $name_fields FROM members_f2
 	WHERE status in ($member_status_set)
 	AND test_status = ''
-	AND profile_updated > '$p_time'
+	AND profile_updated > '$ptimes'
 	AND  join_date <= '$ptimes'
 	AND username not like 'Flames %'
 	ORDER BY username
