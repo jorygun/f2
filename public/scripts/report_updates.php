@@ -257,7 +257,7 @@ function prepare_name_report($name_list){
 		$last_name = '';
 		$name_report = "New or updated information about these AMD Alumni:
 ----------------------------
-";
+    ";
 		foreach ($name_list as $name){
 			if ($name <> $last_name){ #dedup
 				$name_report .= $name;
