@@ -412,7 +412,6 @@ function prepare_opp_report ($ptimes){
                 $oppnew='<b>New</b>';
                 $opp_is_new = true;
             
-            
                 $newopp_report_t .= "${row['title']} - ${row['location']}\n";
             
            //  $opp_report_h .= "<tr style='font-size:0.9em;'>
@@ -426,9 +425,7 @@ function prepare_opp_report ($ptimes){
         "\nNew Opportunities Posted\n--------------------------------\n$newopp_report_t\n";
         
       }
-    if (!empty($opp_report_h)){
-        file_put_contents($opportunities_html,$opp_report_h );
-    }
+    echo $newopp_report_t;
 
     return $newopp_report_t;
 }
