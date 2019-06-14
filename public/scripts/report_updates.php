@@ -27,7 +27,7 @@
  $ptime_file = SITEPATH . "/news/last_update_published.txt";
  
  $updates_html_file=SITEPATH . "/news/news_next/news_updates.html";
- $updates_text_text = SITEPATH . "/news/news_next/tease_updates.txt";
+ $updates_text_file = SITEPATH . "/news/news_next/tease_updates.txt";
  
  $updates_html = $updates_text = ''; #containers for building reports in
  
@@ -197,7 +197,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 
 $updates_html	.= "</div>\n";
 
-file_put_contents($update_html_file, $update_html);
+file_put_contents($updates_html_file, $updates_html);
 
 echo "Saving member updates to $updates_html_file" . BRNL;
 
@@ -257,7 +257,8 @@ EOT;
 ###############################################################
 
 function prepare_name_report($name_list){
-	if ($name_list){
+	if (empty($name_list)) {return '';}
+	
 		sort($name_list);
 		$name_count = 0;
 		$last_name = '';
@@ -277,7 +278,7 @@ function prepare_name_report($name_list){
 
 		$name_report = preg_replace('/,\W+$/',"\n",$name_report); #remove trailling ,
 		$name_report .= "\n";
-	}
+	
 	return $name_report;
 }
 
@@ -386,7 +387,7 @@ function prepare_opp_report ($ptimex){
 	#saves new opps  to news_opps.html; returns text version for teser.
     $newopp_report_h = "";
     $newopp_report_t = '';
-    
+    $pdo = MyPDO::instance();
     $opportunities_html=SITEPATH. "/news/news_next/news_opportunities.html";
     
     $sql = "
