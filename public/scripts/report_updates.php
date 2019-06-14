@@ -389,6 +389,7 @@ function prepare_opp_report ($ptimes){
     $newopp_report_t = '';
     $pdo = MyPDO::instance();
     $opportunities_html = SITEPATH. "/news/news_next/news_opportunities.html";
+    $dtp = new DateTime($ptimes);
     
     $sql = "
         SELECT title,owner,owner_email,location,created,link
@@ -412,7 +413,8 @@ function prepare_opp_report ($ptimes){
 
         foreach ($result as $row){
             $oppclass=''; $oppnew='';$opp_is_new=false;
-   			if (created > ptime){
+            $dtr = new DateTime($row['created']);
+   			if ($dtr > $dtp){
                 $oppclass='yellow';
                 $oppnew='<b>New</b>';
                 $opp_is_new = true;
