@@ -1418,7 +1418,7 @@ function days_ago ($date_str) {
 	//takes a date and returns the age from today in days 
 	
 	if (empty($date_str)){ #blank or NULL??
-		return 9999'
+		return 9999;
 	}
 	$dt = new DateTime();
 	$t=$date_str; #may change
