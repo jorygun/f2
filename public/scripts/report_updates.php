@@ -390,7 +390,7 @@ function prepare_opp_report ($ptimes){
         FROM opportunities
         WHERE
         (expired = '0000-00-00' OR expired > NOW())
-        AND created > $ptimes
+        AND created > '$ptimes'
         ORDER BY
         created desc
         ;";
