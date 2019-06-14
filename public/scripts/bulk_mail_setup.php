@@ -336,7 +336,7 @@ else { #IS POST
 
 	#ge job id and set paths
 	$working = $project_path . "/bulk_jobs";
-	$queue = $project_path . "working/queue";
+	$queue = $project_path . "/bulk_jobs/queue";
 	
 	
 	#set up job as datecode, and make sure it doesn't already exist
