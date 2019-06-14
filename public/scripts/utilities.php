@@ -394,9 +394,9 @@ function pretty_date ($form='sql',$type = 'time',$when='' ){
 		default :
 			throw new Exception ("unknown format $form for pretty_date");
 	}
-	$dt = new DateTime();
-	$dt->setTimeZone(new DateTimeZone('America/Los_Angeles'));
-	$dt->($when) ;
+	$dt = new DateTime($when);
+	#$dt->setTimeZone(new DateTimeZone('America/Los_Angeles'));
+	
 	
 	if (! $dt ){
 		echo "Cannot set date from $when in pretty_date";
