@@ -32,7 +32,7 @@
  
 #report status changes
 //Find date to begin looking from //
-if($ptime = $_GET['ptime']){
+if(! empty($ptime = $_GET['ptime'] )){
     $ptimex = strtotime($ptime);
     
 }
