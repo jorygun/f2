@@ -48,6 +48,7 @@ if (!$ptimex){
 $ptimeh  = date('M d, Y',$ptimex);
 $ptimes = date('Y-m-d H:i', $ptimex);
 
+echo "Start times:<br>$ptimex = $ptimeh = $ptimes<br>\n";
 
 /* List All Updates Since Last Newsletter */
 
