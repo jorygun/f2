@@ -389,8 +389,7 @@ function prepare_opp_report ($ptimes){
         SELECT title,owner,owner_email,location,created,link
         FROM opportunities
         WHERE
-        (expired = '0000-00-00' OR expired > NOW())
-        AND created > '$ptimes'
+        expired > NOW() AND created > '$ptimes'
         ORDER BY
         created desc
         ;";
@@ -399,29 +398,27 @@ function prepare_opp_report ($ptimes){
     $results = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     $opps = count($result);
     if ($opps  > 0 ){
-        $opp_report_h = "<table>
-        <tr style='font-size:0.9em;'>
-        <th></th><th>Posted</th><th>Description</th><th>Location</th></tr>
-        ";
+       //  $opp_report_h = "<table>
+//         <tr style='font-size:0.9em;'>
+//         <th></th><th>Posted</th><th>Description</th><th>Location</th></tr>
+//         ";
        
 
         foreach ($results as $row){
             $oppclass=''; $oppnew='';$opp_is_new=false;
-             $created_tics = strtotime($row['created']);
-
-            
+   
                 $oppclass='yellow';
                 $oppnew='<b>New</b>';
                 $opp_is_new = true;
             
-            if ($opp_is_new){
+            
                 $newopp_report_t .= "${row['title']} - ${row['location']}\n";
-            }
-            $opp_report_h .= "<tr style='font-size:0.9em;'>
-            <td>$oppnew</td><td>${row['created']}</td>
-            <td>${row['title']}</td><td>${row['location']}</td></tr>";
+            
+           //  $opp_report_h .= "<tr style='font-size:0.9em;'>
+//             <td>$oppnew</td><td>${row['created']}</td>
+//             <td>${row['title']}</td><td>${row['location']}</td></tr>";
         }
-        $opp_report_h .= "</table>\n";
+//         $opp_report_h .= "</table>\n";
     }
 
     if (!empty($newopp_report_t)){$newopp_report_t =
@@ -432,7 +429,6 @@ function prepare_opp_report ($ptimes){
         file_put_contents($opportunities_html,$opp_report_h );
     }
 
-    echo "Listed $new_opps opportunities<br>";
     return $newopp_report_t;
 }
 
