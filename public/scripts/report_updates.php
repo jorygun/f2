@@ -227,7 +227,9 @@ fclose ($ph);
 ######################
 
 echo <<<EOT
-<html><head><title>Show Updates</title>
+<html><head> 
+<title>Show Updates</title>
+<link rel='stylesheet' href='/css/news2.css'>
 
 </head><body>
 <p>Showing updated since $ptimeh</p>
