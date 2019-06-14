@@ -387,16 +387,15 @@ function prepare_opp_report ($ptimes){
     
     $sql = "
         SELECT title,owner,owner_email,location,created,link
-        FROM opportunities
+        FROM `opportunities`
         WHERE
         created > '$ptimes'
-        ORDER BY
-        created desc
+        
         ;";
 
-echo "opp sql: $sql <br>\n";
+#echo "opp sql: $sql <br>\n";
 
-    $results = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    $result = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     $opps = count($result);
     echo "Got $opps opps to report. ";
     if ($opps  > 0 ){
