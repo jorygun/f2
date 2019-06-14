@@ -228,7 +228,7 @@ echo "Saving member updates to $updates_html" . BRNL;
 	$teaser_report = '';
 	$teaser_report .=  $name_report;
 	file_put_contents($updates_text,$teaser_report);
-echo "Saving name_report to $updates.text" . BRNL;
+echo "Saving name_report to $updates_text" . BRNL;
 
 
 //build opportunity report
