@@ -42,7 +42,7 @@ if (!$ptimex){ #get from last published file
 if (!$ptimex){
 	echo "No starting time in either parameter or last published file. ";
 	echo "Setting to one week ago.";
-	$ptimex = strtotime('-7 days'));
+	$ptimex = strtotime('-7 days');
 }
 
 $ptimeh  = date('M d, Y',$ptimex);
