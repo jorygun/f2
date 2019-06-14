@@ -234,19 +234,16 @@ echo <<<EOT
 <p>Showing updated since $ptimeh</p>
 <h3>Update HTML Version</h3>
 $updates_html 
+
 <hr>
-<h3>Update Text Version</h3>
+<h3>Opportunity Report</h3>
+$opp_report
+
+<hr>
+<h3>Teaser File</h3>
 <pre>
 $teaser_report
 </pre>
-<hr>
-<h3>Opportunity Reports</h3>
-$opp_report
-<hr>
-<pre>
-$newopp_report
-</pre>
-<
 
 </body></html>
 
