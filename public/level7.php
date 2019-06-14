@@ -18,8 +18,10 @@ $navbar = $nav -> build_menu();
 		}
 	}
 	else {
-		echo "No valid p_time file; setting time to never." . BRNL;
-		$last_ptime= '0000-00-00 00:00';
+		echo "No valid p_time file; setting time to one week ago." . BRNL;
+		$dt = new DateTime(" - 7 days");
+		
+		$last_ptime= $dt->format('Y-m-d');
 		
 		
 		
