@@ -30,9 +30,7 @@ ini_set('error_reporting', E_ALL);
 	
 	";
 
-	$select_bulk_only	=	$select_all_valid . " AND no_bulk = FALSE ";
-	$select_nobulk_only	=	$select_all_valid . " AND no_bulk = TRUE ";
-
+	
 	$news_latest = SITEPATH . "/news/news_latest";
 	
 	$teasers = $news_latest . "/teasers.txt";
@@ -365,54 +363,11 @@ else { #IS POST
 
     $subject = $_POST['subject'];
 
-	$teaser = $teaser_heads = $teaser_updates = $teaser_calendar = $teaser_opportunities = $teaser_comments = $teaser_assets ='';
- 	if (file_exists($headlines)){$teaser_heads =
-			 file_get_contents($headlines) ;
-			 $tease = 1;
-	}
-
-	if (file_exists($preview)){$preview_heads =
-			 file_get_contents($preview) ;
-			 $preview_mode = 1;
-
-	}
-	if (file_exists($updates)){$teaser_updates =
-			 file_get_contents($updates) ;
-			  $tease = 1;
-	}
-	if (file_exists($calendar)){$teaser_calendar =
-			 file_get_contents($calendar) ;
-			  $tease = 1;
-	}
-	if (file_exists($opportunities)){$teaser_opportunities =
-			 file_get_contents($opportunities) ;
-			  $tease = 1;
-	}
-
-	if (file_exists($comments)){$teaser_comments =
-			 file_get_contents($comments) ;
-			 $tease = 1;
-	}
-	if (file_exists($assets)){$teaser_assets =
-			 file_get_contents($assets) ;
-			 $tease = 1;
-	}
-	if ($tease){
-        $test = '';
-		$teaser .= $teaser_heads;
-		$teaser .= $teaser_calendar;
-		$teaser .= $teaser_updates;
-		$teaser .= $teaser_opportunities;
-		$teaser .= $teaser_comments;
-		$teaser .= $teaser_assets;
-	 }
-
+	$teaser = build_teaser(SITEMAP . "/news/news_latest" );
 
 	$message = $_POST['body'];
-		$message = str_replace('::teaser', $teaser, $message);
-
-    $message = str_replace('::preview',$preview_heads,$message);
-		$message = preg_replace('/\t/',"    ",$message);
+	$message = str_replace('::teaser', build_teaser(), $message);
+	$message = preg_replace('/\t/',"    ",$message);
 
 
 
@@ -440,7 +395,7 @@ echo "Message saved .\n";
 
 #now build mail list
 
-$sql = get_send_list();
+$sql = get_send_list($select_all_valid, $G_member_status_set);
 if (!$result = $pdo->query($sql) ){
 		echo "No results from query for ${_POST['sendto']} \n"; 
 		exit;
@@ -523,21 +478,15 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 }
 
 ######### Get the send list ##########
-function get_send_list () {
-global $select_all_valid, $select_bulk_only, $G_member_status_set;
+function get_send_list ($select_all_valid, $G_member_status_set) {
+
 $pdo = MyPDO::instance();
 $field_list = "*";
 $sql = "SELECT $field_list FROM `members_f2` ";
 
- 	if ($_POST['sendto'] == 'limited'){
-        #doesn't send; but picks some random names and shows result
-  			if (!$sendlimit){$sendlimit = 5;}
-  		$sql .= "WHERE $select_all_valid ORDER BY RAND() LIMIT ${_POST['testnumber']};";
-		echo "Simulating test send to limited number of  valid emails ($sendlimit)<br>";
-
-	}
+ 	
     // if selected admin only, then use admin code = J; otherwise, exclude these.
- 	elseif ($_POST['sendto'] == 'admin'){
+ 	if ($_POST['sendto'] == 'admin'){
 
  		$sendlimit = 1;
  		$sendornot = 'Send';
@@ -553,7 +502,8 @@ $sql = "SELECT $field_list FROM `members_f2` ";
 
 	}
 	elseif ($_POST['sendto'] == 'req'){
-			$sql .= "WHERE $select_bulk_only ORDER BY user_id;";
+			$sql .= "WHERE $select_all_valid AND no_bulk = FALSE
+			ORDER BY user_id;";
 	 		echo "Sending only to those without No_Bulk flag <br>";
 	}
 	elseif ($_POST['sendto'] == 'nobulk'){
@@ -617,6 +567,29 @@ function ml_script($text){
 	    $js = str_replace("\n", "\\n", $text);
 	    return $js;
 	}
+
+function build_teaser($dir) {
+
+	$teaser_files = array(
+	'headlines',
+	'updates',
+	'calendar',
+	'opportunities',
+	'comments',
+	'assets'
+	);
+	$teaser = '';
 	
-?>
+	foreach ($teaser_files as $tease){
+		$tfile = $dir . "/tease_" . $tease . ".txt";
+		if (file_exists($tfile)){
+			$teaser .= file_get_contents($tfile);
+		}
+	}
+	
+	return $teaser;
+	
+}
+
+
 

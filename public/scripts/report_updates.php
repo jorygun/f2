@@ -22,40 +22,36 @@
  $member_status_set = $G_member_status_set;
 #$G_member_status_array = array('M', 'MA','MN','MC','MU','R','G');
 
- $event_table = SITEPATH . "/news/events.txt";
+ 
  $rtime_file = SITEPATH . "/news/last_update_run.txt";
  $ptime_file = SITEPATH . "/news/last_update_published.txt";
- $updates_html=SITEPATH . "/news/news_next/updates.html";
- $headline_file = SITEPATH . "/news/news_next/headlines.txt";
-
-
- //teasers for newsletter and home page.  Created in news_next.
- // Can be retrieved from news_latest after publish.
- $updates_text = SITEPATH . "/news/news_next/updates.txt";
- $opportunities_text=SITEPATH . "/news/news_next/opportunities.txt";
- $opportunities_html=SITEPATH . "/news/news_next/opportunities.html";
-
- //this file has all open opps in it.
-
-
+ 
+ $updates_html=SITEPATH . "/news/news_next/news_updates.html";
+ $updates_text = SITEPATH . "/news/news_next/tease_updates.txt";
+ 
+ 
+#report status changes
 //Find date to begin looking from //
 if($ptime = $_GET['ptime']){
-    $ptime1 = strtotime($ptime);
-    $p_time = date('Y-m-d H:i:s', $ptime1);
+    $ptimex = strtotime($ptime);
+    $p_time = date('Y-m-d H:i:s', $ptimex);
 }
 if (!$p_time){ #get from last published file
     $p_time = get_start_time();
 }
-if (!$p_time){die ("No p_time found ");}
-$php_ptime = strtotime($p_time);
-$nice_ptime = date('M d, Y',$php_ptime);
+if (!$p_time){
+	echo "No starting time in either parameter or last published file. ";
+	echo "Setting to one week ago.";
+	$p_time = date('Y-m-d', strtotime('-7 days'));
+}
+$ptimex = strtotime($p_time);
+$ptimeh  = date('M d, Y',$php_ptime);
+$ptimes = date('Y-m-d H:i', $ptimex);
+
 
 /* List All Updates Since Last Newsletter */
 
-$hcode = "
-<!-- show_updates.php run at $nowsql  -->
 
-";
 
 //Get total membership
 $q = "SELECT count(*) as count FROM members_f2
@@ -74,7 +70,9 @@ $q = "SELECT count(*) as count FROM members_f2
 
 	echo "<br>Active Members: $active_members.  (Plus $lost_members lost contact; total $total_members.) <br> ";
 
-$hcode .= "";
+$hcode = "";
+
+// list of people who appear in updates.  For teaser
 $name_list = array();
 $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_about,join_date, user_email,email_hide,email_status,profile_validated";
 
@@ -82,13 +80,13 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	$q = "SELECT $name_fields FROM members_f2
 	WHERE status in ($member_status_set)
 	AND test_status != 'M'
-	AND join_date > '$p_time'
+	AND join_date > '$ptimes'
 	ORDER BY username;
 	";
-	echo ("q: $q<br>");
+	;
 	$stmt = $pdo->query($q);
 	$new_member_count = $stmt->rowCount();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'new');
 	$hcode .= $report_data;
@@ -100,7 +98,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	WHERE status in ($member_status_set)
 	AND test_status = ''
 	AND profile_updated > '$p_time'
-	AND  join_date <= '$p_time'
+	AND  join_date <= '$ptimes'
 	AND username not like 'Flames %'
 	ORDER BY username
 	";
@@ -117,8 +115,8 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	$q = "SELECT $name_fields FROM members_f2
 	WHERE status in ($member_status_set)
 	AND test_status = ''
-	AND email_chg_date > '$p_time'
-	AND join_date <= '$p_time'
+	AND email_chg_date > '$ptimes'
+	AND join_date <= '$ptimes'
 	ORDER BY username";
 
 	$result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
@@ -130,7 +128,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 
 // deceased
 	$q = "SELECT $name_fields FROM members_f2
-	WHERE status_updated > '$p_time'
+	WHERE status_updated > '$ptimes'
 	AND status like 'D'
 	AND test_status = ''
 
@@ -145,7 +143,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	$q = "SELECT $name_fields FROM members_f2
 	WHERE status in ($member_status_set)
 	AND test_status = ''
-	AND email_status_time >= '$p_time'
+	AND email_status_time >= '$ptimes'
 	AND email_status like 'L%'
 	AND previous_ems not like 'L%'
 	ORDER BY username
@@ -234,6 +232,9 @@ echo "Saving name_report to $updates_text" . BRNL;
 //build opportunity report
     $newopp_report_h = "";
     $newopp_report_t = '';
+    $opportunities_text=SITEPATH . "/news/news_next/tease_opportunities.txt";
+    $opportunities_html=SITEPATH. "/news/news_next/news_opportunities.html";
+    
    // $sql = "
    //      SELECT title,owner,owner_email,location,created,link
 //         FROM opportunities
@@ -292,10 +293,30 @@ echo "Saving name_report to $updates_text" . BRNL;
 
     echo "Listed $new_opps opportunities<br>";
 
+## NOW get headlines from articles
+	$tease_hls = SITEPATH . "/news/news_next/tease_headlines.txt";
+	
+	$sql = "SELECT title,contributor FROM `news_items` WHERE
+		status != 'P' and use_me > 0;";
+		
+	$arts = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+	$cont = '';
+	
+	$hl_report = 'News Articles' . "\n";
+	foreach ($arts as $article){
+		if (! in_array($article['contributor'] , ['FLAMES_editor'])){
+			$cont = " (${article['contributor']})";
+		}
+		$hl_report .= $article['title'] . ' ' . $cont . "\n";
+	}
+	
+	file_put_contents($tease_hls,$hl_report);
+	
     if (file_exists($headline_file)){
         $headline_report = file_get_contents($headline_file);
     }
     else {$headline_report = 'Headlines not prepared' ."\n";}
+
 
 // update the last run file
 $ph = fopen($rtime_file,'w');
@@ -308,7 +329,7 @@ fclose ($ph);
 <html><head><title>Show Updates</title>
 
 </head><body>
-<p>Showing updated since <?=$p_time?></p>
+<p>Showing updated since <?=$ptimeh?></p>
 <h3>Update HTML Version</h3>
 <?= $hcode ?>
 <hr>

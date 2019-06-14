@@ -257,7 +257,7 @@ function save_story_files($directory,$story_text){
     foreach (array_keys($story_text) as $section){
        # echo "Got section $section for directory $directory<br>";
         if ($section == 'teaser'){
-             $myfile  = "$directory/headlines.txt";
+             $myfile  = "$directory/tease_headlines.txt";
         }
         else{
             $myfile = "$directory/$section_files[$section]";

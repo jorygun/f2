@@ -151,7 +151,7 @@ function generate_files($h,$t){
     echo "<p>Generating Files</p>";
     file_put_contents(SITEPATH . "/news/calendar.html",$h);
     #file_put_contents($calendar_test,$calendar_h);
-    file_put_contents(SITEPATH . "/news/news_next/calendar.txt", $t);
+    file_put_contents(SITEPATH . "/news/news_next/tease_calendar.txt", $t);
 }
 
 
