@@ -225,7 +225,6 @@ fprintf ($ph,"Run at %s\n",$nowsql);
 fclose ($ph);
 
 ######################
-$opp_report = file_get_contents (SITEPATH. "/news/news_next/news_opportunities.html");
 
 echo <<<EOT
 <html><head><title>Show Updates</title>
@@ -236,10 +235,7 @@ echo <<<EOT
 $updates_html 
 
 <hr>
-<h3>Opportunity Report</h3>
-$opp_report
 
-<hr>
 <h3>Teaser File</h3>
 <pre>
 $teaser_report
@@ -397,7 +393,7 @@ function prepare_opp_report ($ptimes){
 
     $result = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     $opps = count($result);
-    echo "Got $opps opps to report. ";
+   # echo "Got $opps opps to report. ";
     if ($opps  > 0 ){
        //  $opp_report_h = "<table>
 //         <tr style='font-size:0.9em;'>
@@ -412,7 +408,7 @@ function prepare_opp_report ($ptimes){
                 $oppnew='<b>New</b>';
                 $opp_is_new = true;
             
-                $newopp_report_t .= "${row['title']} - ${row['location']}\n";
+                $newopp_report_t .= "    ${row['title']} - ${row['location']}\n";
             
            //  $opp_report_h .= "<tr style='font-size:0.9em;'>
 //             <td>$oppnew</td><td>${row['created']}</td>
@@ -425,8 +421,7 @@ function prepare_opp_report ($ptimes){
         "\nNew Opportunities Posted\n--------------------------------\n$newopp_report_t\n";
         
       }
-    echo $newopp_report_t;
-
+   
     return $newopp_report_t;
 }
 
