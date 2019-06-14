@@ -228,16 +228,15 @@ $pdo = MyPDO::instance();
 	$count_valid = $pdo->query($sql)->fetchColumn();
 	
 
-	$sql = "SELECT count(*) FROM `members_f2` WHERE  $select_bulk_only;";
+	$sql = "SELECT count(*) FROM `members_f2` 
+	WHERE  $select_all_valid AND  no_bulk = FALSE;";
 		$count_bulk  = $pdo->query($sql)->fetchColumn();
 
-	$sql = "SELECT count(*) FROM `members_f2` WHERE  $select_nobulk_only;";
+	$sql = "SELECT count(*) FROM `members_f2` 
+	WHERE  $select_all_valid AND  no_bulk = TRUE;";
 		$count_nobulk = $pdo->query($sql)->fetchColumn();
 
 
-	$sql = "SELECT count(*) FROM `members_f2`
-WHERE status in ($G_member_status_set) AND email_status = 'LA';";
-		$count_aged =  $pdo->query($sql)->fetchColumn();
 
 // Detect any existing jobs in the queue.
     $jobs_in_queue = $bulkmail->show_bulk_jobs();
@@ -279,7 +278,7 @@ echo <<<EOT
 <button  onclick="set_message('');">Blank</button>
 </p>
 <form  method="post" name='sendchoices'>
-<input type=hidden name='a' value='$abort_file'>
+
 
 <br><hr><br>
 
@@ -322,10 +321,8 @@ Message Body<br>
 
 
 </form>
-<p>Note: to abort a mailing in progress, create file 'abort_mailing' at site root. 
-<button type='button' onClick='window.open("/scripts/abort_bulk_mail.php");'>
-Create Abort File</button>
-</p>
+
+
 </body>
 </html>
 
@@ -339,7 +336,7 @@ else { #IS POST
 
 	#ge job id and set paths
 	$working = $project_path . "/bulk_jobs";
-	$queue = $project_path . "/bulk_queue";
+	$queue = $project_path . "working/queue";
 	
 	
 	#set up job as datecode, and make sure it doesn't already exist
@@ -414,7 +411,7 @@ else { #IS POST
 	$message = $_POST['body'];
 		$message = str_replace('::teaser', $teaser, $message);
 
-        $message = str_replace('::preview',$preview_heads,$message);
+    $message = str_replace('::preview',$preview_heads,$message);
 		$message = preg_replace('/\t/',"    ",$message);
 
 
@@ -457,23 +454,28 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
  //Loop over rows
  foreach ($result as $row) {
 	 // Assemble the list
-		$profile_age = days_ago($row['profile_updated']);
-		$last_profile_date = pretty_date('human','date',$row['profile_updated']);
-	  list($profile_age,$last_profile_date) = age($row['profile_updated']);
-	  list($p_val_age,$profile_validated) = age($row['profile_validated']);
+		
+			$profile_updated_age = days_ago($row['profile_updated']);
+			$profile_updated_date = pretty_date('human','date',$row['profile_updated']);
+		
+	  #list($profile_age,$last_profile_date) = age($row['profile_updated']);
+	 # list($p_val_age,$profile_validated) = age($row['profile_validated']);
+	  $profile_validated_age = days_ago($row['profile_validated']);
+	$profile_validated_date = pretty_date('human','date',$row['profile_validated']);
 
-	  $age_flag =  ($profile_age > $G_stale_data_limit)?1:0; #flag to print age warning
+	  $age_flag =  ($profile_age > 365)?1:0; #flag to print age warning
+	  
 	  $slink = $row['upw'].$row['user_id'];
 
         $mlarray = [
             $row['username'],
             $row['user_email'],
             $slink,
-            $profile_age,
-            $last_profile_date,
+            $profile_updated_age,
+            $profile_updated_date,
             $row['no_bulk'],
             $age_flag,
-            $profile_validated
+            $profile_validated_date
         ];
        #recho ($mlarray,'ML array'); 
 /*

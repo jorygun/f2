@@ -20,6 +20,8 @@ test.php
 #misc
 *.log
 logs/
+unused/
+
 
 #don't alter normally
 public/jslib/
