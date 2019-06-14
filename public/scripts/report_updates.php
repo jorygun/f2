@@ -225,7 +225,7 @@ fprintf ($ph,"Run at %s\n",$nowsql);
 fclose ($ph);
 
 ######################
-
+$opportunities_html = file_get_contents( SITEPATH. "/news/news_next/news_opportunities.html");
 echo <<<EOT
 <html><head> 
 <title>Show Updates</title>
@@ -233,8 +233,15 @@ echo <<<EOT
 
 </head><body>
 <p>Showing updated since $ptimeh</p>
-<h3>Update HTML Version</h3>
+<h3>recent_articles</h3>
+
+<h3>Recent_assets</h3>
+
+<h3>Member Updates</h3>
 $updates_html 
+
+<h3>Opportunities</h3>
+$opportunities_html
 
 <hr>
 
@@ -387,38 +394,40 @@ function prepare_opp_report ($ptimes){
         SELECT title,owner,owner_email,location,created,link
         FROM `opportunities`
         WHERE
-        created > '$ptimes'
+        expired > NOW();
         
         ;";
-
+#created > '$ptimes'
 #echo "opp sql: $sql <br>\n";
 
     $result = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     $opps = count($result);
    # echo "Got $opps opps to report. ";
     if ($opps  > 0 ){
-       //  $opp_report_h = "<table>
-//         <tr style='font-size:0.9em;'>
-//         <th></th><th>Posted</th><th>Description</th><th>Location</th></tr>
-//         ";
+        $opp_report_h = "<table>
+        <tr style='font-size:0.9em;'>
+        <th></th><th>Posted</th><th>Description</th><th>Location</th></tr>
+        ";
        
 
         foreach ($result as $row){
             $oppclass=''; $oppnew='';$opp_is_new=false;
-   
+   			if (created > ptime){
                 $oppclass='yellow';
                 $oppnew='<b>New</b>';
                 $opp_is_new = true;
             
                 $newopp_report_t .= "    ${row['title']} - ${row['location']}\n";
-            
-           //  $opp_report_h .= "<tr style='font-size:0.9em;'>
-//             <td>$oppnew</td><td>${row['created']}</td>
-//             <td>${row['title']}</td><td>${row['location']}</td></tr>";
+            }
+            $opp_report_h .= "<tr style='font-size:0.9em;'>
+            <td>$oppnew</td><td>${row['created']}</td>
+            <td>${row['title']}</td><td>${row['location']}</td></tr>";
         }
-//         $opp_report_h .= "</table>\n";
+         $opp_report_h .= "</table>\n";
     }
-
+	if (!empty($opp_report_h)){
+		file_put_contents($opportunities_html,$opp_report_h);
+	}
     if (!empty($newopp_report_t)){$newopp_report_t =
         "\nNew Opportunities Posted\n--------------------------------\n$newopp_report_t\n";
         
