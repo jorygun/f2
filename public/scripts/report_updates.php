@@ -389,7 +389,7 @@ function prepare_opp_report ($ptimes){
         SELECT title,owner,owner_email,location,created,link
         FROM opportunities
         WHERE
-        expired > NOW() AND created > '$ptimes'
+        created > '$ptimes'
         ORDER BY
         created desc
         ;";
