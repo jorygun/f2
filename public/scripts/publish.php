@@ -79,9 +79,9 @@ EOT;
     echo "Updating recent article titles" . BRNL ;
         require 'recent.php';
 
-    echo "Updating recent asset list" . BRNL;
-        include "recent_assets.php";
-     #copy recent assets from news to news_next so it gets retained
+   //  echo "Updating recent asset list" . BRNL;
+//         include "recent_assets.php";
+//      #copy recent assets from news to news_next so it gets retained
 
     echo BRNL;
 
