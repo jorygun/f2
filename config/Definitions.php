@@ -45,10 +45,10 @@ class Definitions {
     );
     #tag starting with Z is reserved for special searches, e.g., all archives
 
-	static public $archival_tags = "ACDEFIMOSWY";
+	 public static $archival_tags = "ACDEFIMOSWY";
 
 	
-	static public $ems_names = array(
+	 public static $ems_names = array(
 		'Y'	=>	'Validated',
 		'Q'	=>	'Believed Good',
 		'XX'	=>	'To be removed',
@@ -270,7 +270,9 @@ public static $stale_date_limit = 365; #days
 		$Aliastext = "(Aliases: " . implode(', ',array_keys(self::$user_aliases)) . ")";
 		return $Aliastext;
 	}
-	
+	public static function get_archival_tags() {
+		return self::$archival_tags;
+	}
 	
 }
 
