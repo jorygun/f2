@@ -463,7 +463,7 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
 	  $profile_validated_age = days_ago($row['profile_validated']);
 	$profile_validated_date = pretty_date('human','date',$row['profile_validated']);
 
-	  $age_flag =  ($profile_age > 365)?1:0; #flag to print age warning
+	  $age_flag =  ($profile_updated_age > 365)?1:0; #flag to print age warning
 	  
 	  $slink = $row['upw'].$row['user_id'];
 
