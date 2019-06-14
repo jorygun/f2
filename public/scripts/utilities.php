@@ -1417,8 +1417,8 @@ function recho($var,$title=''){
 function days_ago ($date_str) {
 	//takes a date and returns the age from today in days 
 	
-	if (!$date_str){ #blank or NULL??
-		throw new Exception("no value to days_ago function");
+	if (empty($date_str)){ #blank or NULL??
+		return 9999'
 	}
 	$dt = new DateTime();
 	$t=$date_str; #may change
