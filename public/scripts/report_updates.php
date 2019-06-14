@@ -397,6 +397,7 @@ function prepare_opp_report ($ptimes){
 
     $results = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     $opps = count($result);
+    echo "Got $opps opps to report. ";
     if ($opps  > 0 ){
        //  $opp_report_h = "<table>
 //         <tr style='font-size:0.9em;'>
