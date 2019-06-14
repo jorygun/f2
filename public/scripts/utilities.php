@@ -1416,7 +1416,7 @@ function recho($var,$title=''){
 
 function days_ago ($date_str) {
 	//takes a date and returns the age from today in days 
-	
+
 	if (empty($date_str)){ #blank or NULL??
 		return 9999;
 	}
