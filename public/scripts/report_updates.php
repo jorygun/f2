@@ -26,8 +26,10 @@
  $rtime_file = SITEPATH . "/news/last_update_run.txt";
  $ptime_file = SITEPATH . "/news/last_update_published.txt";
  
- $updates_html=SITEPATH . "/news/news_next/news_updates.html";
- $updates_text = SITEPATH . "/news/news_next/tease_updates.txt";
+ $updates_html_file=SITEPATH . "/news/news_next/news_updates.html";
+ $updates_text_text = SITEPATH . "/news/news_next/tease_updates.txt";
+ 
+ $updates_html = $updates_text = ''; #containers for building reports in
  
  
 #report status changes
@@ -71,10 +73,29 @@ $q = "SELECT count(*) as count FROM members_f2
 
 	echo "<br>Active Members: $active_members.  (Plus $lost_members lost contact; total $total_members.) <br> ";
 
-$hcode = "";
+
 
 // list of people who appear in updates.  For teaser
 $name_list = array();
+
+$updates_html = <<< EOT
+
+<div class='update_data'>
+<h3>FLAMEs membership</h3>
+<p>As of $nowh. Updates since $ptimeh.<br>
+Active: $active_members; Lost: $lost_members; Total: $total_members.
+</p>
+
+<p>View a member's profile by clicking on their names.<br><br>
+Lost members are ones that we have no email for, or whose email has
+repeatedly bounced.  A sample of "long lost" members is shown at
+the bottom.  If you have any information about any of our "Lost"
+members, please let me know and I'll try to update their
+information.</p>
+
+EOT;
+
+
 $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_about,join_date, user_email,email_hide,email_status,profile_validated";
 
 //Get New Members
@@ -91,7 +112,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'new');
-	$hcode .= $report_data;
+	$updates_html .= $report_data;
 	$name_list = array_merge($name_list,$name_data);
 
 
@@ -107,9 +128,8 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 
 	 $result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
 
-
 	list ($report_data,$name_data) = report_changes($result,'updates');
-	$hcode .= $report_data;
+	$updates_html .= $report_data;
 	$name_list = array_merge($name_list,$name_data);
 
 
@@ -124,7 +144,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	$result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'email');
-	$hcode .= $report_data;
+	$updates_html .= $report_data;
 	$name_list = array_merge($name_list,$name_data);
 
 
@@ -138,7 +158,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	$result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'deceased');
-	$hcode .= $report_data;
+	$updates_html .= $report_data;
 	$name_list = array_merge($name_list,$name_data);
 
 // new lost
@@ -153,10 +173,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	$result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'lost');
-	$hcode .= $report_data;
-#	$name_list = array_merge($name_list,$name_data);
-
-
+	$updates_html .= $report_data;
 
 // old lost
 	$q = "SELECT $name_fields FROM members_f2
@@ -171,153 +188,35 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	$result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'long lost');
-	$hcode .= $report_data;
+	$updates_html .= $report_data;
 	#$name_list = array_merge($name_list,$name_data);
 
 
 
 
-$update_message = <<< EOT
 
-<div class='update_data'>
-<h3>FLAMEs membership</h3>
-<p>As of $nowh. Updates since $ptimeh.<br>
-Active: $active_members; Lost: $lost_members; Total: $total_members.
-</p>
+$updates_html	.= "</div>\n";
 
-<p>View a member's profile by clicking on their names.<br><br>
-Lost members are ones that we have no email for, or whose email has
-repeatedly bounced.  A sample of "long lost" members is shown at
-the bottom.  If you have any information about any of our "Lost"
-members, please let me know and I'll try to update their
-information.</p>
+file_put_contents($updates_html_file, $update_html);
+
+echo "Saving member updates to $updates_html_file" . BRNL;
 
 
-
-EOT;
-
-$hcode = $update_message . $hcode . "</div>\n";
-file_put_contents($updates_html, $hcode);
-echo "Saving member updates to $updates_html" . BRNL;
-
-// now prepare name report
-
-	if ($name_list){
-		sort($name_list);
-		$name_count = 0;
-		$last_name = '';
-		$name_report = "New or updated information about these AMD Alumni:
-----------------------------
-	";
-		foreach ($name_list as $name){
-			if ($name <> $last_name){ #dedup
-				$name_report .= $name;
-				$last_name = $name;
-				++$name_count;
-				    #line break every 4 names
-				if ($name_count%4){$name_report .= ", ";}
-					else {$name_report .= "\n    ";}
-			}
-		}
-
-		$name_report = preg_replace('/,\W+$/',"\n",$name_report); #remove trailling ,
-		$name_report .= "\n";
-	}
 
 // prepare teaser report
-	$teaser_report = '';
-	$teaser_report .=  $name_report;
+	$teaser_report = prepare_headline_report($pdates);
+	$teaser_report .=  prepare_name_report ($name_list);
+	$teaser_report .= prepare_opp_report($pdatex);
+	
+	
+	
+	
 	file_put_contents($updates_text,$teaser_report);
-echo "Saving name_report to $updates_text" . BRNL;
-
-
-//build opportunity report
-    $newopp_report_h = "";
-    $newopp_report_t = '';
-    $opportunities_text=SITEPATH . "/news/news_next/tease_opportunities.txt";
-    $opportunities_html=SITEPATH. "/news/news_next/news_opportunities.html";
-    
-   // $sql = "
-   //      SELECT title,owner,owner_email,location,created,link
-//         FROM opportunities
-//         WHERE created > '$p_time'
-//         AND
-//         (expired = '0000-00-00' OR expired > NOW())
-//         ;";
-//
-    $sql = "
-        SELECT title,owner,owner_email,location,created,link
-        FROM opportunities
-        WHERE
-        (expired = '0000-00-00' OR expired > NOW())
-        ORDER BY
-        created desc
-        ;";
-
-
-    $results = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-    $opps = count($result);
-    if ($opps  > 0 ){
-        $opp_report_h = "<table>
-        <tr style='font-size:0.9em;'>
-        <th></th><th>Posted</th><th>Description</th><th>Location</th></tr>
-        ";
-       
-
-        foreach ($results as $row){
-            $oppclass=''; $oppnew='';$opp_is_new=false;
-             $created_tics = strtotime($row['created']);
-
-            if ($created_tics > $ptimex) {
-                $oppclass='yellow';
-                $oppnew='<b>New</b>';
-                $opp_is_new = true;
-            }
-            if ($opp_is_new){
-                $newopp_report_t .= "${row['title']} - ${row['location']}\n";
-            }
-            $opp_report_h .= "<tr style='font-size:0.9em;'>
-            <td>$oppnew</td><td>${row['created']}</td>
-            <td>${row['title']}</td><td>${row['location']}</td></tr>";
-        }
-        $opp_report_h .= "</table>\n";
-    }
-
-    if (!empty($newopp_report_t)){$newopp_report_t =
-        "\nNew Opportunities Posted\n--------------------------------\n$newopp_report_t\n";
-        file_put_contents($opportunities_text,$newopp_report_t);
-      }
-    if (!empty($opp_report_h)){
-        file_put_contents($opportunities_html,$opp_report_h );
-    }
 
 
 
-    echo "Listed $new_opps opportunities<br>";
 
-## NOW get headlines from articles
-	$tease_hls = SITEPATH . "/news/news_next/tease_headlines.txt";
-	
-	$sql = "SELECT title,contributor FROM `news_items` WHERE
-		status != 'P' and use_me > 0;";
-		
-	$arts = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-	$cont = '';
-	
-	$hl_report = 'News Articles' . "\n";
-	foreach ($arts as $article){
-		if (! in_array($article['contributor'] , ['FLAMES_editor'])){
-			$cont = " (${article['contributor']})";
-		}
-		$hl_report .= $article['title'] . ' ' . $cont . "\n";
-	}
-	
-	file_put_contents($tease_hls,$hl_report);
-	
-    if (file_exists($headline_file)){
-        $headline_report = file_get_contents($headline_file);
-    }
-    else {$headline_report = 'Headlines not prepared' ."\n";}
+
 
 
 // update the last run file
@@ -325,9 +224,9 @@ $ph = fopen($rtime_file,'w');
 fprintf ($ph,"Run at %s\n",$nowsql);
 fclose ($ph);
 
-?>
+######################
 
-
+echo <<<EOT
 <html><head><title>Show Updates</title>
 
 </head><body>
@@ -353,7 +252,36 @@ fclose ($ph);
 </pre>
 </body></html>
 
-<? function report_changes (&$result,$type){
+EOT;
+
+###############################################################
+
+function prepare_name_report($name_list){
+	if ($name_list){
+		sort($name_list);
+		$name_count = 0;
+		$last_name = '';
+		$name_report = "New or updated information about these AMD Alumni:
+----------------------------
+	";
+		foreach ($name_list as $name){
+			if ($name <> $last_name){ #dedup
+				$name_report .= $name;
+				$last_name = $name;
+				++$name_count;
+				    #line break every 4 names
+				if ($name_count%4){$name_report .= ", ";}
+					else {$name_report .= "\n    ";}
+			}
+		}
+
+		$name_report = preg_replace('/,\W+$/',"\n",$name_report); #remove trailling ,
+		$name_report .= "\n";
+	}
+	return $name_report;
+}
+
+function report_changes (&$result,$type){
  // print info on updated users, given query result and type of report
 
 
@@ -451,6 +379,85 @@ fclose ($ph);
 function pickbest($val,$best,$alt){
 	$string = (!isSet( $val ) || empty( $val ) )? "$alt" : $best;
 	return $string;
+}
+
+//build opportunity report
+function prepare_opp_report ($pdatex){
+	#saves new opps  to news_opps.html; returns text version for teser.
+    $newopp_report_h = "";
+    $newopp_report_t = '';
+    
+    $opportunities_html=SITEPATH. "/news/news_next/news_opportunities.html";
+    
+    $sql = "
+        SELECT title,owner,owner_email,location,created,link
+        FROM opportunities
+        WHERE
+        (expired = '0000-00-00' OR expired > NOW())
+        ORDER BY
+        created desc
+        ;";
+
+
+    $results = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    $opps = count($result);
+    if ($opps  > 0 ){
+        $opp_report_h = "<table>
+        <tr style='font-size:0.9em;'>
+        <th></th><th>Posted</th><th>Description</th><th>Location</th></tr>
+        ";
+       
+
+        foreach ($results as $row){
+            $oppclass=''; $oppnew='';$opp_is_new=false;
+             $created_tics = strtotime($row['created']);
+
+            if ($created_tics > $ptimex) {
+                $oppclass='yellow';
+                $oppnew='<b>New</b>';
+                $opp_is_new = true;
+            }
+            if ($opp_is_new){
+                $newopp_report_t .= "${row['title']} - ${row['location']}\n";
+            }
+            $opp_report_h .= "<tr style='font-size:0.9em;'>
+            <td>$oppnew</td><td>${row['created']}</td>
+            <td>${row['title']}</td><td>${row['location']}</td></tr>";
+        }
+        $opp_report_h .= "</table>\n";
+    }
+
+    if (!empty($newopp_report_t)){$newopp_report_t =
+        "\nNew Opportunities Posted\n--------------------------------\n$newopp_report_t\n";
+        file_put_contents($opportunities_text,$newopp_report_t);
+      }
+    if (!empty($opp_report_h)){
+        file_put_contents($opportunities_html,$opp_report_h );
+    }
+
+    echo "Listed $new_opps opportunities<br>";
+    return $opportunities_text;
+}
+
+## NOW get headlines from articles
+function prepare_headline_report () {
+	
+	
+	$sql = "SELECT title,contributor FROM `news_items` WHERE
+		status != 'P' and use_me > 0;";
+		
+	$arts = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+	$cont = '';
+	
+	$hl_report = 'News Articles' . "\n";
+	foreach ($arts as $article){
+		if (! in_array($article['contributor'] , ['FLAMES_editor'])){
+			$cont = " (${article['contributor']})";
+		}
+		$hl_report .= $article['title'] . ' ' . $cont . "\n";
+	}
+	
+	return $hl_report;
 }
 
 function get_start_time(){
