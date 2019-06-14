@@ -225,31 +225,29 @@ fprintf ($ph,"Run at %s\n",$nowsql);
 fclose ($ph);
 
 ######################
+$newopp_report = file_get_contents (SITEPATH. "/news/news_next/news_opportunities.html");
 
 echo <<<EOT
 <html><head><title>Show Updates</title>
 
 </head><body>
-<p>Showing updated since <?=$ptimeh?></p>
+<p>Showing updated since $ptimeh</p>
 <h3>Update HTML Version</h3>
-<?= $hcode ?>
+$updates_html 
 <hr>
 <h3>Update Text Version</h3>
 <pre>
-<?= $teaser_report ?>
+$teaser_report
 </pre>
 <hr>
 <h3>Opportunity Reports</h3>
-<?=$opp_report_h ?>
+$opp_report
 <hr>
 <pre>
-<?=$newopp_report_t ?>
+$newopp_report
 </pre>
-<hr>
-<h3>Headlines if run now</h3>
-<pre>
-<?= $headline_report ?>
-</pre>
+<
+
 </body></html>
 
 EOT;
@@ -430,7 +428,7 @@ function prepare_opp_report ($ptimex){
 
     if (!empty($newopp_report_t)){$newopp_report_t =
         "\nNew Opportunities Posted\n--------------------------------\n$newopp_report_t\n";
-        file_put_contents($opportunities_text,$newopp_report_t);
+        
       }
     if (!empty($opp_report_h)){
         file_put_contents($opportunities_html,$opp_report_h );
