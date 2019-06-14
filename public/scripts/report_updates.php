@@ -197,16 +197,16 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 
 $updates_html	.= "</div>\n";
 
-file_put_contents($updates_html_file, $update_html);
+file_put_contents($update_html_file, $update_html);
 
 echo "Saving member updates to $updates_html_file" . BRNL;
 
 
 
 // prepare teaser report
-	$teaser_report = prepare_headline_report($pdates);
+	$teaser_report = prepare_headline_report($ptimex);
 	$teaser_report .=  prepare_name_report ($name_list);
-	$teaser_report .= prepare_opp_report($pdatex);
+	$teaser_report .= prepare_opp_report($ptimex);
 	
 	
 	
@@ -382,7 +382,7 @@ function pickbest($val,$best,$alt){
 }
 
 //build opportunity report
-function prepare_opp_report ($pdatex){
+function prepare_opp_report ($ptimex){
 	#saves new opps  to news_opps.html; returns text version for teser.
     $newopp_report_h = "";
     $newopp_report_t = '';
@@ -442,6 +442,7 @@ function prepare_opp_report ($pdatex){
 ## NOW get headlines from articles
 function prepare_headline_report () {
 	
+	$pdo = MyPDO::instance();
 	
 	$sql = "SELECT title,contributor FROM `news_items` WHERE
 		status != 'P' and use_me > 0;";
