@@ -471,11 +471,11 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
             $row['username'],
             $row['user_email'],
             $slink,
-            $profile_updated_age,
-            $profile_updated_date,
-            (bool)$row['no_bulk'],
-            $age_flag,
-            $profile_validated_date
+            "$profile_updated_age",
+            "$profile_updated_date",
+            "${row['no_bulk']}",
+            "$age_flag",
+            "$profile_validated_date"
         ];
        #recho ($mlarray,'ML array'); 
 /*
