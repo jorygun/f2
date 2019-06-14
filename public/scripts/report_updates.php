@@ -83,7 +83,8 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	AND join_date > '$ptimes'
 	ORDER BY username;
 	";
-	;
+	echo "sql: $q" . BRNL;
+	exit;
 	$stmt = $pdo->query($q);
 	$new_member_count = $stmt->rowCount();
    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
