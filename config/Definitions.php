@@ -13,7 +13,40 @@ namespace digitalmx\flames;
 */
 class Definitions {
 	
+	public static $asset_tags = array(
+    'A' => 'Ad *',
+
+    'C' => 'Corp - External *',
+    'D' => 'Stories About AMD *',
+    'E' => 'Events *',
+    'F' => 'Facilities *',
+    'G' => 'Gatherings',
+
+    'H' => 'Flames People',
+    'I' => 'Corp - Internal *',
+
+    'M' => 'Marketing Pub *',
 	
+
+    'O' => 'Historical Electronics *',
+
+    'P' => 'Data sheet/Apps *',
+    'R' => '',
+    'S' => 'Sales/Mktg Bulletins *',
+    'T' => 'Cartoons',
+	'U' => 'Interviews *',
+    'V' => 'Car stuff',
+    'W' => 'Sales Conference *',
+    'X' => 'x-Problem',
+    'Y' => 'Posters and Symbols ',
+    
+    
+
+    );
+    #tag starting with Z is reserved for special searches, e.g., all archives
+
+	public static $archival_tags = "ACDEFIMOSWY";
+
 	
 	public static $ems_names = array(
 		'Y'	=>	'Validated',
