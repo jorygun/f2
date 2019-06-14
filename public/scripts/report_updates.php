@@ -225,7 +225,7 @@ fprintf ($ph,"Run at %s\n",$nowsql);
 fclose ($ph);
 
 ######################
-$newopp_report = file_get_contents (SITEPATH. "/news/news_next/news_opportunities.html");
+$opp_report = file_get_contents (SITEPATH. "/news/news_next/news_opportunities.html");
 
 echo <<<EOT
 <html><head><title>Show Updates</title>
@@ -383,7 +383,7 @@ function prepare_opp_report ($ptimex){
     $newopp_report_h = "";
     $newopp_report_t = '';
     $pdo = MyPDO::instance();
-    $opportunities_html=SITEPATH. "/news/news_next/news_opportunities.html";
+    $opportunities_html = SITEPATH. "/news/news_next/news_opportunities.html";
     
     $sql = "
         SELECT title,owner,owner_email,location,created,link
