@@ -198,7 +198,7 @@ EOT;
 
 $hcode = $update_message . $hcode . "</div>\n";
 file_put_contents($updates_html, $hcode);
-
+echo "Saving member updates to $updates_html" . BRNL;
 
 // now prepare name report
 
@@ -228,6 +228,7 @@ file_put_contents($updates_html, $hcode);
 	$teaser_report = '';
 	$teaser_report .=  $name_report;
 	file_put_contents($updates_text,$teaser_report);
+echo "Saving name_report to $updates.text" . BRNL;
 
 
 //build opportunity report
