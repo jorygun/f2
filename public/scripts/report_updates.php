@@ -34,18 +34,18 @@
 //Find date to begin looking from //
 if($ptime = $_GET['ptime']){
     $ptimex = strtotime($ptime);
-    $p_time = date('Y-m-d H:i:s', $ptimex);
+    
 }
-if (!$p_time){ #get from last published file
-    $p_time = get_start_time();
+if (!$ptimex){ #get from last published file
+    $ptimex = get_start_time();
 }
-if (!$p_time){
+if (!$ptimex){
 	echo "No starting time in either parameter or last published file. ";
 	echo "Setting to one week ago.";
-	$p_time = date('Y-m-d', strtotime('-7 days'));
+	$ptimex = strtotime('-7 days'));
 }
-$ptimex = strtotime($p_time);
-$ptimeh  = date('M d, Y',$php_ptime);
+
+$ptimeh  = date('M d, Y',$ptimex);
 $ptimes = date('Y-m-d H:i', $ptimex);
 
 
@@ -179,7 +179,7 @@ $update_message = <<< EOT
 
 <div class='update_data'>
 <h3>FLAMEs membership</h3>
-<p>As of $nowh. Updates since $nice_ptime.<br>
+<p>As of $nowh. Updates since $ptimeh.<br>
 Active: $active_members; Lost: $lost_members; Total: $total_members.
 </p>
 
@@ -260,13 +260,13 @@ echo "Saving name_report to $updates_text" . BRNL;
         <tr style='font-size:0.9em;'>
         <th></th><th>Posted</th><th>Description</th><th>Location</th></tr>
         ";
-        $p_time_tics = strtotime($p_time);
+       
 
         foreach ($results as $row){
             $oppclass=''; $oppnew='';$opp_is_new=false;
              $created_tics = strtotime($row['created']);
 
-            if ($created_tics > $p_time_tics) {
+            if ($created_tics > $ptimex) {
                 $oppclass='yellow';
                 $oppnew='<b>New</b>';
                 $opp_is_new = true;
@@ -460,6 +460,6 @@ function get_start_time(){
 	}
 	#echo "p_time found: $p_time<br>";
 	else {die ("No valid p_time $p_time_s");}
-	return $p_time;
+	return strtotime($p_time);
 }
 
