@@ -45,10 +45,10 @@ class Definitions {
     );
     #tag starting with Z is reserved for special searches, e.g., all archives
 
-	public static $archival_tags = "ACDEFIMOSWY";
+	static public $archival_tags = "ACDEFIMOSWY";
 
 	
-	public static $ems_names = array(
+	static public $ems_names = array(
 		'Y'	=>	'Validated',
 		'Q'	=>	'Believed Good',
 		'XX'	=>	'To be removed',
