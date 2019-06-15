@@ -3,7 +3,7 @@
     "description": "AMD Flames",
     "type": "project",
     "config": {  
-            "vendor-dir": "./vendor"
+            "vendor-dir": "../vendor"
     },
     "require": {
         "phpmailer/phpmailer": "^6.0",
@@ -25,7 +25,7 @@
     ],
     "autoload": { 
          "psr-4": {
-            "Digitalmx\\": "libdmx/"  
+            "digitalmx\\": "libmx/"  
             
             } 
         ,
