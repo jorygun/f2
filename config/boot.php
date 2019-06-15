@@ -65,7 +65,7 @@ ini_set('include_path',
 
 #add vendors 
 
-require_once '../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 
 #these are all namespaced
 #ns digitalmx\
