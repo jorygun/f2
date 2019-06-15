@@ -87,8 +87,13 @@ function echo_if($filename,$extra=''){
 	#pass filename, possible heding text,
 	   
 	#look in local directory or in news directory
-	   $file =  (file_exists($filename))? 
-	   		$filename : SITEPATH ."/news/$filename";
+	   if (file_exists($filename)) {
+	   		$file = $filename;
+	   } elseif (file_exists (SITEPATH ."/news/$filename")){
+	   	$file = SITEPATH ."/news/$filename";
+	   }
+	   else {return false;}
+	   
 
 		if (file_exists($file)){
 			global $voting; #need the voting object
@@ -115,11 +120,6 @@ function echo_if($filename,$extra=''){
 				},
                 $content
                  );
- //                $content1 = preg_replace(
-//                 	'/commenters(\d+)/',
-//                 	"found comment getter on $1",
-//                 	$content
-//                 );
                 
      #replace voting content
             $content2 = preg_replace_callback(
