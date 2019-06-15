@@ -64,8 +64,11 @@ ini_set('include_path',
 	);
 
 #add vendors 
-
-require_once "../vendor_autoload.php";
+if (file_exists("../vendor_autoload.php"){
+	require_once "../vendor_autoload.php";
+} else {
+	echo "no file.  " ; exit;
+}
 
 #these are all namespaced
 #ns digitalmx\
