@@ -53,7 +53,7 @@ EOT;
  		$new_location_surrogate = "$newspath/index.php";
  		$latest_pointer = "$newspath/latest_pointer.txt";
  		$last_published_time = "$newspath/last_published_time.txt";
-
+		$last_published_ts = REPO_PATH . "/data/last_published_ts.txt";
 
 
 	$latest_dir = "$newspath/news_latest";
@@ -114,6 +114,7 @@ $publish_wrapped = "<?php\n" . $publish_data . "?>\n";
     file_put_contents($publish_file,$publish_wrapped);
 
 file_put_contents($last_published_time,"$now\n");
+file_put_contents($last_publish_ts,time());
 
 
 

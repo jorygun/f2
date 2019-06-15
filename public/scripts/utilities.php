@@ -1449,14 +1449,14 @@ function get_latest_pub_date($form='sql')
     */
 
     #from new publishing script 8/12/16
-    $file1 = SITEPATH . '/news/last_published_time.txt';
+    $file1 = REPO_PATH . '/data/last_published_ts.txt';
 
     if (!file_exists($file1)){
         return "Latest pub date file not found";
     }
 
-    $pdate = file_get_contents($file1);
-    $tstamp = strtotime($pdate);
+    $tstamp = file_get_contents($file1);
+   
 
      switch ($form) {
         case 'sql':

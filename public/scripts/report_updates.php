@@ -28,6 +28,7 @@
  
  $updates_html_file=SITEPATH . "/news/news_next/news_updates.html";
  $updates_text_file = SITEPATH . "/news/news_next/tease_updates.txt";
+ # not used.  Only list of names is used.
  
  $updates_html = $updates_text = ''; #containers for building reports in
  

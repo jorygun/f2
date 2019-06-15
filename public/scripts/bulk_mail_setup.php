@@ -43,7 +43,7 @@ ini_set('error_reporting', E_ALL);
 	$assets = $news_latest . "/assets.txt";
 
 
-	$bulk_queue = $project_path . '/bulk_queue'; #directory.  put jobs in here
+	$bulk_queue = $project_path . '/bulk_jobs/queue'; #directory.  put jobs in here
 
 	
 	$comments = $news_latest . "/current_comments.txt";
@@ -575,7 +575,7 @@ function build_teaser($dir) {
 	'updates',
 	'calendar',
 	'opportunities',
-	'comments',
+	'articles',
 	'assets'
 	);
 	$teaser = '';

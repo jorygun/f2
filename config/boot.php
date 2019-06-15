@@ -30,11 +30,11 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-   $site_dir = dirname(__DIR__); #---/flames/<repo>/ - where this repo is      *
-   $project_dir = dirname($site_dir); #---/flames - where shared stuff is          *
-   $repo_name = basename($site_dir); #-- repo name    
+   $repo_dir = dirname(__DIR__); #---/flames/<repo>/ - where this repo is      *
+   $project_dir = dirname($repo_dir); #---/flames - where shared stuff is          *
+   $repo_name = basename($repo_dir); #-- repo name    
    $platform = get_platform();
-	$con_msg = "boot.php:: \nplatform: $platform;\nsite_dir: $site_dir; \nrepo_name: $repo_name;\n\n";
+	$con_msg = "boot.php found: \n  platform: $platform;\n  repo_dir: $repo_dir; \n  repo_name: $repo_name;\n\n";
 	
 if ($repo_name == 'live'){
 	ini_set('display_errors',0);
@@ -52,19 +52,19 @@ else {
 ini_set('include_path',
 	  '.'
    . ':' . '/usr/local/lib/php'
-	. ':' . $project_dir . "/libmx/phpmx"
-	. ':' . $site_dir . '/lib'
-	. ':' . $site_dir. '/config'
-	. ':' . $site_dir. '/code'
-	. ':' . $site_dir . '/public'
-	. ':' . $site_dir . '/public/scripts'
+	. ':' . $repo_dir . '/libmx'
+	. ':' . $repo_dir . '/lib'
+	. ':' . $repo_dir. '/config'
+	. ':' . $repo_dir. '/code'
+	. ':' . $repo_dir . '/public'
+	. ':' . $repo_dir . '/public/scripts'
 
 
 	);
 
-#add primary 
+#add vendors 
 
-require_once $site_dir . '/composer-autoload';
+require_once '../vendor/autoload.php';
 
 #these are all namespaced
 #ns digitalmx\
@@ -76,11 +76,11 @@ require_once 'Definitions.php';
 
 
 require_once 'f2_constants.php'; 
-require_once SITEPATH. "/scripts/utilities.php";
+require_once SITEPATH. "utilities.php";
 
 #build db
 require_once 'MxPDO.php'; 
-$db_ini = $project_dir . '/config/db.ini'; # all the connection params 
+$db_ini = './db.ini'; # all the connection params 
 
 #old pdo
 
@@ -92,7 +92,7 @@ if ($platform == 'pair'){
 	require_once  "f2_connect.php";
 	$DB_link = Connect_DB();
 	$GLOBALS['DB_link'] = $DB_link;
-	  require_once "f2_security.php";
+	require_once "f2_security.php";
 	
 	
 } else {
@@ -103,6 +103,10 @@ if ($platform == 'pair'){
 	require_once "f2_security.php";
 }
 
+defined ('PROJECT_PATH') or
+	define ('PROJECT_PATH',$project_dir);
+defined ('REPO_PATH') or
+	define ('REPO_PATH',$repo_dir);
 require_once 'nav.class.php';
 
 #create container
@@ -268,16 +272,17 @@ $G_departments = array (
 	
 define ('INIT',1);
 #################################################
+// using ENV and HOME because they work in all circumstances: cron, cli, etc.
 function get_platform(){
-	switch ($_SERVER['SERVER_ADDR']) {
-		case '216.146.219.142':
+	switch ($_ENV['HOME']) {
+		case '/usr/home/digitalm':
 			$platform = 'pair';
 			break;
-		case '127.0.0.1':
+		case 'Users/john':
 			$platform = 'ayebook';
 			break;
 		default:
-			$platform = 'ayebook';
+			throw new Exception ("Cannot determine platform");
 	}
 	return $platform;
 }
