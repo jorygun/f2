@@ -1,4 +1,5 @@
 <?php
+namespace digitalmx\flames;
 /**
  Every script run from web must start by running this script
 	(scripts run from cron must take care of their own stuff)
