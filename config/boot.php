@@ -88,7 +88,7 @@ $db_ini = './db.ini'; # all the connection params
 if ($platform == 'pair'){
 	require_once 'setGlobals.php';
 	require_once 'MyPDO.class.php'; #uses envir constants for config
-	$pdo = MyPDO::instance();
+	$pdo = \MyPDO::instance();
 	$GV = $GLOBALS = setGlobals();
 	require_once  "f2_connect.php";
 	$DB_link = Connect_DB();
@@ -99,7 +99,7 @@ if ($platform == 'pair'){
 } else {
 	require_once 'setGlobals.php';
 	require_once 'MyPDO.class.php'; #uses envir constant
-	$pdo = new MxPDO('production',$platform,$db_ini);
+	$pdo = new \digitalmx\MxPDO('production',$platform,$db_ini);
 	$GV = $GLOBALS = setGlobals();
 	require_once "f2_security.php";
 }
