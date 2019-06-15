@@ -124,11 +124,6 @@ $container['pdo_prod'] = function ($c) use ($db_ini,$platform) {
 
 ###### everything below is suspect ######
 
-// set more global values
-		// date object
-		$DT_zone = new DateTimeZone('America/Los_Angeles');
-
-		$DT_now = new DateTime('now',$DT_zone);
 
 
 // SET MEMBER DEFINITIONS

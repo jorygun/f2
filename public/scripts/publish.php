@@ -29,7 +29,7 @@ EOT;
 
 
 //
-	$pubdate = new DateTime($now,$DT_zone);
+	$pubdate = new DateTime();
 
 	$condensed_date = $pubdate -> format('ymd');
 	$conventional_date = $pubdate -> format('M j, Y');

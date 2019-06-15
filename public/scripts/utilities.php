@@ -1373,12 +1373,12 @@ EOT;
 
 function age($date_str) {
 	//takes a date and returns the age from today in days and a formatted version of date
-	global $DT_zone ; #time zone object
-	global $DT_now;
+	
 	if (!$date_str){ #blank or NULL??
 		return array('99999','no_date');
 	}
-	$vd = new DateTime($date_str,$DT_zone);
+	$DT_now = new DateTime();
+	$vd = new DateTime($date_str);
 	$diff = $vd -> diff($DT_now);
 	$diff_str = $diff->format('%a');
 	$last_val = $vd->format ('M j, Y');
