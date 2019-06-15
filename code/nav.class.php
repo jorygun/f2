@@ -76,7 +76,11 @@ EOT;
 
 	private function get_version() {
 		
-		$vname = basename($_SERVER['DOCUMENT_ROOT']); 
+		$vroot = basename($_SERVER['DOCUMENT_ROOT']); 
+		$vfile = "../config/version.txt";
+		$vnum = file_get_contents ($vfile);
+		$vrel = date('d M Y H:i',filemtime($vfile);
+		$vname = "[$vroot] $vnum <br>($vrel)";
 		return $vname;
 	}
 	
@@ -97,6 +101,7 @@ EOT;
 
 
 	public function build_menu ($extra='') {
+		$version = $this->get_version();
 
 	if (! empty($_SESSION['level']) ){
 	  $lvl = $_SESSION['level'];
@@ -255,10 +260,12 @@ EOT;
 	<li><button type='button' onClick='closeMenu($js_menulist)' title='Close open menus (for touchscreen users)' class='xbutton'> X </button>
 	<ul><li>Touchscreen users <a href='#' onClick='closeMenu($js_menulist)' style='text-decoration:underline;'>click</a> to close open menus </ul>
 	</ul>
+	<li>$version 
+	</ul>
 EOT;
 
 	if (!empty($extra)){ $t .= $extra;}
-	$t .= self::if_level(8,'v.' . $this->get_version() );
+	
 	$t .= "</nav>\n";
 	
 	return "$t";
