@@ -283,7 +283,7 @@ function get_platform(){
 			$platform = 'ayebook';
 			break;
 		default:
-			throw new Exception ("Cannot determine platform form $sig");
+			throw new Exception ("Cannot determine platform from $sig");
 	}
 	return $platform;
 }
