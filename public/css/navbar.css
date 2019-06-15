@@ -89,8 +89,11 @@ nav {
 
 }
 #nav .vbox {
-   border:1px solid #030;
+   border:1px solid #333;
    font-size:0.7em;
-   width:15em;
+   color: #000;
    padding:3px;
+   margin-left:1em;
+   margin-right:1em;
+   
 }
