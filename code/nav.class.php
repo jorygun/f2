@@ -101,7 +101,8 @@ EOT;
 	}
 
 
-	public function build_menu ($extra='') {
+	public function build_menu ($extra='') 
+	{
 		$version = $this->get_version();
 
 	if (! empty($_SESSION['level']) ){
@@ -257,22 +258,19 @@ EOT;
 
 	$js_menulist = json_encode ($menulist);
 
-	$t .= <<<EOT
-
+	$t .= "
 	<li><button type='button' onClick='closeMenu($js_menulist)' title='Close open menus (for touchscreen users)' class='xbutton'> X </button>
 	<ul><li>Touchscreen users <a href='#' onClick='closeMenu($js_menulist)' style='text-decoration:underline;'>click</a> to close open menus </ul>
-	 
-	
+";	 
 
-EOT;	 
 	$t .= self::if_level(5,
 		" <li>$version");
 		
-echo "	</ul>\n";
+	$t .=  "	</ul>\n";
 	
 
 
-	if (!empty($extra)){ $t .= $extra;}
+	if (! empty($extra)){ $t .= $extra;}
 	
 	$t .= "</nav>\n";
 	
@@ -280,11 +278,5 @@ echo "	</ul>\n";
 	}
 
 
-
 }
-
-
-
-
-
 
