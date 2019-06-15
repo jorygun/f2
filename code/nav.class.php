@@ -133,7 +133,7 @@ EOT;
 	    $navflag = '(nav v2)';
 	}
 	else {
-		$stylelink = file_get_contents(SITEPATH . '/css/navbar.css') ;
+		$stylelink = file_get_contents(SITEPATH . '/css/navbar2.css') ;
 		$navflag = '';
 	}
 	
@@ -159,7 +159,7 @@ EOT;
 	#$t .= "<p>session level ${_SESSION['level']}; lvl $lvl; name $username<p>";
 	$t .=  <<<EOT
 	<ul>
-	<li>$version
+	
 EOT;
 
 	
@@ -261,6 +261,8 @@ EOT;
 
 	<li><button type='button' onClick='closeMenu($js_menulist)' title='Close open menus (for touchscreen users)' class='xbutton'> X </button>
 	<ul><li>Touchscreen users <a href='#' onClick='closeMenu($js_menulist)' style='text-decoration:underline;'>click</a> to close open menus </ul>
+	 
+	 <li>$version
 	 
 	</ul>
 	
