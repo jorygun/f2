@@ -262,12 +262,15 @@ EOT;
 	<li><button type='button' onClick='closeMenu($js_menulist)' title='Close open menus (for touchscreen users)' class='xbutton'> X </button>
 	<ul><li>Touchscreen users <a href='#' onClick='closeMenu($js_menulist)' style='text-decoration:underline;'>click</a> to close open menus </ul>
 	 
-	 <li>$version
-	 
-	</ul>
 	
 
-EOT;
+EOT;	 
+	$t .= self::if_level(5,
+		" <li>$version");
+		
+echo "	</ul>\n";
+	
+
 
 	if (!empty($extra)){ $t .= $extra;}
 	
