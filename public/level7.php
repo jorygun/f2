@@ -10,21 +10,10 @@ $navbar = $nav -> build_menu();
 	$latest_bulk = SITEPATH . "/logs/bulk_mail_logs/log_last.txt";
 
     // get latest published update date
-	$ptime_file = SITEPATH . "/news/last_update_published.txt";
-	if (file_exists($ptime_file)){
-		$p_time_s = trim(file_get_contents($ptime_file));
-		if(preg_match('/.*?([\d\:\-]+ [\d\:\-]+)/',$p_time_s,$m)){
-			 $last_ptime = ($m[1]);
-		}
-	}
-	else {
+    if (! $last_ptime = get_latest_pub_date('sql')){
 		echo "No valid p_time file; setting time to one week ago." . BRNL;
 		$dt = new DateTime(" - 7 days");
-		
 		$last_ptime= $dt->format('Y-m-d');
-		
-		
-		
 	}
 
     //get current title, if any
