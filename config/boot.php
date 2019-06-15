@@ -285,7 +285,7 @@ function get_platform(){
 		default:
 			echo "Cannot determine platform from '$sig'";
 			echo "ENV:\n";
-			echo getenv();
+			print_r (getenv());
 			exit;
 	}
 	return $platform;
