@@ -16,6 +16,7 @@ test.php
 *~
 
 #ignore vendor directory - will be reconstruted on site
+vendor/
 
 #misc
 *.log

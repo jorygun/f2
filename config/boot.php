@@ -64,8 +64,8 @@ ini_set('include_path',
 	);
 
 #add vendors 
-if (file_exists("../vendor_autoload.php")){
-	require_once "../vendor_autoload.php";
+if (file_exists("../vendor/autoload.php")){
+	require_once "../vendor/autoload.php";
 } else {
 	echo "no file.  " ; exit;
 }

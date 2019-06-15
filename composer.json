@@ -3,7 +3,7 @@
     "description": "AMD Flames",
     "type": "project",
     "config": {  
-            "vendor-dir": "../vendor"
+            "vendor-dir": "./vendor"
     },
     "require": {
         "phpmailer/phpmailer": "^6.0",
