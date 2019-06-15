@@ -274,7 +274,8 @@ define ('INIT',1);
 #################################################
 // using ENV and HOME because they work in all circumstances: cron, cli, etc.
 function get_platform(){
-	switch (getenv('HOME')) {
+	$sig = getenv('HOME');
+	switch ($sig) {
 		case '/usr/home/digitalm':
 			$platform = 'pair';
 			break;
@@ -282,7 +283,7 @@ function get_platform(){
 			$platform = 'ayebook';
 			break;
 		default:
-			throw new Exception ("Cannot determine platform");
+			throw new Exception ("Cannot determine platform form $sig");
 	}
 	return $platform;
 }
