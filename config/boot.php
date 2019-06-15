@@ -274,7 +274,7 @@ define ('INIT',1);
 #################################################
 // using ENV and HOME because they work in all circumstances: cron, cli, etc.
 function get_platform(){
-	switch ($_ENV['HOME']) {
+	switch (getenv('HOME')) {
 		case '/usr/home/digitalm':
 			$platform = 'pair';
 			break;
