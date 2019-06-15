@@ -65,7 +65,7 @@ ini_set('include_path',
 
 #add vendors 
 if (file_exists("$repo_dir/vendor/autoload.php")){
-	require_once "../vendor/autoload.php";
+	require_once "$repo_dir/vendor/autoload.php";
 } else {
 	echo "no file.  " ; exit;
 }
