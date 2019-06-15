@@ -283,7 +283,10 @@ function get_platform(){
 			$platform = 'ayebook';
 			break;
 		default:
-			throw new Exception ("Cannot determine platform from $sig");
+			echo "Cannot determine platform from '$sig'";
+			echo "ENV:\n";
+			echo getenv();
+			exit;
 	}
 	return $platform;
 }
