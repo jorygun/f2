@@ -1455,7 +1455,7 @@ function get_latest_pub_date($form='sql')
         return "Latest pub date file not found";
     }
 
-    $tstamp = file_get_contents($file1);
+    $tstamp = trim(file_get_contents($file1));
    
 
      switch ($form) {
