@@ -76,7 +76,7 @@ require_once 'Definitions.php';
 
 
 require_once 'f2_constants.php'; 
-require_once SITEPATH. "utilities.php";
+require_once "utilities.php";
 
 #build db
 require_once 'MxPDO.php'; 
