@@ -77,7 +77,7 @@ EOT;
 	private function get_version() {
 		
 		$vroot = basename($_SERVER['DOCUMENT_ROOT']); 
-		$vfile = "REPO_PATH/config/version.txt";
+		$vfile = REPO_PATH . "/config/version.txt";
 		$vnum = file_get_contents ($vfile);
 		$vrel = date('d M Y H:i',filemtime($vfile));
 		$vname = "[$vroot] $vnum <br>($vrel)";
