@@ -263,7 +263,7 @@ EOT;
 	<ul><li>Touchscreen users <a href='#' onClick='closeMenu($js_menulist)' style='text-decoration:underline;'>click</a> to close open menus </ul>
 ";	 
 
-	$t .= self::if_level(5,
+	$t .= self::if_level(6,
 		" <li>$version");
 		
 	$t .=  "	</ul>\n";

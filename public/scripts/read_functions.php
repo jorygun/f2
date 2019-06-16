@@ -91,12 +91,12 @@ function echo_if($filename,$extra=''){
 	   		$file = $filename;
 	   } elseif (file_exists (SITEPATH ."/news/$filename")){
 	   	$file = SITEPATH ."/news/$filename";
-	   }
-	   else {return false;}
+	   } elseif (file_exits (SITEPATH . "/news/news_live/$filename")) {
+	   	$file = SITEPATH . "/news/news_live/$filename"; 	
+	  } else {return false;}
 	   
 
-		if (file_exists($file)){
-			global $voting; #need the voting object
+		global $voting; #need the voting object
 	    #	echo "reading $filename" . BRNL;
 			$content = file_get_contents($file);
 	
@@ -149,12 +149,9 @@ function echo_if($filename,$extra=''){
                 
             echo $extra;
         	echo $content3;
-     
+   
+        	return "$extra\n$content3"; #replace echo with using return value
 
-        	return true;
-	
-		}
-		return false;
 	}
 
 
