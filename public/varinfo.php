@@ -100,7 +100,7 @@ recho ($_ENV,'$_ENV');
 recho ($server_changes,'Changed value in $_SERVER');
 recho ($server_adds,'Added to $_SERVER');
 recho ($_SESSION,'$_SESSION');
-<<<<<<< HEAD
+
 recho ($GLOBALS,'$GLOBALS');
 
 
@@ -115,20 +115,7 @@ if (file_exists('.htaccess')){
 echo "No .htaccess";
 }
 echo "<br>\n";
-=======
 
-
-echo "<hr>";
-$htaccessm = date('d M H:i',filemtime('.htaccess'));
-echo ".htaccess ($htaccessm) :<br><pre>";
-echo file_get_contents('.htaccess');
-echo '</pre><hr>';
-
-
-try {
-	echo "From Definitions<br>\n";
-	echo "seclevel ma: " . Definitions::get_seclevel('MA').BRNL;
->>>>>>> develop
 
 
 if (class_exists('Definitions')){
