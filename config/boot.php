@@ -32,7 +32,7 @@ use Pimple\Container;
 
 $init = new Init();
 
-$init->setConstants($init->get_home() );
+$init->setConstants();
 
 #add vendor autoload
 	if (file_exists(REPO_PATH . "/vendor/autoload.php")){
@@ -164,7 +164,7 @@ class Init
 	public function setConstants($home)
 	{
 		
-		define ('HOME', $home);
+		define ('HOME', $this->home);
 		
 
 	// BR, NL, BRNL, CRLF, LF, URL_REGEX //
