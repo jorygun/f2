@@ -81,10 +81,10 @@ EOT;
 		
 		$vrel = date('d M Y H:i',filemtime($vfile));
 		
-		$vnum = $init->getVersion();
+		#$vnum = $init->getVersion();
 		
-		// $vlatest = `tail -n 1 $vfile`;
-// 		$vnum = file_get_contents ($vfile);
+		$vlatest = `tail -n 1 $vfile`;
+		$vnum = preg_split("/\s+/",$vlatest)[0];
 		
 		$vname = "<div class='vbox'>[$vroot] $vnum <br>($vrel)</div>";
 		
