@@ -46,7 +46,7 @@ $init->setConstants($init->get_home() );
 if ($init->get_platform() == 'pair'){
 
 	require_once 'setGlobals.php';
-	require_once 'MyPDO.class.php'; #uses envir constants for config
+	require_once 'MyPDO.class.php'; #uses envir constants for config; sets from db.ini if not already set
 	$pdo = \MyPDO::instance();
 	$GV = $GLOBALS = setGlobals();
 	require_once  "f2_connect.php";
