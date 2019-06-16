@@ -44,8 +44,7 @@ $init->setConstants($init->get_home() );
 
 	
 if ($init->get_platform() == 'pair'){
-	require_once 'f2_constants.php';
-	
+
 	require_once 'setGlobals.php';
 	require_once 'MyPDO.class.php'; #uses envir constants for config
 	$pdo = \MyPDO::instance();
@@ -177,6 +176,7 @@ class Init
 			REPO_PATH (..../flames/beta)
 			SITE_PATH (..../flames/beta/public
 			SITE (amdflames.org)
+			SITE_URL (http://SITE)
 		*/
 		
 		define ('PROJ_PATH',$this->project_dir);
