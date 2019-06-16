@@ -44,6 +44,7 @@ $init->setConstants($init->get_home() );
 
 	
 if ($init->get_platform() == 'pair'){
+	require_once 'f2_constants.php';
 	
 	require_once 'setGlobals.php';
 	require_once 'MyPDO.class.php'; #uses envir constants for config
