@@ -147,7 +147,7 @@ EOT;
 }
 ####################################################
 function process_uploads($dir) {
-    $dirpath = SITEPATH . $dir; #upload directory typically
+    $dirpath = SITE_PATH . $dir; #upload directory typically
 
     if (!$filelist = scandir("$dirpath")){
         die ("No files found in $dirpath");
@@ -182,7 +182,7 @@ function process_uploads($dir) {
         if (!empty($captions[$this_file])){
             $post_array['caption'] = $captions[$this_file];
         }
-        $fake_upload = SITEPATH . '/' . $dir . '/' . $this_file;
+        $fake_upload = SITE_PATH . '/' . $dir . '/' . $this_file;
         $_FILES['linkfile'] = build_files_array($fake_upload);
         #recho ($_FILES,'from asset_generator');
         recho ($post_array,'post array from asset gen');

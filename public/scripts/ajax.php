@@ -52,6 +52,6 @@ function cancel_bulk($job) {
 	require_once 'BulkMail.class.php';
 	$bulkmail = new BulkMail;
 	
-	rename (SITEPATH . '/bulk_queue/' . $job , SITEPATH . '/bulk_queue/' . $job . '-cancelled');
-	return $bulkmail -> show_bulk_jobs(SITEPATH . '/bulk_queue');
+	rename (SITE_PATH . '/bulk_queue/' . $job , SITE_PATH . '/bulk_queue/' . $job . '-cancelled');
+	return $bulkmail -> show_bulk_jobs(SITE_PATH . '/bulk_queue');
 }

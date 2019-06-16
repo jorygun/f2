@@ -62,8 +62,8 @@ function search($params){
 
 // Open the news folder to array $files[] )
 $format = "%6d\t%s\t%s\t%s\t%s\t%s\n";
- $news_index = json_decode (file_get_contents(SITEPATH . "/newsp/index.json"));
- $result_file = SITEPATH . "/assets/search_${type}_${limit_year}.txt";
+ $news_index = json_decode (file_get_contents(SITE_PATH . "/newsp/index.json"));
+ $result_file = SITE_PATH . "/assets/search_${type}_${limit_year}.txt";
  $tag_count = 0;
  $logfh = fopen($result_file,'w');
 

@@ -215,7 +215,7 @@ function get_asset_by_id($id,$style='thumb'){
     $click_line = (!empty($target))? "<p class='small centered'> (Click image for link.)</p>":'';
 
      $thumb_url = "/assets/thumbs/${row['thumb_file']}";
-   if ( empty($row['thumb_file']) or !file_exists(SITEPATH . "/$thumb_url") ){ 
+   if ( empty($row['thumb_file']) or !file_exists(SITE_PATH . "/$thumb_url") ){ 
    	#try to make thumb from source
    		
    		return "Attempt to link id $id to asset with no thumb: $thumb_url"; 
@@ -262,7 +262,7 @@ function get_asset_by_id($id,$style='thumb'){
 
         $gfile = choose_graphic_url('/assets/galleries',$id);
 
-        if (empty($gfile) && file_exists(SITEPATH . "/$thumb_url")  ) {
+        if (empty($gfile) && file_exists(SITE_PATH . "/$thumb_url")  ) {
             $gfile = $thumb_url;
         }
 
@@ -480,7 +480,7 @@ function create_thumb($id,$fsource,$type='thumbs'){
 		$yturl = "http://img.youtube.com/vi/$videoid/mqdefault.jpg" ;
 		#echo "yturl $yturl". BRNL;
 		$thumb = "${id}.jpg";
-		copy ($yturl , SITEPATH . "/assets/$type/$thumb"); 
+		copy ($yturl , SITE_PATH . "/assets/$type/$thumb"); 
 		return $thumb;
 	   
 	}
@@ -489,7 +489,7 @@ function create_thumb($id,$fsource,$type='thumbs'){
 	 #set source path to either absolute file path or url
 	 
 	 if (substr($fsource,0,1) == '/') { #local file
-	 	$source_path = SITEPATH . $fsource;
+	 	$source_path = SITE_PATH . $fsource;
 	 }	
 	 else {
 	 	$source_path = $fsource;
@@ -503,7 +503,7 @@ function create_thumb($id,$fsource,$type='thumbs'){
         
 //         if (strcasecmp($fsource,'pdf') == 0) {
 //         	#set to use page 1 of the pdf [0] for the thumb 
-//             if ($thumb = build_im_thumbnail($id,SITEPATH."$fsource" ,$type, $thumb_width[$type]) ){
+//             if ($thumb = build_im_thumbnail($id,SITE_PATH."$fsource" ,$type, $thumb_width[$type]) ){
 //                 echo "Created thumb from pdf" . BRNL;
 //              
 //             }
@@ -521,7 +521,7 @@ function create_thumb($id,$fsource,$type='thumbs'){
 		case 'application/msword' :
 			$use_icon="doc.jpg";
 			$thumb = "${id}.jpg";
-			copy (SITEPATH . "/assets/icons/$use_icon" , SITEPATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
 			return $thumb;
 			break;
 		case 'application/pdf' :
@@ -536,13 +536,13 @@ function create_thumb($id,$fsource,$type='thumbs'){
 		case 'text/html':
 			$use_icon="web.jpg";
 			$thumb = "${id}.jpg";
-			copy (SITEPATH . "/assets/icons/$use_icon" , SITEPATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
 			return $thumb;
 			break;
 		case 'video/mp4':
 			$use_icon = 'mp4.jpg';
 			$thumb = "${id}.jpg";
-			copy (SITEPATH . "/assets/icons/$use_icon" , SITEPATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
 			return $thumb;
 			break;
 		case 'audio/mp3':
@@ -550,20 +550,20 @@ function create_thumb($id,$fsource,$type='thumbs'){
 			$ext = substr($source_mime,6,3);
 			$use_icon = "${ext}.jpg";
 			$thumb = "${id}.jpg";
-			copy (SITEPATH . "/assets/icons/$use_icon" , SITEPATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
 			return $thumb;
 			break;
 		case 'video/quicktime':
 			$use_icon = 'mov.jpg';
 			$thumb = "${id}.jpg";
-			copy (SITEPATH . "/assets/icons/$use_icon" , SITEPATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
 			return $thumb;
 			break;
 			
 		default:
 			$use_icon = 'default.jpg';
 			$thumb = "${id}.jpg";
-			copy (SITEPATH . "/assets/icons/$use_icon" , SITEPATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
 			return $thumb;
 			break;
 			
@@ -583,7 +583,7 @@ function build_im_thumbnail ($id,$source,$type,$max_dim){
      $im = new imagick ( $source);
     $im->setImageFormat('jpg');
     $im->thumbnailImage($max_dim, $max_dim,true); #best fit
-    $im->writeImage(SITEPATH . "/assets/$type/$thumb");
+    $im->writeImage(SITE_PATH . "/assets/$type/$thumb");
     return $thumb;
 }
 
@@ -592,7 +592,7 @@ function get_gfile($filepath) {
     #looks for designated file and returns its full path
     # if not found looks for either jpg or png or gif with same name
 
-    $path = SITEPATH . $filepath;
+    $path = SITE_PATH . $filepath;
    # ,);
     if (file_exists($path)){return $path;}
     else {
@@ -649,7 +649,7 @@ function delete_files($id){
     	if (! preg_match('/$id\.[jpg|png]/',$thumb))
     		 {echo "Cannot delete thumb $thumb" . BRNL;}
     	else {
-			$file = SITEPATH . "/assets/thumbs/$thumb";
+			$file = SITE_PATH . "/assets/thumbs/$thumb";
 			if (file_exists($file)){
 				$unlink_list['thumb'] = $file;
 			}
@@ -666,14 +666,14 @@ function delete_files($id){
 
     $url = $row['url'];
     if (substr($url,0,1) == '/'){
-        $file = SITEPATH . "$url";
+        $file = SITE_PATH . "$url";
         if (file_exists($file)){
             $unlink_list['source'] = $file;
         }
     }
     $link = $row['link'];
     if (substr($link,0,1) == '/'){
-        $file = SITEPATH . "$link";
+        $file = SITE_PATH . "$link";
         if (file_exists($file)){
             $unlink_list['link'] = $file;
         }
@@ -790,7 +790,7 @@ function add_link_data($url){
             return $sqls;
         }
         elseif (substr($url,0,1) == '/'){# local
-             $filepath = SITEPATH .  "$url";
+             $filepath = SITE_PATH .  "$url";
              $mime = mime_content_type($filepath);
              $size = filesize($filepath);
              if (substr($mime,0,5) == 'image'){
@@ -869,7 +869,7 @@ function update_galleries($galleryid,$ids){
 }
 
  function build_files_array($loc) {
-            #$loc =  SITEPATH . '/' . $upload_dir . '/' . $this_file;
+            #$loc =  SITE_PATH . '/' . $upload_dir . '/' . $this_file;
              #use _FILES array to look like an upload
             
          $finfo = new finfo(FILEINFO_MIME_TYPE);
@@ -921,7 +921,7 @@ function post_asset($post_array){
     $link = $post_array['link'] ?? '';
       
     if (strncmp ($link, '/assets/uploads',15) == 0) {
-          $_FILES['linkfile'] = build_files_array(SITEPATH . $link);
+          $_FILES['linkfile'] = build_files_array(SITE_PATH . $link);
     }
 #if there's a file specified in _FILES (uploaded or bulk), do it
 
@@ -956,7 +956,7 @@ function post_asset($post_array){
         }
        
         if (substr($link,0,1) == '/' and strpos($link,'/galleries')===false){ #local
-        	$postfile = SITEPATH . $link;
+        	$postfile = SITE_PATH . $link;
         	
            if ( is_file ($postfile) === false){
 
@@ -1003,10 +1003,10 @@ function post_asset($post_array){
        
    //  if (substr($url,0,15) == '/assets/uploads'){
 //        
-//         $old_path = SITEPATH . $url;
+//         $old_path = SITE_PATH . $url;
 //         $ext = strtolower(pathinfo($url,PATHINFO_EXTENSION));
 //         $new_url = "/assets/files/${id}.$ext";
-//         $new_path = SITEPATH . $new_url;
+//         $new_path = SITE_PATH . $new_url;
 //            copy ($old_path, $new_path); 
 //         $post_array['url'] = $new_url;
 //         #check to make sure it copied
@@ -1194,7 +1194,7 @@ function accept_upfile($upload_name,$upload_dir,$asset_id){
 
 
     $file_name = "${asset_id}.${ext}";
-    $file_path = SITEPATH . "/$upload_dir/$file_name";
+    $file_path = SITE_PATH . "/$upload_dir/$file_name";
 
     if (empty($file_name)){throw new RuntimeException("Cannot assign name to $upload_name file");}
 

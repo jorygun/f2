@@ -190,7 +190,7 @@ class Member
         
         $is_member = in_array($row['status'], Definitions::get_member_array());
         
-        $image_url = SITEPATH . "/assets/users/{$id}.jpg";
+        $image_url = SITE_PATH . "/assets/users/{$id}.jpg";
         if (!file_exists($image_url)){$image_url = '';}
     
        $profile_date = (empty($row['profile_verified']))? "(Never)" :

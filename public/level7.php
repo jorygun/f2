@@ -7,7 +7,7 @@ $nav = new navBar(1);
 $navbar = $nav -> build_menu();
 
 
-	$latest_bulk = SITEPATH . "/logs/bulk_mail_logs/log_last.txt";
+	$latest_bulk = SITE_PATH . "/logs/bulk_mail_logs/log_last.txt";
 
     // get latest published update date
     if (! $last_ptime = get_latest_pub_date('sql')){
@@ -17,7 +17,7 @@ $navbar = $nav -> build_menu();
 	}
 
     //get current title, if any
-    $titlefile = SITEPATH . '/news/news_next/title.txt';
+    $titlefile = SITE_PATH . '/news/news_next/title.txt';
     if (file_exists($titlefile)){$current_title = file_get_contents($titlefile);}
     else {$current_title = 'Title Not Set';}
     $current_title_decoded = htmlspecialchars_decode($current_title);

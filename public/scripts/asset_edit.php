@@ -196,8 +196,8 @@ function go_to_id($id,$type=''){
 }
 
 function png_or_jpg_exists($dir,$id){
-    if (file_exists(SITEPATH . "/assets/$dir/${id}.jpg")){return true;}
-     if (file_exists(SITEPATH . "/assets/$dir/${id}.png")){return true;}
+    if (file_exists(SITE_PATH . "/assets/$dir/${id}.jpg")){return true;}
+     if (file_exists(SITE_PATH . "/assets/$dir/${id}.png")){return true;}
      return false;
 }
 

@@ -198,7 +198,7 @@ $G_departments = array (
 		$DB_link = Connect_DB();
 		$GLOBALS['DB_link'] = $DB_link;
 
-		require_once SITEPATH. "/scripts/utilities.php";
+		require_once SITE_PATH. "/scripts/utilities.php";
 	#echo "utils loaded. ",im_here();
 
 		require_once "f2_security.php";

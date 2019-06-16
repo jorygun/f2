@@ -12,7 +12,7 @@ ini_set('error_reporting',E_ALL);
 //echo "Beginning news_files2.php<br>\n";
 
 
-$news_directory = SITEPATH . '/news';
+$news_directory = SITE_PATH . '/news';
 $next_directory = "$news_directory/news_next";
 $itemdb = 'news_items';
 $now = sql_now();

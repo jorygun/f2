@@ -140,14 +140,14 @@ function get_gallery_asset($id){
    $edit_field = ($editable) ? "<a href='/scripts/asset_edit.php?id=$id&type=specadmin'>Edit</a> " : '';
 
 
-   if ( empty($row['thumb_file']) or !file_exists(SITEPATH . "/$thumb_url") ){ return "Attempt to link to asset with no thumb: id $id"; }
+   if ( empty($row['thumb_file']) or !file_exists(SITE_PATH . "/$thumb_url") ){ return "Attempt to link to asset with no thumb: id $id"; }
 
 
     $out =  "<div class='album'>";
 
     $gfile = choose_graphic_url('/assets/galleries',$id);
 
-    if (empty($gfile) && file_exists(SITEPATH . "/$thumb_url")  ) {
+    if (empty($gfile) && file_exists(SITE_PATH . "/$thumb_url")  ) {
         $gfile = $thumb_url;
     }
 

@@ -164,7 +164,7 @@ function nogo($alert_message = 'Not logged in correctly') {
 
 <body>
 EOT;
-include SITEPATH . '/navbar_div.php';
+include SITE_PATH . '/navbar_div.php';
 
 echo <<<EOT
 

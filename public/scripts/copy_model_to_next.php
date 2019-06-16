@@ -10,8 +10,8 @@
 <body>
 <?php
 
-		$nextnews_dir = SITEPATH . "/news/news_next";
-		$modelnews_dir = SITEPATH . "/news/news_model";
+		$nextnews_dir = SITE_PATH . "/news/news_next";
+		$modelnews_dir = SITE_PATH . "/news/news_model";
 
 
 	deleteDir ($nextnews_dir);

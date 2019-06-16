@@ -23,11 +23,11 @@
 #$G_member_status_array = array('M', 'MA','MN','MC','MU','R','G');
 
  
- $rtime_file = SITEPATH . "/news/last_update_run.txt";
- $ptime_file = SITEPATH . "/news/last_update_published.txt";
+ $rtime_file = SITE_PATH . "/news/last_update_run.txt";
+ $ptime_file = SITE_PATH . "/news/last_update_published.txt";
  
- $updates_html_file=SITEPATH . "/news/news_next/news_updates.html";
- $updates_text_file = SITEPATH . "/news/news_next/tease_updates.txt";
+ $updates_html_file=SITE_PATH . "/news/news_next/news_updates.html";
+ $updates_text_file = SITE_PATH . "/news/news_next/tease_updates.txt";
  # not used.  Only list of names is used.
  
  $updates_html = $updates_text = ''; #containers for building reports in
@@ -226,7 +226,7 @@ fprintf ($ph,"Run at %s\n",$nowsql);
 fclose ($ph);
 
 ######################
-$opportunities_html = file_get_contents( SITEPATH. "/news/news_next/news_opportunities.html");
+$opportunities_html = file_get_contents( SITE_PATH. "/news/news_next/news_opportunities.html");
 echo <<<EOT
 <html><head> 
 <title>Show Updates</title>
@@ -389,7 +389,7 @@ function prepare_opp_report ($ptimes){
     $newopp_report_h = "";
     $newopp_report_t = '';
     $pdo = MyPDO::instance();
-    $opportunities_html = SITEPATH. "/news/news_next/news_opportunities.html";
+    $opportunities_html = SITE_PATH. "/news/news_next/news_opportunities.html";
     $dtp = new DateTime($ptimes);
     
     $sql = "
@@ -463,7 +463,7 @@ function prepare_headline_report () {
 
 function get_start_time(){
 	// gets last published time from ptime and returns sql date/time
-	$ptime_file = SITEPATH . "/news/last_update_published.txt";
+	$ptime_file = SITE_PATH . "/news/last_update_published.txt";
 	$p_time_s = trim(file_get_contents($ptime_file));
 	if(preg_match('/.*?([\d\:\-]+ [\d\:\-]+)/',$p_time_s,$m)){
 	    $p_time = ($m[1]);

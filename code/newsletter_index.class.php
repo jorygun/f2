@@ -14,9 +14,9 @@ ini_set('error_reporting', E_ALL);
 
 class NewsletterIndex {
 
-    private $ndir = SITEPATH . "/newsp";
-    private $jfile = SITEPATH . "/newsp/index.json";
-    private $hfile = SITEPATH . "/newsp/index_inc.html";
+    private $ndir = SITE_PATH . "/newsp";
+    private $jfile = SITE_PATH . "/newsp/index.json";
+    private $hfile = SITE_PATH . "/newsp/index_inc.html";
 
     private $file_index = array ();
 

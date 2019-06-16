@@ -11,10 +11,10 @@ ini_set('error_reporting', E_ALL);
 //END START
 
 
-require_once SITEPATH ."/scripts/news_functions.php";
+require_once SITE_PATH ."/scripts/news_functions.php";
 #require_once HOMEPATH . "/security/f2_disqus.php";
 #require_once "MyPDO.class.php" ;
-require_once SITEPATH ."/scripts/comments.class.php";
+require_once SITE_PATH ."/scripts/comments.class.php";
 
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();

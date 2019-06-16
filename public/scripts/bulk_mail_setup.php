@@ -31,12 +31,12 @@ ini_set('error_reporting', E_ALL);
 	";
 
 	
-	$news_latest = SITEPATH . "/news/news_latest";
+	$news_latest = SITE_PATH . "/news/news_latest";
 	
 	$teasers = $news_latest . "/teasers.txt";
 	$headlines	= $news_latest . "/headlines.txt";
 	$publish_file = $news_latest . "/publish.txt";
-	$preview = SITEPATH . "/news/news_next/headlines.txt";
+	$preview = SITE_PATH . "/news/news_next/headlines.txt";
 	$updates	= $news_latest . "/updates.txt";
 	$calendar	= $news_latest . "/calendar.txt";
 	$opportunities = $news_latest . "/opportunities.txt";
@@ -54,7 +54,7 @@ ini_set('error_reporting', E_ALL);
 	$publish_file = $news_latest . "/publish.txt";
 	if (file_exists($publish_file)){
    	$edition_name = get_publish_data('title',$publish_file);
-   	 $lastest_pointer = trim(file_get_contents(SITEPATH . "/news/latest_pointer.txt") );
+   	 $lastest_pointer = trim(file_get_contents(SITE_PATH . "/news/latest_pointer.txt") );
     }
     else {
     	echo "No publish file";

@@ -741,7 +741,7 @@ function choose_graphic_url($dir,$id){
         */
 
          $gfile='';
-         $path = SITEPATH . $dir;
+         $path = SITE_PATH . $dir;
         /* try jpg, then png for  file */
         foreach (['jpg','png','gif'] as $ext){
             #echo "testing $path/$id.$ext.. ";

@@ -8,11 +8,11 @@ sitesdir: $sites_dir
 <br>\n";
 
 #define paths
-define ('SITEPATH' , $site_dir); #this project site directory
+define ('SITE_PATH' , $site_dir); #this project site directory
 define ('SITES', $sites_dir);
 define ('SITE' , $_SERVER['SERVER_NAME']);
 define ('SITEURL', "http://" . SITE);
-define ('CONF', SITEPATH . "/config");
+define ('CONF', SITE_PATH . "/config");
 
 
 

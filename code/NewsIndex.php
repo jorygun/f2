@@ -24,10 +24,10 @@ class NewsIndex {
 	
     function __construct($rebuild) {
     	
-    	$newsdir	= SITEPATH . $this->newsindexdir;
+    	$newsdir	= SITE_PATH . $this->newsindexdir;
    	    $this->jfile = "$newsdir/index.json";
   		$this->hfile = "$newsdir/index_inc.html";
-  		$newsarchivedir = SITEPATH . $this->newsarchivedir;
+  		$newsarchivedir = SITE_PATH . $this->newsarchivedir;
   		
    // actual source directory for archived newsletters
       

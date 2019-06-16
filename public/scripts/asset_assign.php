@@ -35,7 +35,7 @@ else {
 
 function show_form(){
     #find all the search files avasilable
-    $asset_dir = SITEPATH . "/assets";
+    $asset_dir = SITE_PATH . "/assets";
     $files = glob("$asset_dir/search*");
 
     foreach ($files as $filepath){

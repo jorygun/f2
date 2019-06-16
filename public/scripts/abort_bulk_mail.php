@@ -1,9 +1,9 @@
 <?php
 
-defined ('SITEPATH') or
-	define ('SITEPATH', '/usr/home/digitalm/public_html/amdflames.org');
+defined ('SITE_PATH') or
+	define ('SITE_PATH', '/usr/home/digitalm/public_html/amdflames.org');
 	
-$abort_file = SITEPATH . "/abort_mailing";
+$abort_file = SITE_PATH . "/abort_mailing";
 
 echo <<<EOT
 <html><head><title>Create Abort File</title></head>

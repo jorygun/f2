@@ -19,7 +19,7 @@
 </head>
 <body>
 
-<? include SITEPATH . '/navm.php' ?>
+<? include SITE_PATH . '/navm.php' ?>
 
 <!-- the sponsor and content stuff are in two floating divisions, so will stack on narrow page. -->
 <!-- start of content -->

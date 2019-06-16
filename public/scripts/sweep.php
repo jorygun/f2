@@ -66,7 +66,7 @@ $now_obj = date_create();
 
 #echo "Running Sweeps at $english_now\n";
 
-$sweep_log = SITEPATH . "/logs/sweep_logs/${mode}_${timestamp}.txt";
+$sweep_log = SITE_PATH . "/logs/sweep_logs/${mode}_${timestamp}.txt";
 echo "Logging to $sweep_log" . BRNL;
 
 

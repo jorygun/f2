@@ -89,10 +89,10 @@ function echo_if($filename,$extra=''){
 	#look in local directory or in news directory
 	   if (file_exists($filename)) {
 	   		$file = $filename;
-	   } elseif (file_exists (SITEPATH ."/news/$filename")){
-	   	$file = SITEPATH ."/news/$filename";
-	   } elseif (file_exists (SITEPATH . "/news/news_live/$filename")) {
-	   	$file = SITEPATH . "/news/news_live/$filename"; 	
+	   } elseif (file_exists (SITE_PATH ."/news/$filename")){
+	   	$file = SITE_PATH ."/news/$filename";
+	   } elseif (file_exists (SITE_PATH . "/news/news_live/$filename")) {
+	   	$file = SITE_PATH . "/news/news_live/$filename"; 	
 	  } else {return false;}
 	   
 
@@ -191,7 +191,7 @@ function get_slogan(){
 // 	'MIL-STD-883 for free!,Quality',
 // 	'The Age of Asparagus,New products take a long time to mature'
 // 	];
-    $slogantexts = file(SITEPATH . '/scripts/slogans.txt'); #reads file into array
+    $slogantexts = file(SITE_PATH . '/scripts/slogans.txt'); #reads file into array
     if (empty($slogantexts)){return ("Can't open slogans");}
    # print_r ($slogans) ;
 

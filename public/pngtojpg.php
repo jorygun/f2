@@ -8,7 +8,7 @@ require '/usr/home/digitalm/security/f2_constants.php';
 require HOMEPATH . '/Sites/lib/php/MyPDO.class.php';
 
 $pdo = MyPDO::instance();
-$thumbs = SITEPATH . '/assets/thumbs';
+$thumbs = SITE_PATH . '/assets/thumbs';
 $limit = 3;
 
 $getst = $pdo->prepare("select thumb_file from assets where id = ?");

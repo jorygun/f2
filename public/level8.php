@@ -12,12 +12,12 @@ $navbar = $nav -> build_menu();
      $members_db = 'members_f2';
 		// get the most recent sweep and bounce logs
 
-		$latest_sweep = get_recent_files (1, SITEPATH . "/logs/sweep_logs");
-		$latest_bounce = get_recent_files (1,SITEPATH . "/logs/bounce_logs");
-		$latest_validation = get_recent_files (1,SITEPATH . "/logs/validation_logs");
-		$latest_bulk = get_recent_files (1,SITEPATH . "/logs/bulk_mail_logs");
+		$latest_sweep = get_recent_files (1, SITE_PATH . "/logs/sweep_logs");
+		$latest_bounce = get_recent_files (1,SITE_PATH . "/logs/bounce_logs");
+		$latest_validation = get_recent_files (1,SITE_PATH . "/logs/validation_logs");
+		$latest_bulk = get_recent_files (1,SITE_PATH . "/logs/bulk_mail_logs");
 
-		$latest_sweeps = get_recent_files(7,SITEPATH . "/logs/sweep_logs");
+		$latest_sweeps = get_recent_files(7,SITE_PATH . "/logs/sweep_logs");
 	#	echo print_r($latest_sweeps,true);
 		$latest_sweep_list = "<ul>\n";
 		foreach ($latest_sweeps as $f){

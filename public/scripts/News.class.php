@@ -227,7 +227,7 @@ class News {
         case 'thumb':
             $out = "<div class='thumb'>";
 
-            if ((!empty($row['thumb_file'])) && file_exists(SITEPATH . "/$thumb_url")){
+            if ((!empty($row['thumb_file'])) && file_exists(SITE_PATH . "/$thumb_url")){
                 $out .= "
                 <a href='/asset_display.php?$id' target='asset' decoration='none'>
                 <img src='$thumb_url'></a>
@@ -269,7 +269,7 @@ class News {
             ";
 
             }
-            elseif (file_exists(SITEPATH . "/$thumb_url")){#try using the thumb
+            elseif (file_exists(SITE_PATH . "/$thumb_url")){#try using the thumb
                  $out .= "
                 <a href='/asset_display.php?$id' target='asset' decoration='none'>
                 <img src='$thumb_url' ></a>
@@ -285,7 +285,7 @@ class News {
         case 'toon':
 
              $gfile = choose_graphic_url('/assets/toons',$id);
-           if (file_exists(SITEPATH . "/$gfile" )){
+           if (file_exists(SITE_PATH . "/$gfile" )){
             $out = "
                 <img src='$gfile' width='800'>
                 ";
@@ -311,7 +311,7 @@ class News {
                 */
 
                  $gfile='';
-                 $path = SITEPATH . $dir;
+                 $path = SITE_PATH . $dir;
                 /* try jpg, then png for  file */
                 foreach (['jpg','png','gif'] as $ext){
                    # echo "testing $path/$id.$ext.. ";

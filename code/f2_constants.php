@@ -6,14 +6,14 @@ $mydir = dirname(__DIR__); #~/Sites/flames/<repo>
 		define ('HOMEPATH', '/usr/home/digitalm');
 	defined ('REPO') or
 		define ('REPO',$mydir);
-	defined ('SITEPATH') or
-		define ('SITEPATH', REPO . "/public");
+	defined ('SITE_PATH') or
+		define ('SITE_PATH', REPO . "/public");
 	defined ('SITE') or
 		define ('SITE','amdflames.org');
 	defined ('SITEURL') or
 		define ('SITEURL','http://amdflames.org');
 	defined ('NAVBAR') or
-		define ('NAVBAR', SITEPATH . '/navbar_div.php');
+		define ('NAVBAR', SITE_PATH . '/navbar_div.php');
 
   if (!defined ('DB')) {
  		define('DB','digitalm_db1');

@@ -130,11 +130,11 @@ EOT;
 	}
 	
 	if ($show_exp_menu){
-	    $stylelink = file_get_contents(SITEPATH . '/css/navbar2.css') ;
+	    $stylelink = file_get_contents(SITE_PATH . '/css/navbar2.css') ;
 	    $navflag = '(nav v2)';
 	}
 	else {
-		$stylelink = file_get_contents(SITEPATH . '/css/navbar2.css') ;
+		$stylelink = file_get_contents(SITE_PATH . '/css/navbar2.css') ;
 		$navflag = '';
 	}
 	

@@ -2,7 +2,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 
 	// secript to set the title file in next next
-	$titlefile = SITEPATH . '/news/news_next/title.txt';
+	$titlefile = SITE_PATH . '/news/news_next/title.txt';
 
 	if (!empty ($_POST['title']) and $_POST['title'] != 'Title Not Set' ){
 			$new_title = htmlspecialchars($_POST['title'],ENT_QUOTES);

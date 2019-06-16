@@ -26,7 +26,7 @@ else {
     $user_status = '';
 }
 
- $news_latest = SITEPATH . "/news/news_latest";
+ $news_latest = SITE_PATH . "/news/news_latest";
 
 $nav = new navBar(false);
 $navbar = $nav -> build_menu();

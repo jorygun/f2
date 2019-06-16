@@ -35,7 +35,7 @@ EOT;
 	$conventional_date = $pubdate -> format('M j, Y');
 	echo "$conventional_date translates to $condensed_date<br>";
 
-	$titlefile = SITEPATH . '/news/news_next/title.txt';
+	$titlefile = SITE_PATH . '/news/news_next/title.txt';
     if (file_exists($titlefile)){
         $current_title = file_get_contents($titlefile);
 	    $title = htmlspecialchars($current_title);
@@ -44,7 +44,7 @@ EOT;
 
 
 	// set all the directories and files
-	$newspath = SITEPATH . "/news"; #development
+	$newspath = SITE_PATH . "/news"; #development
 		$nextnews_dir = "$newspath/news_next";
 
 		$modelnews_dir = "$newspath/news_model";
@@ -61,7 +61,7 @@ EOT;
 	$publish_file = "$latest_dir/publish.txt";
 
     $newnewsfile = "news_${condensed_date}";
-	$newsppath = SITEPATH . "/newsp"; #archive folder
+	$newsppath = SITE_PATH . "/newsp"; #archive folder
 		$newnews_dir = "$newsppath/$newnewsfile";
 			$newsletter = "$newnews_dir/index.php";
 		$news_index = "$newspath/index.php";

@@ -64,7 +64,7 @@ if ( isset ($_GET['term']) && $term = urldecode($_GET['term'])){ #gprocess
 
 // Open the news folder to array $files[] (only news-*.htm(l) files)
 
- $file_list = json_decode(file_get_contents(SITEPATH . "/newsp/index.json"));
+ $file_list = json_decode(file_get_contents(SITE_PATH . "/newsp/index.json"));
 
 
 	$term = trim($term);
@@ -106,7 +106,7 @@ if ( isset ($_GET['term']) && $term = urldecode($_GET['term'])){ #gprocess
        echo "<ul>\n";
         foreach ($filenames as $testfile ){
             $reloc = "/newsp/$testfile";
-            if (! file_exists(SITEPATH . "/newsp/$testfile")){continue;}
+            if (! file_exists(SITE_PATH . "/newsp/$testfile")){continue;}
             else {
              #echo "getting $testfile<br>";
             }
@@ -122,7 +122,7 @@ if ( isset ($_GET['term']) && $term = urldecode($_GET['term'])){ #gprocess
             // 	}
 
 
-                $buffer = file_get_contents(SITEPATH . "/newsp/$testfile");
+                $buffer = file_get_contents(SITE_PATH . "/newsp/$testfile");
                # echo "..$testfile buffered..";
 
                #$buffer = stristr($buffer,'<body'); #clip the buffer head

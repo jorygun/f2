@@ -20,7 +20,7 @@ $month = array(
 );
 
 
-#$count_file = SITEPATH . "/views_data/reads.txt";
+#$count_file = SITE_PATH . "/views_data/reads.txt";
 $out_file = "./graphics/views_2016.png";
 
 #update the access counts

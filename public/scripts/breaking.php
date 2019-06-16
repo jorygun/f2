@@ -6,7 +6,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
 
 #get latest news directory
-$latest_pointer=trim(file_get_contents(SITEPATH . "/news/latest_pointer.txt"));
+$latest_pointer=trim(file_get_contents(SITE_PATH . "/news/latest_pointer.txt"));
 
 $now = gmdate('M d H:i T');
 
@@ -16,8 +16,8 @@ $bnews = "<div style='border:2px solid black;padding:1em;'>"
 	. thtml($_POST['bnews'])
 	. "</div>\n";
 
-file_put_contents(SITEPATH . "/$latest_pointer/breaking.html",$bnews);
-file_put_contents(SITEPATH . '/news/news_latest/breaking.html',$bnews);
+file_put_contents(SITE_PATH . "/$latest_pointer/breaking.html",$bnews);
+file_put_contents(SITE_PATH . '/news/news_latest/breaking.html',$bnews);
 
 
 
