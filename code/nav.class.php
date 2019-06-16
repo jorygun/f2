@@ -78,8 +78,14 @@ EOT;
 		
 		$vroot = basename(REPO_PATH); 
 		$vfile = REPO_PATH . "/config/version.txt";
-		$vnum = file_get_contents ($vfile);
+		
 		$vrel = date('d M Y H:i',filemtime($vfile));
+		
+		$vnum = $init->getVersion();
+		
+		// $vlatest = `tail -n 1 $vfile`;
+// 		$vnum = file_get_contents ($vfile);
+		
 		$vname = "<div class='vbox'>[$vroot] $vnum <br>($vrel)</div>";
 		
 		return $vname;
@@ -251,8 +257,9 @@ EOT;
 		 <li><a href='mailto:admin@amdflames.org'>When all else fails, email the admin</a>
 	");
 		
+	$t .= " <li>.
+		<li>$version";
 	
-	$t .= "<li>$navflag";
 	
 	$t .=  self::closeLine(0, $thisMenu);
 
@@ -263,8 +270,7 @@ EOT;
 	<ul><li>Touchscreen users <a href='#' onClick='closeMenu($js_menulist)' style='text-decoration:underline;'>click</a> to close open menus </ul>
 ";	 
 
-	$t .= self::if_level(6,
-		" <li>$version");
+	
 		
 	$t .=  "	</ul>\n";
 	
