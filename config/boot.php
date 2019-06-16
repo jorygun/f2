@@ -161,7 +161,7 @@ class Init
 		$this->site = $site;
 	}
 	
-	public function setConstants($home)
+	public function setConstants()
 	{
 		
 		define ('HOME', $this->home);
