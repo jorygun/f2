@@ -24,6 +24,9 @@ ini_set('display_errors', 1);
 
 if (defined ('INIT')){ return; } //some init has already run
 
+// put Exceptin into this namespace
+use \Exception as Exception;
+
 use Pimple\Container;
 #use digitalmx\
 
@@ -87,6 +90,7 @@ $container = new Container();
 	};
 
 
+//       CLASS INIT        //
 
 class Init 
 {
@@ -99,6 +103,8 @@ class Init
 	protected $home;
 	private $config_message;
 	private $site; #/beta.amdflames.org
+	private $repo_dir;
+	private $project_dir;
 	
 	
 	
@@ -120,7 +126,11 @@ class Init
 	
 	
 		$repo_dir = dirname(__DIR__); #---/flames/<repo>/ - where this repo is      *
+		$this->repo_dir = $repo_dir;
+		
 		$project_dir = dirname($repo_dir); #---/flames - where shared stuff is          *
+		$this->project_dir = $project_dir;
+		
 		$repo_name = basename($repo_dir); #-- repo name    
 		$this->platform = $this->setPlatform();
 		
@@ -170,11 +180,11 @@ class Init
 			SITE (amdflames.org)
 		*/
 		
-		define ('PROJ_PATH',$project_dir);
+		define ('PROJ_PATH',$this->project_dir);
 
-		define ('REPO_PATH',$repo_dir);
+		define ('REPO_PATH',$this->repo_dir);
 
-		define ('SITE_PATH',"$repo_dir/public");
+		define ('SITE_PATH', REPO_PATH . "/public");
 
 		define ('SITE', $this->site);
 
