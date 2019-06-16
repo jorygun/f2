@@ -9,7 +9,7 @@ updated voting panel to the user.
 
 #ini_set('display_errors', 1);
 
-include_once 'init.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 if (empty($_SESSION['user_id'])){
 	echo ("Not logged in.");
 	exit;

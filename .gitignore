@@ -4,8 +4,10 @@
 #correct linkage on transfer to remote.
 
 
-#ignore mac dir file
+#ignore mac files
 .DS_Store
+.AppleDouble
+.LSOverride
 
 #ignore site-specific config in .htaccess
 .htaccess
@@ -26,7 +28,6 @@ data/
 
 
 #don't alter normally
-public/jslib/
 
 #news directory contains live info.  Don't disturb
 public/news/

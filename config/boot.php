@@ -1,3 +1,4 @@
+
 <?php
 namespace digitalmx\flames;
 /**
@@ -24,7 +25,9 @@ ini_set('display_errors', 1);
 # ini_set('session.cookie_lifetime', 86400);
 # ini_set('session.gc_maxlifetime', 86400);
 
+
 if (defined ('INIT')){ return; } //some init has already run
+
 
 // test if session already started
 if (session_status() == PHP_SESSION_NONE) {
@@ -47,12 +50,14 @@ else {
 }
 	
 
+
 #initial include path set in .user.ini to include this folder.
 #add other paths here so can just call <repo>/config/boot.php for shell scripts.
 
 ini_set('include_path',
 	  '.'
    . ':' . '/usr/local/lib/php'
+
 	. ':' . $repo_dir . '/libmx'
 	. ':' . $repo_dir . '/lib'
 	. ':' . $repo_dir. '/config'
@@ -62,6 +67,7 @@ ini_set('include_path',
 
 
 	);
+
 
 #add vendors 
 if (file_exists("$repo_dir/vendor/autoload.php")){
@@ -112,6 +118,7 @@ defined ('PROJECT_PATH') or
 defined ('REPO_PATH') or
 	define ('REPO_PATH',$repo_dir);
 require_once 'nav.class.php';
+
 
 #create container
 

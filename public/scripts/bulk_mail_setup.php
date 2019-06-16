@@ -3,7 +3,7 @@
 ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 
-	require_once 'init.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
     if (f2_security_below(7)){exit;}
 	$nav = new navBar(1);
 	$navbar = $nav -> build_menu();

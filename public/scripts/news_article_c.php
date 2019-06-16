@@ -6,7 +6,7 @@
 #this script reproduces a single article with the flames comments attached.
 
 //BEGIN START
-	require_once 'init.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(1)){exit;}
 
 //END START

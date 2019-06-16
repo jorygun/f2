@@ -1,4 +1,5 @@
 <?php
+
 require_once 'init.php';
 
 // $proj = dirname(dirname(dirname($me))); #flames

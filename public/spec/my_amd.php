@@ -1,7 +1,7 @@
 <?php
 //BEGIN START
-	require_once 'init.php';
-	if (f2_security_below(1)){exit;}
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+if (f2_security_below(1)){exit;}
 	$nav = new navBar(1);
 	$navbar = $nav -> build_menu();
 //END START

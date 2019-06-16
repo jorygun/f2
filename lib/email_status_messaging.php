@@ -10,7 +10,7 @@
 	separate
 */
 
-require_once "/usr/home/digitalm/Sites/flames/f2/config/init.php";
+#don't know if I need any init.  boot will already have run
 
 function define_lost_reasons(){
     $r = array(

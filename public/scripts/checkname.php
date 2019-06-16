@@ -2,7 +2,7 @@
 // thIS SCRIPT NOT CURRENTLY IN USE
 
 //BEGIN START
-	require_once 'init.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(8)){exit;}
 //END START
 

@@ -11,7 +11,7 @@
 */
 
 //BEGIN START
-	require_once 'init.php';
+	require_once '/usr/home/digitalm/Sites/flames/live/config/boot.php';
 	include_once '/usr/home/digitalm/public_html/amdflames.org/scripts/email_status_messaging.php';
 
 

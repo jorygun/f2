@@ -49,35 +49,5 @@ defined ('CONSTANTS') or
 defined ('MAX_UPLOAD_MB') or
     define ('MAX_UPLOAD_MB',40);
     
-$DBT = setTables();
-/* in scripts, add 
-	global $DBT
-// or 
-	$dbt = setTables();
-// then SELECT * from `$DBT[memberTable]` ...
-*/	
-
-function setTables () {
-	/* call this to set the value of eah of the
-		table names below, so they can be used as
-		variables in program, as in
-		SELECT * from `$memberTable` ...
-	*/
-	
-	static $tables = array(
-		'memberTable' => 'members_f2',
-  		'commentTable' => 'comments',
-  		'assetTable' => 'assets',
-  		'eventTable' => 'events',
-  		'linkTable' => 'links',
-  		'newsTable' => 'news_items',
-  		'oppTable' => 'opportunities',
-  		'readTable' => 'read_table',
-  		'specTable' => 'spec_items',
-  		'voteTable' => 'votes'
-		);
- 	
-	return $tables;
-}
 
 

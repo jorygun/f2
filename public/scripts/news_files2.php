@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('error_reporting',E_ALL);
 
 //BEGIN START
-	require_once "init.php";
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	#if (f2_security_below(4)){exit;}
     require_once "news_functions.php";
 

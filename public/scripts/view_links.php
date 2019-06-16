@@ -10,7 +10,7 @@
 
 */
 
-require_once 'init.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 
 
 $daysback = 30; #number of days back to look.

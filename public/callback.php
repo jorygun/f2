@@ -1,6 +1,5 @@
 <?php
-	require_once 'init.php';
-	if (security_below(6)){exit;}
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';	if (security_below(6)){exit;}
 
 
 // page to show callback
