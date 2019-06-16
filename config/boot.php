@@ -29,7 +29,7 @@ use Pimple\Container;
 
 $init = new Init();
 
-$init->setConstants($init->get_home);
+$init->setConstants($init->get_home() );
 
 #add vendor autoload
 	if (file_exists(REPO_PATH . "/vendor/autoload.php")){
