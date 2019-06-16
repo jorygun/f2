@@ -145,7 +145,7 @@ class Init
 	}
 	
 	private function setSite() {
-		$site = $_SERVER['URL'];
+		$site = $_SERVER['SERVER_NAME'];
 		if (empty($site)){
 			$site = "trial.amdflames.org";
 			echo "Site not determined; setting to $site";
