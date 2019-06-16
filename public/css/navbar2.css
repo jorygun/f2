@@ -90,11 +90,11 @@
 
 }
 #nav .vbox {
-   border:1px solid #666;
-   font-size:0.7em;
-   color: #666;
+   #border:1px solid #666;
+   font-size:0.8em;
+   color: #ccc;
    padding:3px;
-   margin-left:1em;
-   margin-right:1em;
+  # margin-left:1em;
+  # margin-right:1em;
    
 }
