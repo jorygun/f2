@@ -20,80 +20,32 @@ namespace digitalmx\flames;
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 
-// set up for longer session lifes
-# ini_set('session.cookie_lifetime', 86400);
-# ini_set('session.gc_maxlifetime', 86400);
 
 
 if (defined ('INIT')){ return; } //some init has already run
 
+// put Exceptin into this namespace
+use \Exception as Exception;
 
-// test if session already started
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+use Pimple\Container;
+#use digitalmx\
 
-   $repo_dir = dirname(__DIR__); #---/flames/<repo>/ - where this repo is      *
-   $project_dir = dirname($repo_dir); #---/flames - where shared stuff is          *
-   $repo_name = basename($repo_dir); #-- repo name    
-   $platform = get_platform();
-	$con_msg = "boot.php found: \n  platform: $platform;\n  repo_dir: $repo_dir; \n  repo_name: $repo_name;\n\n";
+$init = new Init();
+
+$init->setConstants($init->get_home() );
+
+#add vendor autoload
+	if (file_exists(REPO_PATH . "/vendor/autoload.php")){
+		require_once REPO_PATH . "/vendor/autoload.php";
+	} else {
+		throw new Exception ( "no vendor autoload file.  " );
+	}
+
+
 	
-if ($repo_name == 'live'){
-	ini_set('display_errors',0);
-}
-else {
-	echo $con_msg;
-	ini_set('display_errors',1);
+if ($init->get_platform() == 'pair'){
+	require_once 'f2_constants.php';
 	
-}
-	
-
-
-#initial include path set in .user.ini to include this folder.
-#add other paths here so can just call <repo>/config/boot.php for shell scripts.
-
-ini_set('include_path',
-	  '.'
-   . ':' . '/usr/local/lib/php'
-
-	. ':' . $repo_dir . '/libmx'
-	. ':' . $repo_dir . '/lib'
-	. ':' . $repo_dir. '/config'
-	. ':' . $repo_dir. '/code'
-	. ':' . $repo_dir . '/public'
-	. ':' . $repo_dir . '/public/scripts'
-
-
-	);
-
-
-#add vendors 
-if (file_exists("$repo_dir/vendor/autoload.php")){
-	require_once "$repo_dir/vendor/autoload.php";
-} else {
-	echo "no file.  " ; exit;
-}
-
-#these are all namespaced
-#ns digitalmx\
-#require_once "mx-constants.php";
-#require_once "mx-utilities.php";
-
-#ns digitalmx\flames
-require_once 'Definitions.php';
-
-
-require_once 'f2_constants.php'; 
-require_once "utilities.php";
-
-#build db
-require_once 'MxPDO.php'; 
-$db_ini = './db.ini'; # all the connection params 
-
-#old pdo
-
-if ($platform == 'pair'){
 	require_once 'setGlobals.php';
 	require_once 'MyPDO.class.php'; #uses envir constants for config
 	$pdo = \MyPDO::instance();
@@ -104,33 +56,194 @@ if ($platform == 'pair'){
 	require_once "f2_security.php";
 	
 	
-} else {
+} elseif ($init->get_platform() == 'ayebook') {
+
 	require_once 'setGlobals.php';
 	require_once 'MyPDO.class.php'; #uses envir constant
 	$pdo = new \digitalmx\MxPDO('production',$platform,$db_ini);
 	$GV = $GLOBALS = setGlobals();
 	require_once "f2_security.php";
 }
+else {
+	throw new Exception ("Platform not known $platform");
+}
 
-defined ('PROJECT_PATH') or
-	define ('PROJECT_PATH',$project_dir);
-defined ('REPO_PATH') or
-	define ('REPO_PATH',$repo_dir);
+#ns digitalmx\flames
+require_once 'Definitions.php';
+
+
+require_once 'f2_constants.php'; 
+require_once "utilities.php";
+require_once 'MxPDO.php'; 
+
 require_once 'nav.class.php';
 
 
-#create container
 
-use Pimple\Container;
+#build db
 $container = new Container();
 
-$container['pdo_dev'] = function ($c) use ($db_ini,$platform) {
-	return new MxPDO('dev',$platform,$db_ini);
-};
-$container['pdo_prod'] = function ($c) use ($db_ini,$platform) {
-	return new MxPDO('production',$platform,$db_ini);
-};
+	$container['pdo_dev'] = function ($c)  {
+		return new MxPDO('dev',$init->platform,$init->db_ini);
+	};
+	$container['pdo_prod'] = function ($c)  {
+		return new MxPDO('production',$init->platform,$init->db_ini);
+	};
 
+
+//       CLASS INIT        //
+
+class Init 
+{
+	private static $homes = array(
+		'pair' => '/usr/home/digitalm',
+		'ayebook' => '/Users/john'
+	);
+	protected  $db_ini = './db.ini'; # all the connection params 
+	protected $platform;
+	protected $home;
+	private $config_message;
+	private $site; #/beta.amdflames.org
+	private $repo_dir;
+	private $project_dir;
+	
+	
+	
+	public function __construct () 
+	{
+	
+/*
+	// set up for longer session lifes
+	ini_set('session.cookie_lifetime', 86400);
+	ini_set('session.gc_maxlifetime', 86400);
+*/
+
+	
+		// test if session already started
+		if (session_status() == PHP_SESSION_NONE) {
+			 session_start();
+		}
+
+	
+	
+		$repo_dir = dirname(__DIR__); #---/flames/<repo>/ - where this repo is      *
+		$this->repo_dir = $repo_dir;
+		
+		$project_dir = dirname($repo_dir); #---/flames - where shared stuff is          *
+		$this->project_dir = $project_dir;
+		
+		$repo_name = basename($repo_dir); #-- repo name    
+		$this->platform = $this->setPlatform();
+		
+	
+		$this->home = self::$homes[$this->platform];
+	
+		$this->config_msg = "boot.php: \n  platform - $this->platform; repo_dir - $repo_dir; repo: $repo_name;\n\n";
+	
+	
+		if ($repo_name == 'live'){
+			ini_set('display_errors',0);
+		}
+		else {
+			ini_set('display_errors',1);
+		}
+		$this->setSite();
+		$this->setIncludes($repo_dir);
+		
+		
+		define ('INIT',1);
+	
+	}
+	
+	private function setSite() {
+		$site = $_SERVER['SERVER_NAME'];
+		if (empty($site)){
+			$site = "trial.amdflames.org";
+			echo "Site not determined; setting to $site";
+		}
+		$this->site = $site;
+	}
+	
+	public function setConstants($home)
+	{
+		
+		define ('HOME', $home);
+		
+
+	// BR, NL, BRNL, CRLF, LF, URL_REGEX //
+		require_once "MxConstants.php";
+		$mxc = new \digitalmx\MxConstants (); 
+
+		/* Define site constants
+			PROJ_PATH (..../flames)
+			REPO_PATH (..../flames/beta)
+			SITE_PATH (..../flames/beta/public
+			SITE (amdflames.org)
+		*/
+		
+		define ('PROJ_PATH',$this->project_dir);
+
+		define ('REPO_PATH',$this->repo_dir);
+
+		define ('SITE_PATH', REPO_PATH . "/public");
+
+		define ('SITE', $this->site);
+
+	}
+	
+
+
+
+	#################################################
+	// using PWD because it seems to alwasy work, even in cron
+	private function setPlatform(){
+		$sig = getenv('PWD');
+		if (stristr ($sig,'usr/home/digitalm') !== false ) {	
+				$platform = 'pair';
+		} elseif (stristr ($sig,'Users/john') !== false ) {	
+				$platform = 'ayebook';
+		} else {
+				echo "Cannot determine platform from '$sig'";
+				echo "ENV:\n";
+				print_r (getenv());
+				exit;
+		}
+		return $platform;
+	}
+	
+	private function setIncludes($repo_dir){
+	#initial include path set in .user.ini to include this folder.
+	#add other paths here so can just call <repo>/config/boot.php for shell scripts.
+
+	ini_set('include_path',
+		  '.'
+		. ':' . '/usr/local/lib/php'
+
+		. ':' . $repo_dir . '/libmx'
+		. ':' . $repo_dir . '/lib'
+		. ':' . $repo_dir. '/config'
+		. ':' . $repo_dir. '/code'
+		. ':' . $repo_dir . '/public'
+		. ':' . $repo_dir . '/public/scripts'
+
+
+		);
+
+	}
+	public function get_platform() {
+		return $this->platform;
+	}
+	public function get_home() {
+		return $this->home;
+	}
+	public function get_db_ini() {
+		return $this->db_ini;
+	}
+	public function get_site() {
+		return $this->site;
+	}
+	
+}
 ###### everything below is suspect ######
 
 
@@ -275,20 +388,3 @@ $G_departments = array (
 
 
 	
-define ('INIT',1);
-#################################################
-// using ENV and HOME because they work in all circumstances: cron, cli, etc.
-function get_platform(){
-	$sig = getenv('PWD');
-	if (stristr ($sig,'usr/home/digitalm') !== false ) {	
-			$platform = 'pair';
-	} elseif (stristr ($sig,'Users/john') !== false ) {	
-			$platform = 'ayebook';
-	} else {
-			echo "Cannot determine platform from '$sig'";
-			echo "ENV:\n";
-			print_r (getenv());
-			exit;
-	}
-	return $platform;
-}

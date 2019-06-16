@@ -117,7 +117,6 @@ echo "No .htaccess";
 echo "<br>\n";
 
 
-
 if (class_exists('Definitions')){
 	echo "From Definitions<br>\n";
 	echo "seclevel ma: " . Defs::get_seclevel('MA').BRNL;
