@@ -1,6 +1,7 @@
 <?php
 
-require_once 'f2_constants.php';
+/* db params must already be set s constants */
+
 
 function Connect_DB(){
  #pair:
