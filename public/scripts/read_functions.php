@@ -91,7 +91,7 @@ function echo_if($filename,$extra=''){
 	   		$file = $filename;
 	   } elseif (file_exists (SITEPATH ."/news/$filename")){
 	   	$file = SITEPATH ."/news/$filename";
-	   } elseif (file_exits (SITEPATH . "/news/news_live/$filename")) {
+	   } elseif (file_exists (SITEPATH . "/news/news_live/$filename")) {
 	   	$file = SITEPATH . "/news/news_live/$filename"; 	
 	  } else {return false;}
 	   
