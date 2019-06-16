@@ -137,7 +137,7 @@ class Init
 			ini_set('display_errors',1);
 		}
 		$this->setSite();
-		$this->setIncludes();
+		$this->setIncludes($repo_dir);
 		
 		
 		define ('INIT',1);
@@ -200,7 +200,7 @@ class Init
 		return $platform;
 	}
 	
-	private function setIncludes(){
+	private function setIncludes($repo_dir){
 	#initial include path set in .user.ini to include this folder.
 	#add other paths here so can just call <repo>/config/boot.php for shell scripts.
 
