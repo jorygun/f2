@@ -43,7 +43,7 @@ $init->setConstants($init->get_home() );
 
 
 	
-if ($init->get_platform == 'pair'){
+if ($init->get_platform() == 'pair'){
 	
 	require_once 'setGlobals.php';
 	require_once 'MyPDO.class.php'; #uses envir constants for config
@@ -55,7 +55,7 @@ if ($init->get_platform == 'pair'){
 	require_once "f2_security.php";
 	
 	
-} elseif ($init->get_platform == 'ayebook') {
+} elseif ($init->get_platform() == 'ayebook') {
 
 	require_once 'setGlobals.php';
 	require_once 'MyPDO.class.php'; #uses envir constant
