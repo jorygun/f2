@@ -349,8 +349,8 @@ class EmsUpdate  {
     		return array(
 				'_name_' => $row['username'],
 				'_email_' => $row['user_email'],
-				'_verify_url_' => SITEURL . "/scripts/verify_email.php?s=$login",
-				'_login_url_' => SITEURL . "/?s=$login",
+				'_verify_url_' => SITE_URL . "/scripts/verify_email.php?s=$login",
+				'_login_url_' => SITE_URL . "/?s=$login",
 				'_prior_emai_' => $row['prior_email'],
 			);
 	}

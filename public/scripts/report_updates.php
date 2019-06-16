@@ -352,7 +352,7 @@ function report_changes (&$result,$type){
 						$note = '';
 				}
                 $report .= "<tr class='brow'>
-                    <td class='username'><a href= " . SITEURL . "/scripts/profile_view.php?id=$id' target = '_blank'>$name</a></td>
+                    <td class='username'><a href= " . SITE_URL . "/scripts/profile_view.php?id=$id' target = '_blank'>$name</a></td>
                     <td class='location'>$location</td>
                     <td>$contact</td></tr>
 

@@ -119,7 +119,7 @@ function get_user_text($code,$row){
 	#preset these variables
 
 	$login = get_login_from_row($row);
-	$verify_url = SITEURL . "/scripts/verify_email.php?s=$login";
+	$verify_url = SITE_URL . "/scripts/verify_email.php?s=$login";
 	$login_url = get_login_from_row($row,'link');
 	$name = $row['username'];
 

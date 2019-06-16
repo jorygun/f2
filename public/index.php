@@ -207,7 +207,7 @@ EOT;
 
 
 <?php
-$siteurl = SITEURL;
+$siteurl = SITE_URL;
 if (!array_key_exists('level',$_SESSION) || $_SESSION['level']<1) {echo <<< EOT
 <p>You must access the site with your FLAMES-supplied link to view the rest of the site.</p>
 <form action="/scripts/send_lost_link.php" method="post">

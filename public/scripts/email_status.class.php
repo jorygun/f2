@@ -302,8 +302,8 @@ Class Email_status
         }
 
         public $login = $user_row['user_id'] . $user_row['pw'];
-        $verify_url = SITEURL . "/scripts/verify_email.php?s=$login";
-        #$login_url = SITEURL . "/?s=$login"; ???
+        $verify_url = SITE_URL . "/scripts/verify_email.php?s=$login";
+        #$login_url = SITE_URL . "/?s=$login"; ???
         $uname = $user_row['username'];
         $profile_url = get_profile_message($row,'text');
         $login_link = "https://amdflames.org?s=$login";
@@ -394,7 +394,7 @@ Class Email_status
         #preset these variables
 
         $login = get_login_from_row($row);
-        $verify_url = SITEURL . "/scripts/verify_email.php?s=$login";
+        $verify_url = SITE_URL . "/scripts/verify_email.php?s=$login";
         $login_url = get_login_from_row($row,'link');
         $name = $row['username'];
 

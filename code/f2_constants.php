@@ -10,8 +10,8 @@ $mydir = dirname(__DIR__); #~/Sites/flames/<repo>
 		define ('SITE_PATH', REPO . "/public");
 	defined ('SITE') or
 		define ('SITE','amdflames.org');
-	defined ('SITEURL') or
-		define ('SITEURL','http://amdflames.org');
+	defined ('SITE_URL') or
+		define ('SITE_URL','http://amdflames.org');
 	defined ('NAVBAR') or
 		define ('NAVBAR', SITE_PATH . '/navbar_div.php');
 

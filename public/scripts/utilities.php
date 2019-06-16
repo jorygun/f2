@@ -246,7 +246,7 @@ function get_profile_message($row,$type='html'){
 
         list($profile_days,$profile_date) = age ($row['profile_updated']);
         $login = get_login_from_row($row,'code'); #just the code
-        $profile_url = SITEURL . "/scripts/profile_update.php?s=$login";
+        $profile_url = SITE_URL . "/scripts/profile_update.php?s=$login";
 
 
 	    $html =
@@ -978,9 +978,9 @@ function if_admin ($text) {
 	$send_user = 1; #means send email.  will be set to 0 if silent update
 	$send_admin = 0;
 	$send_to = "$name <$email>";
-	$verify_url = SITEURL . "/scripts/verify_email.php?s=$login";
-	$profile_url = SITEURL . "/scripts/profile_update.php?s=$login";
-	$login_url = SITEURL . "/?s=$login";
+	$verify_url = SITE_URL . "/scripts/verify_email.php?s=$login";
+	$profile_url = SITE_URL . "/scripts/profile_update.php?s=$login";
+	$login_url = SITE_URL . "/?s=$login";
 
 	#echo "In send_verify.  id: $id; email: $email<br>\n";
     $bulkwarn = '';

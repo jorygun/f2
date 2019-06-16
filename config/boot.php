@@ -71,8 +71,6 @@ else {
 #ns digitalmx\flames
 require_once 'Definitions.php';
 
-
-require_once 'f2_constants.php'; 
 require_once "utilities.php";
 require_once 'MxPDO.php'; 
 
@@ -188,6 +186,7 @@ class Init
 		define ('SITE_PATH', REPO_PATH . "/public");
 
 		define ('SITE', $this->site);
+		define ('SITE_URL', 'http://' . SITE);
 
 	}
 	
