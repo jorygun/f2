@@ -160,7 +160,7 @@ class Init
 		
 
 	// BR, NL, BRNL, CRLF, LF, URL_REGEX //
-		require_once "MxConstants.php";
+		require_once "\digitalmx\MxConstants.php";
 		$mxc = new MxConstants (); 
 
 		/* Define site constants
