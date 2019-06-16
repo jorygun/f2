@@ -1,4 +1,3 @@
-
 <?php
 namespace digitalmx\flames;
 /**
