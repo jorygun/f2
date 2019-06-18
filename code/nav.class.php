@@ -78,13 +78,18 @@ EOT;
 		
 		$vroot = basename(REPO_PATH); 
 		$vfile = REPO_PATH . "/config/version.txt";
+		if (! file_exists($vfile)){throw new Exception ("No version file");}
 		
 		$vrel = date('d M Y H:i',filemtime($vfile));
 		
 		#$vnum = $init->getVersion();
 		
-		$vlatest = `tail -n 1 $vfile`;
-		$vnum = preg_split("/\s+/",$vlatest)[0];
+		$vlatest = `head -n 1 $vfile`;
+		#gets first line
+		
+		#echo "vl $vfile $vlatest";
+		
+		list($vnum,$vdesc) = preg_split("/\s+/",$vlatest);
 		
 		$vname = "<div class='vbox'>[$vroot] $vnum <br>($vrel)</div>";
 		
