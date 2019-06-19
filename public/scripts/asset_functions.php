@@ -999,7 +999,7 @@ function post_asset($post_array){
         }
         $post_array['need_thumb'] = true;
     }
-    if( $_url != $post_array['url'] ){
+    if( $orig_url != $post_array['url'] ){
         if (! empty($orig_url)) {
             echo "Thumb source has changed (was $orig_url); will regenerate thumb" . BRNL;
                 $changed_asset = true;
