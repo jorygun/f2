@@ -3,6 +3,7 @@
     related scripts.
 */
 
+
 $asset_types = array(
     'Image' ,
     'Multimedia' ,
@@ -89,6 +90,14 @@ $accepted_mime =
     $document_extensions = array('doc','docx','pdf','html');
     $mmm_extensions = array('mov','mp4','mp3','m4a');
 
+function getMimeGroup ($mime) {
+	if (strncmp($mime,'image/',6) == 0 ){return 'image';}
+	elseif (strncmp($mime,'video/',6) == 0) {return 'av';}
+	elseif (strncmp($mime,'audio/',6) == 0) {return 'av';}
+	elseif (strncmp($mime,'application/',12) == 0) {return 'doc';}
+	else {return '';}
+}
+	
 $editable_fields = array(
 
     'title',
@@ -495,24 +504,6 @@ function create_thumb($id,$fsource,$type='thumbs'){
 	 	$source_path = $fsource;
 	 	
 	 }
-    #set  thumbnail based on source type
-  
-    
-	//     preg_match('/.*\.(\w+)$/',$fsource,$m);
-//         $my_ext = strtolower($m['1']);
-        
-//         if (strcasecmp($fsource,'pdf') == 0) {
-//         	#set to use page 1 of the pdf [0] for the thumb 
-//             if ($thumb = build_im_thumbnail($id,SITE_PATH."$fsource" ,$type, $thumb_width[$type]) ){
-//                 echo "Created thumb from pdf" . BRNL;
-//              
-//             }
-//             else {echo "Failed to create thumb from pdf"; exit;}
-//             
-//         }
-        
-	 // If it's a youtube url, get a thumb from youtube
-	
         
       $source_mime = mime_content_type ($source_path );
       echo "source mime: $source_mime" . BRNL;
@@ -893,7 +884,7 @@ function post_asset($post_array){
    /*
         note: doesn't use $_POST because array may come
         from the news_item_edit form instead.
-        if POST, strip slashes first
+      
     */
     $changed_asset= false;
 	$datetag=date('m/d/y');
@@ -932,21 +923,25 @@ function post_asset($post_array){
 	 relocate uploads
 	 
 	 Files are either uploaded from form or uploaded some other way
-	 into specific directories ftp or assets/uploads.
+	 into specific directories ftp or uploads.
 	 These files need to be moved into correct location in assets, and
 	 then the asset created with the appropriate link.
 	 
-	 From form:
-	 	'linkfile' used for both main file and link to.
-	 	'upfile' used for additional file just to use for thumbnail
-	 	'ftpfile' used for a file uploaded into ftp directory
-	 	'upload' used for file uploaded into the assets/uploads directory.
+	 From asset form:
 	 	
-	 	The first two are created from the file upload form.  The second two
-	 	are created by manually designating /assets/uploads or /assets/ftp as the
-	 	source location. ('link' in the form.)
+	 	'link_sourcc' used for both source file and link to.
+	 	'thumb_source' used for additional file just to use for thumbnail
+	 	in either one, you can have
+	 	* a url
+	 	* a local directory/file
+	 	* ftp/filename
+	 	* uploads/filename 
 	 	
-	 	uploaded file always takes priority for main link
+	 	or you can use an uploaded file
+	 	'link_upload is the uploaded main fail
+	 	'thumb_upload' is the uploaded thumb source file
+	 	
+	  	uploaded file always takes priority for main link
 	 	else use the link directory name
 	 	
 	 	For link possibility
@@ -959,20 +954,24 @@ function post_asset($post_array){
 	 	
 	 	*/
 	 	
-	 	if (!empty($_FILES['linkfile'])){
-	 		$link = relocate ('linkfile');
-	 	} elseif (strncmp ($formlink, '/assets/uploads',15) == 0) {
-          $link = relocate('uploads',$formlink);
-    	} elseif (strncmp ($formlink, '/ftpf',4) == 0) {
-    		$link = relocate('ftp',$formlink);
+	 	// get the main source
+	 	
+	 	if (!empty($_FILES['link_file'])){
+	 		$link = relocate ($id,'link_upload');
+	 		
+	 	} elseif (strncmp ($formlink, 'uploads',7) == 0) {
+          $link = relocate($id, 'uploads',$formlink);
+    	} elseif (strncmp ($formlink, 'ftp',3) == 0) {
+    		$link = relocate($id, 'ftp',$formlink);
     	} else {
     		$link = $formlink;
     	}
     
+    
     	#now check for separate thumb file source
 	 	
 	 	if (!empty($_FILES['upfile'])) {
-	 		$thumbsource = relocate['upfile'];
+	 		$thumbsource = relocate ('thumb_upload' ,'',$id);
 	 	} elseif (!empty ($thumb)){
 	 		$thumbsource = $thumb;
 	 	} else {
@@ -1285,42 +1284,15 @@ function accept_upfile($upload_name,$upload_dir,$asset_id){
     return  [$file_name,$orig_name];
 }
 
-
-function relocate_file ($type,$link='',$id=''){
-   /**
-		@type is upfile,linkfile,ftp, or upload
-		@link is supplied link if any
-		@id is id this asset will have; may be used as file name.
-		
-		
-    
-**/
-    echo "Starting relocation $upload_name... " . BRNL;
-	switch ($type) {
-		case 'upfile':
-			break;
-		case 'upload':
-			break;
-		case 'ftp':
-			break;
-		case 'linkfile':
-			break;
-		default:
-			throw new runtimeException ("Unknown type for relocation");
-		}
+function check_file_uploads ($upload_name){
+	// checks for upload errors, file exits,
+	// returns the original name of the file.
 	
-    
-    if (
-        !isset($_FILES[$upload_name]['error']) ||
-        is_array($_FILES[$upload_name]['error'])
-    ) {
-        throw new RuntimeException("Error: Multiple file named $upload_name.");
-    }
-
+	global $accepted_mime;
     // Check $_FILES[$upload_name]['error'] value.
     switch ($_FILES[$upload_name]['error']) {
         case UPLOAD_ERR_OK:
-            break;
+           break;
         case UPLOAD_ERR_NO_FILE:
             throw new RuntimeException('No file sent.');
         case UPLOAD_ERR_INI_SIZE:
@@ -1329,57 +1301,84 @@ function relocate_file ($type,$link='',$id=''){
         default:
             throw new RuntimeException('Unknown errors.');
     }
-
-    // Ycheck filesize here.
-    $size_mb = $_FILES[$upload_name]['size']/1000000;
-    if ($size_mb > $size_limit_mb) {
-        throw new RuntimeException("Exceeded filesize limit " . $size_limit_mb . "MB.");
+    if (!file_exists($_FILES[$upload_name]['tmp_name'] )){
+    	throw new RuntimeException ("uploaded $upload_name does not exists.");
     }
-    
-    $orig_name = $_FILES[$upload_name]['name'];
-    $tmp_file = $_FILES[$upload_name]['tmp_name'];
-    #$finfo = new finfo(FILEINFO_MIME_TYPE);
-    #$fmime =  $finfo->file($tmp_file);
     $fmime = $_FILES[$upload_name]['type'];
-    $ext = strtolower(pathinfo($orig_name, PATHINFO_EXTENSION));
+    $original = $_FILES[$upload_name]['name'];
+   $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
 
     #check if ext matches mime
     if ($fmime != $accepted_mime[$ext]){
         echo "Warning: ext $ext does not match mime $fmime" . BRNL;
     }
+    return original;
+}
 
-    // if (false === $ext = array_search(
-//         $finfo->file($_FILES[$upload_name]['tmp_name']),
-//         $accepted_mime,
-//         true
-//     )) {
-//         throw new RuntimeException("file mime type $fmime not permitted.");
-//     }
-
-    if (false === in_array($fmime,array_values($accepted_mime)) ){
-        throw new RuntimeException("file mime type $fmime not permitted.");
-    }
-
-	if (in_array($fmime,$multi)){
-		$file_name = $orig_name;
-		$file_path = SITE_PATH . "/assets/av/$file_name";
-		}
-	else {
-    $file_name = "${asset_id}.${ext}";
-    $file_path = SITE_PATH . "/assets/files/$file_name";
-    }
-
-    if (empty($file_name)){throw new RuntimeException("Cannot assign name to $upload_name file");}
-
-    if (!rename ($tmp_file, $file_path)){
-
-        throw new RuntimeException("Failed to move $upload_name from $tmp_file to $file_path" . BRNL);
-    }
-    else {
-        chmod ($file_path,0644);
-        echo "File $orig_name was uploaded successfully to $file_name<br>
-        Mime type: $fmime, size $size_mb MB <br>";
-    }
-
-    return  [$file_name,$orig_name];
+function relocate_file ($id,$type,$link=''){
+   /**
+		@type is upfile,linkfile,ftp, or upload
+		@link is supplied link if any
+		@id is id this asset will have; may be used as file name.
+		@returns url to new location/file
+		
+		
+    
+**/
+    echo "Starting relocation $type... " . BRNL;
+	switch ($type) {
+		case 'link_upload' :
+			
+			$orig = check_file_uploads('link_file');
+			$orig_path = $_FILES['link_file']['tmp_name'];
+			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
+			$new_url = '/assets/files/' . $id . ".$orig_ext";
+			$new_path = SITEPATH . $new_url;
+			
+			break;
+			
+		case 'thumb_upload' :
+			$orig = check_file_uploads('upfile');
+			$orig_path = $_FILES['upfile']['tmp_name'];
+			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
+			$new_url = '/assets/thumb_sources/' . $id . ".$orig_ext";
+			$new_path = SITEPATH . $new_url;
+			
+			break;
+			
+		case 'uploads':
+			$orig_path = PROJ_PATH . '/' . $link;
+			if (! file_exists($orig_path)) {
+				throw new RuntimeException ("file $link does not exist");
+			}
+			$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
+			$new_url = '/assets/files/' . $id . ".$orig_ext";
+			$new_path = SITE_PATH . $new_url;
+			break;
+			
+		case 'ftp':
+			$orig_path = PROJ_PATH . "/$link";
+			if (! file_exists($orig_path)) {
+				throw new RuntimeException ("file $link does not exist");
+			}
+			$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
+			$orig_name = substr($link,4); # remove the ftp/ from beginning.
+			$orig_mime = getMimeType($orig_path) ;
+			if (getMimeGroup($new_mime) == 'av'){
+				$new_url = "assets/av/" . $orig_name;
+			}
+			else {	
+				$new_url = '/assets/files/' . $id . ".$orig_ext";
+			}
+			$new_path = SITEPATH . $new_url;
+		
+			break;
+		default:
+			throw new RuntimeException ("file relocate type $type not recognized");
+			
+	}
+	echo "WIll now move $orig_path to $new_path" . BRNL;
+	echo "New url: $new_url" . BRNL;
+	exit;
+ 	return $new_url;
 }
