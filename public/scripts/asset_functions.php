@@ -1315,7 +1315,7 @@ function check_file_uploads ($upload_name){
     return original;
 }
 
-function relocate_file ($id,$type,$link=''){
+function relocate ($id,$type,$link=''){
    /**
 		@type is upfile,linkfile,ftp, or upload
 		@link is supplied link if any
