@@ -1143,7 +1143,7 @@ function relocate ($id,$type,$link=''){
 			$orig_path = $_FILES['linkfile']['tmp_name'];
 			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
 			$new_url = '/assets/files/' . $id . ".$orig_ext";
-			$new_path = SITE_PATH . $new_url;
+			$new_path = PROJ_PATH . '/shared' . $new_url;
 			
 			break;
 			
@@ -1152,7 +1152,7 @@ function relocate ($id,$type,$link=''){
 			$orig_path = $_FILES['upfile']['tmp_name'];
 			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
 			$new_url = '/assets/thumb_sources/' . $id . ".$orig_ext";
-			$new_path = SITEPATH . $new_url;
+			$new_path = PROJ_PATH . '/shared' . $new_url;
 			
 			break;
 			
@@ -1163,7 +1163,7 @@ function relocate ($id,$type,$link=''){
 			}
 			$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
 			$new_url = '/assets/files/' . $id . ".$orig_ext";
-			$new_path = SITE_PATH . $new_url;
+			$new_path = PROJ_PATH . '/shared' . $new_url;
 			break;
 			
 		case 'ftp':
@@ -1178,12 +1178,12 @@ function relocate ($id,$type,$link=''){
 			$new_mime = $finfo->file($orig_path) ;
 			
 			if (getMimeGroup($new_mime) == 'av'){
-				$new_url = "assets/av/" . $orig_name;
+				$new_url = "/assets/av/" . $orig_name;
 			}
 			else {	
 				$new_url = '/assets/files/' . $id . ".$orig_ext";
 			}
-			$new_path = SITE_PATH . $new_url;
+			$new_path = PROJ_PATH . '/shared' . $new_url;
 		
 			break;
 		default:
