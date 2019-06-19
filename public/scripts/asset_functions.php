@@ -979,7 +979,9 @@ function post_asset($post_array){
 	 		$thumb_source = $link;
 	 	}
 	 	
-	
+		 $finfo = new finfo(FILEINFO_MIME);
+		 $post_array['mime'] = $finfo->file($link);
+		 $post_array['sizekb'] =  round(filesize($link)/1000,0);
 	 	
 	
   
@@ -1136,11 +1138,14 @@ function relocate ($id,$type,$link=''){
     
 **/
     echo "Starting relocation $type ... " . BRNL;
+    $finfo = new finfo(FILEINFO_MIME);
 	switch ($type) {
 		case 'link_upload' :
 			
 			$orig = check_file_uploads('linkfile');
 			$orig_path = $_FILES['linkfile']['tmp_name'];
+			$new_mime = $finfo->file($orig_path) ;
+			$new_size = '';
 			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
 			$new_url = '/assets/files/' . $id . ".$orig_ext";
 			$new_path = PROJ_PATH . '/shared' . $new_url;
@@ -1150,6 +1155,7 @@ function relocate ($id,$type,$link=''){
 		case 'thumb_upload' :
 			$orig = check_file_uploads('upfile');
 			$orig_path = $_FILES['upfile']['tmp_name'];
+			$new_mime = $finfo->file($orig_path) ;
 			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
 			$new_url = '/assets/thumb_sources/' . $id . ".$orig_ext";
 			$new_path = PROJ_PATH . '/shared' . $new_url;
@@ -1161,6 +1167,7 @@ function relocate ($id,$type,$link=''){
 			if (! file_exists($orig_path)) {
 				throw new RuntimeException ("file $link does not exist");
 			}
+			$new_mime = $finfo->file($orig_path) ;
 			$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
 			$new_url = '/assets/files/' . $id . ".$orig_ext";
 			$new_path = PROJ_PATH . '/shared' . $new_url;
@@ -1173,8 +1180,6 @@ function relocate ($id,$type,$link=''){
 			}
 			$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
 			$orig_name = substr($link,5); # remove the /ftp/ from beginning.
-			
-			$finfo = new finfo(FILEINFO_MIME);
 			$new_mime = $finfo->file($orig_path) ;
 			
 			if (getMimeGroup($new_mime) == 'av'){
@@ -1191,8 +1196,8 @@ function relocate ($id,$type,$link=''){
 			
 	}
 	echo "WIll now move $orig_path to $new_path" . BRNL;
-	rename ($orig_path,$new_path);
-	 chmod ($new_path,0644);
+	#rename ($orig_path,$new_path);
+	# chmod ($new_path,0644);
 	echo "New url: $new_url" . BRNL;
 
  	return $new_url;
