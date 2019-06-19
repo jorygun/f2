@@ -967,112 +967,23 @@ function post_asset($post_array){
     		$link = $form_link;
     	}
     
-    exit;
+    post_array['link'] = $link;
+    
+  
     	#now check for separate thumb file source
 	 	
 	 	if (!empty($_FILES['upfile'])) {
 	 		$thumbsource = relocate ('thumb_upload' ,'',$id);
-	 	} elseif (!empty ($thumb)){
-	 		$thumbsource = $thumb;
+	 	} elseif (!empty ($post_array['url'])){
+	 		$thumbsource = $post_array['url'];
 	 	} else {
 	 		$thumbsource = $link;
 	 	}
 	 	
+	
 	 	
 	
-    /* 
-    	file uploaded from asset edit form will be called 'linkfile' primary upload - used for both link and thumb
-		upload_name upfile is used for additonal upload for thumb source if different
-    
-   
-    if (!empty($_FILES['linkfile']['name'])){
-    	$original_name = $_FILES['linkfile']['name'];
-    	
-       list($file_name,$orig_name) =
-            accept_upfile($upload_name,"/assets/files",$id);
-             $post_array['need_thumb'] = true;
-    
-
-
-
-
-        $post_array['notes'] = "$datetag Link Source uploaded from $orig_name\n"
-            . $post_array['notes']  ;
-
-       $post_array['link'] = "/assets/files/$file_name";
-
-
-    }
-    #check that link exists, get size, mime, etc
-
-        if (!empty ($post_array['link'])){
-            $link = trim($post_array['link']);
-        }
-       
-        if (substr($link,0,1) == '/' and strpos($link,'/galleries')===false){ #local
-        	$postfile = SITE_PATH . $link;
-        	
-           if ( is_file ($postfile) === false){
-
-            echoAlert( "post_asset: no file found at link: $link");
-            echo "<script>window.location.href='/scripts/asset_edit.php?id=$id'</script>";
-            }
-
-        }
-
-	if (empty($link)){echo "No link data specified for asset";
-		exit;
-	}
-    $post_array = array_merge ($post_array , add_link_data($link));
-
-#now get any extra file for the thumbnail
-    $upload_name = 'upfile';
-    if (!empty($_FILES[$upload_name]['name'])){
-    try {
-       list($file_name,$orig_name) =
-            accept_upfile($upload_name,"/assets/thumb_sources",$id);
-             $post_array['need_thumb'] = true;
-    }
-
-    catch (RuntimeException $e) {
-    echo $e->getMessage();
-     }
-
-    $post_array['notes'] = "$datetag Thumb source Uploaded from $orig_name\n"
-            . $post_array['notes']  ;
-
-       $post_array['url'] = "/assets/thumb_sources/$file_name";
-
-       $post_array['need_thumb'] = true;
-       // if (in_array ( ['Cartoon','Ad'], $post_array['type'] ) && !$post_array['has_toon'] ) {
-//             $post_array['need_toon'] = true;
-//         }
-
-    }
-    $link = $post_array['link'];
-
-/* below needs rewrite */
-    #if file is in bulk upload directory.  Move into files directory
-        # and change the url
-       
-   //  if (substr($url,0,15) == '/assets/uploads'){
-//        
-//         $old_path = SITE_PATH . $url;
-//         $ext = strtolower(pathinfo($url,PATHINFO_EXTENSION));
-//         $new_url = "/assets/files/${id}.$ext";
-//         $new_path = SITE_PATH . $new_url;
-//            copy ($old_path, $new_path); 
-//         $post_array['url'] = $new_url;
-//         #check to make sure it copied
-//         if (file_exits($new_path)) {
-//             unlink ($old_path);
-//         }
-//         else {echo "Error moving file from uploads. $old_path retained.";}
-// 
-//     }
-
-
-
+  
 
  #test to see if url has changed; if so update thumb
     $orig_link = $pdo->query("SELECT link from `assets` where id = $id;")->fetchColumn();
@@ -1381,7 +1292,9 @@ function relocate ($id,$type,$link=''){
 			
 	}
 	echo "WIll now move $orig_path to $new_path" . BRNL;
+	rename ($orig_path,$new_path);
+	 chmod ($new_path,0644);
 	echo "New url: $new_url" . BRNL;
-	exit;
+
  	return $new_url;
 }
