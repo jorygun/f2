@@ -1121,7 +1121,7 @@ function check_file_uploads ($upload_name){
     if ($fmime != $accepted_mime[$ext]){
         echo "Warning: ext $ext does not match mime $fmime" . BRNL;
     }
-    return original;
+    return $original;
 }
 
 
