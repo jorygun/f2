@@ -956,7 +956,7 @@ function post_asset($post_array){
 	 	
 	 	// get the main source
 	 	
-	 	if (!empty($_FILES['link_file'])){
+	 	if (!empty($_FILES['link_file']['name'])){
 	 		$link = relocate ($id,'link_upload');
 	 		
 	 	} elseif (strncmp ($form_link, 'uploads',7) == 0) {
@@ -972,7 +972,7 @@ function post_asset($post_array){
   
     	#now check for separate thumb file source
 	 	
-	 	if (!empty($_FILES['upfile'])) {
+	 	if (!empty($_FILES['upfile']['name'])) {
 	 	print_r ($_FILES);
 	 	
 	 		$thumbsource = relocate ('thumb_upload' ,'',$id);
