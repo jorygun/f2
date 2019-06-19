@@ -973,13 +973,13 @@ function post_asset($post_array){
     	#now check for separate thumb file source
 	 	
 	 	if (!empty($_FILES['upfile']['name'])) {
-	 	print_r ($_FILES);
+	 	#print_r ($_FILES);
 	 	
-	 		$thumbsource = relocate ('thumb_upload' ,'',$id);
+	 		$thumb_source = relocate ('thumb_upload' ,'',$id);
 	 	} elseif (!empty ($post_array['url'])){
-	 		$thumbsource = $post_array['url'];
+	 		$thumb_source = $post_array['url'];
 	 	} else {
-	 		$thumbsource = $link;
+	 		$thumb_source = $link;
 	 	}
 	 	
 	
@@ -1006,9 +1006,9 @@ function post_asset($post_array){
     }
 
 #now create thumbs
-        $thumb_source = $post_array['link'];
+        
 
-        if (!empty($post_array['url'])){$thumb_source = $post_array['url'];}
+   
 
         if ($post_array['need_thumb']){
             echo "Need new thumbnail for $thumb_source... " . BRNL;
