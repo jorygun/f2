@@ -988,8 +988,9 @@ function post_asset($post_array){
   
 
  #test to see if url has changed; if so update thumb
-    $orig_link = $pdo->query("SELECT link from `assets` where id = $id;")->fetchColumn();
-
+     $row = $pdo->query("SELECT link,url from `assets` where id = $id;")->fetch();
+		list ($orig_link,$orig_url) = $row;
+		
       if( $orig_link != $post_array['link'] ){
         if (! empty($orig_link)) {
             echo "Source has changed (was $orig_link); will regenerate thumb" . BRNL;
@@ -997,7 +998,7 @@ function post_asset($post_array){
         }
         $post_array['need_thumb'] = true;
     }
-    if( $orig_url != $post_array['url'] ){
+    if( $_url != $post_array['url'] ){
         if (! empty($orig_url)) {
             echo "Thumb source has changed (was $orig_url); will regenerate thumb" . BRNL;
                 $changed_asset = true;
