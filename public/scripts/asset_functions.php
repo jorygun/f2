@@ -967,7 +967,7 @@ function post_asset($post_array){
     		$link = $form_link;
     	}
     
-    post_array['link'] = $link;
+    $post_array['link'] = $link;
     
   
     	#now check for separate thumb file source
