@@ -956,9 +956,9 @@ function post_asset($post_array){
 	 	if (!empty($_FILES['linkfile']['name'])){
 	 		$link = relocate ($id,'link_upload');
 	 		
-	 	} elseif (strncmp ($form_link, 'uploads',7) == 0) {
+	 	} elseif (strncmp ($form_link, '/uploads',8) == 0) {
           $link = relocate($id, 'uploads',$form_link);
-    	} elseif (strncmp ($form_link, 'ftp',3) == 0) {
+    	} elseif (strncmp ($form_link, '/ftp',4) == 0) {
     		$link = relocate($id, 'ftp',$form_link);
     	} else {
     		$link = $form_link;
@@ -1143,7 +1143,7 @@ function relocate ($id,$type,$link=''){
 			$orig_path = $_FILES['linkfile']['tmp_name'];
 			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
 			$new_url = '/assets/files/' . $id . ".$orig_ext";
-			$new_path = SITE_PATH . $new_url;
+			$new_path = PROJ_PATH . '/shared' . $new_url;
 			
 			break;
 			
@@ -1152,7 +1152,7 @@ function relocate ($id,$type,$link=''){
 			$orig_path = $_FILES['upfile']['tmp_name'];
 			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
 			$new_url = '/assets/thumb_sources/' . $id . ".$orig_ext";
-			$new_path = SITEPATH . $new_url;
+			$new_path = PROJ_PATH . '/shared' . $new_url;
 			
 			break;
 			
@@ -1163,7 +1163,7 @@ function relocate ($id,$type,$link=''){
 			}
 			$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
 			$new_url = '/assets/files/' . $id . ".$orig_ext";
-			$new_path = SITE_PATH . $new_url;
+			$new_path = PROJ_PATH . '/shared' . $new_url;
 			break;
 			
 		case 'ftp':
@@ -1172,18 +1172,18 @@ function relocate ($id,$type,$link=''){
 				throw new RuntimeException ("file $link does not exist");
 			}
 			$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
-			$orig_name = substr($link,4); # remove the ftp/ from beginning.
+			$orig_name = substr($link,5); # remove the /ftp/ from beginning.
 			
 			$finfo = new finfo(FILEINFO_MIME);
 			$new_mime = $finfo->file($orig_path) ;
 			
 			if (getMimeGroup($new_mime) == 'av'){
-				$new_url = "assets/av/" . $orig_name;
+				$new_url = "/assets/av/" . $orig_name;
 			}
 			else {	
 				$new_url = '/assets/files/' . $id . ".$orig_ext";
 			}
-			$new_path = SITE_PATH . $new_url;
+			$new_path = PROJ_PATH . '/shared' . $new_url;
 		
 			break;
 		default:
