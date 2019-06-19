@@ -960,14 +960,14 @@ function post_asset($post_array){
 	 		$link = relocate ($id,'link_upload');
 	 		
 	 	} elseif (strncmp ($formlink, 'uploads',7) == 0) {
-          $link = relocate($id, 'uploads',$formlink);
+          $link = relocate($id, 'uploads',$form_link);
     	} elseif (strncmp ($formlink, 'ftp',3) == 0) {
-    		$link = relocate($id, 'ftp',$formlink);
+    		$link = relocate($id, 'ftp',$form_link);
     	} else {
-    		$link = $formlink;
+    		$link = $form_link;
     	}
     
-    
+    exit;
     	#now check for separate thumb file source
 	 	
 	 	if (!empty($_FILES['upfile'])) {
@@ -1325,7 +1325,7 @@ function relocate ($id,$type,$link=''){
 		
     
 **/
-    echo "Starting relocation $type... " . BRNL;
+    echo "Starting relocation $type ... " . BRNL;
 	switch ($type) {
 		case 'link_upload' :
 			
