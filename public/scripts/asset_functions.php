@@ -1365,7 +1365,7 @@ function relocate ($id,$type,$link=''){
 			$orig_name = substr($link,4); # remove the ftp/ from beginning.
 			
 			$finfo = new finfo(FILEINFO_MIME);
-			$orig_mime = $finfo->file($orig_path) ;
+			$new_mime = $finfo->file($orig_path) ;
 			
 			if (getMimeGroup($new_mime) == 'av'){
 				$new_url = "assets/av/" . $orig_name;
@@ -1373,7 +1373,7 @@ function relocate ($id,$type,$link=''){
 			else {	
 				$new_url = '/assets/files/' . $id . ".$orig_ext";
 			}
-			$new_path = SITEPATH . $new_url;
+			$new_path = SITE_PATH . $new_url;
 		
 			break;
 		default:
