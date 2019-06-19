@@ -964,7 +964,11 @@ function post_asset($post_array){
     		$link = $form_link;
     	}
     
-    $post_array['link'] = $link;
+    	 $finfo = new finfo(FILEINFO_MIME);
+		 $post_array['mime'] = $finfo->file(SITE_PATH . "/$link");
+		 $post_array['sizekb'] =  round(filesize(SITE_PATH . "/$link")/1000,0);
+   	 $post_array['link'] = $link;
+   	 
     echo "post_array[link] set to $link" . BRNL;
   
     	#now check for separate thumb file source
@@ -978,10 +982,6 @@ function post_asset($post_array){
 	 	} else {
 	 		$thumb_source = $link;
 	 	}
-	 	
-		 $finfo = new finfo(FILEINFO_MIME);
-		 $post_array['mime'] = $finfo->file($link);
-		 $post_array['sizekb'] =  round(filesize($link)/1000,0);
 	 	
 	
   
@@ -1080,7 +1080,8 @@ function youtube_id_from_url($url) {
                 %x'
                 ;	          
             $result = preg_match($pattern, $url, $matches);
-            if (!empty($vid = $matches[1] )){
+            if (array_key_exists(1,$matches)){
+            	$vid = $matches[1] ;
            	 	echo "Matched youtube $matches[0] to video id $vid " . BRNL;
            		return $vid; 
            	}
@@ -1196,8 +1197,8 @@ function relocate ($id,$type,$link=''){
 			
 	}
 	echo "WIll now move $orig_path to $new_path" . BRNL;
-	#rename ($orig_path,$new_path);
-	# chmod ($new_path,0644);
+	rename ($orig_path,$new_path);
+	 chmod ($new_path,0644);
 	echo "New url: $new_url" . BRNL;
 
  	return $new_url;
