@@ -1143,7 +1143,7 @@ function relocate ($id,$type,$link=''){
 			$orig_path = $_FILES['linkfile']['tmp_name'];
 			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
 			$new_url = '/assets/files/' . $id . ".$orig_ext";
-			$new_path = SITEPATH . $new_url;
+			$new_path = SITE_PATH . $new_url;
 			
 			break;
 			
