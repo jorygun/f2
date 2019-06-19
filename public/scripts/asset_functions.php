@@ -1139,8 +1139,8 @@ function relocate ($id,$type,$link=''){
 	switch ($type) {
 		case 'link_upload' :
 			
-			$orig = check_file_uploads('link_file');
-			$orig_path = $_FILES['link_file']['tmp_name'];
+			$orig = check_file_uploads('linkfile');
+			$orig_path = $_FILES['linkfile']['tmp_name'];
 			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
 			$new_url = '/assets/files/' . $id . ".$orig_ext";
 			$new_path = SITEPATH . $new_url;
