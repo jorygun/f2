@@ -973,6 +973,8 @@ function post_asset($post_array){
     	#now check for separate thumb file source
 	 	
 	 	if (!empty($_FILES['upfile'])) {
+	 	print_r ($_FILES);
+	 	
 	 		$thumbsource = relocate ('thumb_upload' ,'',$id);
 	 	} elseif (!empty ($post_array['url'])){
 	 		$thumbsource = $post_array['url'];
