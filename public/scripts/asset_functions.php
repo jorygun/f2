@@ -910,7 +910,7 @@ function post_asset($post_array){
 
     echo "<hr>Starting post_asset on id $id. " . BRNL;
     recho ($post_array,'Post_array');
-    
+    recho ($_FILES,'FILES array');
     
     $form_link = $post_array['link'] ?? '';
       
@@ -965,12 +965,12 @@ function post_asset($post_array){
     	}
     
     $post_array['link'] = $link;
-    
+    echo "post_array[link] set to $link" . BRNL;
   
     	#now check for separate thumb file source
 	 	
 	 	if (!empty($_FILES['upfile']['name'])) {
-	 	#print_r ($_FILES);
+	 	
 	 	
 	 		$thumb_source = relocate ('thumb_upload' ,'',$id);
 	 	} elseif (!empty ($post_array['url'])){
