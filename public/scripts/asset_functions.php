@@ -959,9 +959,9 @@ function post_asset($post_array){
 	 	if (!empty($_FILES['link_file'])){
 	 		$link = relocate ($id,'link_upload');
 	 		
-	 	} elseif (strncmp ($formlink, 'uploads',7) == 0) {
+	 	} elseif (strncmp ($form_link, 'uploads',7) == 0) {
           $link = relocate($id, 'uploads',$form_link);
-    	} elseif (strncmp ($formlink, 'ftp',3) == 0) {
+    	} elseif (strncmp ($form_link, 'ftp',3) == 0) {
     		$link = relocate($id, 'ftp',$form_link);
     	} else {
     		$link = $form_link;
