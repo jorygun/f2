@@ -1093,6 +1093,37 @@ function youtube_id_from_url($url) {
 
 
 
+function check_file_uploads ($upload_name){
+	// checks for upload errors, file exits,
+	// returns the original name of the file.
+	
+	global $accepted_mime;
+    // Check $_FILES[$upload_name]['error'] value.
+    switch ($_FILES[$upload_name]['error']) {
+        case UPLOAD_ERR_OK:
+           break;
+        case UPLOAD_ERR_NO_FILE:
+            throw new RuntimeException('No file sent.');
+        case UPLOAD_ERR_INI_SIZE:
+        case UPLOAD_ERR_FORM_SIZE:
+            throw new RuntimeException('Exceeded filesize limit.');
+        default:
+            throw new RuntimeException('Unknown errors.');
+    }
+    if (!file_exists($_FILES[$upload_name]['tmp_name'] )){
+    	throw new RuntimeException ("uploaded $upload_name does not exists.");
+    }
+    $fmime = $_FILES[$upload_name]['type'];
+    $original = $_FILES[$upload_name]['name'];
+   $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
+
+    #check if ext matches mime
+    if ($fmime != $accepted_mime[$ext]){
+        echo "Warning: ext $ext does not match mime $fmime" . BRNL;
+    }
+    return original;
+}
+
 
 function relocate ($id,$type,$link=''){
    /**
