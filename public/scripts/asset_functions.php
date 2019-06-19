@@ -988,8 +988,9 @@ function post_asset($post_array){
   
 
  #test to see if url has changed; if so update thumb
-     $row = $pdo->query("SELECT link,url from `assets` where id = $id;")->fetch();
-		list ($orig_link,$orig_url) = $row;
+     $row = $pdo->query("SELECT link,url from `assets` where id = $id;")->fetch(PDO::FETCH_ASSOC);
+		$orig_link = $row['link'];
+		$orig_url = $row['url'];
 		
       if( $orig_link != $post_array['link'] ){
         if (! empty($orig_link)) {
