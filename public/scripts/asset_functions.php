@@ -909,11 +909,8 @@ function post_asset($post_array){
     }
 
     echo "<hr>Starting post_asset on id $id. " . BRNL;
-    #first see if file is in uploads or ftpf directory .
-    #if so, build a FILES array for it so it looks like
-    #an uploaded file
+    recho ($post_array,'Post_array');
     
-    //ftpf in the link is not a real directory; gets translated here
     
     $form_link = $post_array['link'] ?? '';
       
@@ -1013,7 +1010,7 @@ function post_asset($post_array){
    
 
         if ($post_array['need_thumb']){
-            echo "Need new thumbnail for $thumb_source... " . BRNL;
+            echo "Need new thumbnail from $thumb_source... " . BRNL;
             if($thumb = create_thumb ($id,$thumb_source,'thumbs')){
                 //$post_array['has_thumb'] = true;
                 $post_array['thumb_file'] = $thumb;
@@ -1089,146 +1086,13 @@ function youtube_id_from_url($url) {
             	#echo "No youtube id in $url" . BRNL;
             	return false;
             }
-        }
+ }
 
     
 
 
 
 
-function accept_upfile($upload_name,$upload_dir,$asset_id){
-   /**
-   
-   @upload_name is 'upfile' etc, name used for _FILES array
-   
- #called with path to directory to save file in and the id to use in the name.
-    #returns the filename (/id.ext);
-    
-    #two transfer modes: if mime type = av, goes into /assets/av/orig_name
-    otherwise, goes into /assets/files/id.ext
-    
-    if from ftpf, file goes into /assets/from_ftp/orig_filename
-    otherwise goes into /assets/files/id.ext
-    
-    
-**/
-    echo "Starting accept $upload_name... " . BRNL;
-
-    #recho ($_FILES[$upload_name],"Files array to accept_file");
-
-    #ame will be id.ext where ext comes from mime
-    global $accepted_mime;
-
-    $size_limit_mb = 1000;
-    $size_limit = $size_limit_mb * 1000000;
-
- // Undefined | Multiple Files | $_FILES Corruption Attack
-    // If this request falls under any of them, treat it invalid.
-
-    if (
-        !isset($_FILES[$upload_name]['error']) ||
-        is_array($_FILES[$upload_name]['error'])
-    ) {
-        throw new RuntimeException("Error: Multiple file named $upload_name.");
-    }
-
-    // Check $_FILES[$upload_name]['error'] value.
-    switch ($_FILES[$upload_name]['error']) {
-        case UPLOAD_ERR_OK:
-            break;
-        case UPLOAD_ERR_NO_FILE:
-            throw new RuntimeException('No file sent.');
-        case UPLOAD_ERR_INI_SIZE:
-        case UPLOAD_ERR_FORM_SIZE:
-            throw new RuntimeException('Exceeded filesize limit.');
-        default:
-            throw new RuntimeException('Unknown errors.');
-    }
-
-    // Ycheck filesize here.
-    $size_mb = $_FILES[$upload_name]['size']/1000000;
-    if ($size_mb > $size_limit_mb) {
-        throw new RuntimeException("Exceeded filesize limit " . $size_limit_mb . "MB.");
-    }
-    
-    $orig_name = $_FILES[$upload_name]['name'];
-    $tmp_file = $_FILES[$upload_name]['tmp_name'];
-    #$finfo = new finfo(FILEINFO_MIME_TYPE);
-    #$fmime =  $finfo->file($tmp_file);
-    $fmime = $_FILES[$upload_name]['type'];
-    $ext = strtolower(pathinfo($orig_name, PATHINFO_EXTENSION));
-
-    #check if ext matches mime
-    if ($fmime != $accepted_mime[$ext]){
-        echo "Warning: ext $ext does not match mime $fmime" . BRNL;
-    }
-
-    // if (false === $ext = array_search(
-//         $finfo->file($_FILES[$upload_name]['tmp_name']),
-//         $accepted_mime,
-//         true
-//     )) {
-//         throw new RuntimeException("file mime type $fmime not permitted.");
-//     }
-
-    if (false === in_array($fmime,array_values($accepted_mime)) ){
-        throw new RuntimeException("file mime type $fmime not permitted.");
-    }
-
-	if (in_array($fmime,$multi)){
-		$file_name = $orig_name;
-		$file_path = SITE_PATH . "/assets/av/$file_name";
-		}
-	else {
-    $file_name = "${asset_id}.${ext}";
-    $file_path = SITE_PATH . "/assets/files/$file_name";
-    }
-
-    if (empty($file_name)){throw new RuntimeException("Cannot assign name to $upload_name file");}
-
-    if (!rename ($tmp_file, $file_path)){
-
-        throw new RuntimeException("Failed to move $upload_name from $tmp_file to $file_path" . BRNL);
-    }
-    else {
-        chmod ($file_path,0644);
-        echo "File $orig_name was uploaded successfully to $file_name<br>
-        Mime type: $fmime, size $size_mb MB <br>";
-    }
-
-    return  [$file_name,$orig_name];
-}
-
-function check_file_uploads ($upload_name){
-	// checks for upload errors, file exits,
-	// returns the original name of the file.
-	
-	global $accepted_mime;
-    // Check $_FILES[$upload_name]['error'] value.
-    switch ($_FILES[$upload_name]['error']) {
-        case UPLOAD_ERR_OK:
-           break;
-        case UPLOAD_ERR_NO_FILE:
-            throw new RuntimeException('No file sent.');
-        case UPLOAD_ERR_INI_SIZE:
-        case UPLOAD_ERR_FORM_SIZE:
-            throw new RuntimeException('Exceeded filesize limit.');
-        default:
-            throw new RuntimeException('Unknown errors.');
-    }
-    if (!file_exists($_FILES[$upload_name]['tmp_name'] )){
-    	throw new RuntimeException ("uploaded $upload_name does not exists.");
-    }
-    $fmime = $_FILES[$upload_name]['type'];
-    $original = $_FILES[$upload_name]['name'];
-   $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
-
-    #check if ext matches mime
-    if ($fmime != $accepted_mime[$ext]){
-        echo "Warning: ext $ext does not match mime $fmime" . BRNL;
-    }
-    return original;
-}
 
 function relocate ($id,$type,$link=''){
    /**
