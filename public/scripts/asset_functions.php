@@ -335,25 +335,17 @@ function set_asset_skip_time ($id){
 
 function get_asset_data($id){
     $pdo = MyPDO::instance();
-
+	global $assetfields;
      $itemdata = array(); #store data to display
     #echo "Starting get_asset_data";
 
     if ( $id == 0){
-     //shw blank screen for new entry
-        $itemdata = array (
-        'status' => 'N',
-        'date_entered' => 'NOW()',
-        'contributor' => $_SESSION['username'],
-        'contributor_id' => $_SESSION['user_id'],
-        'id'=> 0,
-        'tags'=>'', 
-        'link'=>'',
-        'type'=>'',
-        'caption'=>'',
-        'user_info' => ''
-        );
-
+    	foreach ($assetfields as $f){
+    		$itemdata[$f] = '';
+    	}
+    	$itemdata['status'] = 'N';
+    	$itemdata['date_entered'] = 'NOW()';
+    	$itemdata['contributor'] = $_SESSION['username'];
 	}
 
     else{
