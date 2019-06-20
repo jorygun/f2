@@ -91,7 +91,7 @@ function get_news_file($filename,$extra=''){
 	#look in local directory, then news_live, then  in news directory
 	   if (file_exists("./$filename")) {
 	   		$file = "./$filename";
-	    return "Found $file";
+	   # return "Found $file";
 	    
 	   // elseif (file_exists (SITE_PATH . "/news/news_live/$filename")) {
 // 	   	$file = SITE_PATH . "/news/news_live/$filename"; 
@@ -101,8 +101,7 @@ function get_news_file($filename,$extra=''){
 	  } else {
 	  	return "echo_if: $filename not found";
 	  }
-	   echo "Should never get here.";
-	   
+
 	   $content = file_get_contents($file);
 	   
 	if (substr($filename,0,5) !== 'news_') {
