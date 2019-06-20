@@ -249,6 +249,7 @@ global $asset_tags;
 
 
     $has_thumb =  png_or_jpg_exists('thumbs',$id);
+    $item_data['has_thumb'] = $has_thumb;
     $has_thumb_tic = ($has_thumb)?'&radic;':'no';
     $need_thumb = ($id>0 && $has_thumb)?false:true;
     $need_thumb_checked = ($need_thumb)?'checked':'' ;
@@ -256,6 +257,7 @@ global $asset_tags;
 
 
     $has_gallery =  png_or_jpg_exists('galleries',$id);
+    $item_data['has_gallery'] = $has_gallery;
     $has_gallery_tic = ($has_gallery)?'&radic;':'no';
     $need_gallery = false;
     $need_gallery_checked = ($need_gallery)?'checked':'' ;
@@ -263,6 +265,7 @@ global $asset_tags;
 
 
     $has_toon =   png_or_jpg_exists('toons',$id);
+    $item_data['has_toon'] = $has_toon;
     $has_toon_tic = ($has_toon)?'&radic;':'no';
     $need_toon = false;
     $need_toon_checked = ($need_toon)?'checked':'' ;
