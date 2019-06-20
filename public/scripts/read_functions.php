@@ -87,7 +87,7 @@ function echo_if($filename,$extra=''){
 	#pass filename, possible heding text,
 	   
 	#look in local directory, then news_live, then  in news directory
-	   if (file_exists($filename)) {
+	   if (file_exists("./$filename")) {
 	   		$file = $filename;
 	   } elseif (file_exists (SITE_PATH . "/news/news_live/$filename")) {
 	   	$file = SITE_PATH . "/news/news_live/$filename"; 
@@ -98,7 +98,7 @@ function echo_if($filename,$extra=''){
 	   
 	   $content = file_get_contents($file);
 	   
-	if (substr($filename,0,4) !== 'news_') {
+	if (substr($filename,0,5) !== 'news_') {
 		return $content;
 	}
 	

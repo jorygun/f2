@@ -30,4 +30,6 @@ data/
 #don't alter normally
 
 #news directory contains live info.  Don't disturb
-public/news/
+public/news/news_latest/
+public/news/news_next/
+
