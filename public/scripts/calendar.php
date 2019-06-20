@@ -12,6 +12,9 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';);
 
 echo start_page();
 
+   $calendar_html_file = SITE_PATH . '/news/news_latest/calendar.html';
+    $calendar_tease_file = SITE_PATH . '/news/news_latest/tease_calendar.txt';
+    
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 #   echo "<pre>", print_r($_POST,true),"</pre>";
    if (!empty($_POST['cevent'])){ update_calendar();}
@@ -20,12 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 list ($calendar_h, $calendar_t) = get_events_db();
 
 
- generate_files($calendar_h,$calendar_t);
-
 
 echo "<h3>Current Calendar Items</h3>";
 echo "text:<br><pre>",$calendar_t,"</pre><hr>\n";
 echo "html:<br>", $calendar_h,"<hr>\n";
+
+echo "<p>Generating Files</p>";
+ 
+file_put_contents(calendar_html_file,$calendar_h);
+file_put_contents(calendar_tease_file, $calendar_t);
+
 
 echo show_calendar_form();
 
@@ -149,9 +156,10 @@ EOT;
 
 function generate_files($h,$t){
     echo "<p>Generating Files</p>";
-    file_put_contents(SITE_PATH . "/news/calendar.html",$h);
+ 
+    file_put_contents(calendar_html_file,$h);
     #file_put_contents($calendar_test,$calendar_h);
-    file_put_contents(SITE_PATH . "/news/news_next/tease_calendar.txt", $t);
+    file_put_contents(calendar_tease_file, $t);
 }
 
 
