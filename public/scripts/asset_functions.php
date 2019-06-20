@@ -363,6 +363,8 @@ function get_asset_data($id){
 
 
     }
+    #set hsa thumb, gallery, and toon
+    if (file_exists(get_gfile(SITE_PATH . "/assets/thumbs/${id}.jpg"))){$itemdata['has_thumb'] = true;}
     #recho ($itemdata , 'from get_asset_data');
     return $itemdata;
 }
