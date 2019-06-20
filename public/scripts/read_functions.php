@@ -82,8 +82,10 @@ function current_ops(){
     $opp_rows = $pdo->query($sql)-> fetchColumn();
     return $opp_rows;
 }
-
-function echo_if($filename,$extra=''){
+function echo_if ($filename,$extra='') {
+	echo get_news_file($filename,$extra='');
+}
+function get_news_file($filename,$extra=''){
 	#pass filename, possible heding text,
 	   
 	#look in local directory, then news_live, then  in news directory
@@ -157,9 +159,9 @@ function echo_if($filename,$extra=''){
                 $content2
                 );
                 
-            echo $extra;
-        	echo $content3;
-   
+         //    echo $extra;
+//         	echo $content3;
+//    
         	return "$extra\n$content3"; #replace echo with using return value
 
 	}
