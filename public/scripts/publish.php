@@ -35,6 +35,7 @@ EOT;
 	$conventional_date = $pubdate -> format('M j, Y');
 	echo "$conventional_date translates to $condensed_date<br>";
 
+#get title from news_next
 	$titlefile = SITE_PATH . '/news/news_next/title.txt';
     if (file_exists($titlefile)){
         $current_title = file_get_contents($titlefile);
@@ -47,23 +48,25 @@ EOT;
 	$newspath = SITE_PATH . "/news"; #development
 		$nextnews_dir = "$newspath/news_next";
 
-		$modelnews_dir = "$newspath/news_model";
+		
 		$rtime_file = "$newspath/last_update_run.txt";
  		$ptime_file = "$newspath/last_update_published.txt";
+ 		
  		$new_location_surrogate = "$newspath/index.php";
  		$latest_pointer = "$newspath/latest_pointer.txt";
+ 		
  		$last_published_time = "$newspath/last_published_time.txt";
-		$last_published_ts = REPO_PATH . "/data/last_published_ts.txt";
+		$last_published_ts = $newspath . "/last_published_ts.txt";
 
 
 	$latest_dir = "$newspath/news_latest";
 	$working_file = "$latest_dir/index.php";
 	$publish_file = "$latest_dir/publish.txt";
 
-    $newnewsfile = "news_${condensed_date}";
-	$newsppath = SITE_PATH . "/newsp"; #archive folder
-		$newnews_dir = "$newsppath/$newnewsfile";
-			$newsletter = "$newnews_dir/index.php";
+    $newnews_dir = "news_${condensed_date}";
+	
+		$newnews_path = SITE_PATH . "/newsp/$newnews_dir";
+			
 		$news_index = "$newspath/index.php";
 
 
@@ -86,7 +89,7 @@ EOT;
     echo BRNL;
 
 	// copy the news_next to the news_latest directory
-	echo "Copying news_next to news_latest: <br>from  $nextnews_dir<br> to $latest_dir<br>";
+	echo "Copying news_next to news_latest<br>";
 	deleteDir($latest_dir);
 	full_copy($nextnews_dir,$latest_dir);
 	
@@ -114,12 +117,12 @@ $publish_wrapped = "<?php\n" . $publish_data . "?>\n";
     file_put_contents($publish_file,$publish_wrapped);
 
 file_put_contents($last_published_time,"$now\n");
-file_put_contents($last_publish_ts,time());
+file_put_contents($last_published_ts,time());
 
 
 
-		echo "Copying latest directory to news archive at $newnews_dir<br>";
-		full_copy($latest_dir,$newnews_dir);
+		echo "Copying latest to $new_location<br>";
+		full_copy($latest_dir,$newnews_path);
 
 	    #write new location in news/latest_pointer
 
@@ -134,7 +137,7 @@ file_put_contents($last_publish_ts,time());
 		if (! $success){echo "<h3>Failed to copy rtime to ptime!</h3>";}
 		// now make a new news_next directory from the model
 		//echo "Copying model news to next news<br>";
-		//full_copy ($modelnews_dir,$nextnews_dir);
+		
 		// Do this manually instaead.
         $pdo = MyPDO::instance();
 
@@ -170,7 +173,7 @@ file_put_contents($last_publish_ts,time());
          $sql = "UPDATE read_table SET read_cnt=0 WHERE issue = 999999;";
          $result = $pdo->query($sql);
 
-        #now rebuild the files for advance
+        #now rebuild the files
         include './news_files2.php';
 
 
