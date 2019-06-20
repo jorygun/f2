@@ -12,6 +12,7 @@ echo "repo: $repo" . " test: " . $test .  BRNL;
 
 
 $proj_path = dirname(__DIR__);
+$proj_path = '/usr/home/digitalm/Sites/flames';
 $repo_path = $proj_path . "/$repo"; 
 
 ini_set('include_path', "$proj_path/mx-libs/libmx:$repo_path/config");
