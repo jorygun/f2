@@ -94,7 +94,7 @@ function echo_if($filename,$extra=''){
 	   } elseif (file_exists (SITE_PATH ."/news/$filename")){
 	   	$file = SITE_PATH ."/news/$filename";
 	  	
-	  } else {return false;}
+	  } else {echo "$filename not found";}
 	   
 	   $content = file_get_contents($file);
 	   
