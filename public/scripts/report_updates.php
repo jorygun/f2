@@ -1,8 +1,27 @@
 <?PHP
 
 //BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (f2_security_below(4)){exit;}
+	/*  STARTUP */
+ini_set('display_errors', 1);
+
+$opts = getopt('t',['repo:']);
+#var_dump($opts);
+$repo = $opts['repo'] ?? 'live';
+$test = isset($opts['t']) ? true:false;
+echo "repo: $repo" . " test: " . $test .  BRNL;
+
+
+$proj_path = dirname(__DIR__);
+$repo_path = $proj_path . "/$repo"; 
+
+ini_set('include_path', "$proj_path/mx-libs/libmx:$repo_path/config");
+
+require 'MxConstants.php'; #in libmx
+require 'Definitions.php';  #config is in path
+use \digitalmx\flames\Definitions as Defs;
+
+require 'MxPDO.php';
+$pdo = new \digitalmx\MxPDO ('production','pair',"$proj_path/config/db.ini");
 //END START
 
 /* Script to retrieve recenbt updates to user data and produce html for newsletter
@@ -16,22 +35,22 @@
 
  $nowsql = date("Y-m-d H:i:s"); #sql-ready
  $nowh	=	date('M d, Y'); #human ready
- $pdo = MyPDO::instance();
-
- global $G_member_status_set;
- $member_status_set = $G_member_status_set;
+ 
+ 
+ $member_status_set = Defs::get_member_set();
+ 
 #$G_member_status_array = array('M', 'MA','MN','MC','MU','R','G');
 
  
- $rtime_file = SITE_PATH . "/news/last_update_run.txt";
- $ptime_file = SITE_PATH . "/news/last_update_published.txt";
+ $rtime_file = "$repo_path/public/news/last_update_run_ts.txt";
+ $ptime_file = "$repo_path/public/news/last_update_published_ts.txt";
  
- $updates_html_file=SITE_PATH . "/news/news_next/news_updates.html";
- $updates_text_file = SITE_PATH . "/news/news_next/tease_updates.txt";
+ $updates_html_file= "$repo_path/public/news/news_next/news_updates.html";
+ $updates_text_file =  "$repo_path/public/news/news_next/tease_updates.txt";
  # not used.  Only list of names is used.
  
  $updates_html = $updates_text = ''; #containers for building reports in
- 
+ $opportunity_html_file = "$repo_path/public/news/news_next/news_opportunities.html";
  
 #report status changes
 //Find date to begin looking from //
@@ -39,7 +58,7 @@ if(! empty($ptime = $_GET['ptime'] )){
     $ptimex = strtotime($ptime);
     
 }
-if (!$ptimex){ #get from last published file
+if (!$ptimex){ #get from last published file  timestamp!
     $ptimex = get_start_time();
 }
 if (!$ptimex){
@@ -205,9 +224,9 @@ echo "Saving member updates to $updates_html_file" . BRNL;
 
 
 // prepare teaser report
-	$teaser_report = prepare_headline_report($ptimex);
+	$teaser_report = prepare_headline_report($pdo);
 	$teaser_report .=  prepare_name_report ($name_list);
-	$teaser_report .= prepare_opp_report($ptimes);
+	$teaser_report .= prepare_opp_report($pdo,$ptimes);
 	
 	
 	
@@ -221,12 +240,11 @@ echo "Saving member updates to $updates_html_file" . BRNL;
 
 
 // update the last run file
-$ph = fopen($rtime_file,'w');
-fprintf ($ph,"Run at %s\n",$nowsql);
-fclose ($ph);
+file_put_contents($rtime_file,time());
+
 
 ######################
-$opportunities_html = file_get_contents( SITE_PATH. "/news/news_next/news_opportunities.html");
+$opportunities_html = file_get_contents( $opportunity_html_file);
 echo <<<EOT
 <html><head> 
 <title>Show Updates</title>
@@ -384,11 +402,11 @@ function pickbest($val,$best,$alt){
 }
 
 //build opportunity report
-function prepare_opp_report ($ptimes){
+function prepare_opp_report ($pdo,$ptimes){
 	#saves new opps  to news_opps.html; returns text version for teser.
     $newopp_report_h = "";
     $newopp_report_t = '';
-    $pdo = MyPDO::instance();
+   
     $opportunities_html = SITE_PATH. "/news/news_next/news_opportunities.html";
     $dtp = new DateTime($ptimes);
     
@@ -440,9 +458,9 @@ function prepare_opp_report ($ptimes){
 }
 
 ## NOW get headlines from articles
-function prepare_headline_report () {
+function prepare_headline_report ($pdo) {
 	
-	$pdo = MyPDO::instance();
+	
 	
 	$sql = "SELECT title,contributor FROM `news_items` WHERE
 		status != 'P' and use_me > 0;";
@@ -461,15 +479,11 @@ function prepare_headline_report () {
 	return $hl_report;
 }
 
-function get_start_time(){
+function get_start_time($ptime_file){
 	// gets last published time from ptime and returns sql date/time
-	$ptime_file = SITE_PATH . "/news/last_update_published.txt";
+	#is timestamp
 	$p_time_s = trim(file_get_contents($ptime_file));
-	if(preg_match('/.*?([\d\:\-]+ [\d\:\-]+)/',$p_time_s,$m)){
-	    $p_time = ($m[1]);
-	}
-	#echo "p_time found: $p_time<br>";
-	else {die ("No valid p_time $p_time_s");}
-	return strtotime($p_time);
+	
+	return $p_time_s;
 }
 
