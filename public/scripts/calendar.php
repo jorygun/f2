@@ -2,7 +2,7 @@
 #ini_set('display_errors', 1);
 ini_set('error_reporting', -1);
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';);
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
 // script reads the alendar file and produces two outputs:
 // an html table of events, and a plain text list of event highlights.
