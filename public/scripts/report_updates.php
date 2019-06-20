@@ -5,7 +5,7 @@
 ini_set('display_errors', 1);
 
 require 'init.php';
-$repo_path = REPO_PATH
+$repo_path = REPO_PATH;
 //END START
 
 /* Script to retrieve recenbt updates to user data and produce html for newsletter
