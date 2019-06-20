@@ -169,7 +169,7 @@ class Init
 
 	// BR, NL, BRNL, CRLF, LF, URL_REGEX //
 		require_once "MxConstants.php";
-		$mxc = new \digitalmx\MxConstants (); 
+		
 
 		/* Define site constants
 			PROJ_PATH (..../flames)
