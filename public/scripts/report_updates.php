@@ -5,7 +5,7 @@
 ini_set('display_errors', 1);
 
 $root = $_SERVER['DOCUMENT_ROOT'];
-if (empty($root)){$root = '/usr/home/digitalm/Sites/beta/public';}
+if (empty($root)){$root = '/usr/home/digitalm/Sites/flames/beta/public';}
  require_once $root . '/init.php';;
  
 $repo_path = REPO_PATH;
