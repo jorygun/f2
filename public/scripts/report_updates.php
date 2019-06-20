@@ -349,7 +349,7 @@ function report_changes (&$result,$type){
 				$id = $row['id'];
 				$greeting = $row['user_greet'];
 				$aboutme = $row['user_about'];
-				$joined = age($row['join_date'])[1];
+				$joined = _age($row['join_date'])[1];
 				$namelist[] = $name;
 				$contact = display_email($row);
 				$profile_year = substr($row['profile_validated'],0,4);
@@ -400,6 +400,21 @@ function report_changes (&$result,$type){
 function pickbest($val,$best,$alt){
 	$string = (!isSet( $val ) || empty( $val ) )? "$alt" : $best;
 	return $string;
+}
+
+function _age($date_str) {
+	//takes a date and returns the age from today in days and a formatted version of date
+	
+	if (!$date_str){ #blank or NULL??
+		return array('99999','no_date');
+	}
+	$DT_now = new DateTime();
+	$vd = new DateTime($date_str);
+	$diff = $vd -> diff($DT_now);
+	$diff_str = $diff->format('%a');
+	$last_val = $vd->format ('M j, Y');
+	#echo "$date_str, $diff_str, $last_val<br>\n";
+	return array ($diff_str,$last_val);
 }
 
 //build opportunity report
