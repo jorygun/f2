@@ -989,7 +989,7 @@ function post_asset($post_array){
 	 	}
 	 	
 	
-  
+  $post_array['url'] = $thumb_source;
 
  #test to see if url has changed; if so update thumb
      $row = $pdo->query("SELECT link,url from `assets` where id = $id;")->fetch(PDO::FETCH_ASSOC);
