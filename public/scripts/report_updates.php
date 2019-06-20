@@ -60,7 +60,7 @@ if(! empty($ptime = $_GET['ptime'] )){
     
 }
 if (!$ptimex){ #get from last published file  timestamp!
-    $ptimex = get_start_time();
+    $ptimex = get_start_time($ptime_file);
 }
 if (!$ptimex){
 	echo "No starting time in either parameter or last published file. ";
