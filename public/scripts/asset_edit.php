@@ -402,7 +402,9 @@ echo <<<EOT
 <tr><td></td><td>
 Upload file <input type="file" name="linkfile" > <br>
     or URL: <input type='text' name='link' value='${itemdata['link']}' size=80>
-    </td></tr>
+    <br>
+    Use '/ftp/xxx' for files in ftp dir; 'uploads/xxx' for files in uploads dir.
+</td></tr>
 
 
 <tr><td colspan='2'>Upload Thumb/Source file if not the link<br>

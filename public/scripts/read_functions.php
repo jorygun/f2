@@ -86,20 +86,25 @@ function current_ops(){
 function echo_if($filename,$extra=''){
 	#pass filename, possible heding text,
 	   
-	#look in local directory or in news directory
+	#look in local directory, then news_live, then  in news directory
 	   if (file_exists($filename)) {
 	   		$file = $filename;
+	   } elseif (file_exists (SITE_PATH . "/news/news_live/$filename")) {
+	   	$file = SITE_PATH . "/news/news_live/$filename"; 
 	   } elseif (file_exists (SITE_PATH ."/news/$filename")){
 	   	$file = SITE_PATH ."/news/$filename";
-	   } elseif (file_exists (SITE_PATH . "/news/news_live/$filename")) {
-	   	$file = SITE_PATH . "/news/news_live/$filename"; 	
+	  	
 	  } else {return false;}
 	   
-
-		global $voting; #need the voting object
-	    #	echo "reading $filename" . BRNL;
-			$content = file_get_contents($file);
+	   $content = file_get_contents($file);
+	   
+	if (substr($filename,0,4) !== 'news_') {
+		return $content;
+	}
 	
+	#for news files, deal with voting
+	global $voting; #need the voting object
+	    	
  /*   <div class='story_comment_box clear'>
            <? echo get_commenters(1741) ?>
            <br>
