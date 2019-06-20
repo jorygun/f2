@@ -83,7 +83,9 @@ function current_ops(){
     return $opp_rows;
 }
 function echo_if ($filename,$extra='') {
-	echo get_news_file($filename,$extra='');
+	if ($var = get_news_file($filename,$extra='') ){
+		echo $var;
+	}
 }
 function get_news_file($filename,$extra=''){
 	#pass filename, possible heding text,
@@ -99,7 +101,8 @@ function get_news_file($filename,$extra=''){
 // 	   	$file = SITE_PATH ."/news/$filename";
 	  	
 	  } else {
-	  	return "echo_if: $filename not found";
+	  	#return "echo_if: $filename not found";
+	  	return false;
 	  }
 
 	   $content = file_get_contents($file);
