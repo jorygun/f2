@@ -89,6 +89,7 @@ function echo_if($filename,$extra=''){
 	#look in local directory, then news_live, then  in news directory
 	   if (file_exists("./$filename")) {
 	   		$file = "./$filename";
+	    return "Found $file";
 	    
 	   // elseif (file_exists (SITE_PATH . "/news/news_live/$filename")) {
 // 	   	$file = SITE_PATH . "/news/news_live/$filename"; 
