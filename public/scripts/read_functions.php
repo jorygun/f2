@@ -99,6 +99,7 @@ function echo_if($filename,$extra=''){
 	  } else {
 	  	return "echo_if: $filename not found";
 	  }
+	   echo "Should never get here.";
 	   
 	   $content = file_get_contents($file);
 	   
