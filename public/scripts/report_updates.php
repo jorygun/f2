@@ -4,6 +4,8 @@
 	/*  STARTUP */
 ini_set('display_errors', 1);
 
+use \digitalmx\flames\Definitions as Defs;
+
 $root = $_SERVER['DOCUMENT_ROOT'];
 if (empty($root)){$root = '/usr/home/digitalm/Sites/flames/beta/public';}
  require_once $root . '/init.php';;
