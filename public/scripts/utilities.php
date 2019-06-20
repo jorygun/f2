@@ -1448,7 +1448,7 @@ function get_latest_pub_date($form='sql')
         timestamp: 2023409823408
     */
 
-    $file1 = REPO_PATH . '/public/news_latest/last_published_ts.txt';
+    $file1 = PROJ_PATH . '/' . 'live' . '/public/news/last_published_ts.txt';
 
     if (!file_exists($file1)){
         return "Latest pub date file not found";
@@ -1465,7 +1465,8 @@ function get_latest_pub_date($form='sql')
         case 'sqldt':
             $rdate = date('Y-m-d H:m',$tstamp); break;
         case 'timestamp':
-            $rdate = $tstamp;break;
+            $rdate = $tstamp;
+            break;
         default:
             $rdate = "Error: date format $form not understood";
     }

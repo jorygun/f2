@@ -55,8 +55,8 @@ EOT;
  		$new_location_surrogate = "$newspath/index.php";
  		$latest_pointer = "$newspath/latest_pointer.txt";
  		
- 		$last_published_time = "$newspath/last_published_time.txt";
-		$last_published_ts = $newspath . "/last_published_ts.txt";
+ 		
+		$last_published_ts = "$newspath/last_published_ts.txt";
 
 
 	$latest_dir = "$newspath/news_latest";
@@ -116,7 +116,7 @@ $publish_wrapped = "<?php\n" . $publish_data . "?>\n";
    ##put publish_data into a file for inclusion.
     file_put_contents($publish_file,$publish_wrapped);
 
-file_put_contents($last_published_time,"$now\n");
+
 file_put_contents($last_published_ts,time());
 
 
