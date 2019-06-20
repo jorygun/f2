@@ -30,8 +30,8 @@ echo "html:<br>", $calendar_h,"<hr>\n";
 
 echo "<p>Generating Files</p>";
  
-file_put_contents(calendar_html_file,$calendar_h);
-file_put_contents(calendar_tease_file, $calendar_t);
+file_put_contents($calendar_html_file,$calendar_h);
+file_put_contents($calendar_tease_file, $calendar_t);
 
 
 echo show_calendar_form();
