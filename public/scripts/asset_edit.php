@@ -232,6 +232,7 @@ function post_asset_update($post) {
 
 function show_asset_form($itemdata) {
     $id = (isset($itemdata['id'] ))?$itemdata['id']: 0 ;
+    $itemdata['id'] = $id;
     
 // display form using data from itemdata
 // 	recho ($itemdata,'input to show asset form');
