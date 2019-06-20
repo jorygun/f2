@@ -220,7 +220,7 @@ echo "Saving member updates to $updates_html_file" . BRNL;
 	
 	
 	
-	file_put_contents($updates_text,$teaser_report);
+	file_put_contents($updates_text_file,$teaser_report);
 
 
 
