@@ -504,10 +504,12 @@ function create_thumb($id,$fsource,$type='thumbs'){
 	 	
 	 }
 	 	
-	 $finfo = new finfo(FILEINFO_MIME_TYPE);
-      $source_mime = $finfo->file($source_path);
-     
-      echo "source mime: $source_mime" . BRNL;
+	 	$finfo = new finfo(FILEINFO_MIME_TYPE);
+      if (! $source_mime = $finfo->file($source_path)) {
+      	echo "unable to get mime type from source $source_path" . BRNL;
+      }
+      else {echo "Mime: $source_mime" . BRNL;}
+      
       
 	switch ($source_mime) {
 		case 'application/msword' :
@@ -518,7 +520,6 @@ function create_thumb($id,$fsource,$type='thumbs'){
 			break;
 		case 'application/pdf' :
 		case 'image/gif':
-		case 'image/jpeg':
 		case 'image/jpeg':
 		case 'image/png':
 		case 'image/tiff':
