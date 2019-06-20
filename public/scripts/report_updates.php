@@ -4,6 +4,7 @@
 	/*  STARTUP */
 ini_set('display_errors', 1);
 
+$root = $_SERVER['DOCUMENT_ROOT' ?? '/usr/home/digitalm/Sites/beta/public';
  require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
  
 $repo_path = REPO_PATH;
