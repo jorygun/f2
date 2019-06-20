@@ -4,25 +4,8 @@
 	/*  STARTUP */
 ini_set('display_errors', 1);
 
-$opts = getopt('t',['repo:']);
-#var_dump($opts);
-$repo = $opts['repo'] ?? 'live';
-$test = isset($opts['t']) ? true:false;
-echo "repo: $repo" . " test: " . $test .  BRNL;
-
-
-$proj_path = dirname(__DIR__);
-$proj_path = '/usr/home/digitalm/Sites/flames';
-$repo_path = $proj_path . "/$repo"; 
-
-ini_set('include_path', "$proj_path/mx-libs/libmx:$repo_path/config");
-
-require 'MxConstants.php'; #in libmx
-require 'Definitions.php';  #config is in path
-use \digitalmx\flames\Definitions as Defs;
-
-require 'MxPDO.php';
-$pdo = new \digitalmx\MxPDO ('production','pair',"$proj_path/config/db.ini");
+require 'init.php';
+$repo_path = REPO_PATH
 //END START
 
 /* Script to retrieve recenbt updates to user data and produce html for newsletter
