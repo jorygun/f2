@@ -4,7 +4,7 @@
 	/*  STARTUP */
 ini_set('display_errors', 1);
 
-require 'init.php';
+ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 $repo_path = REPO_PATH;
 //END START
 
