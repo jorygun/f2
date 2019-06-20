@@ -505,7 +505,7 @@ function create_thumb($id,$fsource,$type='thumbs'){
 	 }
 	 	
 	 $finfo = new finfo(FILEINFO_MIME_TYPE);
-      $source_mime = $finfo->file($source_path)
+      $source_mime = $finfo->file($source_path);
      
       echo "source mime: $source_mime" . BRNL;
       
