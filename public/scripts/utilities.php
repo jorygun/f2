@@ -1439,7 +1439,7 @@ function days_ago ($date_str) {
 	return $diff_str;
 }
 
-function get_latest_pub_date($form='sql')
+function get_latest_pub_date($form='timestamp')
 {
     /*
      forms are sql: 2017-01-29
@@ -1448,7 +1448,7 @@ function get_latest_pub_date($form='sql')
         timestamp: 2023409823408
     */
 
-    $file1 = PROJ_PATH . '/' . 'live' . '/public/news/last_published_ts.txt';
+    $file1 = REPO_PATH .  '/public/news/last_published_ts.txt';
 
     if (!file_exists($file1)){
         return "Latest pub date file not found";

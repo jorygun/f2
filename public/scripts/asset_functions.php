@@ -503,8 +503,10 @@ function create_thumb($id,$fsource,$type='thumbs'){
 	 	$source_path = $fsource;
 	 	
 	 }
-        
-      $source_mime = mime_content_type ($source_path );
+	 	
+	 $finfo = new finfo(FILEINFO_MIME_TYPE);
+      $source_mime = $finfo->file($source_path)
+     
       echo "source mime: $source_mime" . BRNL;
       
 	switch ($source_mime) {
@@ -962,12 +964,12 @@ function post_asset($post_array){
     	} else {
     		$link = $form_link;
     	}
-    
+    if (substr($link,0,1) == '/') { #local file
     	 $finfo = new finfo(FILEINFO_MIME);
 		 $post_array['mime'] = $finfo->file(SITE_PATH . "/$link");
 		 $post_array['sizekb'] =  round(filesize(SITE_PATH . "/$link")/1000,0);
    	 $post_array['link'] = $link;
-   	 
+   	}
     echo "post_array[link] set to $link" . BRNL;
   
     	#now check for separate thumb file source
