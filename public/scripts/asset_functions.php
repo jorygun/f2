@@ -347,6 +347,11 @@ function get_asset_data($id){
         'contributor' => $_SESSION['username'],
         'contributor_id' => $_SESSION['user_id'],
         'id'=> 0,
+        'tags'=>'', 
+        'link'=>'',
+        'type'=>'',
+        'caption'=>'',
+        'user_info' => ''
         );
 
 	}
@@ -976,7 +981,7 @@ function post_asset($post_array){
 	 	if (!empty($_FILES['upfile']['name'])) {
 	 	
 	 	
-	 		$thumb_source = relocate ('thumb_upload' ,'',$id);
+	 		$thumb_source = relocate ($id,'thumb_upload' );
 	 	} elseif (!empty ($post_array['url'])){
 	 		$thumb_source = $post_array['url'];
 	 	} else {
@@ -1146,7 +1151,7 @@ function relocate ($id,$type,$link=''){
 			$orig = check_file_uploads('linkfile');
 			$orig_path = $_FILES['linkfile']['tmp_name'];
 			$new_mime = $finfo->file($orig_path) ;
-			$new_size = '';
+		
 			$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
 			$new_url = '/assets/files/' . $id . ".$orig_ext";
 			$new_path = PROJ_PATH . '/shared' . $new_url;

@@ -124,9 +124,9 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') ||  $get_token){
         die ("Error processing form data. No search criteria.");
     }
     if (!empty($_GET['get_next'])){$asset_limit = 5;}
-	echo "<div style='border:1px solid gray;'> $sql</div><br>";
+	
     $sql = "SELECT id FROM assets WHERE $sqls ORDER BY id LIMIT $asset_limit;";
-    
+    echo "<div style='border:1px solid gray;'> $sql</div><br>";
     echo "<p>Selected Assets are shown below.</p>";
     #$stmt = $pdo -> query($sql);
     $id_list = $pdo -> query($sql) ->fetchAll(PDO::FETCH_COLUMN);
