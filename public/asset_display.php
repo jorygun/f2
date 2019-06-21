@@ -113,7 +113,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!empty($row['link'])){
     	$url = $row['link'];
     	#$url_enc = str_replace('#','%23',$url);
-    	$url_enc = htmlentities($url);
+    	$url_enc = urlencode($url);
     	
     	$linkline = "Link to: <a href='$url_enc'>$url</a>";
 		$urllinked = "<a href='$url_enc' target='_blank'>$url</a>";
