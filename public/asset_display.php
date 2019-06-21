@@ -174,7 +174,7 @@ EOT;
 
 
      else {$asset_display= <<<EOT
-    <iframe src='$url' id='iframe1'  >
+    <iframe src='$url_enc' id='iframe1'  >
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
      </iframe>
