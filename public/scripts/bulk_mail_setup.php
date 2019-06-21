@@ -363,10 +363,10 @@ else { #IS POST
 
     $subject = $_POST['subject'];
 
-	$teaser = build_teaser(SITEMAP . "/news/news_latest" );
+	$teaser = build_teaser(SITE_PATH . "/news/news_latest" );
 
 	$message = $_POST['body'];
-	$message = str_replace('::teaser', build_teaser(), $message);
+	$message = str_replace('::teaser',$teaser , $message);
 	$message = preg_replace('/\t/',"    ",$message);
 
 
