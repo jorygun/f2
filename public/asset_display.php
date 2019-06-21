@@ -113,10 +113,10 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!empty($row['link'])){
     	$url = $row['link'];
     	$link_url = rawurlencode($url);
-    	$linkline = "Link to: <a href='$link_url'>$link</a>";}
-
+    	$linkline = "Link to: <a href='$link_url'>$link</a>";
+		$urllinked = "<a href='$link_url' target='_blank'>$url</a>";
     }
-    $urllinked = "<a href='$link_url' target='_blank'>$url</a>";
+    
 
     $type = $row['type'];
     $mimetype = $row['mime'];
