@@ -100,6 +100,10 @@ Dear ::name,
 The AMD FLAMEs News, $edition_name edition, is ready. 
 Here's your personal link to the most current newsletter:
     ::newslink
+
+(To view any of the nearly 1000 back issues, 
+log in and choose Dig In > Newsletter Index.)
+
 </td></tr><tr><td colspan='2'>::profile</td></tr>
 <tr><td></td><td>
 <b>IN THIS ISSUE</b>
