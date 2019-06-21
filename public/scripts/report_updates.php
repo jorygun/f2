@@ -213,8 +213,8 @@ echo "Saving member updates to $updates_html_file" . BRNL;
 
 
 // prepare teaser report
-	$teaser_report = prepare_headline_report($pdo);
-	$teaser_report .=  prepare_name_report ($name_list);
+	#$teaser_report = prepare_headline_report($pdo);
+	$teaser_report =  prepare_name_report ($name_list);
 	$teaser_report .= prepare_opp_report($pdo,$ptimes);
 	
 	
