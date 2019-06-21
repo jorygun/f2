@@ -195,11 +195,10 @@ EOT;
             $credit .= "via " . $row['contributor'] ;
     }
 
-echo <<<EOT
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-	"http://www.w3.org/TR/html4/loose.dtd">
+?>
+
 <html><head>
-        <title>${hte['title']}</title>
+        <title><?=${hte['title']}?></title>
         <style type='text/css'>
         iframe {
             border:1px solid green;
@@ -214,7 +213,7 @@ echo <<<EOT
         }
         </style>
 <script language="JavaScript">
-<!--
+
 function autoResize(id){
     var newheight;
     var newwidth;
@@ -237,41 +236,35 @@ function isObject(obj) {
   	return  type === 'object' && !!obj;
   
 }
-
-//-->
 </script>
 
         </head>
 
         <body>
-        $navbar
+        <?=$navbar?>
          <p><b>AMD Flames Asset Display</b></p>
-        <h3>${hte['title']}</h3>
+        <h3><?=${hte['title']}?></h3>
 <p>(Note: display size on this page is limited to 1024px wide. Use URL below to retrieve raw file.)<br>
-        source: $urllinked<br>
-        $linkline<br>
+        source: <?=$urllinked?><br>
+        <?=$linkline?><br>
         (Note: some source files cannot be displayed in the iframe below.  Use source link above to view.)
         </p>
 
     $asset_display
-    <p class='caption'>${hte['caption']}</p>
+    <p class='caption'><?=${hte['caption']}?></p>
     <hr>
         <table>
         <tr><td>
-        Asset id: $item_id<br>
-        Type: $mimetype -> $type <br>
-        Entered on ${row['date_entered']}  <br>
-        Source: $credit  <br>
-        First use: $first_in ($first_date)<br>
-        Size: ${row['sizekb']} kB; ${row['height']} h x ${row['width']} w.<br>
+        Asset id: <?=$item_id?><br>
+        Type: <?=$mimetype?> -> <?=$type?> <br>
+        Entered on <?=${row['date_entered']}?>  <br>
+        Source: <?=$credit?>  <br>
+        First use: <?=$first_in ?>(<?=$first_date?>)<br>
+        Size: <?=${row['sizekb']}?> kB; <?=${row['height']}?> h x <?=${row['width']}?> w.<br>
 
         </td></tr></table>
 
-EOT;
 
-
-
-?>
 
 </body>
 </html>
