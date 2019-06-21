@@ -257,7 +257,7 @@ function isObject(obj) {
         <h3><?=$hte['title']?></h3>
 <p>(Note: display size on this page is limited to 1024px wide. Use URL below to retrieve raw file.)<br>
 		raw url: <?=$url?><br>
-		url_enc: <?=$url_enc?><br>
+		url_enc: <pre><?=$url_enc?></pre><br>
         source: <?=$urllinked?><br>
       url_enc as link <pre> <?=$linkline?></pre><br>
         (Note: some source files cannot be displayed in the iframe below.  Use source link above to view.)
