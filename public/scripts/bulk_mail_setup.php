@@ -70,8 +70,11 @@ $standard_message = <<<EOT
 Dear ::name,
 
 The AMD FLAMEs News, $edition_name edition, is ready. 
-Here's your personal link directly to the newsletter:
+Here's your personal link directly to the most current newsletter:
 	::newslink
+
+(To view any of the nearly 1000 back issues, log in and choose "Dig In" > 
+Newsletter Index.)
 ::profile
 
 IN THIS ISSUE
@@ -94,7 +97,7 @@ Dear ::name,
 <table style='border:0;width:90%;'><tr><td >
 <img src='https://amdflames.org/graphics/logo69x89.png' /></td><td>
 The AMD FLAMEs News, $edition_name edition, is ready. 
-Here's your personal link directly to the newsletter:
+Here's your personal link to the most current newsletter:
     ::newslink
 </td></tr><tr><td colspan='2'>::profile</td></tr>
 <tr><td></td><td>
