@@ -112,8 +112,12 @@ function post_review($rcode,$row) {
    # recho ($row,'Into post_review');
 
     $tags =  trim(charListToString($row['tags']));
-    if (strpos($row['submit'],'repeat') !== false
-        &&  ! empty ($row['last_tags']) ){
+    if (
+    	isset($row['submit'])
+    	&& 
+   	strpos($row['submit'],'repeat') !== false
+		&&  ! empty ($row['last_tags']) 
+		){
         $tags = $row['last_tags'];
     }
 
