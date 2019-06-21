@@ -263,7 +263,7 @@ function isObject(obj) {
         Size: <?=$row['sizekb']?> kB; <?=$row['height']?> h x <?=$row['width']?> w.<br>
 
         </td></tr></table>
-
+2.13
 
 
 </body>
