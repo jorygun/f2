@@ -202,7 +202,7 @@ function myUrlEncode($string) {
  $characters = array('<' , '>' , '#' ,' ' , '"', '{' , '}' , ',' , '\\' , '^' , '[' , ']' , '`' );
    $entities = array_map(function ($c){return rawurlencode($c);},$characters);
 
-	echo "Entities:\n" . print_r($entities,true);
+	#echo "Entities:\n" . print_r($entities,true);
 
     return str_replace($characters, $entities, $string);
 }
