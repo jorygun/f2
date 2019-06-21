@@ -113,7 +113,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!empty($row['link'])){
     	$url = $row['link'];
     	#$url_enc = str_replace('#','%23',$url);
-    	$url_enc = urlencode($url);
+    	$url_enc = myUrlEncode($url);
     	
     	$linkline = "Link to: <a href='$url_enc'>$url</a>";
 		$urllinked = "<a href='$url_enc' target='_blank'>$url</a>";
@@ -195,6 +195,12 @@ EOT;
             $credit .= "via " . $row['contributor'] ;
     }
 
+##############################
+function myUrlEncode($string) {
+    $entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%3A', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D');
+    $replacements = array('!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]");
+    return str_replace($entities, $replacements, urlencode($string));
+}
 ?>
 
 <html><head>
