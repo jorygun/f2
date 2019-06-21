@@ -243,7 +243,7 @@ function isObject(obj) {
         <body>
         <?=$navbar?>
          <p><b>AMD Flames Asset Display</b></p>
-        <h3><?=${hte['title']}?></h3>
+        <h3><?=$hte['title']?></h3>
 <p>(Note: display size on this page is limited to 1024px wide. Use URL below to retrieve raw file.)<br>
         source: <?=$urllinked?><br>
         <?=$linkline?><br>
@@ -251,16 +251,16 @@ function isObject(obj) {
         </p>
 
     $asset_display
-    <p class='caption'><?=${hte['caption']}?></p>
+    <p class='caption'><?=$hte['caption']?></p>
     <hr>
         <table>
         <tr><td>
         Asset id: <?=$item_id?><br>
         Type: <?=$mimetype?> -> <?=$type?> <br>
-        Entered on <?=${row['date_entered']}?>  <br>
+        Entered on <?=$row['date_entered']?>  <br>
         Source: <?=$credit?>  <br>
         First use: <?=$first_in ?>(<?=$first_date?>)<br>
-        Size: <?=${row['sizekb']}?> kB; <?=${row['height']}?> h x <?=${row['width']}?> w.<br>
+        Size: <?=$row['sizekb']?> kB; <?=$row['height']?> h x <?=$row['width']?> w.<br>
 
         </td></tr></table>
 
