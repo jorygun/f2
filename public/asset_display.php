@@ -112,9 +112,9 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $url = $row['url']; #source file
     if (!empty($row['link'])){
     	$url = $row['link'];
-    	$link_url = htmlentities($url);
-    	$linkline = "Link to: <a href='$link_url'>$link</a>";
-		$urllinked = "<a href='$link_url' target='_blank'>$url</a>";
+    	$url_enc = htmlentities($url);
+    	$linkline = "Link to: <a href='$url_enc'>$url</a>";
+		$urllinked = "<a href='$url_enc' target='_blank'>$url</a>";
     }
     
 
@@ -157,7 +157,7 @@ EOT;
  elseif ($type == 'Web Page' || $type == 'Document' ){
 
     $asset_display= <<<EOT
-    <iframe src='$url' id='iframe1'   onLoad='autoResize(this);'>
+    <iframe src='$linked_url' id='iframe1'   onLoad='autoResize(this);'>
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
      </iframe>
