@@ -115,7 +115,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
     	#$url_enc = str_replace('#','%23',$url);
     	$url_enc = myUrlEncode($url);
     	
-    	$linkline = "Link to: <a href='$url_enc'>$url</a>";
+    	$linkline = "<a href='$url_enc'>$url</a>";
 		$urllinked = "<a href='$url_enc' target='_blank'>$url</a>";
     }
     
@@ -257,14 +257,15 @@ function isObject(obj) {
          <p><b>AMD Flames Asset Display</b></p>
         <h3><?=$hte['title']?></h3>
 <p>(Note: display size on this page is limited to 1024px wide. Use URL below to retrieve raw file.)<br>
-		raw url: <?=$url?><br>
+		Raw url: <?=$url?><br>
 		
-        source: <?=$linkline?><br>
+        Link to:<?=$url_enc?><br>
+       Linked:  <?=$urllinked?><br>
    
         (Note: some source files cannot be displayed in the iframe below.  Use source link above to view.)
         </p>
 
-    $asset_display
+    <?=$asset_display=?
     <p class='caption'><?=$hte['caption']?></p>
     <hr>
         <table>
