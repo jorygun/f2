@@ -73,8 +73,9 @@ The AMD FLAMEs News, $edition_name edition, is ready.
 Here's your personal link directly to the most current newsletter:
 	::newslink
 
-(To view any of the nearly 1000 back issues, log in and choose "Dig In" > 
-Newsletter Index.)
+(To view any of the nearly 1000 back issues, 
+log in and choose Dig In > Newsletter Index.)
+
 ::profile
 
 IN THIS ISSUE
