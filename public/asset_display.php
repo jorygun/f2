@@ -265,7 +265,7 @@ function isObject(obj) {
         (Note: some source files cannot be displayed in the iframe below.  Use source link above to view.)
         </p>
 
-    <?=$asset_display=?
+    <?=$asset_display?>
     <p class='caption'><?=$hte['caption']?></p>
     <hr>
         <table>
