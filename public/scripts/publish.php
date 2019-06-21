@@ -78,9 +78,7 @@ EOT;
 	// when publish, copy rtime to ptime.
 
    
-    /* Now build the recent article and assets file */
-    echo "Updating recent article titles" . BRNL ;
-        require 'recent.php';
+   
 
    //  echo "Updating recent asset list" . BRNL;
 //         include "recent_assets.php";
@@ -176,8 +174,14 @@ file_put_contents($last_published_ts,time());
 
         #now rebuild the files
         include './news_files2.php';
-
-
+		
+		 /* Now build the recent article and assets file */
+    echo "Updating recent article titles" . BRNL ;
+        require PROJ_DIR . '/crons/recent.php';
+        
+	 echo "Updating recent assets" . BRNL ;
+        require PROJ_DIR . 'crons/recent_assets.php';
+        
     echo "Done.  <button type='button' onClick='window.close()'>Close Window</button>";
 
 	exit;
