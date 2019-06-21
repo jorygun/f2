@@ -258,9 +258,9 @@ function isObject(obj) {
         <h3><?=$hte['title']?></h3>
 <p>(Note: display size on this page is limited to 1024px wide. Use URL below to retrieve raw file.)<br>
 		raw url: <?=$url?><br>
-		url_enc: <pre><?=$url_enc?></pre><br>
-        source: <?=$urllinked?><br>
-      url_enc as link <pre> <?=$linkline?></pre><br>
+		
+        source: <?=$linkline?><br>
+   
         (Note: some source files cannot be displayed in the iframe below.  Use source link above to view.)
         </p>
 
@@ -277,7 +277,7 @@ function isObject(obj) {
         Size: <?=$row['sizekb']?> kB; <?=$row['height']?> h x <?=$row['width']?> w.<br>
 
         </td></tr></table>
-2.14
+
 
 
 </body>
