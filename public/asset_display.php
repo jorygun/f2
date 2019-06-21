@@ -138,7 +138,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
 
      elseif (strpos($mimetype,'video') !== false ){
-     $asset_display =  "<video src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
+     $asset_display =  "<video src = '$url_enc' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
      }
      elseif (strpos($mimetype,'audio')!== false ){
      $asset_display =  "<audio src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not playing this audio.</audio>";
