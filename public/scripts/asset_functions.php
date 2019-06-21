@@ -1013,7 +1013,7 @@ function post_asset($post_array){
 
    
 
-        if ($post_array['need_thumb']){
+        if (isset($post_array['need_thumb'])){
             echo "Need new thumbnail from $thumb_source... " . BRNL;
             if($thumb = create_thumb ($id,$thumb_source,'thumbs')){
                 //$post_array['has_thumb'] = true;
@@ -1022,7 +1022,7 @@ function post_asset($post_array){
             }
             echo "<br>";
         }
-        if ($post_array['need_gallery']){
+        if (isset($post_array['need_gallery'])){
             echo "Need new gallery ... ";
             if($thumb = create_thumb ($id,$thumb_source,'galleries')){
                 echo "Gallery $thumb created. ";
@@ -1030,7 +1030,7 @@ function post_asset($post_array){
             }
             echo "<br>";
         }
-        if ($post_array['need_toon']){
+        if (isset ($post_array['need_toon']) ){
             echo "Need new toon ... ";
             if($thumb = create_thumb ($id,$thumb_source,'toons')){
                 echo "Toon $thumb created";
