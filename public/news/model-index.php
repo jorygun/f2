@@ -176,7 +176,7 @@ just let the <a href='mailto:editor@amdflames.org'>editor know</a>.</p>
 
 echo_if('calendar.html');
 
-echo_if ("updates.html", news_head("Membership Updates"));
+echo_if ("news_updates.html", news_head("Membership Updates"));
 
 echo  get_slogan();
 

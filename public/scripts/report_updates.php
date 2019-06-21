@@ -35,7 +35,7 @@ $repo_path = REPO_PATH;
  $ptime_file = "$repo_path/public/news/last_update_published_ts.txt";
  
  $updates_html_file= "$repo_path/public/news/news_next/news_updates.html";
- $updates_text_file =  "$repo_path/public/news/news_next/tease_updates.txt";
+ $update_teaser_file =  "$repo_path/public/news/news_next/tease_updates.txt";
  # not used.  Only list of names is used.
  
  $updates_html = $updates_text = ''; #containers for building reports in
@@ -220,7 +220,7 @@ echo "Saving member updates to $updates_html_file" . BRNL;
 	
 	
 	
-	file_put_contents($updates_text_file,$teaser_report);
+	file_put_contents($update_teaser_file,$teaser_report);
 
 
 
