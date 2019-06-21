@@ -97,10 +97,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $discussion = false;
     $contributor_id = $row['contributor_id'];
     $contributor_email = get_user_data_by_id ($contributor_id)[1];
-    if (! empty($link)){
-    	$link_url = rawurlencode($link);
-    	$linkline = "Link to: <a href='$link_url'>$link</a>";}
-
+   
    // display asset
     $hte = array ();
     foreach (array('title','caption','source') as $param)
@@ -113,8 +110,12 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
 	$first_date = ($row['first_use_date'] == '0000-00-00')?'Undated' : $row['first_use_date'];
 	$first_in = ($row['first_use_in'])? "<a href='${row['first_use_in']}' target='_blank'>${row['first_use_in']}</a>" : "Not Used";
     $url = $row['url']; #source file
-    if (!empty($row['link'])){$url = $row['link'];}
+    if (!empty($row['link'])){
+    	$url = $row['link'];
+    	$link_url = rawurlencode($url);
+    	$linkline = "Link to: <a href='$link_url'>$link</a>";}
 
+    }
     $urllinked = "<a href='$link_url' target='_blank'>$url</a>";
 
     $type = $row['type'];
