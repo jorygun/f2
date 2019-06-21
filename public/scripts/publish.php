@@ -7,9 +7,9 @@
 //END START
 
 
-	$today = $DT_now->format('M j, Y');
-	$now = $DT_now -> format ('M j, Y H:i');
-	$sql_now = $DT_now -> format ('Y-m-d');
+
+	$now = date ('M j, Y H:i');
+
 
 // script to get current pub date and publish news_next under that date
 
