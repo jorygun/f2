@@ -147,7 +147,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
      elseif ($type == 'Multimedia' ){
      #$asset_display =  "<video src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
     $asset_display= <<<EOT
-    <iframe src='$url' id='iframe1'   onLoad='autoResize(this);'>
+    <iframe src='$url_enc' id='iframe1'   onLoad='autoResize(this);'>
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href='$url'>${row['url']}</a>.
      </iframe>
@@ -157,7 +157,7 @@ EOT;
  elseif ($type == 'Web Page' || $type == 'Document' ){
 
     $asset_display= <<<EOT
-    <iframe src='$linked_url' id='iframe1'   onLoad='autoResize(this);'>
+    <iframe src='$url_enc' id='iframe1'   onLoad='autoResize(this);'>
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
      </iframe>
