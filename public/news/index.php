@@ -3,6 +3,6 @@
 #header("Location: $current");
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 if (f2_security_below(2)){exit;}
-echo "<script>window.href='/news_latest/'</script>";
+echo "<script>window.location.replace ('/news_latest/') </script>";
 
 
