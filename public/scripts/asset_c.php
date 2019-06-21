@@ -97,7 +97,9 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $discussion = false;
     $contributor_id = $row['contributor_id'];
     $contributor_email = get_user_data_by_id ($contributor_id)[1];
-    if (! empty($link)){$linkline = "Link to: <a href='$link'>$link</a>";}
+    if (! empty($link)){
+    	$link_url = rawurlencode($link);
+    	$linkline = "Link to: <a href='$link_url'>$link</a>";}
 
    // display asset
     $hte = array ();
@@ -113,7 +115,7 @@ $row = $stmt->fetch(PDO::FETCH_ASSOC);
     $url = $row['url']; #source file
     if (!empty($row['link'])){$url = $row['link'];}
 
-    $urllinked = "<a href='$url' target='_blank'>$url</a>";
+    $urllinked = "<a href='$link_url' target='_blank'>$url</a>";
 
     $type = $row['type'];
     $mimetype = $row['mime'];

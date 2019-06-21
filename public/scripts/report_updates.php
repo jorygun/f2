@@ -219,7 +219,6 @@ echo "Saving member updates to $updates_html_file" . BRNL;
 	
 	
 	
-	
 	file_put_contents($update_teaser_file,$teaser_report);
 
 

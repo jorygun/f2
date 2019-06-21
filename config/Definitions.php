@@ -237,13 +237,10 @@ private static $member_codes = array (
 	);
 
 
-
-
 #these member status codes are considered members
-private static $member_array = array('M', 'MA','MN','MC','MU','R','G');
-#text version of member list for use in sql IN(list) statement
-
-
+	private static $member_array = array(
+	'M', 'MA','MN','MC','MU','R','G'
+	);
 
 public static $stale_date_limit = 365; #days
 
