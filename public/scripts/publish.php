@@ -138,7 +138,8 @@ file_put_contents($last_published_ts,time());
 		// now make a new news_next directory from the model
 		//echo "Copying model news to next news<br>";
 		
-		// Do this manually instaead.
+		copy($newspath . "/model-index.php" , $newnext_dir . "/index.php";)
+		
         $pdo = MyPDO::instance();
 
         echo "Marking News Items as published<br>";

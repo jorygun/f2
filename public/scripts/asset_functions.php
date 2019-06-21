@@ -911,8 +911,8 @@ function post_asset($post_array){
     }
 
     echo "<hr>Starting post_asset on id $id. " . BRNL;
-    recho ($post_array,'Post_array');
-    recho ($_FILES,'FILES array');
+   # recho ($post_array,'Post_array');
+   # recho ($_FILES,'FILES array');
     
     $form_link = $post_array['link'] ?? '';
       
