@@ -257,10 +257,8 @@ function isObject(obj) {
          <p><b>AMD Flames Asset Display</b></p>
         <h3><?=$hte['title']?></h3>
 <p>(Note: display size on this page is limited to 1024px wide. Use URL below to retrieve raw file.)<br>
-		Raw url: <?=$url?><br>
-		
-        Link to:<?=$url_enc?><br>
-       Linked:  <?=$urllinked?><br>
+	
+       Link to source:  <?=$urllinked?><br>
    
         (Note: some source files cannot be displayed in the iframe below.  Use source link above to view.)
         </p>
@@ -275,8 +273,9 @@ function isObject(obj) {
         Entered on <?=$row['date_entered']?>  <br>
         Source: <?=$credit?>  <br>
         First use: <?=$first_in ?>(<?=$first_date?>)<br>
-        Size: <?=$row['sizekb']?> kB; <?=$row['height']?> h x <?=$row['width']?> w.<br>
-
+        Size: <?=$row['sizekb']?> kB; <?=$row['height']?> h x <?=$row['width']?> w<br>
+			Raw url: <?=$url?><br> 
+			encoded url:<?=$url_enc?><br>
         </td></tr></table>
 
 
