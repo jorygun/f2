@@ -198,18 +198,19 @@ EOT;
 ##############################
 function myUrlEncode($string) {
 
-# $characters = array('!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "+", "$", ",", "/", "?", "%", "#", "[", "]");
- $characters = array('!', '*', "'", "(", ")", ";", ":", "@", "&", "=", "+", "$", ",",  "?", "%", "#", "[", "]");
-    #$entities = array('%21', '%2A', '%27', '%28', '%29', '%3B', '%3A', '%40', '%26', '%3D', '%2B', '%24', '%2C', '%2F', '%3F', '%25', '%23', '%5B', '%5D');
-    $entities = array_filter($characters,function ($c){return urlencode($c);});
-    
-   
+#forbidden or deprecated characters in url
+ $characters = array('<' , '>' , '#' ,' ' , '"', '{' , '}' , ',' , '\\' , '^' , '[' , ']' , '`' );
+   $entities = array_map(function ($c){return rawurlencode($c);},$characters);
+
+	echo "Entities:\n" . print_r($entities,true);
+
     return str_replace($characters, $entities, $string);
 }
+
 ?>
 
 <html><head>
-        <title><?=${hte['title']}?></title>
+        <title><?=$hte['title']?></title>
         <style type='text/css'>
         iframe {
             border:1px solid green;
