@@ -122,15 +122,15 @@ echo "<br><hr><br />";
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as mx;
 
-if (true) {
+try {
 	echo "Defs: seclevel ma: " . Defs::get_seclevel('MA').BRNL ;
-} else {
+} catch (Error $e) {
 	echo "Defs not loaded" . BRNL;
 }
 
-if (function_exists('days_ago')){
+try {
 	echo "days_ago since Feb 30: " . days_ago('Feb 30, 2017') . BRNL;
-} else {
+} catch (Error $e) {
 	echo "utilities.php not loaded" . BRNL;;
 }
 
