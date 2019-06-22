@@ -121,7 +121,7 @@ echo "<hr>";
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as mx;
 
-if (class_exists('Defs')){
+if (true or class_exists('Definitions')){
 	echo "From Definitions<br>\n";
 	echo "seclevel ma: " . Defs::get_seclevel('MA').BRNL;
 } else {
@@ -135,7 +135,7 @@ if (function_exists('days_ago')){
 }
 
 if (function_exists ('pretty_date')) {
-	echo "Now (RFC3339): " . mx\pretty_date('rfc') . BRNL;
+	echo "Now (RFC822): " . mx\pretty_date('rfc') . BRNL;
 } else {
 	echo 'pretty_date function not available.' . BRNL;
 }
