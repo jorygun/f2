@@ -130,6 +130,7 @@ $pdo = MyPDO::instance();
 
 	$hide_checked =  ($row['email_hide'] == 1)? "checked check='checked' ":'';
 	$no_bulk_checked = ($row['no_bulk'] == 1)? "checked check='checked' ":'';
+	$user_web = $row['user_web'] ?? '';
 
 
 	list ($email_age,$email_date) = age($row['email_last_validated']);
@@ -188,6 +189,7 @@ Last Login: <?=$row['last_login'] ?>
 
 <form method="post" name='profile' id='profile' onsubmit='return validate_profile(this);'>
 		<input type='hidden' name="uid" value="<?=$uid?>">
+		<input type='hidden' name='username' value="<?=$username?>">
 
 
 		<p > <span class="input required">Yellow fields</span> are required information</p>
@@ -223,7 +225,7 @@ Last Login: <?=$row['last_login'] ?>
 		  <input type='checkbox' id='nobulk' name='no_bulk' <?=$no_bulk_checked?> >Opt Out of Weekly Email. <span class='instr'>But Please Don't</span> 😥 </td></tr>
 <tr><td>Web Site</td>
 	<td><span class="instr">Your band? Anything you want.</span><br />
-<input type='url' name='user_web' value='<?=$user_web?>' >
+<input type='url' name='user_web' value='<?=$user_web?>' placeholder='http://...'>
 </td></tr>
 
 <tr><td >LinkedIn
