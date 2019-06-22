@@ -1,5 +1,5 @@
 <?php
-use Digitalmx\flames\Definitions as Defs;
+
 
 ini_set('display_errors', 1);
 $mtimet = date('d M H:i',filemtime(__FILE__));
@@ -116,6 +116,8 @@ echo "No .htaccess";
 }
 echo "<br>\n";
 
+use Digitalmx\flames\Definitions as Defs;
+use digitalmx as mx;
 
 if (class_exists('Definitions')){
 	echo "From Definitions<br>\n";
@@ -130,8 +132,8 @@ if (function_exists('days_ago')){
 	echo "days ago function not available" . BRNL;;
 }
 
-if (function_exists ('pretty_date')) {
-	echo "Now (RFC3339): " . pretty_date('rfc') . BRNL;
+if (function_exists ('mx\pretty_date')) {
+	echo "Now (RFC3339): " . mx\pretty_date('rfc') . BRNL;
 } else {
 	echo 'pretty_date function not available.' . BRNL;
 }
