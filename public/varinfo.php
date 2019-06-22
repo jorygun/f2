@@ -129,7 +129,7 @@ if (true) {
 }
 
 if (function_exists('days_ago')){
-	echo "days since Feb 30 " . days_ago('Feb 30, 2017') . BRNL;
+	echo "days_ago since Feb 30: " . days_ago('Feb 30, 2017') . BRNL;
 } else {
 	echo "utilities.php not loaded" . BRNL;;
 }

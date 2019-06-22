@@ -373,37 +373,37 @@ function display_email(&$row){
 	}
 	return $v;
 }
-function pretty_date ($form='sql',$type = 'time',$when='' ){
-	/**
-		@form sql or human
-		@type = date or time
-		@when = text string of date
-		
-		@returns humsn or sql formated date or time, otherwise returns sql date and time
-	**/
-	
-	switch ($form){
-		case 'sql' :
-			$format = ($type == 'date')?
-		'Y-m-d' : 'Y-m-d H:i:s';
-			break;
-		case 'human' :
-			$format = ($type=='date')?
-		'M d, Y' : 'M d, Y H:m P';
-			break;
-		default :
-			throw new Exception ("unknown format $form for pretty_date");
-	}
-	$dt = new DateTime($when);
-	#$dt->setTimeZone(new DateTimeZone('America/Los_Angeles'));
-	
-	
-	if (! $dt ){
-		echo "Cannot set date from $when in pretty_date";
-		return '??';
-	}
-	return $dt->format($format);  
-}
+// function pretty_date ($form='sql',$type = 'time',$when='' ){
+// 	/**
+// 		@form sql or human
+// 		@type = date or time
+// 		@when = text string of date
+// 		
+// 		@returns humsn or sql formated date or time, otherwise returns sql date and time
+// 	**/
+// 	
+// 	switch ($form){
+// 		case 'sql' :
+// 			$format = ($type == 'date')?
+// 		'Y-m-d' : 'Y-m-d H:i:s';
+// 			break;
+// 		case 'human' :
+// 			$format = ($type=='date')?
+// 		'M d, Y' : 'M d, Y H:m P';
+// 			break;
+// 		default :
+// 			throw new Exception ("unknown format $form for pretty_date");
+// 	}
+// 	$dt = new DateTime($when);
+// 	#$dt->setTimeZone(new DateTimeZone('America/Los_Angeles'));
+// 	
+// 	
+// 	if (! $dt ){
+// 		echo "Cannot set date from $when in pretty_date";
+// 		return '??';
+// 	}
+// 	return $dt->format($format);  
+// }
 
 function sql_now($format = 'time'){
 	// #returns sql date if format requested, otherwise returns sql date and time
