@@ -17,6 +17,8 @@ echo <<<EOT
 	body {max-width:800px; 
 		overflow-wrap: break-word;
 	}
+	.red {color:red;}
+	
 </style>
 </head>
 <body >
@@ -125,17 +127,22 @@ use digitalmx as mx;
 try {
 	echo "Defs: seclevel ma: " . Defs::get_seclevel('MA').BRNL ;
 } catch (Error $e) {
-	echo "Defs not loaded" . BRNL;
+	echo_red ("Defs not loaded") . BRNL;
 }
 
 try {
 	echo "days_ago since Feb 30: " . days_ago('Feb 30, 2017') . BRNL;
 } catch (Error $e) {
-	echo "utilities.php not loaded" . BRNL;;
+	echo_red ("utilities.php not loaded") . BRNL;;
 }
 
 try {
 	echo "Now (RFC822): " . pretty_date('rfc') . BRNL;
 } catch (Error $e) {
-	echo 'pretty_date function not available.' . BRNL;
+	echo_red ('pretty_date function not available.') . BRNL;
+}
+
+###33#####
+function echo_red ($t) {
+	echo "<p class='red'>$t</p>";
 }
