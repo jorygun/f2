@@ -1,9 +1,10 @@
 <?php
 //BEGIN START
 ini_set('display_errors', 1);
-ini_set('error_reporting', E_ALL);
 
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
+use digitalmx as mx;
+
     if (f2_security_below(7)){exit;}
 	$nav = new navBar(1);
 	$navbar = $nav -> build_menu();
@@ -419,12 +420,12 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
 	 // Assemble the list
 		
 			$profile_updated_age = days_ago($row['profile_updated']);
-			$profile_updated_date = pretty_date('human','date',$row['profile_updated']);
+			$profile_updated_date = mx\pretty_date('human','date',$row['profile_updated']);
 		
 	  #list($profile_age,$last_profile_date) = age($row['profile_updated']);
 	 # list($p_val_age,$profile_validated) = age($row['profile_validated']);
 	  $profile_validated_age = days_ago($row['profile_validated']);
-	$profile_validated_date = pretty_date('human','date',$row['profile_validated']);
+	$profile_validated_date = mx\pretty_date('human','date',$row['profile_validated']);
 
 	  $age_flag =  ($profile_updated_age > 365)?1:0; #flag to print age warning
 	  
