@@ -111,12 +111,12 @@ if (file_exists('.htaccess')){
 	$htaccessm = date('d M H:i',filemtime('.htaccess'));
 	echo ".htaccess ($htaccessm) :<br><pre>";
 	echo file_get_contents('.htaccess');
-	echo '</pre><hr>';
+	echo '</pre>';
 } else {
 echo "No .htaccess";
 }
-echo "<br>\n";
-echo "<hr>";
+
+echo "<br><hr><br />";
 
 
 use digitalmx\flames\Definitions as Defs;
@@ -136,7 +136,7 @@ if (function_exists('days_ago')){
 }
 
 if (function_exists ('pretty_date')) {
-	echo "Now (RFC822): " . mx\pretty_date('rfc') . BRNL;
+	echo "Now (RFC822): " . pretty_date('rfc') . BRNL;
 } else {
 	echo 'pretty_date function not available.' . BRNL;
 }
