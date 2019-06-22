@@ -3,30 +3,21 @@
 	require_once "init.php";
 	if (f2_security_below(0)){exit;}
 	$pdo = MyPDO::instance();
-
+	$nav = new navBar(false);
+	$navbar = $nav -> build_menu();
 //END START
 ?>
-<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
+ <link rel="stylesheet" href="/css/flames2.css">
 
-  <link rel="stylesheet" href="/css/flames2.css">
-<style type="text/css">
-	</style>
-	<title>About The FLAMEs site</title>
-	<meta name="generator" content="BBEdit 11.0" />
+<title>About The FLAMEs site</title>
+
 </head>
 <body>
 
-<? include SITE_PATH . '/navm.php' ?>
-
-<!-- the sponsor and content stuff are in two floating divisions, so will stack on narrow page. -->
-<!-- start of content -->
-
-
-
-
+<?=$navbar?>
 
 <h3>About This Site</h3>
 <p>"FLAME" stands for "<b>F</b>ormer <b>L</b>oyal <b>AM</b>D <b>E</b>mployee"</p>

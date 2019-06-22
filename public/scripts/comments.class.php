@@ -215,7 +215,7 @@ class Comment
         }
 
         // rerun the recent.php to generate new comment count display
-        include_once(SITE_PATH . "/scripts/recent.php");
+        //include_once(SITE_PATH . "/scripts/recent.php");
     }
 
 private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
