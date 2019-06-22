@@ -7,7 +7,7 @@ $mtime = filemtime(__FILE__);
 session_start();
 #collect initial data prior to session_start running
 $pre_out = '';
-$repo = basename(dirname(__DIR__);
+$repo = basename(dirname(__DIR__));
 
 echo <<<EOT
 <html>
