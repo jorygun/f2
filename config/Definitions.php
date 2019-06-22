@@ -245,9 +245,13 @@ private static $member_codes = array (
 public static $stale_date_limit = 365; #days
 
 ######## Getters
+	/* returns the list at teh var */
 	public  static function get_ems_def($code){
-			return self::$ems_defs[$code];
+			return self::$ems_codes[$code];
 		}
+	public  static function get_ems_name($code){
+			return self::$ems_codes[$code][0];
+	}
 	public  static function get_seclevel($code='N'){
 		return self::$member_codes[$code][1] ;
 	}
