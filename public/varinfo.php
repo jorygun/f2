@@ -131,13 +131,13 @@ try {
 }
 
 try {
-	echo "days_ago since Feb 30: " . days_ago('Feb 30, 2017') . BRNL;
+	echo "utilities/days_ago since Feb 30: " . days_ago('Feb 30, 2017') . BRNL;
 } catch (Error $e) {
 	echo_red ("utilities.php not loaded") . BRNL;;
 }
 
 try {
-	echo "Now (RFC822): " . mx\pretty_date('rfc') . BRNL;
+	echo "Mx\pretty_date (rfc): " . mx\pretty_date('rfc') . BRNL;
 } catch (Error $e) {
 	echo_red ('pretty_date function not available.') . BRNL;
 }
