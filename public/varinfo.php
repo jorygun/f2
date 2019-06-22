@@ -7,11 +7,12 @@ $mtime = filemtime(__FILE__);
 session_start();
 #collect initial data prior to session_start running
 $pre_out = '';
+$repo = basename(dirname(__DIR__);
 
 echo <<<EOT
 <html>
 <head>
-<title>Varinfo 3</title>
+<title>Varinfo ($repo)</title>
 <style>
 	body {max-width:800px; 
 		overflow-wrap: break-word;
@@ -121,9 +122,9 @@ echo "<hr>";
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as mx;
 
-if (true or class_exists('Definitions')){
+if (true) {
 	echo "From Definitions<br>\n";
-	echo "seclevel ma: " . Defs::get_seclevel('MA').BRNL;
+	echo "seclevel ma: " . Defs::get_seclevel('MA').BRNL ;
 } else {
 	echo "Defs not loaded" . BRNL;
 }
