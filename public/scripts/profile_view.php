@@ -74,7 +74,11 @@ $user_id = $_SESSION['user_id'];
 	$joindate = age($D_join_date)[1];
 	$user_current = $D_user_current ;
 	if (!empty($D_user_from)){$user_current .= " ... $D_user_from";}
-    if (!empty($D_user_web)){$user_web= "<p><a href='$D_user_web' target='_blank' >Relevant Web Site</a></p>";}
+   $user_web= (!empty($D_user_web))? 
+   	"<p><a href='$D_user_web' target='_blank' >Relevant Web Site</a></p>"
+   	:
+   	'';
+   	
     $imagelink='';
     if (!empty($D_image_url )){$imagelink = "<img src='$D_image_url' align='right'  />";}
     $button_text = <<<EOT
