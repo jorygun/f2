@@ -119,7 +119,7 @@ echo "<br>\n";
 use Digitalmx\flames\Definitions as Defs;
 use digitalmx as mx;
 
-if (class_exists('Definitions')){
+if (class_exists('Defs')){
 	echo "From Definitions<br>\n";
 	echo "seclevel ma: " . Defs::get_seclevel('MA').BRNL;
 } else {
@@ -129,7 +129,7 @@ if (class_exists('Definitions')){
 if (function_exists('days_ago')){
 	echo "days since Feb 30 " . days_ago('Feb 30, 2017') . BRNL;
 } else {
-	echo "days ago function not available" . BRNL;;
+	echo "utilities.php not loaded" . BRNL;;
 }
 
 if (function_exists ('mx\pretty_date')) {
