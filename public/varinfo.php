@@ -137,7 +137,7 @@ try {
 }
 
 try {
-	echo "Now (RFC822): " . pretty_date('rfc') . BRNL;
+	echo "Now (RFC822): " . mx\pretty_date('rfc') . BRNL;
 } catch (Error $e) {
 	echo_red ('pretty_date function not available.') . BRNL;
 }
