@@ -135,7 +135,7 @@ if (function_exists('days_ago')){
 }
 
 try {
-	echo "Now (RFC822): " . mx\pretty_date('rfc') . BRNL;
+	echo "Now (RFC822): " . pretty_date('rfc') . BRNL;
 } catch (Exception $e) {
 	echo 'pretty_date function not available.' . BRNL;
 }
