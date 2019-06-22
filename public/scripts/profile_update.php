@@ -223,7 +223,7 @@ Last Login: <?=$row['last_login'] ?>
 		  <input type='checkbox' id='nobulk' name='no_bulk' <?=$no_bulk_checked?> >Opt Out of Weekly Email. <span class='instr'>But Please Don't</span> 😥 </td></tr>
 <tr><td>Web Site</td>
 	<td><span class="instr">Your band? Anything you want.</span><br />
-<input type='url' name='user_web' value='<?=$user_web?>' placeholder='https://' >
+<input type='url' name='user_web' value='<?=$user_web?>' >
 </td></tr>
 
 <tr><td >LinkedIn
