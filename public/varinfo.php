@@ -134,8 +134,8 @@ if (function_exists('days_ago')){
 	echo "utilities.php not loaded" . BRNL;;
 }
 
-if (true or function_exists ('pretty_date')) {
-	echo "Now (RFC822): " . pretty_date('rfc') . BRNL;
+if (function_exists ('pretty_date')) {
+	echo "Now (RFC822): " . mx\pretty_date('rfc') . BRNL;
 } else {
 	echo 'pretty_date function not available.' . BRNL;
 }
