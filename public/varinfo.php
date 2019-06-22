@@ -130,3 +130,8 @@ if (function_exists('days_ago')){
 	echo "days ago function not available" . BRNL;;
 }
 
+if (function_exists ('pretty_date')) {
+	echo "Now (RFC3339): " . pretty_date('rfc') . BRNL;
+} else {
+	echo 'pretty_date function not available.' . BRNL;
+}
