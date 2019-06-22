@@ -105,7 +105,7 @@ recho ($GLOBALS,'$GLOBALS');
 
 
 
-echo "<hr>";
+
 if (file_exists('.htaccess')){
 	$htaccessm = date('d M H:i',filemtime('.htaccess'));
 	echo ".htaccess ($htaccessm) :<br><pre>";
@@ -115,8 +115,10 @@ if (file_exists('.htaccess')){
 echo "No .htaccess";
 }
 echo "<br>\n";
+echo "<hr>";
 
-use Digitalmx\flames\Definitions as Defs;
+
+use digitalmx\flames\Definitions as Defs;
 use digitalmx as mx;
 
 if (class_exists('Defs')){
@@ -132,7 +134,7 @@ if (function_exists('days_ago')){
 	echo "utilities.php not loaded" . BRNL;;
 }
 
-if (function_exists ('mx\pretty_date')) {
+if (function_exists ('pretty_date')) {
 	echo "Now (RFC3339): " . mx\pretty_date('rfc') . BRNL;
 } else {
 	echo 'pretty_date function not available.' . BRNL;

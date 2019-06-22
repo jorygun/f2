@@ -42,25 +42,21 @@ $init->setConstants();
 	}
 
 
-	
-if ($init->get_platform() == 'pair'){
+require_once 'setGlobals.php';
+$GV = $GLOBALS = setGlobals();
 
-	require_once 'setGlobals.php';
-	require_once 'MyPDO.class.php'; #uses envir constants for config; sets from db.ini if not already set
+require_once 'MyPDO.class.php'; #uses envir constants for config; sets from db.ini if not already set
+
+
+if ($init->get_platform() == 'pair'){
 	$pdo = \MyPDO::instance();
-	$GV = $GLOBALS = setGlobals();
 	require_once  "f2_connect.php";
 	$DB_link = Connect_DB();
 	$GLOBALS['DB_link'] = $DB_link;
 	require_once "f2_security.php";
 	
-	
 } elseif ($init->get_platform() == 'ayebook') {
-
-	require_once 'setGlobals.php';
-	require_once 'MyPDO.class.php'; #uses envir constant
 	$pdo = new \digitalmx\MxPDO('production',$platform,$db_ini);
-	$GV = $GLOBALS = setGlobals();
 	require_once "f2_security.php";
 }
 else {
@@ -187,16 +183,12 @@ class Init
 		define ('SITE_PATH', REPO_PATH . "/public");
 
 		define ('SITE', $this->site);
-		define ('SITE_URL', 'http://' . SITE);
+		define ('SITE_URL', 'https://' . SITE);
 
 	}
-	
-
-
-
-	#################################################
-	// using PWD because it seems to alwasy work, even in cron
+		
 	private function setPlatform(){
+	// using PWD because it seems to alwasy work, even in cron
 		$sig = getenv('PWD');
 		if (stristr ($sig,'usr/home/digitalm') !== false ) {	
 				$platform = 'pair';
@@ -230,6 +222,8 @@ class Init
 		);
 
 	}
+	
+	#################################
 	public function get_platform() {
 		return $this->platform;
 	}
@@ -243,7 +237,8 @@ class Init
 		return $this->site;
 	}
 	
-}
+} #end class init
+
 ###### everything below is suspect ######
 
 
