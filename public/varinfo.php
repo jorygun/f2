@@ -123,8 +123,7 @@ use digitalmx\flames\Definitions as Defs;
 use digitalmx as mx;
 
 if (true) {
-	echo "From Definitions<br>\n";
-	echo "seclevel ma: " . Defs::get_seclevel('MA').BRNL ;
+	echo "Defs: seclevel ma: " . Defs::get_seclevel('MA').BRNL ;
 } else {
 	echo "Defs not loaded" . BRNL;
 }
