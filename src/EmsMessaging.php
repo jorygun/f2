@@ -2,6 +2,8 @@
 namespace digitalmx\flames;
 
 use digitalmx\flames\Definitions as Defs;
+use digitalmx as dmx;
+
 use \Exception as Exception;
 
 /*
