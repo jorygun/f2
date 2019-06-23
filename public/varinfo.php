@@ -123,7 +123,8 @@ echo "<br><hr><br />";
 
 
 use digitalmx\flames\Definitions as Defs;
-#use digitalmx as mx;
+use digitalmx as dmx;
+
 
 try {
 	echo "Defs: seclevel ma: " . Defs::getSecLevel('MA').BRNL ;
@@ -137,9 +138,9 @@ try {
 	echo_red ("utilities.php not loaded") . BRNL;;
 }
 
-use digitalmx;
+
 try {
-	echo "pretty_date (rfc): " . mxDate('rfc') . BRNL;
+	echo "pretty_date (rfc): " . dmx\make_date('rfc') . BRNL;
 } catch (Error $e) {
 	echo_red ('pretty_date function not available.') . BRNL;
 }
