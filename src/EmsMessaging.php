@@ -320,7 +320,7 @@ private static $user_messages = array(
 		 		throw new Exception ( "Unrecognized ems $mstatus");
 		 	}
 		 	if (empty($msg['subj'])){ #if empty, there is no user message
-		 		break;
+		 		return;
 		 	}
 			$em['subj'] = $msg['subj'];
 			$em['msg'] = $this->replace_placeholders($msg['msg']);
