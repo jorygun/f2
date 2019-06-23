@@ -292,7 +292,7 @@ private static $user_messages = array(
 		foreach ($this->replacements as $key=>$val){
 			$msg = str_replace($key,$val,$msg);
 		}
-	
+		return $msg;
 	}
 	public function update_ems($uid,$mstatus,$test='')
 	{
