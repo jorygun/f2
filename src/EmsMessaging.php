@@ -320,6 +320,8 @@ private static $user_messages = array(
 		 		throw new Exception ( "Unrecognized ems $mstatus");
 		 	}
 		 	if (empty($msg['subj'])){ #if empty, there is no user message
+		 		dmx\echor($msg,'empty message?');
+		 		
 		 		return;
 		 	}
 			$em['subj'] = $msg['subj'];
