@@ -125,7 +125,7 @@ use digitalmx\flames\Definitions as Defs;
 #use digitalmx as mx;
 
 try {
-	echo "Defs: seclevel ma: " . Defs::get_seclevel('MA').BRNL ;
+	echo "Defs: seclevel ma: " . Defs::getSecLevel('MA').BRNL ;
 } catch (Error $e) {
 	echo_red ("Defs not loaded") . BRNL;
 }
@@ -136,6 +136,7 @@ try {
 	echo_red ("utilities.php not loaded") . BRNL;;
 }
 
+use digitalmx;
 try {
 	echo "pretty_date (rfc): " . mx\pretty_date('rfc') . BRNL;
 } catch (Error $e) {
