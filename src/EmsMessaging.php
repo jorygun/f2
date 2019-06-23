@@ -238,6 +238,12 @@ private static $user_messages = array(
 ")
 
     );
+   private $replacements = array (
+   '::no_bulk::' => "You don't subscribe to the weekly email.  Please reconsider.",
+   
+   
+   );
+   
     
 	private $pdo;
 	
@@ -255,9 +261,12 @@ private static $user_messages = array(
 		 	throw new Exception ("No user at uid $uid");
 		}
 		// enhance the info from the record
-		$row['login'] = $this->get_login_from_row($row);
-		$row['verify'] = SITE_URL . "/scripts/verify_email.php?s=" . $row['login'];
-
+		$this->replacements ['::login::'] = $this->get_login_from_row($row);
+		$this->replacements ['::verify::'] = SITE_URL . "/scripts/verify_email.php?s=" . $row['login'];
+		$this->replacements['::name::'] = $row['username'];
+		$this->replacements['::current_email::'] = $row['user_email'];
+		$this->replacements ['::prior_email::'] = $row['prior_email'];
+		
 	return $row;
 	}
 	
@@ -267,6 +276,13 @@ private static $user_messages = array(
 		return $login;
 	}
 	
+	private function replace_placeholders ($msg) 
+	{
+		foreach ($this->replacements as $key=>$val){
+			$msg = str_replace($key,$val,$msg);
+		}
+	
+	}
 	public function update_ems($uid,$mstatus,$test='')
 	{
 	 
@@ -280,22 +296,21 @@ private static $user_messages = array(
 			  throw new Exception ('bad update email call',"empty status with uid $uid");
 		 }
 		$row = $this->get_user($uid);
-		dmx\echor($row,'Retrieved User');
-		extract($row, EXTR_PREFIX_ALL, 'u');
+		dmx\echor($this->replacements,'replacement data User');
+		#extract($row, EXTR_PREFIX_ALL, 'u');
 		
-exit;
+#exit;
 		
 		/* Get email template for user
 			no point in emailing if the user is marked as lost 
 		*/
 		 if (substr($mstatus,0,1) != 'L'){ #not lost
-		 	$msg = $this->get_user_text($mstatus,$row);
-		 	
-			  
-			  if(!$msg){echo "Error getting user message";exit;}
-			  #echo "Got user text for $mstatus. ";
+		 	if (!$msg = $this->get_user_text($mstatus,$row) ){
+		 		throw new Exception ( "Error getting user message");
+		 	}
 			  $em_subj = $msg['subj'];
-			  $em_msg = $msg['msg'];
+			  $em_msg = $this->replace_placeholders($msg['msg']);
+			  
 			  $em_addr = $row['user_email'];
 			  if (!empty($em_subj)){
 					if ($mode == 'Real'){
