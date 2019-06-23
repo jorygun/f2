@@ -83,7 +83,7 @@ private static $user_messages = array(
 		::verify_url::
 ***************************************************
 
-	$closing
+	
 	"),
 
 'B2'	=>	array(
@@ -105,7 +105,7 @@ private static $user_messages = array(
 
 	Otherwise we will have to mark you as a Lost Member.
 
-	$closing
+	
 	"),
 
 'E1'	=>	array(
@@ -121,9 +121,7 @@ private static $user_messages = array(
 		::verify_url::
 ***************************************************
 
-	$profile_text
-
-	$closing
+	
 
 	"),
 
@@ -145,10 +143,7 @@ private static $user_messages = array(
 		::verify_url::
 ***************************************************
 
-	$profile_text
-
-	$closing
-
+	
 	"),
 
 'A1'	=>	array(
@@ -166,7 +161,6 @@ private static $user_messages = array(
 
 ***************************************************
 
-	$bulk_warn
 
 	(Note: You can avoid these messages by logging into the web site
 	at least once a year.)
@@ -185,10 +179,6 @@ private static $user_messages = array(
 
   	::verify_url::
 
-  	$bulk_warn
-
-	$closing
-
   	"),
 
 'A3'	=>	array(
@@ -204,9 +194,7 @@ private static $user_messages = array(
   	::verify_url::
 ***************************************************************
 
-  	$bulk_warn
-
-	$closing
+  
 
 	"),
 
@@ -244,7 +232,6 @@ private static $user_messages = array(
 
   	::verify_url::
 
-	$closing
 
 ")
 
