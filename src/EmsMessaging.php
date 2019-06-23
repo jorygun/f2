@@ -246,9 +246,11 @@ private static $user_messages = array(
    
     
 	private $pdo;
+	private $test;
 	
-	public function __construct($pdo) {
+	public function __construct($pdo,$test=false) {
 		$this->pdo = $pdo;
+		$this->test = $test;
 	}
 	
 	private function get_user($uid) 
@@ -261,21 +263,30 @@ private static $user_messages = array(
 		 	throw new Exception ("No user at uid $uid");
 		}
 		// enhance the info from the record
-		$this->replacements ['::login::'] = $this->get_login_from_row($row);
-		$this->replacements ['::verify::'] = SITE_URL . "/scripts/verify_email.php?s=" . $row['login'];
+		$login = $this->get_login_from_row($row);
+		$this->replacements ['::login::'] = $login;
+		$this->replacements ['::verify::'] = SITE_URL . "/scripts/verify_email.php?s=$login";
 		$this->replacements['::name::'] = $row['username'];
 		$this->replacements['::current_email::'] = $row['user_email'];
 		$this->replacements ['::prior_email::'] = $row['prior_email'];
 		
 	return $row;
 	}
+	private function send_mail($data) {
+	$data['headers'] = "From: AMD Flames Admin <admin@amdflames.org> \r\n";
+	 mail ($data['to'],$data['subj'],$data['msg'],$data['headers']);
 	
+}
+
 	private function get_login_from_row($row) 
 	{
 		$login = $row['upw'] . $row['user_id'];
 		return $login;
 	}
-	
+	private function show_message($data)
+	{
+		dmx\echor ($data,'email message data');
+	}
 	private function replace_placeholders ($msg) 
 	{
 		foreach ($this->replacements as $key=>$val){
@@ -306,19 +317,25 @@ private static $user_messages = array(
 		*/
 		 if (substr($mstatus,0,1) != 'L'){ #not lost
 		 	if (!$msg = $this->get_user_text($mstatus,$row) ){
-		 		throw new Exception ( "Error getting user message");
+		 		throw new Exception ( "Unrecognized ems $mstatus");
 		 	}
-			  $em_subj = $msg['subj'];
-			  $em_msg = $this->replace_placeholders($msg['msg']);
+		 	if (empty($msg['subj'])){ #if empty, there is no user message
+		 		break;
+		 	}
+			$em['subj'] = $msg['subj'];
+			$em['msg'] = $this->replace_placeholders($msg['msg']);
 			  
-			  $em_addr = $row['user_email'];
-			  if (!empty($em_subj)){
-					if ($mode == 'Real'){
-						 send_user($em_addr,$em_subj,$em_msg);
+			$em['to'] = $row['user_email'];
+			  
+					if (! $this->test ){
+						$this->send_mail($em);
+					} else {
+						$this->show_message($em);
 					}
 
 				}
 		  }
+exit;
 
 		 if (in_array($mstatus, array_keys($lost_reasons))) {
 			  $msg =  get_admin_text($mstatus,$row);
