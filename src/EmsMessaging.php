@@ -247,14 +247,24 @@ private static $user_messages = array(
 	
 	private function get_user($uid) 
 	{
-	$sql = "SELECT username,user_email,prior_email,no_bulk from `members_f2` 
+	$sql = "SELECT user_id,username,user_email,prior_email,no_bulk,upw from `members_f2` 
 			WHERE user_id = $uid;";
 			
 		
 		 if (!$row = $this->pdo->query($sql)->fetch()){
 		 	throw new Exception ("No user at uid $uid");
 		}
+		// enhance the info from the record
+		$row['login'] = $this->get_login_from_row($row);
+		$row['verify'] = SITE_URL . "/scripts/verify_email.php?s=" . $row['login'];
+
 	return $row;
+	}
+	
+	private function get_login_from_row($row) 
+	{
+		$login = $row['upw'] . $row['user_id'];
+		return $login;
 	}
 	
 	public function update_ems($uid,$mstatus,$test='')
@@ -274,8 +284,14 @@ private static $user_messages = array(
 		extract($row, EXTR_PREFIX_ALL, 'u');
 		
 exit;
+		
+		/* Get email template for user
+			no point in emailing if the user is marked as lost 
+		*/
 		 if (substr($mstatus,0,1) != 'L'){ #not lost
-			  $msg =  get_user_text($mstatus,$row);
+		 	$msg = $this->get_user_text($mstatus,$row);
+		 	
+			  
 			  if(!$msg){echo "Error getting user message";exit;}
 			  #echo "Got user text for $mstatus. ";
 			  $em_subj = $msg['subj'];
@@ -331,11 +347,6 @@ private function get_user_text($code,$row){
 	/* returns array of subj,msg for this user for this code.
 	    returns empty array if no user message.
 	*/
-
-	$null_msg =  array(
-    'subj' => '',
-    'msg' => ''
-    );
 
 
 
