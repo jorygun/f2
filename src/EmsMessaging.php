@@ -315,8 +315,8 @@ private static $user_messages = array(
 		/* Get email template for user
 			no point in emailing if the user is marked as lost 
 		*/
-		 if (substr($mstatus,0,1) != 'L'){ #not lost
-		 	if (!$msg = $this->get_user_text($mstatus,$row) ){
+		if (substr($mstatus,0,1) != 'L'){ #not lost
+		 	if (!$msg = $this->get_user_text($mstatus) ){
 		 		throw new Exception ( "Unrecognized ems $mstatus");
 		 	}
 		 	if (empty($msg['subj'])){ #if empty, there is no user message
@@ -327,13 +327,13 @@ private static $user_messages = array(
 			  
 			$em['to'] = $row['user_email'];
 			  
-					if (! $this->test ){
-						$this->send_mail($em);
-					} else {
-						$this->show_message($em);
-					}
+			if (! $this->test ){
+				$this->send_mail($em);
+			} else {
+				$this->show_message($em);
+			}
 
-				}
+		
 		  }
 exit;
 
@@ -374,7 +374,7 @@ exit;
 	}
 	
 	
-private function get_user_text($code,$row){
+private function get_user_text($code){
 	#echo "starting get_user_text id $id, code $code. <br>";
 	/* returns array of subj,msg for this user for this code.
 	    returns empty array if no user message.
@@ -382,19 +382,9 @@ private function get_user_text($code,$row){
 
 
 
-	#preset these variables
-
-	$login = get_login_from_row($row);
-	$verify_url = SITE_URL . "/scripts/verify_email.php?s=$login";
-	$login_url = get_login_from_row($row,'link');
-	$name = $row['username'];
-
-
-	$profile_text = get_profile_message($row,'text');
+	#$profile_text = get_profile_message($row,'text');
 #echo "<br>retreiving profile message: $profile_text<br><br>";
 
-$subscriber = $row['no_bulk']?'No':'Yes';
-$email = $row['user_email'];
 
 if ($row['no_bulk']){$bulk_warn =	"
 	The FLAMEsite sends out an email whenever a new newsletter is
@@ -421,23 +411,10 @@ $closing =  "
 
 ";
 
-
-############################################
-
-
-
-###################################
-
-
-    #echo "<br>";
-    if (in_array($code, array_keys($user_messages))){
-        return $user_messages[$code];
-    }
-    else {
-    #echo "No user message";
-        send_admin('Unrecognized email code $code',"An unrecognized code $code was sent to get_user_text.");
-         return false;
-    }
+    
+   return $this->user_messages[$code];
+    
+    
 }
 
 function get_admin_text($code,$row){
