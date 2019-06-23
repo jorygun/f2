@@ -149,3 +149,5 @@ try {
 function echo_red ($t) {
 	echo "<p class='red'>$t</p>";
 }
+
+$em = new EmsMessaging($pdo);
