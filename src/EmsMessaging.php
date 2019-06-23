@@ -28,7 +28,7 @@ private static $lost_reasons = array(
 	'LS' => "New signup failed to confirm email.",
 	'LE' => "User never confirmed change of email."
 	);
-}
+
 
 private static $user_messages = array(
 
@@ -249,6 +249,7 @@ private static $user_messages = array(
 ")
 
     );
+    
 	private $pdo;
 	
 	public function __construct($pdo) {
