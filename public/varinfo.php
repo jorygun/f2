@@ -136,9 +136,9 @@ try {
 	echo_red ("utilities.php not loaded") . BRNL;;
 }
 
-use digitalmx;
+use digitalmx as mx;
 try {
-	echo "pretty_date (rfc): " . mxDate('rfc') . BRNL;
+	echo "pretty_date (rfc): " . mx\mxDate('rfc') . BRNL;
 } catch (Error $e) {
 	echo_red ('pretty_date function not available.') . BRNL;
 }
