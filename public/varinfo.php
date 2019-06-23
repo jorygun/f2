@@ -154,5 +154,5 @@ function echo_red ($t) {
 }
 
 $em = new EmsMessaging($pdo,true); #for test
-$em->update_ems(11602,'M9');
+$em->update_ems(11602,'A4');
 
