@@ -319,9 +319,9 @@ private static $user_messages = array(
 		 	if (!$msg = $this->get_user_text($mstatus) ){
 		 		throw new Exception ( "Unrecognized ems $mstatus");
 		 	}
+	dmx\echor($msg,'empty message?');
+		 	
 		 	if (empty($msg['subj'])){ #if empty, there is no user message
-		 		dmx\echor($msg,'empty message?');
-		 		
 		 		return;
 		 	}
 			$em['subj'] = $msg['subj'];
