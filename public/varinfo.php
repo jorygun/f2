@@ -138,7 +138,7 @@ try {
 
 use digitalmx;
 try {
-	echo "pretty_date (rfc): " . pretty_date('rfc') . BRNL;
+	echo "pretty_date (rfc): " . mxDate('rfc') . BRNL;
 } catch (Error $e) {
 	echo_red ('pretty_date function not available.') . BRNL;
 }
