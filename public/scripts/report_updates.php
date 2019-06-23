@@ -26,7 +26,7 @@ $repo_path = REPO_PATH;
  $nowh	=	date('M d, Y'); #human ready
  
  
- $member_status_set = Defs::get_member_set();
+ $member_status_set = Defs::getMemberInSet();
  
 #$G_member_status_array = array('M', 'MA','MN','MC','MU','R','G');
 

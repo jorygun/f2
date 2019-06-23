@@ -47,7 +47,7 @@ $user_id = $_SESSION['user_id'];
 
 	$linkedinlink=  ($D_linkedin)?
          " <p><a href='$D_linkedin' target='_blank'><img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /><br />$D_linkedin </a></p>":'';
-    $member_type = get_member_description($D_status);
+    $member_type = getMemberDescription($D_status);
 	$html_greeting = $D_user_greet;
 	$email_status = get_email_status_name($D_email_status);
 	$message_link ='';

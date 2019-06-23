@@ -762,7 +762,7 @@ function get_member_security($code){
 	return $sec;
 }
 
-function get_member_description($code){
+function getMemberDescription($code){
 	global $G_member_desc;
 	$desc = $G_member_desc[$code];
 	return $desc;

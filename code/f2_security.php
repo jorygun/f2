@@ -78,7 +78,7 @@ function login($pw){
 	//speial case for beta testers
 	
 
-	$new_type = get_member_description($rstatus);
+	$new_type = getMemberDescription($rstatus);
 
 		$_SESSION['pwid'] = $pw; // Add to SESSION collection 
 		
@@ -94,7 +94,7 @@ function login($pw){
 		$_SESSION['profile_validated'] = $row['profile_validated'];
 		$_SESSION['email_last_validated'] = $row['email_last_validated'];
 		$_SESSION['user_email'] = $row['user_email'];
-		$_SESSION['typename'] = get_member_description ($rstatus);
+		$_SESSION['typename'] = getMemberDescription ($rstatus);
 		$_SESSION['DB'] = $row;
 		$_SESSION['user'] = $row; #eventually switch everything to this
 

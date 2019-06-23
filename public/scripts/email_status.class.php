@@ -17,7 +17,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	    change_email
 	    verify_email = updates status to Y
 	    verify_emai_silent - updates, but no messages
-	    get_ems_name
+	    getEmsName
 
 	Private:
 	    update_email_status_in_db

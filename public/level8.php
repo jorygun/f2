@@ -195,7 +195,7 @@ function search($post,$members_db){
 <?
 	$status_options = "<option value=''>Choose...</option>";
 	foreach (array('M','R','G','MC','MU','MN','N','T','I') as $v){
-		$desc = get_member_description($v);
+		$desc = getMemberDescription($v);
 		$status_options .= "<option value='$v'>$v ($desc)</option>";
 	}
 

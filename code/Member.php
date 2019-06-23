@@ -199,7 +199,7 @@ class Member
         $addons= array(
         
         'seclevel' => Definitions::get_seclevel($row['status']) ,
-        'status_name' => Definitions::get_member_description($row['status']) ,
+        'status_name' => Definitions::getMemberDescription($row['status']) ,
             
         'login_string' =>  $login_string ,
         'subscriber' => $row['no_bulk']?false:true ,
@@ -209,7 +209,7 @@ class Member
         
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
         'join_date' => u\formatDate('CD',$row['joined']),
-        'email_status_name' => @Definitions::$ems_names[$row['email_status']],
+        'email_status_name' => Defs::$getEmsName($row['email_status']),
         'image_url' => $image_url,
         'decades' => $this->decompress (
             $row ['amd_when'], Definitions::$decades ),

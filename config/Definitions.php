@@ -48,30 +48,7 @@ class Definitions {
 	 public static $archival_tags = "ACDEFIMOSWY";
 
 	
-	 public static $ems_names = array(
-		'Y'	=>	'Validated',
-		'Q'	=>	'Believed Good',
-		'XX'	=>	'To be removed',
-		'LA'	=>	'Lost - No Response',
-		'LB'	=>	'Lost - Bounced',
-		'LO'	=>	'Lost - Other',
-		'LN'	=>	'Lost - No Email Address',
-		'LE'	=>	'Lost - After email change',
-		'LS'    =>  'Lost at signup',
-		'LD'    =>  'Lost - Deceased',
-		'B1'	=>	'May be bouncing',
-		'B2'	=>	'Bounced twice',
-		'A1'	=>	'Being revalidated',
-		'A2'	=>	'Being revalidated (2nd attempt)',
-		'A3'	=>	'Being revalidated (3rd attempt)',
-		'A4'	=>	'Being revalidated (Final attempt)',
-		'E1'	=>	'Email change being validated',
-		'E2'	=>	'Email change being validated (2nd)',
-		'N1'	=>	'New Signup',
-		'N2'	=>	'New Signup (2nd)',
-		'D'     =>  'Lost but logging in. (Deferred lost)'
-
-		);
+	
 
 // code => array(name,next-code,after-days)
 private static $ems_codes = array(
@@ -101,51 +78,8 @@ private static $ems_codes = array(
 	
 
 		
-  public static $member_descriptions = array (
-	'N' => 'New Signup',
-	'R' => 'News Reader',
-	'G' => 'Guest',
-	'GA'	=> 'Anonymous Guest',
-	'M' => 'Member',
-
-	'MC' => 'Writer',
-	'MN' => 'News Admin',
-	'MU' => 'User Admin',
-	'MA' => 'Admin Admin',
-
-	'I' => 'Inactive',
-	'T' => 'test user (like member)',
-	'L' => 'lost ',
-	'D' => 'deceased',
-
-	'H' => 'hidden',
-	'X' => 'Other (X)',
-	'NM' => 'Not a Member'
-	);
 	
- public  static $seclevels = array(
-	'N' => 1,
-	'R' => 1,
-	'G' => 2,
-	'M' => 4,
 
-
-	'MC' => 6,
-	'MN' => 7,
-	'MU' => 8,
-	'MA' => 9,
-
-	'I' => 2,
-	'T' => 4,
-	'L' => 1,
-	'D' => 0,
-
-	'GA' => 1,
-	'H' => 4,
-	'X' => 0,
-	'NM' => 0
-	);
-	
 public static $decades = array(
 	'A'	=>	'1960s',
 	'B'	=>	'1970s',
@@ -246,33 +180,39 @@ public static $stale_date_limit = 365; #days
 
 ######## Getters
 	/* returns the list at teh var */
-	public  static function get_ems_def($code){
+	public  static function getEmsData($code){
 			return self::$ems_codes[$code];
 		}
-	public  static function get_ems_name($code){
+	public  static function getEmsName($code){
 			return self::$ems_codes[$code][0];
 	}
-	public  static function get_seclevel($code='N'){
+	public  static function getSecLevel($code='N'){
 		return self::$member_codes[$code][1] ;
 	}
-	public static function get_member_array(){
+	public static function getMemberInList(){
 		return self::$member_array;
 	}
-	public  static function get_member_set () {
+	public  static function getMemberInSet () {
 		#for sql IN clause
 		return "'" . implode("','",self::$member_array) . "'";
 	}
-	public  static function  get_member_description($code='N'){
+	public  static function  getMemberDescription($code='N'){
 		return self::$member_codes[$code][0];
 	}
 	
-	public  static function get_alias_list () {
+	public  static function getMemberAliasList () {
 	// for showing list of available aliases
 		$Aliastext = "(Aliases: " . implode(', ',array_keys(self::$user_aliases)) . ")";
 		return $Aliastext;
 	}
-	public static function get_archival_tags() {
+	public static function getAssetArchivalTags() {
 		return self::$archival_tags;
+	}
+	public static function getAssetTypeName($type) {
+		return self::$asset_type_names($type);
+	}
+	public static function getAssetTagArray () {
+		return self::$asset_tags;
 	}
 	
 }

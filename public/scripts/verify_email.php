@@ -38,7 +38,7 @@ $error_msg = "No record found. Please contact administrator at admin@digitalmx.c
 	
 	$sql_today = sql_now('date');
 	
-	$member_type = get_member_description($row['status']);
+	$member_type = getMemberDescription($row['status']);
 
     list ($join_days,$join_date) = age ($row['join_date']);
 
