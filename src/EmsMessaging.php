@@ -316,7 +316,7 @@ private static $user_messages = array(
 			no point in emailing if the user is marked as lost 
 		*/
 		if (substr($mstatus,0,1) != 'L'){ #not lost
-		 	if (!$msg = $this->get_user_text($mstatus) ){
+		 	if (! is_array($msg = $this->get_user_text($mstatus) )){
 		 		throw new Exception ( "Unrecognized ems $mstatus");
 		 	}
 	dmx\echor($msg,'empty message?');
@@ -377,6 +377,10 @@ exit;
 	
 	
 private function get_user_text($code){
+
+	if (! array_key_exists($code,self::$user_messages)){
+		return 'error';
+	}
 	#echo "starting get_user_text id $id, code $code. <br>";
 	/* returns array of subj,msg for this user for this code.
 	    returns empty array if no user message.
@@ -413,7 +417,7 @@ private function get_user_text($code){
 // 
 // ";
 // 
-    
+  
    return self::$user_messages[$code];
     
     
