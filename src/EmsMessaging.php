@@ -43,7 +43,7 @@ private static $user_messages = array(
 
 	To confirm your signup and receive a temporary password,
 	click on the link below:
-		::verify_url::
+		::verify::
 
 	You must confirm within 3 days to activate this signup.
 
@@ -65,7 +65,7 @@ private static $user_messages = array(
 **************************************************
 	To confirm this is your correct email, please click on the
 	link below:
-		::verify_url::
+		::verify::
 ***************************************************
 
 	Otherwise, your signup will be cancelled.
@@ -82,7 +82,7 @@ private static $user_messages = array(
 ***************************************************
 	If this email <::current_email::> is correct, please just click on the
 	link below to confirm:
-		::verify_url::
+		::verify::
 ***************************************************
 
 	
@@ -102,7 +102,7 @@ private static $user_messages = array(
 	If this message gets through to you, please click on
 	the link below to confirm:
 
-		::verify_url::
+		::verify::
 ***************************************************
 
 	Otherwise we will have to mark you as a Lost Member.
@@ -120,7 +120,7 @@ private static $user_messages = array(
 ***************************************************
 	YOU NEED TO CONFIRM THIS CHANGE BY CLICKING THE LINK BELOW NOW!
 
-		::verify_url::
+		::verify::
 ***************************************************
 
 	
@@ -142,7 +142,7 @@ private static $user_messages = array(
 	If this is your correct new email, please
 	CLICK ON THE LINK BELOW to confirm:
 
-		::verify_url::
+		::verify::
 ***************************************************
 
 	
@@ -159,7 +159,7 @@ private static $user_messages = array(
   JUST CLICK THE LINK BELOW NOW to confirm that
   this <::current_email::>  is your email:
 
-       ::verify_url::
+       ::verify::
 
 ***************************************************
 
@@ -179,7 +179,7 @@ private static $user_messages = array(
 	Please click on the link below to simply verify that this
 	email still works for you.
 
-  	::verify_url::
+  	::verify::
 
   	"),
 
@@ -193,7 +193,7 @@ private static $user_messages = array(
 ***************************************************************
 	IF YOU RECEIVE THIS EMAIL, please click on the link below:
 
-  	::verify_url::
+  	::verify::
 ***************************************************************
 
   
@@ -212,7 +212,7 @@ private static $user_messages = array(
 
 **************************************************************************
   IF THIS IS YOUR CORRECT EMAIL, PLEASE CLICK ON THE LINK BELOW:
-  	::verify_url::
+  	::verify::
 **************************************************************************
 
 	If you have any questions or concerns, please contact the administrator.
@@ -232,7 +232,7 @@ private static $user_messages = array(
 
 	If this is your correct email, please click on the link below:
 
-  	::verify_url::
+  	::verify::
 
 
 ")
@@ -434,7 +434,7 @@ $null_msg =  array(
     #otherwise...
 
 	$login = get_login_from_row($row);
-	$verify_url = "${GLOBALS['siteurl']}/scripts/verify_email.php?s=$login";
+	$verify = "${GLOBALS['siteurl']}/scripts/verify_email.php?s=$login";
 	$login_url = get_login_from_row($row,'link');
 	$name = $row['username'];
 	$profile_url = get_profile_message($row,'text');
@@ -477,7 +477,7 @@ $admin_message =	array(
 
 
  Click to verify your email:
-    $verify_url
+    $verify
 
 -----------------------------------------------------
 	Alert to FLAMES administrator :
