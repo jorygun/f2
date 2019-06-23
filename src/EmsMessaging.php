@@ -267,7 +267,7 @@ private static $user_messages = array(
 		 if(empty($mstatus)){
 			  throw new Exception ('bad update email call',"empty status with uid $uid");
 		 }
-		$row = get_user($uid);
+		$row = $this->get_user($uid);
 		dmx\echor($row,'Retrieved User');
 		extract($row, EXTR_PREFIX_ALL, 'u');
 		
