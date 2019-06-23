@@ -1,6 +1,7 @@
 <?php
 namespace digitalmx\flames;
 
+$verbose = false;
 
 ini_set('display_errors', 1);
 $mtimet = date('d M H:i',filemtime(__FILE__));
@@ -99,26 +100,27 @@ if (file_exists($init_file)){
 
 echo "<p><b>post-init include_path: </b><br>" . str_replace(':','<br>:',get_include_path()) ."</p><br>\n";
 
-recho ($_ENV,'$_ENV');
+if ($verbose) {
+	recho ($_ENV,'$_ENV');
 
-recho ($server_changes,'Changed value in $_SERVER');
-recho ($server_adds,'Added to $_SERVER');
-recho ($_SESSION,'$_SESSION');
+	recho ($server_changes,'Changed value in $_SERVER');
+	recho ($server_adds,'Added to $_SERVER');
+	recho ($_SESSION,'$_SESSION');
 
-recho ($GLOBALS,'$GLOBALS');
-
-
+	recho ($GLOBALS,'$GLOBALS');
 
 
-if (file_exists('.htaccess')){
-	$htaccessm = date('d M H:i',filemtime('.htaccess'));
-	echo ".htaccess ($htaccessm) :<br><pre>";
-	echo file_get_contents('.htaccess');
-	echo '</pre>';
-} else {
-echo "No .htaccess";
+
+
+	if (file_exists('.htaccess')){
+		$htaccessm = date('d M H:i',filemtime('.htaccess'));
+		echo ".htaccess ($htaccessm) :<br><pre>";
+		echo file_get_contents('.htaccess');
+		echo '</pre>';
+	} else {
+	echo "No .htaccess";
+	}
 }
-
 echo "<br><hr><br />";
 
 
@@ -148,6 +150,9 @@ try {
 ###33#####
 function echo_red ($t) {
 	echo "<p class='red'>$t</p>";
+	
 }
 
 $em = new EmsMessaging($pdo);
+$em->update_ems(11602,'A1',1);
+
