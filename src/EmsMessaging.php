@@ -405,7 +405,6 @@ Activity
 			  $msg =  $this->get_admin_text($mstatus,$row);
 			  $em_subj = $msg['subj'];
 			  
-			  
 			  if (empty($em_subj)){return;}
 			  
 			  	$message = $this->replace_placeholders($msg['msg']);
@@ -417,9 +416,11 @@ Activity
 			$em['header'] =  $this->email_header;
 
 			$this->send_mail($em);
-				}
-		 }
-exit;
+		}
+	}
+	
+	private function update_db(){
+
 			  $sqla = array();
 			  #update the email status in the db.
 					// also sets user status if second char on status
@@ -438,14 +439,7 @@ exit;
 					 $result = mysqli_query($GLOBALS['DB_link'],$sql);
 					}
 			  }
-
-		return $em_subj;
-	}
-
-
-	private function getLostReason($code) {
-		return self::$lost_reasons[$code];
-	}
+}
 	
 	
 private function get_user_text($code,$row){
