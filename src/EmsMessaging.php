@@ -344,7 +344,7 @@ Activity
 	
 		if ($this->test) {
 			echo "send_email data" . BRNL;
-			echo "Header:" . htmlentities( $header) ;
+			dmx\echopre ("Header:" . $header) ;
 			dmx\echor ($data,'data array');
 			
 		} else  {	
