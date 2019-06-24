@@ -343,8 +343,9 @@ Activity
 		}
 	
 		if ($this->test) {
-			echo "send_email data" . BRNL;
-			dmx\echopre ("Header:" . $header) ;
+			echo "<h3>send_email data</h3>" ;
+			echo "Header:";
+			dmx\echopre ($header) ;
 			dmx\echor ($data,'data array');
 			
 		} else  {	
