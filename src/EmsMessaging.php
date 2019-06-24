@@ -268,6 +268,9 @@ private static $user_messages = array(
     
 	private $pdo;
 	private $test;
+	
+	private $user_dataset;
+	
 	// std header for outgoing emails, but can be changed before using
 	private $email_header = 
 		"From: AMD Flames Admin <admin@amdflames.org>\r\n"
@@ -305,11 +308,32 @@ private static $user_messages = array(
 		$this->replacements['::name::'] = $row['username'];
 		$this->replacements['::current_email::'] = $row['user_email'];
 		$this->replacements ['::prior_email::'] = $row['prior_email'];
+		
+
+		$this->replacements ['::user_dataset::'] = $this->build_dataset($row);
 
 	return $row;
 	}
 	
-	
+	private function build_dataset($row) {
+	$subscriber  = ($row['no_bulk']) ? 'No' : 'Yes' ;
+	$dataset = "
+User: ${row['username']}
+---------------------
+   Email: ${row['user_email']} (Previously: ${row['prior_email']})
+   Receives weekly newsletter: $subscriber
+
+Activity
+---------------------
+   Last login: ${row['last_login']}
+   Email last validated: ${row['email_last_validated']} (changed on: ${row['email_chg_date']})
+   Profile last validated: ${row['profile_validated']} (updated on: ${row['profile_updated']})
+
+-----------------------
+";
+	return $dataset;
+}
+
 	private function send_mail($data) {
 	if ($this->test)
 		dmx\echor ($data,'User Email');
@@ -438,7 +462,7 @@ private function get_user_text($code,$row){
 function get_admin_text($code,$row){
     // 
     if (! in_array($code,array_keys(self::$lost_reasons))){
-        return [];
+        return '';
     }
   
 	$subscriber = ($row['no_bulk']) ? 'No' : 'Yes' ;
@@ -461,23 +485,23 @@ $last = '';
 if (substr($code,0,1)=='L'){$last = "FINAL ATTEMPT";}
 
 $admin_message =	array(
-	'subj' => "Lost AMD Alumni ${row['username']} ($code)",
+	'subj' => "Lost AMD Alumni ::name:: ($code)",
 	'msg' => "
 
 
 
  Click to verify your email:
-    $verify
+    ::verify::
 
 -----------------------------------------------------
 	Alert to FLAMES administrator :
 
-    Email to FLAMES user ${row['username']} is apparently not getting through.
-	${lost_reasons[$code]}.  The user has been set to Lost Status $code.
+    Email to FLAMES user ::name:: is apparently not getting through.
+	$this->lost_reasons.  The user has been set to Lost Status $code.
 
 	Please attempt to manually reconnect with this user.
 
-	$user_dataset
+	::user_dataset::
 	"
 	);
 
