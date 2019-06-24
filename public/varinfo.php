@@ -32,6 +32,7 @@ varinfo.php - last updated $mtimet
 
 
 EOT;
+if ($test) echo "Test Mode ";
 
 
 echo "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
