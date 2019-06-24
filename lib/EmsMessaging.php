@@ -400,27 +400,27 @@ Activity
 		/* Get email template for user
 			no point in emailing if the user is marked as lost 
 		*/
+		if (substr($mstatus,0,1) != 'L') {
+			if (! is_array($msg = $this->get_user_text($mstatus,$row) )){
+				throw new Exception ( "Unrecognized ems $mstatus");
+			}
 		
-		if (! is_array($msg = $this->get_user_text($mstatus,$row) )){
-			throw new Exception ( "Unrecognized ems $mstatus");
-		}
-		
-		if (!empty($msg['subj'])
-			&&  substr($mstatus,0,1) != 'L'){ 
-			#if empty or lost, there is no user message
-		 		
-		 	// produce user email
-		 	$message = $this->replace_placeholders($msg['msg']);
-		 	$message = dmx\email_std($message);
-		 	
-			$em['subj'] = $msg['subj'];
-			$em['msg'] = $message;
-			$em['to'] = $row['user_email'];
-			$em['header'] = $this->email_header_array;
+			if (!empty($msg['subj'])
+				&&  substr($mstatus,0,1) != 'L'){ 
+				#if empty or lost, there is no user message
+				
+				// produce user email
+				$message = $this->replace_placeholders($msg['msg']);
+				$message = dmx\email_std($message);
+			
+				$em['subj'] = $msg['subj'];
+				$em['msg'] = $message;
+				$em['to'] = $row['user_email'];
+				$em['header'] = $this->email_header_array;
 
-			$this->send_mail($em);
+				$this->send_mail($em);
+			}
 		}
-		  
 		  /* prepare email to admin
 		 statuses requiring admin email are identified
 		in the $lost_reasons array
@@ -457,10 +457,10 @@ Activity
 			  $validate = ($mstatus == 'Y') ? 
 			  	", email_last_validated = NOW()" : '';
 
-				$sql = "UPDATE `members_f2`
-					SET email_status = '$mstatus'
-					$validate
-					WHERE user_id = '$uid';";
+				$sql = 
+				"UPDATE `members_f2` 
+				SET email_status = '$mstatus' $validate
+				WHERE user_id = '$uid';";
 					
 				if ($this->test){
 					echo "SQL (not done): $sql" . BRNL;
@@ -481,7 +481,7 @@ private function get_user_text($code,$row){
 		$message = str_replace('::profile::', self::$profile_message, $message);
 	}
 	if ($row['no_bulk'] == true){
-		$$message = str_replace('::bulk::', self::$bulk_warn, $message);
+		$message = str_replace('::bulk::', self::$bulk_warn, $message);
 	}
 	$message['msg'] .= self::$closing;
 		
