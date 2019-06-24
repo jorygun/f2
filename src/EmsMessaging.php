@@ -44,7 +44,7 @@ private static $user_messages = array(
 	Thanks for signing up for the FLAMEs AMD Alumni News
 	site, ::name::.
 
-	To confirm your signup, click on the link below:
+	To confirm your signup, use the link below:
 		::verify::
 
 	You must confirm within 3 days to activate this signup.
@@ -81,7 +81,7 @@ private static $user_messages = array(
 
 ***************************************************
 	If this email <::current_email::> is correct, 
-	just click on the link below to confirm:
+	just use the link below to confirm:
 		::verify::
 ***************************************************
 
@@ -99,9 +99,8 @@ private static $user_messages = array(
 	We didn't hear back from you, we're trying again.
 
 ***************************************************
-	If this message gets through to you, please click on
+	If this message gets through to you, please use
 	the link below to confirm:
-
 		::verify::
 ***************************************************
 
@@ -169,7 +168,7 @@ private static $user_messages = array(
 	asking you to confirm that this is still your correct email.
 	We haven't heard back from you, so we're giving it another shot.
 
-	Please click on the link below to simply verify that this
+	Please use the link below to simply verify that this
 	email still works for you.
 
   	::verify::
@@ -184,7 +183,7 @@ private static $user_messages = array(
 	that this is your correct email.  We still haven't heard back from you.
 
 ***************************************************************
-	IF YOU RECEIVE THIS EMAIL, please click on the link below:
+	IF YOU RECEIVE THIS EMAIL, please use the link below:
 
   	::verify::
 ***************************************************************
@@ -222,7 +221,7 @@ private static $user_messages = array(
 	is correct.  This email isn't bouncing, but we haven't heard back
 	from you, so we aren't sure you are stilling using this address.
 
-	If this is your correct email, please click on the link below:
+	If this is your correct email, please use the link below:
 
   	::verify::
 
@@ -301,7 +300,7 @@ private static $user_messages = array(
 		
 		$this->replacements ['::login::'] = $login;
 		$verify_code =  SITE_URL . "/scripts/verify_email.php?s=$login";
-		$this->replacements ['::verify::'] = "<a href='$verify_code'>$verify_code</a>";
+		$this->replacements ['::verify::'] = $verify_code;
 		$this->replacements['::name::'] = $row['username'];
 		$this->replacements['::current_email::'] = $row['user_email'];
 		$this->replacements ['::prior_email::'] = $row['prior_email'];
