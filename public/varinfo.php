@@ -148,7 +148,7 @@ try {
 
 
 try {
-	echo "pretty_date (rfc): " . dmx\make_date('rfc') . BRNL;
+	echo "pretty_date (rfc): " . dmx\make_date(time(),'rfc') . BRNL;
 } catch (Error $e) {
 	echo_red ('pretty_date function not available.') . BRNL;
 }
