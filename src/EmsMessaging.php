@@ -421,10 +421,10 @@ private function get_user_text($code,$row){
 	$message = self::$user_messages[$code]; #array of msg, subj
 	
 	if ($row['profile_age'] > self::$profile_age_limit_days ){
-				$message['msg'] .= self::$profile_message;
+		$message = str_replace('::profile::',self::$profile_message);
 	}
 	if ($row['no_bulk'] == true){
-		$message['msg'] .= self::$bulk_warn;
+		$$message = str_replace('::bulk::', self::$bulk_warn);
 	}
 	$message['msg'] .= self::$closing;
 		
