@@ -464,30 +464,12 @@ function get_admin_text($code,$row){
     if (! in_array($code,array_keys(self::$lost_reasons))){
         return '';
     }
-  
-	$subscriber = ($row['no_bulk']) ? 'No' : 'Yes' ;
-$user_dataset = "
-User: ${row['username']}
----------------------
-   Email: ${row['user_email']} (Previously: ${row['prior_email']})
-   Receives weekly newsletter: $subscriber
-
-Activity
----------------------
-   Last login: ${row['last_login']}
-   Email last validated: ${row['email_last_validated']} (changed on: ${row['email_chg_date']})
-   Profile last validated: ${row['profile_validated']} (updated on: ${row['profile_updated']})
-
------------------------
-";
-
-$last = '';
-if (substr($code,0,1)=='L'){$last = "FINAL ATTEMPT";}
+$reason = self::$lost_reasons[$code];
+$last =  (substr($code,0,1)=='L')? "FINAL ATTEMPT" : '';
 
 $admin_message =	array(
 	'subj' => "Lost AMD Alumni ::name:: ($code)",
 	'msg' => "
-
 
 
  Click to verify your email:
@@ -497,7 +479,7 @@ $admin_message =	array(
 	Alert to FLAMES administrator :
 
     Email to FLAMES user ::name:: is apparently not getting through.
-	$this->lost_reasons.  The user has been set to Lost Status $code.
+	$reason.  The user has been set to Lost Status $code.
 
 	Please attempt to manually reconnect with this user.
 
