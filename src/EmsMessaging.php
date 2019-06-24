@@ -35,14 +35,13 @@ private static $lost_reasons = array(
 private static $user_messages = array(
 
 'N1'	=>	array(
-	'subj' => "AMD Alumni FLAMEs Signup Verification - Action Required!",
+	'subj' => "AMD FLAMEs Signup Verification",
 	'msg' => "
 
 	Thanks for signing up for the FLAMEs AMD Alumni News
 	site, ::name::.
 
-	To confirm your signup and receive a temporary password,
-	click on the link below:
+	To confirm your signup, click on the link below:
 		::verify::
 
 	You must confirm within 3 days to activate this signup.
@@ -51,11 +50,10 @@ private static $user_messages = array(
 	will review your signup and send you an email to confirm
 	your membership. This could take a day or two.
 
-	You will receive your personal login and have full access then.
 	"),
 
 'N2'	=>	array(
-	'subj' => "Please Confirm Your Email for AMD FLAMEs",
+	'subj' => "Confirm Your Signup for AMD FLAMEs",
 	'msg' => "
 
 	::name::, a few days ago we sent you an email asking you
@@ -63,8 +61,7 @@ private static $user_messages = array(
 	FLAMEs site. We haven't heard back from you.
 
 **************************************************
-	To confirm this is your correct email, please click on the
-	link below:
+	To confirm this is your email, click here:
 		::verify::
 ***************************************************
 
@@ -80,8 +77,8 @@ private static $user_messages = array(
 	Can you please confirm that this email is correct for you?
 
 ***************************************************
-	If this email <::current_email::> is correct, please just click on the
-	link below to confirm:
+	If this email <::current_email::> is correct, 
+	just click on the link below to confirm:
 		::verify::
 ***************************************************
 
@@ -111,19 +108,16 @@ private static $user_messages = array(
 	"),
 
 'E1'	=>	array(
-	'subj' => "Confirm your new email on the AMD Alumni Site",
+	'subj' => "Important: confirm your new email on the AMD Alumni Site",
 	'msg' => "
 
 	::name::, the email for your membership on the FLAMEs AMD Alumni
 	site has been updated from ::prior_email:: to ::current_email::.
 
 ***************************************************
-	YOU NEED TO CONFIRM THIS CHANGE BY CLICKING THE LINK BELOW NOW!
-
+	CONFIRM THIS CHANGE BY CLICKING THIS LINK!
 		::verify::
 ***************************************************
-
-	
 
 	"),
 
@@ -141,31 +135,27 @@ private static $user_messages = array(
 ***************************************************
 	If this is your correct new email, please
 	CLICK ON THE LINK BELOW to confirm:
-
 		::verify::
 ***************************************************
-
 	
 	"),
 
 'A1'	=>	array(
-	'subj' => "Confirm your email for AMD Flames.",
+	'subj' => "Confirm you're still around .",
 	'msg' => "
 
-    This is an email from the AMD Alumni Flames site to confirm that
-	we have your correct email in our member list.
+    This is an email from the AMD Alumni Flames site.  It has been
+    a long time since you logged in and we want to confirm that
+	 we have your correct email in our member list.  
 
 ***************************************************
   JUST CLICK THE LINK BELOW NOW to confirm that
-  this <::current_email::>  is your email:
-
+  you still get email at ::current_email::
        ::verify::
-
 ***************************************************
 
-
 	(Note: You can avoid these messages by logging into the web site
-	at least once a year.)
+	occasionally .)
 	"),
 
 'A2'	=>	array(
@@ -238,8 +228,38 @@ private static $user_messages = array(
 ")
 
     );
+    
+    private static $profile_message = "
+    Your profile has not been updated in more than 2 years.
+    Anything new?  Log in, go to profile, and edit.
+    ";
+    
+    private static $bulk_warn =	"
+	The FLAMEsite sends out an email whenever a new newsletter is
+    published, typically once a week.  YOU ARE NOT CURRENTLY RECEIVING
+    THIS.  If you'd like to keep informed about AMD alumni, log in,
+    go to your profile, edit,  and UNcheck the box 'No Email Updates'.
+	";
+	
+	private static $closing =  "
+	
+	If you've already verified your email, or you think this message
+	is in error, please email the admin by replying to this email, so
+	I can fix the problem. This email was sent by a dumb computer program
+	but your reply will be read by a human, namely me.
+
+	Also, if you want to change your email, just log into the site
+	and change it in your profile.
+
+--
+	Regards,
+	AMD FLAME site administrator
+	admin@amdflames.org
+";
+
+
+    // many more replacements added when a specific user is selected
    private $replacements = array (
-   '::no_bulk::' => "You don't subscribe to the weekly email.  Please reconsider.",
    
    
    );
@@ -255,8 +275,9 @@ private static $user_messages = array(
 	
 	private function get_user($uid) 
 	{
-	$sql = "SELECT user_id,username,user_email,prior_email,no_bulk,upw from `members_f2` 
-			WHERE user_id = $uid;";
+	$sql = "SELECT user_id,username,user_email,prior_email,no_bulk,upw,profile_updated,profile_validated
+		from `members_f2` 
+		WHERE user_id = $uid;";
 			
 		
 		 if (!$row = $this->pdo->query($sql)->fetch()){
@@ -264,12 +285,17 @@ private static $user_messages = array(
 		}
 		// enhance the info from the record
 		$login = $this->get_login_from_row($row);
+		$row['login'] = $login;
+		$row['profile_age'] = dmx\days_ago($row['profile_updated']);
+		
+			
+		
 		$this->replacements ['::login::'] = $login;
 		$this->replacements ['::verify::'] = SITE_URL . "/scripts/verify_email.php?s=$login";
 		$this->replacements['::name::'] = $row['username'];
 		$this->replacements['::current_email::'] = $row['user_email'];
 		$this->replacements ['::prior_email::'] = $row['prior_email'];
-		
+
 	return $row;
 	}
 	private function send_mail($data) {
@@ -307,7 +333,7 @@ private static $user_messages = array(
 			  throw new Exception ('bad update email call',"empty status with uid $uid");
 		 }
 		$row = $this->get_user($uid);
-		dmx\echor($this->replacements,'replacement data User');
+		#dmx\echor($this->replacements,'replacement data User');
 		#extract($row, EXTR_PREFIX_ALL, 'u');
 		
 #exit;
@@ -319,14 +345,22 @@ private static $user_messages = array(
 		 	if (! is_array($msg = $this->get_user_text($mstatus) )){
 		 		throw new Exception ( "Unrecognized ems $mstatus");
 		 	}
-	dmx\echor($msg,'empty message?');
-		 	
+	
 		 	if (empty($msg['subj'])){ #if empty, there is no user message
 		 		return;
 		 	}
 			$em['subj'] = $msg['subj'];
-			$em['msg'] = $this->replace_placeholders($msg['msg']);
-			  
+			$message = $this->replace_placeholders($msg['msg']);
+			
+			if ($row['profile_age'] > 700 ){
+				$message .= self::$profile_message;
+			}
+			if ($row['no_bulk'] == true){
+				$message .= self::$bulk_warn;
+			}
+			$message .= self::$closing;
+			
+			$em['msg'] = $message;
 			$em['to'] = $row['user_email'];
 			  
 			if (! $this->test ){
@@ -376,49 +410,17 @@ exit;
 	}
 	
 	
-private function get_user_text($code){
+private function get_user_text($code,$flags=[]){
 
 	if (! array_key_exists($code,self::$user_messages)){
 		return 'error';
 	}
-	#echo "starting get_user_text id $id, code $code. <br>";
-	/* returns array of subj,msg for this user for this code.
-	    returns empty array if no user message.
-	*/
-
-
-
-	#$profile_text = get_profile_message($row,'text');
-#echo "<br>retreiving profile message: $profile_text<br><br>";
-
-
-// if ($row['no_bulk']){$bulk_warn =	"
-// 	The FLAMEsite sends out an email whenever a new newsletter is
-//     published, typically once a week.  YOU ARE NOT CURRENTLY RECEIVING
-//     THIS.  If you'd like to keep informed about AMD alumni, go to your
-//     profile using the link below, and UNcheck the box 'No Email Updates'.
-// 	";
-// }
-// else {$bulk_warn='';}
-// 
-// $closing =  "
-// 	If you've already verified your email, or you think this message
-// 	is in error, please email the admin by replying to this email, so
-// 	I can fix the problem. This email was sent by a automated program
-// 	but your reply will be read by a human, namely me.
-// 
-// 	Also, if you want to change your email, just log into the site
-// 	and change it in your profile.
-// 
-// --
-// 	Regards,
-// 	AMD FLAME site administrator
-// 	admin@amdflames.org
-// 
-// ";
-// 
-  
-   return self::$user_messages[$code];
+	$msg = self::$user_messages[$code];
+	if (isset($flags['profile'])){
+		$msg .= self::$profile_message;
+	}
+	// is array of subj and msg
+   return $msg;
     
     
 }
