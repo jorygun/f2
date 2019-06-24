@@ -197,7 +197,6 @@ private static $user_messages = array(
 'A4'	=>	array(
 	'subj' => "AMD FLAMEs Email confirmation - Final Request",
 	'msg' => "
-
 	::name::, we have sent several emails over a few weeks
 	to confirm that your email address on the AMD Flames Alumni site
 	is correct.  This email isn't bouncing, but we haven't heard back
@@ -308,14 +307,14 @@ private static $user_messages = array(
 
 	return $row;
 	}
-	private function send_mail($data,$test) {
-	if (!$test)
-	 mail ($data['to'],$data['subj'],$data['msg'],data['header']);
-	else
-	 	dmx\echor ($data,'User Email');
-	 
 	
-}
+	
+	private function send_mail($data) {
+	if ($this->test)
+		dmx\echor ($data,'User Email');
+	else 	
+	 	mail ($data['to'],$data['subj'],$data['msg'],$data['header']);
+	}
 
 	private function get_login_from_row($row) 
 	{
@@ -363,14 +362,14 @@ private static $user_messages = array(
 		 	}
 		 	
 		 	$message = $this->replace_placeholders($msg['msg']);
-		 	#$message = dmx\email_std($message);
+		 	$message = dmx\email_std($message);
 		 	
 			$em['subj'] = $msg['subj'];
 			$em['msg'] = $message;
 			$em['to'] = $row['user_email'];
 			$em['header'] = $this->email_header;
 
-			$this->send_mail($em,$test);
+			$this->send_mail($em);
 		  }
 		  
 		  /* prepare email to admin
