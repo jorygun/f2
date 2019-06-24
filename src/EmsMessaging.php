@@ -19,7 +19,7 @@ use \Exception as Exception;
 class EmsMessaging 
 {
 // user will receive warning if profile update is over this number of days
-private static $profile_age_limit_days = 700;
+private static $profile_age_limit_days = 10;
 
 private static $lost_reasons = array(
 
@@ -303,7 +303,7 @@ private static $user_messages = array(
 	return $row;
 	}
 	private function send_mail($data) {
-	$data['headers'] = "From: AMD Flames Admin <admin@amdflames.org> \r\n";
+	
 	 mail ($data['to'],$data['subj'],$data['msg'],$data['headers']);
 	
 }
@@ -359,6 +359,7 @@ private static $user_messages = array(
 				
 			$em['msg'] = $message;
 			$em['to'] = $row['user_email'];
+			$em['header'] = 'From: AMD Flames Admin <admin@amdflames.org' . CRLF;
 			  
 			if (! $this->test ){
 				$this->send_mail($em);
@@ -374,7 +375,7 @@ private static $user_messages = array(
 		in the $lost_reasons array
 		*/
 		 if (in_array($mstatus, array_keys(self::$lost_reasons))) {
-			  $msg =  get_admin_text($mstatus,$row);
+			  $msg =  $this->get_admin_text($mstatus,$row);
 			  $em_subj = $msg['subj'];
 			  $em_msg = $msg['msg'];
 			  if (!empty($em_subj)){
