@@ -11,7 +11,7 @@ session_start();
 $pre_out = '';
 $repo = basename(dirname(__DIR__));
 
-if (!empty($req=$_SERVER['REQUEST_STRING'])){
+if (!empty($req=$_SERVER['QUERY_STRING'])){
 	$test = strpos($req,'t');
 	$vebose = strpos($req,'v');
 }
