@@ -230,6 +230,28 @@ private static $user_messages = array(
 
     );
     
+    private static $admin_message =	array(
+	'subj' => "Lost AMD Alumni",
+	'msg' => "
+
+
+ Click to verify your email:
+    ::verify::
+
+-----------------------------------------------------
+	Alert to FLAMES administrator :
+
+    FLAMES user ::name:: is apparently not getting email.
+    ::reason:: 
+	
+	The user has been set to Lost Status
+
+	Please attempt to manually reconnect with this user.
+
+	::user_dataset::
+	"
+	);
+
     private static $profile_message = "
     Your profile has not been updated in more than 2 years.
     Anything new?  Log in, go to profile, and edit.
@@ -411,12 +433,13 @@ Activity
 		in the $lost_reasons array
 		*/
 		if (! is_array($msg = $this->get_admin_text($mstatus,$row) )){
-			throw new Exception ( "Unrecognized ems $mstatus");
+			throw new Exception ( "Error getting admin message for  $mstatus");
 		}
 		 if (!empty($msg['subj'])
 		 	&& in_array($mstatus, array_keys(self::$lost_reasons)) ) { #otherwisee no admin msg
 			
 			  	$message = $this->replace_placeholders($msg['msg']);
+			  	$message = str_replace('::reason::',$msg['reason']);
 				$message = dmx\email_std($message);
 		 	
 			$em['subj'] = $msg['subj'];
@@ -476,34 +499,14 @@ private function get_user_text($code,$row){
 function get_admin_text($code,$row){
     // 
     if (! in_array($code,array_keys(self::$lost_reasons))){
-        return '';
+        return array('subj'=>''); #no message
     }
-$reason = self::$lost_reasons[$code];
-$last =  (substr($code,0,1)=='L')? "FINAL ATTEMPT" : '';
+   $message = self::$admin_message; #array of msg, subj
+	$message['reason'] = self::$lost_reasons[$code];
+	$message['subj'] .= " " . $row['username'] . " ($code) ";
+	
 
-$admin_message =	array(
-	'subj' => "Lost AMD Alumni ${row['username']} ($code)",
-	'msg' => "
-
-
- Click to verify your email:
-    ::verify::
-
------------------------------------------------------
-	Alert to FLAMES administrator :
-
-    FLAMES user ::name:: is apparently not getting email.
-	The user has been set to Lost Status $code.
-
-	Please attempt to manually reconnect with this user.
-
-	::user_dataset::
-	"
-	);
-
-
-#same messsage for all L codes
- return $admin_message;
+ 	return $message;
  }
 
 }
