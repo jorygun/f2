@@ -443,27 +443,28 @@ Activity
 
 			$this->send_mail($em);
 		}
+		
+		$this->update_db($uid,$mstatus);
+		
 	}
 	
-	private function update_db(){
+	private function update_db($uid,$mstatus){
 
-			  $sqla = array();
+			 
 			  #update the email status in the db.
 					// also sets user status if second char on status
-			  $sqla[] = "email_status = '$mstatus'";
-			  if (!empty($ustatus)){ #second char
-					$sqla[] = "status = '$ustatus' ";
-			  }
-			  if ($mstatus == 'Y'){$sqla[] = "email_last_validated = NOW()";}
+			 
+			  if ($mstatus == 'Y'){$validate = ", email_last_validated = NOW()";}
 
-			  if (!empty($sqla)){
-					$sqlj = implode(',',$sqla);
-					$sql = "UPDATE `members_f2`
-					SET $sqlj
-					WHERE id = '$id';";
-					if ($mode=='Real'){
-					 $result = mysqli_query($GLOBALS['DB_link'],$sql);
-					}
+				$sql = "UPDATE `members_f2`
+					SET email_status = '$mstatus'
+					$validate
+					WHERE user_id = '$uid';";
+					
+				if ($this->test){
+					echo "SQL (not done): $sql" . BRNL;
+				} else {
+				$result = $this->pdo->query($sql);
 			  }
 }
 	
