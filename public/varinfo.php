@@ -153,6 +153,6 @@ function echo_red ($t) {
 	
 }
 
-$em = new EmsMessaging($pdo); #,true for test
+$em = new EmsMessaging($pdo,true); #pdo,true for test
 $em->update_ems(11602,'A4');
 
