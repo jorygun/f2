@@ -11,9 +11,10 @@ session_start();
 $pre_out = '';
 $repo = basename(dirname(__DIR__));
 
-if (!empty($req=$_SERVER['QUERY_STRING'])){
-	$test = strpos($req,'t');
-	$vebose = strpos($req,'v');
+$req=$_SERVER['QUERY_STRING'];
+if (!empty($req)){
+	$test = (strpos($req,'t') !== false);
+	$vebose = (strpos($req,'v') !== false);
 }
 echo <<<EOT
 <html>
@@ -28,7 +29,7 @@ echo <<<EOT
 </style>
 </head>
 <body >
-varinfo.php - last updated $mtimet
+varinfo.php - last updated $mtimet<br>
 
 
 EOT;
