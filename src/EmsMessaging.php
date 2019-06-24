@@ -202,12 +202,12 @@ private static $user_messages = array(
 	is correct.  This email isn't bouncing, but we haven't heard back
 	from you, so we think you may not be using this address.
 
-**************************************************************************
+*******************************************************************
   IF THIS IS YOUR CORRECT EMAIL, PLEASE CLICK ON THE LINK BELOW:
   	::verify::
-**************************************************************************
+********************************************************************
 
-	If you have any questions or concerns, please contact the administrator.
+	If you have any questions or concerns, please contact me.
 	We don't want to lose track of you.  If you do not verify,
 	your user status will be set to 'Lost' and you won't receive any
 	more emails from us.  Maybe.
