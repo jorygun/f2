@@ -18,6 +18,9 @@ use \Exception as Exception;
 
 class EmsMessaging 
 {
+// user will receive warning if profile update is over this number of days
+private static $profile_age_limit_days = 700;
+
 private static $lost_reasons = array(
 
 
@@ -208,7 +211,7 @@ private static $user_messages = array(
 	If you have any questions or concerns, please contact the administrator.
 	We don't want to lose track of you.  If you do not verify,
 	your user status will be set to 'Lost' and you won't receive any
-	more emails from us.
+	more emails from us.  Maybe.
 	"),
 
 'D'	=>	array(
@@ -343,7 +346,7 @@ private static $user_messages = array(
 			no point in emailing if the user is marked as lost 
 		*/
 		if (substr($mstatus,0,1) != 'L'){ #not lost
-		 	if (! is_array($msg = $this->get_user_text($mstatus) )){
+		 	if (! is_array($msg = $this->get_user_text($mstatus,$row) )){
 		 		throw new Exception ( "Unrecognized ems $mstatus");
 		 	}
 	
@@ -353,14 +356,7 @@ private static $user_messages = array(
 			$em['subj'] = $msg['subj'];
 			$message = $this->replace_placeholders($msg['msg']);
 			
-			if ($row['profile_age'] > 700 ){
-				$message .= self::$profile_message;
-			}
-			if ($row['no_bulk'] == true){
-				$message .= self::$bulk_warn;
-			}
-			$message .= self::$closing;
-			
+				
 			$em['msg'] = $message;
 			$em['to'] = $row['user_email'];
 			  
@@ -372,8 +368,11 @@ private static $user_messages = array(
 
 		
 		  }
-exit;
-
+		  
+		  /* prepare email to admin
+		 statuses requiring admin email are identified
+		in the $lost_reasons array
+		*/
 		 if (in_array($mstatus, array_keys($lost_reasons))) {
 			  $msg =  get_admin_text($mstatus,$row);
 			  $em_subj = $msg['subj'];
@@ -411,17 +410,23 @@ exit;
 	}
 	
 	
-private function get_user_text($code,$flags=[]){
+private function get_user_text($code,$row){
 
 	if (! array_key_exists($code,self::$user_messages)){
 		return 'error';
 	}
-	$msg = self::$user_messages[$code];
-	if (isset($flags['profile'])){
-		$msg .= self::$profile_message;
+	$message = self::$user_messages[$code]; #array of msg, subj
+	
+	if ($row['profile_age'] > self::$profile_age_limit_days ){
+				$message['msg'] .= self::$profile_message;
 	}
+	if ($row['no_bulk'] == true){
+		$message['msg'] .= self::$bulk_warn;
+	}
+	$message['msg'] .= self::$closing;
+		
 	// is array of subj and msg
-   return $msg;
+   return $message;
     
     
 }
