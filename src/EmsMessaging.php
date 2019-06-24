@@ -247,8 +247,8 @@ private static $user_messages = array(
 	
 	If you've already verified your email, or you think this message
 	is in error, please email the admin by replying to this email, so
-	I can fix the problem. This email was sent by a dumb computer program
-	but your reply will be read by a human, namely me.
+	I can fix the problem. This email was sent by a dumb computer 
+	program but your reply will be read by a human, namely me.
 
 	Also, if you want to change your email, just log into the site
 	and change it in your profile.
