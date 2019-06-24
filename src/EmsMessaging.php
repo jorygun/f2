@@ -454,7 +454,8 @@ Activity
 			  #update the email status in the db.
 					// also sets user status if second char on status
 			 
-			  if ($mstatus == 'Y'){$validate = ", email_last_validated = NOW()";}
+			  $validate = ($mstatus == 'Y') ? 
+			  	", email_last_validated = NOW()" : '';
 
 				$sql = "UPDATE `members_f2`
 					SET email_status = '$mstatus'
