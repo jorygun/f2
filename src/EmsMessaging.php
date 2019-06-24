@@ -234,17 +234,10 @@ private static $user_messages = array(
 	'subj' => "Lost AMD Alumni",
 	'msg' => "
 
-
- Click to verify your email:
-    ::verify::
-
------------------------------------------------------
 	Alert to FLAMES administrator :
 
     FLAMES user ::name:: is apparently not getting email.
     ::reason:: 
-	
-	The user has been set to Lost Status
 
 	Please attempt to manually reconnect with this user.
 
