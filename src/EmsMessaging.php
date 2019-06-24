@@ -404,9 +404,19 @@ Activity
 		 if (in_array($mstatus, array_keys(self::$lost_reasons))) {
 			  $msg =  $this->get_admin_text($mstatus,$row);
 			  $em_subj = $msg['subj'];
-			  $em_msg = $msg['msg'];
-			  if (!empty($em_subj)){
-					send_admin($em_subj,$em_msg,$row['user_email']);
+			  
+			  
+			  if (empty($em_subj)){return;}
+			  
+			  	$message = $this->replace_placeholders($msg['msg']);
+				$message = dmx\email_std($message);
+		 	
+			$em['subj'] = $msg['subj'];
+			$em['msg'] = $message;
+			$em['to'] = 'admin@amdflames.org,'. $row['user_email'];
+			$em['header'] =  $this->email_header;
+
+			$this->send_mail($em);
 				}
 		 }
 exit;
