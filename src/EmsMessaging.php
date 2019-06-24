@@ -334,13 +334,18 @@ Activity
 }
 
 	private function send_mail($data) {
+	//$data arry for to,subj,msg, and header
+	//header is array to be joined to make header
+	$header='';
+	$header_array = $data['header'];
+	foreach ($header_array as $key=>$val){
+		$header .= $key . ': ' . $val . "\r\n";
+	}
+	
 	if ($this->test)
 		dmx\echor ($data,'User Email');
+		echo "Header: $header";
 	else 	
-		$header='';
-		foreach ($data['header'] as $key=>$val){
-			$header .= $key . ': ' . $val . "\r\n";
-		}
 	 	mail ($data['to'],$data['subj'],$data['msg'],$header);
 	}
 
@@ -380,7 +385,8 @@ Activity
 		}
 		
 		if (!empty($msg['subj'])
-			&&  substr($mstatus,0,1) != 'L'){ #if empty, there is no user message
+			&&  substr($mstatus,0,1) != 'L'){ 
+			#if empty or lost, there is no user message
 		 		
 		 	// produce user email
 		 	$message = $this->replace_placeholders($msg['msg']);
