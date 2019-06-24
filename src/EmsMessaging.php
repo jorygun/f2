@@ -268,11 +268,11 @@ private static $user_messages = array(
 	private $user_dataset;
 	
 	// std header for outgoing emails, but can be changed before using
-	private $email_header = 
-		"From: AMD Flames Admin <admin@amdflames.org>\r\n"
-		. "Errors-to: postmaster@amdflames.org\r\n"
-		. "Content-type: text/plain; charset=utf8\r\n"
-		;
+	private $email_header_array = array(
+		"Errors-to" => "postmaster@amdflames.org",
+		"Content-type" => 'text/plain; charset=utf8',
+		"From" => 'AMD Flames Admin <admin@amdflames.org'
+		);
 	
 	
 	public function __construct($pdo,$test=false) {
@@ -337,7 +337,11 @@ Activity
 	if ($this->test)
 		dmx\echor ($data,'User Email');
 	else 	
-	 	mail ($data['to'],$data['subj'],$data['msg'],$data['header']);
+		$header='';
+		foreach ($data['header'] as $key=>$val){
+			$header .= $key . ': ' . $val . "\r\n";
+		}
+	 	mail ($data['to'],$data['subj'],$data['msg'],$header);
 	}
 
 	private function get_login_from_row($row) 
@@ -385,7 +389,7 @@ Activity
 			$em['subj'] = $msg['subj'];
 			$em['msg'] = $message;
 			$em['to'] = $row['user_email'];
-			$em['header'] = $this->email_header;
+			$em['header'] = $this->email_header_array;
 
 			$this->send_mail($em);
 		}
@@ -405,8 +409,9 @@ Activity
 		 	
 			$em['subj'] = $msg['subj'];
 			$em['msg'] = $message;
-			$em['to'] = 'admin@amdflames.org,'. $row['user_email'];
-			$em['header'] =  $this->email_header;
+			$em['to'] = 'admin@amdflames.org';
+			$em['header'] =  $this->email_header_array;
+			$em['header']['From'] = $row['user_email'];
 
 			$this->send_mail($em);
 		}
