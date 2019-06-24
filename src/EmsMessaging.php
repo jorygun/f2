@@ -363,7 +363,7 @@ private static $user_messages = array(
 		 	}
 		 	
 		 	$message = $this->replace_placeholders($msg['msg']);
-		 	$message = dmx\email_std($message);
+		 	#$message = dmx\email_std($message);
 		 	
 			$em['subj'] = $msg['subj'];
 			$em['msg'] = $message;
