@@ -260,12 +260,8 @@ private static $user_messages = array(
 
 
     // many more replacements added when a specific user is selected
-   private $replacements = array (
+   private $replacements = array ();
    
-   
-   );
-   
-    
 	private $pdo;
 	private $test;
 	
@@ -320,14 +316,17 @@ private static $user_messages = array(
 	$dataset = "
 User: ${row['username']}
 ---------------------
-   Email: ${row['user_email']} (Previously: ${row['prior_email']})
+   Email: ${row['user_email']} 
+      (Previously: ${row['prior_email']})
    Receives weekly newsletter: $subscriber
 
 Activity
 ---------------------
    Last login: ${row['last_login']}
-   Email last validated: ${row['email_last_validated']} (changed on: ${row['email_chg_date']})
-   Profile last validated: ${row['profile_validated']} (updated on: ${row['profile_updated']})
+   Email last validated: ${row['email_last_validated']} 
+      (changed on: ${row['email_chg_date']})
+   Profile last validated: ${row['profile_validated']} 
+      (updated on: ${row['profile_updated']})
 
 -----------------------
 ";
@@ -346,10 +345,8 @@ Activity
 		$login = $row['upw'] . $row['user_id'];
 		return $login;
 	}
-	private function show_message($data)
-	{
-		dmx\echor ($data,'email message data');
-	}
+	
+	
 	private function replace_placeholders ($msg) 
 	{
 		foreach ($this->replacements as $key=>$val){
@@ -361,31 +358,27 @@ Activity
 	{
 	 
 		 // do not update if mode = Test
-		 #echo "Updating status for id $id, status $mstatus\n";
+		 #echo "Updating status for uid $uid, status $mstatus\n";
 	
-
-		 $em_subj = '';
-		 #updates status, sends emails
 		 if(empty($mstatus)){
 			  throw new Exception ('bad update email call',"empty status with uid $uid");
 		 }
 		$row = $this->get_user($uid);
-		#dmx\echor($this->replacements,'replacement data User');
-		#extract($row, EXTR_PREFIX_ALL, 'u');
+		# $this->test && dmx\echor($this->replacements,'replacement data User');
 		
-#exit;
 		
 		/* Get email template for user
 			no point in emailing if the user is marked as lost 
 		*/
-		if (substr($mstatus,0,1) != 'L'){ #not lost
-		 	if (! is_array($msg = $this->get_user_text($mstatus,$row) )){
-		 		throw new Exception ( "Unrecognized ems $mstatus");
-		 	}
-		if (empty($msg['subj'])){ #if empty, there is no user message
-		 		return;
-		 	}
-		 	
+		
+		if (! is_array($msg = $this->get_user_text($mstatus,$row) )){
+			throw new Exception ( "Unrecognized ems $mstatus");
+		}
+		
+		if (!empty($msg['subj'])
+			&&  substr($mstatus,0,1) != 'L'){ #if empty, there is no user message
+		 		
+		 	// produce user email
 		 	$message = $this->replace_placeholders($msg['msg']);
 		 	$message = dmx\email_std($message);
 		 	
@@ -395,18 +388,18 @@ Activity
 			$em['header'] = $this->email_header;
 
 			$this->send_mail($em);
-		  }
+		}
 		  
 		  /* prepare email to admin
 		 statuses requiring admin email are identified
 		in the $lost_reasons array
 		*/
-		 if (in_array($mstatus, array_keys(self::$lost_reasons))) {
-			  $msg =  $this->get_admin_text($mstatus,$row);
-			  $em_subj = $msg['subj'];
-			  
-			  if (empty($em_subj)){return;}
-			  
+		if (! is_array($msg = $this->get_admin_text($mstatus,$row) )){
+			throw new Exception ( "Unrecognized ems $mstatus");
+		}
+		 if (!empty($msg['subj'])
+		 	&& in_array($mstatus, array_keys(self::$lost_reasons)) ) { #otherwisee no admin msg
+			
 			  	$message = $this->replace_placeholders($msg['msg']);
 				$message = dmx\email_std($message);
 		 	
@@ -472,7 +465,7 @@ $reason = self::$lost_reasons[$code];
 $last =  (substr($code,0,1)=='L')? "FINAL ATTEMPT" : '';
 
 $admin_message =	array(
-	'subj' => "Lost AMD Alumni ::name:: ($code)",
+	'subj' => "Lost AMD Alumni ${row['username']} ($code)",
 	'msg' => "
 
 
@@ -482,8 +475,8 @@ $admin_message =	array(
 -----------------------------------------------------
 	Alert to FLAMES administrator :
 
-    Email to FLAMES user ::name:: is apparently not getting through.
-	$reason.  The user has been set to Lost Status $code.
+    FLAMES user ::name:: is apparently not getting email.
+	The user has been set to Lost Status $code.
 
 	Please attempt to manually reconnect with this user.
 
