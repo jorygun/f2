@@ -283,7 +283,8 @@ private static $user_messages = array(
 	
 	private function get_user($uid) 
 	{
-	$sql = "SELECT user_id,username,user_email,prior_email,no_bulk,upw,profile_updated,profile_validated
+	$sql = "SELECT user_id,username,user_email,prior_email,no_bulk,upw,profile_updated,profile_validated,
+	last_login,email_last_validated,email_chg_date
 		from `members_f2` 
 		WHERE user_id = $uid;";
 			
@@ -435,21 +436,12 @@ private function get_user_text($code,$row){
 }
 
 function get_admin_text($code,$row){
-    // will only be lost status codes here
-$null_msg =  array(
-    'subj' => '',
-    'msg' => ''
-    );
-
-
+    // 
     if (! in_array($code,array_keys(self::$lost_reasons))){
         return [];
     }
-    #otherwise...
-
-
-
-
+  
+	$subscriber = ($row['no_bulk']) ? 'No' : 'Yes' ;
 $user_dataset = "
 User: ${row['username']}
 ---------------------
