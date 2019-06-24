@@ -334,21 +334,24 @@ Activity
 }
 
 	private function send_mail($data) {
-	//$data arry for to,subj,msg, and header
-	//header is array to be joined to make header
-	$header='';
-	$header_array = $data['header'];
-	foreach ($header_array as $key=>$val){
-		$header .= $key . ': ' . $val . "\r\n";
+		//$data arry for to,subj,msg, and header
+		//header is array to be joined to make header
+		$header='';
+		$header_array = $data['header'];
+		foreach ($header_array as $key=>$val){
+			$header .= $key . ': ' . $val . "\r\n";
+		}
+	
+		if ($this->test) {
+			dmx\echor ($data,'User Email');
+			echo "Header: $header";
+		} else  {	
+			mail ($data['to'],$data['subj'],$data['msg'],$header);
+		}
+
+		return true;
 	}
 	
-	if ($this->test)
-		dmx\echor ($data,'User Email');
-		echo "Header: $header";
-	else 	
-	 	mail ($data['to'],$data['subj'],$data['msg'],$header);
-	}
-
 	private function get_login_from_row($row) 
 	{
 		$login = $row['upw'] . $row['user_id'];
