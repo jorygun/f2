@@ -439,7 +439,7 @@ Activity
 		 	&& in_array($mstatus, array_keys(self::$lost_reasons)) ) { #otherwisee no admin msg
 			
 			  	$message = $this->replace_placeholders($msg['msg']);
-			  	$message = str_replace('::reason::',$msg['reason']);
+			  	$message = str_replace('::reason::',$msg['reason'],$message);
 				$message = dmx\email_std($message);
 		 	
 			$em['subj'] = $msg['subj'];
