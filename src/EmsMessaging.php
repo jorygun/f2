@@ -291,7 +291,8 @@ private static $user_messages = array(
 			
 		
 		$this->replacements ['::login::'] = $login;
-		$this->replacements ['::verify::'] = SITE_URL . "/scripts/verify_email.php?s=$login";
+		$verify_code =  SITE_URL . "/scripts/verify_email.php?s=$login";
+		$this->replacements ['::verify::'] = "<a href='$verify_code'>$verify_code</a>";
 		$this->replacements['::name::'] = $row['username'];
 		$this->replacements['::current_email::'] = $row['user_email'];
 		$this->replacements ['::prior_email::'] = $row['prior_email'];
