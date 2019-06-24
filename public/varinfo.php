@@ -1,7 +1,7 @@
 <?php
 namespace digitalmx\flames;
 
-$verbose = false;
+$verbose = false; $test = false;
 
 ini_set('display_errors', 1);
 $mtimet = date('d M H:i',filemtime(__FILE__));
@@ -11,6 +11,10 @@ session_start();
 $pre_out = '';
 $repo = basename(dirname(__DIR__));
 
+if (!empty($req=$_SERVER['REQUEST_STRING'])){
+	$test = strpos($req,'t');
+	$vebose = strpos($req,'v');
+}
 echo <<<EOT
 <html>
 <head>
@@ -153,6 +157,6 @@ function echo_red ($t) {
 	
 }
 
-$em = new EmsMessaging($pdo,true); #pdo,true for test
+$em = new EmsMessaging($pdo,$test); #pdo,true for test
 $em->update_ems(11602,'A4');
 
