@@ -439,31 +439,14 @@ $null_msg =  array(
     'msg' => ''
     );
 
-     $lost_reasons = define_lost_reasons();
 
-    if (! in_array($code,array_keys($lost_reasons))){
-        return $null_msg;
+    if (! in_array($code,array_keys(self::$lost_reasons))){
+        return [];
     }
     #otherwise...
 
-	$login = get_login_from_row($row);
-	$verify = "${GLOBALS['siteurl']}/scripts/verify_email.php?s=$login";
-	$login_url = get_login_from_row($row,'link');
-	$name = $row['username'];
-	$profile_url = get_profile_message($row,'text');
-    $login_link = "https://amdflames.org?s=$login";
-
-$subscriber = $row['no_bulk']?
-    "No"
-    :
-    'Yes';
 
 
-$please_subscribe =  $row['no_bulk']?
- "   Please consider subscribing to the short weekly email update.
-     Log in, edit profile, and UNCLICK 'Opt out of Weekly Update'.\n"
-    :
-    '';
 
 $user_dataset = "
 User: ${row['username']}
