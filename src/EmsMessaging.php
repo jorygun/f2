@@ -304,7 +304,7 @@ private static $user_messages = array(
 	}
 	private function send_mail($data) {
 	
-	 mail ($data['to'],$data['subj'],$data['msg'],$data['headers']);
+	 mail ($data['to'],$data['subj'],$data['msg'],$data['header']);
 	
 }
 
