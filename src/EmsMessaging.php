@@ -270,11 +270,12 @@ private static $user_messages = array(
 	private $pdo;
 	private $test;
 	// std header for outgoing emails, but can be changed before using
-	private $email_header = array (
-		'From' => 'AMD Flames Admin <admin@amdflames.org>',
-		'Errors-to' => 'postmaster@amdflames.org',
-		"Content-type" => 'text/plain; charset=utf8'
-	);
+	private $email_header = "
+		From: AMD Flames Admin <admin@amdflames.org>\r\n
+		Errors-to: postmaster@amdflames.org\r\n
+		Content-type: text/plain; charset=utf8\r\n
+		";
+	
 	
 	public function __construct($pdo,$test=false) {
 		$this->pdo = $pdo;
