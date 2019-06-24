@@ -270,6 +270,12 @@ private static $user_messages = array(
     
 	private $pdo;
 	private $test;
+	// std header for outgoing emails, but can be changed before using
+	private $email_header = array (
+		'From' => 'AMD Flames Admin <admin@amdflames.org>',
+		'Errors-to' => 'postmaster@amdflames.org',
+		"Content-type" => 'text/plain; charset=utf8'
+	);
 	
 	public function __construct($pdo,$test=false) {
 		$this->pdo = $pdo;
@@ -302,9 +308,12 @@ private static $user_messages = array(
 
 	return $row;
 	}
-	private function send_mail($data) {
-	
-	 mail ($data['to'],$data['subj'],$data['msg'],$data['header']);
+	private function send_mail($data,$test) {
+	if (!$test)
+	 mail ($data['to'],$data['subj'],$data['msg'],data['header']);
+	else
+	 	dmx\echor ($data,'User Email');
+	 
 	
 }
 
@@ -349,25 +358,19 @@ private static $user_messages = array(
 		 	if (! is_array($msg = $this->get_user_text($mstatus,$row) )){
 		 		throw new Exception ( "Unrecognized ems $mstatus");
 		 	}
-	
-		 	if (empty($msg['subj'])){ #if empty, there is no user message
+		if (empty($msg['subj'])){ #if empty, there is no user message
 		 		return;
 		 	}
+		 	
+		 	$message = $this->replace_placeholders($msg['msg']);
+		 	$message = dmx\email_std($message);
+		 	
 			$em['subj'] = $msg['subj'];
-			$message = $this->replace_placeholders($msg['msg']);
-			
-				
 			$em['msg'] = $message;
 			$em['to'] = $row['user_email'];
-			$em['header'] = 'From: AMD Flames Admin <admin@amdflames.org' . CRLF;
-			  
-			if (! $this->test ){
-				$this->send_mail($em);
-			} else {
-				$this->show_message($em);
-			}
+			$em['header'] = $this->email_header;
 
-		
+			$this->send_mail($em,$test);
 		  }
 		  
 		  /* prepare email to admin
