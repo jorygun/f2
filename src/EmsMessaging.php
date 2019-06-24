@@ -373,7 +373,7 @@ private static $user_messages = array(
 		 statuses requiring admin email are identified
 		in the $lost_reasons array
 		*/
-		 if (in_array($mstatus, array_keys($lost_reasons))) {
+		 if (in_array($mstatus, array_keys(self::$lost_reasons))) {
 			  $msg =  get_admin_text($mstatus,$row);
 			  $em_subj = $msg['subj'];
 			  $em_msg = $msg['msg'];
@@ -381,7 +381,7 @@ private static $user_messages = array(
 					send_admin($em_subj,$em_msg,$row['user_email']);
 				}
 		 }
-
+exit;
 			  $sqla = array();
 			  #update the email status in the db.
 					// also sets user status if second char on status
