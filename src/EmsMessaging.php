@@ -271,7 +271,7 @@ private static $user_messages = array(
 	private $email_header_array = array(
 		"Errors-to" => "postmaster@amdflames.org",
 		"Content-type" => 'text/plain; charset=utf8',
-		"From" => 'AMD Flames Admin <admin@amdflames.org'
+		"From" => 'AMD Flames Admin <admin@amdflames.org>'
 		);
 	
 	
