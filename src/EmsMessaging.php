@@ -343,8 +343,10 @@ Activity
 		}
 	
 		if ($this->test) {
-			dmx\echor ($data,'User Email');
-			echo "Header: $header";
+			echo "send_email data" . BRNL;
+			echo "Header:" . htmlentities( $header) ;
+			dmx\echor ($data,'data array');
+			
 		} else  {	
 			mail ($data['to'],$data['subj'],$data['msg'],$header);
 		}
