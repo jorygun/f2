@@ -118,7 +118,7 @@ $navbar = $nav -> build_menu();
 		        }
 
 if (isset($_SESSION['pwid'])){
-    if(in_array($user_status,$G_member_status_array) or $user_status == 'GA'){
+    if(in_array($user_status,Defs::getMemberInList()) or $user_status == 'GA'){
 		echo <<< EOT
 		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#efe;'>
 
@@ -249,7 +249,7 @@ if (isset($_SESSION['pwid'])){echo "<p><small>user: $username S:$sl </small></p>
 
 <?
 function age_warnings ($id){
-	global $G_ems_defs;
+	
 	if ($_SESSION['status'] == 'GA'){return;} #anonymous guest
 
 	// set up all varioables
@@ -259,16 +259,14 @@ function age_warnings ($id){
 
 	$email_status = $_SESSION['DB']['email_status'];
 	$email_status_time = $_SESSION['DB']['email_status_time'];
-	$email_status_description = $G_ems_defs[$email_status];
+	$email_status_description = Defs::getEmsName($email_status);
 
 	list ($profile_age,$last_profile) = age( $_SESSION['DB']['profile_updated']);
     list ($email_age,$last_verify) = age ( $_SESSION['DB']['email_last_validated']);
     list ($profile_validated_age,$profile_last_validated) = age ($_SESSION['DB']['profile_validated']);
 
 
-	$G_stale_data_limit = Defs::$stale_date_limit;
-
-	$G_member_status_array = Defs::getMemberInList();
+	$stale_data_limit = Defs::$stale_date_limit;
 
 
 	$user_status = $_SESSION['DB']['status'];
@@ -288,7 +286,7 @@ function age_warnings ($id){
 
 		if (1
 			&& ($email_status<>'Y' and $email_status <>'Q')
-			&& (in_array($user_status,$G_member_status_array))
+			&& (in_array($user_status,Defs::getMemberInList()))
 		){
 			$update_scratch .= <<< EOT
 			<p>There is a problem with your email $H_user_email.
@@ -303,13 +301,13 @@ EOT;
 	}
 	// check profile
 
-		if ( ($profile_validated_age>$G_stale_data_limit) ){ $update_scratch .= <<< EOT
+		if ( ($profile_validated_age>$stale_data_limit) ){ $update_scratch .= <<< EOT
 
 		<p>Your profile has not been validated since $profile_last_validated.  Please look it over at <a href="/scripts/profile_update.php">edit profile</a>.  You can update it or just verify that it's current.  </p>
 EOT;
 		}
 	// check email age
-		if (0 or ($email_age>$G_stale_data_limit)){ $update_scratch .= <<< EOT
+		if (0 or ($email_age>$stale_data_limit)){ $update_scratch .= <<< EOT
 
 		<p>Your email has not been verified since $last_verify.  Please look it over in your profile at <a href="/scripts/profile_update.php">edit profile</a>.  You can update it or just verify that it's current.  </p>
 EOT;
