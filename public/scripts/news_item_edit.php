@@ -580,7 +580,9 @@ function initialize_row () {
         'url'=>'',
         'link_title' => '',
         'ed_comment' => '',
-
+			'asset_id' => '',
+			'asset_list'=>'',
+			
         'contributor'	=>	$_SESSION['username'],
         'contributor_id'	=>	$_SESSION['user_id'],
         'status'	=>	'N',
