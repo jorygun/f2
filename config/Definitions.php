@@ -177,6 +177,7 @@ private static $member_codes = array (
 	);
 
 public static $stale_date_limit = 365; #days
+public static $test = 'you win';
 
 ######## Getters
 	/* returns the list at teh var */
