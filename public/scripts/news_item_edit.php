@@ -572,7 +572,7 @@ function initialize_row () {
     $form = array (
         'date_entered'	=>	sql_now('date'),
 
-        'date_edited' => sql_new('date'),
+        'date_edited' => sql_nww('date'),
         
 
         'contributor'	=>	$_SESSION['username'],
