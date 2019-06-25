@@ -5,7 +5,9 @@
 //BEGIN START
 	require_once "init.php";
 	if (f2_security_below(0)){exit;}
-	$path_check = dirname(__DIR__);
+	
+	use \digitalmx\flames\Definitions as Defs;
+	
 	
 //END START
 if (isset($_SESSION['pwid'])){ #user is logged in
@@ -232,7 +234,7 @@ EOT;
 if (isset($_SESSION['pwid'])){echo "<p><small>user: $username S:$sl </small></p>";
 //echo "<p>Current login: $_SESSION[username]; status: $_SESSION[status] ($_SESSION[type] on $_SESSION[status_updated]) seclev $_SESSION[level]</p>\n";
 }
-if ($_SESSION['level'] > 7){echo "path: $path_check<br>\n";}
+
 
 ?>
 </div>
