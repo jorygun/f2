@@ -21,9 +21,9 @@ $navbar = $nav -> build_menu();
 		$latest_sweeps = get_recent_files(7,SITE_PATH . "/logs/sweep_logs");
 	#	echo print_r($latest_sweeps,true);
 		$latest_sweep_list = "<ul>\n";
-		foreach ($latest_sweeps as $f){
-		    $latest_sweep_list .= "<li><a href='/logs/sweep_logs/$f' target='sweep_log'>$f</a></li>";
-		}
+			// foreach ($latest_sweeps as $f){
+// 				 $latest_sweep_list .= "<li><a href='/logs/sweep_logs/$f' target='sweep_log'>$f</a></li>";
+// 			}
 		$latest_sweep_list .= "</ul>\n";
 
 
@@ -195,7 +195,7 @@ function search($post,$members_db){
 <h1>User Admin</h1>
 <?
 	$status_options = "<option value=''>Choose...</option>";
-	foreach (array('M','R','G','MC','MU','MN','N','T','I') as $v){
+	foreach (array('M','G','MC','MU','MN','N','T','I') as $v){
 		$desc = Defs::getMemberDescription($v);
 		$status_options .= "<option value='$v'>$v ($desc)</option>";
 	}
