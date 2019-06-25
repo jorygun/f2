@@ -176,7 +176,7 @@ private static $member_codes = array (
 	'M', 'MA','MN','MC','MU','R','G'
 	);
 
-public static $stale_date_limit = 365; #days
+public static $stale_date_limit = 365;   #days
 public static $test = 'you win';
 
 ######## Getters
