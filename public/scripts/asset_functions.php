@@ -972,7 +972,7 @@ function post_asset($post_array){
    	 $post_array['link'] = $link;
    	}
    	$linkdata = add_link_data($link);
-   	array_merge ($post_array,$linkdata);
+   	$post_array = array_merge ($post_array,$linkdata);
    	
     echo "post_array[link] set to $link" . BRNL;
   
