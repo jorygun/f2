@@ -977,19 +977,23 @@ function post_asset($post_array){
     echo "post_array[link] set to $link" . BRNL;
   
     	#now check for separate thumb file source
+	 	#remove old duplicate of link
+	 	if ($post_array['url'] == $post_array['link'] ){
+	 		$post_array['url'] = '';
+	 	}
 	 	
 	 	if (!empty($_FILES['upfile']['name'])) {
-	 	
-	 	
 	 		$thumb_source = relocate ($id,'thumb_upload' );
-	 	} elseif (!empty ($post_array['url'])){
+	 		$post_array['url'] = $thumb_source;
+	 	}
+	 	if (!empty ($post_array['url'])){
 	 		$thumb_source = $post_array['url'];
 	 	} else {
 	 		$thumb_source = $link;
 	 	}
 	 	
 	
-  $post_array['url'] = $thumb_source;
+  
 
  #test to see if url has changed; if so update thumb
      $row = $pdo->query("SELECT link,url from `assets` where id = $id;")->fetch(PDO::FETCH_ASSOC);
