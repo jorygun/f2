@@ -453,7 +453,7 @@ $about_articles
 <tr><td width='160'>Topic: $required_text</td><td><select name='type' id='topic'> $typeoptions</select></td></tr>
 
 
-<tr><td >Item Title $required_text</td><td><input type='text' size='60' name='title' id='title' value="${form_data['title']}"></td></tr>
+<tr><td >Item Title $required_text</td><td><input type='text' size='60' name='title' id='title' value="${row['title']}"></td></tr>
 
 <tr><td>Contributed by: </td><td><input type='text' name='contributor' value='${row['contributor']}' onfocus="form.contributor_id.value='';">
 
