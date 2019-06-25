@@ -263,9 +263,9 @@ function age_warnings ($id){
     list ($profile_validated_age,$profile_last_validated) = age ($_SESSION['DB']['profile_validated']);
 
 
-	global $G_stale_data_limit;
+$G_stale_data_limit = Defs::$stale_data_limit;
 
-	global $G_member_status_array;
+	$G_member_status_array = Defs::getMemberInList();
 
 
 	$user_status = $_SESSION['DB']['status'];
