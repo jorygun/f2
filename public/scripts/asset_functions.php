@@ -445,7 +445,7 @@ function list_numbers($text){
 }
 
 
-function create_thumb($id,$fsource,$type='thumbs'){
+function create_thumb($id,$fsource,$ttype='thumbs'){
 
     global $image_extensions;
     global $document_extensions;
@@ -459,7 +459,7 @@ function create_thumb($id,$fsource,$type='thumbs'){
 	
 	fsource is url to source (from asset url column).  Maybe remote or local
 	
-    Type is array of types:
+    tType is array of types:
     If thumbs, creates a 200w thumb in the thumb file.
     If galleries, it creates a 300w copy
     If toons, it creates an 800w copy.
@@ -475,8 +475,8 @@ function create_thumb($id,$fsource,$type='thumbs'){
  */
  	$fsource = trim($fsource);
  	
- 	#check to see if type requested is recognized width
-    if (! $max_dim = $thumb_width[$type]){die ("Invalid type requested for thumbnail: $type");}
+ 	#check to see if ttype requested is recognized width
+    if (! $max_dim = $thumb_width[$ttype]){die ("Invalid thumb type requested for thumbnail: $ttype");}
    
     if (empty($fsource)){die ("No file specified to create thumb  from.<br>\n");}
     else {echo "Creating thumb from $fsource" . BRNL;}
@@ -488,7 +488,7 @@ function create_thumb($id,$fsource,$type='thumbs'){
 		$yturl = "http://img.youtube.com/vi/$videoid/mqdefault.jpg" ;
 		#echo "yturl $yturl". BRNL;
 		$thumb = "${id}.jpg";
-		copy ($yturl , SITE_PATH . "/assets/$type/$thumb"); 
+		copy ($yturl , SITE_PATH . "/assets/$ttype/$thumb"); 
 		return $thumb;
 	   
 	}
@@ -515,7 +515,7 @@ function create_thumb($id,$fsource,$type='thumbs'){
 		case 'application/msword' :
 			$use_icon="doc.jpg";
 			$thumb = "${id}.jpg";
-			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb"); 
 			return $thumb;
 			break;
 		case 'application/pdf' :
@@ -523,19 +523,19 @@ function create_thumb($id,$fsource,$type='thumbs'){
 		case 'image/jpeg':
 		case 'image/png':
 		case 'image/tiff':
-			$thumb = build_im_thumbnail($id,$source_path,$type,$max_dim);
+			$thumb = build_im_thumbnail($id,$source_path,$ttype,$max_dim);
 			return $thumb;
 			break;
 		case 'text/html':
 			$use_icon="web.jpg";
 			$thumb = "${id}.jpg";
-			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb"); 
 			return $thumb;
 			break;
 		case 'video/mp4':
 			$use_icon = 'mp4.jpg';
 			$thumb = "${id}.jpg";
-			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb"); 
 			return $thumb;
 			break;
 		case 'audio/mp3':
@@ -543,20 +543,20 @@ function create_thumb($id,$fsource,$type='thumbs'){
 			$ext = substr($source_mime,6,3);
 			$use_icon = "${ext}.jpg";
 			$thumb = "${id}.jpg";
-			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb"); 
 			return $thumb;
 			break;
 		case 'video/quicktime':
 			$use_icon = 'mov.jpg';
 			$thumb = "${id}.jpg";
-			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb"); 
 			return $thumb;
 			break;
 			
 		default:
 			$use_icon = 'default.jpg';
 			$thumb = "${id}.jpg";
-			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$type/$thumb"); 
+			copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb"); 
 			return $thumb;
 			break;
 			
@@ -568,7 +568,7 @@ function create_thumb($id,$fsource,$type='thumbs'){
 
 }
 
-function build_im_thumbnail ($id,$source,$type,$max_dim){
+function build_im_thumbnail ($id,$source,$ttype,$max_dim){
     $thumb = $id . '.jpg';
     if (mime_content_type ($source ) == 'application/pdf'){
     	$source = trim($source) . '[0]'; #page 1
@@ -576,7 +576,7 @@ function build_im_thumbnail ($id,$source,$type,$max_dim){
      $im = new imagick ( $source);
     $im->setImageFormat('jpg');
     $im->thumbnailImage($max_dim, $max_dim,true); #best fit
-    $im->writeImage(SITE_PATH . "/assets/$type/$thumb");
+    $im->writeImage(SITE_PATH . "/assets/$ttype/$thumb");
     return $thumb;
 }
 
@@ -971,22 +971,29 @@ function post_asset($post_array){
 		 $post_array['sizekb'] =  round(filesize(SITE_PATH . "/$link")/1000,0);
    	 $post_array['link'] = $link;
    	}
+   	$linkdata = add_link_data($link);
+   	$post_array = array_merge ($post_array,$linkdata);
+   	
     echo "post_array[link] set to $link" . BRNL;
   
     	#now check for separate thumb file source
+	 	#remove old duplicate of link
+	 	if ($post_array['url'] == $post_array['link'] ){
+	 		$post_array['url'] = '';
+	 	}
 	 	
 	 	if (!empty($_FILES['upfile']['name'])) {
-	 	
-	 	
 	 		$thumb_source = relocate ($id,'thumb_upload' );
-	 	} elseif (!empty ($post_array['url'])){
+	 		$post_array['url'] = $thumb_source;
+	 	}
+	 	if (!empty ($post_array['url'])){
 	 		$thumb_source = $post_array['url'];
 	 	} else {
 	 		$thumb_source = $link;
 	 	}
 	 	
 	
-  $post_array['url'] = $thumb_source;
+  
 
  #test to see if url has changed; if so update thumb
      $row = $pdo->query("SELECT link,url from `assets` where id = $id;")->fetch(PDO::FETCH_ASSOC);
@@ -1049,7 +1056,7 @@ function post_asset($post_array){
 
     #remove entities from title, caption, notes
     foreach (['caption','title','notes'] as $v){
-        $post_array[$v] = spchard($post_array[$v]);
+        $post_array[$v] = spchard($post_array[$v]) ?? '';
     }
    
    if ($post_array['status'] == 'T'){$post_array['status'] = 'N';}

@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     'caption' => $_POST['assetcaption'],
                     'url' => $_POST['asseturl'],
                     'title' => $_POST['assettitle'],
-                    
+                    'type' => $_POST['assettype'],
                     'link' => $_POST['assetlink']
                 );
 
@@ -453,7 +453,7 @@ $about_articles
 <tr><td width='160'>Topic: $required_text</td><td><select name='type' id='topic'> $typeoptions</select></td></tr>
 
 
-<tr><td >Item Title $required_text</td><td><input type='text' size='60' name='title' id='title' value="${row['title']}"></td></tr>
+<tr><td >Item Title $required_text</td><td><input type='text' size='60' name='title' id='title' value="${form_data['title']}"></td></tr>
 
 <tr><td>Contributed by: </td><td><input type='text' name='contributor' value='${row['contributor']}' onfocus="form.contributor_id.value='';">
 
@@ -571,18 +571,13 @@ function initialize_row () {
 
     $form = array (
         'date_entered'	=>	sql_now('date'),
+<<<<<<< HEAD
+        'date_edited' = sql_new('date'),
+=======
+        'date_edited' = sql_new('date');
+>>>>>>> dc73b089f30bf48a66d6ee6b52bf1fa7e5fb1a8e
+        
 
-        'date_edited' => sql_now('date'),
-        'use_me' => '',
-        'type' => '',
-        'title'=>'',
-        'source'=>'',
-        'url'=>'',
-        'link_title' => '',
-        'ed_comment' => '',
-			'asset_id' => '',
-			'asset_list'=>'',
-			
         'contributor'	=>	$_SESSION['username'],
         'contributor_id'	=>	$_SESSION['user_id'],
         'status'	=>	'N',

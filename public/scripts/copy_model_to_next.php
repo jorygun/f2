@@ -9,12 +9,15 @@
 <html><head><title>Copy Model to Next</title></head>
 <body>
 <?php
-
-		$nextnews_dir = SITE_PATH . "/news/news_next";
-		$modelnews_dir = SITE_PATH . "/news/news_model";
+		$news_dir = SITE_PATH . "/news";
+		$nextnews_dir = $news_dir . '/news_next';
+	
 
 
 	deleteDir ($nextnews_dir);
+	mkdir ($nextnews_dir);
+	copy ("$news_dir/model-index.php","$nextnews_dir/index.php");
+	
 	full_copy ($modelnews_dir,$nextnews_dir);
 	echo "<script>
 	    alert('Model news copied to next news');

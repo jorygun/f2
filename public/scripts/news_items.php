@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 			if (in_array($id,$_POST['use_me'])){
 				$use_me_val = 1;
 			}
-			if (in_array($id,$_POST['priority'])){
+			if (isset ($_POST['priority']) && in_array($id,$_POST['priority'])){
 				$use_me_val = 2;
 			}
 			if (in_array($id,$_POST['tc_list'])){

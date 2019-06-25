@@ -582,6 +582,9 @@ function id_search($son){
 
 
 function use_vintage($year,$range){
+	$year = (int)$year;
+	$range = (int)$range;
+	
     if ($range == '0'){
         $sql = "vintage = $year";
     }
