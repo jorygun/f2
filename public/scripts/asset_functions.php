@@ -971,6 +971,9 @@ function post_asset($post_array){
 		 $post_array['sizekb'] =  round(filesize(SITE_PATH . "/$link")/1000,0);
    	 $post_array['link'] = $link;
    	}
+   	$linkdata = add_link_data($link);
+   	array_merge ($post_array,$linkdata);
+   	
     echo "post_array[link] set to $link" . BRNL;
   
     	#now check for separate thumb file source
