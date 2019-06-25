@@ -56,11 +56,11 @@ if (file_exists("title.txt")){
    $subtitle = file_get_contents('title.txt');
 
 }
-else {
+elseif (!empty($conventional_date)) {
     $subtitle = $conventional_date;
     #from the publish data block
 }
-
+else {$subtitle = '';}
 
 
 // can't check security until it's been set above.
