@@ -119,10 +119,10 @@ $pdo = MyPDO::instance();
 <?
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-	global $G_decades;
-	global $G_locations;
-	global $G_departments;
-	global $G_member_desc;
+ $G_decades = Defs::$decades ;
+	 $G_locations = Defs::$locations;
+	 $G_departments = Defs::$departments;
+
 
 
 
@@ -144,7 +144,7 @@ $pdo = MyPDO::instance();
 
 	$department_choices = buildCheckBoxSet('amd_dept',$G_departments,$row['amd_dept'],6);
 
-	$member_type = $G_member_desc[$row['status']];
+	$member_type = Defs::getMemberDescription($row['status']);
 
 	$update_msg = $profile_update_msg = '';
 	if ($email_age > Defs::$stale_data_limit && $row['email_status'] == 'Y'){
