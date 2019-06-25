@@ -573,7 +573,13 @@ function initialize_row () {
         'date_entered'	=>	sql_now('date'),
 
         'date_edited' => sql_now('date'),
-        
+        'use_me' => '',
+        'type' => '',
+        'title'=>'',
+        'source'=>'',
+        'url'=>'',
+        'link_title' => '',
+        'ed_comment' => '',
 
         'contributor'	=>	$_SESSION['username'],
         'contributor_id'	=>	$_SESSION['user_id'],
