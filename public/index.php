@@ -7,6 +7,8 @@
 	if (f2_security_below(0)){exit;}
 	
 	use \digitalmx\flames\Definitions as Defs;
+	echo "From Defs: " . Defs::$stale_data_limit . BRNL;
+	exit;
 	
 	
 //END START
@@ -263,7 +265,7 @@ function age_warnings ($id){
     list ($profile_validated_age,$profile_last_validated) = age ($_SESSION['DB']['profile_validated']);
 
 
-$G_stale_data_limit = Defs::$stale_data_limit;
+	$G_stale_data_limit = Defs::$stale_date_limit;
 
 	$G_member_status_array = Defs::getMemberInList();
 
