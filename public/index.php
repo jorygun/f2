@@ -7,9 +7,9 @@
 	if (f2_security_below(0)){exit;}
 	
 	use digitalmx\flames\Definitions as Defs;
-	echo "From Defs: " . Defs::$test . BRNL;
-	echo "From Defs: " . Defs::$stale_date_limit . BRNL;
-	exit;
+// 	echo "From Defs: " . Defs::$test . BRNL;
+// 	echo "From Defs: " . Defs::$stale_date_limit . BRNL;
+// 	exit;
 	
 	
 //END START
