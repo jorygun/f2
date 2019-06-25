@@ -824,7 +824,7 @@ function add_link_data($url){
         elseif (strpos($mime,'application') !== false){$sqls['type'] = 'Document';}
         elseif (strpos($mime,'html') !== false){$sqls['type'] = 'Web Page';}
 
-recho($sqls,"Link Data");
+#recho($sqls,"Link Data");
     return $sqls;
 }
 
@@ -1058,7 +1058,7 @@ function post_asset($post_array){
    if ($post_array['status'] == 'T'){$post_array['status'] = 'N';}
    # else { $post_array['status'] = $itemdata['status'];}
 
-recho ($post_array,'Post array ');
+#recho ($post_array,'Post array ');
       update_asset($post_array);
 
     return $id;
