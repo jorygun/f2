@@ -3,15 +3,16 @@
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(2)){exit;}
+	use digitalmx\flames\Definitions as Defs;
 //END START
 
 global $G_member_status_set;
 
 
 
-$decade_choices = radio_choices('amd_when',$G_decades);
-$location_choices = radio_choices('amd_where',$G_locations);
-$department_choices = radio_choices('amd_dept',$G_departments);
+$decade_choices = radio_choices('amd_when',Defs::$decades);
+$location_choices = radio_choices('amd_where',Defs::$locations);
+$department_choices = radio_choices('amd_dept',Defs::$departments);
 
 	$headings = array (
 		'username'	=>	'Name',
@@ -28,7 +29,7 @@ $navbar = $nav -> build_menu();
 function show_found ($title,$stobject){
 	//result of sql query from statement object
 	// headings is array of variable names and headings (if not supplied, then show all)
-	 global $G_member_desc;
+
 	 $jurl = "window.open(this.href,'profile','height=700,width=1200,resizeable,scrollbars');return false";
     $fcount = $stobject->rowCount();
 	$o='';
@@ -37,7 +38,7 @@ function show_found ($title,$stobject){
 	foreach ($stobject as $row){
         $recid = $row[id];
         $username = $row['username'];
-        $status_name = $G_member_desc[$row['status']] ;
+        $status_name = Defs::getMemberDescription($row['status']) ;
         $profile_url = "/scripts/profile_view.php?id=$recid";
         $profile_validated = $row['profile_updated'];
         switch ($row['status']) {

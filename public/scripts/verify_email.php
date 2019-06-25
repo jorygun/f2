@@ -7,6 +7,7 @@
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
+	use digitalmx\flames\Definitions as Defs;
 	#if (f2_security_below(0)){exit;}
 //END START
 $error_msg = "No record found. Please contact administrator at admin@digitalmx.com";
@@ -38,7 +39,7 @@ $error_msg = "No record found. Please contact administrator at admin@digitalmx.c
 	
 	$sql_today = sql_now('date');
 	
-	$member_type = getMemberDescription($row['status']);
+	$member_type = Defs::getMemberDescription($row['status']);
 
     list ($join_days,$join_date) = age ($row['join_date']);
 

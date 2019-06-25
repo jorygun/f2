@@ -242,137 +242,137 @@ class Init
 ###### everything below is suspect ######
 
 
-
+// 
 // SET MEMBER DEFINITIONS
-	// Mmeber names
-	$G_member_desc = array (
-	'N' => 'New Signup',
-	
-	'G' => 'Guest',
-	'GA'	=> 'Anonymous Guest',
-	'M' => 'Member',
-
-	'MC' => 'Contributor',
-	'MN' => 'News Admin',
-	'MU' => 'User Admin',
-	'MA' => 'Admin Admin',
-	'MI' => 'Inactive Member',
-
-	'I' => 'Inactive',
-	'T' => 'test user (like member)',
-	'L' => 'lost ',
-	'D' => 'deceased',
-
-	'H' => 'hidden',
-	'X' => 'to be deleted',
-	'Y' => 'Non-member',
-	'YA' => 'Alumni non-member'
-	
-	);
-
-
-	/* sets security level as a function of member status
-	0 = no privileges; access to only home page and signup
-	1 = access to current news only
-	2 = acceess to current news, edit and view own profile
-	3 = spare
-	4 = access to all news, view all profiles, edit own
-	5 = spare
-	6 = access to previews and ability to contribute
-	7 = news admin (publish news)
-	8 = member admin (update members)
-	9 = admin admin (create admins)
-	*/
-
-
-$G_member_sec = array(
-	'N' => 1,
-	
-	'G' => 2,
-	'M' => 4,
-
-
-	'MC' => 6,
-	'MN' => 7,
-	'MU' => 8,
-	'MA' => 9,
-	'MI' => 2,
-	
-	'YA' => 0,
-	'Y' => 0,
-
-	'I' => 2,
-	'T' => 4,
-	'L' => 1,
-	'D' => 0,
-
-	'GA' => 1,
-	'H' => 4
-	);
-
-
-#these member status codes are considered members
-$G_member_status_array = array('M', 'MA','MN','MC','MU','R','G');
-#text version of member list for use in sql IN(list) statement
-$G_member_status_set = "'" . implode("','",$G_member_status_array) . "'";
-
-
-
-
+// 	Mmeber names
+// 	$G_member_desc = array (
+// 	'N' => 'New Signup',
+// 	
+// 	'G' => 'Guest',
+// 	'GA'	=> 'Anonymous Guest',
+// 	'M' => 'Member',
+// 
+// 	'MC' => 'Contributor',
+// 	'MN' => 'News Admin',
+// 	'MU' => 'User Admin',
+// 	'MA' => 'Admin Admin',
+// 	'MI' => 'Inactive Member',
+// 
+// 	'I' => 'Inactive',
+// 	'T' => 'test user (like member)',
+// 	'L' => 'lost ',
+// 	'D' => 'deceased',
+// 
+// 	'H' => 'hidden',
+// 	'X' => 'to be deleted',
+// 	'Y' => 'Non-member',
+// 	'YA' => 'Alumni non-member'
+// 	
+// 	);
+// 
+// 
+// 	/* sets security level as a function of member status
+// 	0 = no privileges; access to only home page and signup
+// 	1 = access to current news only
+// 	2 = acceess to current news, edit and view own profile
+// 	3 = spare
+// 	4 = access to all news, view all profiles, edit own
+// 	5 = spare
+// 	6 = access to previews and ability to contribute
+// 	7 = news admin (publish news)
+// 	8 = member admin (update members)
+// 	9 = admin admin (create admins)
+// 	*/
+// 
+// 
+// $G_member_sec = array(
+// 	'N' => 1,
+// 	
+// 	'G' => 2,
+// 	'M' => 4,
+// 
+// 
+// 	'MC' => 6,
+// 	'MN' => 7,
+// 	'MU' => 8,
+// 	'MA' => 9,
+// 	'MI' => 2,
+// 	
+// 	'YA' => 0,
+// 	'Y' => 0,
+// 
+// 	'I' => 2,
+// 	'T' => 4,
+// 	'L' => 1,
+// 	'D' => 0,
+// 
+// 	'GA' => 1,
+// 	'H' => 4
+// 	);
+// 
+// 
+// #these member status codes are considered members
+// $G_member_status_array = array('M', 'MA','MN','MC','MU','R','G');
+// #text version of member list for use in sql IN(list) statement
+// $G_member_status_set = "'" . implode("','",$G_member_status_array) . "'";
+// 
+// 
+// 
+// 
 // EMAIL DEFINIITIONS
-	// definition of email statuses
-	$G_ems_defs = array(
-	'Y'	=>	'Validated',
-	'Q'	=>	'Believed Good',
-	'XX'	=>	'To be removed',
-	'LA'	=>	'Lost - No Response',
-	'LB'	=>	'Lost - Bounced',
-	'LO'	=>	'Lost - Other',
-	'LN'	=>	'Lost - No Email Address',
-	'LE'	=>	'Lost - After email change',
-	'LS'    =>  'Lost at signup',
-	'LD'    =>  'Lost - Deceased',
-	'B1'	=>	'May be bouncing',
-	'B2'	=>	'Bounced twice',
-	'A1'	=>	'Being revalidated',
-	'A2'	=>	'Being revalidated (2nd attempt)',
-	'A3'	=>	'Being revalidated (3rd attempt)',
-	'A4'	=>	'Being revalidated (Final attempt)',
-	'E1'	=>	'Email change being validated',
-	'E2'	=>	'Email change being validated (2nd)',
-	'N1'	=>	'New Signup',
-	'N2'	=>	'New Signup (2nd)',
-	'D'     =>  'Lost but logging in. (Deferred lost)'
-
-	);
-
-
-$G_decades = array(
-	'A'	=>	'1960s',
-	'B'	=>	'1970s',
-	'C'	=>	'1980s',
-	'D'	=>	'1990s',
-	'E'	=>	'2000s',
-	'F'	=>	'2010s',
-);
-
-$G_locations = array(
-	'A'	=>	'Sunnyvale',
-	'B'	=>	'Austin',
-	'C'	=>	'San Antonio',
-	'U'	=>	'US Field',
-	'V'	=>	'Europe',
-	'W'	=>	'Asia',
-	'X' =>	'Other'
-);
-
-$G_departments = array (
-	'A'	=>	'Design',
-	'B'	=>	'Marketing/Sales',
-	'C'	=>	'Production',
-	'D'	=>	'Finance/HR',
-	'X' =>	'Other'
-);
+// 	definition of email statuses
+// 	$G_ems_defs = array(
+// 	'Y'	=>	'Validated',
+// 	'Q'	=>	'Believed Good',
+// 	'XX'	=>	'To be removed',
+// 	'LA'	=>	'Lost - No Response',
+// 	'LB'	=>	'Lost - Bounced',
+// 	'LO'	=>	'Lost - Other',
+// 	'LN'	=>	'Lost - No Email Address',
+// 	'LE'	=>	'Lost - After email change',
+// 	'LS'    =>  'Lost at signup',
+// 	'LD'    =>  'Lost - Deceased',
+// 	'B1'	=>	'May be bouncing',
+// 	'B2'	=>	'Bounced twice',
+// 	'A1'	=>	'Being revalidated',
+// 	'A2'	=>	'Being revalidated (2nd attempt)',
+// 	'A3'	=>	'Being revalidated (3rd attempt)',
+// 	'A4'	=>	'Being revalidated (Final attempt)',
+// 	'E1'	=>	'Email change being validated',
+// 	'E2'	=>	'Email change being validated (2nd)',
+// 	'N1'	=>	'New Signup',
+// 	'N2'	=>	'New Signup (2nd)',
+// 	'D'     =>  'Lost but logging in. (Deferred lost)'
+// 
+// 	);
+// 
+// 
+// $G_decades = array(
+// 	'A'	=>	'1960s',
+// 	'B'	=>	'1970s',
+// 	'C'	=>	'1980s',
+// 	'D'	=>	'1990s',
+// 	'E'	=>	'2000s',
+// 	'F'	=>	'2010s',
+// );
+// 
+// $G_locations = array(
+// 	'A'	=>	'Sunnyvale',
+// 	'B'	=>	'Austin',
+// 	'C'	=>	'San Antonio',
+// 	'U'	=>	'US Field',
+// 	'V'	=>	'Europe',
+// 	'W'	=>	'Asia',
+// 	'X' =>	'Other'
+// );
+// 
+// $G_departments = array (
+// 	'A'	=>	'Design',
+// 	'B'	=>	'Marketing/Sales',
+// 	'C'	=>	'Production',
+// 	'D'	=>	'Finance/HR',
+// 	'X' =>	'Other'
+// );
 
 
 // age limits in days before warnings appear
