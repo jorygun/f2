@@ -7,7 +7,7 @@
 	if (f2_security_below(6)){exit;}
 //END START
 
-
+use digitalmx\flames\Definitions as Defs;
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
 
