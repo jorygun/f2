@@ -1058,7 +1058,7 @@ function post_asset($post_array){
    if ($post_array['status'] == 'T'){$post_array['status'] = 'N';}
    # else { $post_array['status'] = $itemdata['status'];}
 
-#recho ($post_array,'Post array ');
+recho ($post_array,'Post array ');
       update_asset($post_array);
 
     return $id;
