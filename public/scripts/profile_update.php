@@ -5,6 +5,8 @@
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(2)){exit;}
+	use digitalmx\flames\Definitions as Defs;
+
 //END START
 
 
@@ -117,10 +119,6 @@ $pdo = MyPDO::instance();
 <?
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-
-
-	global $G_stale_data_limit;
-
 	global $G_decades;
 	global $G_locations;
 	global $G_departments;
@@ -149,11 +147,11 @@ $pdo = MyPDO::instance();
 	$member_type = $G_member_desc[$row['status']];
 
 	$update_msg = $profile_update_msg = '';
-	if ($email_age > $G_stale_data_limit && $row['email_status'] == 'Y'){
+	if ($email_age > Defs::$stale_data_limit && $row['email_status'] == 'Y'){
 	    $email_update_msg = "<tr><td colspan='2' style='color:red'>Your email has not been validated since $email_date.
 	If it's wrong, you can change it or submitting this form will validate it.</td></tr>";}
 
-	if ($profile_age>$G_stale_data_limit ){
+	if ($profile_age> Defs::$stale_data_limit ){
 
 	    $profile_update_msg =  "
 	<tr><td colspan='2' style='color:red'>

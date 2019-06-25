@@ -378,7 +378,7 @@ $G_departments = array (
 // age limits in days before warnings appear
 	#	$G_profile_age_limit = 365;
 	#	$G_email_age_limit = 365;
-		$G_stale_data_limit = 365;
+#	$G_stale_data_limit = 365;
 
 
 

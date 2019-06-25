@@ -5,7 +5,7 @@ ini_set('error_reporting', E_ALL);
 
 	
 
-require_once '../config/boot.php';
+require_once '../config/init.php';
 
 
 $thispdo = $container['pdo_dev'];

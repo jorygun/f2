@@ -65,7 +65,7 @@ foreach ($_SERVER as $k=>$v){
 #$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 
 #$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
-$init_file = '../config/boot.php';
+$init_file = '../config/init.php';
 
 #	$old_init_file = '../config/init.php';
 
