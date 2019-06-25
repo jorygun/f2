@@ -305,13 +305,13 @@ EOT;
     $delete_item = '';
     $mytypes = $ptypes;
 }
-else {
+else { #admin user
      $asset_types = array(
     'Image' ,
     'Cartoon' ,
     'Multimedia' ,
     'Document' ,
-    'Album' ,
+
     'Web Page' ,
     'Ad',
     'Other'
@@ -571,6 +571,8 @@ function initialize_row () {
 
     $form = array (
         'date_entered'	=>	sql_now('date'),
+        'date_edited' = sql_new('date'),
+        
 
         'contributor'	=>	$_SESSION['username'],
         'contributor_id'	=>	$_SESSION['user_id'],
