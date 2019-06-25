@@ -152,7 +152,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
                     'caption' => $_POST['assetcaption'],
                     'url' => $_POST['asseturl'],
                     'title' => $_POST['assettitle'],
-                    'type' => $_POST['assettype'],
+                    
                     'link' => $_POST['assetlink']
                 );
 
