@@ -1049,7 +1049,7 @@ function post_asset($post_array){
 
     #remove entities from title, caption, notes
     foreach (['caption','title','notes'] as $v){
-        $post_array[$v] = spchard($post_array[$v]);
+        $post_array[$v] = spchard($post_array[$v]) ?? '';
     }
    
    if ($post_array['status'] == 'T'){$post_array['status'] = 'N';}
