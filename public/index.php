@@ -6,7 +6,7 @@
 	require_once "init.php";
 	if (f2_security_below(0)){exit;}
 	
-	use \digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\Definitions as Defs;
 	echo "From Defs: " . Defs::$stale_data_limit . BRNL;
 	exit;
 	
