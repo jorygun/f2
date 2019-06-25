@@ -5,7 +5,7 @@
 
 
 require_once 'MyPDO.class.php';
-
+use digitalmx\flames\Definitions as Defs;
 
 
 function security_below($min) {
@@ -69,7 +69,7 @@ function login($pw){
 		){echoAlert ("No user for that login. ($msg)");}
 		
 	$rstatus = $row['status'];
-	$seclevel = get_member_security($rstatus );
+	$seclevel = Defs::getSecLevel($rstatus );
 	
 	#echoAlert("Loggin you in as $showname");
 	if (isset($_SESSION['pwid']) && $pw != $_SESSION['pwid']){
@@ -78,7 +78,7 @@ function login($pw){
 	//speial case for beta testers
 	
 
-	$new_type = getMemberDescription($rstatus);
+	$new_type = Defs::getMemberDescription($rstatus);
 
 		$_SESSION['pwid'] = $pw; // Add to SESSION collection 
 		
@@ -94,7 +94,7 @@ function login($pw){
 		$_SESSION['profile_validated'] = $row['profile_validated'];
 		$_SESSION['email_last_validated'] = $row['email_last_validated'];
 		$_SESSION['user_email'] = $row['user_email'];
-		$_SESSION['typename'] = getMemberDescription ($rstatus);
+		$_SESSION['typename'] = Defs::getMemberDescription ($rstatus);
 		$_SESSION['DB'] = $row;
 		$_SESSION['user'] = $row; #eventually switch everything to this
 

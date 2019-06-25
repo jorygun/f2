@@ -119,10 +119,6 @@ $pdo = MyPDO::instance();
 <?
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
- $G_decades = Defs::$decades ;
-	 $G_locations = Defs::$locations;
-	 $G_departments = Defs::$departments;
-
 
 
 
@@ -138,11 +134,11 @@ $pdo = MyPDO::instance();
 	$verify_profile = verify_click_profile($id);
 
 	// compute decade choices from amd_when field
-	$decade_choices = buildCheckBoxSet('amd_when',$G_decades,$row['amd_when'],6);
+	$decade_choices = buildCheckBoxSet('amd_when',Defs::$decades,$row['amd_when'],6);
 
-	$location_choices = buildCheckBoxSet('amd_where',$G_locations,$row['amd_where'],4);
+	$location_choices = buildCheckBoxSet('amd_where',Defs::$locations,$row['amd_where'],4);
 
-	$department_choices = buildCheckBoxSet('amd_dept',$G_departments,$row['amd_dept'],6);
+	$department_choices = buildCheckBoxSet('amd_dept',Defs::$departments,$row['amd_dept'],6);
 
 	$member_type = Defs::getMemberDescription($row['status']);
 
@@ -167,7 +163,7 @@ $pdo = MyPDO::instance();
 	$html_greeting = $row['user_greet'];
 		# $html_greeting = nl2br($html_greeting);
 
-	$email_status = get_email_status_name($row['email_status']);
+	$email_status = Defs::getEmsName($row['email_status']);
 ?>
 
 <h1>Profile and Email Updater</h1>

@@ -198,8 +198,8 @@ class Member
         
         $addons= array(
         
-        'seclevel' => Definitions::get_seclevel($row['status']) ,
-        'status_name' => Definitions::getMemberDescription($row['status']) ,
+        'seclevel' => Defs::get_seclevel($row['status']) ,
+        'status_name' => Defs::getMemberDescription($row['status']) ,
             
         'login_string' =>  $login_string ,
         'subscriber' => $row['no_bulk']?false:true ,

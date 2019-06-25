@@ -18,13 +18,13 @@
   	$log_loc = "/logs/validation_logs/validated-".$timestamp.".txt"; #log file
   $logfile = "$GV_pathd/$log_loc";
 
- 	global $G_ems_defs;
+
 
  function show_email_def($sarray){
-		global $G_ems_defs;
+	
 		$t='';
 		foreach ($sarray as $s){
-			$t .= "<tr><td> $s</td><td>$G_ems_defs[$s]</td></tr>\n";
+			$t .= "<tr><td> $s</td><td>" . Defs::$getEmsName($s) . "</td></tr>\n";
 		}
 		return $t;
 	}

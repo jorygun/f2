@@ -3,6 +3,7 @@
 ini_set('error_reporting', -1);
 //BEGIN START
 	require_once 'init.php';
+	use digitalmx\flames\Definitions as Defs;
 	$nav = new navBar(1);
 $navbar = $nav -> build_menu();
 
@@ -195,12 +196,12 @@ function search($post,$members_db){
 <?
 	$status_options = "<option value=''>Choose...</option>";
 	foreach (array('M','R','G','MC','MU','MN','N','T','I') as $v){
-		$desc = getMemberDescription($v);
+		$desc = Defs::getMemberDescription($v);
 		$status_options .= "<option value='$v'>$v ($desc)</option>";
 	}
 
     $ems_options = "<option value=''>Choose...</option>";
-    foreach ($G_ems_defs as $v=>$desc){
+    foreach (Defs::getEmsNameArray() as $v=>$desc){
 		$ems_options .= "<option value='$v'>$v ($desc)</option>";
 	}
 
