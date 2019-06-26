@@ -26,16 +26,12 @@ $nav = new navBar(1);
 $navbar = $nav -> build_menu();
 
 //// FUNCTIONS ////
-function show_found ($title,$stobject){
+function show_found ($row){
 	//result of sql query from statement object
 	// headings is array of variable names and headings (if not supplied, then show all)
 
 	 $jurl = "window.open(this.href,'profile','height=700,width=1200,resizeable,scrollbars');return false";
-    $fcount = $stobject->rowCount();
-	$o='';
-	#$o = "<tr><td colspan='5'><i>$title</i> ($fcount found)</td></tr>";
-	$row_count = 0;
-	foreach ($stobject as $row){
+   
         $recid = $row['id'];
         $username = $row['username'];
         $status_name = Defs::getMemberDescription($row['status']) ;
@@ -56,9 +52,8 @@ function show_found ($title,$stobject){
 
 
 
-		$show_email = display_email($row);
-		++$row_count;
-		$o .= "<tr>"
+			$show_email = display_email($row);
+		$out .= "<tr>"
 		    . '<td>' . $user_val . '</td>'
 		    . '<td>' . $row['user_from'] . '</td>'
 		    . '<td>' . $row['user_amd'] . '</td>'
@@ -67,9 +62,9 @@ function show_found ($title,$stobject){
 		    . "<tr>\n";
 
 
-	}
+	
 
-	return $o;
+	return $out;
 }
 
 
@@ -168,16 +163,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			
 			$sql2 = $sql . " AND username like '%$name%' " . "LIMIT 50;";
 
-			if ($st2 = $pdo->query ($sql2)) {
+			if ($st2 = $pdo->query ($sql2))->fetchAll() {
 		        $rc = $st2->rowCount();
 		        $found += $rc;
 			    
-			    if ($rc >49){
-		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
-                 }
-                 show_found('Results',$st2);
-		    }
-      }  
+				if ($rc >49){
+				 $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
+				}
+				foreach ($st2 as $row){
+					$output .= show_found($row);
+		    	}
+      	}  
 
 	if ($found){
 		$output .= "</table> $found found.";
