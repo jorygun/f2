@@ -122,8 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$is_member = 'status is NOT NULL ';
 #    $is_member = "status IN ($G_member_status_set) ";
 
-	$sql = "SELECT * FROM $GV[members_table] WHERE $is_member ";
-
+	$sql = "SELECT * FROM `members_f2` WHERE $is_member ";
+	$q=false;
 	if (! empty ($CLEAR['amd_where'])) {
 			$v=trim ($CLEAR['amd_where']);
 			$sql .= " AND amd_where like '%$v%' ";
@@ -164,54 +164,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	else {
 
-			$whole_name = $CLEAR['name'];
-			$last_name = parse_name($CLEAR['name'],'last');
-			echo "Parsing $whole_name into last name $last_name<br>";
-
-		// first try using exact match
-			$sql2 = $sql . " AND username = '$whole_name' " . "LIMIT 50;";
+			$name = $CLEAR['name'];
+			
+			$sql2 = $sql . " AND username like '%$name%' " . "LIMIT 50;";
 
 			if ($st2 = $pdo->query ($sql2)) {
 		        $rc = $st2->rowCount();
 		        $found += $rc;
-			    $output .= show_found("Searching on user name exactly matches $whole_name",$st2);
+			    
 			    if ($rc >49){
 		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
                  }
 		    }
-        if ($found == 0) {
-            // now try last name
-            $more = " AND username REGEXP \" $last_name\$\" AND username <> '$whole_name' ";
-
-            $sql3 = $sql . $more . "LIMIT 50;";
-            if ($st3 = $pdo->query ($sql3)) {
-		        $rc = $st3->rowCount();
-		        $found += $rc;
-			    $output .= show_found("Searching on user name ends with $last_name ",$st3);
-			    if ($rc >49){
-		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
-                 }
-		    }
-        }
-
-		//this is too dangerous
-		// now try last name anywhere
-
-		if ($found == 0) {
-            $more = " AND username like '%$last_name%' AND username NOT LIKE '% $last_name' AND username <> '$whole_name' ";
-            $sql4 = $sql . $more . "LIMIT 50;";
-
-            if ($st4 = $pdo->query ($sql4)) {
-		        $rc = $st4->rowCount();
-		        $found += $rc;
-			    $output .= show_found("Searching on $last_name anywhere in user name ",$st4);
-			    if ($rc >49){
-		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
-                 }
-		    }
-
-        }
-	}
+      }  
 
 	if ($found){
 		$output .= "</table> $found found.";
