@@ -58,6 +58,7 @@ use digitalmx\flames\Definitions as Defs;
 	if (file_exists($publish_file)){
    	$edition_name = get_publish_data('title',$publish_file);
    	$pointerfile = SITE_PATH . "/news/latest_pointer.txt";
+
    	if (file_exists($pointerfile)){
    	 	$lastest_pointer = trim(file_get_contents(SITE_PATH . "/news/latest_pointer.txt") );
    	 } else {
