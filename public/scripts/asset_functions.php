@@ -504,8 +504,8 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 	 	
 	 }
 	 	
-	 	$finfo = new finfo(FILEINFO_MIME_TYPE);
-      if (! $source_mime = $finfo->file($source_path)) {
+	 	$finfo =  finfo_open(FILEINFO_MIME_TYPE);
+      if (! $source_mime = $finfo_file($finfo, $source_path)) {
       	echo "unable to get mime type from source $source_path" . BRNL;
       }
       else {echo "Mime: $source_mime" . BRNL;}
