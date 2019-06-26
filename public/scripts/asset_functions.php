@@ -507,7 +507,7 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 	 $finfo = new finfo(FILEINFO_MIME_TYPE);
 	 
 	 if (substr($source_path,0,4) == 'http'){
-	 	$source_mime = get_url_mime($source_path);
+	 	$source_mime = get_url_mime_type($source_path);
 	 } elseif ( $source_mime = $finfo->file($source_path)) {
       	
    } else {
