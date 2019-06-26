@@ -27,7 +27,7 @@ use digitalmx\flames\Definitions as Defs;
 
 
 	$select_all_valid	=
-	    "  status in (" . Defs::$member_status_set . ")
+	    "  status in (" . Defs::getMemberInSet() . ")
 	AND email_status NOT LIKE 'X%'
 	AND email_status NOT LIKE 'L%'
 	
