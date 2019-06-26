@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			    if ($rc >49){
 		    $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
                  }
-                 show_found($st2);
+                 show_found('Results',$st2);
 		    }
       }  
 
