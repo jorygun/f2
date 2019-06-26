@@ -92,7 +92,7 @@ EOT;
 		
 		#gets last line
 		
-		#echo "vl $vfile $vlatest";
+		echo "vl $vfile $vlatest";
 		
 		list($vnum,$vdesc) = preg_split("/\s+/",$vlatest);
 		
