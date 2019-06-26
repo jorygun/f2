@@ -86,7 +86,7 @@ EOT;
 		$vfh = fopen($vfile,'r');
 		while (($line = fgets($vfh)) !== false) {
    		 if (!empty($line)) {
-   		 	$v_latest = $line;
+   		 	$vlatest = $line;
    		 }
    	}
 		
