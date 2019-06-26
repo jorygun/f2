@@ -53,7 +53,7 @@ function show_found ($row){
 
 
 			$show_email = display_email($row);
-		$out .= "<tr>"
+		$out = "<tr>"
 		    . '<td>' . $user_val . '</td>'
 		    . '<td>' . $row['user_from'] . '</td>'
 		    . '<td>' . $row['user_amd'] . '</td>'
