@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
      
       
 	} else {$output =  "<h3>Nothing Found</h3>";}
-	return $output;
+	echo $output;
 }
 ?>
 
