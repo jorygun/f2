@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$is_member = 'status is NOT NULL ';
 #    $is_member = "status IN ($G_member_status_set) ";
 
-	$sql = "SELECT * FROM `members_f2` WHERE $is_member ";
+	$sql = "SELECT username,user_email,user_amd,user_from,TIMESTAMP(profile_updated) as profile_updated FROM `members_f2` WHERE $is_member ";
 	$q=false;
 	if (! empty ($CLEAR['amd_where'])) {
 			$v=trim ($CLEAR['amd_where']);
