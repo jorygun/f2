@@ -36,7 +36,7 @@ function show_found ($row){
         $username = $row['username'];
         $status_name = Defs::getMemberDescription($row['status']) ;
         $profile_url = "/scripts/profile_view.php?id=$recid";
-        $profile_updated = date('M d, Y',(int)$row['profile_updated']);
+        $profile_updated = date('M d, Y',strtotime($row['profile_updated']));
         switch ($row['status']) {
             case 'D' :
                 $user_status = '*';
@@ -114,8 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		list ($CLEAR,$SAFE) = clear_safe($_POST);
 	$is_member = 'status is NOT NULL ';
 #    $is_member = "status IN ($G_member_status_set) ";
-
-	$sql = "SELECT username,user_email,user_amd,user_from,TIMESTAMP(profile_updated) as profile_updated FROM `members_f2` WHERE $is_member ";
+	$fields = 'username,user_email,user_amd,user_from,TIMESTAMP(profile_updated) as profile_updated';
+	
+	$sql = "SELECT * FROM `members_f2` WHERE $is_member ";
 	$q=false;
 	if (! empty ($CLEAR['amd_where'])) {
 			$v=trim ($CLEAR['amd_where']);
