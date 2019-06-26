@@ -14,14 +14,7 @@ $decade_choices = radio_choices('amd_when',Defs::$decades);
 $location_choices = radio_choices('amd_where',Defs::$locations);
 $department_choices = radio_choices('amd_dept',Defs::$departments);
 
-	$headings = array (
-		'username'	=>	'Name',
-		'user_from'	=>	'Location',
-		'user_amd'	=>	'At AMD',
-		'user_email'	=>	'Email',
-		'profile_updated'	=>	'Profile last Updated'
-	);
-
+	
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
 
@@ -140,10 +133,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$found = 0;
 	$output = "<p>* Deceased; # Inactive</small></p>";
 	$output .=	"<table class='bordered'><tr>";
-	foreach ($headings as $k => $v){
-		$output .= "<th>$v</th>";
-	}
-	$output .= "</tr>\n";
+	$output .= "<tr><th>Name</th><th>Location</th><th style='width:20em;'>At AMD</th>
+		<th>EMail</th><th>Profile Updated</th></tr>\n";
+	
 
 	// if no name request, then one search and yer done.
 	if (!empty($name = $CLEAR['name'])){
