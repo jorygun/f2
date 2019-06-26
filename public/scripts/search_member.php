@@ -34,9 +34,9 @@ function show_found ($title,$stobject){
     $fcount = $stobject->rowCount();
 	$o='';
 	#$o = "<tr><td colspan='5'><i>$title</i> ($fcount found)</td></tr>";
-	
+	$row_count = 0;
 	foreach ($stobject as $row){
-        $recid = $row[id];
+        $recid = $row['id'];
         $username = $row['username'];
         $status_name = Defs::getMemberDescription($row['status']) ;
         $profile_url = "/scripts/profile_view.php?id=$recid";

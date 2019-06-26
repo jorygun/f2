@@ -47,13 +47,14 @@ function deleteDir($path) {
 }
 
 function parse_name($name,$piece){
-	preg_match('/[, ]*(jr|sr|II|III)\.? *$/i',$name,$m);
-	$suffix = $m[1];
-	$tname = preg_replace("/$m[0]/",'',$name);
-	preg_match('/ ?(\S+)$/',$tname,$m);
-	$last_name = trim($m[0]) ;
-	#echo "<hr>How I Parsed the Name<table class='bordered'><tr><th>name</th><th>suffix</th><th>w/o suffix</th><th>last</th></tr><tr><td>$name</td><td>$suffix</td><td>$tname</td><td>$last_name</td></tr></table><hr>\n";
-	if ($piece=='last'){return $last_name;}
+	if (preg_match('/[, ]*(jr|sr|II|III)\.? *$/i',$name,$m) ){
+		$suffix = $m[1];
+		$tname = preg_replace("/$m[0]/",'',$name);
+		preg_match('/ ?(\S+)$/',$tname,$m);
+		$last_name = trim($m[0]) ;
+		#echo "<hr>How I Parsed the Name<table class='bordered'><tr><th>name</th><th>suffix</th><th>w/o suffix</th><th>last</th></tr><tr><td>$name</td><td>$suffix</td><td>$tname</td><td>$last_name</td></tr></table><hr>\n";
+		if ($piece=='last'){return $last_name;}
+	}
 	return 0; #default
 }
 
