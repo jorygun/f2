@@ -83,8 +83,16 @@ EOT;
 		$vrel = date('d M Y H:i',filemtime($vfile));
 		
 		#$vnum = $init->getVersion();
+		$vfh = fopen($vfile,'r');
+		while (($line = fgets($vfh)) !== false) {
+   		 if (!empty($line)) {
+   		 	$v_latest = $line;
+   		 }
+   	}
+   
+    
+}
 		
-		$vlatest = `tail -n 1 $vfile`;
 		#gets last line
 		
 		#echo "vl $vfile $vlatest";
