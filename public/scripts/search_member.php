@@ -36,7 +36,7 @@ function show_found ($row){
         $username = $row['username'];
         $status_name = Defs::getMemberDescription($row['status']) ;
         $profile_url = "/scripts/profile_view.php?id=$recid";
-        $profile_validated = $row['profile_updated'];
+        $profile_validated = date('M d, Y',$row['profile_updated']);
         switch ($row['status']) {
             case 'D' :
                 $user_status = '*';
