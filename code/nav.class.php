@@ -84,8 +84,8 @@ EOT;
 		
 		#$vnum = $init->getVersion();
 		
-		$vlatest = `head -n 1 $vfile`;
-		#gets first line
+		$vlatest = `tail -n 1 $vfile`;
+		#gets last line
 		
 		#echo "vl $vfile $vlatest";
 		
