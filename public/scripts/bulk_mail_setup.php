@@ -57,7 +57,13 @@ use digitalmx\flames\Definitions as Defs;
 	$publish_file = $news_latest . "/publish.txt";
 	if (file_exists($publish_file)){
    	$edition_name = get_publish_data('title',$publish_file);
-   	 $lastest_pointer = trim(file_get_contents(SITE_PATH . "/news/latest_pointer.txt") );
+   	$pointerfile = SITE_PATH . "/news/latest_pointer.txt";
+   	if (file_exists($pointfile)){
+   	 	$lastest_pointer = trim(file_get_contents(SITE_PATH . "/news/latest_pointer.txt") );
+   	 } else {
+   	 	$latest_pointer = '';
+   	 	echo "Latest pointer not found.  Do not know where latest news is.";
+   	 }
     }
     else {
     	echo "No publish file";
@@ -315,7 +321,7 @@ Message Body<br>
 <p><input type="radio" name="sendto" value="atag">Only the admin statuses below:
 <br>Set admin statuses (single chars): <input type="text" name='admin_status'></p>
 <p><input type="radio" name="sendto" value="news">News contributors</p>
-<p><input type="radio" name="sendto" value="aged_out">Lost - Aged Out (count: $count_aged)</p>
+<p><input type="radio" name="sendto" value="aged_out">Lost - Aged Out </p>
 <p><input type="radio" name="sendto" value="not_lost">Newly Found</p>
 <p><input type="radio" name="sendto" value="this">Only This email address: <input type='text' name="sendtothis" ></p>
 
