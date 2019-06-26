@@ -4,6 +4,8 @@ ini_set('display_errors', 1);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 use digitalmx as mx;
+use digitalmx\flames\Definitions as Defs;
+
 
     if (f2_security_below(7)){exit;}
 	$nav = new navBar(1);
@@ -21,11 +23,11 @@ use digitalmx as mx;
 
 //END START
 	global $G_member_status_set;
-	global $G_stale_data_limit;
+	
 
 
 	$select_all_valid	=
-	    "  status in ($G_member_status_set)
+	    "  status in (" . Defs::$member_status_set . ")
 	AND email_status NOT LIKE 'X%'
 	AND email_status NOT LIKE 'L%'
 	
@@ -404,7 +406,7 @@ echo "Message saved .\n";
 
 #now build mail list
 
-$sql = get_send_list($select_all_valid, $G_member_status_set);
+$sql = get_send_list($select_all_valid);
 if (!$result = $pdo->query($sql) ){
 		echo "No results from query for ${_POST['sendto']} \n"; 
 		exit;
@@ -487,7 +489,7 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 }
 
 ######### Get the send list ##########
-function get_send_list ($select_all_valid, $G_member_status_set) {
+function get_send_list ($select_all_valid) {
 
 $pdo = MyPDO::instance();
 $field_list = "*";
@@ -538,7 +540,7 @@ $sql = "SELECT $field_list FROM `members_f2` ";
 
 	}
 		elseif ($_POST['sendto'] == 'aged_out'){
-		$sql .= "WHERE status in ($G_member_status_set) AND email_status = 'LA' ;";
+		$sql .= "WHERE status in (" . Defs::getMemberInSet() . ") AND email_status = 'LA' ;";
 
 	 		echo "Sending only to those marked as Lost - Aged Out <br>";
 	}
