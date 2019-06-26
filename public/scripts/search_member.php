@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			
 			$sql2 = $sql . " AND username like '%$name%' " . "LIMIT 50;";
 
-			if ($st2 = $pdo->query ($sql2))->fetchAll() {
+			if ($st2 = $pdo->query ($sql2)->fetchAll(PDO::FETCH_ASSOC) {
 		        $rc = $st2->rowCount();
 		        $found += $rc;
 			    
