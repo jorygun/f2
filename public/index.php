@@ -129,10 +129,10 @@ if (isset($_SESSION['pwid'])){
 
 		<p>Use the menus above to:</p>
 		<ul>
-		<li>Your Name: Update your Profile, so others can see what you're doing now, Log out, Get back to this page.
-		<li>Site: Signup a new member, About this site, Help
-		<li>Library: Current newsletter, index to old newsletters, photo galleries, and special one-off pages.
-		<li>Search: Search in newsletters, members, or graphic library
+		<li>Your Name: Update your Profile, so others can see what you're doing now, Help, About this Site, Log out.
+		
+		<li>Dig In: Current newsletter, index to old newsletters, photo galleries, and special one-off pages.
+		<li>Search: Search in newsletters, search for a member, or search assets (pics and a/v).
 		<li>Opportunties: Look for opportunities posted by members
 		<li>Other menu items may appear for special purposes.
 		</ul>
