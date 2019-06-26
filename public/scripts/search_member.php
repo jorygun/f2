@@ -107,8 +107,6 @@ function radio_choices($field,$array){
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-		global $DB_link;
-
 		$pdo = MyPDO::instance();
 		echo "<h3>Search Results</h3>
 		<p>Click on a Member's Name to view Profile.</p>";
@@ -141,45 +139,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	$found = 0;
 	$output = "<p>* Deceased; # Inactive</small></p>";
 	$output .=	"<table class='bordered'><tr>";
-		foreach ($headings as $k => $v){
-			$output .= "<th>$v</th>";
-		}
-		$output .= "</tr>\n";
+	foreach ($headings as $k => $v){
+		$output .= "<th>$v</th>";
+	}
+	$output .= "</tr>\n";
 
 	// if no name request, then one search and yer done.
-	if ($q && empty($CLEAR['name'])){
-		if ($st = $pdo->query ($sql)) {
-		    $rc = $st->rowCount();
-            if ($rc > 0){
-                $found += $rc;
-			    $output .= show_found('No name: searching attributes only',$st);
-			}
-		}
+	if (!empty($name = $CLEAR['name'])){
+		$sql .= " AND username like '%$name%' " ;
+		
 	}
-
-	else {
-
-			$name = $CLEAR['name'];
-			
-			$sql2 = $sql . " AND username like '%$name%' " . "LIMIT 50;";
-
-			if ($st2 = $pdo->query ($sql2)->fetchAll(PDO::FETCH_ASSOC)) {
-		        $rc = $st2->rowCount();
-		        $found += $rc;
-			    
-				if ($rc >49){
-				 $output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
-				}
-				foreach ($st2 as $row){
-					$output .= show_found($row);
-		    	}
-      	}  
-
-	if ($found){
-		$output .= "</table> $found found.";
-		 echo $output;
-	}
-	else {echo "<h3>Nothing Found</h3>";}
+	$sql .= "LIMIT 50;";
+	
+	if ($st = $pdo->query ($sql) -> fetchAll(PDO::FETCH_ASSOC) ){
+			foreach ($st as $row){
+				$output .= show_found($row);
+				++$found;
+		    }
+		    if ($found > 49) {
+		    	$output .= "<tr><td colspan='5'>(First 50 shown.  Please change search to be more selective.)</td></tr>";
+		    }
+		    $output .= "</table> $found found.";
+     
+      
+	} else {$output =  "<h3>Nothing Found</h3>";}
+	return $output;
 }
 ?>
 
