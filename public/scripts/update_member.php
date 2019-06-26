@@ -7,7 +7,7 @@
 	if (f2_security_below(6)){exit;}
 //END START
 
-global $G_ems_defs;
+use digitalmx\flames\Definitions as Defs;
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
 
@@ -251,7 +251,7 @@ EOT;
 		$email_status_options = '';
 		#only allow certain changes.  x-bad, a-start validation y-verified q-unknown
 		foreach (array('A1','Y','Q','LO','LB','XX','A2','A3','B1') as $k){
-			if ($k <> $my_row['email_status']){$email_status_options .= "<option value='$k'>$k $G_ems_defs[$k]</option>";}
+			if ($k <> $my_row['email_status']){$email_status_options .= "<option value='$k'>$k " . Defs::getEmsName($k) . "</option>";}
 		}
 
 		if ($_SESSION['level'] > 6) {  #news admin

@@ -187,6 +187,14 @@ public static $test = 'you win';
 	public  static function getEmsName($code){
 			return self::$ems_codes[$code][0];
 	}
+	public static function getEmsNameArray() {
+		$names=array();
+		foreach (self::$ems_codes as $k=>$data){
+			$names[$k] = $data[0];
+		}
+		return $names;
+	}
+	
 	public  static function getSecLevel($code='N'){
 		return self::$member_codes[$code][1] ;
 	}
