@@ -503,12 +503,18 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 	 	$source_path = $fsource;
 	 	
 	 }
-	 	
-	 	$finfo =  finfo_open(FILEINFO_MIME_TYPE);
-      if (! $source_mime = finfo_file($finfo, $source_path)) {
-      	echo "unable to get mime type from source $source_path" . BRNL;
-      }
-      else {echo "Mime: $source_mime" . BRNL;}
+	 
+	 $finfo = new finfo(FILEINFO_MIME_TYPE);
+	 
+	 if (substr($source_path,0,4) == 'http'){
+	 	$source_mime = get_url_mime($source_path);
+	 } elseif ( $source_mime = $finfo->file($source_path)) {
+      	
+   } else {
+      echo "Unable to get mime type from source $source_path" . BRNL;
+   }
+   
+   echo "Mime: $source_mime" . BRNL;
       
       
 	switch ($source_mime) {
@@ -566,6 +572,17 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 
 
 
+}
+
+function get_url_mime_type($url)
+{
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt($ch, CURLOPT_HEADER, 1);
+curl_setopt($ch, CURLOPT_NOBODY, 1);
+curl_exec($ch);
+return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 }
 
 function build_im_thumbnail ($id,$source,$ttype,$max_dim){
