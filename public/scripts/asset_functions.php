@@ -587,7 +587,7 @@ return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 
 function build_im_thumbnail ($id,$source_mime,$source,$ttype,$max_dim){
     $thumb = $id . '.jpg';
-    if ($source_mime) == 'application/pdf'){
+    if ($source_mime == 'application/pdf'){
     	$source = trim($source) . '[0]'; #page 1
     }
      $im = new imagick ( $source);
