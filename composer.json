@@ -2,6 +2,7 @@
     "name": "digitalmx/flames",
     "description": "AMD Flames",
     "type": "project",
+    "license": "proprietary",
     "config": {  
             "vendor-dir": "./vendor"
     },
@@ -25,7 +26,8 @@
     ],
     "autoload": { 
          "psr-4": {
-            "digitalmx\\": "libmx/"  
+            "digitalmx\\": "libmx/" ,
+            "digitalmx\\flames\\" : ["src","code"]
             
             } 
       } 

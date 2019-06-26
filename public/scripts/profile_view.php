@@ -5,6 +5,8 @@
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(2)){exit;}
+	use digitalmx\flames\Definitions as Defs;
+	
 //END START
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
@@ -39,7 +41,7 @@ $user_id = $_SESSION['user_id'];
     else {
 	    $row = get_member_by_id($get_id);
 	}
-	global $G_member_desc;
+	
 	
 	extract($row,EXTR_PREFIX_ALL,'D');
 
@@ -47,18 +49,18 @@ $user_id = $_SESSION['user_id'];
 
 	$linkedinlink=  ($D_linkedin)?
          " <p><a href='$D_linkedin' target='_blank'><img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /><br />$D_linkedin </a></p>":'';
-    $member_type = getMemberDescription($D_status);
+    $member_type = Defs::getMemberDescription($D_status);
 	$html_greeting = $D_user_greet;
-	$email_status = get_email_status_name($D_email_status);
+	$email_status = Defs::getEmsName($D_email_status);
 	$message_link ='';
 	if ($D_email_hide){
 			$message_link = "<a href='send_message.php?n=$D_username&r=$D_id' target='_blank'>Send a Message to me.</a><br>";
 		}
 
 
-	$decade_choices = decompress($D_amd_when,$G_decades);
-	$location_choices = decompress($D_amd_where,$G_locations);
-	$department_choices = decompress($D_amd_dept,$G_departments);
+	$decade_choices = decompress($D_amd_when,Defs::$decades);
+	$location_choices = decompress($D_amd_where,Defs::$locations);
+	$department_choices = decompress($D_amd_dept,Defs::$departments);
 
 	$amd_boxes = '';
 	$amd_boxes .= (!empty($D_user_amd) ) ?  $D_user_amd : '';
@@ -87,7 +89,7 @@ $user_id = $_SESSION['user_id'];
 EOT;
     $edit_button = ($user_id ==  $D_user_id or $_SESSION['level']>7 )?
     	$button_text:'';
-	$member_type = $G_member_desc[$row['status']];
+	$member_type = Defs::getMemberDescription($row['status']);
 ?>
 
 

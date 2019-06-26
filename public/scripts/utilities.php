@@ -597,10 +597,10 @@ function get_field_from_db($field,$db,$id){
 }
 
 
-function get_email_status_name ($status){
-	global $G_ems_defs;
-	return $G_ems_defs[$status];
-}
+// function get_email_status_name ($status){
+// 	global $G_ems_defs;
+// 	return $G_ems_defs[$status];
+// }
 
 function get_id_from_name($name){
     $pdo = MyPDO::instance();
@@ -762,11 +762,11 @@ function get_member_security($code){
 	return $sec;
 }
 
-function getMemberDescription($code){
-	global $G_member_desc;
-	$desc = $G_member_desc[$code];
-	return $desc;
-}
+// function getMemberDescription($code){
+// 	global $G_member_desc;
+// 	$desc = $G_member_desc[$code];
+// 	return $desc;
+// }
 
 function im_here(){
 	echo "Utilities are here.";

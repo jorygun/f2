@@ -1,6 +1,7 @@
 <?php
 namespace digitalmx\flames;
 
+$verbose = false; $test = false;
 
 ini_set('display_errors', 1);
 $mtimet = date('d M H:i',filemtime(__FILE__));
@@ -10,6 +11,11 @@ session_start();
 $pre_out = '';
 $repo = basename(dirname(__DIR__));
 
+$req=$_SERVER['QUERY_STRING'];
+if (!empty($req)){
+	$test = (strpos($req,'t') !== false);
+	$vebose = (strpos($req,'v') !== false);
+}
 echo <<<EOT
 <html>
 <head>
@@ -23,10 +29,11 @@ echo <<<EOT
 </style>
 </head>
 <body >
-varinfo.php - last updated $mtimet
+varinfo.php - last updated $mtimet<br>
 
 
 EOT;
+echo "Test Mode: $test";
 
 
 echo "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
@@ -58,7 +65,7 @@ foreach ($_SERVER as $k=>$v){
 #$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 
 #$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
-$init_file = '../config/boot.php';
+$init_file = '../config/init.php';
 
 #	$old_init_file = '../config/init.php';
 
@@ -99,26 +106,27 @@ if (file_exists($init_file)){
 
 echo "<p><b>post-init include_path: </b><br>" . str_replace(':','<br>:',get_include_path()) ."</p><br>\n";
 
-recho ($_ENV,'$_ENV');
+if ($verbose) {
+	recho ($_ENV,'$_ENV');
 
-recho ($server_changes,'Changed value in $_SERVER');
-recho ($server_adds,'Added to $_SERVER');
-recho ($_SESSION,'$_SESSION');
+	recho ($server_changes,'Changed value in $_SERVER');
+	recho ($server_adds,'Added to $_SERVER');
+	recho ($_SESSION,'$_SESSION');
 
-recho ($GLOBALS,'$GLOBALS');
-
-
+	recho ($GLOBALS,'$GLOBALS');
 
 
-if (file_exists('.htaccess')){
-	$htaccessm = date('d M H:i',filemtime('.htaccess'));
-	echo ".htaccess ($htaccessm) :<br><pre>";
-	echo file_get_contents('.htaccess');
-	echo '</pre>';
-} else {
-echo "No .htaccess";
+
+
+	if (file_exists('.htaccess')){
+		$htaccessm = date('d M H:i',filemtime('.htaccess'));
+		echo ".htaccess ($htaccessm) :<br><pre>";
+		echo file_get_contents('.htaccess');
+		echo '</pre>';
+	} else {
+	echo "No .htaccess";
+	}
 }
-
 echo "<br><hr><br />";
 
 
@@ -140,7 +148,7 @@ try {
 
 
 try {
-	echo "pretty_date (rfc): " . dmx\make_date('rfc') . BRNL;
+	echo "pretty_date (rfc): " . dmx\make_date(time(),'rfc') . BRNL;
 } catch (Error $e) {
 	echo_red ('pretty_date function not available.') . BRNL;
 }
@@ -148,4 +156,9 @@ try {
 ###33#####
 function echo_red ($t) {
 	echo "<p class='red'>$t</p>";
+	
 }
+
+$em = new EmsMessaging($pdo,$test); #pdo,true for test
+$em->update_ems(11602,'A4');
+
