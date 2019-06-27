@@ -10,7 +10,7 @@ updated voting panel to the user.
 
 
 #ini_set('display_errors', 1);
-$repo_path = dirname(dirname(__DIR__);
+$repo_path = dirname(dirname(__DIR__));
 echo "repo: $repo<br>\n";
 
 require_once $repo_path . '/public/init.php';
