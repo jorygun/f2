@@ -53,7 +53,7 @@ function vote_action($post){
 }
 
 function cancel_bulk($job) {
-	require_once $repo_path . '/code/BulkMail.php';
+	require_once  'BulkMail.php';
 	$bulkmail = new BulkMail;
 	$queue = PROJ_PATH . '/bulk_jobs/queue';
 	rename ($queue . "/$job" , $queue . "/${job}-cancelled");
