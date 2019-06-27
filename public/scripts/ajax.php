@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
 
 /*
 Script called by ajax js voting3.js
@@ -51,7 +53,7 @@ function vote_action($post){
 function cancel_bulk($job) {
 	require_once 'BulkMail.class.php';
 	$bulkmail = new BulkMail;
-	
-	rename (SITE_PATH . '/bulk_queue/' . $job , SITE_PATH . '/bulk_queue/' . $job . '-cancelled');
+	$queue = PROJ_PATH . '/bulk_jobs/queue';
+	rename ($queue . "/$job" , $queue . "/${job}-cancelled");
 	return $bulkmail -> show_bulk_jobs(SITE_PATH . '/bulk_queue');
 }

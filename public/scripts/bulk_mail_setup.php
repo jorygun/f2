@@ -16,8 +16,8 @@ use digitalmx\flames\Definitions as Defs;
 	require 'BulkMail.php';
 	$bulkmail = new BulkMail();
 	
-	$project_path = '/usr/home/digitalm/Sites/flames';
-	$bulk_processor = $project_path . "/crons/send_bulk.php";
+	
+	$bulk_processor = PROJ_PATH . "/crons/send_bulk.php";
 	
 	
 
@@ -46,7 +46,7 @@ use digitalmx\flames\Definitions as Defs;
 	$assets = $news_latest . "/assets.txt";
 
 
-	$bulk_queue = $project_path . '/bulk_jobs/queue'; #directory.  put jobs in here
+	$queue = PROJ_PATH . '/bulk_jobs/queue'; #directory.  put jobs in here
 
 	
 	$comments = $news_latest . "/current_comments.txt";
@@ -351,8 +351,8 @@ else { #IS POST
 	echo  "<HTML><head><title>Bulk Email Plan</title></head>";
 
 	#ge job id and set paths
-	$working = $project_path . "/bulk_jobs";
-	$queue = $project_path . "/bulk_jobs/queue";
+	$working = PROJ_PATH . "/bulk_jobs";
+	$queue = $working . "/queue";
 	
 	
 	#set up job as datecode, and make sure it doesn't already exist
