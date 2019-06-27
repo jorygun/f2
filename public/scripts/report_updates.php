@@ -7,7 +7,10 @@ ini_set('display_errors', 1);
 use \digitalmx\flames\Definitions as Defs;
 
 $root = $_SERVER['DOCUMENT_ROOT'];
-if (empty($root)){$root = '/usr/home/digitalm/Sites/flames/beta/public';}
+if (empty($root)){
+	$root = '/usr/home/digitalm/Sites/flames/beta/public';
+	echo "Cannot determine root; using beta site." . "<br>\n";
+}
  require_once $root . '/init.php';;
  
 $repo_path = REPO_PATH;

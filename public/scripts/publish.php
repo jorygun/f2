@@ -177,10 +177,10 @@ file_put_contents($last_published_ts,time());
 		
 		 /* Now build the recent article and assets file */
     echo "Updating recent article titles" . BRNL ;
-        require PROJ_DIR . '/crons/recent_articles.php';
+        require PROJ_PATH . '/crons/recent_articles.php';
         
 	 echo "Updating recent assets" . BRNL ;
-        require PROJ_DIR . 'crons/recent_assets.php';
+        require PROJ_PATH . 'crons/recent_assets.php';
         
     echo "Done.  <button type='button' onClick='window.close()'>Close Window</button>";
 
