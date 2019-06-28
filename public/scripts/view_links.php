@@ -60,7 +60,7 @@ function show_links($daysback) {
 			 ON l.article_id = n.id
 			 WHERE l.last_user_hit > NOW() -  interval $daysback day
 
-			ORDER BY user_count DESC;";
+			ORDER BY date_published DESC,user_count DESC;";
 
 		$result = $pdo->query($sql);
 
