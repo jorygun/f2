@@ -113,23 +113,19 @@ function search($post,$members_db){
 		if ($email = $post['email']){
 			#if (!is_valid_email($email = trim($email))){die ("Invalid email $email");}
 
-			if ($q){$q .= ' AND ';}
 			$q[] = " user_email LIKE '%$email%' ";
 		}
 		if ($status = $post['status']){
-			if ($q){$q .= ' AND ';}
 			$q[] = " status LIKE '$status' ";
 		}
 		if ($ems = $post['ems']){
-			if ($q){$q .= ' AND ';}
 			$q[] = " email_status LIKE '$ems' ";
 		}
 		if ($admin_status = $post['admin_status']){
-			if ($q){$q .= ' AND ';}
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		$sql = "SELECT * FROM `$members_db` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
-
+			echo $sql . "Will use name = $name" .  BRNL;
 		$stmt = $pdo->prepare($sql);
 		
      
