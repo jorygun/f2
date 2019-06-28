@@ -125,12 +125,13 @@ function search($post,$members_db){
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		$sql = "SELECT * FROM `$members_db` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
-			echo $sql . "Will use name = $name" .  BRNL;
+echo $sql . "Will use name = $name" .  BRNL;
 		$stmt = $pdo->prepare($sql);
-		
-     
+	
          if  (! $result = $stmt -> execute([$name]) ){echo "Nothing Found.";}
         else{
+        		echo "Found " . $result->rowCount() . BRNL;
+        		
             echo "<form><table style='border-collapse:collapse;font-size:small;'>";
 
             echo "<tr>";
