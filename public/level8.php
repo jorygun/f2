@@ -37,7 +37,7 @@ function echo_user_row ($row,$post=''){
        $fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
 
     echo "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
-        $username = dmx\specchar($row['username']);
+        $username = dmx\entity_spec($row['username']);
         echo "<tr><td colspan='2'><b>$username</b></td>";
 
         $v = $row['user_email'];
@@ -125,7 +125,7 @@ function search($post,$members_db){
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		$sql = "SELECT * FROM `$members_db` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
-echo $sql . "Will use name = $name" .  BRNL;
+#echo $sql . "Will use name = $name" .  BRNL;
 		$stmt = $pdo->prepare($sql);
 	
          if  (! $stmt -> execute([$name]) ){echo "Nothing Found.";}
@@ -142,7 +142,7 @@ echo $sql . "Will use name = $name" .  BRNL;
             echo "</tr>\n";
 
             while ($row = $stmt -> fetch()){
-            dmx\echor ($row);
+           # dmx\echor ($row);
             
                 echo_user_row($row);
             }
