@@ -43,8 +43,9 @@ $root = $_SERVER['DOCUMENT_ROOT'];
 
 	update_link_db($url,$article_id,$my_name);
 
+echo header(Location: $url);
 
-echo "<script>location.assign('$url')</script>";
+
 	exit;
 
 	#######################
@@ -93,5 +94,3 @@ function update_link_db($url,$article_id,$my_name){
 
 
 	}
-
-?>
