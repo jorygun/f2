@@ -539,9 +539,9 @@ function build_im_thumbnail ($id,$source_mime,$source,$ttype,$max_dim){
      $im = new imagick ( $source);
     $im->setImageFormat('jpg');
     
-	autoRotateImage($image); 
+	autoRotateImage($im); 
 
-$image->writeImage('result-image.jpg');
+
     $im->thumbnailImage($max_dim, $max_dim,true); #best fit
     $im->writeImage(SITE_PATH . "/assets/$ttype/$thumb");
     return $thumb;
