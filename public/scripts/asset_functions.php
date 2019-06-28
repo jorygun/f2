@@ -567,7 +567,7 @@ function autoRotateImage($image) {
     // Now that it's auto-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image! 
     $image->setImageOrientation(imagick::ORIENTATION_TOPLEFT); 
 } 
-?> 
+
 function get_gfile($filepath) {
     #looks for designated file and returns its full path
     # if not found looks for either jpg or png or gif with same name
