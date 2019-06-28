@@ -66,18 +66,20 @@ function show_links($daysback) {
 
 		if ($result){
 			echo "<table style='width:800px;table-layout:fixed;'>
-				<tr><th>Link</th><th>From Article</th><th>Clicks user (total)</th></tr>
+				<tr><th>Link</th><th>From Article</th><th>Published</th><th>Clicks user (total)</th></tr>
 				";
 			while ($row = $result->fetch() ){
 				$url = $row['url'];
 				$title = substr(htmlentities(stripslashes(trim($row['linktitle']))),0,100);
 				if (empty($title)){$title = $url;} #shouldn't ever happen
 				$link = "<a href='$url'>$title</a>";
-				$source = "<a href='/scripts/news_article_c.php?id=${row['article_id']}'>${row['itemtitle']}</a> (pub ${row['date_published']})";
+				$source = "<a href='/scripts/news_article_c.php?id=${row['article_id']}'>${row['itemtitle']}</a> ";
+				$pub_date =  $row['date_published'];
 				echo "
 					<tr>
 					<td >$link </td>
 					<td >$source</td>
+					<td>$pub_date</td>
 					<td style='text-align:center;'>${row['user_count']} (${row['count']})</td>
 
 					</tr>
