@@ -4,6 +4,7 @@ ini_set('error_reporting', -1);
 //BEGIN START
 	require_once 'init.php';
 	use digitalmx\flames\Definitions as Defs;
+	use digitalmx as dmx;
 	$nav = new navBar(1);
 $navbar = $nav -> build_menu();
 
@@ -36,7 +37,7 @@ function echo_user_row ($row,$post=''){
        $fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
 
     echo "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
-        $username = $row['username'];
+        $username = dmx\specchar($row['username']);
         echo "<tr><td colspan='2'><b>$username</b></td>";
 
         $v = $row['user_email'];
