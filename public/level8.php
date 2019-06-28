@@ -144,7 +144,7 @@ function search($post,$members_db){
             echo "<th>-</th><th> - </th></tr>";
             echo "</tr>\n";
 
-            while ($row = $result -> fetch()){
+            while ($row = $stmt -> fetch()){
                 echo_user_row($row);
             }
             echo "</table></form>\n";
