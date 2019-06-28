@@ -538,12 +538,36 @@ function build_im_thumbnail ($id,$source_mime,$source,$ttype,$max_dim){
     }
      $im = new imagick ( $source);
     $im->setImageFormat('jpg');
+    
+	autoRotateImage($image); 
+
+$image->writeImage('result-image.jpg');
     $im->thumbnailImage($max_dim, $max_dim,true); #best fit
     $im->writeImage(SITE_PATH . "/assets/$ttype/$thumb");
     return $thumb;
 }
 
+function autoRotateImage($image) { 
+    $orientation = $image->getImageOrientation(); 
 
+    switch($orientation) { 
+        case imagick::ORIENTATION_BOTTOMRIGHT: 
+            $image->rotateimage("#000", 180); // rotate 180 degrees 
+        break; 
+
+        case imagick::ORIENTATION_RIGHTTOP: 
+            $image->rotateimage("#000", 90); // rotate 90 degrees CW 
+        break; 
+
+        case imagick::ORIENTATION_LEFTBOTTOM: 
+            $image->rotateimage("#000", -90); // rotate 90 degrees CCW 
+        break; 
+    } 
+
+    // Now that it's auto-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image! 
+    $image->setImageOrientation(imagick::ORIENTATION_TOPLEFT); 
+} 
+?> 
 function get_gfile($filepath) {
     #looks for designated file and returns its full path
     # if not found looks for either jpg or png or gif with same name
