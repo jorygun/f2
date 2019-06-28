@@ -55,20 +55,19 @@ function update_link_db($url,$article_id,$my_name){
 
        $pdo = MyPDO::instance();
 
-        $inc_user   =   (empty ($my_name))?0:1;
+        $is_user   =   !empty ($my_name);
 
    #     $now = date('Y-m-d');
 
 	$sql_user = "INSERT INTO digitalm_db1.links
-		    (url, article_id, count, user_count, last, last_user_hit, last_user)
-		VALUES ('$url',$article_id,1,1, NOW(),NOW(), '$my_name')
+		    (url, article_id, count, user_count, last, last_user_hit)
+		VALUES ('$url',$article_id,1,1, NOW(),NOW())
 		ON DUPLICATE KEY UPDATE
 		    count=count + 1,
 		    user_count= user_count + 1,
 		    last= NOW(),
 		    last_user_hit = NOW(),
-		    article_id = $article_id,
-		    last_user = '$my_name'
+		    article_id = $article_id
 	;";
 
     $sql_nonuser = "INSERT INTO digitalm_db1.links
@@ -79,7 +78,7 @@ function update_link_db($url,$article_id,$my_name){
 		    last = NOW()
 	;";
 
-    if ($inc_user == 1){
+    if ($is_user){
         $st = $pdo -> query($sql_user);
       #  echo "Using user code<br>";
 
