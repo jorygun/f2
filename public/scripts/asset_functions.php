@@ -1196,6 +1196,12 @@ function relocate ($id,$type,$link=''){
 	echo "WIll now move $orig_path to $new_path" . BRNL;
 	rename ($orig_path,$new_path);
 	 chmod ($new_path,0644);
+	 # if image, check rotational problems
+	 if (getMimeGroup($new_mime) == "Image"){
+	 	$im = new Imagick ($new_path);
+	 	autoRotateImage($im); 
+   	 $im->writeImage($new_path);
+   }
 	echo "New url: $new_url" . BRNL;
 
  	return $new_url;
