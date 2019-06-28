@@ -43,6 +43,8 @@
 
 #use Digitalmx\Lib as u;
 use \Exception as Exception;
+use \digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
 
 
 class Member
@@ -63,7 +65,7 @@ class Member
    *
    */
 
-    private $memberTable;
+    private  $memberTable = 'members_f2';
     private $pdo;
     private $messenger;
 
@@ -120,7 +122,7 @@ class Member
     {
         // $settings = $ci->get('settings');
 //         $this->memberTable = $settings['appvars']['DB_TABLES']['memberTable'];
-	$this->memberTable = 'members_f2';
+
 //         $this->pdo = $ci->get('pdo');
 	$this->pdo = MyPDO::instance();
 //         $this->messenger = $ci->get('messenger');
@@ -194,7 +196,7 @@ class Member
         if (!file_exists($image_url)){$image_url = '';}
     
        $profile_date = (empty($row['profile_verified']))? "(Never)" :
-            u\formatDate($row['profile_verified']);
+            u\make_date($row['profile_verified']);
         
         $addons= array(
         
@@ -204,17 +206,17 @@ class Member
         'login_string' =>  $login_string ,
         'subscriber' => $row['no_bulk']?false:true ,
         'is_member' => $is_member ,     
-        'email_age' => u\ageDate($row['email_verified']),
-        'profile_age' => u\ageDate($row['profile_verified']),
+        'email_age' => u\days_ago($row['email_verified']),
+        'profile_age' => u\days_ago ($row['profile_verified']),
         
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
-        'join_date' => u\formatDate('CD',$row['joined']),
+        'join_date' => u\make_date($row['joined']),
         'email_status_name' => Defs::$getEmsName($row['email_status']),
         'image_url' => $image_url,
         'decades' => $this->decompress (
-            $row ['amd_when'], Definitions::$decades ),
+            $row ['amd_when'], Defs::$decades ),
        'departments' => $this->decompress (
-            $row['amd_dept'], Definitions::$departments),
+            $row['amd_dept'], Defs::$departments),
         'profile_date' => $profile_date,
             
         
@@ -247,6 +249,7 @@ class Member
     
     $valid_vars = array('upw','username','user_email','status',
     'user_from','user_amd','admin_note','email_status');
+// switch to pdo_prep
     $prepared =  u\prepareVars($post,$valid_vars);
     $fieldlist = $prepared['field_list'];
     $data = $prepared['data'];

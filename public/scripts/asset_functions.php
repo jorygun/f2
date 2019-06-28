@@ -1203,7 +1203,8 @@ function relocate ($id,$type,$link=''){
 		case 'ftp':
 			$orig_path = PROJ_PATH . "/$link";
 			if (! file_exists($orig_path)) {
-				throw new RuntimeException ("file $link does not exist");
+				echo "file $link does not exist";
+				exit;
 			}
 			$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
 			$orig_name = substr($link,5); # remove the /ftp/ from beginning.

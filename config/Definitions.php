@@ -36,7 +36,7 @@ class Definitions {
     'T' => 'Cartoons',
 	'U' => 'Interviews *',
     'V' => 'Car stuff',
-    'W' => 'Sales Conference *',
+    'W' => 'Sales Conference/Event *',
     'X' => 'x-Problem',
     'Y' => 'Posters and Symbols ',
     
