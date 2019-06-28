@@ -1197,7 +1197,7 @@ function relocate ($id,$type,$link=''){
 	rename ($orig_path,$new_path);
 	 chmod ($new_path,0644);
 	 # if image, check rotational problems
-	 if (getMimeGroup($new_mime) == "Image"){
+	 if (false && getMimeGroup($new_mime) == "Image"){
 	 	$im = new Imagick ($new_path);
 	 	autoRotateImage($im); 
    	 $im->writeImage($new_path);
