@@ -18,7 +18,7 @@
 //require_once "scripts/news_functions.php";
 
 
-$my_name = (isset ($_SESSION['username']))?$_SESSION['username']:'';
+
 
 $root = $_SERVER['DOCUMENT_ROOT'];
 
@@ -50,46 +50,22 @@ echo header("Location: $url");
 
 	#######################
 
-function update_link_db($url,$article_id,$my_name){
+function update_link_db($url,$article_id){
 		#if url exists, update it; otherwise add
 
        $pdo = MyPDO::instance();
-
-        $is_user   =   !empty ($my_name);
-
-   #     $now = date('Y-m-d');
+        $add_user_cnt  =   (empty ($_SESSION['username'])) ? 0 : 1 ;
 
 	$sql_user = "INSERT INTO digitalm_db1.links
-		    (url, article_id, count, user_count, last, last_user_hit)
-		VALUES ('$url',$article_id,1,1, NOW(),NOW())
+		    (url, article_id, count, user_count, last)
+		VALUES ('$url',$article_id,1,$add_user_cnt, NOW() )
 		ON DUPLICATE KEY UPDATE
-		    count=count + 1,
-		    user_count= user_count + 1,
-		    last= NOW(),
-		    last_user_hit = NOW(),
-		    article_id = $article_id
-	;";
-
-    $sql_nonuser = "INSERT INTO digitalm_db1.links
-		    (url, article_id, count,last)
-		VALUES ('$url',$article_id,1, NOW())
-		ON DUPLICATE KEY UPDATE
-		    count=count + 1,
-		    last = NOW()
-	;";
-
-    if ($is_user){
-        $st = $pdo -> query($sql_user);
-      #  echo "Using user code<br>";
-
-    }
-    else {
-        $st = $pdo -> query($sql_nonuser);
-       # echo "Non-user code<br>";
-    }
-
-
-   
-
-
-	}
+		     article_id = $article_id,
+		     count=count + 1,
+		    user_count= user_count + $add_user_cnt,
+		    last= NOW()
+		   ;";
+		   
+      $st = $pdo -> query($sql_user);
+      
+}
