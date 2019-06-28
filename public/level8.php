@@ -142,6 +142,8 @@ echo $sql . "Will use name = $name" .  BRNL;
             echo "</tr>\n";
 
             while ($row = $stmt -> fetch()){
+            dmx\echor ($row);
+            
                 echo_user_row($row);
             }
             echo "</table></form>\n";
