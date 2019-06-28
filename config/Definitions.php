@@ -13,6 +13,15 @@ namespace digitalmx\flames;
 */
 class Definitions {
 	
+	public static $asset_types = array(
+    'Image' ,
+    'Multimedia' ,
+    'Document' ,
+    'Web Page' ,
+    'Other'
+    );
+
+
 	public static $asset_tags = array(
     'A' => 'Ad *',
 

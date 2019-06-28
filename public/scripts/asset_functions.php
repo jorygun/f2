@@ -3,70 +3,16 @@
     related scripts.
 */
 
+use digitalmx\flames\Definitions as Defs;
 
-$asset_types = array(
-    'Image' ,
-    'Multimedia' ,
-    'Document' ,
-    'Web Page' ,
-    'Other'
-    );
 
-// $asset_tags_old = array(
-//
-//     'A' => 'Ad', .
-//     'B' => 'Stories About AMD', - D
-//     'C' => 'Corporate Literature', .
-//     'D' => 'Facilities', - F
-//     'E' => 'Events', .
-//     'F' => 'Flames', -H
-//
-//     'L' => 'Cartoons', -T
-//     'O' => 'Old Electronics',  .
-//     'P' => 'Product Literature', .
-//     'Q' => 'Sales Literature', -S
-//     'R' => 'AMD Reports', .
-//     'S' => 'Sales Conference', -W
-//     'T' => 'Themes and Symbols', -Z
-//     'V' => 'Cars', .
-//
-//
-//
-//     );
+$asset_types = Defs::$asset_types;
 
-$asset_tags = array(
-    'A' => 'Ad *',
 
-    'C' => 'Corp - External *',
-    'D' => 'Stories About AMD *',
-    'E' => 'Events *',
-    'F' => 'Facilities *',
-    'G' => 'Gatherings',
-
-    'H' => 'Flames People',
-    'I' => 'Corp - Internal *',
-
-    'M' => 'Marketing Pub *',
-	
-
-    'O' => 'Historical Electronics *',
-
-    'P' => 'Data sheet/Apps *',
-    'R' => '',
-    'S' => 'Sales/Mktg Bulletins *',
-    'T' => 'Cartoons',
-	'U' => 'Interviews *',
-    'V' => 'Car stuff',
-    'W' => 'Sales Conference *',
-    'X' => 'x-Problem',
-    'Y' => 'Posters and Symbols ',
-    
-    
-
-    );
     #tag starting with Z is reserved for special searches, e.g., all archives
+$asset_tags = Defs::$asset_tags;
 
-$archival_tags = "ACDEFIMOSWY";
+$archival_tags = Defs::$archival_tags;
 
 $accepted_mime =
     array(
