@@ -106,7 +106,7 @@ function search($post,$members_db){
 
 		if ($name = $post['name']){
 		  # $name = str_replace('\\','\\',$name);
-			$q[] = " username REGEXP '$name' ";
+			$q[] = " username REGEXP ? ";
 		}
 
 		if ($email = $post['email']){
@@ -129,9 +129,10 @@ function search($post,$members_db){
 		}
 		$sql = "SELECT * FROM `$members_db` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
 
-
-        echo "Searching $sql<br>";
-         if  (! $result = $pdo -> query($sql) ){echo "Nothing Found.";}
+		$stmt = $pdo->prepare($sql);
+		
+     
+         if  (! $result = $stmt -> execute([$name]) ){echo "Nothing Found.";}
         else{
             echo "<form><table style='border-collapse:collapse;font-size:small;'>";
 
