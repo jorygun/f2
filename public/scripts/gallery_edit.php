@@ -95,10 +95,16 @@ function make_gallery_images($itemlist) {
         #make gallery file
         #get source for asset; create thumb
         $pdo = MyPDO::instance();
-        $sql = "SELECT url from `assets` where id = $id";
-        $fsource = $pdo->query($sql)->fetchColumn();
-
-        create_thumb($id,$fsource,'galleries');
+        $sql = "SELECT url , link from `assets` where id = $id";
+        $fresult = $pdo->query($sql)->fetch();
+        $fsource = '';
+        if (! empty($fresult['url'])){$fsource = $fresult['url'];}
+        elseif (! empty($fresult['link'])){$fsource = $fresult[link];}
+        else {
+        echo "Cannot find source file for thumb at asset id $id";
+        	continue;
+        	}
+        if (!empty ($fsource)){create_thumb($id,$fsource,'galleries');}
 
 
     }
