@@ -131,8 +131,9 @@ function search($post,$members_db){
 echo $sql . "Will use name = $name" .  BRNL;
 		$stmt = $pdo->prepare($sql);
 	
-         if  (! $stmt -> execute([$name]) ){echo "Nothing Found.";}
-        else{
+      $stmt -> execute([$name]) 
+      if ($stmt->rowCount() == 0){echo "Nothing Found.";}
+       else{
         		echo "Found " . $stmt->rowCount() . BRNL;
         		
             echo "<form><table style='border-collapse:collapse;font-size:small;'>";
