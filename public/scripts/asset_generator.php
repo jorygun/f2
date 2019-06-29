@@ -118,7 +118,7 @@ global $asset_types;
 <tr><td>Contributor:</td><td><input type='text' name='contributor' value='${itemdata['contributor']}' onfocus="form.contributor_id.value='';"> id: <input type='text' name='contributor_id' id='contributor_id' value='${itemdata['contributor_id']}'><br>$Aliastext</td></tr>
 
 
-<tr><td>From</td><td>vintage (year): <input type='text' name='vintage' value = "${itemdata['vintage'}]" size="6"> Event/Pub<input type='text' name='source' value="${itemdata['source']}" size="40"> </td></tr>
+<tr><td>From</td><td>vintage (year): <input type='text' name='vintage' value = "${itemdata['vintage']}" size="6"> Event/Pub<input type='text' name='source' value="${itemdata['source']}" size="40"> </td></tr>
 
 
 
