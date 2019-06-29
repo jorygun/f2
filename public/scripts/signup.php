@@ -216,6 +216,7 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 
 
 	 // SQLify the insert
+echo "Inserting new user" . BRNL;
 
 	$upw = randPW(); #temporary password until data is confirmed
 	$user_id = 0;
@@ -242,6 +243,7 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 
 	   ;
 EOT;
+echo "$sql" . BRNL;
 
   	$user_name = $_POST['username'];
 
@@ -251,6 +253,7 @@ EOT;
 	  
 	 $id = $pdo->getLastInsertId();
 	
+echo "New id $id " . BRNL;
 
 
 	$dup_notice = '';
@@ -276,8 +279,9 @@ EOT;
 
 
 
+echo "Sending verify to $id";
 
-	send_verify($id,'N1');
+	#send_verify($id,'N1');
 
 
 }
