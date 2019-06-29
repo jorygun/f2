@@ -178,7 +178,7 @@ correct current email address.</p>
 
 //check for duplicate name
 $name = $_POST['name'];
-	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from 'members_f2' where username like '%$name%'  "; #basically looking for exact match, not similar
+	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from `members_f2` where username like '%$name%'  "; #basically looking for exact match, not similar
 
 	 $result = $pdo->query($q);
 
