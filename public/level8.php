@@ -130,8 +130,11 @@ function search($post,$members_db){
 		$sql = "SELECT * FROM `$members_db` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
 echo $sql . "Will use name = $name" .  BRNL;
 		$stmt = $pdo->prepare($sql);
-	
-      $stmt -> execute([$name]) ;
+		if (!empty($name)){
+      	$stmt -> execute([$name]) ;
+      } else {
+      	$stmt -> execute ();
+      }
       if ($stmt->rowCount() == 0){echo "Nothing Found.";}
        else{
         		echo "Found " . $stmt->rowCount() . BRNL;
