@@ -126,8 +126,8 @@ EOT;
 
 		if (! filter_var($_POST ['email'], FILTER_VALIDATE_EMAIL)) {
 		
-  			echo "<p>Bad Address - $CLEAR['email'] is not a valid email address.</p>";
- 			 echo "<p><a href='$_SERVER['PHP_SELF']'>Try again.</a></p>";
+  			echo "<p>Bad Address - ${_POST['email']} is not a valid email address.</p>";
+ 			 echo "<p><a href='${_SERVER['PHP_SELF']}'>Try again.</a></p>";
  			exit;
 		}
 
