@@ -281,7 +281,7 @@ echo "New id $id " . BRNL;
 
 echo "Sending verify to $id";
 
-	#send_verify($id,'N1');
+	send_verify($id,'N1');
 
 
 }
