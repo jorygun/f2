@@ -17,8 +17,6 @@ echo <<<EOT
 <html lang="en">
 <head>
 	
-
-	
 	 <link rel="stylesheet" href="/css/flames2.css">
 
 	<script src="/js/f2js.js"></script>
@@ -56,7 +54,7 @@ echo <<<EOT
 EOT;
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-
+echo <<<EOT;
 	<h1><strong><span style="font-size: 36pt; color: green">FLAME<em>site</em></span></strong><span style="font-size: 26pt;color:black;">
 			&nbsp; Membership Signup</span></h1>
 
@@ -120,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 		<input name="Submit" value="Submit"  type="submit">
 		</p>
 	</form>
-
+EOT;
 
 	
 	} else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')
