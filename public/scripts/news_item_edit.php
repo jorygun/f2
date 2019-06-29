@@ -41,6 +41,8 @@ echo <<<EOT
 <title>News Item</title>
 <link rel='stylesheet' href='/css/news3.css' />
 <script type='text/javascript' src='/js/f2js.js'></script>
+<script src="/jsmx/tinymce/tinymce.min.js"></script>
+<script src="/jsmx/tiny_init.js"></script>
 </head>
 <body >
 $page_text
@@ -444,7 +446,7 @@ echo <<< EOT
 <form  method="POST" enctype="multipart/form-data" onsubmit="return check_form(['title','topic']);">
 
 $form_prefix
-$delete_item
+
 <hr>
 <p><b>Article Title and Content</b> <button type='button' style='background:#cfc' name='ShowAbout' onclick="showDiv('AboutArticles')">Help</button></p>
 $about_articles
@@ -470,7 +472,7 @@ id: <input type='text' name='contributor_id' id='contributor_id' value='${row['c
 <tr><td >title for above link</td><td><input type='text' size='60' name='link_title' value="${row['link_title']}"></td></tr>
 
 
-<tr><td style="vertical-align:top;">Content</td><td><textarea cols=60 rows=10 name='content'>${row['content']}</textarea></td><tr>
+<tr><td style="vertical-align:top;">Content</td><td><textarea cols=60 rows=10 name='content' class='useredit' >${row['content']}</textarea></td><tr>
 
 <tr><td>Comment</td><td><textarea cols=60 rows=3 name='ed_comment'>${row['ed_comment']}</textarea></td><tr>
 
@@ -486,12 +488,12 @@ EOT;
 
 
 echo <<<EOF
-
-<tr><td><b>Use Existing Asset(s)</b></td>
-    <td style='border:1px solid green'>First Asset ID: <input type=text name='asset_id' size='6' value='${row['asset_id']}'> Additional IDs <input type=text name='asset_list' value='${row['asset_list']}'>
+<tr<td colspan=2><h3>Associated Assets</h3></td></tr>
+<tr><td><b>Existing Asset(s) to display</b></td>
+    <td style='border:1px solid green'>First Asset ID: <input type=text name='asset_id' size='6' value='${row['asset_id']}'> Additional asset IDs <input type=text name='asset_list' value='${row['asset_list']}'>
 
 <button type='button' onclick="window.open('/scripts/assets.php' ,'assets','width=1100,left=160');">Search Assets</button></td></tr>
-<tr><td valign='top'><b>...OR</b></td></tr>
+<tr><td valign='top'><b>OR  add a new asset... </b></td></tr>
 EOF;
 echo new_asset_form($row['asset_id'],$asset_types);
 if ($mode == 'admin'){
@@ -501,6 +503,7 @@ if ($mode == 'admin'){
 }
 echo <<<EOF
 </table><input type='submit' value='Submit Story and Asset' style='background:#CFC;'>
+$delete_item
 </form></div>
 
 
@@ -550,11 +553,11 @@ Upload file <input type="file" name="linkfile" > <br>
     </td></tr>
 
 
-<tr><td colspan='2'>Upload Thumb/Source file if not the link. <br>
-(thumbs automatically created if link file is a pdf or youtube video.)</td></tr>
+<tr><td colspan='2'>Upload a file to create the thumbnail from if not the link. <br>
+(thumbs automatically created if link file is a jpeg, pdf or youtube video.)</td></tr>
 <tr><td></td><td>-- Upload thumb/source file:
     <input type="file" name="upfile" id="photo"><br>
---- or source URL: <input type='text' name='asseturl'  size='80'>
+--- or designate source URL: <input type='text' name='asseturl'  size='80'>
      </td></tr>
 
 
