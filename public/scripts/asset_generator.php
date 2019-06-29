@@ -157,7 +157,7 @@ function process_uploads($dir) {
         $have_captions = true;
         echo "have titles. ";
     }
-    else {die "No title file found in folder.";}
+    else {die ("No title file found in folder.");}
 
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $new_ids = [];
