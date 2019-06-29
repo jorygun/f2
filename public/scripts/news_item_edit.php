@@ -448,7 +448,7 @@ echo <<< EOT
 $form_prefix
 
 <hr>
-<p><b>Article Title and Content</b> <button type='button' style='background:#cfc' name='ShowAbout' onclick="showDiv('AboutArticles')">Help</button></p>
+<p><h4>Article Title and Content</h4> <button type='button' style='background:#cfc' name='ShowAbout' onclick="showDiv('AboutArticles')">Help</button></p>
 $about_articles
 <table>
 
@@ -479,7 +479,7 @@ id: <input type='text' name='contributor_id' id='contributor_id' value='${row['c
 <tr><td colspan='2'>Allow Comments? <input type='checkbox' value='1' name='take_comments' $take_comments_checked> &bull;
 Allow Votes? <input type='checkbox' value='1' name='take_votes' $take_votes_checked></td></tr>
 
-<tr><td colspan='2'><h3>Display Existing Assets With Your Article...</h3></tr>
+<tr><td colspan='2'><h4>Display Existing Assets With Your Article...</h4></tr>
 EOT;
 
 
@@ -531,7 +531,7 @@ EOT;
      $tag_options = buildCheckBoxSet('tags',$asset_tags,'',3);
     $assetoptions = build_options($asset_types,'Image');
     $form = <<<EOT
-    <tr><td valign='top'><b>OR Create a New Asset Here.</b></td><td>
+    <tr><td valign='top'><h4>OR Create a New Asset Here.</h4></td><td>
     <table style='border:1px solid green;'>
 
 
