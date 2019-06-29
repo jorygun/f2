@@ -206,8 +206,8 @@ email address?
 all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 ";
 				 break; #only do one record
-				}
-
+				  }
+			}
 		}
 		
 
