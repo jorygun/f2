@@ -38,19 +38,14 @@ $sql_now = sql_now('date');
 </head>
 <body >
 <h4>Bulk Asset Editor</h4>
-<p>Use this to create a series of assets from a directory of image files
-that have been uploaded (jpg, gif, and png only).
+<p>Use this to create a series of assets from a directory of  files
+that have been uploaded).
 </p><p>If the directory is in /assets/uploads, then when asset is created, files are moved
 from the upload directory to the /assets/files directory (and renamed
 with the asset id, like 1013.jpg).  If the files are in any other directory, they
-are NOT moved or renamed. </p><p> All the assets get the same title,
-caption, contributor, and keywords.  Of course, these can be edited
-later.
+are NOT moved or renamed. </p>
+<p>  The directory must also include a file called "titles.txt". This file needs to have 3 tab-dlimited fields: filename, title, and caption.  These will be used when the assets are created.
 </p>
-<p><b>Captions</b><br>
-If the directory contains a file called 'captions.txt', then captions will be added to the
-items as they are created.  The captions file is in the form of <br>
-<code>filename.jpg[tab]caption[return]</code>
 <hr>
 <?
 
@@ -61,11 +56,11 @@ if ($_SERVER[REQUEST_METHOD] == 'POST'){
 
 else {#new item
      $itemdata = array(); #store data to display
-    $itemdata[date_entered] = sql_now('date');
-    $itemdata[contributor] = $_SESSION[username];
-    $itemdata[contributor_id] = $_SESSION[user_id];
-    $itemdata[id]=0;
-    $itemdata[dir] = "/assets/uploads";
+    $itemdata['date_entered'] = sql_now('date');
+    $itemdata['contributor'] = $_SESSION[username];
+    $itemdata['contributor_id'] = $_SESSION[user_id];
+    $itemdata['id']=0;
+    $itemdata['dir'] = "/assets/uploads";
 
 
     show_form($itemdata);
@@ -75,11 +70,10 @@ else {#new item
 
 
 function show_form($itemdata) {
-    $id = $itemdata[id];
+    $id = $itemdata['id'];
 // display form using data from itemdata
 global $asset_types;
 
-	$typeoptions = build_options($asset_types,$itemdata[type]);
 
     $need_gallery = "Create new <input type=checkbox name='need_gallery'>";
      $need_toon = "Create new <input type=checkbox name='need_toon'>";
@@ -116,22 +110,15 @@ global $asset_types;
 <hr>
 
 <table>
-<tr><td>Type: </td><td><input type='text' name='type' value='Image' READONLY> (jpg, gif, png only)</td></tr>
-<tr><td>Source directory<br>
-(from web root)</td><td><input type='text' name='dir' value='$itemdata[dir]' size='100'></td></tr>
 
-<tr><td>Item Titles (all)</td><td><input type='text' size='60' name='title' value="$itemdata[title]"></td></tr>
-<tr><td>Keywords</td><td><textarea rows='3' cols='60' name='keywords'>$itemdata[keywords]</textarea></td></tr>
+<tr><td>Source directory<br>
+(from web root)</td><td><input type='text' name='dir' value='${itemdata['dir']}' size='100'></td></tr>
+
+
 <tr><td>Contributor:</td><td><input type='text' name='contributor' value='$itemdata[contributor]' onfocus="form.contributor_id.value='';"> id: <input type='text' name='contributor_id' id='contributor_id' value='$itemdata[contributor_id]'><br>$Aliastext</td></tr>
 
 
 <tr><td>From</td><td>vintage (year): <input type='text' name='vintage' value = "$itemdata[vintage]" size="6"> Event/Pub<input type='text' name='source' value="$itemdata[source]" size="40"> </td></tr>
-
-
-
-<tr><td>Caption</td><td><textarea name='caption' rows=2 cols=40>$itemdata[caption]</textarea></td></tr>
-
-<tr><td style="vertical-align:text-top;">Notes</td><td><textarea rows=2 cols=40 name='notes'>$itemdata[notes]</textarea></td></tr>
 
 
 
@@ -156,36 +143,42 @@ function process_uploads($dir) {
     echo "found $file_count files in $dirpath. ";
 
     $have_captions=false;
-    if (file_exists("$dirpath/captions.txt")){
-        $captionfh = fopen("$dirpath/captions.txt",'r');
+    if (file_exists("$dirpath/titles.txt")){
+        $captionfh = fopen("$dirpath/titles.txt",'r');
         #got caption file
         while (($line = fgets($captionfh))!==false){
-            list($gfile,$caption)=explode("\t",$line);
+            list($gfile,$title, $caption)=explode("\t",$line);
             $captions[$gfile] = $caption;
+
+            $titles[$gfile] = $title;
+
         }
 
         $have_captions = true;
-        echo "have captions. ";
+        echo "have titles. ";
     }
+    else {die "No title file found in folder.";}
+
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $new_ids = [];
 
     foreach ($filelist as $this_file){
-        if (substr($this_file,0,1)=='.'){continue;}
+        if (substr($this_file,0,1)=='#'){continue;}
         if (empty($this_file)){continue;}
-        if ($this_file == "captions.txt"){continue;}
+        if ($this_file == "titles.txt"){continue;}
 
         #build the post array, starting with stuff from form
         #make the chosen file look like it was an upload from asset form
         $post_array = $_POST;
         $post_array['id'] = 0;
-        if (!empty($captions[$this_file])){
-            $post_array['caption'] = $captions[$this_file];
-        }
+
+         $post_array['caption'] = $captions[$this_file];
+        	$post_array['title'] = $titles[$this_file];
+
         $fake_upload = SITE_PATH . '/' . $dir . '/' . $this_file;
         $_FILES['linkfile'] = build_files_array($fake_upload);
         #recho ($_FILES,'from asset_generator');
-        recho ($post_array,'post array from asset gen');
+        #recho ($post_array,'post array from asset gen');
 
        $id =  post_asset($post_array);
        $new_ids[] = $id;

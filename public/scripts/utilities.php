@@ -283,13 +283,6 @@ function get_login_from_row($row,$form='code'){
  }
 
 
-function obscure_name($name){
-	//returns text with only part of the name showsing
-
-	preg_match('/(...\S*)/',$name,$m);
-				$obscure = "$m[0]...";
-	return $obscure;
-}
 
 function remove_dir($dir) {
     // deletes all the files and subdirectories; then the directory

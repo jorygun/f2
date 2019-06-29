@@ -6,8 +6,9 @@
 //END START
 
 use \digitalmx\flames\Definitions as Defs;
-$pdo = MyPDO::instance();
+use digitalmx as u;
 
+# shoudl have pdo from init
 $member_status_set = Defs::getMemberInSet();
 
 echo <<<EOT
@@ -104,8 +105,7 @@ echo <<<EOT
 
 
 		<tr><td colspan="2"><p class="instr"><hr>
-			Finally, if you'd like to send a note to the admin, enter it here.  Especially note
-			if you think you're already a member but couldn't log in successfully.
+			Finally, if you'd like to send a note to the admin, enter it here.  
 			</p></td></tr>
 		<tr><td>Note to Admin</td><td>
 			<textarea rows="8" cols="60" name='admin_note' ></textarea></td></tr>
@@ -132,9 +132,10 @@ EOT;
 		}
 
 
+$like_email = u\safe_like($_POST['email']);
 
 
-	$q = "SELECT username,join_date,id,user_id,email_status,status from `members_f2` where user_email like '$_POST[email]' ";
+	$q = "SELECT username,join_date,id,user_id,email_status,status from `members_f2` where user_email like '$like_email' ";
 
 	 $result = $pdo->query($q);
 
@@ -177,8 +178,8 @@ correct current email address.</p>
 	}
 
 //check for duplicate name
-$name = $_POST['name'];
-	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from `members_f2` where username like '%$name%'  "; #basically looking for exact match, not similar
+$like_name = u\safe_like($_POST['name']);
+	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from `members_f2` where username like '%$like_name%'  "; #basically looking for exact match, not similar
 
 	 $result = $pdo->query($q);
 
@@ -285,5 +286,14 @@ echo "Sending verify to $id";
 
 
 }
+
+function obscure_name($name){
+	//returns text with only part of the name showsing
+
+	preg_match('/(...\S*)/',$name,$m);
+				$obscure = "$m[0]...";
+	return $obscure;
+}
+
 
 
