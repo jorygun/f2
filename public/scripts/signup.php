@@ -251,7 +251,7 @@ echo "$sql" . BRNL;
 
 	 // Get the ID for this Insert
 	  
-	 $id = $pdo->getLastInsertId();
+	 $id = $pdo->lastInsertId();
 	
 echo "New id $id " . BRNL;
 
