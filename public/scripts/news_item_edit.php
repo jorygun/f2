@@ -479,13 +479,13 @@ id: <input type='text' name='contributor_id' id='contributor_id' value='${row['c
 <tr><td colspan='2'>Allow Comments? <input type='checkbox' value='1' name='take_comments' $take_comments_checked> &bull;
 Allow Votes? <input type='checkbox' value='1' name='take_votes' $take_votes_checked></td></tr>
 
-<tr><td colspan='2'><b>To Add a graphic to your article...</td></tr>
+<tr><td colspan='2'><h3>Display Existing Assets With Your Article...</h3></tr>
 EOT;
 
 
 
 echo <<<EOF
-<tr><td><b>Existing Asset(s) to display</b></td>
+<tr><td>Specify existing asset IDs:</td>
     <td style='border:1px solid green'>First Asset ID: <input type=text name='asset_id' size='6' value='${row['asset_id']}'> Additional asset IDs <input type=text name='asset_list' value='${row['asset_list']}'>
 
 <button type='button' onclick="window.open('/scripts/assets.php' ,'assets','width=1100,left=160');">Search Assets</button></td></tr>
@@ -531,7 +531,7 @@ EOT;
      $tag_options = buildCheckBoxSet('tags',$asset_tags,'',3);
     $assetoptions = build_options($asset_types,'Image');
     $form = <<<EOT
-    <tr><td valign='top'><b>Create New Asset...</b></td><td>
+    <tr><td valign='top'><b>OR Create a New Asset Here.</b></td><td>
     <table style='border:1px solid green;'>
 
 
