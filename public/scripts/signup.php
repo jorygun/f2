@@ -187,8 +187,8 @@ $name = $_POST['name'];
 			if ($row_count>0){
 				$dup_found = TRUE;
 				echo "<h3>Already signed up?</h3>
-				<p>I found $row_count members named $SAFE[name]</p>\n";
-				$this_email = $row[user_email];
+				<p>I found $row_count members named $name]</p>\n";
+				$this_email = $row['user_email'];
 				$urlemail=rawurlencode($this_email);
 				$obscure_mail = obscure_email($this_email);
 
@@ -232,7 +232,7 @@ echo "Inserting new user" . BRNL;
 	   status = 'N',
 	   status_updated = NOW(),
 	   username = "$_POST[name]",
-	   user_email = "$_POSt[email]",
+	   user_email = "$_POST[email]",
 	   user_from = "$_POST[location]",
 	   email_status = 'N1',
 	   user_amd = "$_POST[affiliation]",
@@ -243,7 +243,7 @@ echo "Inserting new user" . BRNL;
 EOT;
 echo "$sql" . BRNL;
 
-  	$user_name = $_POST['username'];
+  	
 
 	 $result = $pdo->query($sql);
 
