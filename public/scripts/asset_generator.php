@@ -80,14 +80,14 @@ global $asset_types;
 
 
 
-        $show_thumb= ($itemdata['has_thumb'])? "&radic;" :
+        $show_thumb= (isset($itemdata['has_thumb']))? "&radic;" :
             "Create <input type=checkbox name='need_thumb' checked>";
 
-        $show_gallery= ($itemdata['has_gallery']) ?
+        $show_gallery= (isset($itemdata['has_gallery'])) ?
              "&radic;" :
             "Create <input type=checkbox name='need_gallery'>";
 
-        $show_toon = ($itemdata['has_toon']) ?
+        $show_toon = (isset($itemdata['has_toon'])) ?
              "&radic;" :
             "Create <input type=checkbox name='need_toon'>";
     ## also post vals in hidden variables to correct file to reality
