@@ -215,6 +215,8 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 
 	 // SQLify the insert
 echo "Inserting new user" . BRNL;
+$user_id = $pdo->query("Select Max (user_id) from `members_f2'") ->fetchColumn();
+$user_id += 1;
 
 	$upw = randPW(); #temporary password until data is confirmed
 	$user_id = 0;
