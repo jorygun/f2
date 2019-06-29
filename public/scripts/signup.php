@@ -5,9 +5,12 @@
 	if (f2_security_below(-1)){exit;}
 //END START
 
-$member_status_set = "'M', 'MA','MN','MC','MU','R','G'";
+use \digitalmx\flames\Definitions as Defs;
+$pdo = MyPDO::instance();
 
- ?>
+$member_status_set = Defs::getMemberInSet();
+
+echo <<<EOT
 
 
 <!DOCTYPE html>
@@ -50,8 +53,9 @@ $member_status_set = "'M', 'MA','MN','MC','MU','R','G'";
 </head>
 
 <body >
+EOT;
 
-<?php if ($_SERVER['REQUEST_METHOD'] == 'GET') {?>
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 	<h1><strong><span style="font-size: 36pt; color: green">FLAME<em>site</em></span></strong><span style="font-size: 26pt;color:black;">
 			&nbsp; Membership Signup</span></h1>
@@ -118,88 +122,35 @@ $member_status_set = "'M', 'MA','MN','MC','MU','R','G'";
 	</form>
 
 
+	
+	} else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')
+		
 
-
-
-		 <!--
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-			<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
-			<script src="js/plugins.js"></script>
-			<script src="js/main.js"></script>
- -->
-
-			<!-- Google Analytics: change UA-XXXXX-X to be your site's ID.
-			<script>
-				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-				e.src='//www.google-analytics.com/analytics.js';
-				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-				ga('create','UA-XXXXX-X','auto');ga('send','pageview');
-			</script>
-			-->
-
-<?
-	}
-
-else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')
-
-     //  include_once "verify_utilities.php";
-	// Gather info (strip any slashes added by the POST function)
-
-	list ($CLEAR,$SAFE) = clear_safe($_POST);
-
-
-
-	// Notify user if error
-		$invalid='0';
-
-
-		if ($invalid){
-			echoAlert( "Data submitted is not valid. Please reenter.");
-			echo "<script type='text/javascript'>
-	   window.location.assign('$_SERVER[PHP_SELF]')
-	  </script>";
-			exit;
+		if (! filter_var($_POST ['email'], FILTER_VALIDATE_EMAIL)) {
+		
+  			echo "<p>Bad Address - $CLEAR['email'] is not a valid email address.</p>";
+ 			 echo "<p><a href='$_SERVER['PHP_SELF']'>Try again.</a></p>";
+ 			exit;
 		}
-	//// Skip if bogus data
-		$bogus = '';
-		if (strpos($CLEAR[name],"?")){$bogus = 1;} // If username contains ?'s skip adding to DB
-		$strange_count = preg_match_all ('/[^\w\.\ \']/',$CLEAR[name]); #count strange chars
 
 
 
-		if (! filter_var($CLEAR[email], FILTER_VALIDATE_EMAIL)) {
-			$bogus=1;
-  			echo "<p>Bad Address - $CLEAR[email] is not a valid email address.</p>";
- 			 echo "<p><a href='$_SERVER[PHP_SELF]'>Try again.</a></p>";
 
- 			 if ($bogus){exit;} #silently close
-}
+	$q = "SELECT username,join_date,id,user_id,email_status,status from `members_f2` where user_email like '$_POST[email]' ";
 
+	 $result = $pdo->query($q);
 
-	$dup_found = FALSE;
-//check for duplicate email
-
-
-
-	$q = "SELECT username,join_date,id,user_id,email_status,status from $GLOBALS[members_table] where user_email like '$SAFE[email]' AND status  IN ($member_status_set) ";
-
-	 $result = mysqli_query($GLOBALS['DB_link'],$q);
-
-		$row_count = mysqli_num_rows($result);
+		$row_count = $result->rowCount();
 		$obscure_names = array ();
 		if ($row_count>0){
-
-			$dup_found = TRUE;
-			while ($row = mysqli_fetch_assoc($result)){
-				$obscure_names[] = obscure_name($row[username]);
+			foreach ($result as $row){
+				$obscure_names[] = obscure_name($row['username']);
 			}
-			$urlemail = rawurlencode($SAFE[email]);
+			$urlemail = rawurlencode($_POST['email']);
 
 			echo	"
 <h3>Already here?</h3>
-<p>The email you entered &lt;$SAFE[email]&gt;
+<p>The email you entered {_POST['email']}
 is already in the member database for one or more users named: <br>
 ";
 
@@ -225,16 +176,16 @@ correct current email address.</p>
 <p>If all else fails, <a href='mailto:admin@amdflames.org' >contact the admin</a>.</p>
 ";
 
-
+	}
 
 //check for duplicate name
 
-	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from $GLOBALS[members_table] where username like '%${SAFE[name]}%'   AND status   REGEXP 'm|g|r|a' ;"; #basically looking for exact match, not similar
+	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from 'members_f2' where username like '%${_POST['name']}%'  "; #basically looking for exact match, not similar
 
-	 $result = mysqli_query($GLOBALS['DB_link'],$q);
+	 $result = $pdo->query($q);
 
-		$row_count = mysqli_num_rows($result);
-		while ($row = mysqli_fetch_assoc($result)){
+		$row_count = $result->rowCount();
+		foreach ($result as $row ){
 			if ($row_count>0){
 				$dup_found = TRUE;
 				echo "<h3>Already signed up?</h3>
@@ -245,7 +196,7 @@ correct current email address.</p>
 
 				if ($this_email){
 					echo "
-<p>The name $SAFE[name] is already in the member database with what
+<p>The name $SAFE['name'] is already in the member database with what
 appears to be a valid email
 address like this: <code>$obscure_mail</code>.</p>
 <p>If that is you and your email, should I send a login link to that
@@ -259,48 +210,47 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 				 break; #only do one record
 				}
 
-			}
 		}
+		
 
 
-    }
 
 	 // SQLify the insert
 
 	$upw = randPW(); #temporary password until data is confirmed
 	$user_id = 0;
 	$login = $upw . $user_id;
-	$user_email	=	$CLEAR[email];
+	$user_email	=	$_POST['email'];
 	$uemenc = rawurlencode($user_email);
 
 	$source_ip = $_SERVER['REMOTE_ADDR'];
 	$source_message = sprintf("From %s at %s\n",$source_ip,date('Y-m-d H:i'));
 
 	  $sql = <<< EOT
-	INSERT INTO $GLOBALS[members_table] SET
+	INSERT INTO `members_f2` SET
 	   user_id = $user_id,
 	   upw = '$upw',
 	   status = 'N',
 	   status_updated = NOW(),
-	   username = "$SAFE[name]",
-	   user_email = "$CLEAR[email]",
-	   user_from = "$SAFE[location]",
+	   username = "$_POST[name]",
+	   user_email = "$_POSt[email]",
+	   user_from = "$_POST[location]",
 	   email_status = 'N1',
-	   user_amd = "$SAFE[affiliation]",
-	   alt_contact = "$SAFE[altc]",
-	   admin_note = "$source_message  $SAFE[admin_note]"
+	   user_amd = "$_POST[affiliation]",
+	 
+	   admin_note = "$source_message  $_POST[admin_note]"
 
 	   ;
 EOT;
 
-  	$user_name = htmlentities($CLEAR[username]);
+  	$user_name = $_POST['username'];
 
-	 $result = mysqli_query($GLOBALS['DB_link'],$sql);
+	 $result = $pdo->query($sql);
 
 	 // Get the ID for this Insert
-	  $result = mysqli_query($GLOBALS['DB_link'],"SELECT LAST_INSERT_ID() AS id;");
-	  $row = mysqli_fetch_assoc($result);
-	  $id = $row[id];
+	  
+	 $id = $pdo->getLastInsertId();
+	
 
 
 	$dup_notice = '';
@@ -329,12 +279,7 @@ EOT;
 
 	send_verify($id,'N1');
 
-	  mysqli_close($DB_link);
-
-
-
 
 }
 
-?>
-</body></html>
+
