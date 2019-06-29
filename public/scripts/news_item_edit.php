@@ -480,15 +480,11 @@ id: <input type='text' name='contributor_id' id='contributor_id' value='${row['c
 Allow Votes? <input type='checkbox' value='1' name='take_votes' $take_votes_checked></td></tr>
 
 <tr><td colspan='2'><b>To Add a graphic to your article...</td></tr>
-
-
-
 EOT;
 
 
 
 echo <<<EOF
-<tr<td colspan=2><h3>Associated Assets</h3></td></tr>
 <tr><td><b>Existing Asset(s) to display</b></td>
     <td style='border:1px solid green'>First Asset ID: <input type=text name='asset_id' size='6' value='${row['asset_id']}'> Additional asset IDs <input type=text name='asset_list' value='${row['asset_list']}'>
 
