@@ -166,6 +166,8 @@ function process_uploads($dir) {
         if (empty($this_file)){continue;}
         if ($this_file == "titles.txt"){continue;}
 
+      echo "Processing file $this_file" . BRNL;
+
         #build the post array, starting with stuff from form
         #make the chosen file look like it was an upload from asset form
         $post_array = $_POST;
