@@ -176,16 +176,15 @@ function process_uploads($dir) {
 
          $post_array['caption'] = $captions[$this_file];
         	$post_array['title'] = $titles[$this_file];
-
+         $post_array['notes'] = "Generated from $this_file.\n";
         $fake_upload = SITE_PATH . '/' . $dir . '/' . $this_file;
         $_FILES['linkfile'] = build_files($fake_upload);
         #recho ($_FILES,'from asset_generator');
-        recho ($post_array,'post array from asset gen');
+       # recho ($post_array,'post array from asset gen');
 
        $id =  post_asset($post_array);
        $new_ids[] = $id;
 
-exit;
 
     }
 
