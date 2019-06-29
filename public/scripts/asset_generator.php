@@ -163,6 +163,7 @@ function process_uploads($dir) {
 
     foreach ($filelist as $this_file){
         if (substr($this_file,0,1)=='#'){continue;}
+        if (substr($this_file,0,1) == '.') {continue;}
         if (empty($this_file)){continue;}
         if ($this_file == "titles.txt"){continue;}
 
