@@ -108,7 +108,9 @@ function search($post,$members_db){
 		if (!empty($name = $post['name'])){
 		  # $name = str_replace('\\','\\',$name);
 			$q[] = " username like '%$name%' ";
+			$use_name=1;
 		}
+		
 		
 
 		if ($email = $post['email']){
@@ -126,7 +128,7 @@ function search($post,$members_db){
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		$sql = "SELECT * FROM `$members_db` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
-#echo $sql . "Will use name = $name" .  BRNL;
+echo $sql . "Will use name = $name" .  BRNL;
 		$stmt = $pdo->prepare($sql);
 	
          if  (! $stmt -> execute([$name]) ){echo "Nothing Found.";}
