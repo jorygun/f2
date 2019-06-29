@@ -194,7 +194,7 @@ correct current email address.</p>
 
 				if ($this_email){
 					echo "
-<p>The name $SAFE['name'] is already in the member database with what
+<p>The name ${_POST['name']} is already in the member database with what
 appears to be a valid email
 address like this: <code>$obscure_mail</code>.</p>
 <p>If that is you and your email, should I send a login link to that
