@@ -147,8 +147,8 @@ function process_uploads($dir) {
         $captionfh = fopen("$dirpath/titles.txt",'r');
         #got caption file
         while (($line = fgets($captionfh))!==false){
-            list($gfile ,$title, $caption)=explode("\t",$line);
-            $captions[$gfile] = $caption;
+            @list($gfile ,$title, $caption)=explode("\t",$line);
+            $captions[$gfile] = $caption ?? '';
             $titles[$gfile] = $title;
             if (empty($title)){die ("No title for file $gfile");}
         }
@@ -160,7 +160,7 @@ function process_uploads($dir) {
 
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $new_ids = [];
-exit;
+
     foreach ($filelist as $this_file){
         if (substr($this_file,0,1)=='#'){continue;}
         if (empty($this_file)){continue;}
@@ -177,12 +177,12 @@ exit;
         $fake_upload = SITE_PATH . '/' . $dir . '/' . $this_file;
         $_FILES['linkfile'] = build_files($fake_upload);
         #recho ($_FILES,'from asset_generator');
-        #recho ($post_array,'post array from asset gen');
+        recho ($post_array,'post array from asset gen');
 
        $id =  post_asset($post_array);
        $new_ids[] = $id;
 
-
+exit;
 
     }
 
