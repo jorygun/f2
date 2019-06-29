@@ -147,11 +147,10 @@ function process_uploads($dir) {
         $captionfh = fopen("$dirpath/titles.txt",'r');
         #got caption file
         while (($line = fgets($captionfh))!==false){
-            list($gfile,$title, $caption)=explode("\t",$line);
+            list($gfile ,$title, $caption)=explode("\t",$line);
             $captions[$gfile] = $caption;
-
             $titles[$gfile] = $title;
-
+            if (empty($title)){die ("No title for file $gfile");}
         }
 
         $have_captions = true;
@@ -161,7 +160,7 @@ function process_uploads($dir) {
 
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $new_ids = [];
-
+exit;
     foreach ($filelist as $this_file){
         if (substr($this_file,0,1)=='#'){continue;}
         if (empty($this_file)){continue;}
