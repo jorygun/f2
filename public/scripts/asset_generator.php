@@ -49,7 +49,7 @@ are NOT moved or renamed. </p>
 <hr>
 <?
 
-if ($_SERVER[REQUEST_METHOD] == 'POST'){
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $dir = $_POST['dir'];
         process_uploads($dir);
 }
@@ -57,8 +57,8 @@ if ($_SERVER[REQUEST_METHOD] == 'POST'){
 else {#new item
      $itemdata = array(); #store data to display
     $itemdata['date_entered'] = sql_now('date');
-    $itemdata['contributor'] = $_SESSION[username];
-    $itemdata['contributor_id'] = $_SESSION[user_id];
+    $itemdata['contributor'] = $_SESSION['username'];
+    $itemdata['contributor_id'] = $_SESSION['user_id'];
     $itemdata['id']=0;
     $itemdata['dir'] = "/assets/uploads";
 
@@ -80,14 +80,14 @@ global $asset_types;
 
 
 
-        $show_thumb= ($itemdata[has_thumb])? "&radic;" :
+        $show_thumb= ($itemdata['has_thumb'])? "&radic;" :
             "Create <input type=checkbox name='need_thumb' checked>";
 
-        $show_gallery= ($itemdata[has_gallery]) ?
+        $show_gallery= ($itemdata['has_gallery']) ?
              "&radic;" :
             "Create <input type=checkbox name='need_gallery'>";
 
-        $show_toon = ($itemdata[has_toon]) ?
+        $show_toon = ($itemdata['has_toon']) ?
              "&radic;" :
             "Create <input type=checkbox name='need_toon'>";
     ## also post vals in hidden variables to correct file to reality
@@ -115,10 +115,10 @@ global $asset_types;
 (from web root)</td><td><input type='text' name='dir' value='${itemdata['dir']}' size='100'></td></tr>
 
 
-<tr><td>Contributor:</td><td><input type='text' name='contributor' value='$itemdata[contributor]' onfocus="form.contributor_id.value='';"> id: <input type='text' name='contributor_id' id='contributor_id' value='$itemdata[contributor_id]'><br>$Aliastext</td></tr>
+<tr><td>Contributor:</td><td><input type='text' name='contributor' value='${itemdata['contributor']}' onfocus="form.contributor_id.value='';"> id: <input type='text' name='contributor_id' id='contributor_id' value='${itemdata['contributor_id']}'><br>$Aliastext</td></tr>
 
 
-<tr><td>From</td><td>vintage (year): <input type='text' name='vintage' value = "$itemdata[vintage]" size="6"> Event/Pub<input type='text' name='source' value="$itemdata[source]" size="40"> </td></tr>
+<tr><td>From</td><td>vintage (year): <input type='text' name='vintage' value = "${itemdata['vintage'}]" size="6"> Event/Pub<input type='text' name='source' value="${itemdata['source']}" size="40"> </td></tr>
 
 
 
