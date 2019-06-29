@@ -219,7 +219,7 @@ $user_id = $pdo->query("Select max(user_id) from `members_f2` ") -> fetchColumn(
 $user_id += 1;
 
 	$upw = randPW(); #temporary password until data is confirmed
-	$user_id = 0;
+	;
 	$login = $upw . $user_id;
 	$user_email	=	$_POST['email'];
 	$uemenc = rawurlencode($user_email);
