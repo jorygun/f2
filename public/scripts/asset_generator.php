@@ -176,7 +176,7 @@ function process_uploads($dir) {
         	$post_array['title'] = $titles[$this_file];
 
         $fake_upload = SITE_PATH . '/' . $dir . '/' . $this_file;
-        $_FILES['linkfile'] = build_files_array($fake_upload);
+        $_FILES['linkfile'] = build_files($fake_upload);
         #recho ($_FILES,'from asset_generator');
         #recho ($post_array,'post array from asset gen');
 
@@ -218,4 +218,22 @@ function process_uploads($dir) {
 
 
 }
+  function build_files($loc) {
+            /*
+            $loc is complete file path
+            $loc =  SITE_PATH . '/' . $upload_dir . '/' . $this_file;
+            or $loc = PROJ_PATH / ftpf /this_file
+             #use _FILES array to look like an upload
+            */
 
+         $finfo = new finfo(FILEINFO_MIME_TYPE);
+
+        $file_data = array(
+            'tmp_name' => $loc,
+            'name' => basename($loc),
+            'error' => 0,
+            'size' => filesize($loc),
+            'type' => $finfo->file($loc)
+        );
+        return $file_data;
+}
