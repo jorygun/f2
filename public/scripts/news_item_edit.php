@@ -493,7 +493,8 @@ echo <<<EOF
 EOF;
 echo new_asset_form($row['asset_id'],$asset_types);
 if ($mode == 'admin'){
-    echo "<tr> <td>Use<input type='checkbox' name='use_me[]' value='$id' $uchk>
+    echo "<tr> <td colspan='2'>
+    Queue for next <input type='checkbox' name='use_me[]' value='$id' $uchk>
     priority <input type='checkbox' name='priority[]' value='$id' $pchk>
     </td></tr>\n";
 }
