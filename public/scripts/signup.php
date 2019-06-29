@@ -16,10 +16,10 @@ echo <<<EOT
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="iso-8859-1" />
+	
 
-	 <meta name="viewport" content="width=device-width, initial-scale=1">
-	 <link rel="stylesheet" href="../css/flames2.css">
+	
+	 <link rel="stylesheet" href="/css/flames2.css">
 
 	<script src="/js/f2js.js"></script>
     <script type = 'text/javascript'>
