@@ -155,12 +155,12 @@ is already in the member database for one or more users named: <br>
 			foreach($obscure_names as $v){echo "$v, ";}
 			echo "
 </p>
-<p>  Should I send the login link for those members to $SAFE[email]?
+<p>  Should I send the login link for those members to ${_POST['email']}?
 Note: the same email can be used by more than one member, but each member
 has their own profile and login.  If you are one of the people listed
 above, then click to have the member logins associated with this email
 address sent to you.
-<a href='#' onclick=\"window.open('send_lost_link.php?email=$urlemail','lostlink','height=200,width=400,x=200,y=200');return false;\">Send existing logins to $SAFE[email]</a>
+<a href='#' onclick=\"window.open('send_lost_link.php?email=$urlemail','lostlink','height=200,width=400,x=200,y=200');return false;\">Send existing logins to {_POST['email']}</a>
 </p>
 <p>If you are NOT one of the people named above, then you can
 get your own member account at the same address.
@@ -177,8 +177,8 @@ correct current email address.</p>
 	}
 
 //check for duplicate name
-
-	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from 'members_f2' where username like '%${_POST['name']}%'  "; #basically looking for exact match, not similar
+$name = $_POST['name'];
+	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from 'members_f2' where username like '%$name%'  "; #basically looking for exact match, not similar
 
 	 $result = $pdo->query($q);
 
