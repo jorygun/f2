@@ -489,7 +489,7 @@ echo <<<EOF
     <td style='border:1px solid green'>First Asset ID: <input type=text name='asset_id' size='6' value='${row['asset_id']}'> Additional asset IDs <input type=text name='asset_list' value='${row['asset_list']}'>
 
 <button type='button' onclick="window.open('/scripts/assets.php' ,'assets','width=1100,left=160');">Search Assets</button></td></tr>
-<tr><td valign='top'><b>OR  add a new asset... </b></td></tr>
+<tr><td valign='top' colspan='2'><h4>OR Create A New Asset Here. </h4></td></tr>
 EOF;
 echo new_asset_form($row['asset_id'],$asset_types);
 if ($mode == 'admin'){
@@ -531,7 +531,7 @@ EOT;
      $tag_options = buildCheckBoxSet('tags',$asset_tags,'',3);
     $assetoptions = build_options($asset_types,'Image');
     $form = <<<EOT
-    <tr><td valign='top'><h4>OR Create a New Asset Here.</h4></td><td>
+    <tr><td valign='top'></td><td>
     <table style='border:1px solid green;'>
 
 
