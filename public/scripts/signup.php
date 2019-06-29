@@ -54,7 +54,7 @@ echo <<<EOT
 EOT;
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-echo <<<EOT;
+echo <<<EOT
 	<h1><strong><span style="font-size: 36pt; color: green">FLAME<em>site</em></span></strong><span style="font-size: 26pt;color:black;">
 			&nbsp; Membership Signup</span></h1>
 
