@@ -105,10 +105,11 @@ function search($post,$members_db){
     $fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
 		$q = array ();
 
-		if ($name = $post['name']){
+		if (!empty($name = $post['name'])){
 		  # $name = str_replace('\\','\\',$name);
-			$q[] = " username REGEXP ? ";
+			$q[] = " username like '%$name%' ";
 		}
+		
 
 		if ($email = $post['email']){
 			#if (!is_valid_email($email = trim($email))){die ("Invalid email $email");}
