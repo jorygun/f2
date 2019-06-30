@@ -57,7 +57,10 @@ require_once 'MxUtilities.php';
 
 require_once 'nav.class.php';
 
+use \MyPDO;
 
+Init->setRequired(Init->$platform);
+$pdo = Init->setPDO(Init->$platform);
 
 // #build db
 // $container = new Container();
@@ -132,15 +135,13 @@ class Init
 		$this->setIncludes($repo_dir);
 		
 		
-		$this->pdo = $this->setPDO($this->platform);
 
-		$this->$this->setRequired($this->platform);
 		
 		define ('INIT',1);
 	
 	}
 	
-	private function setRequired($platform){
+	public function setRequired($platform){
 		if ($platform == 'pair'){
 			require_once  "f2_connect.php";
 			$DB_link = Connect_DB();
@@ -154,15 +155,16 @@ class Init
 		return true;
 	}
 	
-	private function setPDO($platform){
+	public function setPDO($platform){
 		if ($platform == 'pair'){
-			$pdo = MyPDO::instance();
+			$pdo = \MyPDO::instance();
 		} elseif ($platform == 'ayebook') {
 			$pdo = new \digitalmx\MxPDO('production',$platform,$db_ini);
 			
 		} else {
 			throw new Exception ("Platform not known $platform");
 		}
+		$this->pdo = $pdo;
 		return $pdo;
 	}
 	
