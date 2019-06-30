@@ -195,7 +195,7 @@ class Member
         
         $addons= array(
         
-        'seclevel' => Defs::get_seclevel($row['status']) ,
+        'seclevel' => Defs::getSecLevel($row['status']) ,
         'status_name' => Defs::getMemberDescription($row['status']) ,
             
         'login_string' =>  $login_string ,
