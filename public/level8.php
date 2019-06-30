@@ -132,7 +132,7 @@ echo $sql .  BRNL;
 
 		$stmt = $pdo->prepare($sql);
 		if (!empty($name)){
-      	$stmt->execute([$name]) ;
+      	$stmt->execute($name) ;
       	echo " using username = $name" . BRNL;
       } else {
       	$stmt->execute ();
