@@ -153,11 +153,13 @@ EOT;
 	if (!empty($P_email_status)){
 		echo "<hr>Email Status Update<br>";
 		require_once ('EmsMessaging.php');
+		$ems = new EmsMessaging();
+		
 
 		if ( in_array($P_email_status,array( 'A1','B1'))){
 			#send_verify($P_id,$P_email_status);
 			echo "Starting update_email_status ($P_email_status)<br>";
-			update_ems($P_id,$P_email_status);
+			$ems->update_ems($P_id,$P_email_status);
 		}
 		else {set_mu_status($P_id,$P_email_status);} #silent
 
@@ -380,6 +382,8 @@ EOT;
 
 function update_email ($row,$new_email){ #$id,$name,$old_email,$new_email){
     require_once ('EmsMessaging.php');
+    $ems = new EmsMessaging();
+    
     $pdo = MyPDO::instance();
 	//  if email is changed, send message to old email and verify to new email
 	//
@@ -450,7 +454,7 @@ EOT;
 	$found_msg, $GLOBALS['from_admin']);
 	}
 
-	else {update_ems ($id,'E1');
+	else {$ems->update_ems ($id,'E1');
 	#will immediately set the status to E1 and send out verify email
 }
 	return 1;
