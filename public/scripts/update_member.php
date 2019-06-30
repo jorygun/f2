@@ -9,7 +9,7 @@
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx\flames as dmxf;
-use digitalm as u;
+use digitalmx as u;
 
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
