@@ -74,15 +74,15 @@ require_once 'nav.class.php';
 
 
 
-#build db
-$container = new Container();
-
-	$container['pdo_dev'] = function ($c)  {
-		return new MxPDO('dev',$init->platform,$init->db_ini);
-	};
-	$container['pdo_prod'] = function ($c)  {
-		return new MxPDO('production',$init->platform,$init->db_ini);
-	};
+// #build db
+// $container = new Container();
+// 
+// 	$container['pdo_dev'] = function ($c)  {
+// 		return new MxPDO('dev',$init->platform,$init->db_ini);
+// 	};
+// 	$container['pdo_prod'] = function ($c)  {
+// 		return new MxPDO('production',$init->platform,$init->db_ini);
+// 	};
 
 
 //       CLASS INIT        //
@@ -100,6 +100,8 @@ class Init
 	private $site; #/beta.amdflames.org
 	private $repo_dir;
 	private $project_dir;
+	
+	public $pdo;
 	
 	
 	
@@ -145,8 +147,38 @@ class Init
 		$this->setIncludes($repo_dir);
 		
 		
+		$this->pdo = setPDO($this->platform);
+
+		$this->setRequired();
+		
 		define ('INIT',1);
 	
+	}
+	
+	private function setRequired($platform){
+		if ($platform == 'pair'){
+			require_once  "f2_connect.php";
+			$DB_link = Connect_DB();
+			$GLOBALS['DB_link'] = $DB_link;
+			require_once "f2_security.php";
+		} elseif ($platform == 'ayebook') {
+			require_once "f2_security.php"
+		} else {
+			throw new Exception ("Platform not known $platform");
+		}
+		return true;
+	}
+	
+	private function setPDO($platform){
+		if ($platform == 'pair'){
+			$pdo = \MyPDO::instance();
+		} elseif ($platform == 'ayebook') {
+			$pdo = new \digitalmx\MxPDO('production',$platform,$db_ini);
+			
+		} else {
+			throw new Exception ("Platform not known $platform");
+		}
+		return $pdo;
 	}
 	
 	private function setSite() {
