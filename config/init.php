@@ -60,8 +60,10 @@ require_once 'nav.class.php';
 use \MyPDO;
 echo "DB USEr: " . DB_USER;
 
-$init->setRequired();
-$pdo = $init->setPDO();
+
+$pdo = $init->setPDO(); #guarantees db values are set
+$init->setRequired(); #f2 connect needs db values
+
 
 // #build db
 // $container = new Container();
