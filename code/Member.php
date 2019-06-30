@@ -79,7 +79,7 @@ class Member
     private static $short_data_fields = array(
     'user_id','status','user_email','username',
     'email_status','email_status_time', 'last_login', 'email_hide',
-    'email_verified','email_public','user_from','decades','departments','aka'
+    'email_last_validated','email_public','user_from','decades','departments','aka'
     
     );
     # these fields retained in _SESSION['login_user']
@@ -97,8 +97,8 @@ class Member
     'last_login', 
     'image_url', 
     'subscriber', 
-    'email_verified', 
-    'profile_verified', 
+    'email_last_validated', 
+    'profile_validated', 
     'profile_age', 
     'email_age', 
     'needs_update',
@@ -110,7 +110,7 @@ class Member
     );
     
     public static $member_update_fields = array (
-	'username', 'upw', 'joined', 'user_email', 'prior_email', 'email_chg_date', 'email_status', 'email_status_time', 'email_verified', 'previous_ems', 'no_bulk', 'email_hide', 'status_updated', 'status', 'admin_status',  'profile_verified', 'user_from', 'user_amd', 'amd_where', 'amd_when', 'amd_dept', 'user_current', 'user_interests', 'user_greet', 'user_about', 'user_memories', 'image_url', 'linkedin', 'admin_note', 'contributed','user_web','upward'
+	'username', 'upw', 'joined', 'user_email', 'prior_email', 'email_chg_date', 'email_status', 'email_status_time', 'email_last_validated', 'previous_ems', 'no_bulk', 'email_hide', 'status_updated', 'status', 'admin_status',  'profile_validated', 'user_from', 'user_amd', 'amd_where', 'amd_when', 'amd_dept', 'user_current', 'user_interests', 'user_greet', 'user_about', 'user_memories', 'image_url', 'linkedin', 'admin_note', 'contributed','user_web','upward'
 	);
     // data for return
     private $info;
@@ -192,8 +192,8 @@ class Member
         $image_url = SITE_PATH . "/assets/users/{$id}.jpg";
         if (!file_exists($image_url)){$image_url = '';}
     
-       $profile_date = (empty($row['profile_verified']))? "(Never)" :
-            u\make_date($row['profile_verified']);
+       $profile_date = (empty($row['profile_validated']))? "(Never)" :
+            u\make_date($row['profile_validated']);
         
         $addons= array(
         
@@ -203,12 +203,12 @@ class Member
         'login_string' =>  $login_string ,
         'subscriber' => $row['no_bulk']?false:true ,
         'is_member' => $is_member ,     
-        'email_age' => u\days_ago($row['email_verified']),
-        'profile_age' => u\days_ago ($row['profile_verified']),
+        'email_age' => u\days_ago($row['email_last_validated']),
+        'profile_age' => u\days_ago ($row['profile_validated']),
         
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
         'join_date' => u\make_date($row['joined']),
-        'email_status_name' => Defs::$getEmsName($row['email_status']),
+        'email_status_name' => Defs::getEmsName($row['email_status']),
         'image_url' => $image_url,
         'decades' => $this->decompress (
             $row ['amd_when'], Defs::$decades ),
@@ -620,7 +620,7 @@ class Member
     }
     
      public function setProfileVerified ($id) {
-        $sql = "Update `$this->memberTable` set profile_verified = NOW(),email_status='Y'
+        $sql = "Update `$this->memberTable` set profile_validated = NOW(),email_status='Y'
             WHERE user_id = $id;";
             
         $stmt = $this->pdo->query($sql);
@@ -628,7 +628,7 @@ class Member
         // u\echoR($md);
 //         exit;
         
-        $newstat = $md['data']['profile_verified'];
+        $newstat = $md['data']['profile_validated'];
         
         return  $newstat;
 
