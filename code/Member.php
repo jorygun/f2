@@ -1,5 +1,5 @@
 <?php
-
+namespace digitalmx\flames;
 
  /**
   *
@@ -118,16 +118,11 @@ class Member
     private $credential = false;
     # plus record count and data
     
- public function __construct()
+ public function __construct($pdo)
     {
-        // $settings = $ci->get('settings');
-//         $this->memberTable = $settings['appvars']['DB_TABLES']['memberTable'];
+       
+	$this->pdo = $pdo;
 
-//         $this->pdo = $ci->get('pdo');
-	$this->pdo = MyPDO::instance();
-//         $this->messenger = $ci->get('messenger');
-	#need this->messenger email object
-        
     }
     
    
