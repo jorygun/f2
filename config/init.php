@@ -59,8 +59,8 @@ require_once 'nav.class.php';
 
 use \MyPDO;
 
-Init->setRequired($init->platform);
-$pdo = Init->setPDO($init->platform);
+$init->setRequired();
+$pdo = Init->setPDO();
 
 // #build db
 // $container = new Container();
@@ -141,7 +141,8 @@ class Init
 	
 	}
 	
-	public function setRequired($platform){
+	public function setRequired(){
+		$platform = $this->platform;
 		if ($platform == 'pair'){
 			require_once  "f2_connect.php";
 			$DB_link = Connect_DB();
@@ -155,7 +156,8 @@ class Init
 		return true;
 	}
 	
-	public function setPDO($platform){
+	public function setPDO(){
+		$platform = $this->platform;
 		if ($platform == 'pair'){
 			$pdo = \MyPDO::instance();
 		} elseif ($platform == 'ayebook') {
