@@ -9,6 +9,7 @@
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx\flames as dmxf;
+use digitalm as u;
 
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
@@ -187,6 +188,7 @@ EOT;
 
 #echo "<pre>" . print_r ($sqlu,true) . "</pre>";
 $prep = pdoPrep($sqlu,'', $key='user_id');
+u\echor($prep,'Prep');
 
 $sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id=${prep['key']} ";
 echo $sql . BRNL;
