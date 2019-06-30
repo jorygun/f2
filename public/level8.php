@@ -135,7 +135,7 @@ echo $sql . "Will use name = $name" .  BRNL;
       } else {
       	$stmt -> execute ();
       }
-      if ($stmt->rowCount() == 0){echo "Nothing Found.";}
+      if (false and $stmt->rowCount() == 0){echo "Nothing Found.";}
        else{
         		echo "Found " . $stmt->rowCount() . BRNL;
         		
