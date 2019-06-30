@@ -183,10 +183,25 @@ EOT;
 		$sqlu['admin_note'] = $P_admin_note;
 	}
 	//finish sql if there are updates.
-
+	$sqlu['user_id'] = $my_row['user_id'];
 
 #echo "<pre>" . print_r ($sqlu,true) . "</pre>";
- update_record_for_id_pdo ($my_id,$sqlu);
+$pdo_data = pdoPrep($sqlu,[], $key='user_id'){
+$sql = "UPDATE `members_f2` SET ${pdo_data['update']} WHERE user_id=${prep['key']} ";
+$stmt = $this->pdo->prepare($sql)->execute($pdo_data['data']);
+
+
+ /**
+  *                                          *
+ $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+       $new_id = $pdo->lastInsertId();
+
+    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
+       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+
+*/
+
 
 	if (isset($P_sendlost)){ #send lost link
 		echo "<hr>Lost Link Sent<br>", send_lost_link($use_email);
