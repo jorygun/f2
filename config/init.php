@@ -58,6 +58,7 @@ require_once 'MxUtilities.php';
 require_once 'nav.class.php';
 
 use \MyPDO;
+echo "DB USEr: " . DB_USER;
 
 $init->setRequired();
 $pdo = $init->setPDO();
@@ -145,8 +146,7 @@ class Init
 		$platform = $this->platform;
 		if ($platform == 'pair'){
 			require_once  "f2_connect.php";
-			$DB_link = Connect_DB();
-			$GLOBALS['DB_link'] = $DB_link;
+			$GLOBALS['DB_link'] = Connect_DB();
 			require_once "f2_security.php";
 		} elseif ($platform == 'ayebook') {
 			require_once "f2_security.php";
@@ -161,7 +161,7 @@ class Init
 		if ($platform == 'pair'){
 			$pdo = \MyPDO::instance();
 		} elseif ($platform == 'ayebook') {
-			$pdo = new \digitalmx\MxPDO('production',$platform,$db_ini);
+			$pdo = new \digitalmx\MxPDO('production',$platform,$this->db_ini);
 			
 		} else {
 			throw new Exception ("Platform not known $platform");
