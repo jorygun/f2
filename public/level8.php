@@ -127,18 +127,20 @@ function search($post,$members_db){
 		if ($admin_status = $post['admin_status']){
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
-		$sql = "SELECT * FROM `$members_db` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
+		$sql = "SELECT * FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
 echo $sql .  BRNL;
+
 		$stmt = $pdo->prepare($sql);
 		if (!empty($name)){
       	$stmt->execute([$name]) ;
       	echo " using username = $name" . BRNL;
       } else {
-      	$stmt -> execute ();
+      	$stmt->execute ();
       }
-      if ($stmt->rowCount() == 0){echo "Nothing Found.";}
-       else{
-        		echo "Found " . $stmt->rowCount() . BRNL;
+		$rc = $stmt->rowCount();
+      if ($rc == 0){echo "Nothing Found.";}
+		else{
+        		echo "Found " . $rc . BRNL;
         		
             echo "<form><table style='border-collapse:collapse;font-size:small;'>";
 
