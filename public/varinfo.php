@@ -131,7 +131,7 @@ echo "<br><hr><br />";
 
 
 use digitalmx\flames\Definitions as Defs;
-use digitalmx as dmx;
+use digitalmx as u;
 
 
 try {
@@ -148,7 +148,7 @@ try {
 
 
 try {
-	echo "pretty_date (rfc): " . dmx\make_date(time(),'rfc') . BRNL;
+	echo "pretty_date (rfc): " . u\make_date(time(),'rfc') . BRNL;
 } catch (Error $e) {
 	echo_red ('pretty_date function not available.') . BRNL;
 }
