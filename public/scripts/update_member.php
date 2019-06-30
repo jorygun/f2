@@ -184,9 +184,10 @@ EOT;
 		$sqlu['admin_note'] = $P_admin_note;
 	}
 	//finish sql if there are updates.
-	$sqlu['user_id'] = $my_row['user_id'];
+	
 
 if (!empty ($sqlu)){
+	$sqlu['user_id'] = $my_row['user_id'];
 	u\echor ($sqlu, 'sqlu');
 	$prep = u\pdoPrep($sqlu,'', $key='user_id');
 	u\echor($prep,'Prep');
