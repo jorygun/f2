@@ -72,7 +72,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' ){
 
 
 $use_email = $my_row['user_email'];
-
+$uid = $my_row['user_id'];
 	#first check for new email
 
 
@@ -163,7 +163,7 @@ EOT;
 		if ( in_array($P_email_status,array( 'A1','B1'))){
 			#send_verify($P_id,$P_email_status);
 			echo "Starting update_email_status ($P_email_status)<br>";
-			$ems->update_ems($P_id,$P_email_status);
+			$ems->update_ems($uid,$P_email_status);
 		}
 		else {set_mu_status($P_id,$P_email_status);} #silent
 
@@ -187,7 +187,7 @@ EOT;
 	
 
 if (!empty ($sqlu)){
-	$sqlu['user_id'] = $my_row['user_id'];
+	$sqlu['user_id'] = $uid;
 	u\echor ($sqlu, 'sqlu');
 	$prep = u\pdoPrep($sqlu,'', $key='user_id');
 	u\echor($prep,'Prep');
