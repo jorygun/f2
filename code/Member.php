@@ -110,7 +110,7 @@ class Member
     );
     
     public static $member_update_fields = array (
-	'username', 'upw', 'joined', 'user_email', 'prior_email', 'email_chg_date', 'email_status', 'email_status_time', 'email_last_validated', 'previous_ems', 'no_bulk', 'email_hide', 'status_updated', 'status', 'admin_status',  'profile_validated', 'user_from', 'user_amd', 'amd_where', 'amd_when', 'amd_dept', 'user_current', 'user_interests', 'user_greet', 'user_about', 'user_memories', 'image_url', 'linkedin', 'admin_note', 'contributed','user_web','upward'
+	'username', 'upw', 'join_date', 'user_email', 'prior_email', 'email_chg_date', 'email_status', 'email_status_time', 'email_last_validated', 'previous_ems', 'no_bulk', 'email_hide', 'status_updated', 'status', 'admin_status',  'profile_validated', 'user_from', 'user_amd', 'amd_where', 'amd_when', 'amd_dept', 'user_current', 'user_interests', 'user_greet', 'user_about', 'user_memories', 'image_url', 'linkedin', 'admin_note', 'contributed','user_web','upward'
 	);
     // data for return
     private $info;
@@ -207,7 +207,7 @@ class Member
         'profile_age' => u\days_ago ($row['profile_validated']),
         
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
-        'join_date' => u\make_date($row['joined']),
+        'join_date' => u\make_date($row['join_date']),
         'email_status_name' => Defs::getEmsName($row['email_status']),
         'image_url' => $image_url,
         'decades' => $this->decompress (
