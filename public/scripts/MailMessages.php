@@ -10,11 +10,9 @@
 	separate
 */
 
-<<<<<<< HEAD
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-=======
-require_once "/usr/home/digitalm/Sites/flames/f2/config/init.php";
->>>>>>> master
+
 
 function define_lost_reasons(){
     $r = array(
@@ -41,6 +39,7 @@ function update_email_status($id,$mstatus,$mode='Real'){
     // do not update if mode = Test
     #echo "Updating status for id $id, status $mstatus\n";
     $lost_reasons = define_lost_reasons();
+    $pdo = MyPDO::instance();
 
     $em_subj = '';
     #updates status, sends emails
@@ -94,7 +93,7 @@ function update_email_status($id,$mstatus,$mode='Real'){
             SET $sqlj
             WHERE id = '$id';";
             if ($mode=='Real'){
-             $result = mysqli_query($GLOBALS['DB_link'],$sql);
+             $result = $pdo->query($sql);
             }
         }
 

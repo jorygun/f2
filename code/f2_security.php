@@ -224,15 +224,6 @@ EOT;
 /* *** DATABASE FUNCTIONS *** */
 
 
-// NOT USED
-// function query($sql){	
-// #	echo "Got query " . debug_print_backtrace() ;
-//  $result = mysqli_query($GLOBALS['DB_link'],$sql) ;
-// if (!$result){echo "No result from $sql";}
-//   // die ("Mysql error: <pre>\n$sql\n</pre>" . mysqli_error($DB_link) . debug_print_backtrace()  );
-//  return $result;
-// } 
-
 
 
 

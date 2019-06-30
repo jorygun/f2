@@ -19,7 +19,7 @@ require_once "comments.class.php";
 
 $pdo = MyPDO::instance();
 
-$DB_link = Connect_DB();
+
 if(isset($_GET['id'])){$item_id = $_GET['id'];}
 else {echo "No article requested"; exit;}
 

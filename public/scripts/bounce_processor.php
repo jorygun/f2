@@ -5,7 +5,7 @@
 	if (f2_security_below(1)){exit;}
 //END START
     include_once "verify_utilities.php";
-
+	$pdo = MyPDO::instance();
 	$test = '';
 #	$test = 'NOT'; #NOT means don't update the db. blank means go
 
@@ -148,17 +148,14 @@ EOF;
 			$qv = "SELECT $select_fields FROM $GLOBALS[members_table] WHERE user_email = '$email' AND status NOT LIKE 'X';";
 				#if ($rt){print ">>>>>>\$qv: $qv<br><br>\n";}
 
-			 $qr = mysqli_query($GLOBALS['DB_link'],$qv);
-
-
-			if (mysqli_num_rows($qr) == 0){
+			 if (! $qr = $pdo->query($qv) ){
 					echo "<tr>
 					<td></td><td></td><td></td>
 					<td>$email</td>
 					<td colspan='5' style='color:red'>Email Not Found</td>
 					</tr>";
 			}
-			while ($row = mysqli_fetch_assoc($qr)){
+			foreach ($qr as $row) { 
 				$values = array ();
 				$llog  = $row['last_login'];
 

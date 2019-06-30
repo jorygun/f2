@@ -28,8 +28,9 @@ $sql = "UPDATE $GLOBALS['members_table'] SET contributed = '$now' WHERE id = $th
 <title>Setting Contribution date to $now</title>
 </head><body onblur="self.close()">
 <?
+$pdo = MyPDO::instance();
 echo "<p><tt>$sql</tt></p>";
- $result = mysqli_query($GLOBALS['DB_link'],$sql);
+ $result = $pdo->query($sql);
 if ($result){echo "User contribution marked for $now";}
 else {die ("Contributon entry failed");}
 

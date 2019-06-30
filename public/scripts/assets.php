@@ -532,23 +532,7 @@ function process_asset_search($data){
       return $sqls;
 }
 
-// function find_asset_dups($qp){
-//          #special case.  Search for duplicates, build list, display one set
-//          #include previously specified search conditioins
-//          if (!empty($qp)){
-//             $sqls = "WHERE " .implode(' AND ',$qp);
-//          }
-//
-//          $sql = "SELECT url,count(*) as c from assets $sqls group by url having c>1 ;";
-//           $result = mysqli_query($GLOBALS['DB_link'],$sql);
-//          if (!$num_rows = mysqli_num_rows($result)){return null;}
-//          else {
-//             echo "<p>$num_rows urls with duplicate entries found.  Returning only the first.  Fix dup and repeat search to get the next one.</p>";
-//             $row = mysqli_fetch_assoc($result);
-//             $sql = "url = '" . mysqli_real_escape_string($GLOBALS['DB_link'],$row['url']) . "'" ;
-//             }
-//         return $sql;
-// }
+
 
 function id_search($son){
 

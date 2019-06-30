@@ -143,18 +143,18 @@ EOT;
 			if ($email){$qv = "SELECT $select_fields FROM $db_members WHERE user_email = '$email' AND status NOT LIKE 'X';";}
 			elseif ($id){$qv = "SELECT $select_fields FROM $db_members WHERE user_id = '$id' AND status NOT LIKE 'X';";}
 				#if ($rt){print ">>>>>>\$qv: $qv<br><br>\n";}
+			$pdo = MyPDO::instance();
+			 $row = $pdo->query($qv)->fetch();
 
-			 $qr = mysqli_query($GLOBALS['DB_link'],$qv);
-
-			if (mysqli_num_rows($qr) <1){
+			
 				foreach ($fields as $k){$values[] = $row[$k];}
 				$action = " <span style='color:red'>not in database</span>";
 				$values[] = $action;
 				vprintf ("$tformat", $values);
-				continue;
-			}
+				
+			
 
-			while ($row = mysqli_fetch_assoc($qr)){
+			
 				$values = array ();
 				$llog  = $row['last_login'];
 
@@ -191,7 +191,7 @@ EOT;
 				$values[] = $action;
 				vprintf ("$tformat", $values);
 
-			}
+			
 		}
 		echo "</table>";
 		echo "<input type=radio name='testmode' value='test' checked>Test Run Only";

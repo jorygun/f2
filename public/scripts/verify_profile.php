@@ -47,10 +47,10 @@
 	if (!$my_id){die ("No id to verify profile script");}
 
 
-
+$pdo = MyPDO::instance();
 	$sql = "UPDATE $GV[members_table] SET profile_validated = '$sql_today' WHERE id = $my_id;";
 
-	 $result = mysqli_query($GLOBALS['DB_link'],$sql);
+	 $result = $pdo->query($sql);
 	// if ($_SESSION['DB'][id] = $my_id){
 // 		$_SESSION['DB'][profile_updated] = $sql_today;
 // 	}

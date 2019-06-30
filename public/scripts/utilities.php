@@ -202,18 +202,8 @@ function send_user ($contact,$subject='Notice from AMD FLAMEs Site',$info){
     #accepts either id or email text
     $contact = trim($contact);
     #echo "Contact in send_user: $contact ... ";
-    if (is_numeric($contact)){ #it's the id
-        $sql = "SELECT username,user_email FROM members_f2
-                WHERE id = '$contact';";
-         $result = mysqli_query($GLOBALS['DB_link'],$sql);
-            if (mysqli_num_rows($result) == 0){
-                die ("No contact found for $contact");
-            }
-
-        $row = mysqli_fetch_assoc($result);
-
-        $to = "'${row['username']}' <${row['user_email']}>";
-    }
+    if (is_numeric($contact)){ throw new Exception ("Send User with numeric id");}
+   
     elseif (is_valid_email($contact)){$to = $contact;}
 
     else {die("Invalid email in contact: $contact");}
@@ -432,13 +422,13 @@ function remove_slashes($element){
 	}
 }
 function clear_safe ($Post){
-		global $DB_link;
+		
 		foreach ($Post as $param => $value){
 			if (is_string($value)){
                 $clear = remove_slashes($value);
                 $clear = trim($clear);
 
-                $safe =  mysqli_real_escape_string($DB_link,$clear);
+                $safe =  $clear;
 
                 $CLEAR[$param] = $clear;
                 $SAFE[$param] = $safe;
@@ -493,17 +483,6 @@ function tbreak($text){
 
 }
 
-function set_item_data($itemdata){
-	    #turns itemdata array into a string for SET comnd
-	    global $DB_link;
-        $sqls = array();
-        foreach ($itemdata as $k => $v){
-		    $v = mysqli_escape_string ($DB_link,trim($v));
-			$sqls[]= " $k = '$v' ";
-		}
-		$sqlset = implode(', ',$sqls);
-        return $sqlset;
-}
 
 function pdoPrep($data,$include=[], $key=''){
 
@@ -582,20 +561,6 @@ function stripslashes_deep ($value){
 
 
 
-function get_field_from_db($field,$db,$id){
-    #returns array of data for fields specified in db name where id = id
-    $sql = "SELECT $field FROM $db where id='$id';";
-     $result = mysqli_query($GLOBALS['DB_link'],$sql);
-    $row = mysqli_fetch_assoc($result);
-    return $row[$field];
-}
-
-
-// function get_email_status_name ($status){
-// 	global $G_ems_defs;
-// 	return $G_ems_defs[$status];
-// }
-
 function get_id_from_name($name){
     $pdo = MyPDO::instance();
         $sql2="SELECT user_id,username FROM `members_f2`
@@ -646,7 +611,7 @@ $stmnt->execute($data);
 
 function update_record_for_id ($id,$vars){
 	// supply id and array of field => data
-	global $GV;
+	$pdo = MyPDO::instance();
 
 
 	#make sure id exists
@@ -658,11 +623,9 @@ function update_record_for_id ($id,$vars){
 		$q = substr($q,0,-2); #chop last 2 chars off to get rid of ,
 		$q .= " WHERE id = $id;";
 
-		if (1){
-			 $result = mysqli_query($GLOBALS['DB_link'],$q);
-			}else {
-			echo "SQL NOT RUN:<br>$q<br>";
-		}
+		
+			 $result = $pdo->query($q);
+		
 		return $result;
 	}
 	else {die ("no id supplied to update_record_for_id");}
@@ -767,7 +730,7 @@ function im_here(){
 }
 
 function send_lost_link($this_email){
-	global $GV;
+	$pdo = MyPDO::instance();
 
 
 	$output = '';
@@ -788,12 +751,11 @@ function send_lost_link($this_email){
 
 	 // Look up this address in DB
 		echo "Looking for $this_email<br>\n";
-		$q = "SELECT upw, user_id, username, user_email from ${GLOBALS['members_table']} WHERE user_email LIKE '$this_email'
+		$q = "SELECT upw, user_id, username, user_email from `members_f2` WHERE user_email LIKE '$this_email'
 		AND status NOT in('x','d','n');";
 
-	   $result = mysqli_query($GLOBALS['DB_link'],$q);
-	   if(mysqli_num_rows($result)<1) // Not there - notify user
-	   {
+	   if (!$result = $pdo->query($q) ){
+	  
 		$output .= "<p>$this_email was not not found in the member file.";
 		$output .=  "<p>Please <a href='mailto:admin@amdflames.org'>contact the administrator</a>.</p>";
 		$output .=  "<p><a href='${GLOBALS['siteurl']}'>Return to main page</a></p>";
@@ -802,8 +764,8 @@ function send_lost_link($this_email){
 	   }
 
 	 // List each match (some addresses are shared by two or more members)
-		  while ($row = mysqli_fetch_assoc($result))
-		  {
+		 foreach ($result as $row){
+		  
 			$login = $row['upw'] . $row['user_id'];
 		   $msg .= "${row['username']}:  ${GLOBALS['siteurl']}/?s=$login\n";
 
@@ -1297,6 +1259,7 @@ function set_email_status($id,$m_status){
 
 function set_mu_status($id,$m_status='',$u_status=''){
 	//
+	$pdo = MyPDO::instance();
 	$today = sql_today();
 	$sqla = array();
 	unset ($sqla);
@@ -1314,10 +1277,8 @@ function set_mu_status($id,$m_status='',$u_status=''){
     	$sql = "UPDATE `members_f2` SET "
     	. implode(',',$sqla) .
 	   " WHERE id=$id;";
-	 $result = mysqli_query($GLOBALS['DB_link'],$sql);
-	if ($result){return 1;}
+	 if ($result = $pdo->query($sql) ){return 1;}
     }
-
 	return 0;
 }
 

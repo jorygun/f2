@@ -68,7 +68,7 @@ else if ($_SERVER[REQUEST_METHOD] == 'POST'){
 	    array ('title','location','owner','owner_email','link','description','expired')
 	    as $f){
 		$v = stripslashes($_POST[$f]);
-		$uv = mysqli_escape_string($DB_link,$v);
+		$uv = $v;
 		$sqla[] = "$f = '$uv'";
 		#echo "F $f; V $v UV $uv <br>";
 	}

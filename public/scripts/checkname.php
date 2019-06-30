@@ -211,7 +211,7 @@ if ($target_id){
 
 // Leave
 
-	 mysqli_close($DB_link);
+	
  exit;
 ?>
 </body>

@@ -10,6 +10,7 @@
 use digitalmx\flames\Definitions as Defs;
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
+$pdo = MyPDO::instance();
 
 /* this script is used to make all manual updates to members records.
 	You can change email status or user status.  Changing a user from New
@@ -53,8 +54,8 @@ $navbar = $nav -> build_menu();
 
 // first check to see if bounce has come in from button on level8 page.
 if (isset($_GET['email_status'])){
-    require_once ('email_status_messaging.php');
-    update_email_status($my_id,$_GET['email_status']);
+    require_once ('EmsMessaging.php');
+    update_ems($my_id,$_GET['email_status']);
     $my_row = get_member_by_id($my_id);
 }
 
@@ -151,12 +152,12 @@ EOT;
 
 	if (!empty($P_email_status)){
 		echo "<hr>Email Status Update<br>";
-		require_once ('email_status_messaging.php');
+		require_once ('EmsMessaging.php');
 
 		if ( in_array($P_email_status,array( 'A1','B1'))){
 			#send_verify($P_id,$P_email_status);
 			echo "Starting update_email_status ($P_email_status)<br>";
-			update_email_status($P_id,$P_email_status);
+			update_ems($P_id,$P_email_status);
 		}
 		else {set_mu_status($P_id,$P_email_status);} #silent
 
@@ -378,7 +379,8 @@ EOT;
 
 
 function update_email ($row,$new_email){ #$id,$name,$old_email,$new_email){
-    require_once ('email_status_messaging.php');
+    require_once ('EmsMessaging.php');
+    $pdo = MyPDO::instance();
 	//  if email is changed, send message to old email and verify to new email
 	//
 	$id = $row['id'];
@@ -436,7 +438,7 @@ EOT;
 
 	// record new email and set email status to Q; will be reset immediately by the verify process
 	$q = "UPDATE `members_f2` SET user_email = '$new_email',email_status='E1'  WHERE id = $id;";
-			 $result = mysqli_query($GLOBALS['DB_link'],$q);
+			 $result = $pdo->query($q);
 			if ($result){echo "<br>Database Updated<br>";} #prior_email and date setr by trigger}
 			else {die ("Database update in update_email failed.");}
 
@@ -448,7 +450,7 @@ EOT;
 	$found_msg, $GLOBALS['from_admin']);
 	}
 
-	else {update_email_status ($id,'E1');
+	else {update_ems ($id,'E1');
 	#will immediately set the status to E1 and send out verify email
 }
 	return 1;
