@@ -108,6 +108,7 @@ function search($post,$members_db){
 		if (!empty($name = $post['name'])){
 		  # $name = str_replace('\\','\\',$name);
 			$q[] = " username like ? ";
+			$namelike="%${name}%";
 			$use_name=1;
 		}
 		
@@ -132,8 +133,8 @@ echo $sql .  BRNL;
 
 		$stmt = $pdo -> prepare($sql);
 		if (!empty($name)){
-      	$stmt -> execute([$name]) ;
-      	echo " using username = $name" . BRNL;
+      	$stmt -> execute([$namelike]) ;
+      	echo " using username = $namelike" . BRNL;
       } else {
       	$stmt -> execute();
       }
