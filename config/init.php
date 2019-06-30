@@ -48,21 +48,6 @@ $GV = $GLOBALS = setGlobals();
 require_once 'MyPDO.class.php'; #uses envir constants for config; sets from db.ini if not already set
 
 
-if ($init->get_platform() == 'pair'){
-	$pdo = \MyPDO::instance();
-	require_once  "f2_connect.php";
-	$DB_link = Connect_DB();
-	$GLOBALS['DB_link'] = $DB_link;
-	require_once "f2_security.php";
-	
-} elseif ($init->get_platform() == 'ayebook') {
-	$pdo = new \digitalmx\MxPDO('production',$platform,$db_ini);
-	require_once "f2_security.php";
-}
-else {
-	throw new Exception ("Platform not known $platform");
-}
-
 #ns digitalmx\flames
 require_once 'Definitions.php';
 
