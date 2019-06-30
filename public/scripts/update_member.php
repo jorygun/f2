@@ -186,7 +186,8 @@ EOT;
 	$sqlu['user_id'] = $my_row['user_id'];
 
 #echo "<pre>" . print_r ($sqlu,true) . "</pre>";
-$pdo_data = pdoPrep($sqlu,[], $key='user_id'){
+$pdo_data = pdoPrep($sqlu,[], $key='user_id');
+
 $sql = "UPDATE `members_f2` SET ${pdo_data['update']} WHERE user_id=${prep['key']} ";
 $stmt = $this->pdo->prepare($sql)->execute($pdo_data['data']);
 
