@@ -147,9 +147,9 @@ class Init
 		$this->setIncludes($repo_dir);
 		
 		
-		$this->pdo = setPDO($this->platform);
+		$this->pdo = $this->setPDO($this->platform);
 
-		$this->setRequired();
+		$this->$this->setRequired($this->platform);
 		
 		define ('INIT',1);
 	
