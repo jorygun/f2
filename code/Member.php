@@ -1,6 +1,8 @@
 <?php
 namespace digitalmx\flames;
+$proj_path = dirname(__DIR__);
 
+require_once $proj_path . '/mx-libs/phpmx' . '/MxPDO.php';
  /**
   *
   *  member class  ... get info about members from the database              *
@@ -139,7 +141,7 @@ class Member
   public function getMemberData($tag,$method='')
     {
          /*returns all the member data for one member,
-         // enhanced with computed fields
+         // enhanced with computed fields, except profile text
         // Methods: email, login, name_exact, uid
         
         */
