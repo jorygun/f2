@@ -186,7 +186,7 @@ EOT;
 	$sqlu['user_id'] = $my_row['user_id'];
 
 #echo "<pre>" . print_r ($sqlu,true) . "</pre>";
-$prep = pdoPrep($sqlu,, $key='user_id');
+$prep = pdoPrep($sqlu,'', $key='user_id');
 
 $sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id=${prep['key']} ";
 echo $sql . BRNL;
