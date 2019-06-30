@@ -189,7 +189,7 @@ EOT;
 $prep = pdoPrep($sqlu,[], $key='user_id');
 
 $sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id=${prep['key']} ";
-$stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+$stmt = pdo->prepare($sql)->execute($prep['data']);
 
 
  /**
