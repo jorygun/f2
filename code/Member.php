@@ -185,7 +185,7 @@ class Member
         // creates array of other fields to be added to the db fields
         $login_string = $row['upw'] . $id ;
         
-        $is_member = in_array($row['status'], Definitions::get_member_array());
+        $is_member = in_array($row['status'], Defs::getMemberList();
         
         $image_url = SITE_PATH . "/assets/users/{$id}.jpg";
         if (!file_exists($image_url)){$image_url = '';}
