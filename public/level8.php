@@ -107,7 +107,7 @@ function search($post,$members_db){
 
 		if (!empty($name = $post['name'])){
 		  # $name = str_replace('\\','\\',$name);
-			$q[] = " username like '?' ";
+			$q[] = " username like ? ";
 			$use_name=1;
 		}
 		
