@@ -186,15 +186,16 @@ EOT;
 	//finish sql if there are updates.
 	$sqlu['user_id'] = $my_row['user_id'];
 
-#echo "<pre>" . print_r ($sqlu,true) . "</pre>";
-$prep = u\pdoPrep($sqlu,'', $key='user_id');
-u\echor($prep,'Prep');
+if (!empty ($sqlu)){
+	#echo "<pre>" . print_r ($sqlu,true) . "</pre>";
+	$prep = u\pdoPrep($sqlu,'', $key='user_id');
+	u\echor($prep,'Prep');
 
-$sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id=${prep['key']} ";
-echo $sql . BRNL;
+	$sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id=${prep['key']} ";
+	echo $sql . BRNL;
 
-$stmt = $pdo->prepare($sql)->execute($prep['data']);
-
+	$stmt = $pdo->prepare($sql)->execute($prep['data']);
+}
 
  /**
   *                                          *
