@@ -11,6 +11,7 @@ use digitalmx\flames\Definitions as Defs;
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
 $pdo = MyPDO::instance();
+require_once 'EmsMessaging.php';
 
 /* this script is used to make all manual updates to members records.
 	You can change email status or user status.  Changing a user from New
@@ -152,7 +153,7 @@ EOT;
 
 	if (!empty($P_email_status)){
 		echo "<hr>Email Status Update<br>";
-		require_once ('EmsMessaging.php');
+		
 		$ems = new EmsMessaging();
 		
 
