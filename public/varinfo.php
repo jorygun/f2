@@ -162,6 +162,9 @@ require 'Member.php';
 use digitalmx\flames\Member;
 $member = new Member($pdo);
 
+$md = $member->getMemberData('11602');
+u\echor ($md,'Member Data');
+
 // $em = new EmsMessaging($pdo,$test); #pdo,true for test
 // $em->update_ems(11602,'A4');
 
