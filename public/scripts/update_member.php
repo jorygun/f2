@@ -8,6 +8,8 @@
 //END START
 
 use digitalmx\flames\Definitions as Defs;
+use digitalmx\flames as dmxf;
+
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
 $pdo = MyPDO::instance();
@@ -55,7 +57,7 @@ require_once 'EmsMessaging.php';
 
 // first check to see if bounce has come in from button on level8 page.
 if (isset($_GET['email_status'])){
-  $ems = new EmsMessaging();
+  $ems = new dmxf\EmsMessaging();
    $ems -> update_ems($my_id,$_GET['email_status']);
     $my_row = get_member_by_id($my_id);
 }
@@ -154,7 +156,7 @@ EOT;
 	if (!empty($P_email_status)){
 		echo "<hr>Email Status Update<br>";
 		
-		$ems = new EmsMessaging ();
+		$ems = new dmxf\EmsMessaging ();
 		
 
 		if ( in_array($P_email_status,array( 'A1','B1'))){
@@ -383,7 +385,7 @@ EOT;
 
 function update_email ($row,$new_email){ #$id,$name,$old_email,$new_email){
 
-    $ems = new EmsMessaging();
+    $ems = new dmxf\EmsMessaging();
     
     $pdo = MyPDO::instance();
 	//  if email is changed, send message to old email and verify to new email
