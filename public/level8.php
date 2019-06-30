@@ -128,14 +128,15 @@ function search($post,$members_db){
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		$sql = "SELECT * FROM `$members_db` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
-echo $sql . "Will use name = $name" .  BRNL;
+echo $sql .  BRNL;
 		$stmt = $pdo->prepare($sql);
 		if (!empty($name)){
       	$stmt -> execute([$name]) ;
+      	echo " using username = $name" . BRNL;
       } else {
       	$stmt -> execute ();
       }
-      if (false and $stmt->rowCount() == 0){echo "Nothing Found.";}
+      if ($stmt->rowCount() == 0){echo "Nothing Found.";}
        else{
         		echo "Found " . $stmt->rowCount() . BRNL;
         		
