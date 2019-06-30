@@ -129,12 +129,12 @@ function search($post,$members_db){
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		$sql = "SELECT * FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
-echo $sql .  BRNL;
+#echo $sql .  BRNL;
 
 		$stmt = $pdo -> prepare($sql);
 		if (!empty($name)){
       	$stmt -> execute([$namelike]) ;
-      	echo " using username = $namelike" . BRNL;
+      	#echo " using username = $namelike" . BRNL;
       } else {
       	$stmt -> execute();
       }

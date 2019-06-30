@@ -135,7 +135,7 @@ class Init
 			ini_set('display_errors',1);
 		}
 		$this->setSite();
-		$this->setIncludes($repo_dir);
+		$this->setIncludes($project_dir,$repo_dir);
 		
 		
 
@@ -226,7 +226,7 @@ class Init
 		return $platform;
 	}
 	
-	private function setIncludes($repo_dir){
+	private function setIncludes($proj_path, $repo_dir){
 	#initial include path set in .user.ini to include this folder.
 	#add other paths here so can just call <repo>/config/init.php for shell scripts.
 
@@ -240,6 +240,7 @@ class Init
 		. ':' . $repo_dir. '/code'
 		. ':' . $repo_dir . '/public'
 		. ':' . $repo_dir . '/public/scripts'
+		. ':' . $proj_path . '/lib/
 
 
 		);
