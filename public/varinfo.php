@@ -158,7 +158,7 @@ function echo_red ($t) {
 	echo "<p class='red'>$t</p>";
 	
 }
-
+use digitalmx\flames\Member;
 $member = new Member($pdo);
 
 // $em = new EmsMessaging($pdo,$test); #pdo,true for test
