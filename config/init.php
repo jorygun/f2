@@ -59,8 +59,8 @@ require_once 'nav.class.php';
 
 use \MyPDO;
 
-Init->setRequired(Init->$platform);
-$pdo = Init->setPDO(Init->$platform);
+Init->setRequired($init->platform);
+$pdo = Init->setPDO($init->platform);
 
 // #build db
 // $container = new Container();
