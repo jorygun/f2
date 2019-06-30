@@ -187,7 +187,7 @@ EOT;
 	$sqlu['user_id'] = $my_row['user_id'];
 
 if (!empty ($sqlu)){
-	#echo "<pre>" . print_r ($sqlu,true) . "</pre>";
+	u\echor ($sqlu, 'sqlu');
 	$prep = u\pdoPrep($sqlu,'', $key='user_id');
 	u\echor($prep,'Prep');
 
