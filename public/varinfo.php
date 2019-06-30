@@ -158,6 +158,7 @@ function echo_red ($t) {
 	echo "<p class='red'>$t</p>";
 	
 }
+require 'Member.php';
 use digitalmx\flames\Member;
 $member = new Member($pdo);
 
