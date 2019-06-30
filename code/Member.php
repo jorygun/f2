@@ -171,6 +171,8 @@ class Member
         }
         
         $mdata = $stmt->fetch();
+        u\echor($mdata,'Mdata');
+        
         $addon_array = $this->buildAddons($mdata);
         $user_array = array_merge($mdata,$addon_array);
       // u\echoR($user_array,"Get data user array");
