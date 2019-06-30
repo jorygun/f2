@@ -162,7 +162,7 @@ class Init
 			$GLOBALS['DB_link'] = $DB_link;
 			require_once "f2_security.php";
 		} elseif ($platform == 'ayebook') {
-			require_once "f2_security.php"
+			require_once "f2_security.php";
 		} else {
 			throw new Exception ("Platform not known $platform");
 		}
