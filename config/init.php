@@ -58,7 +58,7 @@ require_once 'MxUtilities.php';
 require_once 'nav.class.php';
 
 use \MyPDO;
-echo "DB USEr: " . DB_USER;
+
 
 
 $pdo = $init->setPDO(); #guarantees db values are set
