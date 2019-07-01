@@ -147,7 +147,7 @@ class Init
 	public function setRequired(){
 		$platform = $this->platform;
 		if ($platform == 'pair'){
-			require_once  "f2_connect.php";
+			#require_once  "f2_connect.php";
 			$GLOBALS['DB_link'] = Connect_DB();
 			require_once "f2_security.php";
 		} elseif ($platform == 'ayebook') {

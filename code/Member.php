@@ -2,7 +2,8 @@
 namespace digitalmx\flames;
 $proj_path = dirname(__DIR__);
 
-require_once $proj_path . '/mx-libs/phpmx' . '/MxPDO.php';
+require_once '../config/init.php';
+#require_once $proj_path . '/mx-libs/phpmx' . '/MxPDO.php';
  /**
   *
   *  member class  ... get info about members from the database              *
@@ -30,6 +31,10 @@ require_once $proj_path . '/mx-libs/phpmx' . '/MxPDO.php';
    return array:
     'data' => member data array (one or more)
     'info' => messages from the search
+    'error' => error messages 
+    'credential' => ??
+    'rcount' => records found (especially 0)
+    
     public function getMemberDisplayEmail($tag)
     public function getMemberName($tag)
     public function getMemberEmail($tag)
@@ -128,12 +133,12 @@ class Member
     }
     
    
- private function getReturn ($records,$data) {
+ private function getReturn ($record_cnt,$data) {
     #mnenomic rdc  
     $r['data'] = $data;
     $r['info'] = $this->info;
     $r['error'] = $this->error;
-    $r['records'] = $records;
+    $r['records'] = $record_cnt;
     $f['credential'] = $this->credential;
     return $r;
  }
@@ -236,8 +241,8 @@ class Member
        
        
        
-        $addon_array = array_merge($row, $addons);
-        return $addon_array;
+      #  $addon_array = array_merge($row, $addons);
+        return $addons;
     }
   
   public function addMember ($post){
@@ -351,7 +356,7 @@ class Member
  
   public function updateMember($post){
     if (empty ($post['user_id'])){
-        throw new Exception ("update Member called with no valid array.");
+        throw new Exception ("update Member called with no user_id.");
     }
     
    
