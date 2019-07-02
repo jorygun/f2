@@ -75,14 +75,14 @@ td {vertical-align: top;}
 .grayback {background:#CCC;}
 .tright {text-align:right;}
 
-.quoted {
+.quoted, blockquote {
     display:block;
     border-left:2px solid #030;
     padding-left:1em;
     font-style:normal;
     color:#363;
     }
-.quoted p {
+.quoted p, blockquote p {
     padding-left:1em;
 }
 .instr {font-style:italic;}
