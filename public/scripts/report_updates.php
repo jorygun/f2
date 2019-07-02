@@ -239,7 +239,7 @@ $opportunities_html = file_get_contents( $opportunity_html_file);
 echo <<<EOT
 <html><head> 
 <title>Show Updates</title>
-<link rel='stylesheet' href='/css/news2.css'>
+<link rel='stylesheet' href='/css/news3.css'>
 
 </head><body>
 <p>Showing updated since $ptimeh</p>

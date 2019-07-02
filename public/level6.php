@@ -20,7 +20,7 @@ $nav = new navBar(1);
 <title>News Contributor Page</title>
 <link rel="stylesheet" href="/css/flames2.css">
 <link rel="stylesheet" href="/css/news3.css">
-<!-- <link rel="stylesheet" href="/news/news_model/news2.css"> -->
+
 </head>
 
 <body >
