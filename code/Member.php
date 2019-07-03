@@ -274,6 +274,8 @@ private static $long_profile_fields = array (
        
 	$this->pdo = $pdo;
 	$this->data_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
+	$this->EmsMsg = new EmsMessaging($this->pdo);
+	
 
     }
 
@@ -743,14 +745,11 @@ private static $long_profile_fields = array (
             return false;
         }
         $last = $md ['data']['last_login'];
-        return u\formatDate('CDL', $last);
+        return u\make_date( $last);
     }
     
-    public function setEmailStatus ($id,$status) {
-        $sql = "Update `$this->memberTable` set email_status = '$status'
-            WHERE user_id = $id;";
-            
-        if (!$stmt = $this->pdo->query($sql)){
+    public function setEmailStatus ($id,$status) {	
+    		if (! $this->EmsMsg->update_ems($id,$status) ) {
             return false;
         }
         return "OK";
