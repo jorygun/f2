@@ -1,7 +1,8 @@
 <?php
 namespace Digitalmx\Flames;
 
-use Digitalmx\Lib as u;
+use digitalmx as u;
+use digitalmx\flames\Member;
 
 
 class MemberController {
@@ -21,12 +22,9 @@ class MemberController {
     private $table_defs = [];
     private $pdo;
 
-public function __construct(\Slim\Container $ci) {
-        $this->member = $ci->get('member'); 
-        $this->asset_controller = $ci->get('asset_controller');
-        $settings = $ci->get('settings');
-        $this->table_defs  = $settings['appvars']['DB_TABLES'];
-        $this->pdo = $ci->get('pdo');
+public function __construct($pdo) {
+    		$this->member = new Member();
+        $this->pdo = $pdo;
     }
     
     /// routines to prepare data for forms ///

@@ -25,13 +25,13 @@ require_once '../config/init.php';
     getMembers($_POST) // returns list based on post vars
     getMemberLogin(loginstring) returns login data for one user
   
-   return array: returnResult($data,count, error, info)
+   return array: returnResult($data)
     'data' => member data array (one or more)
     
     
-    'info' => messages from the search
+    'info' => messages from this->infoh
 
-    'error' => error message
+    'error' => $this->error message
      'count' => no of records returned.
      
 
@@ -218,10 +218,11 @@ private static $long_profile_fields = array (
 	'user_about',
 );
 
-#frields genereated from main data
+#additional fields genereated from main data
  private static $added_fields = array (
  	'decades',
 	'departments',
+	'locations',
 	'email_age',
 	'email_public',
 	'email_status_name',
@@ -233,6 +234,9 @@ private static $long_profile_fields = array (
 	'seclevel',
 	'status_name',         
 	'subscriber',
+	'linkedinlink',
+	'at_amd',
+	'needs_update',
 
  );
  
@@ -249,20 +253,18 @@ private static $long_profile_fields = array (
  );
     private  $memberTable = 'members_f2';
     private $pdo;
-    private $messenger;
+ #   private $messenger;
 
  
  /* fields normally delivered.
- 	db fields pluss added fields less long profile fields
+ 	db fields plus added fields less long profile fields
  	*/
 
     private  $data_fields = array();   
-    
-
 
     // data for return
-    private $info;
-    private $error;
+    private $info='';
+    private $error='';
     private $credential; #not sure what this is for
   
     # plus record count and data
@@ -276,11 +278,11 @@ private static $long_profile_fields = array (
     }
 
    /* searches are returned an array containing these fields */
- private function returnResult ($data=[] ,$error='',$info='') {
+ private function returnResult ($data=[] ) {
     #mnenomic rdc  
     $r['data'] = $data;
-    $r['info'] = $info;
-    $r['error'] = $error;
+    $r['info'] = $this->info;
+    $r['error'] = $this->error;
     $r['count'] = count($data);
 
     $r['credential'] = $this->credential;
@@ -292,14 +294,16 @@ private static $long_profile_fields = array (
          /*returns all the member data for one member,
          // enhanced with computed fields, except profile text
 
-        // Methods: email, login, name_exact, uid
+        // Methods: email, login, name_exact, uid, 
+        // method generally selected automtically from the tag format
         
         */
        if (empty($tag)){throw new Exception ("Attempt to getMemberData on empty tag");}
        
        #get searchfield for to prepare sql, then searchfor to execute
         if (! list ($searchfield,$searchfor) = $this->setSearchCriteria($tag,$method)){
-            return returnResult(0,[],'Search method not understood');
+        		$this->error = 'Search method not understood';
+            return returnResult();
         }
         
         # only want 1 result.  
@@ -314,10 +318,12 @@ private static $long_profile_fields = array (
        # echo $idcnt . BRLF; 
         $messages = [];
         if ($idcnt > $limit) {
-            return $this->returnResult(0,[],"Got $idcnt results; only $limit allowed (searching on '$tag')");
+        	$this->error = "Got $idcnt results; only $limit allowed (searching on '$tag')";
+            return $this->returnResult();
         }
         if ($idcnt == 0) {
-            return $this->returnResult(0,[],'',"No Members Found");
+        		$this->info = "No Members Found" ;
+            return $this->returnResult();
         }
         
         $mdata = $stmt->fetch();
@@ -361,21 +367,23 @@ private static $long_profile_fields = array (
         
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
         'join_date' => u\make_date($row['join_date']),
+        'linkedinlink' => u\linkHref($row['linkedin'],'Me on Linked In'),
         'email_status_name' => Defs::getEmsName($row['email_status']),
         'image_url' => $image_url,
-        'decades' => $this->decompress (
+        'decades' => u\decompress (
             $row ['amd_when'], Defs::$decades ),
-       'departments' => $this->decompress (
+       'departments' => u\decompress (
             $row['amd_dept'], Defs::$departments),
+         'locations' => u\decompress (
+         	$row['amd_where'], Defs::$locations),
         'profile_date' => $profile_date,
          'at_amd' => $row['user_amd'] 
          	. "("
-         	. $this->decompress( $row ['amd_when'], Defs::$decades )
+         	. u\decompress( $row ['amd_when'], Defs::$decades )
          	. ', '
-         	. $this->decompress ( $row['amd_where'], Defs::$locations)
-         	. ')'
-      
-        );
+         	. u\decompress ( $row['amd_where'], Defs::$locations)
+         	. ')',
+     );
        
        $addons ['needs_update'] = (
             $addons['profile_age'] > 365
@@ -567,8 +575,8 @@ private static $long_profile_fields = array (
             
         }   
         if (empty($searchfield)){
-           
-            return $this->returnResult(0,[],'','No Members Found');
+           $this->info = "No Members Found";
+            return $this->returnResult();
         }
         
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield ";
@@ -597,7 +605,7 @@ private static $long_profile_fields = array (
          }   
                 
         
-        return $this->returnResult($idcnt,$mb);
+        return $this->returnResult($mb);
     }
     
     
@@ -610,19 +618,19 @@ private static $long_profile_fields = array (
         $limitplusone = $limit + 1;
         list ($searchfield,$searchfor) = $this->setSearchCriteria($tag);
          $short_data_fields = implode(',', self::$short_data_fields);
-        $sql = "SELECT $short_data_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
+        $sql = "SELECT $data_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
         #echo $sql . BRNL;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt->execute($searchfor);
         $idcnt = $stmt->rowCount();
         if ($idcnt > $limit) {
-            $error .= "Got $idcnt results; only $limit allowed (searching on '$tag').";
+            $this->error .= "Got $idcnt results; only $limit allowed (searching on '$tag').";
         }
         
         #return array of all reesults 
         $mb = $stmt->fetchAll();
        
-       return $this->returnResult($idcnt,$mb,$error,$info);
+       return $this->returnResult($mb);
        ;
     }
     
@@ -681,7 +689,16 @@ private static $long_profile_fields = array (
     }
     
    
-    
+    public function verifyEmail ($id) {
+    $newstat = $this->member->setEmailStatus($id,'Y');
+    return $newstat;
+	}
+
+	public function verifyProfile ($id) {
+    $newstat = $this->member->setProfileVerified($id);
+    return $newstat;
+	}
+
     
     public function getMemberName($tag)
     {
@@ -813,23 +830,7 @@ private static $long_profile_fields = array (
         
     }
     
-    private function decompress($data,$defs)
-    {
-	//to turn a string of character codes into a descriptive string.
-        $choices = [];
-		// step through the codes and values in the defining array
-		foreach ($defs as $k=>$v){  # D => '60s'
-			if (strchr($data,$k)){$choices[]  = $v;}
-		}
-        if (empty($choices)){
-            $my_choices = 'Not specified';
-        }
-        else {
-		    $my_choices = implode (',',$choices);
-		}
-
-		return $my_choices;
-    }
+   
 
   private function buildDisplayEmail($email, $ems, $hide)
     {
