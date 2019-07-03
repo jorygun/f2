@@ -312,7 +312,7 @@ private static $long_profile_fields = array (
         u\echor($mdata,'Mdata');
         
         $addon_array = $this->buildAddons($mdata);
-        $user_array = array_intersect(array_merge($mdata,$addon_array), $this->data_fields);
+        $user_array = array_intersect_key(array_merge($mdata,$addon_array), $this->data_fields);
       // u\echoR($user_array,"Get data user array");
   
         return $this->returnResult($idcnt,$user_array);
