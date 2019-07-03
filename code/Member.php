@@ -16,15 +16,14 @@ require_once '../config/init.php';
                                                                  
 
 /* Methods and Properties
-    $memberTable // current db table for members
-    
-    
+ 
     getMemberList($tag, $limit = 100, $method = '') //list
-    getMemberData($tag,method) // all data, limit 1
+    getMemberData($tag,method) // all data for one member, limit 1
+    	tag is either email, uid, or username 
+    	email may return error if more than one person found
+    	
     getMembers($_POST) // returns list based on post vars
     getMemberLogin(loginstring) returns login data for one user
-      
-   getMemberData(tag,method) returns enhanced data for one member
   
    return array: returnResult($count,$data,error, info)
     'data' => member data array (one or more)
@@ -34,8 +33,8 @@ require_once '../config/init.php';
      'count' => no of records returned.
      
 
-    public function getMemberDisplayEmail($tag)
-    public function getMemberName($tag)
+    public function getMemberDisplayEmail($tag) // email or message
+    public function getMemberName($tag) /
     public function getMemberEmail($tag)
     public function getMemberEmailLinked($tag)
     public function getMemberId($tag)
@@ -235,7 +234,17 @@ private static $long_profile_fields = array (
 
  );
  
+ private static $member_info = array (
+ 	'username',
+ 	'user_id',
+ 	'user_email',
+ 	'email_public',
+ 	'seclevel',
+ 	'user_current',
+ 	'user_from',
+ 	'at_amd',
  
+ );
     private  $memberTable = 'members_f2';
     private $pdo;
     private $messenger;
@@ -252,7 +261,7 @@ private static $long_profile_fields = array (
     // data for return
     private $info;
     private $error;
-    private $credential = false;
+  
     # plus record count and data
     
  public function __construct($pdo)
@@ -266,13 +275,13 @@ private static $long_profile_fields = array (
    /* searches are returned an array containing these fields */
  private function returnResult ($count=0,$data=[] ,$error='',$info='') {
     #mnenomic rdc  
-    $r['data'] = $data;
-    $r['info'] = $info;
-    $r['error'] = $error;
-    $r['count'] = $count;
+    
+    $data['minfo'] = $info;
+    $data['merror'] = $error;
+    $data['mcount'] = $count;
 
-    $r['credential'] = $this->credential;
-    return $r;
+    $data['credential'] = $this->credential;
+    return $data;
  }
 
   public function getMemberData($tag,$method='')
@@ -311,19 +320,18 @@ private static $long_profile_fields = array (
         $mdata = $stmt->fetch();
         u\echor($mdata,'Mdata');
         
-        $addon_array = $this->buildAddons($mdata);
-        $user_array = array_merge($mdata,$addon_array);
-        u\echor ($user_array ,'after merge');
-        u\echor ($this->data_fields, 'Data fields');
+     
+        $user_array = $this->enhancedData($mdata);
+       # u\echor ($user_array ,'after merge');
+        #u\echor ($this->data_fields, 'Data fields');
         $user_array = array_intersect_key($user_array, array_flip($this->data_fields ) );
-        u\echor ($user_array,'post-filter');
-      // u\echoR($user_array,"Get data user array");
-  
+       # u\echor ($user_array,'post-filter');
+     
         return $this->returnResult($idcnt,$user_array);
             
     }
 
-     private function buildAddons($row)
+     private function enhanceData($row)
     {
         $id = $row['user_id'];
         // creates array of other fields to be added to the db fields
@@ -357,11 +365,13 @@ private static $long_profile_fields = array (
        'departments' => $this->decompress (
             $row['amd_dept'], Defs::$departments),
         'profile_date' => $profile_date,
-            
-        
-
-       
-                
+         'at_amd' => $row['user_amd'] 
+         	. "("
+         	. $this->decompress( $row ['amd_when'], Defs::$decades )
+         	. ', '
+         	. $this->decompress ( $row['amd_where'], Defs::$locations)
+         	. ')'
+      
         );
        
        $addons ['needs_update'] = (
@@ -376,8 +386,8 @@ private static $long_profile_fields = array (
        
        
        
-      #  $addon_array = array_merge($row, $addons);
-        return $addons;
+        $enhanced = array_merge($row, $addons);
+        return $enhanced;
     }
   
   public function addMember ($post){
@@ -603,13 +613,13 @@ private static $long_profile_fields = array (
         $ids = $stmt->execute($searchfor);
         $idcnt = $stmt->rowCount();
         if ($idcnt > $limit) {
-            $this->error .= "Got $idcnt results; only $limit allowed (searching on '$tag').";
+            $error .= "Got $idcnt results; only $limit allowed (searching on '$tag').";
         }
         
         #return array of all reesults 
         $mb = $stmt->fetchAll();
        
-       return $this->returnResult($idcnt,$mb);
+       return $this->returnResult($idcnt,$mb,$error,$info);
        ;
     }
     
@@ -630,7 +640,7 @@ private static $long_profile_fields = array (
         return $data;
     }
         
-    public function getMemberLogin($login_string)
+    public function getMemberFromLogin($login_string)
     {
         if (! isLogin($login_string)){
             throw new Exception ("Invalid login tag $tag");
@@ -642,14 +652,17 @@ private static $long_profile_fields = array (
         throw new Exception ("Could not get login data: {$md['error']}");
         }
         
-       
-        foreach (self::$login_fields as $f){
-            $li_data[$f] = $md['data'][$f];
-        }
-       # u\echoR($li_data,'li_data');
-        return $li_data;
+      
+        return $md['data'];
     }
 
+	public function getMemberProfile ($uid){
+		$sql = "SELECT * from `members_f2` WHERE uid = $uid";
+		$row = $this->pdo->query($sql) -> fetch();
+		$user_data = $this->enhanceData($row);
+		return $user_data;
+	}
+		
    
 
    
@@ -797,7 +810,7 @@ private static $long_profile_fields = array (
         
     }
     
-    private  function decompress($data,$defs)
+    private function decompress($data,$defs)
     {
 	//to turn a string of character codes into a descriptive string.
         $choices = [];
