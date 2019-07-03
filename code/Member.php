@@ -25,8 +25,10 @@ require_once '../config/init.php';
     getMembers($_POST) // returns list based on post vars
     getMemberLogin(loginstring) returns login data for one user
   
-   return array: returnResult($count,$data,error, info)
+   return array: returnResult($data,count, error, info)
     'data' => member data array (one or more)
+    
+    
     'info' => messages from the search
 
     'error' => error message
@@ -261,6 +263,7 @@ private static $long_profile_fields = array (
     // data for return
     private $info;
     private $error;
+    private $credential; #not sure what this is for
   
     # plus record count and data
     
@@ -273,15 +276,15 @@ private static $long_profile_fields = array (
     }
 
    /* searches are returned an array containing these fields */
- private function returnResult ($count=0,$data=[] ,$error='',$info='') {
+ private function returnResult ($data=[] ,$error='',$info='') {
     #mnenomic rdc  
-    
-    $data['minfo'] = $info;
-    $data['merror'] = $error;
-    $data['mcount'] = $count;
+    $r['data'] = $data;
+    $r['info'] = $info;
+    $r['error'] = $error;
+    $r['count'] = count($data);
 
-    $data['credential'] = $this->credential;
-    return $data;
+    $r['credential'] = $this->credential;
+    return $r;
  }
 
   public function getMemberData($tag,$method='')
@@ -327,7 +330,7 @@ private static $long_profile_fields = array (
         $user_array = array_intersect_key($user_array, array_flip($this->data_fields ) );
        # u\echor ($user_array,'post-filter');
      
-        return $this->returnResult($idcnt,$user_array);
+        return $this->returnResult($user_array);
             
     }
 
@@ -701,7 +704,7 @@ private static $long_profile_fields = array (
     public function getMemberEmailLinked($tag)
     {
         $md = $this->getMemberData($tag);
-        if ($md['records'] == 0 or !empty($mb['error'])) {
+        if ($md['count'] == 0 or !empty($mb['error'])) {
             return false;
         }
         return u\linkEmail($md['data'][0]['user_email'], $md['data']['username']);
