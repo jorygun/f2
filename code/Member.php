@@ -321,7 +321,7 @@ private static $long_profile_fields = array (
         u\echor($mdata,'Mdata');
         
      
-        $user_array = $this->enhancedData($mdata);
+        $user_array = $this->enhanceData($mdata);
        # u\echor ($user_array ,'after merge');
         #u\echor ($this->data_fields, 'Data fields');
         $user_array = array_intersect_key($user_array, array_flip($this->data_fields ) );
