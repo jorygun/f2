@@ -26,15 +26,14 @@ require_once '../config/init.php';
       
    getMemberData(tag,method) returns enhanced data for one member
   
-
-    
-   return array:
+   return array: returnResult($count,$data,error, info)
     'data' => member data array (one or more)
     'info' => messages from the search
-    'error' => error messages 
-    'credential' => ??
-    'rcount' => records found (especially 0)
-    
+
+    'error' => error message
+     'count' => no of records returned.
+     
+
     public function getMemberDisplayEmail($tag)
     public function getMemberName($tag)
     public function getMemberEmail($tag)
@@ -47,8 +46,76 @@ require_once '../config/init.php';
 
 */
 
+/* member fields:
+'admin_status'
+'aka' --
+'alt_contact'
+'amd_dept'
+'amd_when'
+'amd_where'
+'contributed' @
+'email_chg_date' @
+'email_hide'
+'email_last_validated' @
+'email_status_time' @ ++
+'email_status'
+'id' --
+'image_url'
+'join_date' @
+'last_login' @
+'linkedin'
+'no_bulk'
+'previous_ems' ++
+'prior_email' ++ 
+'prior_username' ++ 
+'profile_updated' @ * ++ 
+'profile_validated' @
+'record_updated' @ ++ 
+'status_updated' @ ++
+'status'
+'test_status'
+'upw'
+'upwards'
+'user_about'
+'user_amd'
+'user_current'
+'user_email'
+'user_from'
+'user_greet'
+'user_id'
+'user_interests'
+'user_memories'
+'user_web'
+'username'
 
-#use Digitalmx\Lib as u;
+
+#-- deprecated, ++ trigger @ timestamp
+ (* on user_about,user_interests,user_current,user_from,user_memories)
+ 
+Generated fields:
+	'decades',
+	'departments',
+	'email_age',
+	'email_public',
+	'email_status_name',
+	'is_member',
+	'join_date',
+	'login_string',
+	'profile_age',
+	'profile_date',
+	'seclevel',
+	'status_name',         
+	'subscriber',
+
+
+Long profile fields
+	'user_memories',
+	'user_about',
+	'user_interests',
+	
+*/ 
+
+
 use \Exception as Exception;
 use \digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
@@ -71,54 +138,117 @@ class Member
     
    *
    */
+   #all database fiels
+   private static $member_fields = array (
+   'admin_status',
+'alt_contact',
+'amd_dept',
+'amd_when',
+'amd_where',
+'contributed',
+'email_chg_date',
+'email_hide',
+'email_last_validated',
+'email_status_time',
+'email_status',
+'id' ,
+'image_url',
+'join_date' ,
+'last_login',
+'linkedin',
+'no_bulk',
+'previous_ems',
+'prior_email' ,
+'prior_username' ,
+'profile_updated' ,
+'profile_validated',
+'record_updated' ,
+'status_updated',
+'status',
+'test_status',
+'upw',
+'upwards',
+'user_about',
+'user_amd',
+'user_current',
+'user_email',
+'user_from',
+'user_greet',
+'user_id',
+'user_interests',
+'user_memories',
+'user_web',
+'username'
+);
 
+#db fields not including ones controlled by trigger
+private static $update_fields = array(
+'admin_status',
+'alt_contact',
+'amd_dept',
+'amd_when',
+'amd_where',
+'contributed' ,
+'email_hide',
+'email_status',
+'image_url',
+'linkedin',
+'no_bulk',
+'status',
+'test_status',
+'upw',
+'upwards',
+'user_about',
+'user_amd',
+'user_current',
+'user_email',
+'user_from',
+'user_greet',
+'user_interests',
+'user_memories',
+'user_web',
+'username',
+
+);
+#long text fields only needed for profile
+private static $long_profile_fields = array (
+	'user_interests',
+	'user_memories',
+	'user_about',
+);
+
+#frields genereated from main data
+ private static $added_fields = array (
+ 	'decades',
+	'departments',
+	'email_age',
+	'email_public',
+	'email_status_name',
+	'is_member',
+	'join_date',
+	'login_string',
+	'profile_age',
+	'profile_date',
+	'seclevel',
+	'status_name',         
+	'subscriber',
+
+ );
+ 
+ 
     private  $memberTable = 'members_f2';
     private $pdo;
     private $messenger;
 
- /**
-  *  base fields retrieved in initial pull                                   *
-  *  set these fields so some applications get all the data they need.       *
-  *  e.g., list of members and email meeting some criteria,                  *
-  *  list of users from a search.                                            *
-  **/
+ 
+ /* fields normally delivered.
+ 	db fields pluss added fields less long profile fields
+ 	*/
 
-    private static $short_data_fields = array(
-    'user_id','status','user_email','username',
-    'email_status','email_status_time', 'last_login', 'email_hide',
-    'email_last_validated','email_public','user_from','decades','departments','aka'
+    private  $data_fields = array();   
     
-    );
-    # these fields retained in _SESSION['login_user']
-    private static $login_fields = array(
-    'user_id', 
-    'username', 
-    'status', 
-    'status_name', 
-    'is_member', 
-    'seclevel', 
-    'user_email', 
-    'email_status', 
-    'email_public',
-    'email_hide', 
-    'last_login', 
-    'image_url', 
-    'subscriber', 
-    'email_last_validated', 
-    'profile_validated', 
-    'profile_age', 
-    'email_age', 
-    'needs_update',
-    'join_date',
-    'profile_date',
-    
-    
-    
-    );
-    
-    public static $member_update_fields = array (
-	'username', 'upw', 'join_date', 'user_email', 'prior_email', 'email_chg_date', 'email_status', 'email_status_time', 'email_last_validated', 'previous_ems', 'no_bulk', 'email_hide', 'status_updated', 'status', 'admin_status',  'profile_validated', 'user_from', 'user_amd', 'amd_where', 'amd_when', 'amd_dept', 'user_current', 'user_interests', 'user_greet', 'user_about', 'user_memories', 'image_url', 'linkedin', 'admin_note', 'contributed','user_web','upward'
-	);
+
+
     // data for return
     private $info;
     private $error;
@@ -129,17 +259,19 @@ class Member
     {
        
 	$this->pdo = $pdo;
+	$this->data_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
 
     }
-    
-   
- private function getReturn ($record_cnt,$data) {
+
+   /* searches are returned an array containing these fields */
+ private function returnResult ($count=0,$data=[] ,$error='',$info='') {
     #mnenomic rdc  
     $r['data'] = $data;
-    $r['info'] = $this->info;
-    $r['error'] = $this->error;
-    $r['records'] = $record_cnt;
-    $f['credential'] = $this->credential;
+    $r['info'] = $info;
+    $r['error'] = $error;
+    $r['count'] = $count;
+
+    $r['credential'] = $this->credential;
     return $r;
  }
 
@@ -147,6 +279,7 @@ class Member
     {
          /*returns all the member data for one member,
          // enhanced with computed fields, except profile text
+
         // Methods: email, login, name_exact, uid
         
         */
@@ -154,7 +287,7 @@ class Member
        
        #get searchfield for to prepare sql, then searchfor to execute
         if (! list ($searchfield,$searchfor) = $this->setSearchCriteria($tag,$method)){
-            return getReturn(0,[]);
+            return returnResult(0,[],'Search method not understood');
         }
         
         # only want 1 result.  
@@ -169,12 +302,10 @@ class Member
        # echo $idcnt . BRLF; 
         $messages = [];
         if ($idcnt > $limit) {
-            $this->error .= "Got $idcnt results; only $limit allowed (searching on '$tag').";
-            return $this->getReturn(0,[]);
+            return $this->returnResult(0,[],"Got $idcnt results; only $limit allowed (searching on '$tag')");
         }
         if ($idcnt == 0) {
-            $this->info = "No Members Found";
-            return $this->getReturn(0,[]);
+            return $this->returnResult(0,[],'',"No Members Found");
         }
         
         $mdata = $stmt->fetch();
@@ -184,7 +315,7 @@ class Member
         $user_array = array_merge($mdata,$addon_array);
       // u\echoR($user_array,"Get data user array");
   
-        return $this->getReturn($idcnt,$user_array);
+        return $this->returnResult($idcnt,$user_array);
             
     }
 
@@ -419,8 +550,8 @@ class Member
             
         }   
         if (empty($searchfield)){
-            $this->info = 'No Members Found';
-            return $this->getReturn(0,[]);
+           
+            return $this->returnResult(0,[],'','No Members Found');
         }
         
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield ";
@@ -449,7 +580,7 @@ class Member
          }   
                 
         
-        return $this->getReturn($idcnt,$mb);
+        return $this->returnResult($idcnt,$mb);
     }
     
     
@@ -474,7 +605,7 @@ class Member
         #return array of all reesults 
         $mb = $stmt->fetchAll();
        
-       return $this->getReturn($idcnt,$mb);
+       return $this->returnResult($idcnt,$mb);
        ;
     }
     
