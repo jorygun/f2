@@ -617,8 +617,8 @@ private static $long_profile_fields = array (
         #some simple functions.
         $limitplusone = $limit + 1;
         list ($searchfield,$searchfor) = $this->setSearchCriteria($tag);
-         $short_data_fields = implode(',', self::$short_data_fields);
-        $sql = "SELECT $data_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
+        # $short_data_fields = implode(',', self::$data_fields);
+        $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
         #echo $sql . BRNL;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt->execute($searchfor);
