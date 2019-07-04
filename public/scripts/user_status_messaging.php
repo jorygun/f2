@@ -13,7 +13,7 @@ ini_set('error_reporting', -1);
 	separate
 */
 
-require_once "/usr/home/digitalm/Sites/f2/code/init.php";
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 
 function add_user($id,$new_status){
         $pdo = MyPDO::instance();

@@ -14,7 +14,7 @@ $repo = basename(dirname(__DIR__));
 $req=$_SERVER['QUERY_STRING'];
 if (!empty($req)){
 	$test = (strpos($req,'t') !== false);
-	$vebose = (strpos($req,'v') !== false);
+	$verbose = (strpos($req,'v') !== false);
 }
 echo <<<EOT
 <html>
