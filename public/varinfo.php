@@ -163,7 +163,7 @@ require 'SiteUtilities.php';
 use digitalmx\flames\Member;
 #$member = new Member($pdo);
 
-$md = $member->getMemberList('john.scott.springer@gmail.com');
+#$md = $member->getMemberList('john.scott.springer@gmail.com');
 #u\echor ($md,'Member Data');
 
 $em = new Messenger($pdo,$test); #pdo,true for test
