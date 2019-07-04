@@ -185,7 +185,9 @@ private static $member_codes = array (
 	'M', 'MA','MN','MC','MU','R','G'
 	);
 
-public static $stale_data_limit = 365;   #days
+// time limits in days that produce warnings or emails
+public static $inactivity_limit = 365; 
+public static $old_profile_limit = 365;
 public static $test = 'you win';
 
 ######## Getters

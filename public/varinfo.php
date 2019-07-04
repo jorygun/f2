@@ -160,12 +160,12 @@ function echo_red ($t) {
 }
 require 'SiteUtilities.php';
 #require 'Member.php';
-use digitalmx\flames\Member;
-$member = new Member($pdo);
+#use digitalmx\flames\Member;
+#$member = new Member($pdo);
 
 $md = $member->getMemberList('john.scott.springer@gmail.com');
-u\echor ($md,'Member Data');
+#u\echor ($md,'Member Data');
 
-// $em = new EmsMessaging($pdo,$test); #pdo,true for test
-// $em->update_ems(11602,'A4');
+$em = new Messenger($pdo,$test); #pdo,true for test
+ $em->sendMessages(11602,'ems-A4');
 
