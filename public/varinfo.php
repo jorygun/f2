@@ -159,7 +159,7 @@ function echo_red ($t) {
 	
 }
 require 'SiteUtilities.php';
-require 'Member.php';
+#require 'Member.php';
 use digitalmx\flames\Member;
 $member = new Member($pdo);
 
