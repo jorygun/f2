@@ -160,7 +160,7 @@ function echo_red ($t) {
 }
 require 'SiteUtilities.php';
 #require 'Member.php';
-#use digitalmx\flames\Member;
+use digitalmx\flames\Member;
 #$member = new Member($pdo);
 
 $md = $member->getMemberList('john.scott.springer@gmail.com');
