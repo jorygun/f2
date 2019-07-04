@@ -1,0 +1,12 @@
+Confirm Your Signup for AMD FLAMEs
+
+::name::, a few days ago we sent you an email asking you
+to confirm this email for your signup on the AMD Alumni
+FLAMEs site. We haven't heard back from you.
+
+**************************************************
+To confirm this is your email, click here:
+	::verify::
+***************************************************
+
+Otherwise, your signup will be cancelled.

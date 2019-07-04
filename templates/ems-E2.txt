@@ -1,0 +1,16 @@
+AMD FLAMEs Email Confirmation Required - Second Request
+
+	::name::, about a week ago, your email
+	on the AMD FLAMEs site was changed, and we sent
+	you an email asking you to verify the change.
+
+	You haven't confirmed the change, so now we're wondering if
+	this was a mistake?
+
+***************************************************
+	If this is your correct new email, please
+	CLICK ON THE LINK BELOW to confirm:
+		::verify::
+***************************************************
+	
+

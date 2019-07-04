@@ -1,0 +1,12 @@
+Your AMD FLAMEs Email Bounced - Action Needed
+
+	::name::,  The AMD Alumni FLAMES  site recently
+	sent you an email at this address that bounced.
+	Can you please confirm that this email is correct for you?
+
+***************************************************
+	If this email <::current_email::> is correct, 
+	just use the link below to confirm:
+		::verify::
+***************************************************
+

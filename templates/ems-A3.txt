@@ -1,0 +1,12 @@
+::name::, please confirm your email address
+
+		::name::, about 2 weeks ago we sent you an email asking you to confirm
+	that this is your correct email.  We still haven't heard back from you.
+
+***************************************************************
+	IF YOU RECEIVE THIS EMAIL, please use the link below:
+
+  	::verify::
+***************************************************************
+
+  
