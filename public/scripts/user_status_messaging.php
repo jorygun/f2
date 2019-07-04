@@ -87,7 +87,7 @@ function update_user_status($id,$mstatus,$mode='sending'){
         $em_subj = $msg['subj'];
         $em_msg = $msg['msg'];
         if (!empty($em_subj) && ($mode == 'sending')){
-                send_user($id,$em_subj,$em_msg);
+                send_user($row['user_email'],$em_subj,$em_msg);
         }
 
 
