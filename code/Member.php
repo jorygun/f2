@@ -119,7 +119,7 @@ Long profile fields
 
 use \Exception as Exception;
 use \digitalmx\flames\Definitions as Defs;
-use \digitalmx\flames\EmsMessaging;
+#use \digitalmx\flames\EmsMessaging;
 use digitalmx as u;
 
 
@@ -275,8 +275,7 @@ private static $long_profile_fields = array (
        
 	$this->pdo = $pdo;
 	$this->data_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
-	echo "include path: " . get_include_path() . BRNL;
-	require "EmsMessaging.php";
+	
 	$this->EmsMsg = new EmsMessaging($this->pdo);
 	
 
