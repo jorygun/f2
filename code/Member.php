@@ -2,7 +2,7 @@
 namespace digitalmx\flames;
 $proj_path = dirname(__DIR__);
 
-require_once '../config/init.php';
+#require_once '../config/init.php';
 #require_once $proj_path . '/mx-libs/phpmx' . '/MxPDO.php';
  /**
   *
