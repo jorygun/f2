@@ -562,7 +562,7 @@ private static $long_profile_fields = array (
 		// gets members by email, name, ems, status, or admin 
 		// from MemberAdmin
 		$q = array ();
-		$fields = 'status, user_email, email_status,  DATE_FORMAT(FROM_UNIXTIME(email_last_validated), %D %M $Y) ,
+		$fields = 'status, user_email, email_status,  DATE_FORMAT(FROM_UNIXTIME(email_last_validated), %D %M %Y) ,
 			record_updated, 
 			DATE_FORMAT(FROM_UNIXTIME(last_login), %D %M %Y), no_bulk,upw,user_id,username';
 		
