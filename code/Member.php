@@ -582,7 +582,8 @@ private static $long_profile_fields = array (
 		}
 		$sql = "SELECT $fields FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
 #echo $sql .  BRNL;
-
+		echo "Ready to search: $sql" . BRNL;
+		
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
 		$this->returnResult($result);
 	}
