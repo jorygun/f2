@@ -585,6 +585,8 @@ private static $long_profile_fields = array (
 		echo "Ready to search: $sql" . BRNL;
 		
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+		u\echor ($result,'from query');
+		
 		$this->returnResult($result);
 	}
     
