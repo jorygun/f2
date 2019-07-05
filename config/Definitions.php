@@ -60,7 +60,7 @@ class Definitions {
 	
 
 // code => array(name,next-code,after-days)
-private static $ems_codes = array(
+public static $ems_codes = array(
 		'Y'	=> ['Validated','',7],
 		'Q'	=> ['Believed Good','',7],
 		'XX'	=> ['To be removed','',7],
