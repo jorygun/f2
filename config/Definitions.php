@@ -76,6 +76,7 @@ public static $ems_codes = array(
 		'A1'	=> ['Being revalidated','A2',3],
 		'A2'	=> ['Being revalidated (2nd attempt)','A4',7],
 		'A3'	=> ['Being revalidated (Final attempt)','LA',3],
+		'A4'	=> ['Being revalidated (Final attempt)','LA',3],
 		'E1'	=> ['Email change being validated','E2',3],
 		'E2'	=> ['Email change being validated (2nd)','LE',3],
 		'N1'	=> ['New Signup','N2',2],
