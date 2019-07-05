@@ -165,7 +165,7 @@ require 'SiteUtilities.php';
 
 #$md = $member->getMemberList('john.scott.springer@gmail.com');
 #u\echor ($md,'Member Data');
-require 'Messenger.php';
+
 $em = new Messenger ($pdo,$test); #pdo,true for test
  $em->sendMessages(11602,'ems-A4');
 
