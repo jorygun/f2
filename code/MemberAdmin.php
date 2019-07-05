@@ -10,9 +10,10 @@ ini_set('error_reporting', -1);
 //BEGIN START
 
 	require_once 'init.php';
+	require 'Member.php';
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx as u;
-	use digitalmx\flames\Members;
+	use digitalmx\flames\Member;
 	
 
 	
@@ -24,9 +25,11 @@ class MemberAdmin {
 	private static  $members_db = 'members_f2';
 	private $pdo;
 	private $member;
+	
+	
 	public function __construct($pdo){
 		$this->pdo = $pdo;
-		$this->members = new Members ($pdo);
+		$this->member = new Member ($pdo);
 		
 	}
 	
