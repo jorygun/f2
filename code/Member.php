@@ -16,7 +16,8 @@ require_once '../config/init.php';
                                                                  
 
 /* Methods and Properties
- 
+ 	$member = new Member($pdo);
+ 	
     getMemberList($tag, $limit = 100, $method = '') //list
     getMemberData($tag,method) // all data for one member, limit 1
     	tag is either email, uid, or username 
@@ -43,6 +44,7 @@ require_once '../config/init.php';
     public function getLastLogin($tag)
     public function getDonors() // list of liinked emails
     public function getAuthors() // list of liinked emails
+    public function updateEms($uid,$ems)
 
 
 */
@@ -860,7 +862,14 @@ private static $long_profile_fields = array (
         }
         return $v;
     }
-
-
+	public function updateEms($uid,$ems) {
+		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
+			WHERE user_id = '$uid';";
+			echo "from member->updateEms: $sql" . BRNL;
+			
+		#$result = $this->pdo->query($sql);
+		return $result;
+	}
+	
 } #end class
 
