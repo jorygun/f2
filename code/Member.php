@@ -122,6 +122,7 @@ Long profile fields
 use \Exception as Exception;
 use \digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
+use digitalmx\flames as f;
 
 
 class Member
@@ -476,7 +477,7 @@ private static $long_profile_fields = array (
         if ($field == 'email' or strpos($tag, '@') > 0) { #is email
             $searchfield = $search_fields['email'];
             $searchfor = [$tag];
-        } elseif ($field == 'login' or u\isLogin($tag)) { #looks like a login code
+        } elseif ($field == 'login' or f\isLogin($tag)) { #looks like a login code
             $searchfield = $search_fields['login'];
             $searchfor = splitLogin($tag);
         } elseif ($field == 'uid' or is_numeric($tag)) { #is a userid
