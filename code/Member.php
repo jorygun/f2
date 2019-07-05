@@ -562,7 +562,7 @@ private static $long_profile_fields = array (
 		// gets members by email, name, ems, status, or admin 
 		// from MemberAdmin
 		$q = array ();
-		$fields = 'status, user_email, email_status, email_last_validated, record_updated, last_login, no_bulk,upw,user_id';
+		$fields = 'status, user_email, email_status, email_last_validated, record_updated, last_login, no_bulk,upw,user_id,username';
 		
 		if (!empty($name = $post['name'])){
 			$q[] = " username LIKE '%" . addslashes($post['name']) . "%' "; 
