@@ -166,9 +166,13 @@ require 'SiteUtilities.php';
 #$md = $member->getMemberList('john.scott.springer@gmail.com');
 #u\echor ($md,'Member Data');
 
-$em = new Messenger ($pdo,$test); #pdo,true for test
-$event = 'em-found';
-$event_extra = array('informant'=>'Teddy Technjcal');
- $em->sendMessages(11602,$event,$event_extra);
- echo "Sent $event<br";
+// $em = new Messenger ($pdo,$test); #pdo,true for test
+// $event = 'em-found';
+// $event_extra = array('informant'=>'Teddy Technjcal');
+//  $em->sendMessages(11602,$event,$event_extra);
+//  echo "Sent $event<br";
+
+require "MemberAdmin.php";
+$ma = new MemberAdmin($pdo);
+echo $ma->showSearch();
 

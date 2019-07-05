@@ -558,7 +558,34 @@ private static $long_profile_fields = array (
   }
 
 
+	public function getMembersForAdmin($post) {
+		// gets members by email, name, ems, status, or admin 
+		// from MemberAdmin
+		$q = array ();
+		$fields = 'status, email_status, email_last_validated, record_updated, last_login, no_bulk';
+		
+		if (!empty($name = $post['name'])){
+			$q[] = " username LIKE '%" . addslashes($post['name']) . "%' "; 
+		}
+		
+		if ($email = $post['email']){
+			$q[] = " user_email LIKE '%$email%' ";
+		}
+		if ($status = $post['status']){
+			$q[] = " status LIKE '$status' ";
+		}
+		if ($ems = $post['ems']){
+			$q[] = " email_status LIKE '$ems' ";
+		}
+		if ($admin_status = $post['admin_status']){
+			$q[] = " admin_status LIKE '$admin_status' ";
+		}
+		$sql = "SELECT $fields FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
+#echo $sql .  BRNL;
 
+		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+		$this->returnResult($result);
+	}
     
     public function getMembers($post){
          $q=[]; $messages=[];
