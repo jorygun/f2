@@ -9,12 +9,13 @@ You have been a member of amdflames.org along with about 2000 other
 ex-AMDers since ::join_date::, but somewhere along the line we lost
 a working email for you.
 
-Each week we publish a newsletter that lists a few “lost members” -
-lost because we have no email, or the one we have bounces, or they
-didn't respond to several requests to confirm their email.
+In our weekly newsletter, we publish a list of a few 
+“lost members” - lost because we have no email, or the one we have 
+bounces, or they didn't respond to several requests to confirm 
+their email.
 
-Your name showed up recently, and ::informant:: informed me that
-this is the correct email for you.
+Your name showed up recently, and ::informant:: informed me 
+that this is the correct email for you.
 
 I have updated your email address with this one, and also set your
 account to receive the weekly update email.
