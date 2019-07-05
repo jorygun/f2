@@ -14,7 +14,7 @@ ini_set('error_reporting', -1);
 	use digitalmx as u;
 	
 
-	if (f2_security_below(8)){die ("NOt allowed");}
+	
 //END START
 
     
