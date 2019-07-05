@@ -42,18 +42,20 @@ class MemberAdmin {
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
         $username = u\entity_spec($row['username']);
       $o .=  "<tr>
-        <td colspan='2'><b>$username</b></td>
+        <td colspan='2'><b>${row['username']}</b></td>
 			<td colspan='2' >" . u\linkHref($row['user_email']) . "</td>";
          $login = $row['upw'] . $row['user_id'];
         $user_login_link = "https://amdflames.org/?s=$login";
       
         $o .=  "<td colspan='4'>User Login: $user_login_link <a href='$user_login_link' target='user_login'>Log in as</a></td></tr>";
 
-       
+       $o .= "<tr>
+       <td>${row['email_status']}</td>
+       </tr>";
 
        
 
-        $o .=   "<tr><td align='center'><a href='#' onclick=\"window.open('/scripts/send_lost_link.php?email=$urlemail','lostlink','height=200,width=400,x=200,y=200');return false;\">Send Login</a></td>";
+        $o .=   "<tr>";
         $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
         $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
         $o .=   "<td align='center'><a href='/scripts/verify_email.php?r=$uid' target='verify'>Verify Email</a></td>";
