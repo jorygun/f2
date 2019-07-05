@@ -346,6 +346,13 @@ private static $long_profile_fields = array (
             
     }
 
+	private function isLogin($login) {
+    #returns true or false
+    // regex for user login string 5 char pw, 5 digit user_id
+       $login_regex =  '/^(\w{5})(\d{5})$/';
+       return preg_match($login_regex,$login);
+       
+}
      private function enhanceData($row)
     {
         $id = $row['user_id'];
@@ -477,7 +484,7 @@ private static $long_profile_fields = array (
         if ($field == 'email' or strpos($tag, '@') > 0) { #is email
             $searchfield = $search_fields['email'];
             $searchfor = [$tag];
-        } elseif ($field == 'login' or f\isLogin($tag)) { #looks like a login code
+        } elseif ($field == 'login' or $this->isLogin($tag)) { #looks like a login code
             $searchfield = $search_fields['login'];
             $searchfor = splitLogin($tag);
         } elseif ($field == 'uid' or is_numeric($tag)) { #is a userid
