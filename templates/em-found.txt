@@ -1,4 +1,4 @@
-Your email address has changed.
+Your AMD Flames address has been changed.
 
 ::name::,
 
@@ -13,7 +13,8 @@ Each week we publish a newsletter that lists a few “lost members” -
 lost because we have no email, or the one we have bounces, or they 
 didn't respond to several requests to confirm their email.
 
-::informant::
+Your name showed up recently, and ::informant:: informed me that
+this is the correct email for you.
 
 I have updated your email address with this one, and also set your 
 account to receive the weekly update email.
