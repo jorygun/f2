@@ -245,7 +245,7 @@ class Init
 		. ':' . $repo_dir. '/code'
 		. ':' . $repo_dir . '/public'
 		. ':' . $repo_dir . '/public/scripts'
-		. ':' . $proj_path . '/lib/'
+		. ':' . $repo_dir . '/lib/'
 
 
 		);
