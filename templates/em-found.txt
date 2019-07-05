@@ -10,8 +10,8 @@ ex-AMDers since ::join_date::, but somewhere along the line we lost
 a working email for you.
 
 In our weekly newsletter, we publish a list of a few 
-“lost members” - lost because we have no email, or the one we have 
-bounces, or they didn't respond to several requests to confirm 
+“lost members” - lost because we have no email, or the one we 
+have bounces, or they didn't respond to several requests to confirm 
 their email.
 
 Your name showed up recently, and ::informant:: informed me 
