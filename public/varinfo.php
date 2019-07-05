@@ -166,6 +166,6 @@ require 'SiteUtilities.php';
 #$md = $member->getMemberList('john.scott.springer@gmail.com');
 #u\echor ($md,'Member Data');
 
-$em = new Messenger($pdo,$test); #pdo,true for test
+$em = new \digitalmx\flames\Messenger ($pdo,$test); #pdo,true for test
  $em->sendMessages(11602,'ems-A4');
 
