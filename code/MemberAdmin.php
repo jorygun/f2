@@ -54,14 +54,14 @@ class MemberAdmin {
        
 
         $o .=   "<tr><td align='center'><a href='#' onclick=\"window.open('/scripts/send_lost_link.php?email=$urlemail','lostlink','height=200,width=400,x=200,y=200');return false;\">Send Login</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$id' target='profile'>Profile</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$id&email_status=LB' target='$username'>Bounces</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/verify_email.php?r=$id' target='verify'>Verify Email</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$id' target='$username'>Update</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$id' target='$username'>Edit</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$id' target='_blank'> Donor</a></td>";
-       // echo "<td align='center'><a href='/scripts/xout.php?xid=$id&post=$post' target='_blank'>X out</a></td>";
-        $o .=   "<td align='center'><button name='xout' value='$id' type='submit'>Xout</button></td>";
+        $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
+        $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
+        $o .=   "<td align='center'><a href='/scripts/verify_email.php?r=$uid' target='verify'>Verify Email</a></td>";
+        $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid' target='$username'>Update</a></td>";
+        $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
+        $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
+       // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
+        $o .=   "<td align='center'><button name='xout' value='$uid' type='submit'>Xout</button></td>";
         $o .=   "</tr>\n";
 		return $o;
 }
