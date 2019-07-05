@@ -330,7 +330,7 @@ private static $long_profile_fields = array (
         }
         
         $mdata = $stmt->fetch();
-        u\echor($mdata,'Mdata');
+       # u\echor($mdata,'Mdata');
         
      
         $user_array = $this->enhanceData($mdata);
