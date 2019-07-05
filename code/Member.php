@@ -860,7 +860,7 @@ private static $long_profile_fields = array (
 			echo "from member->updateEms: $sql" . BRNL;
 			
 		#$result = $this->pdo->query($sql);
-		return $result;
+		return ;#$result;
 	}
 	
 } #end class
