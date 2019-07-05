@@ -48,10 +48,14 @@ class MemberAdmin {
          $login = $row['upw'] . $row['user_id'];
         $user_login_link = "https://amdflames.org/?s=$login";
       
-        $o .=  "<td colspan='4'>User Login: $user_login_link <a href='$user_login_link' target='user_login'>Log in as</a></td></tr>";
+        $o .=  "<td colspan='4'>$user_login_link <a href='$user_login_link' target='user_login'>Log in as</a></td></tr>";
 
        $o .= "<tr>
+       <td>${row['status']}</td>
        <td>${row['email_status']}</td>
+        <td>${row['email_last_validated']}</td>
+         <td>${row['last_login']}</td>
+          <td>${row['no_bulk']}</td>
        </tr>";
 
        
@@ -95,9 +99,9 @@ function xout($id,$members_db){
             <table style='border-collapse:collapse;font-size:small;'>";
 
             echo "<tr>
-            	<th>Name</th>
+            	
             	<th>Status</th>
-            	<th>Email</th>
+            	
             	<th>Email Status</th>
             	<th>Email Validated</th>
             	<th>Last Login</th>
