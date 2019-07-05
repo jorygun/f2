@@ -1,4 +1,4 @@
-::name,
+::name::,
 
 Your email address on the AMD Alumni site amdflames.org has just
 been updated to ::current_email:: .
@@ -24,6 +24,6 @@ information, and block weekly emails from the site. Just
 log in and Edit Profile.
 
 Your personal login to the amdflames site:
-    ::login_string::
+    ::login::
 
-::closeing::
+::closing::

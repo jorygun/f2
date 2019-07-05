@@ -170,5 +170,5 @@ $em = new Messenger ($pdo,$test); #pdo,true for test
 $event = 'em-change';
 $event_extra = array('informant'=>'Teddy Technjcal');
  $em->sendMessages(11602,$event,$event_extra);
- echo "Sent $emscode<br";
+ echo "Sent $event<br";
 
