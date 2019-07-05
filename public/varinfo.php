@@ -175,4 +175,7 @@ require 'SiteUtilities.php';
 require "MemberAdmin.php";
 $ma = new MemberAdmin($pdo);
 echo $ma->showSearch();
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+	echo $ma->search($_POST);
+}
 
