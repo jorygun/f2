@@ -82,6 +82,7 @@ function xout($id,$members_db){
      $_SESSION['last_member_search'] = $post;
 	
 	$result = $this->member->getMembersForAdmin($post);
+   u\echor ($result,'from Member');
    
       if ($result['count'] == 0){echo "Nothing Found.";}
 		else{
