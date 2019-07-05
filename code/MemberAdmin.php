@@ -39,7 +39,8 @@ class MemberAdmin {
 		 $uid = $row['user_id'];
 		  $urlemail = rawurlencode($row['user_email']);
 		   $username = u\entity_spec($row['username']);
-		  
+		  $last_login = date('d M, Y',strtotime($row['last_login']);
+		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']);
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
        
       $o .=  "<tr>
@@ -53,7 +54,8 @@ class MemberAdmin {
        $o .= "<tr>
        <td>${row['status']}</td>
        <td>${row['email_status']}</td>
-        <td>${row['email_last_validated']}</td>
+        <td>$email_last_validated</td>
+        <td>$last_login</td>
          <td>${row['last_login']}</td>
           <td>${row['no_bulk']}</td>
        </tr>";
