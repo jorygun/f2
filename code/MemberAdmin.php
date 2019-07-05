@@ -104,7 +104,7 @@ function xout($id,$members_db){
 
             foreach ($result['data'] as $row){
             
-                echo echo_user_row($row);
+                echo $this->echo_user_row($row);
             }
            
            echo "</table></form>\n";
