@@ -1,4 +1,4 @@
-Confirm you're still around
+Hi ::name::.  Please confirm you're still around.
 
     This is an email from the AMD Alumni Flames site.  It has been
     a long time since you logged in and we want to confirm that
@@ -13,3 +13,4 @@ Confirm you're still around
 	(Note: You can avoid these messages by logging into the web site
 	occasionally .)
 
+   ::bulk::

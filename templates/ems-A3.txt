@@ -1,12 +1,18 @@
-::name::, please confirm your email address
+AMD FLAMEs Email confirmation - Final Request
 
-		::name::, about 2 weeks ago we sent you an email asking you to confirm
-	that this is your correct email.  We still haven't heard back from you.
+	::name::, we have sent several emails over a few weeks
+	to confirm that your email address on the AMD Flames 
+	Alumni site is correct.  This email isn't bouncing, 
+	but we haven't heard back from you, so we think 
+	you may not be using this address.
 
-***************************************************************
-	IF YOU RECEIVE THIS EMAIL, please use the link below:
-
+****************************************************************
+  IF THIS IS YOUR CORRECT EMAIL, PLEASE CLICK ON THE LINK BELOW:
   	::verify::
-***************************************************************
+*****************************************************************
 
-  
+	If you have any questions or concerns, please contact me.
+	We don't want to lose track of you.  If you do not verify,
+	your user status will be set to 'Lost' and you won't receive any
+	more emails from us.  Maybe.
+

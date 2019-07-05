@@ -167,8 +167,8 @@ require 'SiteUtilities.php';
 #u\echor ($md,'Member Data');
 
 $em = new Messenger ($pdo,$test); #pdo,true for test
-foreach (['A4'] as $ems){
-	$emscode='ems-' . $ems;
- $em->sendMessages(11602,$emscode);
+$event = 'em-change';
+$event_extra = array('informant'=>'Teddy Technjcal');
+ $em->sendMessages(11602,$event,$event_extra);
  echo "Sent $emscode<br";
-}
+
