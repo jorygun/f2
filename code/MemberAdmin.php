@@ -38,11 +38,12 @@ class MemberAdmin {
        #$fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
 		 $uid = $row['user_id'];
 		  $urlemail = rawurlencode($row['user_email']);
+		   $username = u\entity_spec($row['username']);
 		  
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
-        $username = u\entity_spec($row['username']);
+       
       $o .=  "<tr>
-        <td colspan='2'><b>${row['username']}</b></td>
+        <td colspan='2'><b>$username</b></td>
 			<td colspan='2' >" . u\linkHref($row['user_email']) . "</td>";
          $login = $row['upw'] . $row['user_id'];
         $user_login_link = "https://amdflames.org/?s=$login";
