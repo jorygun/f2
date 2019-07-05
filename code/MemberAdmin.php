@@ -56,7 +56,7 @@ class MemberAdmin {
        <td>${row['email_status']}</td>
         <td>$email_last_validated</td>
         <td>$last_login</td>
-         <td>${row['last_login']}</td>
+   
           <td>${row['no_bulk']}</td>
        </tr>";
 
