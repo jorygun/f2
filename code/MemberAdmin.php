@@ -39,8 +39,8 @@ class MemberAdmin {
 		 $uid = $row['user_id'];
 		  $urlemail = rawurlencode($row['user_email']);
 		   $username = u\entity_spec($row['username']);
-		  $last_login = date('d M, Y',strtotime($row['last_login']);
-		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']);
+		  $last_login = date('d M, Y',strtotime($row['last_login']));
+		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
        
       $o .=  "<tr>
