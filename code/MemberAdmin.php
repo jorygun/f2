@@ -159,8 +159,8 @@ here. Name and email can be partials.
 
     <td> <input type='text' name = 'name' ></td>
     <td><input type='text' name='email'></td>
-    <td><select type='text' name='status'><?=$status_options?></select></td>
-   <td><select type='text' name='ems'><?=$ems_options?></select></td>
+    <td><select type='text' name='status'>$status_options</select></td>
+   <td><select type='text' name='ems'>$ems_options</select></td>
      <td>Admin Status:<input type="text" name="admin_status" size='4'></td></tr>
 </table>
 <input type=submit name='search' value='Search'>
