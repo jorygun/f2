@@ -23,7 +23,9 @@ class DocPage {
       if ($_SESSION['login']['seclevel'] < $min){
          $header = "HTTP/1.1 403 Forbidden" ;
          #echo $header;
+         $header = "Location: /403.html";
         header($header);
+
 
       }
 
