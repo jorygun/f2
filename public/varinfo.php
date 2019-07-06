@@ -19,23 +19,29 @@ if (!empty($req)){
 $init_file = '../config/init.php';
 require $init_file;
 
-echo <<<EOT
-<html>
-<head>
-<title>Varinfo ($repo)</title>
-<style>
-	body {max-width:800px; 
-		overflow-wrap: break-word;
-	}
-	.red {color:red;}
-	
-</style>
-</head>
-<body >
-varinfo.php - last updated $mtimet<br>
+use digitalmx\flames\DocPage;
 
+$page = new DocPage;
+echo $page->getHead('my title');
+echo $page ->startBody('page title' );
 
-EOT;
+// echo <<<EOT
+// <html>
+// <head>
+// <title>Varinfo ($repo)</title>
+// <style>
+// 	body {max-width:800px; 
+// 		overflow-wrap: break-word;
+// 	}
+// 	.red {color:red;}
+// 	
+// </style>
+// </head>
+// <body >
+// varinfo.php - last updated $mtimet<br>
+// 
+// 
+// EOT;
 echo "Test Mode: $test";
 
 

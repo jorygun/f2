@@ -127,16 +127,17 @@ class Init
 		$project_dir = dirname($repo_dir); #---/flames - where shared stuff is          *
 		$this->project_dir = $project_dir;
 		
-		$repo_name = basename($repo_dir); #-- repo name    
+		$this->repo = basename($repo_dir); #-- repo name    
+	
 		$this->platform = $this->setPlatform();
 		
 	
 		$this->home = self::$homes[$this->platform];
 	
-		$this->config_msg = "init.php: \n  platform - $this->platform; repo_dir - $repo_dir; repo: $repo_name;\n\n";
+		$this->config_msg = "init.php: \n  platform - $this->platform; repo_dir - $repo_dir; repo: $this->repo \n\n";
 	
 	
-		if ($repo_name == 'live'){
+		if ($this->repo == 'live'){
 			ini_set('display_errors',0);
 		}
 		else {
@@ -210,7 +211,8 @@ class Init
 		define ('PROJ_PATH',$this->project_dir);
 
 		define ('REPO_PATH',$this->repo_dir);
-
+		define ('REPO', $this->repo);
+		
 		define ('SITE_PATH', REPO_PATH . "/public");
 
 		define ('SITE', $this->site);
