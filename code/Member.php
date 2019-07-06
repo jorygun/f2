@@ -376,8 +376,11 @@ private static $long_profile_fields = array (
 	}
 	
 	
-     private function enhanceData($row)
+     private function enhanceData($row,$fieldlist='')
     {
+    	// takes row from select *, adds computed fields, and
+    	// returns the fields requested in fieldlist
+    	
         $id = $row['user_id'];
         // creates array of other fields to be added to the db fields
         $login_string = $row['upw'] . $id ;
@@ -431,9 +434,16 @@ private static $long_profile_fields = array (
             
       # u\echoR($addons,'addons');
        
-       
-       
         $enhanced = array_merge($row, $addons);
+        
+        if (! empty($fieldlist) ){
+        		if (is_array($fieldlist)){
+       	 		$enhanced = array_intersect_key($enhanced,array_flip($fieldlist) );
+       	 	} else {
+       	 		throw new Exception ("Field list to enhance data is not a list"); 
+       	 	}
+        }
+        
         return $enhanced;
     }
   
@@ -732,15 +742,14 @@ private static $long_profile_fields = array (
     	}
     	$fields = implode (',',self::$member_info);
     	
-    	$sql = "SELECT $fields from `members_f2` where user_id = $uid and upw = '$pass';";
+    	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
     	echo "$sql" . BRNL;
     	
     	$result = $this->pdo->query($sql)->fetch();
     	
     	if (! $result){return $this-no_member;}
-    	
-    	$result = $this->enhanceData($result);
-    	
+    	//add fields and filter result
+    	$result = $this->enhanceData($result,self::$member_info);
     	return $result;
     }
     	
