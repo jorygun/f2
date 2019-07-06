@@ -18,6 +18,8 @@ class Login
 	// mays supply old style login string in $user with empty pass
 	public function __construct ($pdo,$user,$pass='') 
 	{
+		if ($user == -1){$this->logout();}
+		
 		$this->pdo = $pdo;
 		$this->member = new Member($pdo);
 		
@@ -76,46 +78,5 @@ class Login
 		exit;
 	
 	}
-
-
-
-
-private function not_logged_in() {#not logged in
-	$alert_message = "You are not logged in.  (Your login may have expired.)";
-
-	#$stext = addslashes($alert_message);
-	$stext = $alert_message;
-   header('HTTP/1.0 401 Restricted');
-   echo <<<EOT
-<html>
-<head>
-<title>Not Logged In</title>
-<link rel='stylesheet' href='/css/flames2.css'>
-
-</head>
-
-
-<body>
-
-
-<h1>You are not logged in.</h1>
-<p>You have attempted to access a page or function which is only
-accessible to members.</p>
-<p>If you are a member, please log in again using your personal login code</p>
-
-<p><b>If you believe
-this is an error, please <a href='mailto:admin@amdflames.org'>contact the admin</a></b>.  Sometimes I break stuff.</p>
-<hr>
-
-
-</body></html>
-EOT;
-
-	exit;
-
-  }
-
-
- 
 
 }
