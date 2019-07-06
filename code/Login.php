@@ -6,7 +6,7 @@ namespace digitalmx\flames;
 //ini_set('error_reporting', E_ALL);
 
 
-require_once 'init.php'; #don't think I need this, because this is called from init
+#require_once 'init.php'; #don't think I need this, because this is called from init
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx\flames\Member;
