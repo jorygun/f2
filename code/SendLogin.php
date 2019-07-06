@@ -47,7 +47,7 @@ EOT;
      	admin@amdflames.org
      	";
      	
-     	$mail($email,'AMD Flames Logins',$message, "From: admin@amdflames.org\r\n");
+     	mail($email,'AMD Flames Logins',$message, "From: admin@amdflames.org\r\n");
       echo "Logins Sent.";
    
    
