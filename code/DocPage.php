@@ -69,6 +69,7 @@ EOT;
          $gsource = '';
 
    }
+
       $t = "<div class='page_head'>\n";
 
 	if (!empty($gsource)){
@@ -78,10 +79,12 @@ EOT;
 	<p class='title'>FLAME<i>news</i><br>
 	<span style='font-size:0.5em;'>$subtitle</span>
 	</p>
-	<hr style="width: 100%; height: 2px;clear:both;">
-
-</div>
 EOT;
+   $t .= $_SESSION['menu'];
+   $t .= "<hr style='width: 100%; height: 2px;clear:both;'>";
+
+   $t .= "</div>\n";
+
 
       return $t;
    }
