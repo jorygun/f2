@@ -202,7 +202,7 @@ EOT;
 	$t .=  self::closeLine(6, $thisMenu) ;
 
 	$thisMenu = 'Opportunities';
-	if ($userlevel >= 0){$menulist[] = $thisMenu;}
+	$menulist[] = $thisMenu;
 	$opp_rows = self::count_opps();
 	$t .= self::addMenu (0,$thisMenu);
 	$t .=  "<li><a href='/opportunitiesE.php' target='_blank'> $opp_rows Listed</a>";
@@ -250,7 +250,7 @@ EOT;
 	$t .= ($userlevel > 1 and !empty ($userlinkedin))? 
 		"<li><a href='$userlinkedin' target='_blank'>My LinkedIn Page</a>" : '';
 	
-	$t .= $t .= self::if_level(1,"
+	$t .= self::if_level(1,"
 		<li><a href='/?s=0'>Log Out</a>
 		");
 	$t .= self::if_level(0,"
