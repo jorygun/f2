@@ -6,6 +6,7 @@ namespace digitalmx\flames;
 
 */
 
+use digitalmx us u;
 
 class DocPage {
 
@@ -24,6 +25,8 @@ class DocPage {
       if ($my_sec_level < $min){
          $header = "HTTP/1.1 403 Forbidden" ;
          echo "Failed $my_sec_level < $min" . BRNL;
+         u\echor ($_SESSION['login'], 'login');
+
 
         # $header = "Location: /403.html";
         #header($header);
