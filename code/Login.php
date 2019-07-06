@@ -35,7 +35,7 @@ class Login
 	
 	}
 	
-	function checkLogin ($log_info) 
+	private function checkLogin ($log_info) 
 	{
 		// is this the same as current logged in user?
 		if (empty($login_id = $_SESSION['login']['user_id'] )){
@@ -54,7 +54,7 @@ class Login
 	}
 	
 	
-	function setLogin ($log_info) {
+	private function setLogin ($log_info) {
 		// sets vars in session
 		$nav = new Menu($log_info);
 		$navbar = $nav -> getMenuBar();
@@ -64,7 +64,7 @@ class Login
 		$_SESSION['menu'] = $navbar;
 	}
 
-	function logout(){
+	private function logout(){
 		$_SESSION = array();
 		if (ini_get("session.use_cookies")) {
 		 $params = session_get_cookie_params();
@@ -76,14 +76,14 @@ class Login
 		session_destroy();
 		header ("Location: http://amdflames.org\n\n");
 		exit;
-	
+
 	
 	}
 
 
 
 
-  else {#not logged in
+private function not_logged_in() {#not logged in
 	$alert_message = "You are not logged in.  (Your login may have expired.)";
 
 	#$stext = addslashes($alert_message);
@@ -117,14 +117,13 @@ EOT;
 	exit;
 
   }
-}
-/* *** DATABASE FUNCTIONS *** */
 
 
 
 
 
- function randPW() {
+
+ private function randPW() {
  //Generate a 5 digit password from 20 randomly selected characters
 	global $GV;
 	$pdo = MyPDO::instance();
@@ -151,7 +150,7 @@ EOT;
 
 
 
-	function echoAlert($text) {
+	private function echoAlert($text) {
 		$stext = addslashes($text);
 		 echo "<script type='text/javascript'>alert('{$stext}');</script>";
 	}
@@ -159,14 +158,11 @@ EOT;
 
 
 
-	function splitLogin($login){
+	private function splitLogin($login){
 			$pw = substr($login,0,5); // Split user_id from upw (user password)
 			$user_id = substr($login,5);
 			return array($user_id,$pw);
 	}
 
 
-	function get_member_by_id($id){
-
-
-	}
+}
