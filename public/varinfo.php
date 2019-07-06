@@ -22,7 +22,7 @@ require $init_file;
 use digitalmx\flames\DocPage;
 
 $page = new DocPage;
-echo $page->getHead('my title',4);
+echo $page->getHead('my title',1);
 echo $page ->startBody('page title' );
 
 // echo <<<EOT
