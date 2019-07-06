@@ -365,7 +365,7 @@ private static $long_profile_fields = array (
 	
 	private function parseLogin ($login) {
 		// paarse old style login string into user and pw
-		if (preg_match($this->login_regex,$login,$match) ){
+		if (preg_match(self::$login_regex,$login,$match) ){
 			return array_slice($match,1,2);
 		}
 		return false;
