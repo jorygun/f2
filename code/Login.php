@@ -19,7 +19,7 @@ class Login
 	private $member;
 	
 	// mays supply old style login string in $user with empty pass
-	public function __construct ($pdo,$user,$pass) 
+	public function __construct ($pdo,$user,$pass='') 
 	{
 		$this->pdo = $pdo;
 		$this->member = new Member();
