@@ -178,6 +178,6 @@ $member = new Member($pdo);
 // if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 // 	echo $ma->search($_POST);
 // }
-$md = $member->getMemberFromLogin('6kQ4k11602');
+$md = $member->getMemberFromLogin('6kQ4k1160');
 u\echor ($md,'Member from Login');
 

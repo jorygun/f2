@@ -729,7 +729,7 @@ private static $long_profile_fields = array (
     	
     	$result = $this->pdo->query($sql)->fetch();
     	
-    	if (!result){return $this-no_member;}
+    	if (! $result){return $this-no_member;}
     	
     	$result = $this->enhanceData($result);
     	
