@@ -159,5 +159,5 @@ use digitalmx\flames\Menu;
 
 use digitalmx\flames\SendLogin;
 $sender = new SendLogin($pdo);
-$sender->sendLink('jorygun@gmail.com');
+$sender->sendLink('john.scott.springer@gmail.com');
 
