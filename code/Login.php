@@ -11,7 +11,7 @@ require_once 'init.php'; #don't think I need this, because this is called from i
 use digitalmx\flames\Definitions as Defs;
 use digitalmx\flames\Member;
 use digitalmx as u;
-
+use \Exception as Exception;
 
 class Login
 {
