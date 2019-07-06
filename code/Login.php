@@ -38,7 +38,8 @@ class Login
 	private function checkLogin ($log_info) 
 	{
 		// is this the same as current logged in user?
-		if (empty($login_id = $_SESSION['login']['user_id'] )){
+		if (isset ($_SESSION['login']['user_id'] )){
+			$login_id = $_SESSION['login']['user_id'];
 			#no current user
 			$this->setLogin($log_info);
 		} elseif ($login_id = $log_info['user_id']) {
