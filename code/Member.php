@@ -267,6 +267,7 @@ private static $long_profile_fields = array (
  	'user_email' => '',
  	'seclevel' => 0,
  	'status_name' => "Not a Member",
+ 	'linkedin' => '',
  	
  	);
  	
