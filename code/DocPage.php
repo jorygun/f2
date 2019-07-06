@@ -21,7 +21,9 @@ class DocPage {
          'votes' = iinclude voting script/css
       */
       if ($_SESSION['login']['seclevel'] < $min){
-        header("HTTP/1.1 403 Forbidden" );
+         $header = "HTTP/1.1 403 Forbidden" ;
+         echo $header;
+        #header($header);
          exit;
       }
 
