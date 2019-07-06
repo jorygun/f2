@@ -14,7 +14,7 @@ class DocPage {
       {
 
    }
-   public function getHead($title, $min = 0, $options=''){
+   public function getHead($title, $min = 0, $options=[]){
       /* options:
          'tiny' = include tinymce
          'ajax' = include jquery, ajax
