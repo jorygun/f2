@@ -770,7 +770,7 @@ private static $long_profile_fields = array (
     	$fields = implode (',',self::$member_info);
     	
     	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
-    	echo "$sql" . BRNL;
+    	#echo "$sql" . BRNL;
     	
     	$result = $this->pdo->query($sql)->fetch();
     	
