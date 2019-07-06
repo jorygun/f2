@@ -13,7 +13,7 @@ use digitalmx\flames\Member;
 use digitalmx as u;
 
 
-class Login() 
+class Login
 {
 	private $pdo;
 	private $member;
