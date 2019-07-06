@@ -24,9 +24,9 @@ class Login()
 		$this->pdo = $pdo;
 		$this->member = new Member();
 		
-		$login = $this->member->getMemberFromLogin($user,$pass);
+		$log_info = $this->member->getMemberFromLogin($user,$pass);
 		
-		if (! $this->checkLogin ($login)){
+		if (! $this->checkLogin ($log_info)){
 			throw new Exception ("Login Failed");
 		}
 		
@@ -35,28 +35,32 @@ class Login()
 	
 	}
 	
-	function checkLogin ($login) 
+	function checkLogin ($log_info) 
 	{
 		// is this the same as current logged in user?
-		if (empty($login_id = $_SESSION['login_user_id'] )){
+		if (empty($login_id = $_SESSION['login']['user_id'] )){
 			#no current user
-			$this->setLogin($login);
-		} elseif ($login_id = $login['user_id']) {
+			$this->setLogin($log_info);
+		} elseif ($login_id = $log_info['user_id']) {
 				#same user, go on.
 				return true;
 		} else {
 			#different user to log in
-			u\echoAlert("Changing logged in user to " . $login['username']);
-			$this->setLogin($login);
+			u\echoAlert("Changing logged in user to " . $log_info['username']);
+			$this->setLogin($log_info);
 				
 		}
 			
 	}
 	
 	
-	function setLogin ($login) {
+	function setLogin ($log_info) {
 		// sets vars in session
+		$nav = new NavBar(1);
+		$navbar = $nav -> getNavBar();
 		
+		$_SESSION['login'] = $log_info;
+		$_SESSION
 
 	function logout(){
 		$_SESSION = array();

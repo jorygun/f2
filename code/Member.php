@@ -255,7 +255,8 @@ private static $long_profile_fields = array (
  	'profile_age',
  	'join_date',
  	'email_status',
- 	'last_login'
+ 	'last_login',
+ 	'status_name',
  
  );
  
@@ -755,7 +756,7 @@ private static $long_profile_fields = array (
     	
     
 
-	public function getMemberProfile ($uid){
+	public function getMemberAll ($uid){
 		$sql = "SELECT * from `members_f2` WHERE uid = $uid";
 		$row = $this->pdo->query($sql) -> fetch();
 		$user_data = $this->enhanceData($row);
