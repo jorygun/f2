@@ -180,6 +180,6 @@ $member = new Member($pdo);
 // }
 use \digitalmx\flames\Login;
 
-$md = $member->getMemberFromLogin('6kQ4k1160');
+$md = $member->getMemberFromLogin('6kQ4k11602');
 u\echor ($md,'Member from Login');
 
