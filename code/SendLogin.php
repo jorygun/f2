@@ -10,7 +10,7 @@ class SendLogin {
    private $pdo;
    private $member;
    
-   private static $message = <<<EOT;
+   private static $message = <<<EOT
    Someone has requested the logins for users assocated with
    this email address at amdflames.org.
    
