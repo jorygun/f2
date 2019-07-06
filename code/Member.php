@@ -254,6 +254,16 @@ private static $long_profile_fields = array (
  	'at_amd',
  
  );
+ 
+ 	private static $no_member = array(
+ 	'username' => 'Not a Member',
+ 	'user_id' => 0,
+ 	'user_email' = '',
+ 	'seclevel' => 0,
+ 	
+ 	);
+ 	
+ 	private static $login_regex =  '/^(\w{5})(\d{5})$/';
     private  $memberTable = 'members_f2';
     private $pdo;
  #   private $messenger;
@@ -349,10 +359,19 @@ private static $long_profile_fields = array (
 	private function isLogin($login) {
     #returns true or false
     // regex for user login string 5 char pw, 5 digit user_id
-       $login_regex =  '/^(\w{5})(\d{5})$/';
-       return preg_match($login_regex,$login);
-       
-}
+      
+      return preg_match($this->login_regex,$login) ; 
+	}
+	
+	private function parseLogin ($login) {
+		// paarse old style login string into user and pw
+		if (preg_match($this->login_regex,$login,$match) ){
+			return array_slice($match,1,2);
+		}
+		return false;
+	}
+	
+	
      private function enhanceData($row)
     {
         $id = $row['user_id'];
@@ -696,21 +715,26 @@ private static $long_profile_fields = array (
         return $data;
     }
         
-    public function getMemberFromLogin($login_string)
+    public function getMemberFromLogin($user,$pass='')
     {
-        if (! isLogin($login_string)){
-            throw new Exception ("Invalid login tag $tag");
-        }
-    
-    
-       $md = $this->getMemberData($login_string,'login');
-       if (!empty($md['error'] )){
-        throw new Exception ("Could not get login data: {$md['error']}");
-        }
-        
-      
-        return $md['data'];
+    	if (empty($user)) {
+    		return $this->no_member;
+    	}
+    	if (empty($pass) and ($m = $this->parseLogin($user)){
+    		list($uid,$pass) = $m;
+    	}
+    	
+    	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
+    	$result = $this->pdo->query($sql)->fetch();
+    	
+    	if (!result){return $this-no_member;}
+    	
+    	$result = $this->enhanceData($result);
+    	
+    	return $result;
     }
+    	
+    
 
 	public function getMemberProfile ($uid){
 		$sql = "SELECT * from `members_f2` WHERE uid = $uid";

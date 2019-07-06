@@ -56,7 +56,7 @@ if (file_exists("title.txt")){
    $subtitle = file_get_contents('title.txt');
 
 }
-elseif (!empty($conventional_date)) {
+elseif (isset($conventional_date)) {
     $subtitle = $conventional_date;
     #from the publish data block
 }

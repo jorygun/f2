@@ -307,7 +307,14 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
     $t = make_links($t);
         $webready[$f] = $t;
     }
-	$webready['content'] = nl2br($webready['content']);
+    /* detect if story is already html.  If not, do nl2br.
+    // otherwise use as is. Non-tiny content will only have
+    <p class=quoted" paragraphs. 
+    */
+    
+	if (strpos($webready['content'],'<p>') === false ){
+		$webready['content'] = nl2br($webready['content']);
+	}
 	$webready['ed_comment'] = nl2br($webready['ed_comment']);
 	
 

@@ -297,13 +297,13 @@ EOT;
 	}
 	// check profile
 
-		if ( ($profile_validated_age>Defs::$stale_data_limit) ){ $update_scratch .= <<< EOT
+		if ( ($profile_validated_age>Defs::$old_profile_limit) ){ $update_scratch .= <<< EOT
 
 		<p>Your profile has not been validated since $profile_last_validated.  Please look it over at <a href="/scripts/profile_update.php">edit profile</a>.  You can update it or just verify that it's current.  </p>
 EOT;
 		}
 	// check email age
-		if (0 or ($email_age>Defs::$stale_data_limit)){ $update_scratch .= <<< EOT
+		if (0 or ($email_age>Defs::$inactivity_limit)){ $update_scratch .= <<< EOT
 
 		<p>Your email has not been verified since $last_verify.  Please look it over in your profile at <a href="/scripts/profile_update.php">edit profile</a>.  You can update it or just verify that it's current.  </p>
 EOT;

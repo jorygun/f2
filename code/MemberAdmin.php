@@ -56,8 +56,11 @@ class MemberAdmin {
        <td>${row['email_status']}</td>
         <td>$email_last_validated</td>
         <td>$last_login</td>
-   
+
           <td>${row['no_bulk']}</td>
+          <td></td>
+          <td></td>
+
        </tr>";
 
        
@@ -108,6 +111,10 @@ function xout($id,$members_db){
             	<th>Email Validated</th>
             	<th>Last Login</th>
             	<th>No Bulk</th>
+
+            	<th></th>
+            	<th></th>
+
             	</tr>";
             	
 
