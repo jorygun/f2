@@ -183,5 +183,5 @@ use digitalmx\flames\Menu;
 
 $md = $member->getMemberFromLogin('6kQ4k11602');
 u\echor ($md,'Member from Login');
-$nav = new Menu();
+$nav = new Menu($md);
 
