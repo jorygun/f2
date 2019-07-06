@@ -29,15 +29,15 @@ EOT;
    		echo "Invalid Email Requested";
    		exit;
    	}
-      $memberslist = $this->member->getMemberList($email);   
+      $members = $this->member->getMemberList($email);   
       #u\echor ($memberslist, 'Member List');
-     if ($memberslist['count'] == 0 ){
+     if ($members['count'] == 0 ){
      	echo "No members found at that email.";
      	exit;
      }
      
      $message = self::$message;
-     foreach ($memberslist['data'] as $row){
+     foreach ($members['data'] as $row){
      	 $login = SITE_URL . "/?s=" . $row['upw'] . $row['user_id'];
      	$message .= "   " . $row['username'] . '    ' . $login . "\n";
      	}
