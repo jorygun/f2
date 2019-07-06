@@ -51,7 +51,9 @@ class Menu {
 	}
 
 	private function count_opps(){
-		 $pdo = $pdo = MyPDO::instance();
+		return 0;
+		
+		 $pdo = MyPDO::instance();
 		 $sql = "SELECT count(*) FROM opportunities WHERE
 					expired = '0000-00-00' OR
 					expired > NOW();";
