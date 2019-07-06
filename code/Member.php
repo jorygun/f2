@@ -252,6 +252,10 @@ private static $long_profile_fields = array (
  	'user_current',
  	'user_from',
  	'at_amd',
+ 	'profile_age',
+ 	'join_date',
+ 	'email_status',
+ 	'last_login'
  
  );
  
@@ -726,8 +730,9 @@ private static $long_profile_fields = array (
     	else {
     		return self::$no_member;
     	}
+    	$fields = implode (',',self::$member_info);
     	
-    	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
+    	$sql = "SELECT $fields from `members_f2` where user_id = $uid and upw = '$pass';";
     	echo "$sql" . BRNL;
     	
     	$result = $this->pdo->query($sql)->fetch();

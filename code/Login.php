@@ -40,21 +40,23 @@ class Login()
 		// is this the same as current logged in user?
 		if (empty($login_id = $_SESSION['login_user_id'] )){
 			#no current user
-			$this->recordLogin($login);
+			$this->setLogin($login);
 		} elseif ($login_id = $login['user_id']) {
 				#same user, go on.
 				return true;
 		} else {
 			#different user to log in
 			u\echoAlert("Changing logged in user to " . $login['username']);
-			$this->recordLogin($login);
+			$this->setLogin($login);
 				
 		}
 			
 	}
 	
 	
-	{
+	function setLogin ($login) {
+		// sets vars in session
+		
 
 	function logout(){
 		$_SESSION = array();
