@@ -720,7 +720,7 @@ private static $long_profile_fields = array (
     	if (empty($user)) {
     		return $this->no_member;
     	}
-    	if (empty($pass) and ($m = $this->parseLogin($user)){
+    	if (empty($pass) and $m = $this->parseLogin($user) ){
     		list($uid,$pass) = $m;
     	}
     	
