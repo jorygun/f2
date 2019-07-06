@@ -187,6 +187,6 @@ use digitalmx\flames\Menu;
 // $navbar = $nav->getMenuBar();
 // echo $navbar;
 // 
-new Login($pdo, '6kQ4k11602');
+new Login($pdo, '6kQ4k1160');
 echo $_SESSION['menu'];
 
