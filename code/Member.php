@@ -258,7 +258,7 @@ private static $long_profile_fields = array (
  	private static $no_member = array(
  	'username' => 'Not a Member',
  	'user_id' => 0,
- 	'user_email' = '',
+ 	'user_email' => '',
  	'seclevel' => 0,
  	
  	);
