@@ -41,7 +41,7 @@ EOT;
      $message = self::$message;
      foreach ($members['data'] as $row){
      	 $login = SITE_URL . "/?s=" . $row['upw'] . $row['user_id'];
-     	$message .= sprintf ("\t%-20s  %s\n", $row['username'], $login);
+     	$message .= sprintf ("   %-18s  %s\n", $row['username'], $login);
      	}
      	
      	$message .= "
