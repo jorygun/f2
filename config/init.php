@@ -27,7 +27,7 @@ if (defined ('INIT')){ return; } //some init has already run
 // put Exceptin into this namespace
 use \Exception as Exception;
 
-use Pimple\Container;
+#use Pimple\Container;
 #use digitalmx\
 
 $init = new Init();
@@ -64,12 +64,15 @@ require_once 'nav.class.php';
 
 use \MyPDO;
 
+use digitalmx\flames\Login;
 
 
 $pdo = $init->setPDO(); #guarantees db values are set
 $init->setRequired(); #f2 connect needs db values
 
-
+$s = $_GET['s'] ?? '';
+$login = new Login($pdo,$s)
+	
 // #build db
 // $container = new Container();
 // 
