@@ -10,6 +10,15 @@ class SendLogin {
    private $pdo;
    private $member;
    
+   private static $message = <<<EOT;
+   Someone has requested the logins for users assocated with
+   this email address at amdflames.org.
+   
+   Below are the names and logins for these users.
+   There may be more than one user at the same email.
+   
+EOT;
+
    public function __construct($pdo) {
          $this->pdo = $pdo;
          $this->member = new Member($pdo);
@@ -17,11 +26,26 @@ class SendLogin {
    }
    public function sendLink($email) {
       $memberslist = $this->member->getMemberList($email);   
-      u\echor ($memberslist, 'Member List');
-      exit;
-      
-      
-      
+      #u\echor ($memberslist, 'Member List');
+     if ($memberslist['count'] == 0 ){
+     	echo "No members found at that email.";
+     	exit;
+     }
+     
+     $message = $this->$message;
+     foreach ($memberlist['data'] as $row){
+     	 $login = SITE_URL . "/?s=" . $row['upw'] . $row['user_id'];
+     	$message .= "   " . $row['username'] . '    ' . $login . "\n";
+     	}
+     	
+     	$message .= "
+     	If you have any difficulties, contact the admin at
+     	admin@amdflames.org
+     	";
+     	
+     	$mail($email,'AMD Flames Logins',$message, "From: admin@amdflames.org\r\n");
+      echo "Logins Sent."
+   
    
    }
 // function send_lost_link($this_email){
