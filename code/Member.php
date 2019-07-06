@@ -728,8 +728,8 @@ private static $long_profile_fields = array (
         #some simple functions.
         $limitplusone = $limit + 1;
         list ($searchfield,$searchfor) = $this->setSearchCriteria($tag);
-   
-        $sql = "SELECT self::$list_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
+   		$list_fields = self::$list_fields;
+        $sql = "SELECT $list_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
         #echo $sql . BRNL;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt->execute($searchfor);
