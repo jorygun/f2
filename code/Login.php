@@ -25,6 +25,7 @@ class Login
 		$this->member = new Member($pdo);
 		
 		$log_info = $this->member->getMemberFromLogin($user,$pass);
+		u\echor($log_info, 'In login construct');
 		
 		if (! $this->checkLogin ($log_info)){
 			throw new Exception ("Login Failed");
@@ -40,17 +41,19 @@ class Login
 		// is this the same as current logged in user?
 		if (isset ($_SESSION['login']['user_id'] )){
 			$login_id = $_SESSION['login']['user_id'];
-			#no current user
+			echo "no current user" . BRNL;
 			$this->setLogin($log_info);
 		} elseif ($login_id = $log_info['user_id']) {
-				#same user, go on.
+				echo "same user, go on." . BRNL;
 				return true;
 		} else {
-			#different user to log in
+			echo "different user to log in" . BRNL;
+			
 			u\echoAlert("Changing logged in user to " . $log_info['username']);
 			$this->setLogin($log_info);
 				
 		}
+		return false;
 			
 	}
 	
