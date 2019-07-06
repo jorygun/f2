@@ -20,12 +20,14 @@ class DocPage {
          'ajax' = include jquery, ajax
          'votes' = iinclude voting script/css
       */
-      if ($_SESSION['login']['seclevel'] < $min){
+      $my_sec_level = $_SESSION['login']['seclevel'];
+      if ($my_sec_level < $min){
          $header = "HTTP/1.1 403 Forbidden" ;
-         #echo $header;
-         $header = "Location: /403.html";
-        header($header);
+         echo "Failed $my_sec_level < $min" . BRNL;
 
+        # $header = "Location: /403.html";
+        #header($header);
+         exit;
 
       }
 
