@@ -21,8 +21,8 @@ else {$this_email = '';}
 </head><body onblur="self.close()">
 <?
 
-if (!is_valid_email($this_email)){echo ("Invalid Email."); exit;}
-echo send_lost_link($this_email);
 
-?>
-</body></html>
+$sender = new digitalmx\flames\SendLogin($pdo);
+$sender->sendLink($this_email);
+
+
