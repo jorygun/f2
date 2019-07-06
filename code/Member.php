@@ -721,7 +721,7 @@ private static $long_profile_fields = array (
     		return $this->no_member;
     	}
     	if (empty($pass) and $m = $this->parseLogin($user) ){
-    		list($uid,$pass) = $m;
+    		list($pass,$uid) = $m;
     	}
     	
     	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
