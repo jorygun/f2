@@ -51,7 +51,7 @@ class MemberAdmin {
       
         $o .=  "<td colspan='4'>$user_login_link <a href='$user_login_link' target='user_login'>Log in as</a></td></tr>";
 
-       $o .= "<tr>
+       $o .= "<tr style='text-align:center'>
        <td>${row['status']}</td>
        <td>${row['email_status']}</td>
         <td>$email_last_validated</td>
