@@ -16,7 +16,7 @@ class SendLogin {
    
    }
    public function sendLink($email) {
-      $memberslist = $this->member->getMemberList($email)->fetchAll(\PDO::FETCH_ASSOC);   
+      $memberslist = $this->member->getMemberList($email);   
       u\echor ($memberslist, 'Member List');
       exit;
       
