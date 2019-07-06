@@ -144,7 +144,7 @@ EOT;
 		$username = $this->login['username'];
 		$usertype = $this->login['status_name'];
 		$userlevel = $this->login['seclevel'];
-		
+		$userlinkedin = $this->login['linkedin'];
 
 		$css_file = $this->css;
 	
@@ -161,7 +161,7 @@ EOT;
 		}
 
 		</script>
-		<style>$stylelink</style>
+
 		<nav id='nav'>
 EOT;
 	#$t .= "nav header: " . $this->header;
@@ -246,7 +246,7 @@ EOT;
 		 <li >$username <br> &nbsp;&nbsp;<i>$usertype</i><hr style='height:2px;margin:1px;'>
 		<li><a href='/'>Home</a>
 		 <li><a href='/scripts/profile_view.php' target='profile'>View/Edit My Profile</a>
-		<li><a href='$linkedin' target='_blank'>My LinkedIn Page</a>
+		<li><a href='$userlinkedin' target='_blank'>My LinkedIn Page</a>
 		<li><a href='/?s=0'>Log Out</a>
 		");
 	$t .= self::if_level(0,"
