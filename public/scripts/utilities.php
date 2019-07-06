@@ -265,7 +265,7 @@ function detab_text($message){
 function get_login_from_row($row,$form='code'){
         #returns either login code or full url if form = 'url'
         $logincode = $row['upw'] . $row['user_id'];
-        $loginurl = "${GLOBALS['siteurl']}/?s=$logincode";
+        $loginurl = SITE_URL . "/?s=$logincode";
         if ($form=='url'){return $loginurl;}
         elseif ($form == 'link') {return "<a href='$loginurl'>$loginurl</a>";}
         elseif ($form == 'code'){return $logincode;}
@@ -742,7 +742,7 @@ function send_lost_link($this_email){
 	$this_email = trim($this_email);
 	if (! filter_var($this_email, FILTER_VALIDATE_EMAIL)) {
 	  $output .=  "<br/>Bad Address - $this_email - is not a valid email address.</span>";
-	  $output .=  "<p><a href='${GLOBALS['siteurl']}'>Return to main page</a></p>";
+	  $output .=  "<p><a href='" . SITE_URL . "'>Return to main page</a></p>";
 	  return $output;
 
 	}
@@ -758,7 +758,7 @@ function send_lost_link($this_email){
 	  
 		$output .= "<p>$this_email was not not found in the member file.";
 		$output .=  "<p>Please <a href='mailto:admin@amdflames.org'>contact the administrator</a>.</p>";
-		$output .=  "<p><a href='${GLOBALS['siteurl']}'>Return to main page</a></p>";
+		$output .=  "<p><a href='" . SITE_URL . "'>Return to main page</a></p>";
 		return $output;
 
 	   }
@@ -767,13 +767,13 @@ function send_lost_link($this_email){
 		 foreach ($result as $row){
 		  
 			$login = $row['upw'] . $row['user_id'];
-		   $msg .= "${row['username']}:  ${GLOBALS['siteurl']}/?s=$login\n";
+		   $msg .= "${row['username']}:" . SITE_URL . "/?s=$login\n";
 
 		  }
 
 
 	 // mail("admin@amdflames.org", $subj, $msg, $hdrs);
-	 $hdrs =	$GLOBALS['from_admin'];
+	 $hdrs =	"From: admin@amdflames.org";
 	 $hdrs .=	 "cc: ${GLOBALS['admin']}\r\n";
 
 	 mail($this_email,"Your FLAMEsite Login",$msg,$hdrs);

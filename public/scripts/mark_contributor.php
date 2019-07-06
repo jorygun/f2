@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 }
 $now = sql_now('date');
 
-$sql = "UPDATE $GLOBALS['members_table'] SET contributed = '$now' WHERE id = $this_id;";
+$sql = "UPDATE `members_f2`SET contributed = '$now' WHERE id = $this_id;";
 
 
 ?>

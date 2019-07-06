@@ -157,5 +157,7 @@ use digitalmx\flames\Menu;
 // echo $navbar;
 // 
 
-echo $_SESSION['menu'];
+use digitalmx\flames\SendLogin;
+$sender = new SendLogin($pdo);
+$sender->sendLink('jorygun@gmail.com');
 

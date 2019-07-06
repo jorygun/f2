@@ -476,7 +476,7 @@ EOT;
 	if (isset($_POST['suggested_email'])){
 	    mail ($new_email,
 	"AMD Alumni Site: Email for $name has been updated",
-	$found_msg, $GLOBALS['from_admin']);
+	$found_msg, 'admin@amdflames.org';
 	}
 
 	else {$ems->update_ems ($id,'E1');

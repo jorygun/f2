@@ -243,6 +243,7 @@ private static $long_profile_fields = array (
 
  );
  
+ //fields returned for log-in
  private static $member_info = array (
  	'username',
  	'user_id',
@@ -259,6 +260,11 @@ private static $long_profile_fields = array (
  	'status_name',
  	'linkedin',
  
+ );
+ #limited fields returned from member listss
+ private static $list_fields = array (
+ 'username', 'user_id', 'user_email', 'email_status',
+ 'status', 'upw'
  );
  
  	private static $no_member = array(
@@ -566,7 +572,7 @@ private static $long_profile_fields = array (
 	 static $iterations = 0;
 	 if ($iterations > 5){die ("Too many iterations of random password");}
 	 $pass = "";
-	 $q = "SELECT * from $GLOBALS[members_table] WHERE upw = ?;";
+	 $q = "SELECT * from `members_f2` WHERE upw = ?;";
 	 $stmt = $pdo -> prepare($q);
 	 while (!$pass){
 	 	
@@ -722,8 +728,8 @@ private static $long_profile_fields = array (
         #some simple functions.
         $limitplusone = $limit + 1;
         list ($searchfield,$searchfor) = $this->setSearchCriteria($tag);
-        # $short_data_fields = implode(',', self::$data_fields);
-        $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
+   
+        $sql = "SELECT self::$list_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
         #echo $sql . BRNL;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt->execute($searchfor);

@@ -275,7 +275,7 @@ echo "New id $id " . BRNL;
 	 <p>$dup_notice</p>
 	 <p>A few days after you've verified your email, you will get a welcome message with your permanent login.</p><br>";
 
-	  print "<p><a href='$GLOBALS[siteurl]'>Return to main page</a></p>";
+	  print "<p><a href='" . SITE_URL . "'>Return to main page</a></p>";
 
 
 
