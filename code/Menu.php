@@ -246,7 +246,11 @@ EOT;
 		 <li >$username <br> &nbsp;&nbsp;<i>$usertype</i><hr style='height:2px;margin:1px;'>
 		<li><a href='/'>Home</a>
 		 <li><a href='/scripts/profile_view.php' target='profile'>View/Edit My Profile</a>
-		<li><a href='$userlinkedin' target='_blank'>My LinkedIn Page</a>
+		 ");
+	$t .= (!empty ($userlinkedin))? 
+		"<li><a href='$userlinkedin' target='_blank'>My LinkedIn Page</a>" : '';
+	
+	$t .= $t .= self::if_level(1,"
 		<li><a href='/?s=0'>Log Out</a>
 		");
 	$t .= self::if_level(0,"
