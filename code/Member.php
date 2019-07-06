@@ -723,6 +723,9 @@ private static $long_profile_fields = array (
     	if (empty($pass) and $m = $this->parseLogin($user) ){
     		list($pass,$uid) = $m;
     	}
+    	else {
+    		return $this->no_member;
+    	}
     	
     	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
     	echo "$sql" . BRNL;
