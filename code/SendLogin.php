@@ -39,7 +39,7 @@ EOT;
      $message = self::$message;
      foreach ($members['data'] as $row){
      	 $login = SITE_URL . "/?s=" . $row['upw'] . $row['user_id'];
-     	$message .= "   " . $row['username'] . '    ' . $login . "\n";
+     	$message .= sprintf ("\t%30s    %s\n", $row['username'], $login);
      	}
      	
      	$message .= "
@@ -47,7 +47,7 @@ EOT;
      	admin@amdflames.org
      	";
      	$message = u\email_std($message); 
-     if (mail($email,'AMD Flames Logins',$message, "From: admin@amdflames.org\r\n") ){
+     if (mail($email,'AMD Flames Logins',$message, "From: Flames admin <admin@amdflames.org>\r\n") ){
       		echo "Logins Sent.";
       }
       else {echo "Error";}
