@@ -22,7 +22,7 @@ class Login
 	public function __construct ($pdo,$user,$pass='') 
 	{
 		$this->pdo = $pdo;
-		$this->member = new Member();
+		$this->member = new Member($pdo);
 		
 		$log_info = $this->member->getMemberFromLogin($user,$pass);
 		
