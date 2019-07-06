@@ -37,7 +37,7 @@ class Login
 			echo "no current user, logging in." . BRNL;
 			return $this->setLogin($log_info);
 			
-		} elseif ($_SESSION['login']['user_id'] = $log_info['user_id']) {
+		} elseif ($_SESSION['login']['user_id'] == $log_info['user_id']) {
 				echo "same user, go on." . BRNL;
 				return true;
 		} else {
