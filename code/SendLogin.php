@@ -25,6 +25,10 @@ EOT;
    
    }
    public function sendLink($email) {
+   	if (! u\isValidEmail($email)){
+   		echo "Invalid Email Requested";
+   		exit;
+   	}
       $memberslist = $this->member->getMemberList($email);   
       #u\echor ($memberslist, 'Member List');
      if ($memberslist['count'] == 0 ){
@@ -33,7 +37,7 @@ EOT;
      }
      
      $message = self::$message;
-     foreach ($memberlist['data'] as $row){
+     foreach ($memberslist['data'] as $row){
      	 $login = SITE_URL . "/?s=" . $row['upw'] . $row['user_id'];
      	$message .= "   " . $row['username'] . '    ' . $login . "\n";
      	}
