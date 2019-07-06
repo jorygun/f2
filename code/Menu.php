@@ -37,7 +37,7 @@ class Menu {
 	public function __construct ($log_info,$header='') {
 		 $this->login = $log_info;
 			$this->header = $header;
-			$this->css = choose_css($this->expnames);
+			$this->css = $this->choose_css($this->expnames);
 	 
 	}
 
