@@ -71,7 +71,7 @@ $pdo = $init->setPDO(); #guarantees db values are set
 $init->setRequired(); #f2 connect needs db values
 
 $s = $_GET['s'] ?? '';
-$login = new Login($pdo,$s)
+$login = new Login($pdo,$s);
 	
 // #build db
 // $container = new Container();
