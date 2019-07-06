@@ -131,7 +131,7 @@ EOT;
 		return $stylelink;
 	}
 
-	public function getNavBar ($extra='') 
+	public function getMenuBar ($extra='') 
 	{
 		$version = $this->get_version();
 		
