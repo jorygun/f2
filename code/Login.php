@@ -41,8 +41,9 @@ class Login
 		// is this the same as current logged in user?
 		if (isset ($_SESSION['login']['user_id'] )){
 			$login_id = $_SESSION['login']['user_id'];
-			echo "no current user" . BRNL;
-			$this->setLogin($log_info);
+			echo "no current user, logging in." . BRNL;
+			return $this->setLogin($log_info);
+			
 		} elseif ($login_id = $log_info['user_id']) {
 				echo "same user, go on." . BRNL;
 				return true;
@@ -66,6 +67,7 @@ class Login
 		
 		$_SESSION['login'] = $log_info;
 		$_SESSION['menu'] = $navbar;
+		return true;
 	}
 
 	private function logout(){
