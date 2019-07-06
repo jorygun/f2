@@ -257,6 +257,7 @@ private static $long_profile_fields = array (
  	'email_status',
  	'last_login',
  	'status_name',
+ 	'linkedin',
  
  );
  
