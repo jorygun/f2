@@ -16,7 +16,9 @@ class SendLogin {
    
    Below are the names and logins for these users.
    There may be more than one user at the same email.
-   
+
+--------------------------------------------------------
+
 EOT;
 
    public function __construct($pdo) {
@@ -43,6 +45,7 @@ EOT;
      	}
      	
      	$message .= "
+     	
      	If you have any difficulties, contact the admin at
      	admin@amdflames.org
      	";
