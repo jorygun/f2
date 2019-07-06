@@ -160,8 +160,8 @@ function echo_red ($t) {
 }
 require 'SiteUtilities.php';
 #require 'Member.php';
-#use digitalmx\flames\Member;
-#$member = new Member($pdo);
+use digitalmx\flames\Member;
+$member = new Member($pdo);
 
 #$md = $member->getMemberList('john.scott.springer@gmail.com');
 #u\echor ($md,'Member Data');
@@ -172,10 +172,10 @@ require 'SiteUtilities.php';
 //  $em->sendMessages(11602,$event,$event_extra);
 //  echo "Sent $event<br";
 
-require "MemberAdmin.php";
-$ma = new MemberAdmin($pdo);
-echo $ma->showSearch();
-if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-	echo $ma->search($_POST);
-}
+// require "MemberAdmin.php";
+// $ma = new MemberAdmin($pdo);
+// echo $ma->showSearch();
+// if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+// 	echo $ma->search($_POST);
+// }
 
