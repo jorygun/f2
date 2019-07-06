@@ -6,7 +6,7 @@ namespace digitalmx\flames;
 
 */
 
-use digitalmx us u;
+use digitalmx as u;
 
 class DocPage {
 
