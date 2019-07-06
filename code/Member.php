@@ -558,7 +558,30 @@ private static $long_profile_fields = array (
     }  
 
 
-    
+    private function randPW() {
+ //Generate a 5 digit password from 20 randomly selected characters
+	global $GV;
+	$pdo = MyPDO::instance();
+	 static $tb1 = array (0,1,2,3,4,5,6,7,8,9,'P','Q','W','X','V','b','r','z','k','n');
+	 static $iterations = 0;
+	 if ($iterations > 5){die ("Too many iterations of random password");}
+	 $pass = "";
+	 $q = "SELECT * from $GLOBALS[members_table] WHERE upw = ?;";
+	 $stmt = $pdo -> prepare($q);
+	 while (!$pass){
+	 	
+	 	 ++$iterations;
+		 for ($i=0; $i<5; $i++) {
+			$pass = $pass . $tb1[rand(0,19)];
+		  }
+		 
+		  #make sure it's unique
+		  
+		  $stmt->execute([$pass]);
+		  if ($stmt -> rowCount() >0 ){$pass='';}
+  	}
+	 return $pass;
+ }
  
   public function updateMember($post){
     if (empty ($post['user_id'])){
