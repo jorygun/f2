@@ -16,6 +16,9 @@ if (!empty($req)){
 	$test = (strpos($req,'t') !== false);
 	$verbose = (strpos($req,'v') !== false);
 }
+$init_file = '../config/init.php';
+require $init_file;
+
 echo <<<EOT
 <html>
 <head>
@@ -62,47 +65,7 @@ foreach ($_SERVER as $k=>$v){
 	}
 }
 
-#$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 
-#$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
-$init_file = '../config/init.php';
-
-#	$old_init_file = '../config/init.php';
-
-
-
-echo "Looking for boot file: $init_file <br>\n";
-if (file_exists($init_file)){
-	echo "Begin Site init from boot ... ";
-	try {
-		if (! include "$init_file"){
-			throw new Exception ("$init_file failed to load");
-		}
-	}catch (Exception $e){
-		echo "$init_file failed to execute <br>" . $e->getMessage();
-	}
-	echo "site init done.<br>";
-
-} else {
-	echo ".. not found, looking for old init $old_init_file <br>";
-	if (file_exists($old_init_file)){
-		try {
-		if (! include "$old_init_file"){
-			throw new Exception ("$old_init_file did not load");
-		}
-		}catch (Exception $e){
-		echo "$old_init_file failed to execute <br>" . $e->getMessage();
-		}
-		echo "site init-old done.<br>";
-	}
-	else {
-		echo "Init not found; skipped.<br>";
-		function recho($var,$title=''){
-    		echo "<h4>$title:</h4>";
-    		echo "<pre>" .  print_r($var,true) . "</pre>\n";
-		}
-	}
-}
 
 echo "<p><b>post-init include_path: </b><br>" . str_replace(':','<br>:',get_include_path()) ."</p><br>\n";
 
