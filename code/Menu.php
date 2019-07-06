@@ -144,7 +144,7 @@ EOT;
 		$username = $this->login['username'];
 		$usertype = $this->login['status_name'];
 		$userlevel = $this->login['seclevel'];
-		$userlinkedin = $this->login['linkedin'];
+		$userlinkedin = $this->login['linkedin'] ?? '';
 
 		$css_file = $this->css;
 	
@@ -247,7 +247,7 @@ EOT;
 		<li><a href='/'>Home</a>
 		 <li><a href='/scripts/profile_view.php' target='profile'>View/Edit My Profile</a>
 		 ");
-	$t .= (!empty ($userlinkedin))? 
+	$t .= ($userlevel > 1 and !empty ($userlinkedin))? 
 		"<li><a href='$userlinkedin' target='_blank'>My LinkedIn Page</a>" : '';
 	
 	$t .= $t .= self::if_level(1,"
