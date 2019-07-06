@@ -46,8 +46,8 @@ EOT;
      	If you have any difficulties, contact the admin at
      	admin@amdflames.org
      	";
-     	
-     if (	mail($email,'AMD Flames Logins',$message, "From: admin@amdflames.org\r\n") ){
+     	$message = u\email_std($message); 
+     if (mail($email,'AMD Flames Logins',$message, "From: admin@amdflames.org\r\n") ){
       		echo "Logins Sent.";
       }
       else {echo "Error";}
