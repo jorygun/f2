@@ -32,7 +32,7 @@ EOT;
      	exit;
      }
      
-     $message = $this->$message;
+     $message = self::$message;
      foreach ($memberlist['data'] as $row){
      	 $login = SITE_URL . "/?s=" . $row['upw'] . $row['user_id'];
      	$message .= "   " . $row['username'] . '    ' . $login . "\n";
