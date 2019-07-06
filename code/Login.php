@@ -23,23 +23,28 @@ class Login
 		$this->pdo = $pdo;
 		$this->member = new Member($pdo);
 		
+		//returns info for whatever id was passed, including 0
 		$log_info = $this->member->getMemberFromLogin($user,$pass);
-		#u\echor($log_info, 'In login construct');
+		
 		
 		if (! $this->checkLogin ($log_info)){
 			throw new Exception ("Login Failed");
 		}
 	
 	}
-	
+
 	private function checkLogin ($log_info) 
 	{
+		
 		// is this the same as current logged in user?
 		if (!isset ($_SESSION['login']['user_id'] )){
 			#echo "no current user, logging in." . BRNL;
 			return $this->setLogin($log_info);
 			
-		} elseif ($_SESSION['login']['user_id'] == $log_info['user_id']) {
+		} else{
+			$current_userid = $_SESSION['login']['user_id'];
+			if ($log_info['user_id'] == 0 
+				|| $log_info['user_id'] == $_SESSION['login']['user_id']) {
 				#echo "same user, go on." . BRNL;
 				return true;
 		} else {
