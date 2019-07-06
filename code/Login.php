@@ -56,11 +56,13 @@ class Login()
 	
 	function setLogin ($log_info) {
 		// sets vars in session
-		$nav = new NavBar(1);
-		$navbar = $nav -> getNavBar();
+		$nav = new Menu($log_info);
+		$navbar = $nav -> getMenuBar();
+		
 		
 		$_SESSION['login'] = $log_info;
-		$_SESSION
+		$_SESSION['menu'] = $navbar;
+	}
 
 	function logout(){
 		$_SESSION = array();

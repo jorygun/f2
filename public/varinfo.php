@@ -181,9 +181,12 @@ $member = new Member($pdo);
 use \digitalmx\flames\Login;
 use digitalmx\flames\Menu;
 
-$md = $member->getMemberFromLogin('6kQ4k11602');
-u\echor ($md,'Member from Login');
-$nav = new Menu($md);
-$navbar = $nav->getMenuBar();
-echo $navbar;
+// $md = $member->getMemberFromLogin('6kQ4k11602');
+// u\echor ($md,'Member from Login');
+// $nav = new Menu($md);
+// $navbar = $nav->getMenuBar();
+// echo $navbar;
+// 
+new Login('6kQ4k11602');
+echo $_SESSION['menu'];
 
