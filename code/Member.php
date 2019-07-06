@@ -725,6 +725,8 @@ private static $long_profile_fields = array (
     	}
     	
     	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
+    	echo "$sql" . BRNL;
+    	
     	$result = $this->pdo->query($sql)->fetch();
     	
     	if (!result){return $this-no_member;}
