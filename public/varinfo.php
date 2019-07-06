@@ -179,6 +179,7 @@ $member = new Member($pdo);
 // 	echo $ma->search($_POST);
 // }
 use \digitalmx\flames\Login;
+use digitalmx\flames\Menu;
 
 $md = $member->getMemberFromLogin('6kQ4k11602');
 u\echor ($md,'Member from Login');
