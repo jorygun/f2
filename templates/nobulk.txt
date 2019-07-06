@@ -1,0 +1,14 @@
+Dear ::name::,
+
+You have been unsubscribed from the regular AMD Flame email.
+You’re still in the member database and can still log in at
+       ::login::
+
+Once logged in, you can update your profile and/or turn emails back on.
+
+You will get an email about once a year to see if this email still works.
+Other Flame members can still find you and view your profile.
+If that’s not OK, let me know and I will completely deactivate you.
+
+Sorry to see you go.
+-- admin@amdflames.org

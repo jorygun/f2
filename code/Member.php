@@ -1,6 +1,9 @@
 <?php
 namespace digitalmx\flames;
+$proj_path = dirname(__DIR__);
 
+#require_once '../config/init.php';
+#require_once $proj_path . '/mx-libs/phpmx' . '/MxPDO.php';
  /**
   *
   *  member class  ... get info about members from the database              *
@@ -13,38 +16,113 @@ namespace digitalmx\flames;
                                                                  
 
 /* Methods and Properties
-    $memberTable // current db table for members
-    
-    
+ 	$member = new Member($pdo);
+ 	
     getMemberList($tag, $limit = 100, $method = '') //list
-    getMemberData($tag,method) // all data, limit 1
+    getMemberData($tag,method) // all data for one member, limit 1
+    	tag is either email, uid, or username 
+    	email may return error if more than one person found
+    	
     getMembers($_POST) // returns list based on post vars
     getMemberLogin(loginstring) returns login data for one user
-      
-   getMemberData(tag,method) returns enhanced data for one member
   
-
-    
-   return array:
+   return array: returnResult($data)
     'data' => member data array (one or more)
-    'info' => messages from the search
-    public function getMemberDisplayEmail($tag)
-    public function getMemberName($tag)
+    
+    
+    'info' => messages from this->infoh
+
+    'error' => $this->error message
+     'count' => no of records returned.
+     
+
+    public function getMemberDisplayEmail($tag) // email or message
+    public function getMemberName($tag) /
     public function getMemberEmail($tag)
     public function getMemberEmailLinked($tag)
     public function getMemberId($tag)
     public function getLastLogin($tag)
     public function getDonors() // list of liinked emails
     public function getAuthors() // list of liinked emails
+    public function updateEms($uid,$ems)
 
 
 */
 
+/* member fields:
+'admin_status'
+'aka' --
+'alt_contact'
+'amd_dept'
+'amd_when'
+'amd_where'
+'contributed' @
+'email_chg_date' @
+'email_hide'
+'email_last_validated' @
+'email_status_time' @ ++
+'email_status'
+'id' --
+'image_url'
+'join_date' @
+'last_login' @
+'linkedin'
+'no_bulk'
+'previous_ems' ++
+'prior_email' ++ 
+'prior_username' ++ 
+'profile_updated' @ * ++ 
+'profile_validated' @
+'record_updated' @ ++ 
+'status_updated' @ ++
+'status'
+'test_status'
+'upw'
+'upwards'
+'user_about'
+'user_amd'
+'user_current'
+'user_email'
+'user_from'
+'user_greet'
+'user_id'
+'user_interests'
+'user_memories'
+'user_web'
+'username'
 
-#use Digitalmx\Lib as u;
+
+#-- deprecated, ++ trigger @ timestamp
+ (* on user_about,user_interests,user_current,user_from,user_memories)
+ 
+Generated fields:
+	'decades',
+	'departments',
+	'email_age',
+	'email_public',
+	'email_status_name',
+	'is_member',
+	'join_date',
+	'login_string',
+	'profile_age',
+	'profile_date',
+	'seclevel',
+	'status_name',         
+	'subscriber',
+
+
+Long profile fields
+	'user_memories',
+	'user_about',
+	'user_interests',
+	
+*/ 
+
+
 use \Exception as Exception;
 use \digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
+use digitalmx\flames as f;
 
 
 class Member
@@ -64,90 +142,174 @@ class Member
     
    *
    */
+   #all database fiels
+   private static $member_fields = array (
+   'admin_status',
+'alt_contact',
+'amd_dept',
+'amd_when',
+'amd_where',
+'contributed',
+'email_chg_date',
+'email_hide',
+'email_last_validated',
+'email_status_time',
+'email_status',
+'id' ,
+'image_url',
+'join_date' ,
+'last_login',
+'linkedin',
+'no_bulk',
+'previous_ems',
+'prior_email' ,
+'prior_username' ,
+'profile_updated' ,
+'profile_validated',
+'record_updated' ,
+'status_updated',
+'status',
+'test_status',
+'upw',
+'upwards',
+'user_about',
+'user_amd',
+'user_current',
+'user_email',
+'user_from',
+'user_greet',
+'user_id',
+'user_interests',
+'user_memories',
+'user_web',
+'username'
+);
 
+#db fields not including ones controlled by trigger
+private static $update_fields = array(
+'admin_status',
+'alt_contact',
+'amd_dept',
+'amd_when',
+'amd_where',
+'contributed' ,
+'email_hide',
+'email_status',
+'image_url',
+'linkedin',
+'no_bulk',
+'status',
+'test_status',
+'upw',
+'upwards',
+'user_about',
+'user_amd',
+'user_current',
+'user_email',
+'user_from',
+'user_greet',
+'user_interests',
+'user_memories',
+'user_web',
+'username',
+
+);
+#long text fields only needed for profile
+private static $long_profile_fields = array (
+	'user_interests',
+	'user_memories',
+	'user_about',
+);
+
+#additional fields genereated from main data
+ private static $added_fields = array (
+ 	'decades',
+	'departments',
+	'locations',
+	'email_age',
+	'email_public',
+	'email_status_name',
+	'is_member',
+	'join_date',
+	'login_string',
+	'profile_age',
+	'profile_date',
+	'seclevel',
+	'status_name',         
+	'subscriber',
+	'linkedinlink',
+	'at_amd',
+	'needs_update',
+
+ );
+ 
+ private static $member_info = array (
+ 	'username',
+ 	'user_id',
+ 	'user_email',
+ 	'email_public',
+ 	'seclevel',
+ 	'user_current',
+ 	'user_from',
+ 	'at_amd',
+ 
+ );
     private  $memberTable = 'members_f2';
     private $pdo;
-    private $messenger;
+ #   private $messenger;
 
- /**
-  *  base fields retrieved in initial pull                                   *
-  *  set these fields so some applications get all the data they need.       *
-  *  e.g., list of members and email meeting some criteria,                  *
-  *  list of users from a search.                                            *
-  **/
+ 
+ /* fields normally delivered.
+ 	db fields plus added fields less long profile fields
+ 	*/
 
-    private static $short_data_fields = array(
-    'user_id','status','user_email','username',
-    'email_status','email_status_time', 'last_login', 'email_hide',
-    'email_last_validated','email_public','user_from','decades','departments','aka'
-    
-    );
-    # these fields retained in _SESSION['login_user']
-    private static $login_fields = array(
-    'user_id', 
-    'username', 
-    'status', 
-    'status_name', 
-    'is_member', 
-    'seclevel', 
-    'user_email', 
-    'email_status', 
-    'email_public',
-    'email_hide', 
-    'last_login', 
-    'image_url', 
-    'subscriber', 
-    'email_last_validated', 
-    'profile_validated', 
-    'profile_age', 
-    'email_age', 
-    'needs_update',
-    'join_date',
-    'profile_date',
-    
-    
-    
-    );
-    
-    public static $member_update_fields = array (
-	'username', 'upw', 'join_date', 'user_email', 'prior_email', 'email_chg_date', 'email_status', 'email_status_time', 'email_last_validated', 'previous_ems', 'no_bulk', 'email_hide', 'status_updated', 'status', 'admin_status',  'profile_validated', 'user_from', 'user_amd', 'amd_where', 'amd_when', 'amd_dept', 'user_current', 'user_interests', 'user_greet', 'user_about', 'user_memories', 'image_url', 'linkedin', 'admin_note', 'contributed','user_web','upward'
-	);
+    private  $data_fields = array();   
+
     // data for return
-    private $info;
-    private $error;
-    private $credential = false;
+    private $info='';
+    private $error='';
+    private $credential; #not sure what this is for
+  
     # plus record count and data
     
  public function __construct($pdo)
     {
        
 	$this->pdo = $pdo;
+	$this->data_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
+	
+	#$this->EmsMsg = new EmsMessaging($this->pdo);
+	
 
     }
-    
-   
- private function getReturn ($records,$data) {
+
+   /* searches are returned an array containing these fields */
+ private function returnResult ($data=[] ) {
     #mnenomic rdc  
     $r['data'] = $data;
     $r['info'] = $this->info;
     $r['error'] = $this->error;
-    $r['records'] = $records;
-    $f['credential'] = $this->credential;
+    $r['count'] = count($data);
+
+    $r['credential'] = $this->credential;
     return $r;
  }
 
   public function getMemberData($tag,$method='')
     {
          /*returns all the member data for one member,
-         // enhanced with computed fields
-        // Methods: email, login, name_exact, uid
+         // enhanced with computed fields, except profile text
+
+        // Methods: email, login, name_exact, uid, 
+        // method generally selected automtically from the tag format
         
         */
        if (empty($tag)){throw new Exception ("Attempt to getMemberData on empty tag");}
        
        #get searchfield for to prepare sql, then searchfor to execute
         if (! list ($searchfield,$searchfor) = $this->setSearchCriteria($tag,$method)){
-            return getReturn(0,[]);
+        		$this->error = 'Search method not understood';
+            return returnResult();
         }
         
         # only want 1 result.  
@@ -162,26 +324,36 @@ class Member
        # echo $idcnt . BRLF; 
         $messages = [];
         if ($idcnt > $limit) {
-            $this->error .= "Got $idcnt results; only $limit allowed (searching on '$tag').";
-            return $this->getReturn(0,[]);
+        	$this->error = "Got $idcnt results; only $limit allowed (searching on '$tag')";
+            return $this->returnResult();
         }
         if ($idcnt == 0) {
-            $this->info = "No Members Found";
-            return $this->getReturn(0,[]);
+        		$this->info = "No Members Found" ;
+            return $this->returnResult();
         }
         
         $mdata = $stmt->fetch();
-        u\echor($mdata,'Mdata');
+       # u\echor($mdata,'Mdata');
         
-        $addon_array = $this->buildAddons($mdata);
-        $user_array = array_merge($mdata,$addon_array);
-      // u\echoR($user_array,"Get data user array");
-  
-        return $this->getReturn($idcnt,$user_array);
+     
+        $user_array = $this->enhanceData($mdata);
+       # u\echor ($user_array ,'after merge');
+        #u\echor ($this->data_fields, 'Data fields');
+        $user_array = array_intersect_key($user_array, array_flip($this->data_fields ) );
+       # u\echor ($user_array,'post-filter');
+     
+        return $this->returnResult($user_array);
             
     }
 
-     private function buildAddons($row)
+	private function isLogin($login) {
+    #returns true or false
+    // regex for user login string 5 char pw, 5 digit user_id
+       $login_regex =  '/^(\w{5})(\d{5})$/';
+       return preg_match($login_regex,$login);
+       
+}
+     private function enhanceData($row)
     {
         $id = $row['user_id'];
         // creates array of other fields to be added to the db fields
@@ -208,19 +380,23 @@ class Member
         
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
         'join_date' => u\make_date($row['join_date']),
+        'linkedinlink' => u\linkHref($row['linkedin'],'Me on Linked In'),
         'email_status_name' => Defs::getEmsName($row['email_status']),
         'image_url' => $image_url,
-        'decades' => $this->decompress (
+        'decades' => u\decompress (
             $row ['amd_when'], Defs::$decades ),
-       'departments' => $this->decompress (
+       'departments' => u\decompress (
             $row['amd_dept'], Defs::$departments),
+         'locations' => u\decompress (
+         	$row['amd_where'], Defs::$locations),
         'profile_date' => $profile_date,
-            
-        
-
-       
-                
-        );
+         'at_amd' => $row['user_amd'] 
+         	. "("
+         	. u\decompress( $row ['amd_when'], Defs::$decades )
+         	. ', '
+         	. u\decompress ( $row['amd_where'], Defs::$locations)
+         	. ')',
+     );
        
        $addons ['needs_update'] = (
             $addons['profile_age'] > 365
@@ -234,8 +410,8 @@ class Member
        
        
        
-        $addon_array = array_merge($row, $addons);
-        return $addon_array;
+        $enhanced = array_merge($row, $addons);
+        return $enhanced;
     }
   
   public function addMember ($post){
@@ -308,7 +484,7 @@ class Member
         if ($field == 'email' or strpos($tag, '@') > 0) { #is email
             $searchfield = $search_fields['email'];
             $searchfor = [$tag];
-        } elseif ($field == 'login' or isLogin($tag)) { #looks like a login code
+        } elseif ($field == 'login' or $this->isLogin($tag)) { #looks like a login code
             $searchfield = $search_fields['login'];
             $searchfor = splitLogin($tag);
         } elseif ($field == 'uid' or is_numeric($tag)) { #is a userid
@@ -349,7 +525,7 @@ class Member
  
   public function updateMember($post){
     if (empty ($post['user_id'])){
-        throw new Exception ("update Member called with no valid array.");
+        throw new Exception ("update Member called with no user_id.");
     }
     
    
@@ -382,7 +558,39 @@ class Member
   }
 
 
+	public function getMembersForAdmin($post) {
+		// gets members by email, name, ems, status, or admin 
+		// from MemberAdmin
+		$q = array ();
+		$fields = "status, user_email, email_status,  email_last_validated,
+			record_updated, 
+			last_login, no_bulk,upw,user_id,username";
+		
+		if (!empty($name = $post['name'])){
+			$q[] = " username LIKE '%" . addslashes($post['name']) . "%' "; 
+		}
+		
+		if ($email = $post['email']){
+			$q[] = " user_email LIKE '%$email%' ";
+		}
+		if ($status = $post['status']){
+			$q[] = " status LIKE '$status' ";
+		}
+		if ($ems = $post['ems']){
+			$q[] = " email_status LIKE '$ems' ";
+		}
+		if ($admin_status = $post['admin_status']){
+			$q[] = " admin_status LIKE '$admin_status' ";
+		}
+		$sql = "SELECT $fields FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
+#echo $sql .  BRNL;
+		echo "Ready to search: $sql" . BRNL;
+		
+		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
 
+		
+		return $this->returnResult($result);
+	}
     
     public function getMembers($post){
          $q=[]; $messages=[];
@@ -412,8 +620,8 @@ class Member
             
         }   
         if (empty($searchfield)){
-            $this->info = 'No Members Found';
-            return $this->getReturn(0,[]);
+           $this->info = "No Members Found";
+            return $this->returnResult();
         }
         
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield ";
@@ -442,7 +650,7 @@ class Member
          }   
                 
         
-        return $this->getReturn($idcnt,$mb);
+        return $this->returnResult($mb);
     }
     
     
@@ -454,8 +662,8 @@ class Member
         #some simple functions.
         $limitplusone = $limit + 1;
         list ($searchfield,$searchfor) = $this->setSearchCriteria($tag);
-         $short_data_fields = implode(',', self::$short_data_fields);
-        $sql = "SELECT $short_data_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
+        # $short_data_fields = implode(',', self::$data_fields);
+        $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
         #echo $sql . BRNL;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt->execute($searchfor);
@@ -467,7 +675,7 @@ class Member
         #return array of all reesults 
         $mb = $stmt->fetchAll();
        
-       return $this->getReturn($idcnt,$mb);
+       return $this->returnResult($mb);
        ;
     }
     
@@ -488,7 +696,7 @@ class Member
         return $data;
     }
         
-    public function getMemberLogin($login_string)
+    public function getMemberFromLogin($login_string)
     {
         if (! isLogin($login_string)){
             throw new Exception ("Invalid login tag $tag");
@@ -500,14 +708,17 @@ class Member
         throw new Exception ("Could not get login data: {$md['error']}");
         }
         
-       
-        foreach (self::$login_fields as $f){
-            $li_data[$f] = $md['data'][$f];
-        }
-       # u\echoR($li_data,'li_data');
-        return $li_data;
+      
+        return $md['data'];
     }
 
+	public function getMemberProfile ($uid){
+		$sql = "SELECT * from `members_f2` WHERE uid = $uid";
+		$row = $this->pdo->query($sql) -> fetch();
+		$user_data = $this->enhanceData($row);
+		return $user_data;
+	}
+		
    
 
    
@@ -523,7 +734,16 @@ class Member
     }
     
    
-    
+    public function verifyEmail ($id) {
+    $newstat = $this->member->setEmailStatus($id,'Y');
+    return $newstat;
+	}
+
+	public function verifyProfile ($id) {
+    $newstat = $this->member->setProfileVerified($id);
+    return $newstat;
+	}
+
     
     public function getMemberName($tag)
     {
@@ -546,7 +766,7 @@ class Member
     public function getMemberEmailLinked($tag)
     {
         $md = $this->getMemberData($tag);
-        if ($md['records'] == 0 or !empty($mb['error'])) {
+        if ($md['count'] == 0 or !empty($mb['error'])) {
             return false;
         }
         return u\linkEmail($md['data'][0]['user_email'], $md['data']['username']);
@@ -568,20 +788,9 @@ class Member
             return false;
         }
         $last = $md ['data']['last_login'];
-        return u\formatDate('CDL', $last);
+        return u\make_date( $last);
     }
     
-    public function setEmailStatus ($id,$status) {
-        $sql = "Update `$this->memberTable` set email_status = '$status'
-            WHERE user_id = $id;";
-            
-        if (!$stmt = $this->pdo->query($sql)){
-            return false;
-        }
-        return "OK";
-    }
-        
-
     public function sendLogin($id) {
         // can receive a user_id or an email as input
         if (is_numeric($id)){
@@ -655,23 +864,7 @@ class Member
         
     }
     
-    private  function decompress($data,$defs)
-    {
-	//to turn a string of character codes into a descriptive string.
-        $choices = [];
-		// step through the codes and values in the defining array
-		foreach ($defs as $k=>$v){  # D => '60s'
-			if (strchr($data,$k)){$choices[]  = $v;}
-		}
-        if (empty($choices)){
-            $my_choices = 'Not specified';
-        }
-        else {
-		    $my_choices = implode (',',$choices);
-		}
-
-		return $my_choices;
-    }
+   
 
   private function buildDisplayEmail($email, $ems, $hide)
     {
@@ -701,7 +894,14 @@ class Member
         }
         return $v;
     }
-
-
+	public function  setEmailStatus($uid,$ems) {
+		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
+			WHERE user_id = '$uid';";
+			echo "from member->updateEms: $sql" . BRNL;
+			
+		#$result = $this->pdo->query($sql);
+		return ;#$result;
+	}
+	
 } #end class
 

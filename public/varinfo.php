@@ -14,7 +14,7 @@ $repo = basename(dirname(__DIR__));
 $req=$_SERVER['QUERY_STRING'];
 if (!empty($req)){
 	$test = (strpos($req,'t') !== false);
-	$vebose = (strpos($req,'v') !== false);
+	$verbose = (strpos($req,'v') !== false);
 }
 echo <<<EOT
 <html>
@@ -159,13 +159,23 @@ function echo_red ($t) {
 	
 }
 require 'SiteUtilities.php';
-require 'Member.php';
-use digitalmx\flames\Member;
-$member = new Member($pdo);
+#require 'Member.php';
+#use digitalmx\flames\Member;
+#$member = new Member($pdo);
 
-$md = $member->getMemberData('11602');
-u\echor ($md,'Member Data');
+#$md = $member->getMemberList('john.scott.springer@gmail.com');
+#u\echor ($md,'Member Data');
 
-// $em = new EmsMessaging($pdo,$test); #pdo,true for test
-// $em->update_ems(11602,'A4');
+// $em = new Messenger ($pdo,$test); #pdo,true for test
+// $event = 'em-found';
+// $event_extra = array('informant'=>'Teddy Technjcal');
+//  $em->sendMessages(11602,$event,$event_extra);
+//  echo "Sent $event<br";
+
+require "MemberAdmin.php";
+$ma = new MemberAdmin($pdo);
+echo $ma->showSearch();
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+	echo $ma->search($_POST);
+}
 

@@ -1,0 +1,16 @@
+Hi ::name::.  Please confirm you're still around.
+
+    This is an email from the AMD Alumni Flames site.  It has been
+    a long time since you logged in and we want to confirm that
+	 we have your correct email in our member list.  
+
+***************************************************
+  JUST CLICK THE LINK BELOW NOW to confirm that
+  you still get email at ::current_email::
+       ::verify::
+***************************************************
+
+	(Note: You can avoid these messages by logging into the web site
+	occasionally .)
+
+   ::bulk::

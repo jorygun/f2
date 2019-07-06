@@ -1,8 +1,7 @@
 body, .normal {padding:6px;
 	font-family: "New Times Roman",Times,serif;
 	font-size: 1em; color: black;
-	max-width:1000px;
-	width:100vw;
+	max-width:1200px;
 	padding:5px;
 	color:black;
 	font-style: normal;
@@ -75,14 +74,14 @@ td {vertical-align: top;}
 .grayback {background:#CCC;}
 .tright {text-align:right;}
 
-.quoted, blockquote {
+.quoted {
     display:block;
     border-left:2px solid #030;
     padding-left:1em;
     font-style:normal;
     color:#363;
     }
-.quoted p, blockquote p {
+.quoted p {
     padding-left:1em;
 }
 .instr {font-style:italic;}

@@ -36,7 +36,12 @@ $init->setConstants();
 
 #add vendor autoload
 	if (file_exists(REPO_PATH . "/vendor/autoload.php")){
-		require_once REPO_PATH . "/vendor/autoload.php";
+		$loader = require_once REPO_PATH . "/vendor/autoload.php";
+		$loader->add('digitalmx\\', REPO_PATH .'/libmx/');
+		$loader->add('digitalmx\\flames\\', REPO_PATH . '/src/');
+		$loader->add('digitalmx\\flames\\', REPO_PATH . '/lib/');
+		$loader->add('digitalmx\\flames\\', REPO_PATH . '/code/');
+		
 	} else {
 		throw new Exception ( "no vendor autoload file.  " );
 	}
@@ -135,7 +140,7 @@ class Init
 			ini_set('display_errors',1);
 		}
 		$this->setSite();
-		$this->setIncludes($repo_dir);
+		$this->setIncludes($project_dir,$repo_dir);
 		
 		
 
@@ -147,8 +152,8 @@ class Init
 	public function setRequired(){
 		$platform = $this->platform;
 		if ($platform == 'pair'){
-			require_once  "f2_connect.php";
-			$GLOBALS['DB_link'] = Connect_DB();
+			#require_once  "f2_connect.php";
+			#$GLOBALS['DB_link'] = Connect_DB();
 			require_once "f2_security.php";
 		} elseif ($platform == 'ayebook') {
 			require_once "f2_security.php";
@@ -226,7 +231,7 @@ class Init
 		return $platform;
 	}
 	
-	private function setIncludes($repo_dir){
+	private function setIncludes($proj_path, $repo_dir){
 	#initial include path set in .user.ini to include this folder.
 	#add other paths here so can just call <repo>/config/init.php for shell scripts.
 
@@ -240,6 +245,7 @@ class Init
 		. ':' . $repo_dir. '/code'
 		. ':' . $repo_dir . '/public'
 		. ':' . $repo_dir . '/public/scripts'
+		. ':' . $repo_dir . '/lib/'
 
 
 		);

@@ -1,0 +1,14 @@
+AMD FLAMEs Signup Verification
+
+Thanks for signing up for the FLAMEs AMD Alumni News
+site, ::name::.
+
+To confirm your signup, use the link below:
+   ::verify::
+
+You must confirm within 3 days to activate this signup.
+
+After you have clicked the link above, an administrator
+will review your signup and send you an email to confirm
+your membership. This could take a day or two.
+

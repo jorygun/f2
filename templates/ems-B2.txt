@@ -1,0 +1,17 @@
+AMD FLAMEs Email Bouncing - Second Request!
+
+	::name::,  we recently sent you an email advising you that
+	email sent to this address <::current_email::>
+	from the AMD FLAMEs site was bouncing.
+
+	We didn't hear back from you, we're trying again.
+
+***************************************************
+	If this message gets through to you, please use
+	the link below to confirm:
+		::verify::
+***************************************************
+
+	Otherwise we will have to mark you as a Lost Member.
+
+	
