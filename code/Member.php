@@ -244,7 +244,7 @@ private static $long_profile_fields = array (
  );
  
  //fields returned for log-in
- private static $member_info = array (
+ private static $info_fields = array (
  	'username',
  	'user_id',
  	'status',
@@ -696,7 +696,7 @@ private static $long_profile_fields = array (
 		// gets members by email, name, ems, status, or admin 
 		// from MemberAdmin
 		$q = array ();
-		$fields = implode (',',self::$member_info);
+		$fields = implode (',',self::$std_fields);
 		
 		if (!empty($name = $post['name'])){
 			$q[] = " username LIKE '%" . addslashes($post['name']) . "%' "; 
@@ -719,9 +719,11 @@ private static $long_profile_fields = array (
 		echo "Ready to search: $sql" . BRNL;
 		
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
-
-		
-		return $this->returnResult($result);
+	// enhance and contract	
+		foreach ($result as $row){
+			$final[] = enhanceData($row,$info_fields);
+		}
+		return $this->returnResult($final);
 	}
     
     public function getMembers($post){
@@ -834,16 +836,16 @@ private static $long_profile_fields = array (
     	else {
     		return self::$no_member;
     	}
-    	$fields = implode (',',self::$member_info);
+    	$fields = implode (',',self::$std_fields);
     	
     	$sql = "SELECT $fields from `members_f2` where user_id = $uid and upw = '$pass';";
     	#echo "$sql" . BRNL;
     	
     	$result = $this->pdo->query($sql)->fetch();
     	
-    	if (! $result){return $this-no_member;}
+    	if (! $result){return self::$no_member;}
     	//add fields and filter result
-    	$result = $this->enhanceData($result,self::$member_info);
+    	$result = $this->enhanceData($result,self::$info_fields);
     	return $result;
     }
     	
