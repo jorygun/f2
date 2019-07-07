@@ -31,7 +31,7 @@ function cancel_bulk(job) {
 function sendLogin(uid) {
    $.ajax({
    url: "/scripts/ajax.php",
-   data: 'ajax=sendlogin&uid='+uid,
+   data: 'ajax=sendLogin&uid='+uid,
    type: "POST",
    success: function (response) {
             if (response.status === "success") {
