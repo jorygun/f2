@@ -347,7 +347,7 @@ private static $long_profile_fields = array (
         #Set limit for 2 so can detect where more than one returned.
         $limit = 1;
         $limitplusone = $limit + 1;
-        $fields = implode(',',self::$std_fields);
+        $fields = implode(',',$this->std_fields);
         $sql = "SELECT $fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
        # echo $sql . BRLF . print_r($searchfor,true) . BRLF ;
         $stmt = $this->pdo-> prepare($sql);
@@ -696,7 +696,7 @@ private static $long_profile_fields = array (
 		// gets members by email, name, ems, status, or admin 
 		// from MemberAdmin
 		$q = array ();
-		$fields = implode (',',self::$std_fields);
+		$fields = implode (',',$this->std_fields);
 		
 		if (!empty($name = $post['name'])){
 			$q[] = " username LIKE '%" . addslashes($post['name']) . "%' "; 
@@ -836,7 +836,7 @@ private static $long_profile_fields = array (
     	else {
     		return self::$no_member;
     	}
-    	$fields = implode (',',self::$std_fields);
+    	$fields = implode (',',$this->std_fields);
     	
     	$sql = "SELECT $fields from `members_f2` where user_id = $uid and upw = '$pass';";
     	#echo "$sql" . BRNL;
