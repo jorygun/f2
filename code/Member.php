@@ -714,9 +714,9 @@ private static $long_profile_fields = array (
 		if ($admin_status = $post['admin_status']){
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
-		$sql = "SELECT $fields FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
+		$sql = "SELECT * FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
 #echo $sql .  BRNL;
-		echo "Ready to search: $sql" . BRNL;
+		
 		
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
 	// enhance and contract	
