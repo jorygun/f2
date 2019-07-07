@@ -149,7 +149,7 @@ class Init
 		
 		
 	if (! function_exists('\f2_security_below')){
-		function f2_security_below($n) {return false;}
+		function \f2_security_below($n) {return false;}
 		}
 		
 		define ('INIT',1);
