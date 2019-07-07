@@ -59,17 +59,17 @@ require_once 'Definitions.php';
 require_once "utilities.php";
 require_once 'MxPDO.php'; 
 require_once 'MxUtilities.php';
-
+require_once 'Login.php';
 require_once 'nav.class.php';
 
 use \MyPDO;
 
-use digitalmx\flames\Login;
 
 
 $pdo = $init->setPDO(); #guarantees db values are set
 $init->setRequired(); #f2 connect needs db values
 
+use digitalmx\flames\Login;
 $s = $_GET['s'] ?? '';
 $login = new Login($pdo,$s);
 	
