@@ -148,8 +148,8 @@ class Init
 		$this->setIncludes($project_dir,$repo_dir);
 		
 		
-	if (! function_exists('\f2_security_below'){
-		function f2_security_below($n){return false;}
+	if (! function_exists('\f2_security_below')){
+		function f2_security_below($n) {return false;}
 		}
 		
 		define ('INIT',1);
