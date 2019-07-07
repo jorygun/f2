@@ -332,21 +332,19 @@ public function sendLogin($id) {
         $format = "   %-25s %-50s\n";
         $msg = sprintf($format,"Member Name",  "login url");
         foreach ($result as $row){ #there may be more than one
-            $login = 'https://' . SITE_NAME . "/?s=" . $row['upw']  . $row['user_id'];
+            $login = 'https://' . SITE . "/?s=" . $row['upw']  . $row['user_id'];
             //echo $login;
             // send message with login
             $msg .=  sprintf($format,$row['username'], $login );
         }
+      
         
-        $data = array(
-                'username' => $row['username'],
-                'email'=>$row['user_email'],
-                'msg'=>$msg,
-            );
-       // u\echoR($data,'to sendit');
-        
-       # $messenger = $this->messenger->sendit('sendlogin',$data);
-        return "Login Sent";
+        if($this->messenger->sendLogins($row['user_email'],$msg) ){
+       		 return "Login Sent";
+       	}
+       	else { 
+       		return "Message not sent";
+       	}
     
     }
 // GEt PAGE
