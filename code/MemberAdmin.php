@@ -321,9 +321,9 @@ public function sendLogin($id) {
         elseif (filter_var($id,FILTER_VALIDATE_EMAIL)){
             $where = "user_email = '$id'";
         }
-        else {return "Request not valid.";}
+        else {throw new Exception ("Request $id not valid.");}
         
-        $sql = "SELECT username,user_id,upw,user_email FROM $this->memberTable
+        $sql = "SELECT username,user_id,upw,user_email FROM `members_f2`
             where $where";
         if (!$result = $this->pdo->query($sql) ){
             throw new Exception ("get user row in sendlogin failed");
