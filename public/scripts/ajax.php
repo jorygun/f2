@@ -16,6 +16,7 @@ $repo_path = dirname(dirname(__DIR__));
 
 
 require_once $repo_path . '/config/init.php';
+require_once 'Member.php';
 
 if (empty($_SESSION['user_id'])){
 	echo ("Not logged in.");
@@ -67,8 +68,12 @@ function cancel_bulk($job) {
 	return $bulkmail -> show_bulk_jobs(SITE_PATH . '/bulk_queue');
 }
 
-function sendLogin($uid) {
-	require_once 'MemberAdmin.php';
-	$admin = new MemberAdmin();
-	return $admin->sendLogin($uid);
+function sendLogin($tag) {
+	//tag may be uid or email
+	$pdo = MyPDO::instance();
+	
+	$member = new Member($pdo);
+	$login_msg = $member->getLogins($tag);
+	$messenger = new Messenger($pdo,true); #true = test
+	return $messenger->sendLogin($tag);
 }

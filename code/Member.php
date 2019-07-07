@@ -691,7 +691,36 @@ private static $long_profile_fields = array (
     return true;
   }
 
-
+public function getLogins($tag) {
+        // can receive a user_id or an email as input
+        if (is_numeric($tag)){
+            $where =  "user_id = '$tag'";
+        }
+        elseif (filter_var($tag,FILTER_VALIDATE_EMAIL)){
+            $where = "user_email = '$tag'";
+        }
+        else {throw new Exception ("Request $tag not valid.");}
+        
+        $sql = "SELECT username,user_id,upw,user_email FROM `members_f2`
+            where $where";
+        if (!$result = $this->pdo->query($sql) ){
+            throw new Exception ("get user row in sendlogin failed");
+        }
+        if ($result->rowCount() == 0) {return "No Members Found";}
+        $format = "   %-25s %-50s\n";
+        $msg = sprintf($format,"Member Name",  "login url");
+        foreach ($result as $row){ #there may be more than one
+            $login = 'https://' . SITE . "/?s=" . $row['upw']  . $row['user_id'];
+            //echo $login;
+            // send message with login
+            $msg .=  sprintf($format,$row['username'], $login );
+        }
+      
+      return $msg;
+        
+       
+    
+    }
 	public function getMemberListFromAdmin($post) {
 		// gets members by email, name, ems, status, or admin 
 		// from MemberAdmin
