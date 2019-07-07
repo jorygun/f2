@@ -1,4 +1,6 @@
 <?php
+namespace digitalmx\flames;
+
 ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 
@@ -13,7 +15,8 @@ updated voting panel to the user.
 $repo_path = dirname(dirname(__DIR__));
 
 
-require_once $repo_path . '/public/init.php';
+require_once $repo_path . '/config/init.php';
+
 if (empty($_SESSION['user_id'])){
 	echo ("Not logged in.");
 	exit;
