@@ -16,7 +16,7 @@ require_once $repo_path . '/config/init.php';
 
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
-use digitalmx\MyPDO;
+
 
 if (empty($_SESSION['user_id'])){
 	echo ("Not logged in.");
@@ -70,7 +70,8 @@ function cancel_bulk($job) {
 
 function sendLogin($tag) {
 	//tag may be uid or email
-	$pdo = MyPDO::instance();
+
+	$pdo = \MyPDO::instance();
 	require_once 'Member.php';
 	$member = new Member($pdo);
 	$login_msg = $member->getLogins($tag);
