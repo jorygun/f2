@@ -72,7 +72,6 @@ function sendLogin($tag) {
 	//tag may be uid or email
 
 	$pdo = \MyPDO::instance();
-	require_once 'Member.php';
 	$member = new Member($pdo);
 	$login_msg = $member->getLogins($tag);
 	$messenger = new Messenger($pdo,true); #true = test
