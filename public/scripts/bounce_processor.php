@@ -13,7 +13,7 @@
 	$timestamp = date('Ymd_his');
 
   	$log_loc = "/logs/bounce_logs/bouncelog-".$timestamp.".txt"; #log file
-  $logfile = "$GLOBALS[sitepath]/$log_loc";
+  $logfile = SITE_PATH . "/$log_loc";
 
  	
 
@@ -145,7 +145,7 @@ EOF;
 
 			++$count;
 
-			$qv = "SELECT $select_fields FROM $GLOBALS[members_table] WHERE user_email = '$email' AND status NOT LIKE 'X';";
+			$qv = "SELECT $select_fields FROM `members_f2` WHERE user_email = '$email' AND status NOT LIKE 'X';";
 				#if ($rt){print ">>>>>>\$qv: $qv<br><br>\n";}
 
 			 if (! $qr = $pdo->query($qv) ){

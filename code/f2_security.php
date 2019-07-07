@@ -235,7 +235,7 @@ EOT;
 	 static $iterations = 0;
 	 if ($iterations > 5){die ("Too many iterations of random password");}
 	 $pass = "";
-	 $q = "SELECT * from $GLOBALS[members_table] WHERE upw = ?;";
+	 $q = "SELECT * from `members_f2`] WHERE upw = ?;";
 	 $stmt = $pdo -> prepare($q);
 	 while (!$pass){
 	 	

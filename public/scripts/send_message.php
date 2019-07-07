@@ -26,7 +26,7 @@ if ($_SERVER[REQUEST_METHOD] == 'POST'){
 	$recipient_to = "$recip_name <$recip_email>";
 	$recipient_to_h = h($recipient_to);
 
-	$from = $GLOBALS['from_admin'];
+	$from = "admin@amdflames.org";
 	$from_h = h($from);
 	$subject = "Message from $sender_name sent via the AMD FLAMEsite";
 	$clean_message = stripslashes($_POST['message']);

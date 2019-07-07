@@ -16,24 +16,21 @@ if (!empty($req)){
 	$test = (strpos($req,'t') !== false);
 	$verbose = (strpos($req,'v') !== false);
 }
-echo <<<EOT
-<html>
-<head>
-<title>Varinfo ($repo)</title>
-<style>
-	body {max-width:800px; 
-		overflow-wrap: break-word;
-	}
-	.red {color:red;}
-	
-</style>
-</head>
-<body >
-varinfo.php - last updated $mtimet<br>
+$init_file = '../config/init.php';
+require $init_file;
 
+use digitalmx\flames\DocPage;
+use digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
 
-EOT;
-echo "Test Mode: $test";
+if (true){
+
+$page = new DocPage;
+echo $page->getHead('my title',1);
+echo $page ->startBody('page title' );
+}
+
+echo " Mode: $test";
 
 
 echo "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
@@ -62,58 +59,18 @@ foreach ($_SERVER as $k=>$v){
 	}
 }
 
-#$init_file = "../init.php"; #at site level, ie., Sites/flames/f2
 
-#$init_file = $_SERVER['REDIRECT_SITE_INIT'] ?? 'No Init in ENV';
-$init_file = '../config/init.php';
-
-#	$old_init_file = '../config/init.php';
-
-
-
-echo "Looking for boot file: $init_file <br>\n";
-if (file_exists($init_file)){
-	echo "Begin Site init from boot ... ";
-	try {
-		if (! include "$init_file"){
-			throw new Exception ("$init_file failed to load");
-		}
-	}catch (Exception $e){
-		echo "$init_file failed to execute <br>" . $e->getMessage();
-	}
-	echo "site init done.<br>";
-
-} else {
-	echo ".. not found, looking for old init $old_init_file <br>";
-	if (file_exists($old_init_file)){
-		try {
-		if (! include "$old_init_file"){
-			throw new Exception ("$old_init_file did not load");
-		}
-		}catch (Exception $e){
-		echo "$old_init_file failed to execute <br>" . $e->getMessage();
-		}
-		echo "site init-old done.<br>";
-	}
-	else {
-		echo "Init not found; skipped.<br>";
-		function recho($var,$title=''){
-    		echo "<h4>$title:</h4>";
-    		echo "<pre>" .  print_r($var,true) . "</pre>\n";
-		}
-	}
-}
 
 echo "<p><b>post-init include_path: </b><br>" . str_replace(':','<br>:',get_include_path()) ."</p><br>\n";
 
 if ($verbose) {
-	recho ($_ENV,'$_ENV');
+	u\echor ($_ENV,'$_ENV');
 
-	recho ($server_changes,'Changed value in $_SERVER');
-	recho ($server_adds,'Added to $_SERVER');
-	recho ($_SESSION,'$_SESSION');
+	u\echor ($server_changes,'Changed value in $_SERVER');
+	u\echor ($server_adds,'Added to $_SERVER');
+	u\echor ($_SESSION,'$_SESSION');
 
-	recho ($GLOBALS,'$GLOBALS');
+	u\echor ($GLOBALS,'$GLOBALS');
 
 
 
@@ -130,8 +87,6 @@ if ($verbose) {
 echo "<br><hr><br />";
 
 
-use digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
 
 
 try {
@@ -160,8 +115,8 @@ function echo_red ($t) {
 }
 require 'SiteUtilities.php';
 #require 'Member.php';
-#use digitalmx\flames\Member;
-#$member = new Member($pdo);
+use digitalmx\flames\Member;
+$member = new Member($pdo);
 
 #$md = $member->getMemberList('john.scott.springer@gmail.com');
 #u\echor ($md,'Member Data');
@@ -172,10 +127,23 @@ require 'SiteUtilities.php';
 //  $em->sendMessages(11602,$event,$event_extra);
 //  echo "Sent $event<br";
 
-require "MemberAdmin.php";
-$ma = new MemberAdmin($pdo);
-echo $ma->showSearch();
-if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-	echo $ma->search($_POST);
-}
+// require "MemberAdmin.php";
+// $ma = new MemberAdmin($pdo);
+// echo $ma->showSearch();
+// if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+// 	echo $ma->search($_POST);
+// }
+use \digitalmx\flames\Login;
+use digitalmx\flames\Menu;
+
+// $md = $member->getMemberFromLogin('6kQ4k11602');
+// u\echor ($md,'Member from Login');
+// $nav = new Menu($md);
+// $navbar = $nav->getMenuBar();
+// echo $navbar;
+// 
+
+// use digitalmx\flames\SendLogin;
+// $sender = new SendLogin($pdo);
+// $sender->sendLink('john.scott.springer@gmail.com');
 

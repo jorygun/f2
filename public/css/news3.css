@@ -108,6 +108,9 @@ div.head {margin: auto;
     /*width: 600px;*/
 	vertical-align:bottom;
 	}
+div.page_head {margin:auto;
+   vertical-align:bottom;
+   }
 p.title {
 	text-align:center; color: #396;
 	font-family:helvetica,arial,sans-serif;

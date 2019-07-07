@@ -34,7 +34,7 @@ $sql_now = sql_now('date');
 <style>
 .red {color:red;}
 </style>
-<link rel='stylesheet' href='/css/news2.css'>
+<link rel='stylesheet' href='/css/news3.css'>
 </head>
 <body >
 <h4>Bulk Asset Editor</h4>

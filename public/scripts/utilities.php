@@ -46,18 +46,6 @@ function deleteDir($path) {
     rmdir($path);
 }
 
-function parse_name($name,$piece){
-	if (preg_match('/[, ]*(jr|sr|II|III)\.? *$/i',$name,$m) ){
-		$suffix = $m[1];
-		$tname = preg_replace("/$m[0]/",'',$name);
-		preg_match('/ ?(\S+)$/',$tname,$m);
-		$last_name = trim($m[0]) ;
-		#echo "<hr>How I Parsed the Name<table class='bordered'><tr><th>name</th><th>suffix</th><th>w/o suffix</th><th>last</th></tr><tr><td>$name</td><td>$suffix</td><td>$tname</td><td>$last_name</td></tr></table><hr>\n";
-		if ($piece=='last'){return $last_name;}
-	}
-	return 0; #default
-}
-
 
 function is_valid_email($email){
 	return (filter_var($email, FILTER_VALIDATE_EMAIL)) ? 1 : 0;
@@ -265,7 +253,7 @@ function detab_text($message){
 function get_login_from_row($row,$form='code'){
         #returns either login code or full url if form = 'url'
         $logincode = $row['upw'] . $row['user_id'];
-        $loginurl = "${GLOBALS['siteurl']}/?s=$logincode";
+        $loginurl = SITE_URL . "/?s=$logincode";
         if ($form=='url'){return $loginurl;}
         elseif ($form == 'link') {return "<a href='$loginurl'>$loginurl</a>";}
         elseif ($form == 'code'){return $logincode;}
@@ -729,59 +717,6 @@ function im_here(){
 	echo "Utilities are here.";
 }
 
-function send_lost_link($this_email){
-	$pdo = MyPDO::instance();
-
-
-	$output = '';
-	$msg = "Below is the link for the access to the FLAMEsite attached to $this_email .\n
-	There may be more than one.\n\n";
-
-	if (!$this_email){return "No email provided for send_lost_link";}
-
-	$this_email = trim($this_email);
-	if (! filter_var($this_email, FILTER_VALIDATE_EMAIL)) {
-	  $output .=  "<br/>Bad Address - $this_email - is not a valid email address.</span>";
-	  $output .=  "<p><a href='${GLOBALS['siteurl']}'>Return to main page</a></p>";
-	  return $output;
-
-	}
-
-
-
-	 // Look up this address in DB
-		echo "Looking for $this_email<br>\n";
-		$q = "SELECT upw, user_id, username, user_email from `members_f2` WHERE user_email LIKE '$this_email'
-		AND status NOT in('x','d','n');";
-
-	   if (!$result = $pdo->query($q) ){
-	  
-		$output .= "<p>$this_email was not not found in the member file.";
-		$output .=  "<p>Please <a href='mailto:admin@amdflames.org'>contact the administrator</a>.</p>";
-		$output .=  "<p><a href='${GLOBALS['siteurl']}'>Return to main page</a></p>";
-		return $output;
-
-	   }
-
-	 // List each match (some addresses are shared by two or more members)
-		 foreach ($result as $row){
-		  
-			$login = $row['upw'] . $row['user_id'];
-		   $msg .= "${row['username']}:  ${GLOBALS['siteurl']}/?s=$login\n";
-
-		  }
-
-
-	 // mail("admin@amdflames.org", $subj, $msg, $hdrs);
-	 $hdrs =	$GLOBALS['from_admin'];
-	 $hdrs .=	 "cc: ${GLOBALS['admin']}\r\n";
-
-	 mail($this_email,"Your FLAMEsite Login",$msg,$hdrs);
-
-	 	 $output .=  "Your login link has been emailed to &lt;${this_email}&gt;.";
-
-	 return $output;
- }
 
  function full_copy( $source, $target ) {
  	// copies entire directories
@@ -1360,13 +1295,6 @@ preg_match('/^(.\s+)?.*?([\w\.\-]+@[\w\.\-]+)/',$text,$m);
 
 function pecho($text){
     echo "<p>$text</p>";
-}
-function preecho($text){
-    echo "<pre>\n$text\n</pre>\n";
-}
-function recho($var,$title=''){
-    echo "<h4>$title:</h4>";
-    echo "<pre>" .  print_r($var,true) . "</pre>\n";
 }
 
 function days_ago ($date_str) {

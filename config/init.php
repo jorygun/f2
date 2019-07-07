@@ -27,7 +27,7 @@ if (defined ('INIT')){ return; } //some init has already run
 // put Exceptin into this namespace
 use \Exception as Exception;
 
-use Pimple\Container;
+#use Pimple\Container;
 #use digitalmx\
 
 $init = new Init();
@@ -69,7 +69,10 @@ use \MyPDO;
 $pdo = $init->setPDO(); #guarantees db values are set
 $init->setRequired(); #f2 connect needs db values
 
-
+use digitalmx\flames\Login;
+$s = $_GET['s'] ?? '';
+$login = new Login($pdo,$s);
+	
 // #build db
 // $container = new Container();
 // 
@@ -89,7 +92,7 @@ class Init
 		'pair' => '/usr/home/digitalm',
 		'ayebook' => '/Users/john'
 	);
-	protected  $db_ini = './db.ini'; # all the connection params 
+	protected  $db_ini; # all the connection params 
 	protected $platform;
 	protected $home;
 	private $config_message;
@@ -123,17 +126,19 @@ class Init
 		
 		$project_dir = dirname($repo_dir); #---/flames - where shared stuff is          *
 		$this->project_dir = $project_dir;
+		$this->db_ini = "$project_dir/config/db.ini";
 		
-		$repo_name = basename($repo_dir); #-- repo name    
+		$this->repo = basename($repo_dir); #-- repo name    
+	
 		$this->platform = $this->setPlatform();
 		
 	
 		$this->home = self::$homes[$this->platform];
 	
-		$this->config_msg = "init.php: \n  platform - $this->platform; repo_dir - $repo_dir; repo: $repo_name;\n\n";
+		$this->config_msg = "init.php: \n  platform - $this->platform; repo_dir - $repo_dir; repo: $this->repo \n\n";
 	
 	
-		if ($repo_name == 'live'){
+		if ($this->repo == 'live'){
 			ini_set('display_errors',0);
 		}
 		else {
@@ -156,7 +161,7 @@ class Init
 			#$GLOBALS['DB_link'] = Connect_DB();
 			require_once "f2_security.php";
 		} elseif ($platform == 'ayebook') {
-			require_once "f2_security.php";
+			#require_once "f2_security.php";
 		} else {
 			throw new Exception ("Platform not known $platform");
 		}
@@ -207,7 +212,8 @@ class Init
 		define ('PROJ_PATH',$this->project_dir);
 
 		define ('REPO_PATH',$this->repo_dir);
-
+		define ('REPO', $this->repo);
+		
 		define ('SITE_PATH', REPO_PATH . "/public");
 
 		define ('SITE', $this->site);
@@ -217,7 +223,7 @@ class Init
 		
 	private function setPlatform(){
 	// using PWD because it seems to alwasy work, even in cron
-		$sig = getenv('PWD');
+		$sig = $_SERVER['DOCUMENT_ROOT'];
 		if (stristr ($sig,'usr/home/digitalm') !== false ) {	
 				$platform = 'pair';
 		} elseif (stristr ($sig,'Users/john') !== false ) {	

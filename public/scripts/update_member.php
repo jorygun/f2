@@ -2,7 +2,9 @@
 // ini_set('display_errors', 1);
 // ini_set('error_reporting', E_ALL);
 
+
 require_once 'init.php';
+
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx\flames\EmsMessaging;
@@ -28,13 +30,50 @@ $page = new DocPage();
 
 // start by getting users record.  Needed for both get and put
 
-	if (isset($_GET['uid'])) {
-		$_POST['uid'] = $_GET['uid'];
-	}
+	if (isset($_GET['id'])) {$_POST['uid'] = $_GET['id'];}
 	$uid = $_POST['uid'];
+	$md = $member->getMemberData($uid);
+	$username = $md['data']['username'];
 	
-	if (isset($_GET['email_status'])){
-		$_POST['email_status'] = $_GET['email_status'];
+
+echo $page->getHead('Member Update');
+echo $page ->startBody("Act On Member : $username");
+
+
+
+
+// first check to see if bounce has come in from button on level8 page.
+if (isset($_GET['email_status'])){
+ # $ems = new EmsMessaging( MyPDO::instance());
+  
+   $member -> setEmailStatus($my_id,$_GET['email_status']);
+   $messenger->sendMessage($my_id,'ems-' . $_GET['email_status']);
+   
+    $my_row = get_member_by_id($my_id);
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' ){
+
+
+
+	list($CLEAR,$SAFE) = clear_safe($_POST);
+	extract ($CLEAR,EXTR_PREFIX_ALL,'P');
+
+
+$use_email = $my_row['user_email'];
+$uid = $my_row['user_id'];
+	#first check for new email
+
+
+	if (!empty($P_new_email)){ #new email address; update and send verify
+		echo "<hr>New Email<br>";
+		if (!is_valid_email($P_new_email)){echo "Invalid Email address $P_new_email<br>\n";}
+		else {
+		update_email ($my_row,$P_new_email);
+		$use_email = $P_new_email;
+
+		}
+
 	}
 	
 	
@@ -194,13 +233,14 @@ if (!empty ($sqlu)){
 */
 
 
+
 	
 
 	// reset my row with updated data
 	$my_row = get_member_by_id($my_id);
 }
 
-
+}
 // GEt PAGE
 
 
@@ -459,11 +499,12 @@ EOT;
 	    mail ($new_email,
 	"AMD Alumni Site: Email for $name has been updated",
 	$found_msg, 'admin@amdflames.org');
+
 	}
 
 	else {$ems->update_ems ($id,'E1');
 	#will immediately set the status to E1 and send out verify email
-}
+	}
 	return 1;
 }
 

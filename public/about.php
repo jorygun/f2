@@ -60,7 +60,7 @@ These members can write articles and upload graphics to the site. If you&rsquot;
 <a href='mailto:editor@amdflames.org'>contact the editor</a>.
 <ul>
  <?
- $q="SELECT username,user_email,contributed FROM $GLOBALS[members_table] WHERE status = 'MC' ";
+ $q="SELECT username,user_email,contributed FROM `members_f2` WHERE status = 'MC' ";
  $result = $pdo -> query($q);
   while ($row = $result->fetch()){
     echo "<li>${row['username']}</li>";
