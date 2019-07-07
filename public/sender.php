@@ -11,6 +11,6 @@ require_once '../config/init.php';
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
 
-$messenger = new Messenger(\MyPDO::instance);
+$messenger = new Messenger(\MyPDO::instance());
 $messenger->sendLogins('john@digitalmx.com','here is the text');
 
