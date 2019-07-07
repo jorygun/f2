@@ -136,7 +136,7 @@ $member = new Member($pdo);
 use \digitalmx\flames\Login;
 use digitalmx\flames\Menu;
 
-// $md = $member->getMemberFromLogin('6kQ4k11602');
+// $md = $member->getInfoFromLogin('6kQ4k11602');
 // u\echor ($md,'Member from Login');
 // $nav = new Menu($md);
 // $navbar = $nav->getMenuBar();

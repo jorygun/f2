@@ -97,7 +97,7 @@ class MemberAdmin {
    //save search so can be repeated
      $_SESSION['last_member_search'] = $post;
 	
-	$result = $this->member->getMembersForAdmin($post);
+	$result = $this->member->getMemberListFromAdmin($post);
   # u\echor ($result,'from Member');
    
    if ($result['count'] == 0){echo "Nothing Found.";}
@@ -312,6 +312,42 @@ EOT;
 }
 ## end of update
 
+public function sendLogin($id) {
+        // can receive a user_id or an email as input
+        if (is_numeric($id)){
+            $where =  "user_id = '$id'";
+        }
+        elseif (filter_var($id,FILTER_VALIDATE_EMAIL)){
+            $where = "user_email = '$id'";
+        }
+        else {return "Request not valid.";}
+        
+        $sql = "SELECT username,user_id,upw,user_email FROM $this->memberTable
+            where $where";
+        if (!$result = $this->pdo->query($sql) ){
+            throw new Exception ("get user row in sendlogin failed");
+        }
+        if ($result->rowCount() == 0) {return "No Members Found";}
+        $format = "   %-25s %-50s\n";
+        $msg = sprintf($format,"Member Name",  "login url");
+        foreach ($result as $row){ #there may be more than one
+            $login = 'https://' . SITE_NAME . "/?s=" . $row['upw']  . $row['user_id'];
+            //echo $login;
+            // send message with login
+            $msg .=  sprintf($format,$row['username'], $login );
+        }
+        
+        $data = array(
+                'username' => $row['username'],
+                'email'=>$row['user_email'],
+                'msg'=>$msg,
+            );
+       // u\echoR($data,'to sendit');
+        
+       # $messenger = $this->messenger->sendit('sendlogin',$data);
+        return "Login Sent";
+    
+    }
 // GEt PAGE
 public function show_update() {
 

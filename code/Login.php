@@ -24,7 +24,7 @@ class Login
 		$this->member = new Member($pdo);
 		
 		//returns info for whatever id was passed, including 0
-		$log_info = $this->member->getMemberFromLogin($user,$pass);
+		$log_info = $this->member->getInfoFromLogin($user,$pass);
 		
 		
 		if (! $this->checkLogin ($log_info)){

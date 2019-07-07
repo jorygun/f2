@@ -247,6 +247,8 @@ private static $long_profile_fields = array (
  private static $member_info = array (
  	'username',
  	'user_id',
+ 	'status',
+ 	'email_last_validated',
  	'user_email',
  	'email_public',
  	'seclevel',
@@ -258,13 +260,19 @@ private static $long_profile_fields = array (
  	'email_status',
  	'last_login',
  	'status_name',
+ 	'no_bulk',
+ 	'upw'
  	'linkedin',
  
  );
  #limited fields returned from member listss
- private static $list_fields = array (
- 'username', 'user_id', 'user_email', 'email_status',
- 'status', 'upw'
+ private static $min_fields = array (
+ 'username', 
+ 'user_id', 
+ 'user_email', 
+ 'email_status',
+ 'status', 
+ 'upw'
  );
  
  	private static $no_member = array(
@@ -286,8 +294,7 @@ private static $long_profile_fields = array (
  /* fields normally delivered.
  	db fields plus added fields less long profile fields
  	*/
-
-    private  $data_fields = array();   
+    private  $std_fields = array();   
 
     // data for return
     private $info='';
@@ -300,7 +307,7 @@ private static $long_profile_fields = array (
     {
        
 	$this->pdo = $pdo;
-	$this->data_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
+	$this->std_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
 	
 	
 	
@@ -340,7 +347,8 @@ private static $long_profile_fields = array (
         #Set limit for 2 so can detect where more than one returned.
         $limit = 1;
         $limitplusone = $limit + 1;
-        $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
+        $fields = implode(',',self::$std_fields);
+        $sql = "SELECT $fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
        # echo $sql . BRLF . print_r($searchfor,true) . BRLF ;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
@@ -684,13 +692,11 @@ private static $long_profile_fields = array (
   }
 
 
-	public function getMembersForAdmin($post) {
+	public function getMemberListFromAdmin($post) {
 		// gets members by email, name, ems, status, or admin 
 		// from MemberAdmin
 		$q = array ();
-		$fields = "status, user_email, email_status,  email_last_validated,
-			record_updated, 
-			last_login, no_bulk,upw,user_id,username";
+		$fields = implode (',',self::$member_info);
 		
 		if (!empty($name = $post['name'])){
 			$q[] = " username LIKE '%" . addslashes($post['name']) . "%' "; 
@@ -783,7 +789,7 @@ private static $long_profile_fields = array (
         #some simple functions.
         $limitplusone = $limit + 1;
         list ($searchfield,$searchfor) = $this->setSearchCriteria($tag);
-   		$list_fields = implode (',',self::$list_fields);
+   		$list_fields = implode (',',self::$min_fields);
         $sql = "SELECT $list_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
         #echo $sql . BRNL;
         $stmt = $this->pdo-> prepare($sql);
@@ -817,7 +823,7 @@ private static $long_profile_fields = array (
         return $data;
     }
         
-    public function getMemberFromLogin($user,$pass='')
+    public function getInfoFromLogin($user,$pass='')
     {
     	if (empty($user)) {
     		return self::$no_member;
@@ -830,7 +836,7 @@ private static $long_profile_fields = array (
     	}
     	$fields = implode (',',self::$member_info);
     	
-    	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
+    	$sql = "SELECT $fields from `members_f2` where user_id = $uid and upw = '$pass';";
     	#echo "$sql" . BRNL;
     	
     	$result = $this->pdo->query($sql)->fetch();
@@ -843,7 +849,7 @@ private static $long_profile_fields = array (
     	
     
 
-	public function getMemberAll ($uid){
+	public function getMemberDataAll ($uid){
 		$sql = "SELECT * from `members_f2` WHERE uid = $uid";
 		$row = $this->pdo->query($sql) -> fetch();
 		$user_data = $this->enhanceData($row);
@@ -922,42 +928,7 @@ private static $long_profile_fields = array (
         return u\make_date( $last);
     }
     
-    public function sendLogin($id) {
-        // can receive a user_id or an email as input
-        if (is_numeric($id)){
-            $where =  "user_id = '$id'";
-        }
-        elseif (filter_var($id,FILTER_VALIDATE_EMAIL)){
-            $where = "user_email = '$id'";
-        }
-        else {return "Request not valid.";}
-        
-        $sql = "SELECT username,user_id,upw,user_email FROM $this->memberTable
-            where $where";
-        if (!$result = $this->pdo->query($sql) ){
-            throw new Exception ("get user row in sendlogin failed");
-        }
-        if ($result->rowCount() == 0) {return "No Members Found";}
-        $format = "   %-25s %-50s\n";
-        $msg = sprintf($format,"Member Name",  "login url");
-        foreach ($result as $row){ #there may be more than one
-            $login = 'https://' . SITE_NAME . "/?s=" . $row['upw']  . $row['user_id'];
-            //echo $login;
-            // send message with login
-            $msg .=  sprintf($format,$row['username'], $login );
-        }
-        
-        $data = array(
-                'username' => $row['username'],
-                'email'=>$row['user_email'],
-                'msg'=>$msg,
-            );
-       // u\echoR($data,'to sendit');
-        
-       # $messenger = $this->messenger->sendit('sendlogin',$data);
-        return "Login Sent";
     
-    }
     
      public function setProfileVerified ($id) {
         $sql = "Update `$this->memberTable` set profile_validated = NOW(),email_status='Y'
