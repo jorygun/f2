@@ -4,8 +4,6 @@
 //ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 include_once './init.php';
-$nav = new navBar(1);
-	$navbar = $nav -> build_menu();
 
 //END START
 if (isset ($_SESSION['username'])){
@@ -38,9 +36,9 @@ $alert_message = "Blocked: You are logged in as a $member_type_name ($member_typ
 
 
 <body>
-<?=$navbar?>
 
-<h1>Sorry, You Can't Do That.</h1>
+
+<h1>Sorry, You Cant Do That.</h1>
 <p>You have attempted to access a page or function which is not
 accessible to your member type (<?= $member_type_name ?>).
 </p>
