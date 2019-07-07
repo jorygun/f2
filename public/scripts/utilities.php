@@ -1176,7 +1176,7 @@ $simulate=0;
 			if (!$send_user && !$send_admin){echo "Preparing to silently update $name at ",h($email)," and update to $new_status<br>\n";}
 		}
 		else {
-		if ($send_admin){mail($GV['admin'],"Lost user - $name",$admin_msg,"${GLOBALS['from_admin']}Reply-to:$send_to");}
+		if ($send_admin){mail('admin@amdflames.org',"Lost user - $name",$admin_msg,"${GLOBALS['from_admin']}Reply-to:$send_to");}
 
 		   if ($send_user){
 		   	mail($send_to, $subj, $msg, $GLOBALS['from_admin'],"-f postmaster@amdflames.org");

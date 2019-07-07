@@ -11,6 +11,7 @@ use digitalmx\flames\EmsMessaging;
 use digitalmx as u;
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
+use digitalmx\flames\DocPage;
 
 $pdo = MyPDO::instance();
 $messenger = new Messenger($pdo);
