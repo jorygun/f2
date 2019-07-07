@@ -721,7 +721,7 @@ private static $long_profile_fields = array (
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
 	// enhance and contract	
 		foreach ($result as $row){
-			$final[] = $this->enhanceData($row,$info_fields);
+			$final[] = $this->enhanceData($row,self::$info_fields);
 		}
 		return $this->returnResult($final);
 	}
