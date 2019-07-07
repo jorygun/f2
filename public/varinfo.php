@@ -20,6 +20,9 @@ $init_file = '../config/init.php';
 require $init_file;
 
 use digitalmx\flames\DocPage;
+use digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
+
 
 $page = new DocPage;
 echo $page->getHead('my title',1);
@@ -76,13 +79,13 @@ foreach ($_SERVER as $k=>$v){
 echo "<p><b>post-init include_path: </b><br>" . str_replace(':','<br>:',get_include_path()) ."</p><br>\n";
 
 if ($verbose) {
-	recho ($_ENV,'$_ENV');
+	u\echor ($_ENV,'$_ENV');
 
-	recho ($server_changes,'Changed value in $_SERVER');
-	recho ($server_adds,'Added to $_SERVER');
-	recho ($_SESSION,'$_SESSION');
+	u\echor ($server_changes,'Changed value in $_SERVER');
+	u\echor ($server_adds,'Added to $_SERVER');
+	u\echor ($_SESSION,'$_SESSION');
 
-	recho ($GLOBALS,'$GLOBALS');
+	u\echor ($GLOBALS,'$GLOBALS');
 
 
 
@@ -99,8 +102,6 @@ if ($verbose) {
 echo "<br><hr><br />";
 
 
-use digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
 
 
 try {

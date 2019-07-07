@@ -210,9 +210,7 @@ if (!empty ($sqlu)){
 */
 
 
-	if (isset($P_sendlost)){ #send lost link
-		echo "<hr>Lost Link Sent<br>", send_lost_link($use_email);
-	}
+	
 
 	// reset my row with updated data
 	$my_row = get_member_by_id($my_id);
