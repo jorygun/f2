@@ -921,7 +921,7 @@ public function getLogins($tag) {
     }
     public function getMemberEmail($tag)
     {
-        if (! $md = $this->getMemberData($tag)){
+        $md = $this->getMemberData($tag);
         if ($md['count'] == 0 or !empty($mb['error'])) {
             return false;
         }
