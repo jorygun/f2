@@ -33,6 +33,14 @@ function sendLogin(uid) {
    url: "/scripts/ajax.php",
    data: 'ajax=sendlogin&uid='+uid,
    type: "POST",
-   success: alert ("Done")
+   success: function (response) {
+            if (response.status === "success") {
+                alert ("Login Sent");
+            }
+            else if (response.status === "error"){
+                alert("Error : " + data.d[0]);
+            }
+        }
+        
  });  
 }
