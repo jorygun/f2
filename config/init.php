@@ -92,7 +92,7 @@ class Init
 		'pair' => '/usr/home/digitalm',
 		'ayebook' => '/Users/john'
 	);
-	protected  $db_ini = './db.ini'; # all the connection params 
+	protected  $db_ini = PROJ_PATH . '/config/db.ini'; # all the connection params 
 	protected $platform;
 	protected $home;
 	private $config_message;
