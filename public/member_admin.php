@@ -12,12 +12,16 @@ ini_set('error_reporting', -1);
 	$page = new DocPage();
 	$admin = new MemberAdmin();
 	
-	
-//END START
-
      echo $page->getHead('Member Admin');
  	echo $page ->startBody("Search for Member");
 
+	
+//END START
+	
+
+if (isset($_POST['search'])){
+		echo $admin->search ($_POST);
+	}
 	echo $admin->showSearch();
 	
 
