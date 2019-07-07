@@ -149,10 +149,8 @@ class Init
 		
 		
 	if (! function_exists('\f2_security_below')){
-		namespace { #dfine function in global namespace
-			function f2_security_below($n) {return false;}
-		}
-	
+		include 'f2_proxy.php';
+
 		}
 		
 		define ('INIT',1);
