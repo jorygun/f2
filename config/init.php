@@ -149,10 +149,10 @@ class Init
 		$this->setIncludes($project_dir,$repo_dir);
 		
 		
-	if (! function_exists('\f2_security_below')){
-		include 'f2_proxy.php';
-
-		}
+	// if (! function_exists('\f2_security_below')){
+// 		include 'f2_proxy.php';
+// 
+// 		}
 		
 		define ('INIT',1);
 	
