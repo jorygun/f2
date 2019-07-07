@@ -24,27 +24,27 @@ use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 
 
-$page = new DocPage;
-echo $page->getHead('my title',1);
-echo $page ->startBody('page title' );
+// $page = new DocPage;
+// echo $page->getHead('my title',1);
+// echo $page ->startBody('page title' );
 
-// echo <<<EOT
-// <html>
-// <head>
-// <title>Varinfo ($repo)</title>
-// <style>
-// 	body {max-width:800px; 
-// 		overflow-wrap: break-word;
-// 	}
-// 	.red {color:red;}
-// 	
-// </style>
-// </head>
-// <body >
-// varinfo.php - last updated $mtimet<br>
-// 
-// 
-// EOT;
+echo <<<EOT
+<html>
+<head>
+<title>Varinfo ($repo)</title>
+<style>
+	body {max-width:800px; 
+		overflow-wrap: break-word;
+	}
+	.red {color:red;}
+	
+</style>
+</head>
+<body >
+varinfo.php - last updated $mtimet<br>
+
+
+EOT;
 echo "Test Mode: $test";
 
 
