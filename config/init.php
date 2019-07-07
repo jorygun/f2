@@ -92,7 +92,7 @@ class Init
 		'pair' => '/usr/home/digitalm',
 		'ayebook' => '/Users/john'
 	);
-	protected  $db_ini = PROJ_PATH . '/config/db.ini'; # all the connection params 
+	protected  $db_ini; # all the connection params 
 	protected $platform;
 	protected $home;
 	private $config_message;
@@ -126,6 +126,7 @@ class Init
 		
 		$project_dir = dirname($repo_dir); #---/flames - where shared stuff is          *
 		$this->project_dir = $project_dir;
+		$this->db_ini = "$project_dir/config/db.ini";
 		
 		$this->repo = basename($repo_dir); #-- repo name    
 	
