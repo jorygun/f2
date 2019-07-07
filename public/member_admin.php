@@ -12,8 +12,8 @@ ini_set('error_reporting', -1);
 	$page = new DocPage();
 	$admin = new MemberAdmin();
 	
-     echo $page->getHead('Member Admin');
- 	echo $page ->startBody("Search for Member",0,['ajax']);
+     echo $page->getHead('Member Admin',0,['ajax']);
+ 	echo $page ->startBody("Search for Member");
 
 	
 //END START
