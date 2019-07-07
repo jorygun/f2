@@ -49,5 +49,5 @@ this is an error, please <a href='mailto:admin@amdflames.org'>contact the admin<
 <hr>
 
 
-    echo "<script type='text/javascript'>alert("$stext'");</script>";
+    echo "<script>alert('$stext');</script>";
 </body></html>
