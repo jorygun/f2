@@ -66,6 +66,6 @@ function cancel_bulk($job) {
 
 function sendLogin($uid) {
 	require_once 'MemberAdmin.php';
-	$admin = new Member();
+	$admin = new MemberAdmin();
 	return $admin->sendLogin($uid);
 }
