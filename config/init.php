@@ -222,7 +222,7 @@ class Init
 		
 	private function setPlatform(){
 	// using PWD because it seems to alwasy work, even in cron
-		$sig = getenv($HOME);
+		$sig = getenv('HOME');
 		if (stristr ($sig,'usr/home/digitalm') !== false ) {	
 				$platform = 'pair';
 		} elseif (stristr ($sig,'Users/john') !== false ) {	
