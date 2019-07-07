@@ -374,7 +374,7 @@ private static $long_profile_fields = array (
     #returns true or false
     // regex for user login string 5 char pw, 5 digit user_id
       
-      return preg_match($this->login_regex,$login) ; 
+      return preg_match(self::$login_regex,$login) ; 
 	}
 	
 	private function parseLogin ($login) {
@@ -386,7 +386,7 @@ private static $long_profile_fields = array (
 	}
 	
 	
-     private function enhanceData($row,$fieldlist='')
+     private function enhanceData($row,$fieldlist=[])
     {
     	// takes row from select *, adds computed fields, and
     	// returns the fields requested in fieldlist
@@ -504,7 +504,67 @@ private static $long_profile_fields = array (
     #$this->messenger->sendit('welcome', $data);
   
   }
-
+	public function setEmail ($uid,$email){
+		$sql = "UPDATE `members_f2` SET user_email = '$email'";
+		if (! $this->pdo->query($sql) ){
+			return false;
+		} else {
+		return true;
+		}
+	}
+	
+	public function setAdminStatus ($uid,$status) {
+	$sql = "UPDATE `members_f2` SET admin_status = '$status'";
+		if (! $this->pdo->query($sql) ){
+			return false;
+		} else {
+		return true;
+		}
+	}
+	
+	
+	public function setStatus ($uid,$status){
+		$sql = "UPDATE `members_f2` SET status = '$status'";
+		if (! $this->pdo->query($sql) ){
+			return false;
+		} else {
+		return true;
+		}
+	}
+	public function setUserName ($uid,$name){
+	$sql = "UPDATE `members_f2` SET username = '$name'";
+		if (! $this->pdo->query($sql) ){
+			return false;
+		} else {
+		return true;
+		}
+	}
+	public function setNoBulk($uid,$nobulk){
+		// nobulk must be 0 or 1
+	$sql = "UPDATE `members_f2` SET no_bulk = $nobulk";
+		if (! $this->pdo->query($sql) ){
+			return false;
+		} else {
+		return true;
+		}
+	}
+	
+	public function setCurrent ($uid,$current) {
+		$sql = "UPDATE `members_f2` SET user_current = ?";
+		 $stmt = $this->pdo->prepare ($sql);
+		 $stmt->execute ([$current]);
+			
+		return true;
+		
+	}
+	public function setAdminNote ($uid,$note) {
+		$sql = "UPDATE `members_f2` SET user_current = ?";
+		 $stmt = $this->pdo->prepare ($sql);
+		 $stmt->execute ([$note]);
+			
+		return true;
+		
+	}
  private function setSearchCriteria($tag, $method = '')
     {
         // sets where clause and data based on the tag
@@ -612,7 +672,7 @@ private static $long_profile_fields = array (
     #   echo "Prepared data: "; u\echoR($data); 
        $key = $prepared['key'];
           
-    $sql = "UPDATE `$this->memberTable` set $fields where user_id = $key;";
+    $sql = "UPDATE `members_f2` set $fields where user_id = $key;";
 
    if (! $stmt = $this->pdo->prepare($sql)){
      throw new Exception ("pdo prepare failed. ");
@@ -706,17 +766,12 @@ private static $long_profile_fields = array (
         else {
             $this->info = "$idcnt Members Found";
              foreach ($stmt as $row){
-                $row = array_merge ($row,$this->buildAddons($row));
-               
-                foreach (self::$short_data_fields as $field){
-                    $short_row[$field] = $row[$field];
-                }
-            $mb[] = $short_row;
+                $short_list[] = enhanceData($row,self::short_data_fields);
             }
          }   
                 
         
-        return $this->returnResult($mb);
+        return $this->returnResult($short_list);
     }
     
     

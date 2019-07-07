@@ -1,4 +1,4 @@
-Your AMD Flames address has been changed.
+Your AMD Flames address has been updated.
 
 ::name::,
 
@@ -21,7 +21,7 @@ I have updated your email address with this one, and also set your
 account to receive the weekly update email.
 
 PLEASE CLICK THE LINK BELOW TO CONFIRM THIS EMAIL ADDRESS.
-::verify::
+   ::verify::
 
 Your login to the site is  below.  You can use this to enter the
 site and provide a different email, confirm your email, update your

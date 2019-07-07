@@ -1,0 +1,16 @@
+You are now a registered Guest on the AMD FLames site
+
+::name::, you have been registered as a guest on the AMD Flames site.
+
+	This means you can view newsletters and some other things, but do
+	not have full capability of a member, such as searching for contact
+	information for members.
+
+	I hope you enjoy your access to the AMD Flames newsletters.
+
+	Please feel free to contact me if there are any questions.
+
+	Your personal link to the FLAMEsite:
+   ::login::
+
+::closing::

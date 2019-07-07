@@ -1,0 +1,23 @@
+Your AMD Flames membership is now Inactive
+
+ Dear $name:
+
+    Per your request, your status on the AMD Flames Site
+    has been set to "Inactive".
+
+    This means that while you can still log in, you can
+    only view the most recent newsletter.  You cannot
+    search archives, graphics, or members.  You will not
+    receive any further emails from the site.
+
+    You information still remains on the site, and members can
+    find it by searching, but you are marked as
+    an inactive member.
+
+    If you change your mind, contact the admin and your
+    account can be restored to active.  As an active member,
+    you can still set your profile to opt out of email updates.
+
+    We are sorry to see you go.
+
+::closing::

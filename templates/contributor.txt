@@ -1,0 +1,28 @@
+You are now and AMD Flames Contributor
+
+$name, your member status on the AMD Flames site has
+	been upgraded to "Contributor".
+
+	This means now have the ability to create news articles for the
+	newsletter, as well as see and comment on articles that others have
+	created that have not yet been published.
+
+	There will be a new menu item in the left menu stack labeled
+	"New/Pending Articles".  You can create a new article, including
+	a link to some url and a graphic. You can also see unpublished articles
+	others have created.  You can edit your own article as long as it hasn't
+	been published yet.
+
+	Your article will be reviewed by the admin before it is published,
+	so don't worry about making a mistake.  Hopefully, the instructions
+	on the page are clear; if not please let me know.
+
+	You can also see what links people have clicked on in past newsletters
+	and how many views each newsletter issue has received.
+
+	As always, feel free to contact me with questions or issues.
+
+	Your personal link to the FLAMEsite:
+    ::login::
+
+::closing::
