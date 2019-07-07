@@ -10,12 +10,9 @@ Will record the vote and return a new
 updated voting panel to the user.
 */
 
-
-#ini_set('display_errors', 1);
-$repo_path = dirname(dirname(__DIR__));
+require_once 'init.php';
 
 
-require_once $repo_path . '/config/init.php';
 
 
 if (empty($_SESSION['user_id'])){
