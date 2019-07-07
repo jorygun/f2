@@ -23,11 +23,12 @@ use digitalmx\flames\DocPage;
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 
+if (true){
 
-// $page = new DocPage;
-// echo $page->getHead('my title',1);
-// echo $page ->startBody('page title' );
-
+$page = new DocPage;
+echo $page->getHead('my title',1);
+echo $page ->startBody('page title' );
+}
 
 echo " Mode: $test";
 
@@ -142,7 +143,7 @@ use digitalmx\flames\Menu;
 // echo $navbar;
 // 
 
-use digitalmx\flames\SendLogin;
-$sender = new SendLogin($pdo);
-$sender->sendLink('john.scott.springer@gmail.com');
+// use digitalmx\flames\SendLogin;
+// $sender = new SendLogin($pdo);
+// $sender->sendLink('john.scott.springer@gmail.com');
 
