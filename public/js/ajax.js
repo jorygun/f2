@@ -38,7 +38,7 @@ function sendLogin(uid) {
                 alert ("Login Sent");
             }
             else {
-                alert("Error : " + data.d[0]);
+                alert("Error : " + response);
             }
         }
         
