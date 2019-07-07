@@ -3,7 +3,7 @@
 //BEGIN START
 //ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
-include_once(./init.php);
+include_once './init.php';
 $nav = new navBar(1);
 	$navbar = $nav -> build_menu();
 
