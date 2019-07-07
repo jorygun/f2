@@ -10,10 +10,12 @@ Will record the vote and return a new
 updated voting panel to the user.
 */
 
-require_once 'init.php';
 
+$repo_path = dirname(dirname(__DIR__));
+require_once $repo_path . '/config/init.php';
 
-
+use digitalmx\flames\Member;
+use digitalmx\flames\Messenger;
 
 if (empty($_SESSION['user_id'])){
 	echo ("Not logged in.");
