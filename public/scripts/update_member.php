@@ -51,7 +51,7 @@ echo $page->getHead('Member Update');
 echo $page ->startBody("Act On Member : $username");
 
 
-if (isset ($_POST['uid']){
+if (isset ($_POST['uid'])){
 	#get vars submitted
 	
 	$use_email = $my_row['user_email'];
@@ -457,7 +457,7 @@ EOT;
 	if (isset($_POST['suggested_email'])){
 	    mail ($new_email,
 	"AMD Alumni Site: Email for $name has been updated",
-	$found_msg, 'admin@amdflames.org';
+	$found_msg, 'admin@amdflames.org');
 	}
 
 	else {$ems->update_ems ($id,'E1');
