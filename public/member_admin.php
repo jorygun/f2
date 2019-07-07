@@ -18,6 +18,8 @@ ini_set('error_reporting', -1);
      echo $page->getHead('Member Admin');
  	echo $page ->startBody("Search for Member");
 
+	echo $admin->showSearch();
+	
 
 //END START
 
