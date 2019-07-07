@@ -243,6 +243,7 @@ private static $long_profile_fields = array (
 
  );
  
+ //fields returned for log-in
  private static $member_info = array (
  	'username',
  	'user_id',
@@ -252,8 +253,31 @@ private static $long_profile_fields = array (
  	'user_current',
  	'user_from',
  	'at_amd',
+ 	'profile_age',
+ 	'join_date',
+ 	'email_status',
+ 	'last_login',
+ 	'status_name',
+ 	'linkedin',
  
  );
+ #limited fields returned from member listss
+ private static $list_fields = array (
+ 'username', 'user_id', 'user_email', 'email_status',
+ 'status', 'upw'
+ );
+ 
+ 	private static $no_member = array(
+ 	'username' => 'Not a Member',
+ 	'user_id' => 0,
+ 	'user_email' => '',
+ 	'seclevel' => 0,
+ 	'status_name' => "Not a Member",
+ 	'linkedin' => '',
+ 	
+ 	);
+ 	
+ 	private static $login_regex =  '/^(\w{5})(\d{5})$/';
     private  $memberTable = 'members_f2';
     private $pdo;
  #   private $messenger;
@@ -278,7 +302,7 @@ private static $long_profile_fields = array (
 	$this->pdo = $pdo;
 	$this->data_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
 	
-	#$this->EmsMsg = new EmsMessaging($this->pdo);
+	
 	
 
     }
@@ -349,12 +373,24 @@ private static $long_profile_fields = array (
 	private function isLogin($login) {
     #returns true or false
     // regex for user login string 5 char pw, 5 digit user_id
-       $login_regex =  '/^(\w{5})(\d{5})$/';
-       return preg_match($login_regex,$login);
-       
-}
-     private function enhanceData($row)
+      
+      return preg_match($this->login_regex,$login) ; 
+	}
+	
+	private function parseLogin ($login) {
+		// paarse old style login string into user and pw
+		if (preg_match(self::$login_regex,$login,$match) ){
+			return array_slice($match,1,2);
+		}
+		return false;
+	}
+	
+	
+     private function enhanceData($row,$fieldlist='')
     {
+    	// takes row from select *, adds computed fields, and
+    	// returns the fields requested in fieldlist
+    	
         $id = $row['user_id'];
         // creates array of other fields to be added to the db fields
         $login_string = $row['upw'] . $id ;
@@ -408,9 +444,16 @@ private static $long_profile_fields = array (
             
       # u\echoR($addons,'addons');
        
-       
-       
         $enhanced = array_merge($row, $addons);
+        
+        if (! empty($fieldlist) ){
+        		if (is_array($fieldlist)){
+       	 		$enhanced = array_intersect_key($enhanced,array_flip($fieldlist) );
+       	 	} else {
+       	 		throw new Exception ("Field list to enhance data is not a list"); 
+       	 	}
+        }
+        
         return $enhanced;
     }
   
@@ -521,7 +564,30 @@ private static $long_profile_fields = array (
     }  
 
 
-    
+    private function randPW() {
+ //Generate a 5 digit password from 20 randomly selected characters
+
+	
+	 static $tb1 = array (0,1,2,3,4,5,6,7,8,9,'P','Q','W','X','V','b','r','z','k','n');
+	 static $iterations = 0;
+	 if ($iterations > 5){die ("Too many iterations of random password");}
+	 $pass = "";
+	 $q = "SELECT * from `members_f2` WHERE upw = ?;";
+	 $stmt = $this-> pdo -> prepare($q);
+	 while (!$pass){
+	 	
+	 	 ++$iterations;
+		 for ($i=0; $i<5; $i++) {
+			$pass = $pass . $tb1[rand(0,19)];
+		  }
+		 
+		  #make sure it's unique
+		  
+		  $stmt->execute([$pass]);
+		  if ($stmt -> rowCount() >0 ){$pass='';}
+  	}
+	 return $pass;
+ }
  
   public function updateMember($post){
     if (empty ($post['user_id'])){
@@ -662,8 +728,8 @@ private static $long_profile_fields = array (
         #some simple functions.
         $limitplusone = $limit + 1;
         list ($searchfield,$searchfor) = $this->setSearchCriteria($tag);
-        # $short_data_fields = implode(',', self::$data_fields);
-        $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
+   		$list_fields = implode (',',self::$list_fields);
+        $sql = "SELECT $list_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
         #echo $sql . BRNL;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt->execute($searchfor);
@@ -696,23 +762,33 @@ private static $long_profile_fields = array (
         return $data;
     }
         
-    public function getMemberFromLogin($login_string)
+    public function getMemberFromLogin($user,$pass='')
     {
-        if (! isLogin($login_string)){
-            throw new Exception ("Invalid login tag $tag");
-        }
-    
-    
-       $md = $this->getMemberData($login_string,'login');
-       if (!empty($md['error'] )){
-        throw new Exception ("Could not get login data: {$md['error']}");
-        }
-        
-      
-        return $md['data'];
+    	if (empty($user)) {
+    		return self::$no_member;
+    	}
+    	if (empty($pass) and $m = $this->parseLogin($user) ){
+    		list($pass,$uid) = $m;
+    	}
+    	else {
+    		return self::$no_member;
+    	}
+    	$fields = implode (',',self::$member_info);
+    	
+    	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
+    	#echo "$sql" . BRNL;
+    	
+    	$result = $this->pdo->query($sql)->fetch();
+    	
+    	if (! $result){return $this-no_member;}
+    	//add fields and filter result
+    	$result = $this->enhanceData($result,self::$member_info);
+    	return $result;
     }
+    	
+    
 
-	public function getMemberProfile ($uid){
+	public function getMemberAll ($uid){
 		$sql = "SELECT * from `members_f2` WHERE uid = $uid";
 		$row = $this->pdo->query($sql) -> fetch();
 		$user_data = $this->enhanceData($row);
@@ -899,8 +975,10 @@ private static $long_profile_fields = array (
 			WHERE user_id = '$uid';";
 			echo "from member->updateEms: $sql" . BRNL;
 			
-		#$result = $this->pdo->query($sql);
-		return ;#$result;
+		if (! $result = $this->pdo->query($sql) ){
+			throw new Exception ("Failed setEmailStatus on $uid, $ems");
+		}
+		
 	}
 	
 } #end class

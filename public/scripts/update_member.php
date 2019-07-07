@@ -2,15 +2,20 @@
 // ini_set('display_errors', 1);
 // ini_set('error_reporting', E_ALL);
 
-//BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (f2_security_below(6)){exit;}
-//END START
 
 use digitalmx\flames\Definitions as Defs;
-$nav = new navBar(1);
-$navbar = $nav -> build_menu();
+use digitalmx\flames\EmsMessaging;
+use digitalmx as u;
+use digitalmx\flames\Member;
+use digitalmx\flames\Messenger;
+
 $pdo = MyPDO::instance();
+$messenger = new Messenger($pdo);
+$member = new Member($pdo);
+$page = new DocPage();
+
+
+#require_once 'EmsMessaging.php';
 
 /* this script is used to make all manual updates to members records.
 	You can change email status or user status.  Changing a user from New
@@ -22,65 +27,47 @@ $pdo = MyPDO::instance();
 
 // start by getting users record.  Needed for both get and put
 
-	if (isset($_GET['id'])) {$my_id = $_GET['id'];}
-	elseif (isset($_POST['id'])) {$my_id = $_POST['id'];}
-	else {die ("No id supplied to update script");}
-
-	$my_row = get_member_by_id($my_id)
-	    or die ("Got no row from get_member_by_id");
-	#$my_row = stripslashes_deep($my_row);
-	$my_name = $my_row['username'];
-	$login_string = "https://amdflames.org/?s=${my_row['upw']}${my_row['user_id']}";
-
-?>
-<head>
-
-<title>Update <?=$my_name?> </title>
-<style type="text/css">
-	table {border-collapse: collapse;}
-	tr td,th {border:1px solid black;padding:3px;vertical-align:top;}
-	tr.y_row,td.y_row,p.y_row {background:#ff0;}
-	tr.condense {height:4em;}
-</style>
-<script src='/js/f2js.js'></script>
-</head>
-
-<body >
-<?=$navbar?>
-
-<h3>Act On Member Record on: <?=$my_name?></h3>
-
-<?
-
-// first check to see if bounce has come in from button on level8 page.
-if (isset($_GET['email_status'])){
-    require_once ('EmsMessaging.php');
-    update_ems($my_id,$_GET['email_status']);
-    $my_row = get_member_by_id($my_id);
-}
-
-elseif ($_SERVER['REQUEST_METHOD'] == 'POST' ){
-
-
-
-	list($CLEAR,$SAFE) = clear_safe($_POST);
-	extract ($CLEAR,EXTR_PREFIX_ALL,'P');
-
-
-$use_email = $my_row['user_email'];
-
-	#first check for new email
-
-
-	if (!empty($P_new_email)){ #new email address; update and send verify
-		echo "<hr>New Email<br>";
-		if (!is_valid_email($P_new_email)){echo "Invalid Email address $P_new_email<br>\n";}
-		else {
-		update_email ($my_row,$P_new_email);
-		$use_email = $P_new_email;
-
-		}
+	if (isset($_GET['uid'])) {
+		$_POST['uid'] = $_GET['uid'];
 	}
+	$uid = $_POST['uid'];
+	
+	if (isset($_GET['email_status'])){
+		$_POST['email_status'] = $_GET['email_status'];
+	}
+	
+	
+	$new_ems = $_POST['email_status'];
+	
+	if (empty ($uid) ) {
+		throw new Exception ("no uid for update member");
+	}
+	
+	$md = $member->getMemberData($uid);
+	$username = $md['data']['username'];
+	
+	
+echo $page->getHead('Member Update');
+echo $page ->startBody("Act On Member : $username");
+
+
+if (isset ($_POST['uid']){
+	#get vars submitted
+	
+	$use_email = $my_row['user_email'];
+	$uid = $my_row['user_id'];
+		#first check for new email
+
+
+		if (!empty($P_new_email)){ #new email address; update and send verify
+			echo "<hr>New Email<br>";
+			if (!is_valid_email($P_new_email)){echo "Invalid Email address $P_new_email<br>\n";}
+			else {
+			update_email ($my_row,$P_new_email);
+			$use_email = $P_new_email;
+
+			}
+		}
 
 
 
@@ -152,12 +139,14 @@ EOT;
 
 	if (!empty($P_email_status)){
 		echo "<hr>Email Status Update<br>";
-		require_once ('EmsMessaging.php');
+		
+		$ems = new EmsMessaging ( MyPDO::instance());
+		
 
 		if ( in_array($P_email_status,array( 'A1','B1'))){
 			#send_verify($P_id,$P_email_status);
 			echo "Starting update_email_status ($P_email_status)<br>";
-			update_ems($P_id,$P_email_status);
+			$ems->update_ems($uid,$P_email_status);
 		}
 		else {set_mu_status($P_id,$P_email_status);} #silent
 
@@ -178,14 +167,33 @@ EOT;
 		$sqlu['admin_note'] = $P_admin_note;
 	}
 	//finish sql if there are updates.
+	
+
+if (!empty ($sqlu)){
+	$sqlu['user_id'] = $uid;
+	u\echor ($sqlu, 'sqlu');
+	$prep = u\pdoPrep($sqlu,'', $key='user_id');
+	u\echor($prep,'Prep');
+
+	$sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id=${prep['key']} ";
+	echo $sql . BRNL;
+
+	$stmt = $pdo->prepare($sql)->execute($prep['data']);
+}
+
+ /**
+  *                                          *
+ $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+       $new_id = $pdo->lastInsertId();
+
+    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
+       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+
+*/
 
 
-#echo "<pre>" . print_r ($sqlu,true) . "</pre>";
- update_record_for_id_pdo ($my_id,$sqlu);
-
-	if (isset($P_sendlost)){ #send lost link
-		echo "<hr>Lost Link Sent<br>", send_lost_link($use_email);
-	}
+	
 
 	// reset my row with updated data
 	$my_row = get_member_by_id($my_id);
@@ -379,7 +387,9 @@ EOT;
 
 
 function update_email ($row,$new_email){ #$id,$name,$old_email,$new_email){
-    require_once ('EmsMessaging.php');
+
+    $ems = new EmsMessaging( MyPDO::instance());
+    
     $pdo = MyPDO::instance();
 	//  if email is changed, send message to old email and verify to new email
 	//
@@ -447,10 +457,10 @@ EOT;
 	if (isset($_POST['suggested_email'])){
 	    mail ($new_email,
 	"AMD Alumni Site: Email for $name has been updated",
-	$found_msg, $GLOBALS['from_admin']);
+	$found_msg, 'admin@amdflames.org';
 	}
 
-	else {update_ems ($id,'E1');
+	else {$ems->update_ems ($id,'E1');
 	#will immediately set the status to E1 and send out verify email
 }
 	return 1;
