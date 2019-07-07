@@ -59,7 +59,8 @@ class MemberAdmin {
          $login = $row['upw'] . $row['user_id'];
         $user_login_link = "https://amdflames.org/?s=$login";
       
-        $o .=  "<td colspan='4'>$user_login_link <a href='$user_login_link' target='user_login'>Log in as</a></td></tr>";
+        $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> 
+        <button type='button' onClick='sendLogin($uid)'>Send Login</button></td></tr>";
 
        $o .= "<tr style='text-align:center'>
        <td>${row['status']}</td>
