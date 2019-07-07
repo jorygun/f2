@@ -261,7 +261,7 @@ private static $long_profile_fields = array (
  	'last_login',
  	'status_name',
  	'no_bulk',
- 	'upw'
+ 	'upw',
  	'linkedin',
  
  );
