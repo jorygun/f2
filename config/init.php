@@ -148,7 +148,9 @@ class Init
 		$this->setIncludes($project_dir,$repo_dir);
 		
 		
-
+	if (! function_exists('f2_security_below'){
+		function \f2_security_below($n){return true;}
+		}
 		
 		define ('INIT',1);
 	
@@ -161,7 +163,7 @@ class Init
 			#$GLOBALS['DB_link'] = Connect_DB();
 			require_once "f2_security.php";
 		} elseif ($platform == 'ayebook') {
-			require_once "f2_security.php";
+			#require_once "f2_security.php";
 		} else {
 			throw new Exception ("Platform not known $platform");
 		}
