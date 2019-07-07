@@ -35,6 +35,10 @@ switch ($_POST['ajax']) {
 		echo cancel_bulk($_POST['job']);
 		break;
 		
+	case 'sendLogin' :
+		echo sendLogin($_POST['uid']);
+		break;
+		
 	default:
 		echo ("Unknown attempt at ajax update ${_POST['ajax']}");
 }
@@ -58,4 +62,10 @@ function cancel_bulk($job) {
 	$queue = PROJ_PATH . '/bulk_jobs/queue';
 	rename ($queue . "/$job" , $queue . "/${job}-cancelled");
 	return $bulkmail -> show_bulk_jobs(SITE_PATH . '/bulk_queue');
+}
+
+function sendLogin($uid) {
+	require_once 'MemberAdmin.php';
+	$admin = new Member();
+	return $admin->sendLogin($uid);
 }
