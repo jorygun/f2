@@ -37,7 +37,7 @@ function sendLogin(uid) {
             if (response.status === "success") {
                 alert ("Login Sent");
             }
-            else if (response.status === "error"){
+            else {
                 alert("Error : " + data.d[0]);
             }
         }
