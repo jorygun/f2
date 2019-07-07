@@ -368,10 +368,8 @@ private static $long_profile_fields = array (
        # u\echor($mdata,'Mdata');
         
      
-        $user_array = $this->enhanceData($mdata);
-       # u\echor ($user_array ,'after merge');
-        #u\echor ($this->data_fields, 'Data fields');
-        $user_array = array_intersect_key($user_array, array_flip($this->data_fields ) );
+        $user_array = $this->enhanceData($mdata,$this->std_fields);
+       
        # u\echor ($user_array,'post-filter');
      
         return $this->returnResult($user_array);
