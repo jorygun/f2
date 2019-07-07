@@ -16,7 +16,7 @@ $repo_path = dirname(dirname(__DIR__));
 
 
 require_once $repo_path . '/config/init.php';
-require_once 'Member.php';
+
 
 if (empty($_SESSION['user_id'])){
 	echo ("Not logged in.");
@@ -71,7 +71,7 @@ function cancel_bulk($job) {
 function sendLogin($tag) {
 	//tag may be uid or email
 	$pdo = MyPDO::instance();
-	
+	require_once 'Member.php';
 	$member = new Member($pdo);
 	$login_msg = $member->getLogins($tag);
 	$messenger = new Messenger($pdo,true); #true = test
