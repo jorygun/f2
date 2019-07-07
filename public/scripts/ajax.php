@@ -16,6 +16,7 @@ require_once $repo_path . '/config/init.php';
 
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
+use digitalmx\MyPDO;
 
 if (empty($_SESSION['user_id'])){
 	echo ("Not logged in.");
