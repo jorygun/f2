@@ -27,3 +27,12 @@ function cancel_bulk(job) {
 	}
 	});
 }
+
+function sendLogin(uid) {
+   $.ajax({
+   url: "/scripts/ajax.php",
+   data: 'ajax=sendlogin&uid='+uid,
+   type: "POST",
+   success: alert ("Done")
+ });  
+}
