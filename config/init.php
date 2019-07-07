@@ -131,6 +131,7 @@ class Init
 		$this->repo = basename($repo_dir); #-- repo name    
 	
 		$this->platform = $this->setPlatform();
+		define ('PLATFORM',$this->platform);
 		
 	
 		$this->home = self::$homes[$this->platform];
