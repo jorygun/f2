@@ -71,5 +71,4 @@ function echo_user_row ($row,$post=''){
 }
 
 
-</body></html>
 
