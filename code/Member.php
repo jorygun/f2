@@ -348,7 +348,7 @@ private static $long_profile_fields = array (
         $limit = 1;
         $limitplusone = $limit + 1;
         $fields = implode(',',$this->std_fields);
-        $sql = "SELECT $fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
+        $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
        # echo $sql . BRLF . print_r($searchfor,true) . BRLF ;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
