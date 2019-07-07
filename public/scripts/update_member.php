@@ -2,19 +2,20 @@
 // ini_set('display_errors', 1);
 // ini_set('error_reporting', E_ALL);
 
-//BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (f2_security_below(6)){exit;}
-//END START
 
 use digitalmx\flames\Definitions as Defs;
-use digitalmx\flames as dmxf;
+use digitalmx\flames\EmsMessaging;
 use digitalmx as u;
+use digitalmx\flames\Member;
+use digitalmx\flames\Messenger;
 
-$nav = new navBar(1);
-$navbar = $nav -> build_menu();
 $pdo = MyPDO::instance();
-require_once 'EmsMessaging.php';
+$messenger = new Messenger($pdo);
+$member = new Member($pdo);
+$page = new DocPage();
+
+
+#require_once 'EmsMessaging.php';
 
 /* this script is used to make all manual updates to members records.
 	You can change email status or user status.  Changing a user from New
@@ -26,31 +27,15 @@ require_once 'EmsMessaging.php';
 
 // start by getting users record.  Needed for both get and put
 
-	if (isset($_GET['id'])) {$my_id = $_GET['id'];}
-	elseif (isset($_POST['id'])) {$my_id = $_POST['id'];}
-	else {die ("No id supplied to update script");}
-
-	$my_row = get_member_by_id($my_id)
-	    or die ("Got no row from get_member_by_id");
-	#$my_row = stripslashes_deep($my_row);
-	$my_name = $my_row['username'];
-	$login_string = "https://amdflames.org/?s=${my_row['upw']}${my_row['user_id']}";
-
+	if (isset($_GET['id'])) {$_POST['uid'] = $_GET['id'];}
+	$uid = $_POST['uid'];
+	$md = $member->getMemberData($uid);
+	$username = $md['data']['username'];
+	
 ?>
-<head>
+echo $page->getHead('Member Update');
+echo $page ->startBody("Act On Member : $username");
 
-<title>Update <?=$my_name?> </title>
-<style type="text/css">
-	table {border-collapse: collapse;}
-	tr td,th {border:1px solid black;padding:3px;vertical-align:top;}
-	tr.y_row,td.y_row,p.y_row {background:#ff0;}
-	tr.condense {height:4em;}
-</style>
-<script src='/js/f2js.js'></script>
-</head>
-
-<body >
-<?=$navbar?>
 
 <h3>Act On Member Record on: <?=$my_name?></h3>
 
@@ -58,8 +43,11 @@ require_once 'EmsMessaging.php';
 
 // first check to see if bounce has come in from button on level8 page.
 if (isset($_GET['email_status'])){
-  $ems = new dmxf\EmsMessaging( MyPDO::instance());
-   $ems -> update_ems($my_id,$_GET['email_status']);
+ # $ems = new EmsMessaging( MyPDO::instance());
+  
+   $member -> setEmailStatus($my_id,$_GET['email_status']);
+   $messenger->sendMessage($my_id,'ems-' . $_GET['email_status']);
+   
     $my_row = get_member_by_id($my_id);
 }
 
@@ -157,7 +145,7 @@ EOT;
 	if (!empty($P_email_status)){
 		echo "<hr>Email Status Update<br>";
 		
-		$ems = new dmxf\EmsMessaging ( MyPDO::instance());
+		$ems = new EmsMessaging ( MyPDO::instance());
 		
 
 		if ( in_array($P_email_status,array( 'A1','B1'))){
@@ -405,7 +393,7 @@ EOT;
 
 function update_email ($row,$new_email){ #$id,$name,$old_email,$new_email){
 
-    $ems = new dmxf\EmsMessaging( MyPDO::instance());
+    $ems = new EmsMessaging( MyPDO::instance());
     
     $pdo = MyPDO::instance();
 	//  if email is changed, send message to old email and verify to new email

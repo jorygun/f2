@@ -566,14 +566,14 @@ private static $long_profile_fields = array (
 
     private function randPW() {
  //Generate a 5 digit password from 20 randomly selected characters
-	global $GV;
-	$pdo = MyPDO::instance();
+
+	
 	 static $tb1 = array (0,1,2,3,4,5,6,7,8,9,'P','Q','W','X','V','b','r','z','k','n');
 	 static $iterations = 0;
 	 if ($iterations > 5){die ("Too many iterations of random password");}
 	 $pass = "";
 	 $q = "SELECT * from `members_f2` WHERE upw = ?;";
-	 $stmt = $pdo -> prepare($q);
+	 $stmt = $this-> pdo -> prepare($q);
 	 while (!$pass){
 	 	
 	 	 ++$iterations;

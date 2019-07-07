@@ -10,7 +10,7 @@ Show selected document with search string highlighted.
 // Get parameters
  $reloc = $_GET['file'];
 //t $reloc = "/archive/news-071102.html";
-$fpath = "$GLOBALS[sitepath]/$reloc";
+$fpath = SITE_PATH . "/$reloc";
 preg_match('/(\d{6})/',$fpath,$m);
 $fdtag = $m[1];
 

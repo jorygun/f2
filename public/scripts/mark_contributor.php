@@ -8,7 +8,7 @@
 // used to send login codes to an email address.
 
 
-		global $GV;
+
 //END START
 
 
