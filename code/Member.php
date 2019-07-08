@@ -955,7 +955,7 @@ public function getLogins($tag) {
             return false;
         }
         $last = $md ['data']['last_login'];
-        return u\make_date( $last);
+        return u\make_date( $last,'human','time');
     }
     
     

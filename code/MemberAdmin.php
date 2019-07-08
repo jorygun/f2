@@ -389,9 +389,9 @@ EOT;
 			// now show target data
 
 			//print heading row
-                echo '<tr>';
-                foreach ($cn_fields as  $v){echo "<th>$v</th>";}
-                echo "</tr>\n";
+         echo '<tr>';
+         foreach ($cn_fields as  $v){echo "<th>$v</th>";}
+         echo "</tr>\n";
 		// print data for cn fields
 				echo "<tr class = 'y_row'>";
 				foreach ($cn_fields as $k){
@@ -407,12 +407,11 @@ EOT;
 				foreach ($en_fields as $k){
 					echo "<td>$mdd[$k]</td>";
 				}
-				echo "</tr></table><table><tr>\n";
+				echo "</tr></table>\n";
 
-				echo "<tr><td><b>User Current</b></td><td class = 'y_row' > ${mdd['user_current']}</td></tr>";
-				echo "<tr><td><b>At AMD</b></td><td class = 'y_row' > ${mdd['user_amd']}</td></tr>";
-				echo "<tr><td>Admin Note</td><td class = 'y_row'> ${mdd['admin_note']}</td></tr>";
-				echo "</table>\n";
+				echo "<p><b>At AMD: </b>${mdd['user_amd']}</p>\n";
+				
+
 
 	  #now show action fields
 
