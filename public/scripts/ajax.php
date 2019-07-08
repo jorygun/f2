@@ -47,7 +47,7 @@ switch ($_POST['ajax']) {
 		break;
 		
 	default:
-		echo ("Unknown attempt at ajax update ${_POST['ajax']}");
+		echo ("Unknown attempt at ajax update : " . u\echor ($_POST,'post'); 
 }
 	
 function vote_action($post){
