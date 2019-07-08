@@ -565,7 +565,7 @@ private static $long_profile_fields = array (
 		
 	}
 	public function setAdminNote ($uid,$note) {
-		$sql = "UPDATE `members_f2` SET user_current = ?";
+		$sql = "UPDATE `members_f2` SET admin_note = ?";
 		 $stmt = $this->pdo->prepare ($sql);
 		 $stmt->execute ([$note]);
 			
