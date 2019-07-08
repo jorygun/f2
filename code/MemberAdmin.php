@@ -40,7 +40,7 @@ class MemberAdmin {
 		$this->pdo = \MyPDO::instance();
 		$this->member = new Member ($this->pdo);
 		$this->page = new DocPage();
-		$this->messenger = new Messenger($this->pdo,true);
+		$this->messenger = new Messenger($this->pdo);
 	}
 	
 	// this function just echos out the data in a list of found members.
