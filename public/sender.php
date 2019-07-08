@@ -19,7 +19,7 @@ echo $page->startBody('Hello');
 $pdo = MyPDO::instance();
 $messenger = new Messenger($pdo);
 $email = 'springerj@yahoo.com';
-$uid = '10117';
+$uid = '13085';
 
 echo "Sending to email $email" . BRNL;
 $messenger->sendLogins($email,'here is the text from sender for email $email at '. date('H:i') );
