@@ -40,6 +40,8 @@ function sendLogin(uid) {
 }
 
 function takeAction (uid,action) {
+alert ('action: '+action);
+exit;
    $.ajax({
    url: "/scripts/ajax.php",
    data: 'ajax='+action+'&uid='+uid,
