@@ -221,7 +221,7 @@ if (!array_key_exists('level',$_SESSION) || $_SESSION['level']<1) {echo <<< EOT
 
 
 EOT;
-
+}
 echo "
 </div>
 <p style='text-align:center;clear:both'></p>
