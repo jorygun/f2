@@ -28,16 +28,16 @@ function cancel_bulk(job) {
 	});
 }
 
-function sendLogin(uid) {
-   $.ajax({
-   url: "/scripts/ajax.php",
-   data: 'ajax=sendLogin&uid='+uid,
-   type: "POST",
-   success: function (response) {
-               alert (response);
-        }
- });  
-}
+// function sendLogin(uid) {
+//    $.ajax({
+//    url: "/scripts/ajax.php",
+//    data: 'ajax=sendLogin&uid='+uid,
+//    type: "POST",
+//    success: function (response) {
+//                alert (response);
+//         }
+//  });  
+// }
 
 function takeAction (uid,action) {
 alert ('action: '+action);
