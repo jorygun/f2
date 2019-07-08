@@ -229,7 +229,7 @@ echo "
 
 if (isset($_SESSION['pwid'])){echo "<p><small>user: $username S:$sl </small></p>";
 //echo "<p>Current login: $_SESSION[username]; status: $_SESSION[status] ($_SESSION[type] on $_SESSION[status_updated]) seclev $_SESSION[level]</p>\n";
-
+}
 echo "</div></body></html>\n";
 
 
