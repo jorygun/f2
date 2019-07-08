@@ -84,7 +84,7 @@ class MemberAdmin {
         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
        // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
-        $o .=   "<td align='center'><button name='xout' value='$uid' type='submit'>Xout</button></td>";
+        $o .=   "<td align='center'> <button type='button' onClick='x-out($uid)'>Send Login</button></td>";
         $o .=   "</tr>\n";
 		return $o;
 	}
@@ -317,6 +317,7 @@ public function show_update($uid) {
 	}
 	
 	$username = $mdd ['username'];
+	$uid = $mdd['user_id'];
      // Start a display table
     $login_string = "https://amdflames.org/?s=${mdd['upw']}${mdd['user_id']}";
 
@@ -472,7 +473,7 @@ EOT;
 	  	<tr><td><p><b>Update the Admin Note.</b>  </td><td>
 	  	<textarea  name='admin_note' cols = '40' rows = '8'>${mdd['admin_note']}</textarea></td></tr>
 
-	  	<tr><td><b>Send Lost Link to this user.</b>  This will happen AFTER all the changes above.</td><td>Send lost link: <input type='checkbox' name='sendlost'></td></tr>
+	  	<tr><td><b>Send Lost Link to this user.</b>  This will happen immediately.</td><td> <button type='button' onClick='sendLogin($uid)'>Send Login</button></td></tr>
 
 
 	  	<tr><td ><input type='submit' name='submit' value='Do It' style='background:#6F6; width:12em;'></td><td></td></tr>
