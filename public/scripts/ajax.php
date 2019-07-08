@@ -96,4 +96,5 @@ function verifyEmail($uid) {
 function xoutUser($uid) {
 	$pdo = \MyPDO::instance();
 	$member = new Member($pdo);
-	echo $member->xOut($uid);
+	echo $member->xoutUser($uid);
+}
