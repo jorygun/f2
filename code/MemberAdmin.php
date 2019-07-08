@@ -100,7 +100,7 @@ class MemberAdmin {
    	// script to buld button for ajax
    	$button = '<button type="button" onClick="takeAction('
    		. $uid
-   		. ",'$action')>"
+   		. ",'$action')\">"
    		. $label
    		. "</button>";
    	return $button;
