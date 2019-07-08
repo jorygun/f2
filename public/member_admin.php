@@ -20,9 +20,7 @@ ini_set('error_reporting', -1);
 	
 #display user data
 if (!empty($uid = $_GET['id'] ?? '')){
-echo "Got  $uid" . BRNL;
-
-	echo $admin->member_edit($uid);
+	echo $admin->show_update($uid);
 }
 
 #display search results
