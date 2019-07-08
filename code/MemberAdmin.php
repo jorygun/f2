@@ -231,7 +231,7 @@ EOT;
 				'informant' => $informant,
 				'prior_email' => $mdd['user_email'],
 				);
-			$this->messenger->sendMessages($uid,'em-found');
+			$this->messenger->sendMessages($uid,'em-found',$extra);
 			
 		}
 		else {
