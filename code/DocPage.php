@@ -78,8 +78,8 @@ EOT;
          $gsource = '';
 
    }
-
-      $t = "<div class='page_head'>\n";
+      $t = "</head>\n";
+      $t .= "<div class='page_head'>\n";
 
 	if (!empty($gsource)){
 	   $t .= "<img class='left' alt='AMD Flames' src='$gsource'>";
