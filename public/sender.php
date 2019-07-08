@@ -18,5 +18,7 @@ echo $page->startBody('Hello');
 
 $pdo = MyPDO::instance();
 $messenger = new Messenger($pdo,false);
-$messenger->sendLogins('john@digitalmx.com','here is the text');
+$messenger->sendLogins('john@digitalmx.com','here is the text for email');
+
+$messenger->sendLogins(11602,'here is the text for uid');
 
