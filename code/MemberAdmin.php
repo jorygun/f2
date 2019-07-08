@@ -281,7 +281,7 @@ EOT;
 		}
 		elseif ($nobulkset){
 			$this->member->setNoBulk($uid,1);
-			$messenger->sendMessages($uid,'nobulk');
+			$this->messenger->sendMessages($uid,'nobulk');
 		}
 	}
 
