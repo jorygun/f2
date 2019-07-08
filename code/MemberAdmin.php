@@ -60,9 +60,11 @@ class MemberAdmin {
         $user_login_link = "https://amdflames.org/?s=$login";
       $button_action = $uid . ",'sendLogin'";
         $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
-        $o .= '<button type="button" onClick="takeAction(' 
-        	. $uid . ",'sendLogin')" . '">Send Login</button></td></tr>';
-
+        // $o .= '<button type="button" onClick="takeAction(' 
+//         	. $uid . ",'sendLogin')" . '">Send Login</button></td></tr>';
+		$o .= $this->actionButton('Send Login','sendLogin',$uid);
+		$o .= "</td></tr>\n";
+		
        $o .= "<tr style='text-align:center'>
        <td>${row['status']}</td>
        <td>${row['email_status']}</td>
@@ -75,7 +77,7 @@ class MemberAdmin {
 
        </tr>";
 
-       
+  
 
         $o .=   "<tr>";
         $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
@@ -94,7 +96,15 @@ class MemberAdmin {
 		$this->members->setStatus($uid,'X');
 	
 	}
-
+	 public function actionButton($label,$action,$uid) {
+   	// script to buld button for ajax
+   	$button = '<button type="button" onClick="takeAction('
+   		. $uid
+   		. ",'$action')>"
+   		. $label
+   		. "</button>";
+   	return $button;
+   }
 	public function listMembers($post){
    //save search so can be repeated
      $_SESSION['last_member_search'] = $post;
