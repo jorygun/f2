@@ -203,12 +203,12 @@ EOT;
 
 
 
-?>
+echo "
 <div id='block5'><a name='logininfo'></a>
 <hr>
+";
 
 
-<?php
 $siteurl = SITE_URL;
 if (!array_key_exists('level',$_SESSION) || $_SESSION['level']<1) {echo <<< EOT
 <p>You must access the site with your FLAMES-supplied link to view the rest of the site.</p>
@@ -221,16 +221,12 @@ if (!array_key_exists('level',$_SESSION) || $_SESSION['level']<1) {echo <<< EOT
 
 
 EOT;
-}
 
-?>
-
+echo "
 </div>
+<p style='text-align:center;clear:both'></p>
+";
 
-<p style="text-align:center;clear:both"></p>
-
-
-<?
 if (isset($_SESSION['pwid'])){echo "<p><small>user: $username S:$sl </small></p>";
 //echo "<p>Current login: $_SESSION[username]; status: $_SESSION[status] ($_SESSION[type] on $_SESSION[status_updated]) seclev $_SESSION[level]</p>\n";
 
