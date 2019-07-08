@@ -186,9 +186,7 @@ EOT;
 
 // convert Get data yo Post data
  public function updateMember ($post){
-	if (empty($uid = $post['uid'])){
-		throw new Exception ('Attemp t update member with no uid in post');
-	}
+	$uid = $post['uid'];
 	// start by getting users record.  Needed for both get and put
 	$md = $this->member->getMemberData($uid);
 	$mdd = $md['data'];

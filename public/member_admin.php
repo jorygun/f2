@@ -28,7 +28,11 @@ elseif (isset($_POST['search'])){
 		echo $admin->listMembers ($_POST);
 }
 elseif (isset($_POST['Update'])){
+	if (empty($uid = $post['uid'])){
+		throw new Exception ('Attemp t update member with no uid in post');
+	}
 	echo $admin->updateMember($_POST);
+	echo showUpdate($uid);
 }
 
 #show search screen
