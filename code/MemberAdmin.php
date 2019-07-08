@@ -61,7 +61,7 @@ class MemberAdmin {
       $button_action = $uid . ",'sendLogin'";
         $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
         $o .= '<button type="button" onClick="takeAction(' 
-        	. $uid . ",'sendLogin')" . ">Send Login</button></td></tr>";
+        	. $uid . ",'sendLogin')" . '">Send Login</button></td></tr>';
 
        $o .= "<tr style='text-align:center'>
        <td>${row['status']}</td>
