@@ -344,7 +344,7 @@ EOT;
     // build option fields
 		$target_status = $mdd['status'];
 		$nm = ($target_status == 'N')?'(Send Welcome)':'';
-		$status_options = u\buildOptions('status',Defs::getStatusOptions(),$mdd['status']);
+		$status_options = u\buildOptions(Defs::getStatusOptions(),$mdd['status']);
 		// $status_options = array(
 // 		'--'	=> '',
 // 		"Member $nm" => 'M',
