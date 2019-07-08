@@ -185,16 +185,13 @@ EOT;
 */
 
 // convert Get data yo Post data
- public function member_edit(){
+ public function member_edit($uid){
 	if (isset($_GET['id'])) {$_POST['uid'] = $_GET['id'];}
 	$uid = $_POST['uid'];
 	
-	if (isset($_GET['email_status'])){
-		$_POST['ems'] = $_GET['email_status'];
-	}
 	
 	// start by getting users record.  Needed for both get and put
-	$md = $member->getMemberData($uid);
+	$md = $this->member->getMemberData($uid);
 	$mdd = $md['data'];
 	$username = $mdd ['username'];
 	
