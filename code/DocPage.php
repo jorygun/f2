@@ -78,7 +78,7 @@ EOT;
          $gsource = '';
 
    }
-      $t = "</head>\n<body>\n";
+      $t = "\n</head>\n<body>\n";
       $t .= "<div class='page_head'>\n";
 
 	if (!empty($gsource)){
