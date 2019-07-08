@@ -205,7 +205,14 @@ public static $test = 'you win';
 		}
 		return $names;
 	}
-	
+	public static function getStatusOptions() {
+		// returns the array for the buildOptions routine
+		$opt = array();
+		foreach (self::$member_codes as $code=>$defs){
+			$opt[$code] = $defs[0];
+		}
+		return $opt;
+	}
 	public  static function getSecLevel($code='N'){
 		return self::$member_codes[$code][1] ;
 	}

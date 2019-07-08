@@ -344,18 +344,18 @@ EOT;
     // build option fields
 		$target_status = $mdd['status'];
 		$nm = ($target_status == 'N')?'(Send Welcome)':'';
-
-		$status_options = array(
-		'--'	=> '',
-		"Member $nm" => 'M',
-		"Guest $nm" => 'G',
-		"Reader $nm" =>'R',
-		'Test' => 'T',
-		'X'	=> 'X',
-		'Lost'	=> 'L',
-		'Inactive' => 'I',
-		'Deceased'	=> 'D'
-		);
+		$status_options = u\buildOptions('status',Defs::getStatusOptions(),$mdd['status']);
+		// $status_options = array(
+// 		'--'	=> '',
+// 		"Member $nm" => 'M',
+// 		"Guest $nm" => 'G',
+// 		"Reader $nm" =>'R',
+// 		'Test' => 'T',
+// 		'X'	=> 'X',
+// 		'Lost'	=> 'L',
+// 		'Inactive' => 'I',
+// 		'Deceased'	=> 'D'
+// 		);
 
 		$status_contribute =array (
 			'--News--' => '',
