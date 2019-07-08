@@ -195,18 +195,14 @@ public static $test = 'you win';
 	/* returns the list at teh var */
 	public  static function getEmsData($code){
 		if (empty($code)){
-			throw new Exception ("No code for getEmsName");
+			return "n/a";
 		}
 			return self::$ems_codes[$code];
-		}
+	}
 	public  static function getEmsName($code){
-		if (empty($code)){
-			throw new Exception ("No code for getEmsName");
-		}
-	print "name for $code". BR;
-	print_r (self::$ems_codes[$code]); exit;
-	
-			return self::$ems_codes[$code][0];
+		if (empty($code)) return "n/a";
+		
+		return self::$ems_codes[$code][0];
 	}
 	public static function getEmsNameArray() {
 		$names=array();
