@@ -32,7 +32,7 @@ elseif (isset($_POST['Update'])){
 		throw new Exception ('Attemp t update member with no uid in post');
 	}
 	echo $admin->updateMember($_POST);
-	echo showUpdate($uid);
+	echo $admin->showUpdate($uid);
 }
 
 #show search screen
