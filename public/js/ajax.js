@@ -28,16 +28,8 @@ function cancel_bulk(job) {
 	});
 }
 
-// function sendLogin(uid) {
-//    $.ajax({
-//    url: "/scripts/ajax.php",
-//    data: 'ajax=sendLogin&uid='+uid,
-//    type: "POST",
-//    success: function (response) {
-//                alert (response);
-//         }
-//  });  
-// }
+
+// this scriput used for verifyEmail, sendLogin,
 
 function takeAction (uid,action) {
    $.ajax({
@@ -48,15 +40,4 @@ function takeAction (uid,action) {
                alert (response);
         }
  });  
-}
-
-function verifyEmail(uid) {
-   $.ajax({
-   url: "/scripts/ajax.php",
-   data: 'ajax=verifyEmail&uid='+uid,
-   type: "POST",
-   success: function (response) {
-      alert (response);
-   }
- });
 }

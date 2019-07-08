@@ -415,7 +415,8 @@ EOT;
 	  	$nobulkchecked = $mdd['no_bulk'] ? 'checked':'';
 
 	  	$validate_email_click = verify_click_email($mdd['id'],'');
-
+	  	$validateEmailButton = $this->actionButton('Validate Email','validateEmail',$uid);
+		$sendLoginButton = $this->actionButton('Send Login','sendLogin',$uid);
     echo <<<EOT
 
 	  <h3 style="border-top:1px solid black;">Actions on this record</h3>
@@ -460,7 +461,7 @@ Fields left blank will not be changed.
 	  	<input type="text" size="4" name="test_status">
 	  	</td></tr>
 	  	
-	  	<tr><td><b>Mark Current Email Valid</b></td><td>$validate_email_click</td></tr>
+	  	<tr><td>$validateEmailButton</td></tr>
 
 	  	<tr><td><p><b>Update user's current information.</b> For deceased members, indicate date and other info.</td><td>
 	  	<textarea  name='current' cols = '40' rows = '8'>${mdd['user_current']}</textarea></td></tr>
@@ -468,7 +469,9 @@ Fields left blank will not be changed.
 	  	<tr><td><p><b>Update the Admin Note.</b>  </td><td>
 	  	<textarea  name='admin_note' cols = '40' rows = '8'>${mdd['admin_note']}</textarea></td></tr>
 
-	  	<tr><td><b>Send Lost Link to this user.</b>  This will happen immediately.</td><td> <button type='button' onClick='sendLogin($uid)'>Send Login</button></td></tr>
+	  	<tr><td><b>Send Lost Link to this user.</b>  This will happen immediately.</td><td> 
+	  	$sendLoginButton
+	  	</td></tr>
 
 
 	  	<tr><td ><input type='submit' name='Update' value='Update' style='background:#6F6; width:12em;'></td><td></td></tr>
