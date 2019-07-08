@@ -863,9 +863,9 @@ public function getLogins($tag) {
     	else {
     		return self::$no_member;
     	}
-    	$fields = implode (',',$this->std_fields);
+
     	
-    	$sql = "SELECT $fields from `members_f2` where user_id = $uid and upw = '$pass';";
+    	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
     	#echo "$sql" . BRNL;
     	
     	$result = $this->pdo->query($sql)->fetch();
