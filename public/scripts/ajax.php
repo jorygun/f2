@@ -74,6 +74,8 @@ function sendLogin($tag) {
 	$pdo = \MyPDO::instance();
 	$member = new Member($pdo);
 	$login_msg = $member->getLogins($tag);
-	$messenger = new Messenger($pdo,true); #true = test
-	return $messenger->sendLogins($tag,$login_msg);
+	$messenger = new Messenger($pdo); #true = test
+	if ($messenger->sendLogins($tag,$login_msg)){
+		return array('status'=>'success');
+	}
 }
