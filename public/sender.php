@@ -22,8 +22,8 @@ $email = 'springerj@yahoo.com';
 $uid = '13085';
 
 echo "Sending to email $email" . BRNL;
-$messenger->sendLogins($email,'here is the text from sender for email $email at '. date('H:i') );
+$messenger->sendLogins($email,"here is the text from sender for email $email at ". date('H:i') );
 
 echo "Sending to the user id $uid " . BRNL;
-$messenger->sendLogins($uid,'here is the text from sender for uid $uid at ' . date('H:i') );
+$messenger->sendLogins($uid,"here is the text from sender for uid $uid at " . date('H:i') );
 
