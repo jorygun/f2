@@ -58,10 +58,8 @@ class MemberAdmin {
 			<td colspan='2' >" . u\linkHref($row['user_email']) . "</td>";
          $login = $row['upw'] . $row['user_id'];
         $user_login_link = "https://amdflames.org/?s=$login";
-      $button_action = $uid . ",'sendLogin'";
-        $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
-        // $o .= '<button type="button" onClick="takeAction(' 
-//         	. $uid . ",'sendLogin')" . '">Send Login</button></td></tr>';
+     
+      $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
 		$o .= $this->actionButton('Send Login','sendLogin',$uid);
 		$o .= "</td></tr>\n";
 		
@@ -87,8 +85,9 @@ class MemberAdmin {
         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
        // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
-        $o .=   "<td align='center'> <button type='button' onClick='x-out($uid)'>X-out </button></td>";
-        $o .=   "</tr>\n";
+        $o .=   "<td align='center'> " . actionButton('X-out','xout',$uid) 
+        		. "</td></tr>\n";
+        		
 		return $o;
 	}
 
