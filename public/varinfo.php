@@ -124,7 +124,7 @@ $member = new Member($pdo);
 // $em = new Messenger ($pdo,$test); #pdo,true for test
 // $event = 'em-found';
 // $event_extra = array('informant'=>'Teddy Technjcal');
-//  $em->sendMessages(11602,$event,$event_extra);
+//  sendMessages(11602,$event,$event_extra);
 //  echo "Sent $event<br";
 
 // require "MemberAdmin.php";

@@ -81,7 +81,11 @@ function sendLogin($tag) {
 	$member = new Member($pdo);
 	$login_msg = $member->getLogins($tag);
 	$messenger = new Messenger($pdo); #true = test
-	echo $messenger->sendLogins($tag,$login_msg);
+	if ( $messenger->sendLogins($tag,$login_msg) ){
+		echo "Logins sent";
+	}else {
+		echo "Failed to send logins";
+	}
 		
 }
 
@@ -90,11 +94,19 @@ function verifyEmail($uid) {
 
 	$pdo = \MyPDO::instance();
 	$member = new Member($pdo);
-	echo $member->verifyEmail($uid);
+	if ($member->verifyEmail($uid)) {
+		echo "Email Verified";
+	} else }
+		echo "Failed Email Verify";
+	}
 	
 }
 function xoutUser($uid) {
 	$pdo = \MyPDO::instance();
 	$member = new Member($pdo);
-	echo $member->xoutUser($uid);
+	if ( $member->xoutUser($uid) ){
+		echo "User xed out";
+	} else {
+		echo "Failed User x-out";
+	}
 }

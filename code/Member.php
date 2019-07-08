@@ -902,18 +902,18 @@ public function getLogins($tag) {
     
    
     public function verifyEmail ($id) {
-		 if ($newstat = $this->setEmailStatus($id,'Y') ){
-			return "Email verified";
+		 if ($this->setEmailStatus($id,'Y') ){
+			return true;
 		 } else {
-			return "Failed to verify email on user $id";
+			return false;
 		 }
 	}
 
 	public function verifyProfile ($id) {
-    if ($newstat = $this->setProfileVerified($id) ){
-    	return "Profile Verified";
+    if ($this->setProfileVerified($id) ){
+    	return true;
     } else {
-    	return "Failed to verify profile";
+    	return false;
     }
     
 	}
@@ -978,7 +978,7 @@ public function getLogins($tag) {
         
         $newstat = $md['data']['profile_validated'];
         
-        return  $newstat;
+        return  true;
 
     }
     
@@ -1039,18 +1039,18 @@ public function getLogins($tag) {
 			echo "from member->updateEms: $sql" . BRNL;
 			
 		if (! $result = $this->pdo->query($sql) ){
-			return "Failed to set EmailStatus on $uid, $ems";
+			return false;
 		}
-		return "Email status updated to $ems";
+		return true;
 	}
 	
 	public function xoutUser ($uid) {
 		$sql = "UPDATE `members_f2` SET status = 'X' 
 			WHERE user_id = '$uid'";
 		if (! $result = $this->pdo->query($sql) ){
-			return "Failed to xout user $uid";
+			return false;
 		}
-		return "User xed out.";
+		return true;
 	}
 } #end class
 

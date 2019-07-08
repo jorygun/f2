@@ -86,7 +86,7 @@ private function getMemberData($tag) {
  
 public function verifyEmail ($id) {
    
-    $newstat = $this->member->setEmailStatus($id,'Y');
+    $this->member->setEmailStatus($id,'Y');
 
     return $newstat;
 }
