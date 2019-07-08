@@ -464,7 +464,11 @@ EOT;
 	  	<tr><td><b>Admin Status</b></td><td>(currently ${mdd['admin_status']}):
 	  	<input type="text" size="4" name="admin_status">
 	  	</td></tr>
-
+	
+		<tr><td><b>Test Status</b></td><td>(currently ${mdd['test_status']}):
+	  	<input type="text" size="4" name="test_status">
+	  	</td></tr>
+	  	
 	  	<tr><td><b>Mark Current Email Valid</b></td><td>$validate_email_click</td></tr>
 
 	  	<tr><td><p><b>Update user's current information.</b> For deceased members, indicate date and other info.</td><td>
