@@ -38,3 +38,21 @@ function sendLogin(uid) {
         }
  });  
 }
+
+function update(uid,action) {
+   $.ajax({
+   url: "/scripts/ajax.php",
+   data: 'ajax='+action+'&uid='+uid,
+   type: "POST",
+   success: function (response) {
+               alert (response);
+        }
+ });  
+}
+
+function verifyEmail(uid) {
+   $.ajax({
+   url: "/scripts/ajax.php",
+   data: 'ajax=verifyEmail&uid='+uid,
+   type: "POST",
+   success: function (
