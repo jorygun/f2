@@ -17,6 +17,6 @@ echo $page->getHead('Test Page');
 echo $page->startBody('Hello');
 
 $pdo = MyPDO::instance();
-$messenger = new Messenger($pdo,true);
+$messenger = new Messenger($pdo,false);
 $messenger->sendLogins('john@digitalmx.com','here is the text');
 
