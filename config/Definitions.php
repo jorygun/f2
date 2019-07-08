@@ -1,5 +1,6 @@
 <?php
 namespace digitalmx\flames;
+use \Exception as Exception;
 
 /* This file contains tables of names, lists, etc
 	used throughout the site and grouped into
