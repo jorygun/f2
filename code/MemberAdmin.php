@@ -218,11 +218,11 @@ EOT;
 				'informant' => $informant,
 				'prior_email' => $mdd['user_email'],
 				);
-			$this->messenger->sendMessages($uid,'em_found');
+			$this->messenger->sendMessages($uid,'em-found');
 			
 		}
 		else {
-			$this->messenger->sendMessages($uid,'em_change');
+			$this->messenger->sendMessages($uid,'em-change');
 		}
 		$P_email_status = 'E1';
 		$use_email = $P_new_email;
