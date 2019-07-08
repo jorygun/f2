@@ -220,7 +220,7 @@ EOT;
 		}
 		// put new email in place for messenger
 		$this->member->setEmail ($uid,$P_new_email);
-		if (substr($mdd['status'],0,1) == 'L'){ #member was lost
+		if (true || substr($mdd['status'],0,1) == 'L'){ #member was lost
 			$informant = 'you';
 			if (!empty ($P_informant)){
 				$informant = $P_informant;
