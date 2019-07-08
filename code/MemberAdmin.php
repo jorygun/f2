@@ -94,7 +94,7 @@ class MemberAdmin {
 	
 	}
 
-	public function search($post){
+	public function listMembers($post){
    //save search so can be repeated
      $_SESSION['last_member_search'] = $post;
 	
@@ -185,17 +185,13 @@ EOT;
 */
 
 // convert Get data yo Post data
- public function member_edit($uid){
+ public function updateMember ($uid){
 	
 	// start by getting users record.  Needed for both get and put
 	$md = $this->member->getMemberData($uid);
 	$mdd = $md['data'];
 	$username = $mdd ['username'];
 	
-
-// echo $page->getHead('Member Update');
-// echo $page ->startBody("Act On Member : $username");
-
 // process any data in the post array
 	extract ($_POST,EXTR_PREFIX_ALL,'P');
 	if (empty ($P_uid)){ #?? think there should always be something here 
@@ -223,7 +219,6 @@ EOT;
 				'prior_email' => $mdd['user_email'],
 				);
 			$this->messenger->sendMessages($uid,'em_found');
-			
 			
 		}
 		else {
@@ -266,7 +261,10 @@ EOT;
 		echo "<p>Change Admin Status: $P_admin_status</p>";
 		$this->member->setAdminStatus($uid,$P_admin_status);
 	}
-
+	if (!empty($P_test_status)){
+		echo "<p>Change Test Status: $P_test_status</p>";
+		$this->member->setTestStatus($uid,$P_test_status);
+	}
 	if (!empty($P_new_name)){
 		echo "<p>change user name</p>";
 		$this->member->setUserName($uid,$P_new_name);
@@ -309,7 +307,7 @@ EOT;
 
 
 // GEt PAGE
-public function show_update($uid) {
+public function showUpdate($uid) {
 	$md = $this->member->getMemberData($uid);
 	
 	if (empty($mdd = $md['data'])){
@@ -345,20 +343,7 @@ EOT;
 		$target_status = $mdd['status'];
 		$nm = ($target_status == 'N')?'(Send Welcome)':'';
 		
-		$status_options = u\buildOptions(Defs::getStatusOptions(),$mdd['status']);
-		u\echor (Defs::getStatusOptions(),'option table');
-		echo "status options: " . $status_options;
-		// $status_options = array(
-// 		'--'	=> '',
-// 		"Member $nm" => 'M',
-// 		"Guest $nm" => 'G',
-// 		"Reader $nm" =>'R',
-// 		'Test' => 'T',
-// 		'X'	=> 'X',
-// 		'Lost'	=> 'L',
-// 		'Inactive' => 'I',
-// 		'Deceased'	=> 'D'
-// 		);
+		$user_status_options = u\buildOptions(Defs::getStatusOptions());
 
 		$status_contribute =array (
 			'--News--' => '',
@@ -372,19 +357,13 @@ EOT;
 
 
 		$email_status_options = '';
+		
 		#only allow certain changes.  x-bad, a-start validation y-verified q-unknown
 		foreach (array('A1','Y','Q','LO','LB','XX','A2','A3','B1') as $k){
 			if ($k <> $mdd['email_status']){$email_status_options .= "<option value='$k'>$k " . Defs::getEmsName($k) . "</option>";}
 		}
 
-		if ($_SESSION['level'] > 6) {  #news admin
-			$status_options = array_merge($status_options,$status_contribute );
-		}
-
-		if ($_SESSION['level'] > 8) { #admin admin
-			$status_options = array_merge($status_options,$status_admin );
-		}
-
+		
 		  $target_email = $mdd['user_email'];
 		  if ($target_email){$show_email = "<a href='mailto:$target_email'>$target_email</a>";}
 		  else {$show_email = '';}
@@ -429,7 +408,7 @@ EOT;
     echo <<<EOT
 
 	  <h3 style="border-top:1px solid black;">Actions on this record</h3>
-
+Fields left blank will not be changed.
 
 	 	<table>
 	 		<columns>
@@ -442,12 +421,10 @@ EOT;
 	 	address.</p> </td><td>New email: <input type='text' name = 'new_email' size=60>
 	 	<br><input type=checkbox name='suggested_email' id='suggested_email' >New Email suggested by someone else. <input type=text id='informant' name='informant' placeholder='Another FLAME member'oninput="check_the_box('suggested_email',true);"></td></tr>
 
-	 	<tr style="background-color:#F90; "><td><p><b>Update user status</b>$new_warning</td><td><select name='new_status'>
-EOT;
-		foreach ($status_options as $k => $v){echo "<option value='$v'>$k</option>\n";}
-
-		echo <<<EOT
-	  	</select></td></tr>
+	 	<tr style="background-color:#F90; ">
+	 		<td><p><b>Update user status</b>$new_warning</td>
+	 		<td><select name='new_status'>$user_status_options</select></td>
+	 	</tr>
 
 	 	<tr><td><p><b>Change User Name</b><br></p></td><td>
 	 	New User Name: <input type='text' name='new_name' size=40></td></tr>
@@ -483,17 +460,12 @@ EOT;
 	  	<tr><td><b>Send Lost Link to this user.</b>  This will happen immediately.</td><td> <button type='button' onClick='sendLogin($uid)'>Send Login</button></td></tr>
 
 
-	  	<tr><td ><input type='submit' name='submit' value='Do It' style='background:#6F6; width:12em;'></td><td></td></tr>
+	  	<tr><td ><input type='submit' name='Update' value='Update' style='background:#6F6; width:12em;'></td><td></td></tr>
 
 	  	</table>
 
 		</form>
-<hr>
-    <form action='../level8.php' method='post'>
-    Search for another name <input type='text' name='name'>
-    <input type='hidden' name='submit' value='Search'>
-    <input type='submit' >
-</form>
+
 </body></html>
 
 EOT;
@@ -505,9 +477,7 @@ EOT;
 
 function update_email ($row,$new_email){ #$id,$name,$old_email,$new_email){
 
-    $ems = new EmsMessaging( MyPDO::instance());
-    
-    $pdo = MyPDO::instance();
+   
 	//  if email is changed, send message to old email and verify to new email
 	//
 	$id = $row['id'];
