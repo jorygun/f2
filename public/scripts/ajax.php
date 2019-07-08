@@ -45,6 +45,9 @@ switch ($_POST['ajax']) {
 	case 'verifyEmail' :
 		return verifyEmail($_POST['uid']);
 		break;
+	case 'xout' :
+		return xoutUser($_POST['uid']);
+		break;
 		
 	default:
 		echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true); 
@@ -90,4 +93,7 @@ function verifyEmail($uid) {
 	echo $member->verifyEmail($uid);
 	
 }
-
+function xoutUser($uid) {
+	$pdo = \MyPDO::instance();
+	$member = new Member($pdo);
+	echo $member->xOut($uid);

@@ -1044,5 +1044,13 @@ public function getLogins($tag) {
 		return "Email status updated to $ems";
 	}
 	
+	public function xoutUser ($uid) {
+		$sql = "UPDATE `members_f2` SET status = 'X' 
+			WHERE user_id = '$uid'";
+		if (! $result = $this->pdo->query($sql) ){
+			return "Failed to xout user $uid";
+		}
+		return "User xed out.";
+	}
 } #end class
 
