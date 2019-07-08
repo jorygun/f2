@@ -74,6 +74,6 @@ function sendLogin($tag) {
 	$pdo = \MyPDO::instance();
 	$member = new Member($pdo);
 	$login_msg = $member->getLogins($tag);
-	$messenger = new Messenger($pdo,true); #true = test
+	$messenger = new Messenger($pdo); #true = test
 	return $messenger->sendLogins($tag,$login_msg);
 }
