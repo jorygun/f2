@@ -309,8 +309,14 @@ EOT;
 
 
 // GEt PAGE
-public function show_update() {
-
+public function show_update($uid) {
+	$md = $this->member->getMemberData($uid);
+	
+	if (empty($mdd = $md['data'])){
+		throw new Exception ("No data for user id $uid: ${md['error']} ");
+	}
+	
+	$username = $mdd ['username'];
      // Start a display table
     $login_string = "https://amdflames.org/?s=${mdd['upw']}${mdd['user_id']}";
 
