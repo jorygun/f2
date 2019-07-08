@@ -292,7 +292,7 @@ EOT;
 
 	if (!empty($P_current) && ($P_current <> $mdd['user_current'])) {
 		echo "Updating user's current information.<br>";
-		$member->setCurrent($uid, $P_current);
+		$this->member->setCurrent($uid, $P_current);
 	}
 
 
@@ -305,7 +305,7 @@ EOT;
 	
 	
 	// reset my row with updated data
-	$md = $member->getMemberData($uid);
+	$md = $this->member->getMemberData($uid);
 	$mdd = $md['data'];
 }
 ## end of update
