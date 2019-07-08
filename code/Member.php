@@ -902,13 +902,20 @@ public function getLogins($tag) {
     
    
     public function verifyEmail ($id) {
-    $newstat = $this->member->setEmailStatus($id,'Y');
-    return $newstat;
+		 if ($newstat = $this->setEmailStatus($id,'Y') ){
+			return "Email verified";
+		 } else {
+			return "Failed to verify email on user $id";
+		 }
 	}
 
 	public function verifyProfile ($id) {
-    $newstat = $this->member->setProfileVerified($id);
-    return $newstat;
+    if ($newstat = $this->setProfileVerified($id) ){
+    	return "Profile Verified";
+    } else {
+    	return "Failed to verify profile";
+    }
+    
 	}
 
     
@@ -1032,9 +1039,9 @@ public function getLogins($tag) {
 			echo "from member->updateEms: $sql" . BRNL;
 			
 		if (! $result = $this->pdo->query($sql) ){
-			throw new Exception ("Failed setEmailStatus on $uid, $ems");
+			return "Failed to set EmailStatus on $uid, $ems";
 		}
-		
+		return "Email status updated to $ems";
 	}
 	
 } #end class

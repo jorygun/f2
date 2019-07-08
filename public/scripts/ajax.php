@@ -42,6 +42,9 @@ switch ($_POST['ajax']) {
 	case 'sendLogin' :
 		return sendLogin($_POST['uid']);
 		break;
+	case 'verifyEmail' :
+		return verifyEmail($_POST['uid']);
+		break;
 		
 	default:
 		echo ("Unknown attempt at ajax update ${_POST['ajax']}");
@@ -75,8 +78,16 @@ function sendLogin($tag) {
 	$member = new Member($pdo);
 	$login_msg = $member->getLogins($tag);
 	$messenger = new Messenger($pdo); #true = test
-	if ($messenger->sendLogins($tag,$login_msg)){
-		return 'success';
-	}
-	return "Error";
+	echo $messenger->sendLogins($tag,$login_msg);
+		
 }
+
+function verifyEmail($uid) {
+	//tag may be uid or email
+
+	$pdo = \MyPDO::instance();
+	$member = new Member($pdo);
+	echo $member->verifyEmail($uid);
+	
+}
+
