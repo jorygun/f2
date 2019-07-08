@@ -51,6 +51,8 @@ class MemberAdmin {
 		   $username = u\entity_spec($row['username']);
 		  $last_login = date('d M, Y',strtotime($row['last_login']));
 		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
+		  	$validateEmailButton = $this->actionButton('Validate Email','validateEmail',$uid);
+		  	
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
        
       $o .=  "<tr>
@@ -80,7 +82,7 @@ class MemberAdmin {
         $o .=   "<tr>";
         $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
         $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/verify_email.php?r=$uid' target='verify'>Verify Email</a></td>";
+        $o .=   "<td align='center'>$validateEmailButton</td>";
         $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
