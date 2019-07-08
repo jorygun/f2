@@ -19,7 +19,8 @@ ini_set('error_reporting', -1);
 //END START
 	
 #display user data
-if (!empty($uid = $_GET['id'] ?? '')){
+$uid = $_GET['id'] ?? '' ;
+if (!empty($uid)){
 	echo $admin->showUpdate($uid);
 }
 
