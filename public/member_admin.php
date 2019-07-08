@@ -20,12 +20,15 @@ ini_set('error_reporting', -1);
 	
 #display user data
 if (!empty($uid = $_GET['id'] ?? '')){
-	echo $admin->show_update($uid);
+	echo $admin->showUpdate($uid);
 }
 
 #display search results
 elseif (isset($_POST['search'])){
-		echo $admin->search ($_POST);
+		echo $admin->listMembers ($_POST);
+}
+elseif (isset($_POST['Update'])){
+	echo $admin->updateMember($_POST);
 }
 
 #show search screen
