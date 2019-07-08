@@ -233,7 +233,7 @@ EOT;
 	if (!empty ($P_email_status)){
 		echo "<p>New Email Status: $P_email_status</p>";
 	
-		$this->member->setEmailStatus($uid,$P_new_status);
+		$this->member->setEmailStatus($uid,$P_email_status);
 		$this->messenger->sendMessages($uid,'ems-' . $P_email_status);
 	
 	}
