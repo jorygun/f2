@@ -47,7 +47,7 @@ switch ($_POST['ajax']) {
 		break;
 		
 	default:
-		echo ("Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true); 
+		echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true); 
 }
 	
 function vote_action($post){
