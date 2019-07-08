@@ -32,15 +32,15 @@ if (empty($_POST['ajax'] )){
  
 switch ($_POST['ajax']) {
 	case 'vote' :
-		echo vote_action($_POST);
+		return vote_action($_POST);
 		break;
 	
 	case 'bulkmail' :
-		echo cancel_bulk($_POST['job']);
+		return cancel_bulk($_POST['job']);
 		break;
 		
 	case 'sendLogin' :
-		echo sendLogin($_POST['uid']);
+		return sendLogin($_POST['uid']);
 		break;
 		
 	default:
