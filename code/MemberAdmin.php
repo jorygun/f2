@@ -213,7 +213,7 @@ EOT;
 			exit;
 		}
 		// put new email in place for messenger
-		$member->setEmail ($uid,$P_new_email);
+		$this->member->setEmail ($uid,$P_new_email);
 		if (substr($mdd['status'],0,1) == 'L'){ #member was lost
 			$informant = 'you';
 			if (!empty ($P_informant)){
@@ -225,12 +225,12 @@ EOT;
 				'informant' => $informant,
 				'prior_email' => $mdd['user_email'],
 				);
-			$messenger->sendMessages($uid,'em_found');
+			$this->messenger->sendMessages($uid,'em_found');
 			
 			
 		}
 		else {
-			$messenger->sendMessages($uid,'em_change');
+			$this->messenger->sendMessages($uid,'em_change');
 		}
 		$P_email_status = 'E1';
 		$use_email = $P_new_email;
@@ -241,17 +241,17 @@ EOT;
 	if (!empty ($P_email_status)){
 		echo "<p>New Email Status: $P_email_status</p>";
 	
-		$member->setEmailStatus($uid,$P_new_status);
-		$messenger->sendMessages($uid,'ems-' . $P_email_status);
+		$this->member->setEmailStatus($uid,$P_new_status);
+		$this->messenger->sendMessages($uid,'ems-' . $P_email_status);
 	
 	}
 
 
 	if (!empty($P_new_status)){
 		echo "<p>Status Change: $P_new_status</p>";
-		$member->setStatus($uid,$P_new_status);
+		$this->member->setStatus($uid,$P_new_status);
 		if ($P_new_status == 'D'){ #deceased
-			$member->setEmailStatus($uid,'LD');
+			$this->member->setEmailStatus($uid,'LD');
 		}
 		if (
 			(empty($mdd['status']) or $mdd['status'] == 'N') 
@@ -261,18 +261,18 @@ EOT;
 ##FIX THIS###
 				'login' => 'login',
 				);
-				$messenger->sendMessages($uid,'welcome',$extra);
+				$this->messenger->sendMessages($uid,'welcome',$extra);
 		}
 	}
 	
 	if (!empty($P_admin_status)){
 		echo "<p>Change Admin Status: $P_admin_status</p>";
-		$member->setAdminStatus($uid,$P_admin_status);
+		$this->member->setAdminStatus($uid,$P_admin_status);
 	}
 
 	if (!empty($P_new_name)){
 		echo "<p>change user name</p>";
-		$member->setUserName($uid,$P_new_name);
+		$this->member->setUserName($uid,$P_new_name);
 		
 	}
 
@@ -282,10 +282,10 @@ EOT;
 	if ($nobulkclear or $nobulkset){
 		echo "p>Bulk Mail Changed</p>";
 		if ($nobulkclear){
-			$member->setNoBulk($uid,0);
+			$this->member->setNoBulk($uid,0);
 		}
 		elseif ($nobulkset){
-			$member->setNoBulk($uid,1);
+			$this->member->setNoBulk($uid,1);
 			$messenger->sendMessages($uid,'nobulk');
 		}
 	}
@@ -298,7 +298,7 @@ EOT;
 
 	if (!empty($P_admin_note) && ($P_admin_note <> $mdd['admin_note']) ){
 		echo "Updating admin note<br>";
-		$member->setAdminNote($uid, $P_admin_note);
+		$this->member->setAdminNote($uid, $P_admin_note);
 	}
 	
 
