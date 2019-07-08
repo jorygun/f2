@@ -103,7 +103,7 @@ try {
 
 
 try {
-	echo "pretty_date (rfc): " . u\make_date(time(),'rfc') . BRNL;
+	echo "make_date (now,rfc): " . u\make_date('now','rfc') . BRNL;
 } catch (Error $e) {
 	echo_red ('pretty_date function not available.') . BRNL;
 }
