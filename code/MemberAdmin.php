@@ -51,7 +51,7 @@ class MemberAdmin {
 		   $username = u\entity_spec($row['username']);
 		  $last_login = date('d M, Y',strtotime($row['last_login']));
 		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
-		  	$validateEmailButton = $this->actionButton('Validate Email','validateEmail',$uid);
+		  	$validateEmailButton = $this->actionButton('Validate Email','verifyEmail',$uid);
 		  	
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
        
