@@ -193,9 +193,15 @@ public static $test = 'you win';
 ######## Getters
 	/* returns the list at teh var */
 	public  static function getEmsData($code){
+		if (empty($code)){
+			throw new Exception ("No code for getEmsName");
+		}
 			return self::$ems_codes[$code];
 		}
 	public  static function getEmsName($code){
+		if (empty($code)){
+			throw new Exception ("No code for getEmsName");
+		}
 	print "name for $code". BR;
 	print_r (self::$ems_codes[$code]); exit;
 	
