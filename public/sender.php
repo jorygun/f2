@@ -18,9 +18,12 @@ echo $page->startBody('Hello');
 
 $pdo = MyPDO::instance();
 $messenger = new Messenger($pdo);
-echo "Sending to email address" . BRNL;
-$messenger->sendLogins('springerj@mac.com','here is the text from sender for email john@me.com at '. date('H:i') );
-echo "Sending to the user id" . BRNL;
+$email = 'springerj@yahoo.com';
+$uid = '10117';
 
-$messenger->sendLogins(10117,'here is the text from sender for uid 10117 at ' . date('H:i') );
+echo "Sending to email $email" . BRNL;
+$messenger->sendLogins($email,'here is the text from sender for email $email at '. date('H:i') );
+
+echo "Sending to the user id $uid " . BRNL;
+$messenger->sendLogins($uid,'here is the text from sender for uid $uid at ' . date('H:i') );
 
