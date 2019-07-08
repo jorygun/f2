@@ -85,7 +85,8 @@ class MemberAdmin {
         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
        // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
-        $o .=   "<td align='center'> " . actionButton('X-out','xout',$uid) 
+        $o .=   "<td align='center'> " 
+        		. $this->actionButton('X-out','xout',$uid) 
         		. "</td></tr>\n";
         		
 		return $o;
