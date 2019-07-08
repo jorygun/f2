@@ -57,7 +57,7 @@ function vote_action($post){
 	$vote = $post['this_vote']??'';
 	#echo "Recording vote  $vote for item $item_id" . BRNL;
 	$new_panel = $voting->tally_vote($item_id,$user_id,$vote);
-	return $new_panel;
+	echo $new_panel;
 }
 
 function cancel_bulk($job) {
@@ -65,7 +65,7 @@ function cancel_bulk($job) {
 	$bulkmail = new BulkMail;
 	$queue = PROJ_PATH . '/bulk_jobs/queue';
 	rename ($queue . "/$job" , $queue . "/${job}-cancelled");
-	return $bulkmail -> show_bulk_jobs(SITE_PATH . '/bulk_queue');
+	echo $bulkmail -> show_bulk_jobs(SITE_PATH . '/bulk_queue');
 }
 
 function sendLogin($tag) {
@@ -76,6 +76,7 @@ function sendLogin($tag) {
 	$login_msg = $member->getLogins($tag);
 	$messenger = new Messenger($pdo); #true = test
 	if ($messenger->sendLogins($tag,$login_msg)){
-		return array('status'=>'success');
+		return 'success';
 	}
+	return "Error";
 }
