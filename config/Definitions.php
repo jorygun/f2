@@ -196,7 +196,7 @@ public static $test = 'you win';
 			return self::$ems_codes[$code];
 		}
 	public  static function getEmsName($code){
-	print_r (self::$ems_codes);
+	print_r (self::$ems_codes[$code]); exit;
 	
 			return self::$ems_codes[$code][0];
 	}
