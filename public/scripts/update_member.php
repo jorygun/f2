@@ -84,7 +84,7 @@ if (empty ($P_uid){ #?? think there should always be something here
 		echo "<p>New Email Status: $P_email_status</p>";
 	
 		$member->setEmailStatus($uid,$P_new_status);
-		$messenger->sendMessages($uid,'ems-' . $P_email_status);
+		$messenger->sendMessages($uid,$P_email_status);
 	
 	}
 
