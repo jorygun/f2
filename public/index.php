@@ -230,21 +230,14 @@ EOT;
 <p style="text-align:center;clear:both"></p>
 
 
-<?php
+<?
 if (isset($_SESSION['pwid'])){echo "<p><small>user: $username S:$sl </small></p>";
 //echo "<p>Current login: $_SESSION[username]; status: $_SESSION[status] ($_SESSION[type] on $_SESSION[status_updated]) seclev $_SESSION[level]</p>\n";
-}
+
+echo "</div></body></html>\n";
 
 
-?>
-</div>
-
-<?php print file_get_contents ('includes/footer_scripts.js'); ?>
-
-</body>
-</html>
-
-<?
+############################
 function age_warnings ($id){
 	
 	if ($_SESSION['status'] == 'GA'){return;} #anonymous guest
@@ -321,10 +314,6 @@ EOT;
 		return $update_msg;
 }
 
-// check to see if came from old site
-function from_old_site(){
-return '';
-}
 
 
 ?>
