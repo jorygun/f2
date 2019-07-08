@@ -58,7 +58,7 @@ class MemberAdmin {
 			<td colspan='2' >" . u\linkHref($row['user_email']) . "</td>";
          $login = $row['upw'] . $row['user_id'];
         $user_login_link = "https://amdflames.org/?s=$login";
-      $button_action = $uid . ',sendLogin';
+      $button_action = $uid . ",'sendLogin'";
         $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> 
         <button type='button' onClick='takeAction($button_action)'>Send Login</button></td></tr>";
 
