@@ -144,7 +144,8 @@ class Member
    */
    #all database fiels
    private static $member_fields = array (
-   'admin_status',
+'admin_note',
+'admin_status',
 'alt_contact',
 'amd_dept',
 'amd_when',
