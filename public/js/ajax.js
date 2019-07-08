@@ -34,7 +34,7 @@ function sendLogin(uid) {
    data: 'ajax=sendLogin&uid='+uid,
    type: "POST",
    success: function (response) {
-            if (response.status === "success") {
+            if (response === 1) {
                 alert ("Login Sent");
             }
             else {
