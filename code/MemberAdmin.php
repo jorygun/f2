@@ -84,7 +84,7 @@ class MemberAdmin {
         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
        // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
-        $o .=   "<td align='center'> <button type='button' onClick='x-out($uid)'>Send Login</button></td>";
+        $o .=   "<td align='center'> <button type='button' onClick='x-out($uid)'>X-out </button></td>";
         $o .=   "</tr>\n";
 		return $o;
 	}
@@ -234,7 +234,7 @@ EOT;
 		echo "<p>New Email Status: $P_email_status</p>";
 	
 		$this->member->setEmailStatus($uid,$P_email_status);
-		$this->messenger->sendMessages($uid,'ems-' . $P_email_status);
+		$this->messenger->sendMessages($uid,$P_email_status);
 	
 	}
 
