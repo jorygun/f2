@@ -18,11 +18,18 @@ ini_set('error_reporting', -1);
 	
 //END START
 	
+#display user data
+if (!empty($uid = $_GET['id'])){
+	echo $admin->member_edit($uid);
+}
 
-if (isset($_POST['search'])){
+#display search results
+elseif (isset($_POST['search'])){
 		echo $admin->search ($_POST);
-	}
-	echo $admin->showSearch();
+}
+
+#show search screen
+echo $admin->showSearch();
 	
 
 //END START

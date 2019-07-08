@@ -80,7 +80,7 @@ class MemberAdmin {
         $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
         $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
         $o .=   "<td align='center'><a href='/scripts/verify_email.php?r=$uid' target='verify'>Verify Email</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid' target='$username'>Update</a></td>";
+        $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
        // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
@@ -313,40 +313,7 @@ EOT;
 }
 ## end of update
 
-public function sendLogin($id) {
-        // can receive a user_id or an email as input
-        if (is_numeric($id)){
-            $where =  "user_id = '$id'";
-        }
-        elseif (filter_var($id,FILTER_VALIDATE_EMAIL)){
-            $where = "user_email = '$id'";
-        }
-        else {throw new Exception ("Request $id not valid.");}
-        
-        $sql = "SELECT username,user_id,upw,user_email FROM `members_f2`
-            where $where";
-        if (!$result = $this->pdo->query($sql) ){
-            throw new Exception ("get user row in sendlogin failed");
-        }
-        if ($result->rowCount() == 0) {return "No Members Found";}
-        $format = "   %-25s %-50s\n";
-        $msg = sprintf($format,"Member Name",  "login url");
-        foreach ($result as $row){ #there may be more than one
-            $login = 'https://' . SITE . "/?s=" . $row['upw']  . $row['user_id'];
-            //echo $login;
-            // send message with login
-            $msg .=  sprintf($format,$row['username'], $login );
-        }
-      
-        
-        if($this->messenger->sendLogins($row['user_email'],$msg) ){
-       		 return "Login Sent";
-       	}
-       	else { 
-       		return "Message not sent";
-       	}
-    
-    }
+
 // GEt PAGE
 public function show_update() {
 
