@@ -39,7 +39,7 @@ function sendLogin(uid) {
  });  
 }
 
-function update(uid,action) {
+function takeAction (uid,action) {
    $.ajax({
    url: "/scripts/ajax.php",
    data: 'ajax='+action+'&uid='+uid,
@@ -55,4 +55,8 @@ function verifyEmail(uid) {
    url: "/scripts/ajax.php",
    data: 'ajax=verifyEmail&uid='+uid,
    type: "POST",
-   success: function (
+   success: function (response) {
+      alert (response);
+   }
+ });
+}
