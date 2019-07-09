@@ -43,7 +43,7 @@ class MemberAdmin {
 		$this->messenger = new Messenger($this->pdo);
 	}
 	
-	this function just echos out the data in a list of found members.
+//	this function just echos out the data in a list of found members.
 	private function echo_user_row ($row,$post=''){
        #$fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
 		 $uid = $row['user_id'];
@@ -100,7 +100,7 @@ class MemberAdmin {
 	}
 	
 	 public function actionButton($label,$action,$uid) {
-   	script to buld button for ajax
+   	//script to buld button for ajax
    	$button = '<button type="button" onClick="takeAction('
    		. $uid
    		. ",'$action')\">"
@@ -110,7 +110,7 @@ class MemberAdmin {
    }
    
 	public function listMembers($post){
-   save search so can be repeated
+   //save search so can be repeated
      $_SESSION['last_member_search'] = $post;
 	
 	$result = $this->member->getMemberListFromAdmin($post);
@@ -196,20 +196,20 @@ EOT;
 
 */
 
-convert Get data yo Post data
+//convert Get data yo Post data
  public function updateMember ($post){
 	$uid = $post['uid'];
-	start by getting users record.  Needed for both get and put
+	//start by getting users record.  Needed for both get and put
 	$md = $this->member->getMemberData($uid);
 	$mdd = $md['data'];
 	$username = $mdd ['username'];
 	
-process any data in the post array
+//process any data in the post array
 	extract ($post,EXTR_PREFIX_ALL,'P');
 	if (empty ($P_uid)){ #?? think there should always be something here 
 		exit;
 	}
-	go over data and find updates and perform as encountered
+	//go over data and find updates and perform as encountered
 	
 	if (!empty($P_new_email)){ #new email address; update and send verify
 		echo "<p>New Email: $P_new_email</p>";
@@ -217,7 +217,7 @@ process any data in the post array
 			echo "Invalid Email address $P_new_email<br>\n";
 			exit;
 		}
-		put new email in place for messenger
+		//put new email in place for messenger
 		$this->member->setEmail ($uid,$P_new_email);
 		if (substr($mdd['status'],0,1) == 'L'){ #member was lost
 			$informant = 'you';
@@ -311,14 +311,14 @@ process any data in the post array
 
 	
 	
-	reset my row with updated data
+	//reset my row with updated data
 	$md = $this->member->getMemberData($uid);
 	$mdd = $md['data'];
 }
 ## end of update
 
 
-GEt PAGE
+//GEt PAGE
 public function showUpdate($uid) {
 	$md = $this->member->getMemberData($uid);
 	
@@ -328,7 +328,7 @@ public function showUpdate($uid) {
 	
 	$username = $mdd ['username'];
 	$uid = $mdd['user_id'];
-     Start a display table
+    // Start a display table
     $login_string = "https://amdflames.org/?s=${mdd['upw']}${mdd['user_id']}";
 
   echo <<<EOT
@@ -343,7 +343,7 @@ public function showUpdate($uid) {
   <table border='1' cellpadding='2' cellspacing='0'>
 
 EOT;
-Set headings
+//Set headings
 	$cn_fields = array(
 		'status','status_updated','admin_status', 'last_login','profile_updated','profile_validated','no_bulk');
 
@@ -351,7 +351,7 @@ Set headings
 
 
 
-    build option fields
+    //build option fields
 		$target_status = $mdd['status'];
 		$nm = ($target_status == 'N')?'(Send Welcome)':'';
 		
@@ -381,13 +381,13 @@ Set headings
 		  else {$show_email = '';}
 
 
-			now show target data
+			//now show target data
 
-			print heading row
+			//print heading row
          echo '<tr>';
          foreach ($cn_fields as  $v){echo "<th>$v</th>";}
          echo "</tr>\n";
-		print data for cn fields
+		//print data for cn fields
 				echo "<tr class = 'y_row'>";
 				foreach ($cn_fields as $k){
 					echo "<td>$mdd[$k]</td>";
