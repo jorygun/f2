@@ -34,7 +34,7 @@ class MemberAdmin {
 	private $messenger;
 	private $pdo;
 	
-	
+	if (class_exists('Member')){echo "Already have Member";}
 	
 	public function __construct(){
 		$this->pdo = \MyPDO::instance();
