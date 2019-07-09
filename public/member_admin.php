@@ -9,7 +9,7 @@ ini_set('error_reporting', -1);
 	use digitalmx\flames\DocPage;
 	use digitalmx\flames\MemberAdmin;
 	
-	$admin = new MemberAdmin();
+#	$admin = new MemberAdmin();
 	$page = new DocPage();
 
 	
@@ -38,5 +38,4 @@ elseif (isset($_POST['Update'])){
 }
 
 #show search screen
-echo $admin->showSearch();
-	
+#	
