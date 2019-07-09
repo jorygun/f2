@@ -117,29 +117,29 @@ EOT;
 		echo "</div>";
 }
 
-elseif ($user_status=='N'){
-		echo <<< EOT
-		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#cfc;'>
-		<h3>Welcome Back, $username</h3>
-		<p>Thanks for signing up for FLAMEs.  You should received your permanent login soon.</p>
-		<p>Until then, you can still <a href="/news/">view the latest newsletter</a>.</p>
-		</div>
-EOT;
-		}
-
-elseif ($user_status=='I'){
-		echo <<< EOT
-		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#cfc;'>
-		<h3>Welcome Back, $username</h3>
-		<p>You have requested an "Inactive" status, which limits the
-		information you can retrieve from the site.</p>
-		<p>If you would like to restore your membership,
-		please <a href="mailto:admin@amdflames.org">contact the admin</a> and have your status reset.  You can still opt
-		out of any regular emails from the site.
-		</p>
-		</div>
-EOT;
-		}
+// elseif ($user_status=='N'){
+// 		echo <<< EOT
+// 		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#cfc;'>
+// 		<h3>Welcome Back, $username</h3>
+// 		<p>Thanks for signing up for FLAMEs.  You should received your permanent login soon.</p>
+// 		<p>Until then, you can still <a href="/news/">view the latest newsletter</a>.</p>
+// 		</div>
+// EOT;
+// 		}
+// 
+// elseif ($user_status=='I'){
+// 		echo <<< EOT
+// 		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#cfc;'>
+// 		<h3>Welcome Back, $username</h3>
+// 		<p>You have requested an "Inactive" status, which limits the
+// 		information you can retrieve from the site.</p>
+// 		<p>If you would like to restore your membership,
+// 		please <a href="mailto:admin@amdflames.org">contact the admin</a> and have your status reset.  You can still opt
+// 		out of any regular emails from the site.
+// 		</p>
+// 		</div>
+// EOT;
+// 		}
 
 else {
 	echo <<< EOT
