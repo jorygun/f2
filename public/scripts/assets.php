@@ -5,7 +5,7 @@ namespace digitalmx\flames;
 
 
 //BEGIN START
-	require_once "init.php";
+	require_once "../init.php";
 
 	#require others
 
