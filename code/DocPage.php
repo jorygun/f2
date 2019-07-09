@@ -3,7 +3,14 @@ namespace digitalmx\flames;
 
 /*
    Start new html page
+   startHead starts the page
+   startBody ends the head and starts the body
 
+   startHead(title,min-security-level,[options])
+      options are to include 'tiny', 'ajax', 'votes' code
+
+   startBody (title, head style, subtitle)
+      head style 1 = news page, 2 = other page
 */
 
 use digitalmx as u;
@@ -15,7 +22,12 @@ class DocPage {
       {
 
    }
-   public function getHead($title, $min = 0, $options=[]){
+
+   # getHead is alias for StartHead
+   public function getHead ($title, $min = 0, $options=[]){
+      $this->startHead ($title, $min, $options=[]);
+   }
+   public function startHead($title, $min = 0, $options=[]){
       /* options:
          'tiny' = include tinymce
          'ajax' = include jquery, ajax
@@ -68,31 +80,39 @@ EOT;
       return $t;
    }
 
-   public function startBody($title,$graphic=1,$subtitle='') {
-      #choose a graphic by number
-      switch ($graphic) {
-      case 1:
-         $gsource = "/graphics/logo-FLAMEs.gif";
-         break;
-      default:
-         $gsource = '';
+   public function startBody($title,$heading=2,$subtitle='') {
 
-   }
       $t = "\n</head>\n<body>\n";
       $t .= "<div class='page_head'>\n";
 
-	if (!empty($gsource)){
-	   $t .= "<img class='left' alt='AMD Flames' src='$gsource'>";
-	}
-	$t .= <<<EOT
-	<p class='title'>FLAME<i>news</i><br>
-	<span style='font-size:0.5em;'>$subtitle</span>
-	</p>
+    #choose a heading by number
+      switch ($heading) {
+      case 1:
+         $t .= <<<EOT
+         <img class='left' alt='AMD Flames' src='/graphics/logo-FLAMEs.gif'>";
+         <p class='title'>FLAME<i>news</i><br>
+         <span style='font-size:0.5em;'>$subtitle</span>
+         </p>
 EOT;
+         break;
+         case 2:
+         $t .= <<<EOT
+         <img class='left' alt='AMD Flames' src='/graphics/logo69x89.png'>";
+         <p class='title'>AMD Flames - The AMD Alumni Site<br>
+         <span style='font-size:0.5em;'>$subtitle</span>
+         </p>
+EOT;
+         break;
+      default:
+
+   }
+
    $t .= $_SESSION['menu'];
    $t .= "<hr style='width: 100%; height: 2px;clear:both;'>";
 
    $t .= "</div>\n";
+
+
 
 
       return $t;

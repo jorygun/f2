@@ -1,25 +1,15 @@
 <?php
 //BEGIN START
 	require_once "init.php";
-	if (f2_security_below(0)){exit;}
+
+	use digitalmx\flames\DocPage;
 	$pdo = MyPDO::instance();
-	$nav = new NavBar(false);
-	$navbar = $nav -> build_menu();
-//END START
+
+	$page = new DocPage;
+	echo $page->startHead("About AMD Flames", 0);
+	echo $page->startBody("About AMD Flames",2);
+
 ?>
-
-<html lang="en">
-<head>
- <link rel="stylesheet" href="/css/flames2.css">
-
-<title>About The FLAMEs site</title>
-
-</head>
-<body>
-
-<?=$navbar?>
-
-<h3>About This Site</h3>
 <p>"FLAME" stands for "<b>F</b>ormer <b>L</b>oyal <b>AM</b>D <b>E</b>mployee"</p>
 <p>The FLAME website was created in 1997 by John McKean, an AMD FAE from Toronto, as a way for former and current AMDers to stay connected. After compiling the suggestions that were sent to him each week, and adding his own commentary, in italics, signed/jm. He published his weekly FLAME newsletter to more than 2,000 readers, around the world, over the past 17 years.</p><p>
 John passed away suddenly in September, 2014.  John will be remembered by many for his contributions to AMD as an integral part of the Toronto field sales office from 1981-1996.</p><p>
@@ -39,6 +29,7 @@ The cost of operating this site is borne by these members.
 
 
 <ul>
+
  <?
  $q="SELECT username,user_email,contributed FROM `members_f2` WHERE contributed IS NOT NULL and contributed > CURDATE() - INTERVAL 24 month;";
  $result = $pdo -> query($q);
