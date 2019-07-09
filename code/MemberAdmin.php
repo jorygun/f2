@@ -98,15 +98,17 @@ class MemberAdmin {
 		$this->members->setStatus($uid,'X');
 	
 	}
-	//  public function actionButton($label,$action,$uid) {
-//    	// script to buld button for ajax
-//    	$button = '<button type="button" onClick="takeAction('
-//    		. $uid
-//    		. ",'$action')\">"
-//    		. $label
-//    		. "</button>";
-//    	return $button;
-//    }
+	
+	 public function actionButton($label,$action,$uid) {
+   	// script to buld button for ajax
+   	$button = '<button type="button" onClick="takeAction('
+   		. $uid
+   		. ",'$action')\">"
+   		. $label
+   		. "</button>";
+   	return $button;
+   }
+   
 	public function listMembers($post){
    //save search so can be repeated
      $_SESSION['last_member_search'] = $post;
@@ -147,43 +149,43 @@ class MemberAdmin {
 
 }
 
- public function showSearch(){
- 	$status_options = "<option value=''>Choose...</option>";
-	foreach (array('M','G','MC','MU','MN','N','T','I') as $v){
-		$desc = Defs::getMemberDescription($v);
-		$status_options .= "<option value='$v'>$v ($desc)</option>";
-	}
-
-    $ems_options = "<option value=''>Choose...</option>";
-    foreach (Defs::getEmsNameArray() as $v=>$desc){
-		$ems_options .= "<option value='$v'>$v ($desc)</option>";
-	}
-
-
-
- 	$o = <<<EOT
-<p><b>Locate a Member to update</b></p>
-To modify a member's record (including accepting new signups) find the member
-here. Name and email can be partials.
-<form  method = 'POST'>
-<table style = 'font-size:small;'>
-<tr><th>Find by name: </th><th>Find by email:</th><th>Find by status:</th>
-    <th>Find by Email Status</th><th>Admin Status</th></tr>
-<tr>
-
-    <td> <input type='text' name = 'name' ></td>
-    <td><input type='text' name='email'></td>
-    <td><select type='text' name='status'>$status_options</select></td>
-   <td><select type='text' name='ems'>$ems_options</select></td>
-     <td>Admin Status:<input type="text" name="admin_status" size='4'></td></tr>
-</table>
-<input type=submit name='search' value='Search'>
-</form>
-EOT;
-	return $o;
-	
-	}
-	
+ // public function showSearch(){
+//  	$status_options = "<option value=''>Choose...</option>";
+// 	foreach (array('M','G','MC','MU','MN','N','T','I') as $v){
+// 		$desc = Defs::getMemberDescription($v);
+// 		$status_options .= "<option value='$v'>$v ($desc)</option>";
+// 	}
+// 
+//     $ems_options = "<option value=''>Choose...</option>";
+//     foreach (Defs::getEmsNameArray() as $v=>$desc){
+// 		$ems_options .= "<option value='$v'>$v ($desc)</option>";
+// 	}
+// 
+// 
+// 
+//  	$o = <<<EOT
+// <p><b>Locate a Member to update</b></p>
+// To modify a member's record (including accepting new signups) find the member
+// here. Name and email can be partials.
+// <form  method = 'POST'>
+// <table style = 'font-size:small;'>
+// <tr><th>Find by name: </th><th>Find by email:</th><th>Find by status:</th>
+//     <th>Find by Email Status</th><th>Admin Status</th></tr>
+// <tr>
+// 
+//     <td> <input type='text' name = 'name' ></td>
+//     <td><input type='text' name='email'></td>
+//     <td><select type='text' name='status'>$status_options</select></td>
+//    <td><select type='text' name='ems'>$ems_options</select></td>
+//      <td>Admin Status:<input type="text" name="admin_status" size='4'></td></tr>
+// </table>
+// <input type=submit name='search' value='Search'>
+// </form>
+// EOT;
+// 	return $o;
+// 	
+// }
+// 	
 	
 
 /* this script is used to make all  updates to members records.
