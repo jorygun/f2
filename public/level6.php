@@ -1,35 +1,26 @@
 <?php
-
 //BEGIN START
-	require_once 'init.php';
-	if (f2_security_below(6)){exit;}
-//END START
+	require_once "init.php";
 
-require_once "scripts/news_functions.php";
+	require_once "scripts/news_functions.php";
 
-$my_login = $_SESSION['pwid'];
-$my_id = $_SESSION['user_id'];
+	use digitalmx\flames\DocPage;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
+
+	$pdo = MyPDO::instance();
+
+	$page = new DocPage;
+	echo $page->startHead("News Contributor Page", 3);
+	echo $page->startBody("News Contributor Page",2);
+
+
+$my_id = $_SESSION['login']['user_id'];
+$username = $_SESSION['login']['username'];
 
 #$ifile='../news/news_next/newsitems.html';
 $now = sql_now();
-$nav = new NavBar(1);
-	$navbar = $nav -> build_menu();
 ?>
-<html>
-<head>
-<title>News Contributor Page</title>
-<link rel="stylesheet" href="/css/flames2.css">
-<link rel="stylesheet" href="/css/news3.css">
-
-</head>
-
-<body >
-
-<?=$navbar?>
-
-
-
-<h1>News Contributor Page</h1>
 
 <p>Use this page to create or edit a news item for the
 FLAMEs News, or to comment on any unpublished articles. "Queued"
@@ -38,16 +29,16 @@ queued or unqueued up until the moment the newsletter is
 actually published.</p>
 
 
-<h2>Personal News Contributions <?=$_SESSION['username']?></h2>
+<h2>Personal News Contributions <?=$username?></h2>
 <p><i>Note: Some images may show as broken links on this page</i></p>
 <hr>
-<h3 class="highlight"> Unpublished News Items from YOU: <?=$_SESSION['username']?>
+<h3 class="highlight"> Unpublished News Items from YOU: <?=$username?>
 <? echo show_edit(0,'Create New Item'); ?>
 </h3>
 <p>(You can create new articles or edit existing ones here.)</p>
 <table>
 
-<?
+<?php
 $these_sections = array_keys($sections);
 $sql= "SELECT * from news_items where status NOt IN ('P','T')
     AND contributor_id = '$my_id'
@@ -89,6 +80,7 @@ if (!empty($stories)){
     }
 }
 ?>
+
 </div>
 
 <script>
@@ -103,8 +95,4 @@ if (!empty($stories)){
 </script>
 
 </body></html>
-<?
 
-###################################################################
-
-?>
