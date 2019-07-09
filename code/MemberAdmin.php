@@ -413,7 +413,6 @@ EOT;
 
 	  	$nobulkchecked = $mdd['no_bulk'] ? 'checked':'';
 
-	  	$validate_email_click = verify_click_email($mdd['id'],'');
 	  	$validateEmailButton = $this->actionButton('Validate Email','validateEmail',$uid);
 		$sendLoginButton = $this->actionButton('Send Login','sendLogin',$uid);
     echo <<<EOT
