@@ -5,9 +5,9 @@ ini_set('display_errors', 1);
 ini_set('error_reporting', -1);
 //BEGIN START
 	require_once 'init.php';
-// 	use digitalmx\flames\Definitions as Defs;
-// 	use digitalmx\flames\DocPage;
-// 	use digitalmx\flames\MemberAdmin;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\DocPage;
+	use digitalmx\flames\MemberAdmin;
 // 	
 // 	$page = new DocPage();
 // 	$admin = new MemberAdmin();
