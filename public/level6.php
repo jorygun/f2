@@ -11,9 +11,11 @@
 	$pdo = MyPDO::instance();
 
 	$page = new DocPage;
-	echo $page->startHead("News Contributor Page", 3);
-	echo $page->startBody("News Contributor Page",2);
+	$title = "News Contributor";
+	echo $page->startHead($title, 3);
+	echo $page->startBody($title ,2);
 
+//END START
 
 $my_id = $_SESSION['login']['user_id'];
 $username = $_SESSION['login']['username'];

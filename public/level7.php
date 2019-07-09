@@ -1,10 +1,21 @@
 <?php
 //BEGIN START
 	require_once "init.php";
-	if(login_security_below(7)){exit;};
+
+	require_once "scripts/news_functions.php";
+
+	use digitalmx\flames\DocPage;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
+
+	$pdo = MyPDO::instance();
+
+	$page = new DocPage;
+	$title = "News Publisher";
+	echo $page->startHead($title, 7);
+	echo $page->startBody($title ,2);
+
 //END START
-$nav = new NavBar(1);
-$navbar = $nav -> build_menu();
 
 
 	$latest_bulk = SITE_PATH . "/logs/bulk_mail_logs/log_last.txt";
@@ -24,22 +35,6 @@ $navbar = $nav -> build_menu();
 
 
 ?>
-<html>
-<head>
-<title>News Publisher Page</title>
-<link rel='stylesheet' href='/css/flames2.css'>
-<style type="text/css">
-	li	{margin-bottom:1em;}
-</style>
-</head>
-
-<body>
-<h1>News Publisher Page</h1>
-
-
-<?=$navbar?>
-
-
 
 <p>To publish newsletter, follow the steps below.  The newsletter is constructed in
 /news/news_next by assembling component files into that directory.  News articles are in the article database, and pressing "Build Files" will insert the article files and teasers into the news_newxt directory.  The Update Report puts a list of all member changes since last publication into news_next. When published, the files are moved to news_latest and then into the main news directory at /newsp/news_yymmdd/. Finally copy news_model into news_next to set it up for the next newsletter.</p>
