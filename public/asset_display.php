@@ -4,7 +4,6 @@ namespace digitalmx\flames;
 	require_once "init.php";
 
 	require_once SITE_PATH ."/scripts/news_functions.php";
-	require_once SITE_PATH ."/scripts/comments.class.php";
 	
 	use digitalmx\flames\DocPage;
 	$pdo = \MyPDO::instance();
@@ -52,7 +51,7 @@ function isObject(obj) {
 </script>
 EOT;
 
-	echo $page->startBody("AMD Asset Display",2);
+	#echo $page->startBody("AMD Asset Display",2);
 
 // END START
 
