@@ -257,6 +257,7 @@ private static $long_profile_fields = array (
  	'user_from',
  	'at_amd',
  	'profile_age',
+ 	'profile_date',
  	'join_date',
  	'email_status',
  	'last_login',
