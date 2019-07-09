@@ -61,6 +61,8 @@ $join_date = $_SESSION['login']['join_date'];
 $username = $_SESSION['login']['username'];
 $last_profile = $_SESSION['login']['profile_date'];
 
+u\echor ($_SESSION['login'], 'login');
+
 if ($_SESSION['login']['user_id'] > 0){ #user is logged in
    
 		echo <<< EOT
