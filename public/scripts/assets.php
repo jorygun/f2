@@ -1,7 +1,35 @@
 <?php
+namespace digitalmx\flames;
+
+#ini_set('display_errors', 1);
+
+
 //BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (f2_security_below(1)){exit;}
+	require_once "init.php";
+
+	#require others
+
+	use digitalmx\flames\DocPage;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
+
+	$pdo = \MyPDO::instance();
+
+	$page = new DocPage;
+	$title = "Assets"; 
+	echo $page->startHead($title, 3,['ajax']);
+	echo <<<EOT
+	<script>
+function check_select_all(obj) {
+	var sbox = document.getElementById('all_active');
+	if (obj.value == ''){
+		sbox.checked = true;
+	}
+	else {sbox.checked = false;}
+}
+</script>
+EOT;
+	echo $page->startBody($title ,2);
 
 //END START
 
@@ -18,44 +46,13 @@
 
 require_once "asset_functions.php";
 
-$pdo = MyPDO::instance();
+
 
 $sql_now = sql_now('date');
    
 
-$nav = new NavBar(1);
-$navbar = $nav -> build_menu();
-
-?>
-<html>
-<head>
-<title>Assets</title>
-<link rel='stylesheet' href='/css/news3.css'>
 
 
-
-<script type='text/javascript' src = '/js/f2js.js'></script>
-<script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-<script type='text/javascript' src = '/js/voting2.js'></script>
-
-
-<link rel='stylesheet' href='/css/news3.css'>
-<script>
-function check_select_all(obj) {
-	var sbox = document.getElementById('all_active');
-	if (obj.value == ''){
-		sbox.checked = true;
-	}
-	else {sbox.checked = false;}
-}
-</script>
-
-</head>
-<body>
-<?=$navbar?>
-
-
-<?
 $asset_limit = 25;
 
 if ($_SESSION['level'] >= 6){
