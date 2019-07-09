@@ -64,6 +64,7 @@ class Login
 		
 		$_SESSION['login'] = $log_info;
 		$_SESSION['menu'] = $navbar;
+		$_SESSION['level'] = $login_info['seclevel'];
 		return true;
 	}
 
