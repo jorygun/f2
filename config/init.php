@@ -51,20 +51,15 @@ require_once 'setGlobals.php';
 $GV = $GLOBALS = setGlobals();
 
 require_once 'MyPDO.class.php'; #uses envir constants for config; sets from db.ini if not already set
-
-
 #ns digitalmx\flames
 require_once 'Definitions.php';
 
 require_once "utilities.php";
 require_once 'MxPDO.php'; 
 require_once 'MxUtilities.php';
-
 require_once 'nav.class.php';
 
 use \MyPDO;
-
-
 
 $pdo = $init->setPDO(); #guarantees db values are set
 $init->setRequired(); #f2 connect needs db values
@@ -163,7 +158,7 @@ class Init
 		if ($platform == 'pair'){
 			#require_once  "f2_connect.php";
 			#$GLOBALS['DB_link'] = Connect_DB();
-			require_once "f2_security.php";
+			#require_once "f2_security.php";
 		} elseif ($platform == 'ayebook') {
 			require_once "f2_security.php";
 		} else {
