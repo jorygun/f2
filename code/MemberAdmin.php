@@ -13,7 +13,7 @@ ini_set('display_errors', 1);
 ini_set('error_reporting', -1);
 //BEGIN START
 
-	require_once 'init.php';
+#	require_once 'init.php';
 	use digitalmx\flames\Definitions as Defs;
 
 	use digitalmx as u;
