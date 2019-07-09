@@ -1,4 +1,6 @@
 <?php
+namespace digitalmx\flames;
+
 //BEGIN START
 	require_once "init.php";
 
@@ -43,7 +45,7 @@
 #get latest newsletter date
 
  $pub_date = 'Published '
-    . get_latest_pub_date('conventional')
+    . get_latest_pub_date()
     .'. ';
  if (file_exists("$news_latest/breaking_at.txt")){
             $update_time = strtotime(file_get_contents("$news_latest/breaking_at.txt"));
@@ -53,10 +55,10 @@
 		        . date ('M d H:i T', $update_time)
 		      # . $update_time
 		        . '.)' ;
-		        }
+}
 
-if (isset($_SESSION['pwid'])){
-    if(in_array($user_status,Defs::getMemberInList()) or $user_status == 'GA'){
+if ($_SESSION['login']['user_id'] > 0){
+   
 		echo <<< EOT
 		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#efe;'>
 

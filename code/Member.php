@@ -264,6 +264,7 @@ private static $long_profile_fields = array (
  	'no_bulk',
  	'upw',
  	'linkedin',
+ 	'is_member',
  
  );
  #limited fields returned from member listss
