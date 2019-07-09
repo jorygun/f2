@@ -30,13 +30,13 @@ The cost of operating this site is borne by these members.
 
 <ul>
 
- <?
- $q="SELECT username,user_email,contributed FROM `members_f2` WHERE contributed IS NOT NULL and contributed > CURDATE() - INTERVAL 24 month;";
+<?
+ $q= "SELECT username,user_email,contributed FROM `members_f2` WHERE contributed IS NOT NULL and contributed > CURDATE() - INTERVAL 24 month;";
  $result = $pdo -> query($q);
   while ($row = $result->fetch()){
     echo "<li>${row['username']}</li>";
     }
- ?>
+?>
 
 </ul>
 
@@ -50,13 +50,14 @@ the link <a href="http://paypal.me/amdflames">paypal.me/amdflames</a>.  </p>
 These members can write articles and upload graphics to the site. If you&rsquot;d like to do have that ability,
 <a href='mailto:editor@amdflames.org'>contact the editor</a>.
 <ul>
- <?
+
+<?
  $q="SELECT username,user_email,contributed FROM `members_f2` WHERE status = 'MC' ";
  $result = $pdo -> query($q);
   while ($row = $result->fetch()){
     echo "<li>${row['username']}</li>";
     }
- ?>
+?>
 </ul>
 
 <h3>How it Works</h3>
