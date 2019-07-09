@@ -36,12 +36,12 @@ class MemberAdmin {
 	
 	
 	
-	public function __construct(){
-		$this->pdo = \MyPDO::instance();
-		$this->member = new Member ($this->pdo);
-		$this->page = new DocPage();
-		$this->messenger = new Messenger($this->pdo);
-	}
+// 	public function __construct(){
+// 		$this->pdo = \MyPDO::instance();
+// 		$this->member = new Member ($this->pdo);
+// 		$this->page = new DocPage();
+// 		$this->messenger = new Messenger($this->pdo);
+// 	}
 	
 // 	this function just echos out the data in a list of found members.
 // 	private function echo_user_row ($row,$post=''){
