@@ -205,7 +205,7 @@ function tag_display($tags,$style='string'){
 
 function show_assets_from_list($ids){
         global $asset_status;
-        $pdo = MyPDO::instance();
+        $pdo = \MyPDO::instance();
         if (! isset($ids)){die ("Nothing sent to show_assets_from_list");}
         if (! is_array($ids)){
             if (is_numeric($ids)){$ids = array($ids);}
