@@ -171,10 +171,6 @@ $siteurl = SITE_URL;
 // 
 // EOT;
 // }
-echo "
-</div>
-<p style='text-align:center;clear:both'></p>
-";
 
 echo "</div></body></html>\n";
 
