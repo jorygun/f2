@@ -487,6 +487,88 @@ EOT;
 
 }
 
+#####  FUNCTIONS ############
+
+
+// function update_email ($row,$new_email){ #$id,$name,$old_email,$new_email){
+// 
+//    
+// 	//  if email is changed, send message to old email and verify to new email
+// 	//
+// 	$id = $row['id'];
+// 	$old_email = $row['user_email'];
+// 	$name = $row['username'];
+// 	$login="s=${row['upw']}${row['user_id']}";
+// 	$login_string = "https://amdflames.org/?$login";
+// 	$verify_string = "https://amdflames.org/scripts/verify_email.php?$login";
+//     if ($old_email == $new_email){
+//         echo "Email not changed."; return 1;
+//     }
+// 
+// 	echo "Updating Email for $name from $old_email to $new_email<br>";
+// 
+// 	$old_msg = <<< EOT
+// 	The email on the AMD Alumni site for $name has been changed
+// 	to $new_email.
+// 
+// 	If this is not correct, please contact the site administrator
+// 		at admin@amdflames.org, or just reply to this message.
+// 
+// EOT;
+//     $join_date_text = date('j F Y', strtotime($row['join_date']));
+//     $informant = (empty($_POST['informant']))?'another member':$_POST['informant'];
+//     $found_msg = <<<EOT
+//     Your email address on the AMD Alumni site amdflames.org has just
+// been updated to $new_email.
+// 
+//     You have been a member of amdflames.org along with about 2000 other
+// ex-AMDers since $join_date_text, but somewhere along the line we lost
+// a working email for you.
+// 
+// Each week we publish newsletter with a list of a few “lost members” -
+// lost because we have no email, or the one we have bounces, or they did not
+// respond to several requests to confirm their email.
+// 
+//     Your name showed up recently, and $informant suggested that
+// this is the correct email for you.  I have updated your email address with
+// this one, and also set your account to receive the weekly update email.
+// 
+//   PLEASE CLICK THE LINK BELOW TO CONFIRM THIS EMAIL ADDRESS.
+//   $verify_string
+// 
+//     Your login to the site is shown below.  You can use this to enter the site
+// and provide a different email, confirm your email, update your current
+// information, and block weekly emails from the site. Just
+// log in and Edit Profile.
+// 
+// Your personal login to the amdflames site:
+//     $login_string
+// 
+// Thanks
+// Flames Admin
+// EOT;
+// 
+// 	// record new email and set email status to Q; will be reset immediately by the verify process
+// 	$q = "UPDATE `members_f2` SET user_email = '$new_email',email_status='E1'  WHERE id = $id;";
+// 			 $result = $pdo->query($q);
+// 			if ($result){echo "<br>Database Updated<br>";} #prior_email and date setr by trigger}
+// 			else {die ("Database update in update_email failed.");}
+// 
+// 
+// 	mail($old_email,"AMD Alumni Site: Email for $name has been changed",$old_msg, "From: Flames Administrator <admin@amdflames.org>\n\r");
+// 	if (isset($_POST['suggested_email'])){
+// 	    mail ($new_email,
+// 	"AMD Alumni Site: Email for $name has been updated",
+// 	$found_msg, 'admin@amdflames.org');
+// 
+// 	}
+// 
+// 	else {$ems->update_ems ($id,'E1');
+// 	#will immediately set the status to E1 and send out verify email
+// 	}
+// 	return 1;
+// }
+
 
 
 }	
