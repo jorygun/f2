@@ -94,19 +94,19 @@ class MemberAdmin {
 		return $o;
 	}
 
-	// private function xout($uid){
-// 		$this->members->setStatus($uid,'X');
-// 	
-// 	}
-	 public function actionButton($label,$action,$uid) {
-   	// script to buld button for ajax
-   	$button = '<button type="button" onClick="takeAction('
-   		. $uid
-   		. ",'$action')\">"
-   		. $label
-   		. "</button>";
-   	return $button;
-   }
+	private function xout($uid){
+		$this->members->setStatus($uid,'X');
+	
+	}
+	//  public function actionButton($label,$action,$uid) {
+//    	// script to buld button for ajax
+//    	$button = '<button type="button" onClick="takeAction('
+//    		. $uid
+//    		. ",'$action')\">"
+//    		. $label
+//    		. "</button>";
+//    	return $button;
+//    }
 	public function listMembers($post){
    //save search so can be repeated
      $_SESSION['last_member_search'] = $post;
