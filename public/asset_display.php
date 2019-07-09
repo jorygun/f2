@@ -1,4 +1,5 @@
 <?php
+namespace digitalmx\flames;
 //BEGIN START
 	require_once "init.php";
 
@@ -6,7 +7,7 @@
 	require_once SITE_PATH ."/scripts/comments.class.php";
 	
 	use digitalmx\flames\DocPage;
-	$pdo = MyPDO::instance();
+	$pdo = \MyPDO::instance();
 
 	$page = new DocPage;
 	echo $page->startHead("AMD Asset Display", 0);
@@ -16,7 +17,7 @@
 
 
 
-$this_userid = $_SESSION['user_id'] + 0; #force numeric.
+$this_userid = $_SESSION['login']['user_id'] + 0; #force numeric.
 $ucom = new Comment($this_userid);
 if( isset ($_GET['id'])){$item_id = $_GET['id'];}
 elseif ($item_id = $_SERVER['QUERY_STRING']){}
