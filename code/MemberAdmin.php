@@ -197,295 +197,295 @@ EOT;
 */
 
 // convert Get data yo Post data
-//  public function updateMember ($post){
-// 	$uid = $post['uid'];
-// 	// start by getting users record.  Needed for both get and put
-// 	$md = $this->member->getMemberData($uid);
-// 	$mdd = $md['data'];
-// 	$username = $mdd ['username'];
-// 	
-// // process any data in the post array
-// 	extract ($post,EXTR_PREFIX_ALL,'P');
-// 	if (empty ($P_uid)){ #?? think there should always be something here 
-// 		exit;
-// 	}
-// 	//go over data and find updates and perform as encountered
-// 	
-// 	if (!empty($P_new_email)){ #new email address; update and send verify
-// 		echo "<p>New Email: $P_new_email</p>";
-// 		if (! u\isValidEmail($P_new_email)){
-// 			echo "Invalid Email address $P_new_email<br>\n";
-// 			exit;
-// 		}
-// 		// put new email in place for messenger
-// 		$this->member->setEmail ($uid,$P_new_email);
-// 		if (substr($mdd['status'],0,1) == 'L'){ #member was lost
-// 			$informant = 'you';
-// 			if (!empty ($P_informant)){
-// 				$informant = $P_informant;
-// 			} elseif (isset($P_suggested_email )){
-// 				$informant = 'another member';
-// 			}
-// 			$extra = array(
-// 				'informant' => $informant,
-// 				'prior_email' => $mdd['user_email'],
-// 				);
-// 			$this->messenger->sendMessages($uid,'em-found',$extra);
-// 			
-// 		}
-// 		else {
-// 			$this->messenger->sendMessages($uid,'em-change');
-// 		}
-// 		$P_email_status = 'E1';
-// 		$use_email = $P_new_email;
-// 
-// 
-// 	}
-// 
-// 	if (!empty ($P_email_status)){
-// 		echo "<p>New Email Status: $P_email_status</p>";
-// 	
-// 		$this->member->setEmailStatus($uid,$P_email_status);
-// 		$this->messenger->sendMessages($uid,$P_email_status);
-// 	
-// 	}
-// 
-// 
-// 	if (!empty($P_new_status)){
-// 		echo "<p>Status Change: $P_new_status</p>";
-// 		$this->member->setStatus($uid,$P_new_status);
-// 		if ($P_new_status == 'D'){ #deceased
-// 			$this->member->setEmailStatus($uid,'LD');
-// 		}
-// 		if (
-// 			(empty($mdd['status']) or $mdd['status'] == 'N') 
-// 			&& in_array($P_new_status,Defs::getMemberInList())
-// 			){
-// 				$extra = array(
-// ##FIX THIS###
-// 				'login' => 'login',
-// 				);
-// 				$this->messenger->sendMessages($uid,'welcome',$extra);
-// 		}
-// 	}
-// 	
-// 	if (!empty($P_admin_status)){
-// 		echo "<p>Change Admin Status: $P_admin_status</p>";
-// 		$this->member->setAdminStatus($uid,$P_admin_status);
-// 	}
-// 	if (!empty($P_test_status)){
-// 		echo "<p>Change Test Status: $P_test_status</p>";
-// 		$this->member->setTestStatus($uid,$P_test_status);
-// 	}
-// 	if (!empty($P_new_name)){
-// 		echo "<p>change user name</p>";
-// 		$this->member->setUserName($uid,$P_new_name);
-// 		
-// 	}
-// 
-// 	
-// 	$nobulkclear = ($mdd['no_bulk'] && ! isset($P_nobulk))?1:0;
-// 	$nobulkset = (! $mdd['no_bulk'] && isset($P_nobulk))?1:0;
-// 	if ($nobulkclear or $nobulkset){
-// 		echo "p>Bulk Mail Changed</p>";
-// 		if ($nobulkclear){
-// 			$this->member->setNoBulk($uid,0);
-// 		}
-// 		elseif ($nobulkset){
-// 			$this->member->setNoBulk($uid,1);
-// 			$this->messenger->sendMessages($uid,'nobulk');
-// 		}
-// 	}
-// 
-// 	if (!empty($P_current) && ($P_current <> $mdd['user_current'])) {
-// 		echo "Updating user's current information.<br>";
-// 		$this->member->setCurrent($uid, $P_current);
-// 	}
-// 
-// 
-// 	if (!empty($P_admin_note) && ($P_admin_note <> $mdd['admin_note']) ){
-// 		echo "Updating admin note<br>";
-// 		$this->member->setAdminNote($uid, $P_admin_note);
-// 	}
-// 	
-// 
-// 	
-// 	
-// 	// reset my row with updated data
-// 	$md = $this->member->getMemberData($uid);
-// 	$mdd = $md['data'];
-// }
+ public function updateMember ($post){
+	$uid = $post['uid'];
+	// start by getting users record.  Needed for both get and put
+	$md = $this->member->getMemberData($uid);
+	$mdd = $md['data'];
+	$username = $mdd ['username'];
+	
+// process any data in the post array
+	extract ($post,EXTR_PREFIX_ALL,'P');
+	if (empty ($P_uid)){ #?? think there should always be something here 
+		exit;
+	}
+	//go over data and find updates and perform as encountered
+	
+	if (!empty($P_new_email)){ #new email address; update and send verify
+		echo "<p>New Email: $P_new_email</p>";
+		if (! u\isValidEmail($P_new_email)){
+			echo "Invalid Email address $P_new_email<br>\n";
+			exit;
+		}
+		// put new email in place for messenger
+		$this->member->setEmail ($uid,$P_new_email);
+		if (substr($mdd['status'],0,1) == 'L'){ #member was lost
+			$informant = 'you';
+			if (!empty ($P_informant)){
+				$informant = $P_informant;
+			} elseif (isset($P_suggested_email )){
+				$informant = 'another member';
+			}
+			$extra = array(
+				'informant' => $informant,
+				'prior_email' => $mdd['user_email'],
+				);
+			$this->messenger->sendMessages($uid,'em-found',$extra);
+			
+		}
+		else {
+			$this->messenger->sendMessages($uid,'em-change');
+		}
+		$P_email_status = 'E1';
+		$use_email = $P_new_email;
+
+
+	}
+
+	if (!empty ($P_email_status)){
+		echo "<p>New Email Status: $P_email_status</p>";
+	
+		$this->member->setEmailStatus($uid,$P_email_status);
+		$this->messenger->sendMessages($uid,$P_email_status);
+	
+	}
+
+
+	if (!empty($P_new_status)){
+		echo "<p>Status Change: $P_new_status</p>";
+		$this->member->setStatus($uid,$P_new_status);
+		if ($P_new_status == 'D'){ #deceased
+			$this->member->setEmailStatus($uid,'LD');
+		}
+		if (
+			(empty($mdd['status']) or $mdd['status'] == 'N') 
+			&& in_array($P_new_status,Defs::getMemberInList())
+			){
+				$extra = array(
+##FIX THIS###
+				'login' => 'login',
+				);
+				$this->messenger->sendMessages($uid,'welcome',$extra);
+		}
+	}
+	
+	if (!empty($P_admin_status)){
+		echo "<p>Change Admin Status: $P_admin_status</p>";
+		$this->member->setAdminStatus($uid,$P_admin_status);
+	}
+	if (!empty($P_test_status)){
+		echo "<p>Change Test Status: $P_test_status</p>";
+		$this->member->setTestStatus($uid,$P_test_status);
+	}
+	if (!empty($P_new_name)){
+		echo "<p>change user name</p>";
+		$this->member->setUserName($uid,$P_new_name);
+		
+	}
+
+	
+	$nobulkclear = ($mdd['no_bulk'] && ! isset($P_nobulk))?1:0;
+	$nobulkset = (! $mdd['no_bulk'] && isset($P_nobulk))?1:0;
+	if ($nobulkclear or $nobulkset){
+		echo "p>Bulk Mail Changed</p>";
+		if ($nobulkclear){
+			$this->member->setNoBulk($uid,0);
+		}
+		elseif ($nobulkset){
+			$this->member->setNoBulk($uid,1);
+			$this->messenger->sendMessages($uid,'nobulk');
+		}
+	}
+
+	if (!empty($P_current) && ($P_current <> $mdd['user_current'])) {
+		echo "Updating user's current information.<br>";
+		$this->member->setCurrent($uid, $P_current);
+	}
+
+
+	if (!empty($P_admin_note) && ($P_admin_note <> $mdd['admin_note']) ){
+		echo "Updating admin note<br>";
+		$this->member->setAdminNote($uid, $P_admin_note);
+	}
+	
+
+	
+	
+	// reset my row with updated data
+	$md = $this->member->getMemberData($uid);
+	$mdd = $md['data'];
+}
 ## end of update
 
 
 // GEt PAGE
-public function showUpdate($uid) {
-	$md = $this->member->getMemberData($uid);
-	
-	if (empty($mdd = $md['data'])){
-		throw new Exception ("No data for user id $uid: ${md['error']} ");
-	}
-	
-	$username = $mdd ['username'];
-	$uid = $mdd['user_id'];
-     // Start a display table
-    $login_string = "https://amdflames.org/?s=${mdd['upw']}${mdd['user_id']}";
-
-  echo <<<EOT
-  <h3 class='y_row'>${mdd['username']}</h3>
-  (user_id = ${mdd['user_id']})
-
-
-  <form action="$_SERVER[PHP_SELF]" method="POST">
-  <input type='hidden' name='uid' value='$uid'>
-  
-	
-  <table border='1' cellpadding='2' cellspacing='0'>
-
-EOT;
-// Set headings
-	$cn_fields = array(
-		'status','status_updated','admin_status', 'last_login','profile_updated','profile_validated','no_bulk');
-
-	$en_fields = array('user_email','email_status','email_status_time','email_last_validated','email_chg_date','prior_email');
-
-
-
-    // build option fields
-		$target_status = $mdd['status'];
-		$nm = ($target_status == 'N')?'(Send Welcome)':'';
-		
-		$user_status_options = u\buildOptions(Defs::getStatusOptions());
-
-		$status_contribute =array (
-			'--News--' => '',
-         'Contributor' => 'MC'
-		);
-		$status_admin =array (
-			'--Admins--' => '',
-			'Publisher' => 'MN',
-			'User Admin' => 'MU'
-		);
-
-
-		$email_status_options = '';
-		
-		#only allow certain changes.  x-bad, a-start validation y-verified q-unknown
-		foreach (array('A1','Y','Q','LO','LB','XX','A2','A3','B1') as $k){
-			if ($k <> $mdd['email_status']){$email_status_options .= "<option value='$k'>$k " . Defs::getEmsName($k) . "</option>";}
-		}
-
-		
-		  $target_email = $mdd['user_email'];
-		  if ($target_email){$show_email = "<a href='mailto:$target_email'>$target_email</a>";}
-		  else {$show_email = '';}
-
-
-			// now show target data
-
-			//print heading row
-         echo '<tr>';
-         foreach ($cn_fields as  $v){echo "<th>$v</th>";}
-         echo "</tr>\n";
-		// print data for cn fields
-				echo "<tr class = 'y_row'>";
-				foreach ($cn_fields as $k){
-					echo "<td>$mdd[$k]</td>";
-				}
-				echo "</tr>
-
-				</table><table><tr>\n";
-				foreach ($en_fields as $k){
-					echo "<th>$k</th>";
-				}
-				echo "</tr><tr class = 'y_row'>";
-				foreach ($en_fields as $k){
-					echo "<td>$mdd[$k]</td>";
-				}
-				echo "</tr></table>\n";
-
-				echo "<p><b>At AMD: </b>${mdd['user_amd']}</p>\n";
-				
-
-
-	  #now show action fields
-
-	  	$new_warning = ($target_status == 'N')?"<p>THIS IS A NEW SIGNUP.  Changing status to M or G will assign
-	  	this person a user_id and send out a welcome message. </p>":'';
-
-	  	$nobulkchecked = $mdd['no_bulk'] ? 'checked':'';
-
-	  	$validateEmailButton = $this->actionButton('Validate Email','validateEmail',$uid);
-		$sendLoginButton = $this->actionButton('Send Login','sendLogin',$uid);
-    echo <<<EOT
-
-	  <h3 style="border-top:1px solid black;">Actions on this record</h3>
-Fields left blank will not be changed.
-
-	 	<table>
-	 		<columns>
-	 		<col width="50%">
-	 		<col width="50%">
-	 		</columns>
-
-	 	<tr><td><p><b>Change email address</b><br>This will change email_status to E1 and send out a verification email. This change will occur before any of the other actions listed below. If suggested by
-	 	someone else is checked, then an explanatory email also goes to the new
-	 	address.</p> </td><td><input type='text' name = 'new_email' size=60>
-	 	<br><input type=checkbox name='suggested_email' id='suggested_email' >New Email suggested by someone else. <input type=text id='informant' name='informant' placeholder='Another FLAME member'oninput="check_the_box('suggested_email',true);"></td></tr>
-
-	 	<tr style="background-color:#F90; ">
-	 		<td><p><b>Update user status</b>$new_warning</td>
-	 		<td><select name='new_status'>$user_status_options</select></td>
-	 	</tr>
-
-	 	<tr><td><p><b>Change User Name</b><br></p></td><td>
-	 	New User Name: <input type='text' name='new_name' size=40></td></tr>
-
-
-
-	  	<tr><td><b>No Bulk</b> Set/Clear the No Bulk tag for this users.</td><td>No Bulk <input type="checkbox" name=nobulk $nobulkchecked >
-	  	<input type='hidden' name='nobulkchecked' value='$nobulkchecked' >
-	  	</td></tr>
-
-	  	<tr><td><b>Change Email Status</b> </td><td>email_status (currently ${mdd['email_status']} ):
-	  	<select name='email_status'><option value=''>Leave as ${mdd['email_status']}</option>
-	  		$email_status_options</select><br>
-	  		(Note: changing to A1 will send a validation email.)
-
-	  	</td></tr>
-	  		<tr><td></td><td>$validateEmailButton</td></tr>
-	  	<tr><td><b>Admin Status</b></td><td>(currently ${mdd['admin_status']}):
-	  	<input type="text" size="4" name="admin_status">
-	  	</td></tr>
-	
-		<tr><td><b>Test Status</b></td><td>(currently ${mdd['test_status']}):
-	  	<input type="text" size="4" name="test_status">
-	  	</td></tr>
-	  	
-	  
-
-	  	<tr><td><p><b>Update user's current information.</b> For deceased members, indicate date and other info.</td><td>
-	  	<textarea  name='current' cols = '40' rows = '8'>${mdd['user_current']}</textarea></td></tr>
-
-	  	<tr><td><p><b>Update the Admin Note.</b>  </td><td>
-	  	<textarea  name='admin_note' cols = '40' rows = '8'>${mdd['admin_note']}</textarea></td></tr>
-
-	  	<tr><td><b>Send Lost Link to this user.</b>  This will happen immediately.</td><td> 
-	  	$sendLoginButton
-	  	</td></tr>
-
-
-	  	<tr><td ><input type='submit' name='Update' value='Update' style='background:#6F6; width:12em;'></td><td></td></tr>
-
-	  	</table>
-
-		</form>
-
-<hr>
-
-EOT;
-
-}
+// public function showUpdate($uid) {
+// 	$md = $this->member->getMemberData($uid);
+// 	
+// 	if (empty($mdd = $md['data'])){
+// 		throw new Exception ("No data for user id $uid: ${md['error']} ");
+// 	}
+// 	
+// 	$username = $mdd ['username'];
+// 	$uid = $mdd['user_id'];
+//      // Start a display table
+//     $login_string = "https://amdflames.org/?s=${mdd['upw']}${mdd['user_id']}";
+// 
+//   echo <<<EOT
+//   <h3 class='y_row'>${mdd['username']}</h3>
+//   (user_id = ${mdd['user_id']})
+// 
+// 
+//   <form action="$_SERVER[PHP_SELF]" method="POST">
+//   <input type='hidden' name='uid' value='$uid'>
+//   
+// 	
+//   <table border='1' cellpadding='2' cellspacing='0'>
+// 
+// EOT;
+// // Set headings
+// 	$cn_fields = array(
+// 		'status','status_updated','admin_status', 'last_login','profile_updated','profile_validated','no_bulk');
+// 
+// 	$en_fields = array('user_email','email_status','email_status_time','email_last_validated','email_chg_date','prior_email');
+// 
+// 
+// 
+//     // build option fields
+// 		$target_status = $mdd['status'];
+// 		$nm = ($target_status == 'N')?'(Send Welcome)':'';
+// 		
+// 		$user_status_options = u\buildOptions(Defs::getStatusOptions());
+// 
+// 		$status_contribute =array (
+// 			'--News--' => '',
+//          'Contributor' => 'MC'
+// 		);
+// 		$status_admin =array (
+// 			'--Admins--' => '',
+// 			'Publisher' => 'MN',
+// 			'User Admin' => 'MU'
+// 		);
+// 
+// 
+// 		$email_status_options = '';
+// 		
+// 		#only allow certain changes.  x-bad, a-start validation y-verified q-unknown
+// 		foreach (array('A1','Y','Q','LO','LB','XX','A2','A3','B1') as $k){
+// 			if ($k <> $mdd['email_status']){$email_status_options .= "<option value='$k'>$k " . Defs::getEmsName($k) . "</option>";}
+// 		}
+// 
+// 		
+// 		  $target_email = $mdd['user_email'];
+// 		  if ($target_email){$show_email = "<a href='mailto:$target_email'>$target_email</a>";}
+// 		  else {$show_email = '';}
+// 
+// 
+// 			// now show target data
+// 
+// 			//print heading row
+//          echo '<tr>';
+//          foreach ($cn_fields as  $v){echo "<th>$v</th>";}
+//          echo "</tr>\n";
+// 		// print data for cn fields
+// 				echo "<tr class = 'y_row'>";
+// 				foreach ($cn_fields as $k){
+// 					echo "<td>$mdd[$k]</td>";
+// 				}
+// 				echo "</tr>
+// 
+// 				</table><table><tr>\n";
+// 				foreach ($en_fields as $k){
+// 					echo "<th>$k</th>";
+// 				}
+// 				echo "</tr><tr class = 'y_row'>";
+// 				foreach ($en_fields as $k){
+// 					echo "<td>$mdd[$k]</td>";
+// 				}
+// 				echo "</tr></table>\n";
+// 
+// 				echo "<p><b>At AMD: </b>${mdd['user_amd']}</p>\n";
+// 				
+// 
+// 
+// 	  #now show action fields
+// 
+// 	  	$new_warning = ($target_status == 'N')?"<p>THIS IS A NEW SIGNUP.  Changing status to M or G will assign
+// 	  	this person a user_id and send out a welcome message. </p>":'';
+// 
+// 	  	$nobulkchecked = $mdd['no_bulk'] ? 'checked':'';
+// 
+// 	  	$validateEmailButton = $this->actionButton('Validate Email','validateEmail',$uid);
+// 		$sendLoginButton = $this->actionButton('Send Login','sendLogin',$uid);
+//     echo <<<EOT
+// 
+// 	  <h3 style="border-top:1px solid black;">Actions on this record</h3>
+// Fields left blank will not be changed.
+// 
+// 	 	<table>
+// 	 		<columns>
+// 	 		<col width="50%">
+// 	 		<col width="50%">
+// 	 		</columns>
+// 
+// 	 	<tr><td><p><b>Change email address</b><br>This will change email_status to E1 and send out a verification email. This change will occur before any of the other actions listed below. If suggested by
+// 	 	someone else is checked, then an explanatory email also goes to the new
+// 	 	address.</p> </td><td><input type='text' name = 'new_email' size=60>
+// 	 	<br><input type=checkbox name='suggested_email' id='suggested_email' >New Email suggested by someone else. <input type=text id='informant' name='informant' placeholder='Another FLAME member'oninput="check_the_box('suggested_email',true);"></td></tr>
+// 
+// 	 	<tr style="background-color:#F90; ">
+// 	 		<td><p><b>Update user status</b>$new_warning</td>
+// 	 		<td><select name='new_status'>$user_status_options</select></td>
+// 	 	</tr>
+// 
+// 	 	<tr><td><p><b>Change User Name</b><br></p></td><td>
+// 	 	New User Name: <input type='text' name='new_name' size=40></td></tr>
+// 
+// 
+// 
+// 	  	<tr><td><b>No Bulk</b> Set/Clear the No Bulk tag for this users.</td><td>No Bulk <input type="checkbox" name=nobulk $nobulkchecked >
+// 	  	<input type='hidden' name='nobulkchecked' value='$nobulkchecked' >
+// 	  	</td></tr>
+// 
+// 	  	<tr><td><b>Change Email Status</b> </td><td>email_status (currently ${mdd['email_status']} ):
+// 	  	<select name='email_status'><option value=''>Leave as ${mdd['email_status']}</option>
+// 	  		$email_status_options</select><br>
+// 	  		(Note: changing to A1 will send a validation email.)
+// 
+// 	  	</td></tr>
+// 	  		<tr><td></td><td>$validateEmailButton</td></tr>
+// 	  	<tr><td><b>Admin Status</b></td><td>(currently ${mdd['admin_status']}):
+// 	  	<input type="text" size="4" name="admin_status">
+// 	  	</td></tr>
+// 	
+// 		<tr><td><b>Test Status</b></td><td>(currently ${mdd['test_status']}):
+// 	  	<input type="text" size="4" name="test_status">
+// 	  	</td></tr>
+// 	  	
+// 	  
+// 
+// 	  	<tr><td><p><b>Update user's current information.</b> For deceased members, indicate date and other info.</td><td>
+// 	  	<textarea  name='current' cols = '40' rows = '8'>${mdd['user_current']}</textarea></td></tr>
+// 
+// 	  	<tr><td><p><b>Update the Admin Note.</b>  </td><td>
+// 	  	<textarea  name='admin_note' cols = '40' rows = '8'>${mdd['admin_note']}</textarea></td></tr>
+// 
+// 	  	<tr><td><b>Send Lost Link to this user.</b>  This will happen immediately.</td><td> 
+// 	  	$sendLoginButton
+// 	  	</td></tr>
+// 
+// 
+// 	  	<tr><td ><input type='submit' name='Update' value='Update' style='background:#6F6; width:12em;'></td><td></td></tr>
+// 
+// 	  	</table>
+// 
+// 		</form>
+// 
+// <hr>
+// 
+// EOT;
+// 
+// }
 
 #####  FUNCTIONS ############
 
