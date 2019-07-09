@@ -11,6 +11,47 @@ namespace digitalmx\flames;
 
 	$page = new DocPage;
 	echo $page->startHead("AMD Asset Display", 0);
+	echo <<<EOT
+	 <style type='text/css'>
+        iframe {
+            border:1px solid green;
+            margin-left:10px;
+            max-width:1024px;
+            width:800px;
+            height:600px;
+
+            background:#ccc;
+            scrolling:auto;
+
+        }
+        </style>
+<script language="JavaScript">
+
+function autoResize(id){
+    var newheight;
+    var newwidth;
+
+    if(document.getElementById && typeof document.getElementById(id).contentDocument === 'object' ){
+    
+        newheight = document.getElementById(id).contentDocument.body.scrollHeight;
+        newwidth = document.getElementById(id).contentDocument.body.scrollWidth;
+        document.getElementById(id).height = (newheight) + "px";
+    	document.getElementById(id).width = (newwidth) + "px";
+    }
+    else {
+    	document.write ("Content of this frame cannot be displayed");
+    }
+    
+}
+
+function isObject(obj) {
+ 	var type = typeof obj;
+  	return  type === 'object' && !!obj;
+  
+}
+</script>
+EOT;
+
 	echo $page->startBody("AMD Asset Display",2);
 
 // END START
@@ -22,28 +63,6 @@ $this_userid = $_SESSION['login']['user_id'] + 0; #force numeric.
 if( isset ($_GET['id'])){$item_id = $_GET['id'];}
 elseif ($item_id = $_SERVER['QUERY_STRING']){}
 else {die ("No item requested");}
-
-// if (isset($_SERVER['HTTP_REFERER'])){
-//     $referer = $_SERVER['HTTP_REFERER'];
-//     preg_match("{(.*/).*$}",$referer,$match);
-//     $new_base = $match[1];
-// }
-   # echo "New Base: $new_base<br>";
-#find referer to set base for page so relative refs works no matter what
-#directory the original article was called from
-
-/* set up commenting:
-*   on_db is the name of the database of items that the comment is on (news,assets,spec)
-*   on_id is the id of the specific item in the db
-*   single=false = multiple comments/user ok; true=new comment replaces last comment
-*   commenting_on enables the add comment form.
-*/
-
-
-
-
-
-
 
 
 $sql = "SELECT * from `assets` WHERE id = $item_id;";
@@ -175,55 +194,9 @@ function myUrlEncode($string) {
 
     return str_replace($characters, $entities, $string);
 }
-
+#########################
 ?>
 
-<html><head>
-        <title><?=$hte['title']?></title>
-        <style type='text/css'>
-        iframe {
-            border:1px solid green;
-            margin-left:10px;
-            max-width:1024px;
-            width:800px;
-            height:600px;
-
-            background:#ccc;
-            scrolling:auto;
-
-        }
-        </style>
-<script language="JavaScript">
-
-function autoResize(id){
-    var newheight;
-    var newwidth;
-
-    if(document.getElementById && typeof document.getElementById(id).contentDocument === 'object' ){
-    
-        newheight = document.getElementById(id).contentDocument.body.scrollHeight;
-        newwidth = document.getElementById(id).contentDocument.body.scrollWidth;
-        document.getElementById(id).height = (newheight) + "px";
-    	document.getElementById(id).width = (newwidth) + "px";
-    }
-    else {
-    	document.write ("Content of this frame cannot be displayed");
-    }
-    
-}
-
-function isObject(obj) {
- 	var type = typeof obj;
-  	return  type === 'object' && !!obj;
-  
-}
-</script>
-
-        </head>
-
-        <body>
-        <?=$navbar?>
-         <p><b>AMD Flames Asset Display</b></p>
         <h3><?=$hte['title']?></h3>
 <p>(Note: display size on this page is limited to 1024px wide. Use URL below to retrieve raw file.)<br>
 	
