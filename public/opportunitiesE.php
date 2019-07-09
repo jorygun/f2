@@ -13,7 +13,7 @@ namespace digitalmx\flames;
 	use digitalmx as u;
 	use digitalmx\flames\Definitions as Defs;
 
-	$pdo = MyPDO::instance();
+	$pdo = \MyPDO::instance();
 
 	$page = new DocPage;
 	$title = "Opportunities"; 
