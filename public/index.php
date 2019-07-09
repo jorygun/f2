@@ -56,8 +56,8 @@ namespace digitalmx\flames;
 		      # . $update_time
 		        . '.)' ;
 }
-
-if ($_SESSION['login']['user_id'] > 0){
+$user_status = $_SESSION['login']['status'];
+if ($_SESSION['login']['user_id'] > 0){ #user is logged in
    
 		echo <<< EOT
 		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#efe;'>
@@ -84,7 +84,7 @@ EOT;
 
 		echo age_warnings($my_id);
 
-    } #end if logged in
+  
 
 		echo
 			"<div id='block2' style='border:0px solid black; padding:5px;' >",
@@ -170,16 +170,13 @@ echo "
 <p style='text-align:center;clear:both'></p>
 ";
 
-if (isset($_SESSION['pwid'])){echo "<p><small>user: $username S:$sl </small></p>";
-//echo "<p>Current login: $_SESSION[username]; status: $_SESSION[status] ($_SESSION[type] on $_SESSION[status_updated]) seclev $_SESSION[level]</p>\n";
-}
 echo "</div></body></html>\n";
 
 
 ############################
 function age_warnings ($id){
 	
-	if ($_SESSION['status'] == 'GA'){return;} #anonymous guest
+	if ($_SESSION['login']['status'] == 'GA'){return;} #anonymous guest
 
 	// set up all varioables
 	$my_id = $id;
@@ -197,8 +194,8 @@ function age_warnings ($id){
 
 
 
-	$user_status = $_SESSION['DB']['status'];
-	$user_email = 	 $_SESSION['DB']['user_email'];
+	$user_status = $_SESSION['login']['status'];
+	$user_email = 	 $_SESSION['login']['user_email'];
 	$H_user_email = h("<$user_email>");
 	$enc_user_email = rawurlencode($user_email);
 
