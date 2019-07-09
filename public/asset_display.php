@@ -18,7 +18,7 @@ namespace digitalmx\flames;
 
 
 $this_userid = $_SESSION['login']['user_id'] + 0; #force numeric.
-$ucom = new Comment($this_userid);
+
 if( isset ($_GET['id'])){$item_id = $_GET['id'];}
 elseif ($item_id = $_SERVER['QUERY_STRING']){}
 else {die ("No item requested");}
