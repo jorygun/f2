@@ -60,11 +60,12 @@ namespace digitalmx\flames;
 }
 
 u\echor ($_SESSION['login'], 'login');
-
+ $user_status = $_SESSION['login']['status'];
+ $username = $_SESSION['login']['username'];
 if ($_SESSION['login']['user_id'] > 0){ #user is logged in
-   $user_status = $_SESSION['login']['status'];
+  
 	$join_date = $_SESSION['login']['join_date'];
-	$username = $_SESSION['login']['username'];
+	
 	$last_profile = $_SESSION['login']['profile_date'];
 
 		echo <<< EOT
