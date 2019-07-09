@@ -221,8 +221,6 @@ function myUrlEncode($string) {
         </td></tr></table>
 
 
-<?php
-echo $_SESSION['menu'];
-?>
+
 </body>
 </html>
