@@ -1,26 +1,21 @@
 <?php
-//ini_set('display_errors', 1);
-ini_set('error_reporting', E_ALL);
-
-
-
 //BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (f2_security_below(0)){exit;}
+	require_once "init.php";
 
-//END START
+	require_once SITE_PATH ."/scripts/news_functions.php";
+	require_once SITE_PATH ."/scripts/comments.class.php";
+	
+	use digitalmx\flames\DocPage;
+	$pdo = MyPDO::instance();
+
+	$page = new DocPage;
+	echo $page->startHead("AMD Asset Display", 0);
+	echo $page->startBody("AMD Asset Display",2);
+
+// END START
 
 
-require_once SITE_PATH ."/scripts/news_functions.php";
-#require_once HOMEPATH . "/security/f2_disqus.php";
-#require_once "MyPDO.class.php" ;
-require_once SITE_PATH ."/scripts/comments.class.php";
 
-$nav = new NavBar(1);
-$navbar = $nav -> build_menu();
-
-
-$pdo = MyPDO::instance();
 $this_userid = $_SESSION['user_id'] + 0; #force numeric.
 $ucom = new Comment($this_userid);
 if( isset ($_GET['id'])){$item_id = $_GET['id'];}

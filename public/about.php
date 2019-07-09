@@ -9,6 +9,8 @@
 	echo $page->startHead("About AMD Flames", 0);
 	echo $page->startBody("About AMD Flames",2);
 
+// END START
+
 ?>
 <p>"FLAME" stands for "<b>F</b>ormer <b>L</b>oyal <b>AM</b>D <b>E</b>mployee"</p>
 <p>The FLAME website was created in 1997 by John McKean, an AMD FAE from Toronto, as a way for former and current AMDers to stay connected. After compiling the suggestions that were sent to him each week, and adding his own commentary, in italics, signed/jm. He published his weekly FLAME newsletter to more than 2,000 readers, around the world, over the past 17 years.</p><p>
