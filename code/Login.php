@@ -3,12 +3,10 @@ namespace digitalmx\flames;
 
 //ini_set('display_errors', 1);
 
-#require_once 'init.php'; #don't think I need this, because this is called from init
-
 use digitalmx\flames\Definitions as Defs;
 use digitalmx\flames\Member;
 use digitalmx as u;
-use \Exception as Exception;
+
 
 class Login
 {
@@ -78,7 +76,8 @@ class Login
 		 );
 		}
 		session_destroy();
-		header ("Location: http://amdflames.org\n\n");
+		#header ("Location: /\n\n");
+		echo "<script>window.location.href='/';</script>\n";
 		exit;
 	
 	}
