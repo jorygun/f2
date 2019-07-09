@@ -60,6 +60,7 @@ echo "</body></html\n";
 
 #####################################
 function get_opps($type,$username=''){
+$pdo = \MyPDO::instance();
 # type = public or user or admin
 if ($type == 'public'){
      $sql = "
@@ -96,7 +97,7 @@ else if ($type == 'admin'){
 //             ORDER BY expired,created;";
 
     }
-    $pdo = MyPDO::instance();
+    
 
  $result = $pdo->query($sql);
     if ($result->rowCount() >0 ){
@@ -149,4 +150,4 @@ else if ($type == 'admin'){
     return $listings;
 }
 
-?>
+
