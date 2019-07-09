@@ -36,290 +36,290 @@ class MemberAdmin {
 	
 	
 	
-	public function __construct(){
-		$this->pdo = \MyPDO::instance();
-		$this->member = new Member ($this->pdo);
-		$this->page = new DocPage();
-		$this->messenger = new Messenger($this->pdo);
-	}
-	
-//	this function just echos out the data in a list of found members.
-	private function echo_user_row ($row,$post=''){
-       #$fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
-		 $uid = $row['user_id'];
-		  $urlemail = rawurlencode($row['user_email']);
-		   $username = u\entity_spec($row['username']);
-		  $last_login = date('d M, Y',strtotime($row['last_login']));
-		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
-		  	$validateEmailButton = $this->actionButton('Validate Email','verifyEmail',$uid);
-		  	
-    $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
-       
-      $o .=  "<tr>
-        <td colspan='2'><b>$username</b></td>
-			<td colspan='2' >" . u\linkHref($row['user_email']) . "</td>";
-         $login = $row['upw'] . $row['user_id'];
-        $user_login_link = "https://amdflames.org/?s=$login";
-     
-      $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
-		$o .= $this->actionButton('Send Login','sendLogin',$uid);
-		$o .= "</td></tr>\n";
-		
-       $o .= "<tr style='text-align:center'>
-       <td>${row['status']}</td>
-       <td>${row['email_status']}</td>
-        <td>$email_last_validated</td>
-        <td>$last_login</td>
-
-          <td>${row['no_bulk']}</td>
-          <td></td>
-          <td></td>
-
-       </tr>";
-
-  
-
-        $o .=   "<tr>";
-        $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
-        $o .=   "<td align='center'>$validateEmailButton</td>";
-        $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
-       echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
-        $o .=   "<td align='center'> " 
-        		. $this->actionButton('X-out','xout',$uid) 
-        		. "</td></tr>\n";
-        		
-		return $o;
-	}
-
-	private function xout($uid){
-		$this->members->setStatus($uid,'X');
-	
-	}
-	
-	 public function actionButton($label,$action,$uid) {
-   	//script to buld button for ajax
-   	$button = '<button type="button" onClick="takeAction('
-   		. $uid
-   		. ",'$action')\">"
-   		. $label
-   		. "</button>";
-   	return $button;
-   }
-   
-	public function listMembers($post){
-   //save search so can be repeated
-     $_SESSION['last_member_search'] = $post;
-	
-	$result = $this->member->getMemberListFromAdmin($post);
-  # u\echor ($result,'from Member');
-   
-   if ($result['count'] == 0){echo "Nothing Found.";}
-	else{
-        		echo $result['info'] . BRNL;
-        		
-            echo "
-            <table style='border-collapse:collapse;font-size:small;'>";
-
-            echo "<tr>
-            	
-            	<th>Status</th>
-            	
-            	<th>Email Status</th>
-            	<th>Email Validated</th>
-            	<th>Last Login</th>
-            	<th>No Bulk</th>
-
-            	<th></th>
-            	<th></th>
-
-            	</tr>";
-            	
-
-            foreach ($result['data'] as $row){
-            
-                echo $this->echo_user_row($row);
-            }
-           
-           echo "</table>\n";
-
-        }
-
-}
-
- public function showSearch(){
- 	$status_options = "<option value=''>Choose...</option>";
-	foreach (array('M','G','MC','MU','MN','N','T','I') as $v){
-		$desc = Defs::getMemberDescription($v);
-		$status_options .= "<option value='$v'>$v ($desc)</option>";
-	}
-
-    $ems_options = "<option value=''>Choose...</option>";
-    foreach (Defs::getEmsNameArray() as $v=>$desc){
-		$ems_options .= "<option value='$v'>$v ($desc)</option>";
-	}
-
-
-
- 	$o = <<<EOT
-<p><b>Locate a Member to update</b></p>
-To modify a member's record (including accepting new signups) find the member
-here. Name and email can be partials.
-<form  method = 'POST'>
-<table style = 'font-size:small;'>
-<tr><th>Find by name: </th><th>Find by email:</th><th>Find by status:</th>
-    <th>Find by Email Status</th><th>Admin Status</th></tr>
-<tr>
-
-    <td> <input type='text' name = 'name' ></td>
-    <td><input type='text' name='email'></td>
-    <td><select type='text' name='status'>$status_options</select></td>
-   <td><select type='text' name='ems'>$ems_options</select></td>
-     <td>Admin Status:<input type="text" name="admin_status" size='4'></td></tr>
-</table>
-<input type=submit name='search' value='Search'>
-</form>
-EOT;
-	return $o;
-	
-}
-	
-	
-
-/* this script is used to make all  updates to members records.
-	You can change email status or user status.  Changing a user from New
-	to Member automatically sends the welcome message.
-
-	Updating email status will send a verify email if appropriate.
-
-*/
-
-//convert Get data yo Post data
- public function updateMember ($post){
-	$uid = $post['uid'];
-	//start by getting users record.  Needed for both get and put
-	$md = $this->member->getMemberData($uid);
-	$mdd = $md['data'];
-	$username = $mdd ['username'];
-	
-//process any data in the post array
-	extract ($post,EXTR_PREFIX_ALL,'P');
-	if (empty ($P_uid)){ #?? think there should always be something here 
-		exit;
-	}
-	//go over data and find updates and perform as encountered
-	
-	if (!empty($P_new_email)){ #new email address; update and send verify
-		echo "<p>New Email: $P_new_email</p>";
-		if (! u\isValidEmail($P_new_email)){
-			echo "Invalid Email address $P_new_email<br>\n";
-			exit;
-		}
-		//put new email in place for messenger
-		$this->member->setEmail ($uid,$P_new_email);
-		if (substr($mdd['status'],0,1) == 'L'){ #member was lost
-			$informant = 'you';
-			if (!empty ($P_informant)){
-				$informant = $P_informant;
-			} elseif (isset($P_suggested_email )){
-				$informant = 'another member';
-			}
-			$extra = array(
-				'informant' => $informant,
-				'prior_email' => $mdd['user_email'],
-				);
-			$this->messenger->sendMessages($uid,'em-found',$extra);
-			
-		}
-		else {
-			$this->messenger->sendMessages($uid,'em-change');
-		}
-		$P_email_status = 'E1';
-		$use_email = $P_new_email;
-
-
-	}
-
-	if (!empty ($P_email_status)){
-		echo "<p>New Email Status: $P_email_status</p>";
-	
-		$this->member->setEmailStatus($uid,$P_email_status);
-		$this->messenger->sendMessages($uid,$P_email_status);
-	
-	}
-
-
-	if (!empty($P_new_status)){
-		echo "<p>Status Change: $P_new_status</p>";
-		$this->member->setStatus($uid,$P_new_status);
-		if ($P_new_status == 'D'){ #deceased
-			$this->member->setEmailStatus($uid,'LD');
-		}
-		if (
-			(empty($mdd['status']) or $mdd['status'] == 'N') 
-			&& in_array($P_new_status,Defs::getMemberInList())
-			){
-				$extra = array(
-##FIX THIS###
-				'login' => 'login',
-				);
-				$this->messenger->sendMessages($uid,'welcome',$extra);
-		}
-	}
-	
-	if (!empty($P_admin_status)){
-		echo "<p>Change Admin Status: $P_admin_status</p>";
-		$this->member->setAdminStatus($uid,$P_admin_status);
-	}
-	if (!empty($P_test_status)){
-		echo "<p>Change Test Status: $P_test_status</p>";
-		$this->member->setTestStatus($uid,$P_test_status);
-	}
-	if (!empty($P_new_name)){
-		echo "<p>change user name</p>";
-		$this->member->setUserName($uid,$P_new_name);
-		
-	}
-
-	
-	$nobulkclear = ($mdd['no_bulk'] && ! isset($P_nobulk))?1:0;
-	$nobulkset = (! $mdd['no_bulk'] && isset($P_nobulk))?1:0;
-	if ($nobulkclear or $nobulkset){
-		echo "p>Bulk Mail Changed</p>";
-		if ($nobulkclear){
-			$this->member->setNoBulk($uid,0);
-		}
-		elseif ($nobulkset){
-			$this->member->setNoBulk($uid,1);
-			$this->messenger->sendMessages($uid,'nobulk');
-		}
-	}
-
-	if (!empty($P_current) && ($P_current <> $mdd['user_current'])) {
-		echo "Updating user's current information.<br>";
-		$this->member->setCurrent($uid, $P_current);
-	}
-
-
-	if (!empty($P_admin_note) && ($P_admin_note <> $mdd['admin_note']) ){
-		echo "Updating admin note<br>";
-		$this->member->setAdminNote($uid, $P_admin_note);
-	}
-	
-
-	
-	
-	//reset my row with updated data
-	$md = $this->member->getMemberData($uid);
-	$mdd = $md['data'];
-}
-## end of update
-
-
-//GEt PAGE
-public function showUpdate($uid) {
+// 	public function __construct(){
+// 		$this->pdo = \MyPDO::instance();
+// 		$this->member = new Member ($this->pdo);
+// 		$this->page = new DocPage();
+// 		$this->messenger = new Messenger($this->pdo);
+// 	}
+// 	
+// //	this function just echos out the data in a list of found members.
+// 	private function echo_user_row ($row,$post=''){
+//        #$fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
+// 		 $uid = $row['user_id'];
+// 		  $urlemail = rawurlencode($row['user_email']);
+// 		   $username = u\entity_spec($row['username']);
+// 		  $last_login = date('d M, Y',strtotime($row['last_login']));
+// 		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
+// 		  	$validateEmailButton = $this->actionButton('Validate Email','verifyEmail',$uid);
+// 		  	
+//     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
+//        
+//       $o .=  "<tr>
+//         <td colspan='2'><b>$username</b></td>
+// 			<td colspan='2' >" . u\linkHref($row['user_email']) . "</td>";
+//          $login = $row['upw'] . $row['user_id'];
+//         $user_login_link = "https://amdflames.org/?s=$login";
+//      
+//       $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
+// 		$o .= $this->actionButton('Send Login','sendLogin',$uid);
+// 		$o .= "</td></tr>\n";
+// 		
+//        $o .= "<tr style='text-align:center'>
+//        <td>${row['status']}</td>
+//        <td>${row['email_status']}</td>
+//         <td>$email_last_validated</td>
+//         <td>$last_login</td>
+// 
+//           <td>${row['no_bulk']}</td>
+//           <td></td>
+//           <td></td>
+// 
+//        </tr>";
+// 
+//   
+// 
+//         $o .=   "<tr>";
+//         $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
+//         $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
+//         $o .=   "<td align='center'>$validateEmailButton</td>";
+//         $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
+//         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
+//         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
+//        echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
+//         $o .=   "<td align='center'> " 
+//         		. $this->actionButton('X-out','xout',$uid) 
+//         		. "</td></tr>\n";
+//         		
+// 		return $o;
+// 	}
+// 
+// 	private function xout($uid){
+// 		$this->members->setStatus($uid,'X');
+// 	
+// 	}
+// 	
+// 	 public function actionButton($label,$action,$uid) {
+//    	//script to buld button for ajax
+//    	$button = '<button type="button" onClick="takeAction('
+//    		. $uid
+//    		. ",'$action')\">"
+//    		. $label
+//    		. "</button>";
+//    	return $button;
+//    }
+//    
+// 	public function listMembers($post){
+//    //save search so can be repeated
+//      $_SESSION['last_member_search'] = $post;
+// 	
+// 	$result = $this->member->getMemberListFromAdmin($post);
+//   # u\echor ($result,'from Member');
+//    
+//    if ($result['count'] == 0){echo "Nothing Found.";}
+// 	else{
+//         		echo $result['info'] . BRNL;
+//         		
+//             echo "
+//             <table style='border-collapse:collapse;font-size:small;'>";
+// 
+//             echo "<tr>
+//             	
+//             	<th>Status</th>
+//             	
+//             	<th>Email Status</th>
+//             	<th>Email Validated</th>
+//             	<th>Last Login</th>
+//             	<th>No Bulk</th>
+// 
+//             	<th></th>
+//             	<th></th>
+// 
+//             	</tr>";
+//             	
+// 
+//             foreach ($result['data'] as $row){
+//             
+//                 echo $this->echo_user_row($row);
+//             }
+//            
+//            echo "</table>\n";
+// 
+//         }
+// 
+// }
+// 
+//  public function showSearch(){
+//  	$status_options = "<option value=''>Choose...</option>";
+// 	foreach (array('M','G','MC','MU','MN','N','T','I') as $v){
+// 		$desc = Defs::getMemberDescription($v);
+// 		$status_options .= "<option value='$v'>$v ($desc)</option>";
+// 	}
+// 
+//     $ems_options = "<option value=''>Choose...</option>";
+//     foreach (Defs::getEmsNameArray() as $v=>$desc){
+// 		$ems_options .= "<option value='$v'>$v ($desc)</option>";
+// 	}
+// 
+// 
+// 
+//  	$o = <<<EOT
+// <p><b>Locate a Member to update</b></p>
+// To modify a member's record (including accepting new signups) find the member
+// here. Name and email can be partials.
+// <form  method = 'POST'>
+// <table style = 'font-size:small;'>
+// <tr><th>Find by name: </th><th>Find by email:</th><th>Find by status:</th>
+//     <th>Find by Email Status</th><th>Admin Status</th></tr>
+// <tr>
+// 
+//     <td> <input type='text' name = 'name' ></td>
+//     <td><input type='text' name='email'></td>
+//     <td><select type='text' name='status'>$status_options</select></td>
+//    <td><select type='text' name='ems'>$ems_options</select></td>
+//      <td>Admin Status:<input type="text" name="admin_status" size='4'></td></tr>
+// </table>
+// <input type=submit name='search' value='Search'>
+// </form>
+// EOT;
+// 	return $o;
+// 	
+// }
+// 	
+// 	
+// 
+// /* this script is used to make all  updates to members records.
+// 	You can change email status or user status.  Changing a user from New
+// 	to Member automatically sends the welcome message.
+// 
+// 	Updating email status will send a verify email if appropriate.
+// 
+// */
+// 
+// //convert Get data yo Post data
+//  public function updateMember ($post){
+// 	$uid = $post['uid'];
+// 	//start by getting users record.  Needed for both get and put
+// 	$md = $this->member->getMemberData($uid);
+// 	$mdd = $md['data'];
+// 	$username = $mdd ['username'];
+// 	
+// //process any data in the post array
+// 	extract ($post,EXTR_PREFIX_ALL,'P');
+// 	if (empty ($P_uid)){ #?? think there should always be something here 
+// 		exit;
+// 	}
+// 	//go over data and find updates and perform as encountered
+// 	
+// 	if (!empty($P_new_email)){ #new email address; update and send verify
+// 		echo "<p>New Email: $P_new_email</p>";
+// 		if (! u\isValidEmail($P_new_email)){
+// 			echo "Invalid Email address $P_new_email<br>\n";
+// 			exit;
+// 		}
+// 		//put new email in place for messenger
+// 		$this->member->setEmail ($uid,$P_new_email);
+// 		if (substr($mdd['status'],0,1) == 'L'){ #member was lost
+// 			$informant = 'you';
+// 			if (!empty ($P_informant)){
+// 				$informant = $P_informant;
+// 			} elseif (isset($P_suggested_email )){
+// 				$informant = 'another member';
+// 			}
+// 			$extra = array(
+// 				'informant' => $informant,
+// 				'prior_email' => $mdd['user_email'],
+// 				);
+// 			$this->messenger->sendMessages($uid,'em-found',$extra);
+// 			
+// 		}
+// 		else {
+// 			$this->messenger->sendMessages($uid,'em-change');
+// 		}
+// 		$P_email_status = 'E1';
+// 		$use_email = $P_new_email;
+// 
+// 
+// 	}
+// 
+// 	if (!empty ($P_email_status)){
+// 		echo "<p>New Email Status: $P_email_status</p>";
+// 	
+// 		$this->member->setEmailStatus($uid,$P_email_status);
+// 		$this->messenger->sendMessages($uid,$P_email_status);
+// 	
+// 	}
+// 
+// 
+// 	if (!empty($P_new_status)){
+// 		echo "<p>Status Change: $P_new_status</p>";
+// 		$this->member->setStatus($uid,$P_new_status);
+// 		if ($P_new_status == 'D'){ #deceased
+// 			$this->member->setEmailStatus($uid,'LD');
+// 		}
+// 		if (
+// 			(empty($mdd['status']) or $mdd['status'] == 'N') 
+// 			&& in_array($P_new_status,Defs::getMemberInList())
+// 			){
+// 				$extra = array(
+// ##FIX THIS###
+// 				'login' => 'login',
+// 				);
+// 				$this->messenger->sendMessages($uid,'welcome',$extra);
+// 		}
+// 	}
+// 	
+// 	if (!empty($P_admin_status)){
+// 		echo "<p>Change Admin Status: $P_admin_status</p>";
+// 		$this->member->setAdminStatus($uid,$P_admin_status);
+// 	}
+// 	if (!empty($P_test_status)){
+// 		echo "<p>Change Test Status: $P_test_status</p>";
+// 		$this->member->setTestStatus($uid,$P_test_status);
+// 	}
+// 	if (!empty($P_new_name)){
+// 		echo "<p>change user name</p>";
+// 		$this->member->setUserName($uid,$P_new_name);
+// 		
+// 	}
+// 
+// 	
+// 	$nobulkclear = ($mdd['no_bulk'] && ! isset($P_nobulk))?1:0;
+// 	$nobulkset = (! $mdd['no_bulk'] && isset($P_nobulk))?1:0;
+// 	if ($nobulkclear or $nobulkset){
+// 		echo "p>Bulk Mail Changed</p>";
+// 		if ($nobulkclear){
+// 			$this->member->setNoBulk($uid,0);
+// 		}
+// 		elseif ($nobulkset){
+// 			$this->member->setNoBulk($uid,1);
+// 			$this->messenger->sendMessages($uid,'nobulk');
+// 		}
+// 	}
+// 
+// 	if (!empty($P_current) && ($P_current <> $mdd['user_current'])) {
+// 		echo "Updating user's current information.<br>";
+// 		$this->member->setCurrent($uid, $P_current);
+// 	}
+// 
+// 
+// 	if (!empty($P_admin_note) && ($P_admin_note <> $mdd['admin_note']) ){
+// 		echo "Updating admin note<br>";
+// 		$this->member->setAdminNote($uid, $P_admin_note);
+// 	}
+// 	
+// 
+// 	
+// 	
+// 	//reset my row with updated data
+// 	$md = $this->member->getMemberData($uid);
+// 	$mdd = $md['data'];
+// }
+// ## end of update
+// 
+// 
+// //GEt PAGE
+// public function showUpdate($uid) {
 // 	$md = $this->member->getMemberData($uid);
 // 	
 // 	if (empty($mdd = $md['data'])){
@@ -484,8 +484,8 @@ public function showUpdate($uid) {
 // <hr>
 // 
 // EOT;
-
-}
+// 
+// }
 
 
 
