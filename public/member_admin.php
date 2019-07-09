@@ -10,7 +10,7 @@ ini_set('error_reporting', -1);
 	use digitalmx\flames\MemberAdmin;
 	
 #	$admin = new MemberAdmin();
-#	$page = new DocPage();
+	$page = new DocPage();
 
 	
    echo $page->getHead('Member Admin',0,['ajax']);
