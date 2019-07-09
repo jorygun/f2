@@ -8,8 +8,8 @@ ini_set('error_reporting', -1);
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\flames\DocPage;
 	use digitalmx\flames\MemberAdmin;
-// 	
-// 	$page = new DocPage();
+	
+	$page = new DocPage();
 // 	$admin = new MemberAdmin();
 // 	
 //    echo $page->getHead('Member Admin',0,['ajax']);
