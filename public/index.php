@@ -7,7 +7,7 @@
 	if (f2_security_below(0)){exit;}
 	
 	use digitalmx\flames\Definitions as Defs;
-	
+	use digitalmx\flames;
 	
 //END START
 if (isset($_SESSION['pwid'])){ #user is logged in
