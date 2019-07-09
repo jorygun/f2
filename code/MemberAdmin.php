@@ -15,11 +15,11 @@ ini_set('error_reporting', -1);
 
 #	require_once 'init.php';
 
-// 	use digitalmx\flames\Definitions as Defs;
-// 	use digitalmx as u;
-// 	use digitalmx\flames\Member;
-// 	use digitalmx\flames\Messenger;
-// 	use digitalmx\flames\DocPage;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx as u;
+	use digitalmx\flames\Member;
+	use digitalmx\flames\Messenger;
+	use digitalmx\flames\DocPage;
 
 	
 //END START
@@ -37,10 +37,10 @@ class MemberAdmin {
 	
 	
 	public function __construct(){
-		$this->pdo = \MyPDO::instance();
-		$this->member = new Member ($this->pdo);
-		$this->page = new DocPage();
-		$this->messenger = new Messenger($this->pdo);
+// 		$this->pdo = \MyPDO::instance();
+// 		$this->member = new Member ($this->pdo);
+// 		$this->page = new DocPage();
+// 		$this->messenger = new Messenger($this->pdo);
 	}
 	
 	// this function just echos out the data in a list of found members.
