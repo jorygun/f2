@@ -103,7 +103,7 @@ EOT;
          break;
       case 1:
          $t .= <<<EOT
-         <img class='left' alt='AMD Flames' src='/graphics/logo-FLAMEs.gif'>";
+         <img class='left' alt='AMD Flames' src='/graphics/logo-FLAMEs.gif'>
          <p class='title'>FLAME<i>news</i><br>
          <span style='font-size:0.5em;'>$subtitle</span>
          </p>
@@ -111,7 +111,7 @@ EOT;
          break;
          case 2:
          $t .= <<<EOT
-         <img class='left' alt='AMD Flames' src='/graphics/logo69x89.png'>";
+         <img class='left' alt='AMD Flames' src='/graphics/logo69x89.png'>
          <p class='title'>AMD Flames - The AMD Alumni Site<br>
          <span style='font-size:0.5em;'>$subtitle</span>
          </p>
