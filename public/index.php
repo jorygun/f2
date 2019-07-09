@@ -59,7 +59,7 @@ namespace digitalmx\flames;
 		        . '.)' ;
 }
 
-u\echor ($_SESSION['login'], 'login');
+#u\echor ($_SESSION['login'], 'login');
 
  $username = $_SESSION['login']['username'];
 if ($_SESSION['login']['user_id'] > 0){ #user is logged in
