@@ -32,6 +32,7 @@ class NavBar {
 		'Rick Marz',
 	);
 	
+	private $pdo;
 		
 	public function __construct ($header=0) {
 		 $this->header = $header;
@@ -48,13 +49,14 @@ class NavBar {
 	}
 
 	private function count_opps(){
-		 $pdo = $pdo = MyPDO::instance();
-		 $sql = "SELECT count(*) FROM opportunities WHERE
-					expired = '0000-00-00' OR
-					expired > NOW();";
-
-		 $opp_rows = $pdo -> query($sql) -> fetchColumn();
-		 return $opp_rows;
+		return '?';
+		 // $pdo = MyPDO::instance();
+// 		 $sql = "SELECT count(*) FROM opportunities WHERE
+// 					expired = '0000-00-00' OR
+// 					expired > NOW();";
+// 
+// 		 $opp_rows = $pdo -> query($sql) -> fetchColumn();
+// 		 return $opp_rows;
 
 	}
 
