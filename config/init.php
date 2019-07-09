@@ -174,7 +174,8 @@ class Init
 		if ($platform == 'pair'){
 			$pdo = \MyPDO::instance();
 		} elseif ($platform == 'ayebook') {
-			$pdo = new \digitalmx\MxPDO('production',$platform,$this->db_ini);
+		$pdo = \MyPDO::instance();
+			#$pdo = new \digitalmx\MxPDO('production',$platform,$this->db_ini);
 			
 		} else {
 			throw new Exception ("Platform not known $platform");
