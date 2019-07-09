@@ -1,5 +1,6 @@
 <?php
 namespace digitalmx\flames;
+use digitalmx\flames as f;
 
 #ini_set('display_errors', 1);
 
@@ -166,16 +167,11 @@ EOT;
 elseif ($_SERVER['REQUEST_METHOD'] == 'GET'){
 
     $htesc = array('status'=>'','all_active'=>true); #initial status selection
-    echo show_asset_search($htesc);
+    echo f\show_asset_search($htesc);
 }
-?>
-</body></html>
-
-##############################################
-<?
 
 
-
+######################################
 
 function tag_display($tags,$style='string'){
     global $asset_tags;
@@ -351,6 +347,7 @@ function empty_post(){
 
 );
 }
+
 function show_asset_search($pdata){
     global $asset_types;
     global $asset_status;
