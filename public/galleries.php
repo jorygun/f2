@@ -16,7 +16,7 @@ exit;
 
 #########################################
 function display_gallery($gal){
-    $nav = new navBar(1);
+    $nav = new NavBar(1);
     $navbar = $nav -> build_menu("<p><a href='/galleries.php/' target='gallery'>Return to All Galleries</a></p>");
     $pdo = MyPDO::instance();
 
@@ -181,7 +181,7 @@ function get_gallery_asset($id){
 
 
 function show_galleries($note=''){
-    $nav = new navBar(true);
+    $nav = new NavBar(true);
     $navbar = $nav -> build_menu();
     $pdo = MyPDO::instance();
 

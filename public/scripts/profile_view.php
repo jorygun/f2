@@ -8,7 +8,7 @@
 	use digitalmx\flames\Definitions as Defs;
 	
 //END START
-$nav = new navBar(1);
+$nav = new NavBar(1);
 $navbar = $nav -> build_menu();
 
 $session_id = $_SESSION['recid'];

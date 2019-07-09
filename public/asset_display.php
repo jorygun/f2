@@ -16,7 +16,7 @@ require_once SITE_PATH ."/scripts/news_functions.php";
 #require_once "MyPDO.class.php" ;
 require_once SITE_PATH ."/scripts/comments.class.php";
 
-$nav = new navBar(1);
+$nav = new NavBar(1);
 $navbar = $nav -> build_menu();
 
 

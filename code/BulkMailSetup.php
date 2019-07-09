@@ -7,7 +7,7 @@ use digitalmx as mx;
 use digitalmx\flames\Definitions as Defs;
 
    if (f2_security_below(7)){exit;}
-	$nav = new navBar(1);
+	$nav = new NavBar(1);
 	$navbar = $nav -> build_menu();
 	
 

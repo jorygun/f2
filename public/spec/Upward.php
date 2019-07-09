@@ -4,7 +4,7 @@
 #require_once "/usr/home/digitalm/public_html/amdflames.org/ap-functions.php";
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 require_once "read_functions.php";
-$nav = new navBar(1);
+$nav = new NavBar(1);
 $navbar = $nav -> build_menu();
 
 if (security_below(-1)){exit;}

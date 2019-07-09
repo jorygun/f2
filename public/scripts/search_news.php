@@ -45,7 +45,7 @@ $months = array(
 
 
 <?
-$nav = new navBar(false);
+$nav = new NavBar(false);
 $navbar = $nav -> build_menu();
 
 echo $navbar;

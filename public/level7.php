@@ -3,7 +3,7 @@
 	require_once "init.php";
 	if(login_security_below(7)){exit;};
 //END START
-$nav = new navBar(1);
+$nav = new NavBar(1);
 $navbar = $nav -> build_menu();
 
 

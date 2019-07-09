@@ -3,7 +3,7 @@
 	require_once "init.php";
 	if (f2_security_below(0)){exit;}
 	$pdo = MyPDO::instance();
-	$nav = new navBar(false);
+	$nav = new NavBar(false);
 	$navbar = $nav -> build_menu();
 //END START
 ?>

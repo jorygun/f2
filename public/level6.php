@@ -12,7 +12,7 @@ $my_id = $_SESSION['user_id'];
 
 #$ifile='../news/news_next/newsitems.html';
 $now = sql_now();
-$nav = new navBar(1);
+$nav = new NavBar(1);
 	$navbar = $nav -> build_menu();
 ?>
 <html>

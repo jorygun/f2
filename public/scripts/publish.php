@@ -15,7 +15,7 @@
 
 
 
-$Nav = new navBar(1);
+$Nav = new NavBar(1);
 
 
 echo <<<EOT

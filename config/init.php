@@ -53,7 +53,7 @@ $GV = $GLOBALS = setGlobals();
 
  require_once 'MyPDO.class.php'; #uses envir constants for config; sets from db.ini if not already set
 // require_once 'MxPDO.php'; 
-require_once 'nav.class.php';
+require_once 'NavBar.php';
 
 #ns digitalmx\flames
 require_once 'Definitions.php';

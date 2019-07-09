@@ -68,7 +68,7 @@ else {$subtitle = '';}
 
 
 increment_reads($condensed_date);
-$nav = new navBar(false);
+$nav = new NavBar(false);
 $navbar = $nav -> build_menu();
 $voting = new Voting();
 

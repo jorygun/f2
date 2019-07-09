@@ -5,7 +5,7 @@ ini_set('error_reporting', -1);
 	require_once 'init.php';
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx as dmx;
-	$nav = new navBar(1);
+	$nav = new NavBar(1);
 $navbar = $nav -> build_menu();
 
 	if (f2_security_below(8)){die ("NOt allowed");}

@@ -168,7 +168,7 @@ EOT;
 
 
 ############
-$nav = new navBar(1);
+$nav = new NavBar(1);
 $navbar = $nav -> build_menu();
 ?>
 

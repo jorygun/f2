@@ -30,7 +30,7 @@ else {
 
  $news_latest = SITE_PATH . "/news/news_latest";
 
-$nav = new navBar(false);
+$nav = new NavBar(false);
 $navbar = $nav -> build_menu();
 
 

@@ -5,7 +5,7 @@
 //END START
 #ini_set('display_errors', 1);
 
-$nav = new navBar(false);
+$nav = new NavBar(false);
 $navbar = $nav -> build_menu();
 
 // See if user is logged in; then they can post an opportunity.
