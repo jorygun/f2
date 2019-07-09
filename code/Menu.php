@@ -4,14 +4,8 @@ namespace digitalmx\flames;
 // ini_set('error_reporting', E_ALL);
 
 // routine to build menus and return them as html text.
-// also includes some javascript to close the open
-//  menus on mobile, because they stick open.
-// get the menus by
-// 	require nav.class.php
-//		$nav = new NavBar($header);
-//				header = 1, add header graphic
-//		echo build_menus (extra)
-//			extra is text to add below the menu (like another link back)
+// this class is used by Login to build the user's menu bar
+// which is saved in _SESSION['menu'] an used in DocPage
 
 //
 
