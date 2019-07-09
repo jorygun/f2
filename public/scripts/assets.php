@@ -110,7 +110,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') ||  $get_token){
         $id = $_POST['delete'];
         delete_asset($id);
     }
-	$pdo = \MyPDO::instance();
+	
     #convert all values to spchars
     $post = array_merge(empty_post(),$_POST);
 
@@ -127,7 +127,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') ||  $get_token){
     echo "<div style='border:1px solid gray;'> $sql</div><br>";
     echo "<p>Selected Assets are shown below.</p>";
     #$stmt = $pdo -> query($sql);
-    $id_list = $pdo -> query($sql) ->fetchAll(PDO::FETCH_COLUMN);
+    $id_list = $pdo -> query($sql) ->fetchAll(\PDO::FETCH_COLUMN);
     $id_count = sizeof ($id_list);
     if ($id_count >= $asset_limit){
        $last_id = $id_list[$asset_limit - 1];
