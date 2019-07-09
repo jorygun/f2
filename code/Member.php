@@ -539,7 +539,7 @@ private static $long_profile_fields = array (
 		}
 	}
 	public function setUserName ($uid,$name){
-	$sql = "UPDATE `members_f2` SET username = '$name'";
+	$sql = "UPDATE `members_f2` SET username = '$name' where user_id = '$uid' ";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -548,7 +548,7 @@ private static $long_profile_fields = array (
 	}
 	public function setNoBulk($uid,$nobulk){
 		// nobulk must be 0 or 1
-	$sql = "UPDATE `members_f2` SET no_bulk = $nobulk";
+	$sql = "UPDATE `members_f2` SET no_bulk = $nobulk where user_id = '$uid' ";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -557,7 +557,7 @@ private static $long_profile_fields = array (
 	}
 	
 	public function setCurrent ($uid,$current) {
-		$sql = "UPDATE `members_f2` SET user_current = ?";
+		$sql = "UPDATE `members_f2` SET user_current = ? where user_id = '$uid' ";
 		 $stmt = $this->pdo->prepare ($sql);
 		 $stmt->execute ([$current]);
 			
@@ -565,7 +565,7 @@ private static $long_profile_fields = array (
 		
 	}
 	public function setAdminNote ($uid,$note) {
-		$sql = "UPDATE `members_f2` SET admin_note = ?";
+		$sql = "UPDATE `members_f2` SET admin_note = ? where user_id = '$uid' ";
 		 $stmt = $this->pdo->prepare ($sql);
 		 $stmt->execute ([$note]);
 			
@@ -747,9 +747,12 @@ echo $sql .  BRNL;
 		
 		
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+		final = [];
 	// enhance and contract	
+	
 		foreach ($result as $row){
 			$final[] = $this->enhanceData($row,self::$info_fields);
+		
 		}
 		return $this->returnResult($final);
 	}
@@ -1036,8 +1039,7 @@ echo $sql .  BRNL;
 	public function  setEmailStatus($uid,$ems) {
 		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
 			WHERE user_id = '$uid';";
-			echo "from member->updateEms: $sql" . BRNL;
-			
+		
 		if (! $result = $this->pdo->query($sql) ){
 			return false;
 		}
