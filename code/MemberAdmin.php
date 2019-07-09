@@ -44,60 +44,60 @@ class MemberAdmin {
 	}
 	
 	// this function just echos out the data in a list of found members.
-	// private function echo_user_row ($row,$post=''){
-//        #$fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
-// 		 $uid = $row['user_id'];
-// 		  $urlemail = rawurlencode($row['user_email']);
-// 		   $username = u\entity_spec($row['username']);
-// 		  $last_login = date('d M, Y',strtotime($row['last_login']));
-// 		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
-// 		  	$validateEmailButton = $this->actionButton('Validate Email','verifyEmail',$uid);
-// 		  	
-//     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
-//        
-//       $o .=  "<tr>
-//         <td colspan='2'><b>$username</b></td>
-// 			<td colspan='2' >" . u\linkHref($row['user_email']) . "</td>";
-//          $login = $row['upw'] . $row['user_id'];
-//         $user_login_link = "https://amdflames.org/?s=$login";
-//      
-//       $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
-// 		$o .= $this->actionButton('Send Login','sendLogin',$uid);
-// 		$o .= "</td></tr>\n";
-// 		
-//        $o .= "<tr style='text-align:center'>
-//        <td>${row['status']}</td>
-//        <td>${row['email_status']}</td>
-//         <td>$email_last_validated</td>
-//         <td>$last_login</td>
-// 
-//           <td>${row['no_bulk']}</td>
-//           <td></td>
-//           <td></td>
-// 
-//        </tr>";
-// 
-//   
-// 
-//         $o .=   "<tr>";
-//         $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
-//         $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
-//         $o .=   "<td align='center'>$validateEmailButton</td>";
-//         $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
-//         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
-//         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
-//        // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
-//         $o .=   "<td align='center'> " 
-//         		. $this->actionButton('X-out','xout',$uid) 
-//         		. "</td></tr>\n";
-//         		
-// 		return $o;
-// 	}
+	private function echo_user_row ($row,$post=''){
+       #$fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
+		 $uid = $row['user_id'];
+		  $urlemail = rawurlencode($row['user_email']);
+		   $username = u\entity_spec($row['username']);
+		  $last_login = date('d M, Y',strtotime($row['last_login']));
+		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
+		  	$validateEmailButton = $this->actionButton('Validate Email','verifyEmail',$uid);
+		  	
+    $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
+       
+      $o .=  "<tr>
+        <td colspan='2'><b>$username</b></td>
+			<td colspan='2' >" . u\linkHref($row['user_email']) . "</td>";
+         $login = $row['upw'] . $row['user_id'];
+        $user_login_link = "https://amdflames.org/?s=$login";
+     
+      $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
+		$o .= $this->actionButton('Send Login','sendLogin',$uid);
+		$o .= "</td></tr>\n";
+		
+       $o .= "<tr style='text-align:center'>
+       <td>${row['status']}</td>
+       <td>${row['email_status']}</td>
+        <td>$email_last_validated</td>
+        <td>$last_login</td>
 
-	private function xout($uid){
-		$this->members->setStatus($uid,'X');
-	
+          <td>${row['no_bulk']}</td>
+          <td></td>
+          <td></td>
+
+       </tr>";
+
+  
+
+        $o .=   "<tr>";
+        $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
+        $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
+        $o .=   "<td align='center'>$validateEmailButton</td>";
+        $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
+        $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
+        $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
+       // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
+        $o .=   "<td align='center'> " 
+        		. $this->actionButton('X-out','xout',$uid) 
+        		. "</td></tr>\n";
+        		
+		return $o;
 	}
+
+	// private function xout($uid){
+// 		$this->members->setStatus($uid,'X');
+// 	
+// 	}
 	 public function actionButton($label,$action,$uid) {
    	// script to buld button for ajax
    	$button = '<button type="button" onClick="takeAction('
