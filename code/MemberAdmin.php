@@ -15,12 +15,12 @@ ini_set('error_reporting', -1);
 
 #	require_once 'init.php';
 
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx as u;
-	use digitalmx\flames\Member;
-	use digitalmx\flames\Messenger;
-	use digitalmx\flames\DocPage;
-
+// 	use digitalmx\flames\Definitions as Defs;
+// 	use digitalmx as u;
+// 	use digitalmx\flames\Member;
+// 	use digitalmx\flames\Messenger;
+// 	use digitalmx\flames\DocPage;
+// 
 	
 //END START
 
