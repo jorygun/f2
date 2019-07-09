@@ -747,9 +747,9 @@ echo $sql .  BRNL;
 		
 		
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
-		final = [];
+		
 	// enhance and contract	
-	
+		$final = [];
 		foreach ($result as $row){
 			$final[] = $this->enhanceData($row,self::$info_fields);
 		
