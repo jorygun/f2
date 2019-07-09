@@ -59,7 +59,7 @@ namespace digitalmx\flames;
 $user_status = $_SESSION['login']['status'];
 $join_date = $_SESSION['login']['join_date'];
 $username = $_SESSION['login']['username'];
-$last_profile = $_SESSIOIN['login']['profile_date'];
+$last_profile = $_SESSION['login']['profile_date'];
 
 if ($_SESSION['login']['user_id'] > 0){ #user is logged in
    

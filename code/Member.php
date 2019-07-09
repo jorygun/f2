@@ -409,8 +409,8 @@ private static $long_profile_fields = array (
         $image_url = SITE_PATH . "/assets/users/{$id}.jpg";
         if (!file_exists($image_url)){$image_url = '';}
     
-       $profile_date = (empty($row['profile_validated']))? "(Never)" :
-            u\make_date($row['profile_validated']);
+       $profile_date = (empty($row['profile_updated']))? "(Never)" :
+            u\make_date($row['profile_updated']);
         
         $addons= array(
         
