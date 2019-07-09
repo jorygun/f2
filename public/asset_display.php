@@ -72,7 +72,7 @@ if (! $stmt = $pdo->query($sql) ){
 	echo "Asset $item_id not found.";
 	exit;
 }
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
     if (
          empty($row)
