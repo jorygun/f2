@@ -4,6 +4,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(2)){exit;}
 	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\NavBar;
 //END START
 
 global $G_member_status_set;
