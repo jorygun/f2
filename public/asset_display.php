@@ -52,7 +52,7 @@ function isObject(obj) {
 </script>
 EOT;
 
-	#echo $page->startBody("AMD Asset Display",2);
+	echo $page->startBody("AMD Asset Display",2);
 
 // END START
 
@@ -221,6 +221,8 @@ function myUrlEncode($string) {
         </td></tr></table>
 
 
-
+<?php
+echo $_SESSION['menu'];
+?>
 </body>
 </html>
