@@ -51,15 +51,16 @@ $init->setConstants();
 require_once 'setGlobals.php';
 $GV = $GLOBALS = setGlobals();
 
-require_once 'MyPDO.class.php'; #uses envir constants for config; sets from db.ini if not already set
-require_once 'MxPDO.php'; 
+// require_once 'MyPDO.class.php'; #uses envir constants for config; sets from db.ini if not already set
+// require_once 'MxPDO.php'; 
+
 #ns digitalmx\flames
 require_once 'Definitions.php';
 
 require_once "utilities.php";
 
 require_once 'MxUtilities.php';
-#require_once 'nav.class.php';
+
 
 use \MyPDO;
 
