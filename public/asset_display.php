@@ -39,40 +39,13 @@ else {die ("No item requested");}
 *   commenting_on enables the add comment form.
 */
 
-$on_db = 'assets';
-$on_id = $item_id;
-$single = false;
-$commenting_on = false;
 
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	//Post data and close window
-	#print_r ($_POST);
-
-
-      $comment = trim($_POST['comment']);
-
-    $contributor_email = trim($_POST['contributor_email']);
-    $mailto = array('editor@amdflames.org','all',$contributor_email);
-
-    $r = $ucom->addComment($on_db,$on_id,$comment,$single,$mailto);
 
 
 
-}
 
-/*
-	Script to generate the an individual page for an
-	asset with link for discussion.
-*/
-
-#echo "<pre>1. sections \n" , var_dump ($these_sections) , "</pre>";
-
-
-
-$show_edit = $show_schedule = 0;
-// $discussion_topics = array ('nostalgia'); #prevent discussion link from showing up.
 $sql = "SELECT * from `assets` WHERE id = $item_id;";
     #echo $sql,"<br>";
 
