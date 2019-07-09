@@ -1,103 +1,44 @@
 <?php
-// ini_set('display_errors', 1);
-// ini_set('error_reporting', E_ALL);
-
 //BEGIN START
 	require_once "init.php";
-	if (f2_security_below(0)){exit;}
+
 	
+	use digitalmx\flames\DocPage;
 	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\NavBar;
+	$pdo = MyPDO::instance();
+
+	$page = new DocPage;
+	echo $page->startHead("AMD Flames", 0);
+	echo "<meta name='google-site-verification' content='VIIA7KGTqXjwzC6nZip4pvYXtFVLx7Th7VpWNGpWzpo' />\n";
+	echo $page->startBody("AMD Flames",0);
+
+// END START
+
 	
-//END START
-if (isset($_SESSION['pwid'])){ #user is logged in
-    $my_id = $_SESSION['recid'];
-	$sl = $_SESSION['level'];
-
-	$username = $_SESSION['DB']['username'];
-	$join_date = age( $_SESSION['DB']['join_date'])[1];
-
-	$user_status = $_SESSION['DB']['status'];
-	list ($profile_age,$last_profile) = age($_SESSION['DB']['profile_updated']);
-    list ($profile_validated_age,$profile_validated_date) = age($_SESSION['DB']['profile_validated']);
-
-}
-else {
-    $my_id=$sl=0;
-    $username = "Nobody";
-    $user_status = '';
-}
+	
+	
+	
+// END START
+// if (isset($_SESSION['pwid'])){ #user is logged in
+//     $my_id = $_SESSION['recid'];
+// 	$sl = $_SESSION['level'];
+// 
+// 	$username = $_SESSION['DB']['username'];
+// 	$join_date = age( $_SESSION['DB']['join_date'])[1];
+// 
+// 	$user_status = $_SESSION['DB']['status'];
+// 	list ($profile_age,$last_profile) = age($_SESSION['DB']['profile_updated']);
+//     list ($profile_validated_age,$profile_validated_date) = age($_SESSION['DB']['profile_validated']);
+// 
+// }
+// else {
+//     $my_id=$sl=0;
+//     $username = "Nobody";
+//     $user_status = '';
+// }
 
  $news_latest = SITE_PATH . "/news/news_latest";
 
-$nav = new NavBar(false);
-$navbar = $nav -> build_menu();
-
-
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
- <link rel="stylesheet" href="/css/flames2.css">
-
-<script type='text/javascript' src="js/f2js.js"></script>
-<script type='text/javascript'>
-    function logmein (){
-        var stext = document.getElementById('litext').value;
-        var re = /(\w{5}\d{1,6})/;
-        var reArray = re.exec(stext);
-        if (! reArray){alert ("The password you entered is not valid");}
-        var logincode = reArray[1];
-        //alert ("Login code: "+logincode);
-        if (logincode){
-            var loginurl='/?s=' + logincode;
-            alert ("Loggin in to "+loginurl);
-            window.location.href = loginurl;
-        }
-        else{alert ("The password you entered is not valid");}
-    }
-</script>
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "Organization",
-  "url": "https://amdflames.org",
-  "logo": "https://amdflames.org/graphics/logo-FLAMEs.gif"
-}
-</script>
-<meta name="google-site-verification" content="VIIA7KGTqXjwzC6nZip4pvYXtFVLx7Th7VpWNGpWzpo" />
-<title>Welcome to AMD FLAMES</title>
-</head>
-<body>
-
-
- <div style="color: #009900; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">
-	<div style="position:relative;float:left;vertical-align:bottom;margin-left:100px;">
-		<div style=" float:left;"><img alt="" src="graphics/logo-FLAMEs.gif"></div>
-
-		<div style= 'position:absolute; bottom:0;margin-left:100px;width:750px;'>FLAMES - The Official AMD Alumni Site
-		</div>
-	</div>
-		<p style="font-size:14pt;clear:both;text-align:center;width:750px;margin-left:100px;">
-		Keeping thousands of ex-AMDers connected since 1997<br>
-	<span style="font-size:12pt;color:#030;font-style:italic;">AMD was probably the best place any of us ever worked.</span></p>
-
-</div>
-
-
-<?=$navbar ?>;
-<!-- start of content -->
-
-
-
-
-
-<?php
 
 #get latest newsletter date
 

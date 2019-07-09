@@ -1,11 +1,17 @@
 <?php
 //BEGIN START
-	require_once 'init.php';
+	require_once "init.php";
+
 	require_once "./scripts/asset_functions.php";
-	if (f2_security_below(1)){exit;}
+	
+	use digitalmx\flames\DocPage;
+	$pdo = MyPDO::instance();
 
-//END START
+	$page = new DocPage;
+	echo $page->startHead("Gallery", 3);
+	echo $page->startBody("Gallery",2);
 
+// END START
 
 
 

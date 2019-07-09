@@ -87,6 +87,18 @@ EOT;
 
     #choose a heading by number
       switch ($heading) {
+      case 0: #for home page
+         $t .= <<<EOT
+<div style="position:relative;float:left;vertical-align:bottom;margin-left:100px;">
+   <div style=" float:left;"><img alt="" src="graphics/logo-FLAMEs.gif"></div>
+   <div style= 'position:absolute; bottom:0;margin-left:100px;width:750px;'>FLAMES - The Official AMD Alumni Site </div>
+</div>
+<p style="font-size:14pt;clear:both;text-align:center;width:750px;margin-left:100px;">
+		Keeping thousands of ex-AMDers connected since 1997<br>
+	<span style="font-size:12pt;color:#030;font-style:italic;">AMD was probably the best place any of us ever worked.</span>
+</p>
+EOT;
+         break;
       case 1:
          $t .= <<<EOT
          <img class='left' alt='AMD Flames' src='/graphics/logo-FLAMEs.gif'>";
