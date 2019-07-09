@@ -110,7 +110,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') ||  $get_token){
         $id = $_POST['delete'];
         delete_asset($id);
     }
-
+	$pdo = \MyPDO::instance();
     #convert all values to spchars
     $post = array_merge(empty_post(),$_POST);
 
