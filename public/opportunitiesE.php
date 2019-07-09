@@ -1,47 +1,33 @@
 <?php
-//BEIN START
-	require_once 'init.php';
-	if (f2_security_below(0)){exit;}
-//END START
+namespace digitalmx\flames;
+
 #ini_set('display_errors', 1);
 
-$nav = new NavBar(false);
-$navbar = $nav -> build_menu();
 
-// See if user is logged in; then they can post an opportunity.
+//BEGIN START
+	require_once "init.php";
 
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	#require others
 
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <link rel="stylesheet" href="/css/news3.css">
+	use digitalmx\flames\DocPage;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
 
-<style type="text/css">
+	$pdo = MyPDO::instance();
 
+	$page = new DocPage;
+	$title = "Opportunities"; 
+	echo $page->startHead($title, 3);
+	echo $page->startBody($title ,2);
 
-</style>
-<title>Opportunities</title>
-
-</head>
-<body>
-<div class='head'>
-	<img class="left" alt="AMD Flames" src="/graphics/logo-FLAMEs.gif">
-	<p class='title'>FLAME<i>news</i><br>
-
-	</p>
-</div>
-
-<?=$navbar?>
-<hr style="width: 100%; height: 2px;clear:both;">
-<h3>Opportunities</h3>
+//END START
+echo <<<EOT
 <p>These opportunities have been submitted by FLAMEs members.<br>If you'd like to
 post something here, use the link below to enter a New Opportunity, or email the information to the <a href="mailto:editor@amdflames.org" target="_blank">editor</a>.</p>
 <p>If you've posted an opportunity here, you can edit or expire it. </p>
 <hr>
- <?
+EOT;
+
 
 
 if (isset($_SESSION['user_id'])){

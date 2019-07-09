@@ -1,4 +1,27 @@
 <?php
+namespace digitalmx\flames;
+
+#ini_set('display_errors', 1);
+
+
+//BEGIN START
+	require_once "init.php";
+
+	#require others
+
+	use digitalmx\flames\DocPage;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
+
+	$pdo = MyPDO::instance();
+
+	$page = new DocPage;
+	$title = "News Contributor"; 
+	echo $page->startHead($title, 3);
+	echo $page->startBody($title ,2);
+
+//END START
+<?php
 ini_set('display_errors', 1);
 ini_set('error_reporting', -1);
 //BEGIN START

@@ -1,47 +1,33 @@
 <?php
+<?php
+namespace digitalmx\flames;
+
+#ini_set('display_errors', 1);
+
+
 //BEGIN START
-	require_once 'init.php';
-	if (f2_security_below(0)){exit;}
+	require_once "init.php";
+
+	#require others
+
+	use digitalmx\flames\DocPage;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
+
+	$pdo = MyPDO::instance();
+
+	$page = new DocPage;
+	$title = "Opportunities"; 
+	echo $page->startHead($title, 3);
+	echo $page->startBody($title ,2);
+
 //END START
 
-$pdo = MyPDO::instance();
-$nav = new NavBar(1);
-$navbar = $nav -> build_menu();
-?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <meta http-equiv="X-UA-Compatible" content="IE=edge">
- <link rel="apple-touch-icon" href="apple-touch-icon.png">
-        <!-- Place favicon.ico in the root directory -->
- <link rel="stylesheet" href="/css/normalize.css">
- <link rel="stylesheet" href="/css/main.css">
- <link rel="stylesheet" href="/css/flames2.css">
-
-<script src="js/vendor/modernizr-2.8.3.min.js"></script>
-
-<style type="text/css">
-
-
-	</style>
-	<title>Opportunties</title>
-	<meta name="generator" content="BBEdit 11.0" />
-</head>
-<body>
-
-<?=$navbar?>
-
-
-
-<h3>Opportunities</h3>
+echo <<<EOT
 <p>These opportunities have been submitted by FLAMEs members.<br><br>
 If you‘d like to post something here, email the information to the 
 <a href="mailto:editor@amdflames.org" target="_blank">editor</a>.</p>
-
- <?php
+EOT;
 
   $sql = "
         SELECT title,owner,owner_email,location,created,link
@@ -67,10 +53,3 @@ If you‘d like to post something here, email the information to the
 
     }
     else {echo "No Current Listings";}
-?>
-
-
-</body></html>
-
-
-</html>
