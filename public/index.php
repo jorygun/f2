@@ -7,7 +7,7 @@ namespace digitalmx\flames;
 	
 	use digitalmx\flames\DocPage;
 	use digitalmx\flames\Definitions as Defs;
-	$pdo = MyPDO::instance();
+	$pdo = \MyPDO::instance();
 
 	$page = new DocPage;
 	echo $page->startHead("AMD Flames", 0);
