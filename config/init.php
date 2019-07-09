@@ -25,7 +25,8 @@ ini_set('display_errors', 1);
 if (defined ('INIT')){ return; } //some init has already run
 
 // put Exceptin into this namespace
-use \Exception as Exception;
+class Exception extends \Exception { }
+
 
 #use Pimple\Container;
 #use digitalmx\
@@ -158,7 +159,7 @@ class Init
 		if ($platform == 'pair'){
 			#require_once  "f2_connect.php";
 			#$GLOBALS['DB_link'] = Connect_DB();
-			#require_once "f2_security.php";
+			require_once "f2_security.php";
 		} elseif ($platform == 'ayebook') {
 			require_once "f2_security.php";
 		} else {
