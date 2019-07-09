@@ -91,7 +91,7 @@ if ($_SESSION['login']['user_id'] > 0){ #user is logged in
 
 EOT;
 
-		echo age_warnings($my_id);
+#		echo age_warnings($my_id);
 
   
 
@@ -155,25 +155,22 @@ EOT;
 
 
 
-echo "
-<div id='block5'><a name='logininfo'></a>
-<hr>
-";
+
 
 
 $siteurl = SITE_URL;
-if (!array_key_exists('level',$_SESSION) || $_SESSION['level']<1) {echo <<< EOT
-<p>You must access the site with your FLAMES-supplied link to view the rest of the site.</p>
-<form action="/scripts/send_lost_link.php" method="post">
-<p>If you are member and need to retrieve your password, enter your email below: <br>Email: <input type="text" name="email" size="40"> <input type="submit" value="Send Login"><br>
-(If your email has changed, please contact the admin using the link below.)</p>
-<p>If you know your password (it's the 8-11 characters following 's=' in the link we frequently send out), you can enter it here to log in: <br>Login: s=<input type="password" name="stext" id="litext" > <input type=button value="Go" onclick="logmein();"></p>
-<p>If all else fails, contact the admin: <a href="mailto:admin@amdflames.org" target="_blank">admin@amdflames.org</a>.</p>
-</form>
-
-
-EOT;
-}
+// if (!array_key_exists('level',$_SESSION) || $_SESSION['level']<1) {echo <<< EOT
+// <p>You must access the site with your FLAMES-supplied link to view the rest of the site.</p>
+// <form action="/scripts/send_lost_link.php" method="post">
+// <p>If you are member and need to retrieve your password, enter your email below: <br>Email: <input type="text" name="email" size="40"> <input type="submit" value="Send Login"><br>
+// (If your email has changed, please contact the admin using the link below.)</p>
+// <p>If you know your password (it's the 8-11 characters following 's=' in the link we frequently send out), you can enter it here to log in: <br>Login: s=<input type="password" name="stext" id="litext" > <input type=button value="Go" onclick="logmein();"></p>
+// <p>If all else fails, contact the admin: <a href="mailto:admin@amdflames.org" target="_blank">admin@amdflames.org</a>.</p>
+// </form>
+// 
+// 
+// EOT;
+// }
 echo "
 </div>
 <p style='text-align:center;clear:both'></p>
