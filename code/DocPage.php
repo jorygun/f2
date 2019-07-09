@@ -112,8 +112,8 @@ EOT;
          case 2:
          $t .= <<<EOT
          <img class='left' alt='AMD Flames' src='/graphics/logo69x89.png'>
-         <p class='title'>AMD Flamese<br>
-         <span style='font-size:0.5em;'>The AMD Alumni Site</span>
+         <p class='title'>$title<br>
+         <span style='font-size:0.5em;'>$subtitle</span>
          </p>
 EOT;
          break;
