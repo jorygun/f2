@@ -89,6 +89,7 @@ EOT;
       switch ($heading) {
       case 0: #for home page
          $t .= <<<EOT
+<div style="color: #009900; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">
 <div style="position:relative;float:left;vertical-align:bottom;margin-left:100px;">
    <div style=" float:left;"><img alt="" src="graphics/logo-FLAMEs.gif"></div>
    <div style= 'position:absolute; bottom:0;margin-left:100px;width:750px;'>FLAMES - The Official AMD Alumni Site </div>
@@ -97,6 +98,7 @@ EOT;
 		Keeping thousands of ex-AMDers connected since 1997<br>
 	<span style="font-size:12pt;color:#030;font-style:italic;">AMD was probably the best place any of us ever worked.</span>
 </p>
+</div>
 EOT;
          break;
       case 1:
