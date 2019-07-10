@@ -1,19 +1,74 @@
 <?php
+namespace digitalmx\flames;
+
+#ini_set('display_errors', 1);
+
+
 //BEGIN START
-ini_set('display_errors', 1);
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-use digitalmx as mx;
-use digitalmx\flames\Definitions as Defs;
-
-
-    if (f2_security_below(7)){exit;}
-	$nav = new NavBar(1);
-	$navbar = $nav -> build_menu();
-	$pdo = MyPDO::instance();
-	
-	
+	#require others
 	require 'BulkMail.php';
+	
+	use digitalmx\flames\DocPage;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
+
+	$pdo = \MyPDO::instance();
+
+	$page = new DocPage;
+	$title = "Bulk Mail Setup"; 
+	echo $page->startHead($title, 3,['ajax']);
+	
+	echo <<<EOT
+	<style type='text/css'>
+.highgreen {background-color:#9C6;}
+#in_bulk_queue li.error {color:red;}
+#in_bulk_queue li.queued {color:green;}
+#in_bulk_queue li.cancelled{color:blue;}
+#in_bulk_queue li.running {color:orange;}
+
+.red {color:red;}
+.
+</style>
+<script type='text/javascript'>
+
+var standard_message = "$js_html_standard";
+var standard_subject = "$subj_standard";
+
+var pl_message = "$js_periodic_lost";
+var pl_subject = "$subj_periodic_lost";
+
+function set_message(type){
+   
+     if (type=='standard'){
+        document.getElementById('message').value = standard_message;
+        document.getElementById('msubject').value = standard_subject;
+         document.sendchoices.sendto[0].checked=true;
+    }
+    else if (type=='periodic_lost'){
+        document.getElementById('message').value = pl_message;
+        document.getElementById('msubject').value = pl_subject;
+         document.sendchoices.sendto[0].checked=true;
+    }
+    else {
+        document.getElementById('message').value = '';
+        document.getElementById('msubject').value = '';
+         document.sendchoices.sendto[0].checked=true;
+    }
+}
+
+</script>
+EOT;
+	echo $page->startBody($title ,2);
+
+//END START
+<?php
+//BEGIN START
+
+
+	
+
 	$bulkmail = new BulkMail();
 	
 	
@@ -180,59 +235,7 @@ $subj_periodic_lost = "AMD Flames Site Thinks You're Lost.";
 
 
 
-echo <<<EOT
-<html>
-<head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-<title>Bulk Mail Setup</title>
-<style type='text/css'>
-.highgreen {background-color:#9C6;}
-#in_bulk_queue li.error {color:red;}
-#in_bulk_queue li.queued {color:green;}
-#in_bulk_queue li.cancelled{color:blue;}
-#in_bulk_queue li.running {color:orange;}
 
-.red {color:red;}
-.
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
-</script>
-<script src='/js/ajax.js'></script>
-<script type='text/javascript'>
-
-var standard_message = "$js_html_standard";
-var standard_subject = "$subj_standard";
-
-var pl_message = "$js_periodic_lost";
-var pl_subject = "$subj_periodic_lost";
-
-function set_message(type){
-   
-     if (type=='standard'){
-        document.getElementById('message').value = standard_message;
-        document.getElementById('msubject').value = standard_subject;
-         document.sendchoices.sendto[0].checked=true;
-    }
-    else if (type=='periodic_lost'){
-        document.getElementById('message').value = pl_message;
-        document.getElementById('msubject').value = pl_subject;
-         document.sendchoices.sendto[0].checked=true;
-    }
-    else {
-        document.getElementById('message').value = '';
-        document.getElementById('msubject').value = '';
-         document.sendchoices.sendto[0].checked=true;
-    }
-}
-
-</script>
-</head>
-<body>
-$navbar
-
-
-
-EOT;
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET'){
@@ -429,12 +432,12 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
 	 // Assemble the list
 		
 			$profile_updated_age = days_ago($row['profile_updated']);
-			$profile_updated_date = mx\make_date($row['profile_updated'],'human','date');
+			$profile_updated_date = u\make_date($row['profile_updated'],'human','date');
 		
 	  #list($profile_age,$last_profile_date) = age($row['profile_updated']);
 	 # list($p_val_age,$profile_validated) = age($row['profile_validated']);
 	  $profile_validated_age = days_ago($row['profile_validated']);
-	$profile_validated_date = mx\make_date($row['profile_validated'],'human','date');
+	$profile_validated_date = u\make_date($row['profile_validated'],'human','date');
 
 	  $age_flag =  ($profile_updated_age > 365)?1:0; #flag to print age warning
 	  
