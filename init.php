@@ -139,7 +139,7 @@ class Init
 	
 		$this->config_msg = "init.php: \n  platform - $this->platform; repo_dir - $repo_dir; repo: $this->repo \n\n";
 	
-	echo $this->config_msg . BRNL;
+#	echo $this->config_msg . BRNL;
 	
 		if ($this->repo == 'live'){
 			ini_set('display_errors',0);
