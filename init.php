@@ -40,7 +40,7 @@ $init->setConstants();
 #add vendor autoload
 	if (file_exists(REPO_PATH . "/vendor/autoload.php")){
 		$loader = require_once PROJ_PATH . "/vendor/autoload.php";
-		$loader->add('digitalmx\\', REPO_PATH .'/libmx/');
+		$loader->add('digitalmx\\',PROJ_PATH .'/libmx/');
 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/lib/');
 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/src/');
 		
@@ -62,7 +62,7 @@ require_once "utilities.php";
 require_once 'setGlobals.php';
 
 use digitalmx\flames\Definitions as Defs;
-use digitalmx\MxUtilities as u;
+use digitalmx\ as u;
 
 $mode = 'production';
 $pdo = $init->setPDO($mode); #guarantees db values are set
