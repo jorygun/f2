@@ -41,7 +41,7 @@ $init = new Init($conf_ini);
 $init->setConstants();
 
 #add vendor autoload
-	if (file_exists(REPO_PATH . "/vendor/autoload.php")){
+	if (file_exists(PROJ_PATH . "/vendor/autoload.php")){
 		$loader = require_once PROJ_PATH . "/vendor/autoload.php";
 		// $loader->add('digitalmx\\',PROJ_PATH .'/libmx/');
 // 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/lib/');
@@ -129,8 +129,7 @@ class Init
 		$this->ini = parse_ini_file( __DIR__ . "/$ini",true);
 		
 		print_r($this->ini);
-		exit
-		;
+		exit;
 	
 		$repo_dir = __DIR__; #---/flames/<repo>/ - where this repo is      *
 		$this->repo_dir = $repo_dir;
