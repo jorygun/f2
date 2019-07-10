@@ -26,6 +26,8 @@ use digitalmx\MxPDO;
 
 if (defined ('INIT')){ return; } //some init has already run
 
+echo Defs::$user_aliases;
+exit;
 // put Exceptin into this namespace
 class Exception extends \Exception { }
 
@@ -65,7 +67,7 @@ require_once 'setGlobals.php';
 
 
 #u\echop ("paragraph");
-echo Defs::$user_aliases;
+
 exit;
 
 
