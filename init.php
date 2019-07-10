@@ -63,6 +63,9 @@ require_once 'setGlobals.php';
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
+u\echop ("paragraph");
+exit;
+
 
 $mode = 'production';
 $pdo = $init->setPDO($mode); #guarantees db values are set
