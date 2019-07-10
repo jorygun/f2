@@ -17,7 +17,7 @@ if (!empty($req)){
 	$verbose = (strpos($req,'v') !== false);
 }
 $init_file = '../init.php';
-include $init_file;
+#include $init_file;
 
 use digitalmx\flames\DocPage;
 use digitalmx\flames\Definitions as Defs;
