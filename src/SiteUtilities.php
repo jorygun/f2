@@ -16,6 +16,7 @@ function replaceAlias ($maybe){
             $lookup = Definitions::$user_aliases[$maybe];
             return $lookup;
         }
+      return $maybe;
     }
     return $maybe;
  }
