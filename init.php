@@ -121,7 +121,7 @@ class Init
 			 session_start();
 		}
 		$this->ini = parse_ini_file( __DIR__ . "/$ini",true);
-		print_r($this->ini);
+		#print_r($this->ini);
 		
 		$repo_dir = __DIR__; #---/flames/<repo>/ - where this repo is      *
 		$this->repo_dir = $repo_dir;
