@@ -13,10 +13,9 @@ function replaceAlias ($maybe){
     // looks for maybe in alias list and replaces with alias name
     if (preg_match('/^\w+$/',$maybe)){ # match alias format
         if (in_array($maybe,array_keys(Definitions::$user_aliases))){
-            $lookup = Definitions::$user_aliases[$maybe];
-            return $lookup;
+            return Definitions::$user_aliases[$maybe];
         }
-      return $maybe;
+        return $maybe;
     }
     return $maybe;
  }
