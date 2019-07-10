@@ -9,7 +9,7 @@ use Digitalmx\Flames\Member;
 #use Digitalmx\Flames\Configuration;
 
 
-function replaceAlias ($maybe){
+function subtituteAlias ($maybe){
     // looks for maybe in alias list and replaces with alias name
     if (preg_match('/^\w+$/',$maybe)){ # match alias format
         if (in_array($maybe,array_keys(Definitions::$user_aliases))){
@@ -33,7 +33,7 @@ function assignNameId ($name) {
     die ("Replace this with member->getMemberList(tag,1)");
     
    
-    $name = replaceAlias($name);
+    $name = substituteAlias($name);
     $member = new Member();
     if (! ($member_name = $member->getMemberName($name))){
         $member_name = $name;
