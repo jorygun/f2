@@ -66,11 +66,11 @@ require_once "utilities.php";
 require_once 'setGlobals.php';
 
 print_r (Defs::$user_aliases);
+
+u\echop ("paragraph");
+
+
 exit;
-#u\echop ("paragraph");
-
-
-
 
 $mode = 'production';
 $pdo = $init->setPDO($mode); #guarantees db values are set
