@@ -38,4 +38,5 @@ elseif (isset($_POST['Update'])){
 }
 
 #show search screen
-#	
+$admin->showSearch();
+
