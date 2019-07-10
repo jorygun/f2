@@ -9,9 +9,6 @@ use Digitalmx\Flames\Member;
 #use Digitalmx\Flames\Configuration;
 
 
-
-
-
 function replaceAlias ($maybe){
     // looks for maybe in alias list and replaces with alias name
     if (preg_match('/^\w+$/',$maybe)){ # match alias format
@@ -22,6 +19,7 @@ function replaceAlias ($maybe){
     }
     return $maybe;
  }
+
 
 function getAliasList (){
     $t = 'Aliases: ' . implode(', ',array_keys(Definitions::$user_aliases));
