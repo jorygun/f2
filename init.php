@@ -64,7 +64,8 @@ require_once 'SiteUtilities.php';
 require_once "utilities.php";
 require_once 'setGlobals.php';
 
-print_r (Defs::$user_aliases);
+#print_r (Defs::$user_aliases);
+u\echor (Defs::$user_aliases);
 
 $mode = 'production';
 $pdo = $init->setPDO($mode); #guarantees db values are set
