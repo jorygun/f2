@@ -1,7 +1,7 @@
 <?php
 namespace digitalmx\flames;
 
-ini_set('display_errors', 1);
+
 ini_set('error_reporting', E_ALL);
 
 /*
@@ -18,7 +18,7 @@ use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
 
 
-if (empty($_SESSION['user_id'])){
+if (empty($_SESSION['login']['user_id'])){
 	echo ("Not logged in.");
 	exit;
 }
