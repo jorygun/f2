@@ -37,7 +37,6 @@ use digitalmx as u;
 use digitalmx\MxPDO;
 
 $init = new Init($conf_ini);
-echo "Ran init" . BRNL;
 
 $init->setConstants();
 
@@ -66,11 +65,6 @@ require_once "utilities.php";
 require_once 'setGlobals.php';
 
 print_r (Defs::$user_aliases);
-
-u\echop ("paragraph");
-
-
-exit;
 
 $mode = 'production';
 $pdo = $init->setPDO($mode); #guarantees db values are set
