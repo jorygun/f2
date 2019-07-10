@@ -145,7 +145,7 @@ class Init
 			ini_set('display_errors',1);
 		}
 		$this->setSite();
-		$this->setIncludes($proj_dir,$repo_dir);
+		$this->setIncludes($this->proj_dir,$this->repo_dir);
 		
 		
 	// if (! function_exists('\f2_security_below')){
