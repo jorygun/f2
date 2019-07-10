@@ -25,7 +25,7 @@ class DocPage {
 
    # getHead is alias for StartHead
    public function getHead ($title, $min = 0, $options=[]){
-      $this->startHead ($title, $min, $options=[]);
+      return $this->startHead ($title, $min, $options);
    }
    public function startHead($title, $min = 0, $options=[]){
       /* options:
