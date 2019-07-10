@@ -117,7 +117,7 @@ class Init
 		if (session_status() == PHP_SESSION_NONE) {
 			 session_start();
 		}
-		$this->ini = $ini;
+		$this->ini = __DIR__ . "/$ini";
 		
 	
 	
