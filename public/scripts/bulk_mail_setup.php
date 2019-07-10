@@ -31,13 +31,7 @@ namespace digitalmx\flames;
 .red {color:red;}
 .
 </style>
-<script type='text/javascript'>
 
-var standard_message = "$js_html_standard";
-var standard_subject = "$subj_standard";
-
-var pl_message = "$js_periodic_lost";
-var pl_subject = "$subj_periodic_lost";
 
 function set_message(type){
    
@@ -60,6 +54,15 @@ function set_message(type){
 
 </script>
 EOT;
+
+echo '<script>';
+echo 'var standard_message = "'  . ml_script(get_html_standard()) . '";';
+echo 'var standard_subject = "' . get_subj_standard() . '";';
+echo 'var pl_message = "' . ml_script(get_periodic_lost()) . '";';
+echo 'var pl_subject = "' . get_subj_periodic_lost() . '";';
+echo '</script>';
+
+
 	echo $page->startBody($title ,2);
 
 //END START
@@ -127,7 +130,28 @@ EOT;
 	
 
 ##########################
-$standard_message = <<<EOT
+
+
+
+/*
+    This script now runs the mail sender in a separate
+    background process, either putting a job in the bulk_queue,'
+    where it will be run by cron,
+    or by starting the run immedetialy.
+
+    In either case, sending is via the script at
+    bulk_mail_processor.php
+
+
+
+*/
+
+  #####################################################
+
+#Set up messages
+
+function get_standard_message () {
+	return  <<<EOT
 Dear ::name,
 
 The AMD FLAMEs News, $edition_name edition, is ready. 
@@ -149,11 +173,15 @@ log in and change the setting in your profile,
 or email the admin by replying to this email.
 
 EOT;
+}
 
-$js_standard = ml_script($standard_message);
-$subj_standard = "FLAME News $edition_name for ::name";
+
+function get_subj_standard () {
+	return "FLAME News $edition_name for ::name";
+}
 ####################
-$html_standard = <<<EOT
+function get_html_standard () {
+	return  <<<EOT
 <html><body>
 Dear ::name,
 <table style='border:0;width:90%;'><tr><td >
@@ -176,11 +204,12 @@ log in and choose Dig In > Newsletter Index.)
 We send these messages to all of our members that have not asked to opt out. If you want to stop receiving these emails, log in and change the setting in your profile, or email the admin by replying to this email.
 </td></tr></table>
 EOT;
-$js_html_standard = ml_script($html_standard);
-$subj_standard = "FLAME News $edition_name for ::name";
+}
+
 
 ######################
-$periodic_lost_message = <<<EOT
+function get_periodic_lost_message () {
+	return <<<EOT
 ::name,
 
 I'm sending this email because you are listed on the AMD alumni site
@@ -206,31 +235,13 @@ If you weren't lost you would have received this in an email.
 ::teaser
 
 EOT;
+}
 
-$js_periodic_lost = ml_script($periodic_lost_message);
-$subj_periodic_lost = "AMD Flames Site Thinks You're Lost.";
 
+function get_subj_periodic_lost () {
+	return "AMD Flames Site Thinks You're Lost.";
+}
 #################
-
-
-
-/*
-    This script now runs the mail sender in a separate
-    background process, either putting a job in the bulk_queue,'
-    where it will be run by cron,
-    or by starting the run immedetialy.
-
-    In either case, sending is via the script at
-    bulk_mail_processor.php
-
-
-
-*/
-
-  #####################################################
-
-
-
 
 
 
