@@ -209,7 +209,7 @@ EOT;
 
 
 ######################
-function get_periodic_lost_message () {
+function get_periodic_lost () {
 	return <<<EOT
 ::name::,
 
