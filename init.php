@@ -30,7 +30,8 @@ class Exception extends \Exception { }
 $conf_ini = './conf.ini';
 
 #use Pimple\Container;
-use digitalmx;
+use digitalmx\MxPDO;
+
 
 $init = new Init($conf_ini);
 
