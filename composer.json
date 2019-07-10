@@ -4,7 +4,7 @@
     "type": "project",
     "license": "proprietary",
     "config": {  
-            "vendor-dir": "./vendor"
+            "vendor-dir": "../vendor"
     },
     "require": {
         "phpmailer/phpmailer": "^6.0",
@@ -27,8 +27,9 @@
     "autoload": { 
          "psr-4": {
             "digitalmx\\": "libmx/" ,
-            "digitalmx\\flames\\" : ["src/","code/","lib/"]
+            "digitalmx\\flames\\" : ["src/"]
             
-            } 
+            }
+            
       } 
 }
