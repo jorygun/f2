@@ -62,7 +62,7 @@ require_once "utilities.php";
 require_once 'setGlobals.php';
 
 use digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
+use digitalmx\MxUtilities as u;
 
 $mode = 'production';
 $pdo = $init->setPDO($mode); #guarantees db values are set
