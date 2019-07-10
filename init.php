@@ -126,7 +126,7 @@ class Init
 		}
 		$this->ini = parse_ini_file( __DIR__ . "/$ini",true);
 		
-	#	u\echor ($this->ini);
+		u\echor ($this->ini);
 		exit
 		;
 	
