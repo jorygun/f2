@@ -11,7 +11,7 @@ namespace digitalmx\flames;
 	use digitalmx as u;
 	
 
-	$page = new DocPage;
+	$page = new DocPage();
 	echo $page->startHead("AMD Flames", 0);
 	echo "<meta name='google-site-verification' content='VIIA7KGTqXjwzC6nZip4pvYXtFVLx7Th7VpWNGpWzpo' />\n";
 	echo $page->startBody("AMD Flames",0);
