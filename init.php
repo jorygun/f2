@@ -40,9 +40,9 @@ $init->setConstants();
 #add vendor autoload
 	if (file_exists(REPO_PATH . "/vendor/autoload.php")){
 		$loader = require_once PROJ_PATH . "/vendor/autoload.php";
-		$loader->add('digitalmx\\',PROJ_PATH .'/libmx/');
-		$loader->add('digitalmx\\flames\\', REPO_PATH . '/lib/');
-		$loader->add('digitalmx\\flames\\', REPO_PATH . '/src/');
+		// $loader->add('digitalmx\\',PROJ_PATH .'/libmx/');
+// 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/lib/');
+// 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/src/');
 		
 	} else {
 		throw new Exception ( "no vendor autoload file.  " );
@@ -124,7 +124,7 @@ class Init
 		}
 		$this->ini = parse_ini_file( __DIR__ . "/$ini",true);
 		
-		u\echor ($this->ini);
+	#	u\echor ($this->ini);
 		exit
 		;
 	
