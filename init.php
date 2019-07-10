@@ -62,8 +62,8 @@ require_once "utilities.php";
 require_once 'setGlobals.php';
 
 
-
-$pdo = $init->setPDO($init->ini); #guarantees db values are set
+$mode = 'production';
+$pdo = $init->setPDO($mode); #guarantees db values are set
 $init->setRequired(); #f2 connect needs db values
 
 use digitalmx\flames\Login;
