@@ -30,8 +30,8 @@ EOT;
 
 
 
-if (isset($_SESSION['user_id'])){
-        $userid = $_SESSION['user_id'];
+if (isset($_SESSION['login']['user_id'])){
+        $userid = $_SESSION['login']['user_id'];
         $user_email = $_SESSION['user_email'];
         $username = $_SESSION['username'];
         $level = $_SESSION['level']; #security level

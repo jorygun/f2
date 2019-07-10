@@ -57,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 else {#new item
      $itemdata = array(); #store data to display
     $itemdata['date_entered'] = sql_now('date');
-    $itemdata['contributor'] = $_SESSION['username'];
-    $itemdata['contributor_id'] = $_SESSION['user_id'];
+    $itemdata['contributor'] = $_SESSION['login']['username'];
+    $itemdata['contributor_id'] = $_SESSION['login']['user_id'];
     $itemdata['id']=0;
     $itemdata['dir'] = "/assets/uploads";
 

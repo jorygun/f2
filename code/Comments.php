@@ -334,7 +334,7 @@ private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
 
          // get the current user's user_id (the one making the comment)
         // and add it to the  no-email list
-        $current_user_id = $_SESSION['DB']['user_id'];
+        $current_user_id = $_SESSION['login']['user_id'];
         $no_email_list[] = $current_user_id;
 
         $uid_list = array_diff($uid_list,$no_email_list);
@@ -386,8 +386,8 @@ private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
 
 #Now build the main message...
 
-    $commenter_email = $_SESSION['user_email'];
-    $commenter_name = $_SESSION['username'];
+    $commenter_email = $_SESSION['login']['user_email'];
+    $commenter_name = $_SESSION['login']['username'];
 
     $mailfrom = "AMD Flames Editor <editor@amdflames.org>";
     switch ($on_db){

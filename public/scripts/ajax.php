@@ -56,7 +56,7 @@ switch ($_POST['ajax']) {
 function vote_action($post){
 	require_once 'Voting.class.php';
 	$voting = new Voting();
-	$user_id = $_SESSION['user_id'];
+	$user_id = $_SESSION['login']['user_id'];
 	if(empty($item_id = $post['item_id'])) {
 		return "posting vote without item id";
 	}
