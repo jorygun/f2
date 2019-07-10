@@ -32,7 +32,7 @@ namespace digitalmx\flames;
 .
 </style>
 
-
+<script>
 function set_message(type){
    
      if (type=='standard'){
