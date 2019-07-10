@@ -61,6 +61,8 @@ require_once 'SiteUtilities.php';
 require_once "utilities.php";
 require_once 'setGlobals.php';
 
+use digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
 
 $mode = 'production';
 $pdo = $init->setPDO($mode); #guarantees db values are set
@@ -119,7 +121,9 @@ class Init
 		}
 		$this->ini = parse_ini_file( __DIR__ . "/$ini",true);
 		
-	
+		u\echor ($this->ini);
+		exit
+		;
 	
 		$repo_dir = __DIR__; #---/flames/<repo>/ - where this repo is      *
 		$this->repo_dir = $repo_dir;
