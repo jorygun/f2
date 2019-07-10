@@ -3,6 +3,8 @@
 #copy this page to index-down.php to bring the site down.
 
 function down_notice (){
+
+	
 	$msg = "Notice: 
 	amdflames.org is currently down. 
 	Access was attempted at " . date('h:i a') . " from 
