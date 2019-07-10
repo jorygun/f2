@@ -13,7 +13,7 @@ ini_set('display_errors', 1);
 	$page = new DocPage();
 
 	
-   echo $page->startHead('Member Admin',0,['ajax']); exit;
+   echo $page->startHead('Member Admin',0,['ajax']); 
  	echo $page ->startBody("Search for Member");
 
 	
