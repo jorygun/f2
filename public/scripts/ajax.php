@@ -96,7 +96,7 @@ function verifyEmail($uid) {
 	$member = new Member($pdo);
 	if ($member->verifyEmail($uid)) {
 		echo "Email Verified";
-	} else }
+	} else {
 		echo "Failed Email Verify";
 	}
 	
