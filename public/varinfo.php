@@ -18,7 +18,7 @@ if (!empty($req)){
 }
 $init_file = '../init.php';
 include $init_file;
-exit;
+
 use digitalmx\flames\DocPage;
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
