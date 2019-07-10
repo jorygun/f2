@@ -153,20 +153,20 @@ echo '</script>';
 
 function get_standard_message () {
 	return  <<<EOT
-Dear ::name,
+Dear ::name::,
 
-The AMD FLAMEs News, $edition_name edition, is ready. 
+The AMD FLAMEs News, ::edition:: edition, is ready. 
 Here's your personal link directly to the most current newsletter:
-	::newslink
+	::newslink::
 
 (To view any of the nearly 1000 back issues, 
 log in and choose Dig In > Newsletter Index.)
 
-::profile
+::profile::
 
 IN THIS ISSUE
 
-::teaser
+::teaser::
 
 We send these messages to all of our members that have not
 asked to opt out. If you want to stop receiving these emails,
@@ -184,21 +184,21 @@ function get_subj_standard () {
 function get_html_standard () {
 	return  <<<EOT
 <html><body>
-Dear ::name,
+Dear ::name::,
 <table style='border:0;width:90%;'><tr><td >
 <img src='https://amdflames.org/graphics/logo69x89.png' /></td><td>
-The AMD FLAMEs News, $edition_name edition, is ready. 
+The AMD FLAMEs News, ::edition:: edition, is ready. 
 Here's your personal link to the most current newsletter:
-    ::newslink
+    ::newslink::
 
 (To view any of the nearly 1000 back issues, 
 log in and choose Dig In > Newsletter Index.)
 
-</td></tr><tr><td colspan='2'>::profile</td></tr>
+</td></tr><tr><td colspan='2'>::profile::</td></tr>
 <tr><td></td><td>
 <b>IN THIS ISSUE</b>
 <pre>
-::teaser
+::teaser::
 </pre>
 
 </td></tr><tr><td colspan='2'>
@@ -211,7 +211,7 @@ EOT;
 ######################
 function get_periodic_lost_message () {
 	return <<<EOT
-::name,
+::name::,
 
 I'm sending this email because you are listed on the AMD alumni site
 amdflames.org as Lost.
@@ -220,20 +220,20 @@ It means we tried to contact you to see if your email address was
 still right, the email didn't bounce, but we did not receive a reply.
 Sometimes those emails don't get through or you may not have noticed.
 
-This email was sent to: ::uemail
+This email was sent to: ::uemail::
 
 If you get this email and are NOT LOST, please just click on the link
 below to verify your email.
-   ::verify
+   ::verify::
 
 If you would like to update your status or change to a different email,
 just log in using this link, and edit your profile.
-   ::link
+   ::link::
 
 I've listed below the headlines in the current newsletter.
 If you weren't lost you would have received this in an email.
 -------------------------------------------------------
-::teaser
+::teaser::
 
 EOT;
 }
