@@ -63,7 +63,7 @@ require_once 'setGlobals.php';
 
 
 
-$pdo = $init->setPDO(); #guarantees db values are set
+$pdo = $init->setPDO($init->ini); #guarantees db values are set
 $init->setRequired(); #f2 connect needs db values
 
 use digitalmx\flames\Login;
@@ -91,7 +91,7 @@ class Init
 		'pair' => '/usr/home/digitalm',
 		'ayebook' => '/Users/john'
 	);
-	protected  $ini; # all the connection params 
+	protected  $ini = array(); # all the connection params 
 	protected $platform;
 	protected $home;
 	private $config_message;
@@ -117,7 +117,7 @@ class Init
 		if (session_status() == PHP_SESSION_NONE) {
 			 session_start();
 		}
-		$this->ini = __DIR__ . "/$ini";
+		$this->ini = parse_ini_file( __DIR__ . "/$ini",true);
 		
 	
 	
@@ -170,10 +170,11 @@ class Init
 		return true;
 	}
 	
-	public function setPDO(){
+	public function setPDO($mode){
+		#mode is production or test
 		$platform = $this->platform;
 		
-		if (! $pdo = new MxPDO($this->platform,'production',$this->ini) ){
+		if (! $pdo = new MxPDO($this->platform,$mode,$this->ini) ){
 			throw new Exception ("Platform not known $platform");
 		}
 		$this->pdo = $pdo;
