@@ -63,7 +63,8 @@ require_once 'setGlobals.php';
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
-u\echop ("paragraph");
+#u\echop ("paragraph");
+echo Defs::$user_aliases;
 exit;
 
 
