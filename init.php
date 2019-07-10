@@ -27,7 +27,7 @@ if (defined ('INIT')){ return; } //some init has already run
 // put Exceptin into this namespace
 class Exception extends \Exception { }
 
-$conf_ini = './config.ini';
+$conf_ini = 'config.ini';
 
 #use Pimple\Container;
 use digitalmx\MxPDO;
