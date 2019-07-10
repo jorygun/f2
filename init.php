@@ -20,7 +20,9 @@ namespace digitalmx\flames;
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 
-
+use digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
+use digitalmx\MxPDO;
 
 if (defined ('INIT')){ return; } //some init has already run
 
@@ -61,9 +63,7 @@ require_once 'SiteUtilities.php';
 require_once "utilities.php";
 require_once 'setGlobals.php';
 
-use digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
-use digitalmx\MxPDO;
+
 #u\echop ("paragraph");
 echo Defs::$user_aliases;
 exit;
