@@ -37,6 +37,7 @@ use digitalmx as u;
 use digitalmx\MxPDO;
 
 $init = new Init($conf_ini);
+echo "Ran init" . BRNL;
 
 $init->setConstants();
 
@@ -68,7 +69,7 @@ echo Defs::$user_aliases;
 exit;
 #u\echop ("paragraph");
 
-exit;
+
 
 
 $mode = 'production';
@@ -127,10 +128,8 @@ class Init
 			 session_start();
 		}
 		$this->ini = parse_ini_file( __DIR__ . "/$ini",true);
-		
 		print_r($this->ini);
-		exit;
-	
+		
 		$repo_dir = __DIR__; #---/flames/<repo>/ - where this repo is      *
 		$this->repo_dir = $repo_dir;
 		
@@ -142,12 +141,12 @@ class Init
 	
 		$this->platform = $this->setPlatform();
 		define ('PLATFORM',$this->platform);
-		
 	
 		$this->home = self::$homes[$this->platform];
 	
 		$this->config_msg = "init.php: \n  platform - $this->platform; repo_dir - $repo_dir; repo: $this->repo \n\n";
 	
+	echo $this->config_msg . BRNL;
 	
 		if ($this->repo == 'live'){
 			ini_set('display_errors',0);
@@ -182,8 +181,7 @@ class Init
 	
 	public function setPDO($mode){
 		#mode is production or test
-		$platform = $this->platform;
-		
+	
 		if (! $pdo = new MxPDO($this->platform,$mode,$this->ini) ){
 			throw new Exception ("Platform not known $platform");
 		}
