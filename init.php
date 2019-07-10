@@ -46,7 +46,7 @@ $init->setConstants();
 		// $loader->add('digitalmx\\',PROJ_PATH .'/libmx/');
 // 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/lib/');
 // 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/src/');
-		
+		echo "Autoload." .BRNL;
 	} else {
 		throw new Exception ( "no vendor autoload file.  " );
 	}
