@@ -8,7 +8,7 @@ namespace digitalmx\flames;
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
 	#require others
-	require 'BulkMail.php';
+	require_once 'BulkMail.php';
 	
 	use digitalmx\flames\DocPage;
 	use digitalmx as u;
