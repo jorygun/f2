@@ -63,10 +63,6 @@ EOT;
 	echo $page->startBody($title ,2);
 
 //END START
-<?php
-//BEGIN START
-
-
 	
 
 	$bulkmail = new BulkMail();
