@@ -14,6 +14,7 @@ namespace digitalmx\flames;
 	use digitalmx as u;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\flames as f;
+	use digitalmx\flames\BulkMail;
 
 	$pdo = \MyPDO::instance();
 
