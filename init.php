@@ -65,7 +65,7 @@ require_once 'SiteUtilities.php';
 require_once "utilities.php";
 require_once 'setGlobals.php';
 
-echo Defs::$user_aliases;
+print_r (Defs::$user_aliases);
 exit;
 #u\echop ("paragraph");
 
