@@ -288,7 +288,7 @@ EOT;
         
 	}
         
-  if ($dt = DateTime::createFromFormat('Y-m-d H:i:s',$row['date_entered'])){
+  if ($dt = \DateTime::createFromFormat('Y-m-d H:i:s',$row['date_entered'])){
   	$date_entered = $dt->format('d M Y');
   }
   else {$date_entered = $row['date_entered'];}
