@@ -13,6 +13,7 @@ namespace digitalmx\flames;
 	use digitalmx\flames\DocPage;
 	use digitalmx as u;
 	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames as f;
 
 	$pdo = \MyPDO::instance();
 
@@ -56,10 +57,10 @@ function set_message(type){
 EOT;
 
 echo '<script>';
-echo 'var standard_message = "'  . ml_script(get_html_standard()) . '";';
-echo 'var standard_subject = "' . get_subj_standard() . '";';
-echo 'var pl_message = "' . ml_script(get_periodic_lost()) . '";';
-echo 'var pl_subject = "' . get_subj_periodic_lost() . '";';
+echo 'var standard_message = "'  . f\ml_script(f\get_html_standard()) . '";';
+echo 'var standard_subject = "' . f\get_subj_standard() . '";';
+echo 'var pl_message = "' . f\ml_script(f\get_periodic_lost()) . '";';
+echo 'var pl_subject = "' . f\get_subj_periodic_lost() . '";';
 echo '</script>';
 
 
