@@ -16,7 +16,7 @@ if (!empty($req)){
 	$test = (strpos($req,'t') !== false);
 	$verbose = (strpos($req,'v') !== false);
 }
-$init_file = '../config/init.php';
+$init_file = '../init.php';
 require $init_file;
 
 use digitalmx\flames\DocPage;
