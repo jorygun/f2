@@ -30,7 +30,7 @@ class Exception extends \Exception { }
 $conf_ini = 'config.ini';
 
 #use Pimple\Container;
-use digitalmx\MxPDO;
+
 
 
 $init = new Init($conf_ini);
@@ -63,6 +63,7 @@ require_once 'setGlobals.php';
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
+use digitalmx\MxPDO;
 #u\echop ("paragraph");
 echo Defs::$user_aliases;
 exit;
