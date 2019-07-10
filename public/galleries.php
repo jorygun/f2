@@ -5,7 +5,7 @@
 	require_once "./scripts/asset_functions.php";
 	
 	use digitalmx\flames\DocPage;
-	$pdo = MyPDO::instance();
+	
 
 	$page = new DocPage;
 	echo $page->startHead("Gallery", 3);
@@ -16,15 +16,15 @@
 
 
 
-if ($gal = $_SERVER['QUERY_STRING']){display_gallery($gal);}
-else{show_galleries();}
+if ($gal = $_SERVER['QUERY_STRING']){display_gallery($gal,$pdo);}
+else{show_galleries($pdo);}
 exit;
 
 #########################################
-function display_gallery($gal){
+function display_gallery($gal,$pdo){
     $nav = new NavBar(1);
     $navbar = $nav -> build_menu("<p><a href='/galleries.php/' target='gallery'>Return to All Galleries</a></p>");
-    $pdo = MyPDO::instance();
+   
 
     if (! is_numeric($gal)){
         preg_match('/^(.*)\.\w+$/',$gal,$m);
@@ -95,7 +95,7 @@ EOT;
 
     foreach ($assets as $asset){
         if (is_numeric($asset) ){
-            if (!empty( $out = get_gallery_asset($asset) )){
+            if (!empty( $out = get_gallery_asset($asset,$pdo) )){
                 echo $out;
             }
             else {continue;} #compensate for missing assts from the list
@@ -105,11 +105,11 @@ EOT;
         }
     }
 }
-function get_gallery_asset($id){
+function get_gallery_asset($id,$pdo){
     #editable is true or false, allowing user to edit the asset data
 
    if (empty($id)){return '';}
-    $pdo = MyPDO::instance();
+   
     $sql = "SELECT * from `assets` WHERE id = $id";
     $row = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
     if (empty($row)){return '';}
@@ -186,10 +186,10 @@ function get_gallery_asset($id){
 
 
 
-function show_galleries($note=''){
+function show_galleries($pdo,$note=''){
     $nav = new NavBar(true);
     $navbar = $nav -> build_menu();
-    $pdo = MyPDO::instance();
+    
 
     echo <<<EOT
     <html><head><title>Galleries</title>

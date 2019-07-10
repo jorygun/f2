@@ -13,7 +13,7 @@ namespace digitalmx\flames;
 	use digitalmx as u;
 	use digitalmx\flames\Definitions as Defs;
 
-	$pdo = \MyPDO::instance();
+	
 
 	$page = new DocPage;
 	$title = "Opportunities"; 
@@ -44,23 +44,23 @@ if (!empty($username) && $username != 'Nobody'){  #user is logged in
 <button onclick=\"window.open('/scripts/opportunity_editor.php?opp=new','opp_edit')\" >Enter New Opportunity</button></p>";
 
 
-    echo get_opps('user',$username);
+    echo get_opps('user',$username,$pdo);
     echo "<hr>";
 }
-if ($level > 6){echo get_opps('admin');}
+if ($level > 6){echo get_opps('admin',$username,$pdo);}
 else {
  echo "
 
     ";
-    echo get_opps('public');
+    echo get_opps('public',$username,$pdo);
     }
 
 echo "</body></html\n";
 
 
 #####################################
-function get_opps($type,$username=''){
-$pdo = \MyPDO::instance();
+function get_opps($type,$username='',$pdo){
+
 # type = public or user or admin
 if ($type == 'public'){
      $sql = "

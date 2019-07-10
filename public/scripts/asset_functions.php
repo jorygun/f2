@@ -2,9 +2,10 @@
 /* contains a bunch of definitions and scripts used by multiple asset
     related scripts.
 */
+require_once '../../init.php';
 
 use digitalmx\flames\Definitions as Defs;
-
+global $pdo;
 
 $asset_types = Defs::$asset_types;
 
@@ -132,7 +133,7 @@ function get_archival_tag_list ()  {
 
 function get_asset_by_id($id,$style='thumb'){
     if (empty($id)){return array ();}
-    $pdo = MyPDO::instance();
+    global $pdo;
     $sql = "SELECT * from `assets` WHERE id = $id";
     $row = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
     #recho($row);
@@ -274,13 +275,13 @@ function get_asset_by_id($id,$style='thumb'){
 }
 
 function set_asset_skip_time ($id){
-    $pdo = MyPDO::instance();
+    global $pdo;
     $sql = "Update `assets` set skip_ts = NOW() where id=$id;";
     $pdo->query($sql);
 }
 
 function get_asset_data($id){
-    $pdo = MyPDO::instance();
+   global $pdo;
 	global $assetfields;
      $itemdata = array(); #store data to display
     #echo "Starting get_asset_data";
@@ -331,7 +332,7 @@ function next_asset_id( $id,$id_list = [] ){
     }
     
     else {
-    	$pdo = MyPDO::instance();
+    	global $pdo;
     	$sql = "SELECT id FROM `assets` WHERE id > $id  AND status != 'D' ORDER by id LIMIT 1;";
     	if (! $next_id = $pdo->query($sql)->fetchColumn()){
     		echo "No ids above $id in database";
@@ -349,7 +350,7 @@ function set_first_use($id){
             if (strpos ($ref, '/scripts/assets.php' ) === false){return null;}
             if ($_SESSION['level'] > 5){return null;} #anythning over member
 
-            $pdo = MyPDO::instance();
+           global $pdo;
             $sqld = "UPDATE `assets` set first_use_date = NOW(), first_use_in = '$ref' where id = '$id';";
             if ($pdo->query($sqld)){return true;}
         }
@@ -593,7 +594,7 @@ function get_gfile($filepath) {
 function delete_asset($id){
     #mark an item as deleted.
     # if already marked as deleted, then delete assetse,
-    $pdo = MyPDO::instance();
+    global $pdo;
 
    $sql = "select * from assets where id = '$id';";
     if (! $row = $pdo->query($sql)->fetch()){
@@ -607,7 +608,7 @@ function delete_asset($id){
     }
 }
 function delete_files($id){
-    $pdo = MyPDO::instance();
+   global $pdo;
 	echo "Deleting files associated with id $id". BRNL;
    $sql = "select * from assets where id = '$id';";
     if (! $row = $pdo->query($sql)->fetch()){
@@ -679,7 +680,7 @@ EOT;
 function delete_confirmed($id,$unlink_list,$doit='true') {
 	$doitmsg =  ($doit)?'':'NOT';
 	
-    $pdo = MyPDO::instance();
+   global $pdo;
     echo "Deleting files for id $id" .BRNL;
 
     foreach($unlink_list as $t=>$f){
@@ -722,7 +723,7 @@ function update_asset($post_array){
     global $editable_fields;
     global $auto_fields;
 
-    $pdo = MyPDO::instance();
+    global $pdo;
 
     $id = $post_array['id'];
     if ($id == 0) {throw new Exception ("attempt to update asset with id = 0");}
@@ -742,7 +743,7 @@ function update_asset($post_array){
 #echo "<p>Post:</p>\n"; print_r ($post_array);
 #echo "<p>Valid:</p>\n"; print_r ($valid_keys);
 
-    $prep = pdoPrep($post_array,$valid_keys,'id');
+    $prep = u\pdoPrep($post_array,$valid_keys,'id');
 #   echo "<p>Prep:</p>\n"; print_r ($prep);
     $id = $prep['key'];
     $sql = "UPDATE `assets` SET ${prep['update']} WHERE id=${prep['key']};";
@@ -823,7 +824,7 @@ function update_galleries($galleryid,$ids){
         $id_list = "'" . implode("','",$ids) . "'";
         $sql = "Select id,url,has_gallery from assets where id in ($id_list)";
        # echo $sql; exit;
-        $pdo = MyPDO::instance();
+       global $pdo;
         $result = $pdo->query($sql);
         echo "Updating info on each gallery item. ";
        while( $row = $result->fetch()){
@@ -883,7 +884,7 @@ function post_asset($post_array){
     
 
      global $image_extensions;
-     $pdo = MyPDO::instance();
+     global $pdo;
 
      if ($id == 0){
 

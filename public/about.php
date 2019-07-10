@@ -3,7 +3,7 @@
 	require_once "init.php";
 
 	use digitalmx\flames\DocPage;
-	$pdo = MyPDO::instance();
+
 
 	$page = new DocPage;
 	echo $page->startHead("About AMD Flames", 0);

@@ -12,7 +12,7 @@ updated voting panel to the user.
 
 
 $repo_path = dirname(dirname(__DIR__));
-require_once $repo_path . '/config/init.php';
+require_once $repo_path . '/init.php';
 
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
@@ -40,7 +40,7 @@ switch ($_POST['ajax']) {
 		break;
 		
 	case 'sendLogin' :
-		return sendLogin($_POST['uid']);
+		return sendLogin($_POST['uid'],$pdo);
 		break;
 	case 'verifyEmail' :
 		return verifyEmail($_POST['uid']);
@@ -74,10 +74,8 @@ function cancel_bulk($job) {
 	echo $bulkmail -> show_bulk_jobs(SITE_PATH . '/bulk_queue');
 }
 
-function sendLogin($tag) {
+function sendLogin($tag,$pdo) {
 	//tag may be uid or email
-
-	$pdo = \MyPDO::instance();
 	$member = new Member($pdo);
 	$login_msg = $member->getLogins($tag);
 	$messenger = new Messenger($pdo); #true = test

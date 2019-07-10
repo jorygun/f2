@@ -2,12 +2,10 @@
 ini_set('display_errors', 1);
 ini_set('error_reporting',E_ALL);
 
+require '../init.php';
 /* One-time prog to convert thumbs from png to jpeg
 */
-require '/usr/home/digitalm/security/f2_constants.php';
-require HOMEPATH . '/Sites/lib/php/MyPDO.class.php';
 
-$pdo = MyPDO::instance();
 $thumbs = SITE_PATH . '/assets/thumbs';
 $limit = 3;
 

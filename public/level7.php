@@ -8,7 +8,7 @@
 	use digitalmx as u;
 	use digitalmx\flames\Definitions as Defs;
 
-	$pdo = MyPDO::instance();
+
 
 	$page = new DocPage;
 	$title = "News Publisher";

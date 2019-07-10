@@ -6,8 +6,7 @@ namespace digitalmx\flames;
 	require_once SITE_PATH ."/scripts/news_functions.php";
 	
 	use digitalmx\flames\DocPage;
-	$pdo = \MyPDO::instance();
-
+	
 	$page = new DocPage;
 	echo $page->startHead("AMD Asset Display", 0);
 	echo <<<EOT

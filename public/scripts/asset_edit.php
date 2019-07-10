@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         case 'Review and Go Next':
         	$_POST['status'] = 'R';
         	$_POST['form'] = 'update';
-        	$id = post_asset_update($_POST);
+        	$id = post_asset_update($_POST,$pdo);
             if (!$next_id = next_asset_id($id,$id_list)){exit;}
              $itemdata = get_asset_data($next_id);
              $itemdata['id_list_string'] = $id_list_string;
@@ -202,10 +202,10 @@ function png_or_jpg_exists($dir,$id){
 }
 
 
-function post_asset_update($post) {
+function post_asset_update($post,$pdo) {
         $id = $post['id'];
         echo "updating asset $id for post_asset_update" . BRNL;
-        $pdo = MyPDO::instance();
+       
         $sql = "UPDATE `assets` 
         	SET title=?, caption=?, vintage=? ,tags=? , status=?
         	WHERE id = $id";

@@ -41,7 +41,7 @@ $root = $_SERVER['DOCUMENT_ROOT'];
 #echo "Updating $url, $article_id, $my_name<br>";
 
 
-	update_link_db($url,$article_id,$my_name);
+	update_link_db($url,$article_id,$pdo);
 
 echo header("Location: $url");
 
@@ -50,10 +50,10 @@ echo header("Location: $url");
 
 	#######################
 
-function update_link_db($url,$article_id){
+function update_link_db($url,$article_id,$pdo){
 		#if url exists, update it; otherwise add
 
-       $pdo = MyPDO::instance();
+       
         $add_user_cnt  =   (empty ($_SESSION['username'])) ? 0 : 1 ;
 
 	$sql_user = "INSERT INTO digitalm_db1.links

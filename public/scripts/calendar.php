@@ -10,17 +10,24 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
 #list ($calendar_h, $calendar_t) = get_events($event_file);
 
-echo start_page();
+	use digitalmx\flames\DocPage;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
+	
+	$page = new DocPage;
+	$title = "Calendar"; 
+	echo $page->startHead($title, 3);
+		echo $page->startBody($title ,2);
 
    $calendar_html_file = SITE_PATH . '/news/news_latest/calendar.html';
     $calendar_tease_file = SITE_PATH . '/news/news_latest/tease_calendar.txt';
     
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 #   echo "<pre>", print_r($_POST,true),"</pre>";
-   if (!empty($_POST['cevent'])){ update_calendar();}
+   if (!empty($_POST['cevent'])){ update_calendar($pdo);}
 }
 
-list ($calendar_h, $calendar_t) = get_events_db();
+list ($calendar_h, $calendar_t) = get_events_db($pdo);
 
 
 
@@ -40,11 +47,11 @@ echo show_calendar_form();
 
 
 ######################################
-function get_events_db(){
+function get_events_db($pdo){
     // reads upcoming events from events table and produces
     // html for newsletter and text file for use in email.
 
-    $pdo = MyPDO::instance();
+    
     $sql = 'SELECT * FROM `events` WHERE `datetime` >= NOW() ORDER BY datetime;';
    # $sql = 'SELECT * FROM `events` ORDER BY datetime;';
     $stmt = $pdo -> query($sql);
@@ -122,9 +129,9 @@ EOT;
     return $f;
 }
 
-function update_calendar(){
+function update_calendar($pdo){
     echo "Updating Calendar";
-    $pdo = MyPDO::instance();
+  
     $sql = "INSERT INTO `events` set event=:cevent,datetime=:cdate,city=:ccity,
         location=:clocation,contact=:ccontact,info=:cinfo;";
     $stmt = $pdo -> prepare ($sql);
@@ -143,16 +150,6 @@ function update_calendar(){
 
 }
 
-function start_page(){
-    $t=<<<EOT
-<html>
-<head>
-<link rel=stylesheet href='/css/news3.css'>
-</head>
-</body>
-EOT;
-    return $t;
-}
 
 function generate_files($h,$t){
     echo "<p>Generating Files</p>";
