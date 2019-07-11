@@ -25,6 +25,7 @@ try {
 	define ('REPO_PATH', dirname(__DIR__) ); # script is in .../project/crons
 	define ('PROJ_PATH', dirname(REPO_PATH));
 	echo "Project: " . PROJ_PATH . "\n";
+	
 	$platform=getPlatform();
 	
 	
@@ -84,7 +85,7 @@ function getPlatform(){
 				$platform = 'pair';
 		} elseif (
 			stristr ($sig,'Users/john') !== false 
-			|| stristr ($sig,'Users/john') !== false 
+			|| stristr ($sig2,'Users/john') !== false 
 			) {	
 				$platform = 'ayebook';
 		} else {
