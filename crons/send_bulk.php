@@ -72,9 +72,11 @@ echo "Checking for files in $queue" . BRNL;
 */
 		
 	if (empty($job = checkfiles($queue)) ){
+	echo "Nothing";
 		exit;
 	}
-
+	echo "Starting $job" . BRNL;
+	
 	#set job dir and record pid so it can be stopped if needed
 	$job_dir = "$bulk/${job}";
 	if (! is_dir($job_dir)){
