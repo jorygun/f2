@@ -54,7 +54,7 @@ function getMessage (type) {
       var result = messdata;
      
       $('#mcontent').html(result['text']);
-      $('#msubject').html(result['subject']);
+      $('#msubject').val(result['subject']);
    },
    error: function( jqXhr, textStatus, errorThrown ){
                     console.log( errorThrown );
