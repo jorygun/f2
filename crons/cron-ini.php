@@ -24,28 +24,19 @@ try {
 
 	define ('PROJ_PATH', dirname(__DIR__) ); # script is in .../project/crons
 
-	if (empty($site_ini = parse_ini_file(PROJ_PATH . '/config/site.ini') )){
-		throw new Exception("Cannot open site ini file");
-	}
-	if (stristr(PROJ_PATH,'/usr/home/digitalm') !== false) {
-		$platform = 'pair';
-	} else {
-		$platform = 'ayebook';
-		$repo = 'f2';
-	}
+	$platform=getPlatform();
+	
 	
 	define ('REPO_PATH',PROJ_PATH . "/$repo");
 	define ('SITE_PATH', REPO_PATH . "/public");
-	define ('SITE', $site_ini['site']);
+	define ('SITE', $_SERVER['SERVER_NAME'];
 	define ('SITE_URL', 'https://' . SITE);
 
 
 	ini_set('include_path', 
-					PROJ_PATH . '/mx-libs/libmx'
-		. ':' . PROJ_PATH . '/lib'
-		. ':' . PROJ_PATH . '/config'
+					PROJ_PATH . '/libmx'
 		. ':' . REPO_PATH . '/config'
-		. ':' . REPO_PATH . '/code'
+		. ':' . REPO_PATH . '/src'
 	);
 
 	require 'MxConstants.php'; #in libmx: NL, BRNL, etc.
@@ -81,5 +72,23 @@ if ( $init){
 	echo "*****  INIT FAILED  *******" . NL;
 	return;
 }
-
-
+function getPlatform(){
+	// using PWD because it seems to alwasy work, even in cron
+		$sig = $_SERVER['DOCUMENT_ROOT'];
+		$sig2 = getenv('PWD');
+		if (
+			stristr ($sig,'usr/home/digitalm') !== false 
+			|| stristr ($sig2,'usr/home/digitalm') !== false 
+			) {	
+				$platform = 'pair';
+		} elseif (
+			stristr ($sig,'Users/john') !== false 
+			|| stristr ($sig,'Users/john') !== false 
+			) {	
+				$platform = 'ayebook';
+		} else {
+				throw new Exception( "cron ini cannot determine platform from ROOT '$sig' or PWD '$sig2'");
+		}
+		return $platform;
+	}
+  
