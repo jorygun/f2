@@ -22,7 +22,7 @@ class BulkMail {
 			$joblist = "<b>Jobs In Bulk Queue:</b><br>";
 			$jobs_in_queue = array_filter(scandir($queue), function($v){return substr($v,0,1) != '.';}); #files not staring with .
 		
-			 if (empty($jobs_in_queue)){return 'Nothing in queue';}
+			 if (empty($jobs_in_queue)){return 'Nothing in queue ' . $queue;}
 			 
 			$joblist .= "<ul>";
 			foreach ($jobs_in_queue as $job){
