@@ -51,7 +51,7 @@ function getMessage (type) {
   
    success: function (messdata) {
       console.log(messdata);
-      var result = messdata[0];
+      var result = messdata;
       $('#mcontent').html(result['text']);
       $('#msubject').html(result['subject']);
    },
