@@ -37,22 +37,10 @@ namespace digitalmx\flames;
 <script>
 function set_message(type){
    
-     if (type=='standard'){
+     if (){
         document.getElementById('message').value = standard_message;
         document.getElementById('msubject').value = standard_subject;
          document.sendchoices.sendto[0].checked=true;
-    }
-    else if (type=='periodic_lost'){
-        document.getElementById('message').value = pl_message;
-        document.getElementById('msubject').value = pl_subject;
-         document.sendchoices.sendto[0].checked=true;
-    }
-    else {
-        document.getElementById('message').value = '';
-        document.getElementById('msubject').value = '';
-         document.sendchoices.sendto[0].checked=true;
-    }
-}
 
 </script>
 EOT;
@@ -151,6 +139,12 @@ echo '</script>';
   #####################################################
 
 #Set up messages
+
+function get_message_text($msg_type){
+	$mtext = file_get_contents(REPO_PATH . "/templates/${msg_type}.txt");
+	
+}
+
 
 function get_standard_message () {
 	return  <<<EOT
@@ -300,7 +294,7 @@ echo <<<EOT
 <div id='in_bulk_queue'>$jobs_in_queue</div>
 
 <p>
-<button  onclick="set_message('standard');">News Ready (html)</button>
+<button  onclick="setMessage('bm-std-plain');">News Ready (html)</button>
 <button onclick="set_message('not_lost');">Not Lost</button>
 <button onclick="set_message('periodic_lost');">Periodic Lost</button>
 <button  onclick="set_message('');">Blank</button>
@@ -314,7 +308,7 @@ echo <<<EOT
 
 
 Message Body<br>
-<textarea name="body" rows="15" cols="78" id='message'>
+<textarea name="body" rows="15" cols="78" id='mcontent'>
 
 
 </textarea>

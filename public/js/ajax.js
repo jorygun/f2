@@ -41,3 +41,14 @@ function takeAction (uid,action) {
         }
  });  
 }
+
+function getMessage (type) {
+   $.ajax({
+   url: "/scripts/ajax.php",
+   data: 'ajax=getmess&type='+type,
+   type: "$POST",
+   success: function (messtxt) {
+      $('#mcontent').html(messtxt);
+   }
+   });
+}

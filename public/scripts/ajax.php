@@ -43,16 +43,21 @@ switch ($_POST['ajax']) {
 		return sendLogin($_POST['uid'],$pdo);
 		break;
 	case 'verifyEmail' :
-		return verifyEmail($_POST['uid']);
+		return verifyEmail($_POST['uid'],$pdo);
 		break;
 	case 'xout' :
-		return xoutUser($_POST['uid']);
+		return xoutUser($_POST['uid'],$pdo);
 		break;
-		
+	case 'getmess' :
+		return getmess($_POST['type']);
+		break
 	default:
 		echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true); 
 }
-	
+function getmess($type) {
+	return file_get_contents(REPO_PATH . "/templates/${type}.txt");
+}
+
 function vote_action($post){
 	require_once 'Voting.class.php';
 	$voting = new Voting();
@@ -87,10 +92,10 @@ function sendLogin($tag,$pdo) {
 		
 }
 
-function verifyEmail($uid) {
+function verifyEmail($uid,$pdo) {
 	//tag may be uid or email
 
-	$pdo = \MyPDO::instance();
+	
 	$member = new Member($pdo);
 	if ($member->verifyEmail($uid)) {
 		echo "Email Verified";
@@ -99,8 +104,8 @@ function verifyEmail($uid) {
 	}
 	
 }
-function xoutUser($uid) {
-	$pdo = \MyPDO::instance();
+function xoutUser($uid,$pdo) {
+	
 	$member = new Member($pdo);
 	if ( $member->xoutUser($uid) ){
 		echo "User xed out";
