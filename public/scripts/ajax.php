@@ -58,7 +58,9 @@ switch ($_POST['ajax']) {
 }
 function getmess($type) {
 	// return text message for bulk mail setup
-	return file_get_contents(REPO_PATH . "/templates/${type}.txt");
+	$tp_path = REPO_PATH . "/templates/${type}.txt";
+	return "Getting $tp_path";
+	return file_get_contents($tp_path);
 }
 
 function vote_action($post){
