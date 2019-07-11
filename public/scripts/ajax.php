@@ -51,6 +51,7 @@ switch ($_POST['ajax']) {
 		return xoutUser($_POST['uid'],$pdo);
 		break;
 	case 'getmess' :
+		return 'at getmess';
 		return getmess($_POST['type']);
 		break;
 	default:
