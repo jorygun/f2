@@ -339,7 +339,7 @@ function checkfiles($queue){
 			
 			if (! preg_match('/^(\d+)(-(\w+))?$/',$f,$matches) ){continue;}
 			$jobid = $matches[1];
-			$jstat = $matches[2];
+			$jstat = $matches[2] ?? '';
 			#echo "$f > $jobid, $jstat\n";
 			#skip files with a status tag
 			if ($jstat = 'cancelled' && filemtime("$queue/$f") < (time() - 86400) ) { #more than 24 hours old
