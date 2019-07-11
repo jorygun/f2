@@ -1,7 +1,11 @@
 <?php
+namespace digitalmx\flames;
 
 //ini_set('display_errors', 1);
 ini_set('error_reporting',E_ALL);
+
+use digitalmx as u;
+use digitalmx\MyPDO;
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
