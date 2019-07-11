@@ -47,7 +47,7 @@ function getMessage (type) {
    url: "/scripts/ajax.php",
    data: 'ajax=getmess&type='+type,
    dataType: 'application/json',
-   type: "POST",
+  
    success: function (messdata) {
       $('#mcontent').html(messdata.text);
       $('#msubject').html(messdata.subj);
