@@ -57,15 +57,15 @@ try {
 	
 }catch (Exception $e){
 	echo 'Error: '
-	.$e->getMessage() .  NL;
+	.$e->getMessage() .  BRNL;
 	$init = false;
 }
 
 
 if (!$quiet)
 echo 
-	"[Cron-start on Site: " . SITE . "(platform $platform) " . NL
-	. "   Repo: $repo" . "; Test: " . $test_state . "; Quiet: " . $quiet_state .  "]" . NL;
+	"[Cron-start on Site: " . SITE . "(platform $platform) " . BRNL
+	. "   Repo: $repo" . "; Test: " . $test_state . "; Quiet: " . $quiet_state .  "]" . BRNL;
 
 if ( $init){
 	define ('INIT',1);
