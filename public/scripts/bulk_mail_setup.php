@@ -280,7 +280,7 @@ echo <<<EOT
 <div id='in_bulk_queue'>$jobs_in_queue</div>
 
 <p>
-<button  onclick="setMessage('bm-std-plain');">News Ready (html)</button>
+<button  onclick="getMessage('bm-std-plain');">News Ready (html)</button>
 <button onclick="set_message('not_lost');">Not Lost</button>
 <button onclick="set_message('periodic_lost');">Periodic Lost</button>
 <button  onclick="set_message('');">Blank</button>
