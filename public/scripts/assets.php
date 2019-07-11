@@ -14,7 +14,7 @@ use digitalmx\flames as f;
 	use digitalmx as u;
 	use digitalmx\flames\Definitions as Defs;
 
-	$pdo = \MyPDO::instance();
+	
 
 	$page = new DocPage;
 	$title = "Assets"; 
@@ -155,7 +155,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') ||  $get_token){
     	
     	</form>
 EOT;
-    	echo show_assets_from_list($id_list);
+    	echo show_assets_from_list($id_list,$pdo);
        
     }
 
@@ -203,9 +203,9 @@ function tag_display($tags,$style='string'){
     return $t;
 }
 
-function show_assets_from_list($ids){
+function show_assets_from_list($ids,$pdo){
         global $asset_status;
-        $pdo = \MyPDO::instance();
+      
         if (! isset($ids)){die ("Nothing sent to show_assets_from_list");}
         if (! is_array($ids)){
             if (is_numeric($ids)){$ids = array($ids);}

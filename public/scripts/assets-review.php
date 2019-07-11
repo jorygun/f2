@@ -22,7 +22,7 @@
 
 require_once "asset_functions.php";
 
-$pdo = MyPDO::instance();
+
 
 $sql_now = sql_now('date');
 // $rcodes = array (
@@ -63,7 +63,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'GET') ){
 //     }
 //     $run = $_SERVER['QUERY_STRING'] ;
 
-    get_unreviewed_items($rcode,$andwhere);
+    get_unreviewed_items($rcode,$andwhere,$pdo);
 
 }
 
@@ -78,7 +78,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' ){
         exit;
     }
     if (!empty($_POST['skip']) ){
-        set_skip($id);
+        set_skip($id,$pdo);
         echo "<p>ID $id will be skipped for 2 days.</p>";
        get_unreviewed_items($rcode,$andwhere,$last_tags);
        exit;
@@ -87,7 +87,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST' ){
     $row = $_POST;
 
     #recho ($_POST,'post data');
-    $last_tags = post_review($rcode,$row);
+    $last_tags = post_review($rcode,$row),$pdo;
 
     get_unreviewed_items($rcode,$andwhere,$last_tags);
 }
@@ -97,14 +97,14 @@ echo "
 ";
 
 ##############################################
-function set_skip ($id){
-    $pdo = MyPDO::instance();
+function set_skip ($id,$pdo){
+   
     $sql = "Update `assets` set skip_ts = NOW() where id=$id;";
     $pdo->query($sql);
 }
 
-function post_review($rcode,$row) {
-    $pdo = MyPDO::instance();
+function post_review($rcode,$row,$pdo) {
+    
     global $asset_status;
     $tagu = array();
     $tags = '';
@@ -142,10 +142,10 @@ function post_review($rcode,$row) {
     return $tags;
 }
 
-function get_unreviewed_items($rcode, $andwhere='',$last_tags=''){
+function get_unreviewed_items($rcode, $andwhere='',$last_tags='',$pdo){
 
         $get_limit = 1;
-        $pdo = MyPDO::instance();
+       
 
         #skip Deleted,allready checked, Hard delete, Test, Error
         $sql = "SELECT * FROM `assets`
