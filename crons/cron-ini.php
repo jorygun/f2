@@ -29,7 +29,7 @@ try {
 	
 	define ('REPO_PATH',PROJ_PATH . "/$repo");
 	define ('SITE_PATH', REPO_PATH . "/public");
-	define ('SITE', $_SERVER['SERVER_NAME'];
+	define ('SITE', $_SERVER['SERVER_NAME']);
 	define ('SITE_URL', 'https://' . SITE);
 
 
