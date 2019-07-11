@@ -1,5 +1,5 @@
 <?php
-namespace = digitalmx\flames;
+namespace digitalmx\flames;
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
