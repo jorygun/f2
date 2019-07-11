@@ -101,7 +101,7 @@ class Init
 	private $site; #/beta.amdflames.org
 	private $repo_dir;
 	private $proj_dir;
-	
+	private $ini_file;
 	public $pdo;
 	
 	
@@ -120,6 +120,7 @@ class Init
 		if (session_status() == PHP_SESSION_NONE) {
 			 session_start();
 		}
+		$this->ini_file =  __DIR__ . "/$ini";
 		$this->ini = parse_ini_file( __DIR__ . "/$ini",true);
 		#print_r($this->ini);
 		
@@ -175,7 +176,7 @@ class Init
 	public function setPDO($mode){
 		#mode is production or test
 	
-		if (! $pdo = new MxPDO($this->ini,$mode) ){
+		if (! $pdo = new MxPDO($this->ini_file,$mode) ){
 			throw new Exception ("Platform not known $platform");
 		}
 		$this->pdo = $pdo;
