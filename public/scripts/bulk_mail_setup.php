@@ -239,8 +239,7 @@ EOT;
 ############## POST #####################
 else { #IS POST
  
-	echo  "<HTML><head><title>Bulk Email Plan</title></head>";
-
+	
 	#ge job id and set paths
 	$working = REPO_PATH . "/bulk_jobs";
 	$queue = REPO_PATH . "/bulk_queue";
@@ -283,7 +282,7 @@ else { #IS POST
 
 $starttimestamp = strtotime($_POST['start']);
 
-$dt = new DateTime(); #sets to MDT because server
+$dt = new \DateTime(); #sets to MDT because server
 $dt->setTimestamp($starttimestamp);
 echo "start date set to " . $dt->format('M d H:i T') .';' ;
 #$dt->setTimeZone(new DateTimeZone('America/Los_Angeles'));
