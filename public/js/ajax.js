@@ -51,7 +51,7 @@ function getMessage (type) {
   
    success: function (messdata) {
       console.log(messdata);
-      var result = $.parseJSON(messdata);
+      var result = messdata;
       alert ("ajax: " + result['subject']);
       
       $('#mcontent').html(result['text']);
