@@ -56,9 +56,9 @@ switch ($_POST['ajax']) {
 	default:
 		echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true); 
 }
-function getmess($type) {
+function getmess($type,$repo_path) {
 	// return text message for bulk mail setup
-	return file_get_contents(REPO_PATH . "/templates/${type}.txt");
+	return file_get_contents($repo_path . "/templates/${type}.txt");
 }
 
 function vote_action($post){
