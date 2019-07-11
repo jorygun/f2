@@ -290,7 +290,7 @@ echo <<<EOT
 
 <br><hr><br>
 
-<p>Subject <input type="text" name="subject" size="100" id='msubject' value=''></p>
+<p>Subject <input type="text" name="subject" size="100" id='msubject' value = 'title' ></p>
 
 
 Message Body<br>
