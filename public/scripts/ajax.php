@@ -50,11 +50,12 @@ switch ($_POST['ajax']) {
 		break;
 	case 'getmess' :
 		return getmess($_POST['type']);
-		break
+		break;
 	default:
 		echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true); 
 }
 function getmess($type) {
+	// return text message for bulk mail setup
 	return file_get_contents(REPO_PATH . "/templates/${type}.txt");
 }
 
