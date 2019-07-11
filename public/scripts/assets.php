@@ -279,12 +279,7 @@ function show_assets_from_list($ids,$pdo){
 EOT;
 
 
-		if ( $row['status'] == 'D' ){
-			$edit_panel .= "Already Deleted.  To Delete linked files, click Edit Asset.";
-		}
-		else {
-			 $edit_panel .= "<button type='submit' name='delete' value='$id' style='background:#f33'>Mark Deleted</button>";
-		}
+		
         
 	}
         
@@ -322,6 +317,7 @@ EOT;
         
         </table>
 		</form>
+		<hr>
 EOT;
 
     }
