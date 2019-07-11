@@ -2,12 +2,18 @@
 namespace digitalmx\flames;
 
 class BulkMail {
-	$repo = dirname(__DIR__);
 	
-	private $queue = $repo . '/var/bulk_queue';
-	private $working= $repo . '/var//bulk_jobs';
+	private $repo;
+	private $queue ;
+	private $working;
 	
-	
+	public function __construct (){
+		$repo = dirname(__DIR__);
+		$this->queue = $repo  . '/var/bulk_queue';
+		$this->working = $repo . '/var/bulk_jobs';
+		
+		
+	}
 	public function show_bulk_jobs(){
 		#looks for jobs in queue, and displays info about them
 	   		$queue = $this->queue;
