@@ -52,8 +52,7 @@ switch ($_POST['ajax']) {
 		break;
 		
 	case 'getmess' :
-		echo 'at getmess';
-		#return getmess($_POST['type']);
+		echo getmess($_POST['type']);
 		break;
 		
 	default:
