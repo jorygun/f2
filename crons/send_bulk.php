@@ -196,6 +196,7 @@ EOT;
             
             $news_url = SITE_URL . "/news" . "/?s=$slink";
             $news_link = "<a href='$news_url'>$news_url</a>";
+            $verify_link = SITE_URL . "/scripts/verify_email.php/$id";
             
             $profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$slink";
             
@@ -287,8 +288,8 @@ EOT;
 
 	$admin_msg = "
 ------------------------------------------------
-Batch email completed on job $mypid at $endtimedate.
-$reason
+Batch email completed on job $job at $endtimedate.
+
 
 $sent sent in $human_elapsed. ($rate/hour).
 --------------------------------------------------

@@ -31,7 +31,7 @@ try {
 	
 	define ('REPO_PATH',PROJ_PATH . "/$repo");
 	define ('SITE_PATH', REPO_PATH . "/public");
-	define ('SITE', $_SERVER['SERVER_NAME'] );
+	define ('SITE', 'amdflames.org');  #cannot be dynamic because cron doesn't have a server
 	define ('SITE_URL', 'https://' . SITE);
 
 echo "Site url: " . SITE_URL . "\n";
