@@ -20,7 +20,7 @@ ini_set('error_reporting', -1);
 	use digitalmx\flames\Member;
 	use digitalmx\flames\Messenger;
 	use digitalmx\flames\DocPage;
-
+	use digitalmx\MyDPO
 	
 //END START
 
