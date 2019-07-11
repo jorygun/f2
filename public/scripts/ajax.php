@@ -16,6 +16,7 @@ require_once $repo_path . '/init.php';
 
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
+use digitalmx as u;
 
 
 if (empty($_SESSION['login']['user_id'])){
@@ -26,6 +27,7 @@ if (empty($_SESSION['login']['user_id'])){
 
 if (empty($_POST['ajax'] )){
 	echo "No ajax request";
+	u\echor($_POST,'post');
 	exit;
 }
 
