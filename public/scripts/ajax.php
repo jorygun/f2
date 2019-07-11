@@ -67,8 +67,8 @@ function getmess($type) {
 	list($subject,$text) = explode("\n",$message,2);
 	$result['text']=$text;
 	$result['subject']=$subject;
-	return "sub: " . $result['subject'] . 'mess: ' . $result['text'] . "\n";
-	#return json_encode($result);
+	#return "sub: " . $result['subject'] . 'mess: ' . $result['text'] . "\n";
+	return json_encode($result);
 	
 }
 
