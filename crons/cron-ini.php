@@ -22,8 +22,9 @@ try {
 
 
 
-	define ('PROJ_PATH', dirname(__DIR__) ); # script is in .../project/crons
-
+	define ('REPO_PATH', dirname(__DIR__) ); # script is in .../project/crons
+	define ('PROJ_PATH', dirname(REPO_PATH);
+	
 	$platform=getPlatform();
 	
 	
