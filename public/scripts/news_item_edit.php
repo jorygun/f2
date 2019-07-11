@@ -596,7 +596,7 @@ function initialize_row () {
 
     );
 
-    if ($_SESSION['username'] == 'FLAMES admin'){
+    if ($_SESSION['login']['username'] == 'FLAMES admin'){
 
        $form [ 'contributor']	=	'FLAMES editor';
         $form ['contributor_id']	=	'';
