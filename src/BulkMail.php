@@ -2,9 +2,10 @@
 namespace digitalmx\flames;
 
 class BulkMail {
-
-	private $queue = '/usr/home/digitalm/Sites/flames/bulk_jobs/queue';
-	private $working='/usr/home/digitalm/Sites/flames/bulk_jobs';
+	$repo = dirname(__DIR__);
+	
+	private $queue = $repo . '/var/bulk_queue';
+	private $working= $repo . '/var//bulk_jobs';
 	
 	
 	public function show_bulk_jobs(){

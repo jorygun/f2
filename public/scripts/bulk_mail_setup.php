@@ -102,7 +102,7 @@ echo '</script>';
 	$assets = $news_latest . "/assets.txt";
 
 
-	$queue = PROJ_PATH . '/bulk_jobs/queue'; #directory.  put jobs in here
+	$queue = REPO_PATH . '/var/bulk_queue'; #directory.  put jobs in here
 
 	
 	$comments = $news_latest . "/current_comments.txt";
@@ -363,8 +363,8 @@ else { #IS POST
 	echo  "<HTML><head><title>Bulk Email Plan</title></head>";
 
 	#ge job id and set paths
-	$working = PROJ_PATH . "/bulk_jobs";
-	$queue = $working . "/queue";
+	$working = REPO_PATH . "/bulk_jobs";
+	$queue = REPO_PATH . "/bulk_queue";
 	
 	
 	#set up job as datecode, and make sure it doesn't already exist
