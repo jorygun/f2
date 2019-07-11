@@ -5,7 +5,7 @@ namespace digitalmx\flames;
 ini_set('error_reporting',E_ALL);
 
 use digitalmx as u;
-use digitalmx\MyPDO;
+
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
@@ -36,14 +36,14 @@ then marked as published.
 
 
 
-$my_login = $_SESSION['pwid'];
 
+$myid = $_SESSION['login']['user_id'];
 
 $now = sql_now();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 // build the web page
-    $pdo = MyPDO::instance();
+ 
 
 	if (!empty ($id_list = $_POST['idlist'])){
 		#all ids on the page
@@ -169,7 +169,7 @@ if ($mode == 't'){
 
 
 echo "<table>";
-$pdo = MyPDO::instance();
+
 
 $result=$pdo->query($sql);
 $last_scheduled = '';
