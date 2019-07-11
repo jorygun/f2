@@ -241,8 +241,8 @@ else { #IS POST
  
 	
 	#ge job id and set paths
-	$working = REPO_PATH . "/bulk_jobs";
-	$queue = REPO_PATH . "/bulk_queue";
+	$working = REPO_PATH . "/var/bulk_jobs";
+	$queue = REPO_PATH . "/var/bulk_queue";
 	
 	
 	#set up job as datecode, and make sure it doesn't already exist
