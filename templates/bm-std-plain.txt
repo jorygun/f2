@@ -1,4 +1,4 @@
-FLAME News $edition_name for ::name::
+FLAME News ::edition:: for ::name::
 Dear ::name::,
 
 The AMD FLAMEs News, ::edition:: edition, is ready. 
