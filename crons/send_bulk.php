@@ -396,6 +396,7 @@ function read_msg_file($msg_file) {
 		$msg=[];
 		$mh = fopen("$msg_file", 'r');
 		$msg['subject'] = fgets($mh); #first line
+		$message = '';
 		while (($line = fgets($mh)) !== false) {
 			$message .= $line;
 		}
