@@ -1,5 +1,5 @@
 <?php
-
+namespace digitalmx\flames;
 
 class BulkMail {
 
