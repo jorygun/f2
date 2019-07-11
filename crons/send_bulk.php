@@ -94,7 +94,7 @@ echo "Checking for files in $queue" . BRNL;
 		echo "Cannot write PID file: ";
 		u\echor( stat ($job_dir),'Stat' );
 		exit;
-		
+		}
 	
 	$starttime = time();
 	$startdate = date('Y-m-d H:i',$starttime);
