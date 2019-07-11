@@ -34,23 +34,9 @@ namespace digitalmx\flames;
 .
 </style>
 
-<script>
-function set_message(type){
-   
-     if (){
-        document.getElementById('message').value = standard_message;
-        document.getElementById('msubject').value = standard_subject;
-         document.sendchoices.sendto[0].checked=true;
 
-</script>
 EOT;
 
-echo '<script>';
-echo 'var standard_message = "'  . f\ml_script(f\get_html_standard()) . '";';
-echo 'var standard_subject = "' . f\get_subj_standard() . '";';
-echo 'var pl_message = "' . f\ml_script(f\get_periodic_lost()) . '";';
-echo 'var pl_subject = "' . f\get_subj_periodic_lost() . '";';
-echo '</script>';
 
 
 	echo $page->startBody($title ,2);
