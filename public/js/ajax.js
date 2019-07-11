@@ -52,7 +52,7 @@ function getMessage (type) {
    success: function (messdata) {
       console.log(messdata);
       var result = messdata;
-      alert ("ajax: " . messdata['subject']);
+      alert ("ajax: " + messdata['subject']);
       
       $('#mcontent').html(result['text']);
       $('#msubject').html(result['subject']);
