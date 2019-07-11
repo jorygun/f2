@@ -52,6 +52,9 @@ function getMessage (type) {
       console.log(messdata);
       $('#mcontent').html(messdata.text);
       $('#msubject').html(messdata.subj);
-   }
+   },
+   error: function( jqXhr, textStatus, errorThrown ){
+                    console.log( errorThrown );
+   },
    });
 }
