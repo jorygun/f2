@@ -51,8 +51,8 @@ function getMessage (type) {
   
    success: function (messdata) {
       console.log(messdata);
-      $('#mcontent').html(messdata['text']);
-      $('#msubject').html(messdata['subject']);
+      $('#mcontent').html(messdata[0]['text']);
+      $('#msubject').html(messdata[0]['subject']);
    },
    error: function( jqXhr, textStatus, errorThrown ){
                     console.log( errorThrown );
