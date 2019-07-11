@@ -8,7 +8,8 @@ class BulkMail {
 	private $working;
 	
 	public function __construct (){
-		$repo = dirname(__DIR__);
+		#$repo = dirname(__DIR__);
+		$repo = REPO_PATH;
 		$this->queue = $repo  . '/var/bulk_queue';
 		$this->working = $repo . '/var/bulk_jobs';
 		
@@ -16,8 +17,8 @@ class BulkMail {
 	}
 	public function show_bulk_jobs(){
 		#looks for jobs in queue, and displays info about them
-	   		$queue = $this->queue;
-	   		$working = $this->working;
+	   	$queue = $this->queue;
+	   	$working = $this->working;
 	   		
 			$joblist = "<b>Jobs In Bulk Queue:</b><br>";
 			$jobs_in_queue = array_filter(scandir($queue), function($v){return substr($v,0,1) != '.';}); #files not staring with .
