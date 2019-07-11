@@ -16,7 +16,7 @@ namespace digitalmx\flames;
 	use digitalmx\flames as f;
 	use digitalmx\flames\BulkMail;
 
-	$pdo = \MyPDO::instance();
+	
 
 	$page = new DocPage;
 	$title = "Bulk Mail Setup"; 
@@ -179,7 +179,7 @@ EOT;
 
 
 function get_subj_standard () {
-	return "FLAME News $edition_name for ::name";
+	return "FLAME News $edition_name for ::name::";
 }
 ####################
 function get_html_standard () {
@@ -248,7 +248,7 @@ function get_subj_periodic_lost () {
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-$pdo = MyPDO::instance();
+
 
 // get counts for the  mail sets
 
@@ -282,19 +282,19 @@ echo <<<EOT
 
 <p><b>Create the Email</b></p>
 <p>You may use the following placeholders:<ul>
-<li>::link  User's personal link to log in
-<li>::slink s=users_code
-<li>::newslink to link to latest newsletter for this user
-<li>::name  User's name in db
-<li>::profile_date Date user's profile last updated if > 1 year<br>
-<li>::donor_date Date of last contribution
-<li>::teaser  Combination of highlights from current newsletter
-<li>::preview Headlines in Preview (News_Next) edition
-<li>::verify URL to verify email
-<li>::uemail User's email address
-<li>::no_bulk Notice to users not subscribing to weekly email
+<li>::link::  User's personal link to log in
+<li>::slink:: s=users_code
+<li>::newslink:: to link to latest newsletter for this user
+<li>::name::  User's name in db
+<li>::profile_date:: Date user's profile last updated if > 1 year<br>
+<li>::donor_date:: Date of last contribution
+<li>::teaser::  Combination of highlights from current newsletter
+<li>::preview:: Headlines in Preview (News_Next) edition
+<li>::verify:: URL to verify email
+<li>::uemail:: User's email address
+<li>::no_bulk:: Notice to users not subscribing to weekly email
 <li> [image nnn] replaced by image link to thumb file nnn.jpg
-
+<li> ::edition:: Edition name
 </ul>
 
 <div id='in_bulk_queue'>$jobs_in_queue</div>
@@ -396,7 +396,7 @@ else { #IS POST
 	$teaser = build_teaser(SITE_PATH . "/news/news_latest" );
 
 	$message = $_POST['body'];
-	$message = str_replace('::teaser',$teaser , $message);
+	$message = str_replace('::teaser::',$teaser , $message);
 	$message = preg_replace('/\t/',"    ",$message);
 
 
@@ -510,7 +510,7 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 ######### Get the send list ##########
 function get_send_list ($select_all_valid) {
 
-$pdo = MyPDO::instance();
+
 $field_list = "*";
 $sql = "SELECT $field_list FROM `members_f2` ";
 

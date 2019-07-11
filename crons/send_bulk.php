@@ -75,28 +75,23 @@ echo "Checking for files in $queue" . BRNL;
 	the date set to the scheduled run date/time.
 */
 		
-	if (empty($jobs = checkfiles($queue)) ){
-
-		if (!$quiet) echo "No jobs for now" . BRNL; 
+	if (empty($job = checkfiles($queue)) ){
 		exit;
 	}
-
-	$job = $jobs[0]; #get first one on list.
 
 	#set job dir and record pid so it can be stopped if needed
 	$job_dir = "$bulk/${job}";
 	if (! is_dir($job_dir)){
 		throw new Exception ("Cannot find bulk job directory $job_dir");
 	}
-	#rename in queue so it doesn't get started again. 
-	// will rename to original if test is set
-	rename ("$queue/$job","$queue/${job}-running");
+	
 	
    $bmail_list = "$job_dir/list.txt";
    $bmail_msg = "$job_dir/message.txt";
 	
-	
-	file_put_contents("$job_dir/pid.txt",getmypid() );
+	#record pid so job can be killed if necessary.  Multiple runs
+	# will record multiple pids.
+	file_put_contents("$job_dir/pid.txt",getmypid() . "\n", FILE_APPEND );
 	
 	$starttime = time();
 	$startdate = date('Y-m-d H:i',$starttime);
@@ -139,12 +134,12 @@ echo "Checking for files in $queue" . BRNL;
    Please consider changing this setting on your profile so you can
    hear news about AMD and other AMD Flames. 
    Your personal login for the site is:
-   ::link  )
+   ::link::  )
 
 EOT;
 
   $profile_message = "
-    Your profile was last updated on ::profile_update.  
+    Your profile was last updated on ::profile_update::.  
     To update: log in, then under your name at top right, select 'View/Edit Profile'.
 
         ";
@@ -153,7 +148,7 @@ EOT;
 ------------------------------------------------------------------
    Click to verify that this is your correct email address:
 
-       https://amdflames.org/scripts/verify_email.php?s=::slink
+       https://amdflames.org/scripts/verify_email.php?s=::slink::
 
 -------------------------------------------------------------------
 EOT;
@@ -203,32 +198,32 @@ EOT;
             
             
         #subsititute in imessage.  later subs can replace text in earlier subs
-        if ($no_bulk){$imessage = str_replace('::no_bulk',$no_bulk_message,$imessage);
+        if ($no_bulk){$imessage = str_replace('::no_bulk::',$no_bulk_message,$imessage);
             
          } else {
-               $imessage = str_replace('::no_bulk','',$imessage);
+               $imessage = str_replace('::no_bulk::','',$imessage);
          }
 			 if ($age_flag > 0){
-               $imessage = str_replace('::profile',$profile_message,$imessage);
+               $imessage = str_replace('::profile::',$profile_message,$imessage);
             
          }else {
-             $imessage = str_replace('::profile','',$imessage);
+             $imessage = str_replace('::profile::','',$imessage);
          }
 			if (false) {
-				$imessage = str_replace('::verify',$verify_message,$imessage);
+				$imessage = str_replace('::verify::',$verify_message,$imessage);
 		  } else {
-				$imessage = str_replace('::verify','',$imessage);
+				$imessage = str_replace('::verify::','',$imessage);
 		  }
            
-            $isubject = str_replace('::name',$username,$isubject);
-            
-            $imessage = str_replace('::name', $username, $imessage);
-            $imessage = str_replace('::link', $login_link, $imessage);
-            $imessage = str_replace('::slink',$logincode,$imessage);
-             $imessage = str_replace('::verify',$verify_link,$imessage);
-             $imessage = str_replace('::uemail',$user_email,$imessage);
-             $imessage = str_replace('::newslink',$news_link,$imessage);
-             $imessage = str_replace('::profile_update',$profile_updated_date,$imessage);
+            $isubject = str_replace('::name::',$username,$isubject);
+            $imessage = str_replace('::edition::', $username, $imessage);
+            $imessage = str_replace('::name::', $username, $imessage);
+            $imessage = str_replace('::link::', $login_link, $imessage);
+            $imessage = str_replace('::slink::',$logincode,$imessage);
+             $imessage = str_replace('::verify::',$verify_link,$imessage);
+             $imessage = str_replace('::uemail::',$user_email,$imessage);
+             $imessage = str_replace('::newslink::',$news_link,$imessage);
+             $imessage = str_replace('::profile_update::',$profile_updated_date,$imessage);
              
             
 	
@@ -264,7 +259,7 @@ EOT;
 //Replace the plain text body with one created manually
 			#$mail->AltBody = 'This is a plain-text message body';
 		if (!$mail->send()) {
-   			 echo "Mailer Error: " . $mail->ErrorInfo;
+			fwrite ($logh,"*** Error on $user_email. " . $mail->ErrorInfo . "\n") ;
 		} 
 }	
            $sent++; // Add to Sent Count
@@ -275,12 +270,7 @@ EOT;
            sleep($interval);
 
       } // End of Loop
-   
 
-
-
-	
-	
 	
 // end job
 	
@@ -335,23 +325,39 @@ $sent sent in $human_elapsed. ($rate/hour).
 
 
  
+/* returns a list of jobs in queue that
+	are due to run and do not have a tag associated 
+	with them.  Only one job will be run.
+	Next job will be picked up on next cron run.
+*/
 
 function checkfiles($queue){
 	$jfiles = [];
 	$qfiles = scandir($queue);
 	foreach ($qfiles as $f){
-			#get job id for jobs, including  a status suffix (-cancelled)
+			/* get job id for jobs, including  a status suffix (-cancelled)
+				looking for ddddddd plus option -text
+			*/
+			
 			if (! preg_match('/^(\d+)(-(\w+))?$/',$f,$matches) ){continue;}
 			$jobid = $matches[1];
 			$jstat = $matches[2];
 			#echo "$f > $jobid, $jstat\n";
 			#skip files with a status tag
-			if (!empty($jstat)){continue;}
-			if (filemtime("$queue/$jobid") > time() ){ continue;}
-			$jfiles[] = $jobid;
+			if ($jstat = 'cancelled' && filemtime("$queue/$f") < (time() - 86400) ) { #more than 24 hours old
+				unlink ("$queue/$f");
+				continue;
+			}
+			if (!empty($jstat)){continue;} #do not process job with any status
+			#only have files with just jobid now
+			if (filemtime("$queue/$jobid") > time() ){ continue;} #not due yet
+			
+			#have a job to run
+			rename ("$queue/$jobid","$queue/${jobid}-running");
+			return $jobid; 
 			
 		}
-		return $jfiles;
+		return false;
 	}
 		
 

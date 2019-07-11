@@ -4,7 +4,7 @@
 //ini_set('error_reporting', E_ALL);
 
 
-require_once 'MyPDO.class.php';
+require_once 'MyPDO.php';
 use digitalmx\flames\Definitions as Defs;
 
 

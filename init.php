@@ -64,8 +64,8 @@ require_once 'SiteUtilities.php';
 require_once "utilities.php";
 require_once 'setGlobals.php';
 
-$mode = 'production';
-$pdo = $init->setPDO($mode); #guarantees db values are set
+$dbmode = 'production';
+$pdo = $init->setPDO($dbmode); #guarantees db values are set
 
 $init->setRequired(); #f2 connect needs db values
 
