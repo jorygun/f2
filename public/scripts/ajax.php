@@ -88,9 +88,9 @@ function vote_action($post){
 function cancel_bulk($job) {
 	require_once  'BulkMail.php';
 	$bulkmail = new BulkMail;
-	$queue = PROJ_PATH . '/bulk_jobs/queue';
+	$queue = REPO_PATH . '/var/bulk_queue';
 	rename ($queue . "/$job" , $queue . "/${job}-cancelled");
-	echo $bulkmail -> show_bulk_jobs(SITE_PATH . '/bulk_queue');
+	echo $bulkmail -> show_bulk_jobs();
 }
 
 function sendLogin($tag,$pdo) {
