@@ -1,4 +1,6 @@
 <?php
+namespace = digitalmx\flames;
+
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	if (f2_security_below(6)){exit;}
@@ -54,7 +56,7 @@ EOT;
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     //if theres an id its an update, otherwise its an insert
 	//prepare data
-	$pdo = MyPDO::instance();
+
 	
 	if ( ! $_POST['title'] ){
 	    echo "
@@ -241,7 +243,7 @@ $row = initialize_row();
 if (isset ($_GET['id']) && $_GET['id'] != 0) {
         $id = $_GET['id'];
         // retrieve existing record
-        $pdo = MyPDO::instance();
+       
         $sql = "SELECT * FROM `news_items` WHERE id = '$id';";
 
         $row = $pdo->query($sql)->fetch();
@@ -583,8 +585,8 @@ function initialize_row () {
 			'asset_id' => '',
 			'asset_list'=>'',
 			
-        'contributor'	=>	$_SESSION['username'],
-        'contributor_id'	=>	$_SESSION['user_id'],
+        'contributor'	=>	$_SESSION['login']['username'],
+        'contributor_id'	=>	$_SESSION['login']['user_id'],
         'status'	=>	'N',
         'id'    => 0,
         'source_date' => date('d M, Y'),
