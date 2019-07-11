@@ -61,7 +61,7 @@ try {
 	
 
 	require 'MxPDO.php';
-	$pdo = new \digitalmx\MxPDO ('production',$platform,PROJ_PATH . '/config/db.ini');
+	$pdo = new \digitalmx\MxPDO (PROJ_PATH . '/config/db.ini');
 	
 }catch (Exception $e){
 	echo 'Error: '

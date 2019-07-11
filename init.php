@@ -175,7 +175,7 @@ class Init
 	public function setPDO($mode){
 		#mode is production or test
 	
-		if (! $pdo = new MxPDO($this->platform,$mode,$this->ini) ){
+		if (! $pdo = new MxPDO($this->ini,$mode) ){
 			throw new Exception ("Platform not known $platform");
 		}
 		$this->pdo = $pdo;
