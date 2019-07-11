@@ -353,7 +353,7 @@ function checkfiles($queue){
 			if (filemtime("$queue/$jobid") > time() ){ continue;} #not due yet
 			
 			#have a job to run
-			rename ("$queue/$jobid","$queue/${jobid}-running");
+			#rename ("$queue/$jobid","$queue/${jobid}-running");
 			return $jobid; 
 			
 		}
