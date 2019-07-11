@@ -1,3 +1,1 @@
-<?php
-require '../init.php';
-
+../init.php
