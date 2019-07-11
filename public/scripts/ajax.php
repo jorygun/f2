@@ -68,7 +68,7 @@ function getmess($type) {
 	$result['text']=$text;
 	$result['subject']=$subject;
 	#return "sub: " . $result['subject'] . 'mess: ' . $result['text'] . "\n";
-	return json_encode($result);
+	return json_encode(array_shift($result));
 	
 }
 
