@@ -54,7 +54,7 @@ try {
 	
 
 	require 'MxPDO.php';
-	$pdo = new \digitalmx\MxPDO (PROJ_PATH . '/config/db.ini');
+	$pdo = new \digitalmx\MxPDO (REPO_PATH . '/config.ini');
 	
 }catch (Exception $e){
 	echo 'Error: '
