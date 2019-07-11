@@ -50,10 +50,12 @@ switch ($_POST['ajax']) {
 	case 'xout' :
 		return xoutUser($_POST['uid'],$pdo);
 		break;
+		
 	case 'getmess' :
 		return 'at getmess';
-		return getmess($_POST['type']);
+		#return getmess($_POST['type']);
 		break;
+		
 	default:
 		echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true); 
 }
