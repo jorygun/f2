@@ -89,8 +89,11 @@ echo "Checking for files in $queue" . BRNL;
 	
 	#record pid so job can be killed if necessary.  Multiple runs
 	# will record multiple pids.
-	file_put_contents("$job_dir/pid.txt",getmypid() . "\n", FILE_APPEND )
-		or die ("Cannot write PID file: " . stat ($job_dir) );
+	if (! file_put_contents("$job_dir/pid.txt",getmypid() . "\n", FILE_APPEND ) ){
+	
+		echo "Cannot write PID file: ";
+		u\echor( stat ($job_dir),'Stat' );
+		exit;
 		
 	
 	$starttime = time();
