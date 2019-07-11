@@ -52,7 +52,7 @@ switch ($_POST['ajax']) {
 		break;
 		
 	case 'getmess' :
-		echo getmess($_POST['type']);
+		return getmess($_POST['type']);
 		break;
 		
 	default:
@@ -62,7 +62,12 @@ function getmess($type) {
 	// return text message for bulk mail setup
 	$tp_path = REPO_PATH . "/templates/${type}.txt";
 	#return "Getting $tp_path";
-	return file_get_contents($tp_path);
+	$message = file_get_contents($tp_path);
+	list($subject,$text) = explode("\n",$message,2);
+	$result['text']=$text;
+	$result['subject']=$subject;
+	return $result;
+	
 }
 
 function vote_action($post){
