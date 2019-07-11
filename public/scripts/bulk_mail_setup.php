@@ -5,7 +5,7 @@ namespace digitalmx\flames;
 
 
 //BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+	require_once 'init.php';
 
 	#require others
 #	require_once 'BulkMail.php';
