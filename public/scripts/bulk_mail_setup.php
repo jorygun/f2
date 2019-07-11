@@ -47,7 +47,7 @@ EOT;
 	$bulkmail = new BulkMail();
 	
 	
-	$bulk_processor = PROJ_PATH . "/crons/send_bulk.php";
+	$bulk_processor = REPO_PATH . "/crons/send_bulk.php";
 	
 	
 
