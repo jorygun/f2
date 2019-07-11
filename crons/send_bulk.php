@@ -34,6 +34,7 @@ include "$dir/cron-ini.php";
 if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 
 use \digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
 
    
 	$bulk = REPO_PATH . "/var/bulk_jobs";
