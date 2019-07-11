@@ -23,8 +23,8 @@ try {
 
 
 	define ('REPO_PATH', dirname(__DIR__) ); # script is in .../project/crons
-	define ('PROJ_PATH', dirname(REPO_PATH);
-	
+	define ('PROJ_PATH', dirname(REPO_PATH));
+	echo "Project: " . PROJ_PATH . "\n";
 	$platform=getPlatform();
 	
 	
