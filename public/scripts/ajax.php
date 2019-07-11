@@ -52,8 +52,8 @@ switch ($_POST['ajax']) {
 		break;
 		
 	case 'getmess' :
-		echo 'at get mess'; 
-		#return getmess($_POST['type']);
+		#echo 'at get mess'; 
+		return getmess($_POST['type']);
 		break;
 		
 	default:
@@ -67,7 +67,8 @@ function getmess($type) {
 	list($subject,$text) = explode("\n",$message,2);
 	$result['text']=$text;
 	$result['subject']=$subject;
-	return json_encode($result);
+	return "sub: " . $result['subject'] . 'mess: ' . $result['text'] . "\n";
+	#return json_encode($result);
 	
 }
 
