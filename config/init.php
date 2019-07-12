@@ -62,7 +62,7 @@ require_once 'MyPDO.php'; #uses envir constants for config; sets from db.ini if 
 
 require_once 'nav.class.php';
 
-use MyPDO;
+use digitalmx\MyPDO;
 
 
 
