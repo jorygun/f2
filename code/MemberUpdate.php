@@ -13,7 +13,7 @@ use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
 use digitalmx\flames\DocPage;
 
-$pdo = MyPDO::instance();
+$pdo = digitalmx\MyPDO::instance();
 $messenger = new Messenger($pdo);
 $member = new Member($pdo);
 $page = new DocPage();
@@ -335,10 +335,10 @@ EOT;
 
 
 function update_email ($row,$new_email){ #$id,$name,$old_email,$new_email){
-
-    $ems = new EmsMessaging( MyPDO::instance());
+	 $pdo = digitalmx\MyPDO::instance();
+    $ems = new EmsMessaging( $pdo);
     
-    $pdo = MyPDO::instance();
+   
 	//  if email is changed, send message to old email and verify to new email
 	//
 	$id = $row['id'];

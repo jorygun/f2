@@ -10,7 +10,8 @@ ini_set('error_reporting', -1);
 	use digitalmx\flames\MemberAdmin;
 	
 	$page = new DocPage();
-	$admin = new MemberAdmin();
+	$member = new Member;
+	$admin = new MemberAdmin($member);
 	
      echo $page->getHead('Member Admin',0,['ajax']);
  	echo $page ->startBody("Search for Member");
