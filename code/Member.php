@@ -350,7 +350,7 @@ private static $long_profile_fields = array (
         $limitplusone = $limit + 1;
         $fields = implode(',',$this->std_fields);
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
-       # echo $sql . BRLF . print_r($searchfor,true) . BRLF ;
+        echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
         $idcnt = $stmt->rowCount();
@@ -583,6 +583,7 @@ private static $long_profile_fields = array (
            'name_exact' => 'username = ?',
            'name_loose' => 'CONCAT_WS (" ", username, aka) like ? ' ,
            'uid' => 'user_id = ?',
+           'id' => 'id = ? ',
         );
         
         $field = false;
@@ -597,8 +598,13 @@ private static $long_profile_fields = array (
         } elseif ($field == 'login' or $this->isLogin($tag)) { #looks like a login code
             $searchfield = $search_fields['login'];
             $searchfor = splitLogin($tag);
-        } elseif ($field == 'uid' or is_numeric($tag)) { #is a userid
+        } elseif ($field == 'uid' or 
+        		(is_numeric($tag) && (int)$tag >= 10000)) { #is a userid
             $searchfield = $search_fields['uid'];
+            $searchfor = [$tag];
+         } elseif ($field == 'uid' or 
+        		(is_numeric($tag) && (int)$tag < 10000)) { #is a id
+            $searchfield = $search_fields['id'];
             $searchfor = [$tag];
         } elseif ($field == 'name_exact' or (in_array($tag[0], ["'",'"']))) {
             $searchfield = $search_fields['name_exact'];

@@ -6,6 +6,7 @@ ini_set('error_reporting', E_ALL);
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
+use digitalmx\flames\Member;
 
 $proj_dir = dirname(__DIR__); #flames
 require_once "$proj_dir/vendor/autoload.php";
@@ -124,10 +125,10 @@ and change it in your profile.
 		);
 	
 	
-	public function __construct($pdo,$test=false) {
+	public function __construct($pdo,$member,$test=false) {
 		$this->pdo = $pdo;
 		$this->test = $test;
-		$this->member = new Member($pdo);
+		$this->member = $member;
 		$this->mailer = new PHPMailer();
 		
 		$this->mailer->setFrom('admin@amdflames.org',"AMD Flames Admin");

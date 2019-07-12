@@ -14,8 +14,9 @@ use digitalmx\flames\Messenger;
 use digitalmx\flames\DocPage;
 
 $pdo = MyPDO::instance();
-$messenger = new Messenger($pdo);
 $member = new Member($pdo);
+$messenger = new Messenger($pdo,$member);
+
 $page = new DocPage();
 
 
@@ -32,18 +33,20 @@ $page = new DocPage();
 // convert Get data yo Post data
 
 	if (isset($_GET['id'])) {$_POST['uid'] = $_GET['id'];}
-	$uid = $_POST['uid'];
+	$uid = $_POST['uid']; #may be id or uid
 	
 	if (isset($_GET['email_status'])){
 		$_POST['ems'] = $_GET['email_status'];
 	}
-	
+	echo "uid=$uid ";
 	// start by getting users record.  Needed for both get and put
 	$md = $member->getMemberData($uid);
 	$mdd = $md['data'];
 	$username = $mdd ['username'];
+		#u\echor($md,'MDD'); exit;
+	$uid = $mdd['user_id']; #corrrect if orig id was id insted of uid
 	
-
+	
 echo $page->getHead('Member Update');
 echo $page ->startBody("Act On Member : $username");
 
@@ -150,7 +153,7 @@ if (empty ($P_uid)){ #?? think there should always be something here
 	// reset my row with updated data
 	$md = $member->getMemberData($uid);
 	$mdd = $md['data'];
-	
+
 ## end of update
 
 // GEt PAGE
