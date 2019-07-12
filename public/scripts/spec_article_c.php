@@ -12,7 +12,7 @@
 
 
 
-require_once "MyPDO.class.php" ;
+require_once "MyPDO.php" ;
 $pdo = MyPDO::instance();
 $itemdb = 'spec_items';
 $test = 0;

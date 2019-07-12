@@ -50,7 +50,7 @@ $init->setConstants();
 require_once 'setGlobals.php';
 $GV = $GLOBALS = setGlobals();
 
-require_once 'MyPDO.class.php'; #uses envir constants for config; sets from db.ini if not already set
+require_once 'MyPDO.php'; #uses envir constants for config; sets from db.ini if not already set
 
 
 #ns digitalmx\flames
