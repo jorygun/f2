@@ -4,7 +4,7 @@
 //ini_set('error_reporting', E_ALL);
 
 
-require_once 'MyPDO.php';
+
 use digitalmx\flames\Definitions as Defs;
 
 
@@ -60,7 +60,7 @@ function f2_security_below($min)
 
 function login($pw){
 	#echoAlert ("logging in with $pw"); 
-	$pdo = MyPDO::instance();
+	$pdo = digitalmx\MyPDO::instance();
 	
 	if ($pw == '0'){logout();}
 	
