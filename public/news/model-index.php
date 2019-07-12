@@ -145,6 +145,7 @@ $current_opps = current_ops();
 echo news_subhead("Job Opportunities");
 echo " <p>Any FLAMEs member can post job opportunities on the site
 by clicking on the 'Opportunities' menu</p>\n";
+
 if ($current_opps>0){
     echo
    "<p>There are $current_opps current employment openings listed. <a href='/opportunitiesE.php' target='_blank'>Click here for details.</a>.</p>

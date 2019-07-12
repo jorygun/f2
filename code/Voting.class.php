@@ -7,7 +7,7 @@ class Voting {
 
 	function __construct() {
 		#$this->pdo = $pdo;
-		$this->pdo = digitalmx\MyPDO::instance();
+		$this->pdo = \MyPDO::instance();
 	}
 
 	public function show_panel($item_id,$user_id){

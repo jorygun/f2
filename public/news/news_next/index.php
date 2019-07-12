@@ -56,11 +56,11 @@ if (file_exists("title.txt")){
    $subtitle = file_get_contents('title.txt');
 
 }
-else {
+elseif (isset($conventional_date)) {
     $subtitle = $conventional_date;
     #from the publish data block
 }
-
+else {$subtitle = '';}
 
 
 // can't check security until it's been set above.
@@ -100,7 +100,7 @@ $voting = new Voting();
 <?=$preview?>
 <hr style="width: 100%; height: 2px;clear:both;">
 
-<?
+<?php
 
 echo $navbar;
 
@@ -145,6 +145,7 @@ $current_opps = current_ops();
 echo news_subhead("Job Opportunities");
 echo " <p>Any FLAMEs member can post job opportunities on the site
 by clicking on the 'Opportunities' menu</p>\n";
+
 if ($current_opps>0){
     echo
    "<p>There are $current_opps current employment openings listed. <a href='/opportunitiesE.php' target='_blank'>Click here for details.</a>.</p>
@@ -176,7 +177,7 @@ just let the <a href='mailto:editor@amdflames.org'>editor know</a>.</p>
 
 echo_if('calendar.html');
 
-echo_if ("updates.html", news_head("Membership Updates"));
+echo_if ("news_updates.html", news_head("Membership Updates"));
 
 echo  get_slogan();
 
