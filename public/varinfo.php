@@ -16,24 +16,43 @@ if (!empty($req)){
 	$test = (strpos($req,'t') !== false);
 	$verbose = (strpos($req,'v') !== false);
 }
+$initial_include = get_include_path();
+
 $init_file = '../config/init.php';
 require $init_file;
 
-use digitalmx\flames\DocPage;
+
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 
-if (true){
+use digitalmx\flames\Login;
+use digitalmx\flames\Menu;
+use digitalmx\flames\DocPage;
+use digitalmx\flames\Member;
 
-$page = new DocPage;
-echo $page->getHead('my title',1);
-echo $page ->startBody('page title' );
+try {
+	require 'DocPage.php';
+	require 'Login.php';
+	require_once 'Member.php';
+	require_once 'Menu.php';
+	$s = $_GET['s'] ?? '';
+	$login = new Login($pdo,$s);
+
+	
+	$page = new DocPage;
+	echo $page->getHead('my title',1);
+	echo $page ->startBody('page title' );
 }
-
+catch (Exception $e){
+	echo "<h3>DocPage not loaded</h3>" . $e->getMessage() . "\n";
+}
 echo " Mode: $test";
 
 
-echo "<br><b>initial include_path: </b>" . get_include_path() ."<br><br>\n";
+echo "<p><b>initial include_path: </b> <br>" .
+	str_replace(':','<br>',$initial_include) ."</p><br>\n";
+
+echo "<p><b>post-init include_path: </b><br>" . str_replace(':','<br>:',get_include_path()) ."</p><br>\n";
 
 $sitedir = dirname(__DIR__); #...<repo>/
 $projdir = dirname($sitedir);
@@ -61,7 +80,7 @@ foreach ($_SERVER as $k=>$v){
 
 
 
-echo "<p><b>post-init include_path: </b><br>" . str_replace(':','<br>:',get_include_path()) ."</p><br>\n";
+
 
 if ($verbose) {
 	u\echor ($_ENV,'$_ENV');
@@ -114,12 +133,12 @@ function echo_red ($t) {
 	
 }
 require 'SiteUtilities.php';
-#require 'Member.php';
-use digitalmx\flames\Member;
+
+
 $member = new Member($pdo);
 
-#$md = $member->getMemberList('john.scott.springer@gmail.com');
-#u\echor ($md,'Member Data');
+$md = $member->getMemberList('john@digitalmx.com');
+u\echor ($md,'Member Data');
 
 // $em = new Messenger ($pdo,$test); #pdo,true for test
 // $event = 'em-found';
@@ -133,8 +152,8 @@ $member = new Member($pdo);
 // if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 // 	echo $ma->search($_POST);
 // }
-use \digitalmx\flames\Login;
-use digitalmx\flames\Menu;
+
+
 
 // $md = $member->getInfoFromLogin('6kQ4k11602');
 // u\echor ($md,'Member from Login');

@@ -116,7 +116,7 @@ $pdo = MyPDO::instance();
 <?=$navbar?>
 
 
-<?
+<?php
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
@@ -287,7 +287,7 @@ Last Login: <?=$row['last_login'] ?>
 	</form>
 
 
-<?
+<?php
 	}
 
 elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {

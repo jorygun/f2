@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
 //BEGIN START
 	/*  STARTUP */

@@ -34,7 +34,7 @@ require_once "asset_functions.php";
 
 </head>
 <body>
-<?
+<?php
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){

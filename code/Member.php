@@ -824,7 +824,7 @@ echo $sql .  BRNL;
         list ($searchfield,$searchfor) = $this->setSearchCriteria($tag);
    		$list_fields = implode (',',self::$min_fields);
         $sql = "SELECT $list_fields from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
-        #echo $sql . BRNL;
+       # echo $sql . BRNL . print_r($searchfor,true) . BRNL;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt->execute($searchfor);
         $idcnt = $stmt->rowCount();
@@ -834,7 +834,7 @@ echo $sql .  BRNL;
         
         #return array of all reesults 
         $mb = $stmt->fetchAll();
-       
+      # u\echor($mb,'from getMemberList');
        return $this->returnResult($mb);
        ;
     }

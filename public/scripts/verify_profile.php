@@ -1,4 +1,4 @@
-<?
+<?php
 /*   verify script receives email and get session data from user login  from link on verify email:
 		 $GV[siteurl]/scripts/verify_email.php?s=$login&m=$uemenc [ = rawurlencode($user_email) ]
 

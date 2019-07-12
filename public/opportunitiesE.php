@@ -41,7 +41,7 @@ $navbar = $nav -> build_menu();
 post something here, use the link below to enter a New Opportunity, or email the information to the <a href="mailto:editor@amdflames.org" target="_blank">editor</a>.</p>
 <p>If you've posted an opportunity here, you can edit or expire it. </p>
 <hr>
- <?
+ <?php
 
 
 if (isset($_SESSION['user_id'])){

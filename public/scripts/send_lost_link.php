@@ -19,7 +19,7 @@ else {$this_email = '';}
 <head>
 <title>Sending Lost Link</title>
 </head><body onblur="self.close()">
-<?
+<?php
 
 
 $sender = new digitalmx\flames\SendLogin($pdo);

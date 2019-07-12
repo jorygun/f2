@@ -100,7 +100,7 @@ $voting = new Voting();
 <?=$preview?>
 <hr style="width: 100%; height: 2px;clear:both;">
 
-<?
+<?php
 
 echo $navbar;
 

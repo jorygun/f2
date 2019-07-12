@@ -55,7 +55,7 @@ function check_select_all(obj) {
 <?=$navbar?>
 
 
-<?
+<?php
 $asset_limit = 25;
 
 if ($_SESSION['level'] >= 6){
@@ -175,7 +175,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'GET'){
 </body></html>
 
 ##############################################
-<?
+<?php
 
 
 

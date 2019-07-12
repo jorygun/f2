@@ -116,7 +116,7 @@ $articles .= "</ul>\n";
 <hr class='clear'>
 <h4> AMD Flames - the people who were and are AMD -  share their memories.</h4>
 <p style='font-size:0.8em'>Listed in order of recent profile updates. If you want to be at the top of this list, update your profile's "memories" section.</p>
-<?
+<?php
 
 $sql = "
 

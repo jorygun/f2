@@ -39,7 +39,7 @@ additional actions, except those controlled by automatic triggers.
 <br>Call with ?id=nn
 </p>
 
-<?
+<?php
 if ($_SERVER[REQUEST_METHOD] == 'GET'){
     if (!$id = $_GET[id]){die( "No ?id=n");}
     if(!($row = get_member_by_id($id))){die ("No user for id $id");}

@@ -38,7 +38,7 @@ $navbar = $nav -> build_menu();
 <hr style="width: 100%; height: 2px;clear:both;">
 <h3>Job Opportunities</h3>
 <p>
- <?
+ <?php
 if (!isset($_GET['id'])){
     echo "Job listing requested without an id";
     exit;

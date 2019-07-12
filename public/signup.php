@@ -138,7 +138,7 @@ global $G_member_status_set;
 			</script>
 			-->
 
-<?
+<?php
 	}
 
 else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')

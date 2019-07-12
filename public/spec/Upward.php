@@ -113,7 +113,7 @@ we&rsquo;ve compiled this list of AMDers who went on to start or lead companies.
     <th style='width:40%'>Company</th></tr>
 
 
-<?
+<?php
 $rowcount=0;
 foreach ($movers as $row)
 {

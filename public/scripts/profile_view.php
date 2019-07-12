@@ -137,7 +137,7 @@ EOT;
 	
 
 </div>
-<?
+<?php
 
 if (! empty($D_user_about)){
 	echo "<div class='profile_frame'>\n";

@@ -138,7 +138,7 @@ value='Preview' style='color:green'>
 
 <form method="POST" id='article_items_form' style='border:none;'>
 
-<?
+<?php
 $mode = '';
 if (array_key_exists('mode',$_GET)){$mode = $_GET['mode'];}
 

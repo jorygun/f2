@@ -14,7 +14,7 @@ Script changed email status and calls update_email_status
 to test email notices.
 <hr>
 
-<?
+<?php
 $id = '4950';
 if ($_SERVER[REQUEST_METHOD] == 'POST'){
 	post();

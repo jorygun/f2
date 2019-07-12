@@ -47,7 +47,7 @@ function choose_gallery(id=''){
 <body>
 <?=$navbar?>
 
-<?
+<?php
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 

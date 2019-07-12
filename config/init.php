@@ -37,6 +37,7 @@ $init->setConstants();
 #add vendor autoload
 	if (file_exists(REPO_PATH . "/vendor/autoload.php")){
 		$loader = require_once REPO_PATH . "/vendor/autoload.php";
+		
 		$loader->add('digitalmx\\', REPO_PATH .'/libmx/');
 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/src/');
 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/lib/');

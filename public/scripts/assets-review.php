@@ -54,7 +54,7 @@ $andwhere = '' ; #additional where clauses
 <body>
 
 
-<?
+<?php
 
 if (($_SERVER['REQUEST_METHOD'] == 'GET') ){
    //  if ( ! isset($_SERVER['QUERY_STRING'])

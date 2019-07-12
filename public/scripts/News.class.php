@@ -664,7 +664,7 @@ EOT;
 
                 $story .=
                " <div class='story_comment_box'>
-               <? echo get_commenters($articleid) ?>
+               <?php echo get_commenters($articleid) ?>
                <br>
                <a href='/scripts/news_article_c.php?id=$articleid' target='cpage'>Discuss this article</a>
                </div>

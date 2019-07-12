@@ -101,6 +101,6 @@ The recipient will receive your name and email along with the message.
 <input type=submit name=submit value="Send">
 </form>
 </body></html>
-<?
+<?php
 }
 ?>

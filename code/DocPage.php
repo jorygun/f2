@@ -3,7 +3,7 @@ namespace digitalmx\flames;
 
 /*
    Start new html page
-
+   must run login first to set menus
 */
 
 use digitalmx as u;
@@ -21,16 +21,16 @@ class DocPage {
          'ajax' = include jquery, ajax
          'votes' = iinclude voting script/css
       */
-      $my_sec_level = $_SESSION['login']['seclevel'];
+      $my_sec_level = $_SESSION['login']['seclevel'] ?? 0;
       if ($my_sec_level < $min){
          $header = "HTTP/1.1 403 Forbidden" ;
-         echo "Failed $my_sec_level < $min" . BRNL;
+         echo "Failed security $my_sec_level < $min" . BRNL;
          u\echor ($_SESSION['login'], 'login');
 
 
         # $header = "Location: /403.html";
         #header($header);
-         exit;
+         #exit;
 
       }
 

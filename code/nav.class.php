@@ -47,7 +47,7 @@ class navBar {
 	}
 
 	private function count_opps(){
-		 $pdo = digitalmx\MyPDO::instance();
+		 $pdo = MyPDO::instance();
 		 $sql = "SELECT count(*) FROM opportunities WHERE
 					expired = '0000-00-00' OR
 					expired > NOW();";
@@ -188,7 +188,7 @@ EOT;
 
 		$t .= self::if_level(8,"<li><a href='/level8.php' target='_blank'>User Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/level7.php'>News Admin</a>");
-		 $t .= self::if_level(8,"<li><a href='/info.php' target='_blank'>Site Info</a>");
+		 $t .= self::if_level(8,"<li><a href='/varinfo.php' target='_blank'>Site Info</a>");
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");
 

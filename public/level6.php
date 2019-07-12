@@ -42,12 +42,12 @@ actually published.</p>
 <p><i>Note: Some images may show as broken links on this page</i></p>
 <hr>
 <h3 class="highlight"> Unpublished News Items from YOU: <?=$_SESSION['username']?>
-<? echo show_edit(0,'Create New Item'); ?>
+<?php echo show_edit(0,'Create New Item'); ?>
 </h3>
 <p>(You can create new articles or edit existing ones here.)</p>
 <table>
 
-<?
+<?php
 $these_sections = array_keys($sections);
 $sql= "SELECT * from news_items where status NOt IN ('P','T')
     AND contributor_id = '$my_id'
@@ -103,8 +103,3 @@ if (!empty($stories)){
 </script>
 
 </body></html>
-<?
-
-###################################################################
-
-?>

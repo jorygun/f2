@@ -47,7 +47,7 @@ are NOT moved or renamed. </p>
 <p>  The directory must also include a file called "titles.txt". This file needs to have 3 tab-dlimited fields: filename, title, and caption.  These will be used when the assets are created.
 </p>
 <hr>
-<?
+<?php
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $dir = $_POST['dir'];

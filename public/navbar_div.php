@@ -47,7 +47,7 @@ $framed = true; #for to force framed page
 <h4><?=$username?> <br><small><?=$usertype?></small></h4>
 
 <ul>
-<?
+<?php
  echo "<a href='/'><li style='margin-top:1em;'>Home Page</li></a>" . BRNL;
 	if($lvl	>=	8){
 

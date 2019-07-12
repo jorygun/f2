@@ -212,7 +212,7 @@ $navbar = $nav -> build_menu();
 <?=$navbar?>
 <h3>Discuss AMD Flames Story</h3>
 <?=$story?>
-<?
+<?php
 if ($discussion){
 echo <<<EOF
 
