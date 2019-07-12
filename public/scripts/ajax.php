@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 
 /*
-Script called by ajax js voting3.js
+Script called by ajax js 
 Will record the vote and return a new 
 updated voting panel to the user.
 */
@@ -16,6 +16,7 @@ require_once $repo_path . '/config/init.php';
 
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
+use Voting;
 
 
 if (empty($_SESSION['user_id'])){
@@ -60,8 +61,8 @@ function vote_action($post){
 	if(empty($item_id = $post['item_id'])) {
 		return "posting vote without item id";
 	}
-	$vote = $post['this_vote']??'';
-	#echo "Recording vote  $vote for item $item_id" . BRNL;
+	$vote = $post['this_vote'] ?? '';
+	#echo "Recording vote  $vote for item $item_id" . BRNL; exit;
 	$new_panel = $voting->tally_vote($item_id,$user_id,$vote);
 	echo $new_panel;
 }
@@ -96,7 +97,7 @@ function verifyEmail($uid) {
 	$member = new Member($pdo);
 	if ($member->verifyEmail($uid)) {
 		echo "Email Verified";
-	} else }
+	} else {
 		echo "Failed Email Verify";
 	}
 	
