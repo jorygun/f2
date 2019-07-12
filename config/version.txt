@@ -1,7 +1,6 @@
-2.10  Initial setup of versions. 
-2.11  Constants fixed throughout site.
-2.12  Crons rewritten to use cron.ini; cleanded up
-2.13  Using Defs for most variables
-2.5   Using new login script
-2.6   Modified MyPDO; workinig on both mac and pair
-
+2.10	Initial setup of versions. 
+2.11	Constants fixed throughout site.
+2.12	Crons rewritten to use cron.ini; cleanded up
+2.13	Using Defs for most variables
+2.5	Using new login script
+2.6	Modified MyPDO; workinig on both mac and pair

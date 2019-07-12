@@ -94,9 +94,9 @@ EOT;
 		
 		#echo "vl $vfile $vlatest";
 		
-		list($vnum,$vdesc) = preg_split("/\s+/",$vlatest);
+		list($vnum,$vdesc) = explode ("\t",$vlatest,2);
 		
-		$vname = "<div class='vbox'>[$vroot] $vnum <br>($vrel)</div>";
+		$vname = "<div class='vbox'><hr>[$vroot] $vnum <br>($vrel)<br>$vdesc</div>";
 		
 		return $vname;
 	}
