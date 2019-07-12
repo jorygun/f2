@@ -5,7 +5,7 @@ ini_set('error_reporting', -1);
 	require_once 'init.php';
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx as dmx;
-	use digitalmx\MyDPO as MyPDO;
+	use  MyPDO;
 	$nav = new navBar(1);
 $navbar = $nav -> build_menu();
 

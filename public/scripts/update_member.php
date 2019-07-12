@@ -3,7 +3,7 @@
 // ini_set('error_reporting', E_ALL);
 
 
-require_once 'init.php';
+require_once '../init.php';
 
 
 use digitalmx\flames\Definitions as Defs;
@@ -49,7 +49,7 @@ echo $page ->startBody("Act On Member : $username");
 
 // process any data in the post array
 extract ($_POST,EXTR_PREFIX_ALL,'P');
-if (empty ($P_uid){ #?? think there should always be something here 
+if (empty ($P_uid)){ #?? think there should always be something here 
 	exit;
 }
 	//go over data and find updates and put them in update array
@@ -127,14 +127,15 @@ if (empty ($P_uid){ #?? think there should always be something here
 			$member->setNoBulk($uid,0);
 		}
 		elseif ($nobulkset){
-			$member->setNoBulk($uid,1)
+			$member->setNoBulk($uid,1);
 			$messenger->sendMessages($uid,'nobulk');
 		}
 	}
 
 
 	
-	if (!empty($P_current) && ($P_current <> $mdd['user_current')) {
+	if ( !empty($P_current) 
+		&& $P_current <> $mdd['user_current'] ) {
 		echo "Updating user's current information.<br>";
 		$member->setCurrent($uid, $P_current);
 	}

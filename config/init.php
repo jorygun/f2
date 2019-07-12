@@ -62,7 +62,7 @@ require_once 'MyPDO.class.php'; #not in namespace
 
 require_once 'nav.class.php';
 
-
+use \MyPDO ;
 
 
 
