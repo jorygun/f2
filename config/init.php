@@ -175,7 +175,7 @@ class Init
 	public function setPDO(){
 		$platform = $this->platform;
 		if ($platform == 'pair'){
-			$pdo = \MyPDO::instance();
+			$pdo = MyPDO::instance();
 		} elseif ($platform == 'ayebook') {
 			$pdo = new \digitalmx\MxPDO('production',$platform,$this->db_ini);
 			
