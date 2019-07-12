@@ -206,7 +206,7 @@ function search($post,$members_db){
 
 
 <h1>User Admin</h1>
-<?
+<?php
 	$status_options = "<option value=''>Choose...</option>";
 	foreach (array('M','G','MC','MU','MN','N','T','I') as $v){
 		$desc = Defs::getMemberDescription($v);

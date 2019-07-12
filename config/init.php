@@ -57,21 +57,25 @@ require_once 'Definitions.php';
 require_once "utilities.php";
 require_once 'MxPDO.php'; 
 require_once 'MxUtilities.php';
-require_once 'MyPDO.php'; #uses envir constants for config; sets from db.ini if not already set
+require_once 'MyPDO.class.php'; #not in namespace
 
 
 require_once 'nav.class.php';
 
-use digitalmx\MyPDO;
+
 
 
 
 $pdo = $init->setPDO(); #guarantees db values are set
 $init->setRequired(); #f2 connect needs db values
 
-use digitalmx\flames\Login;
-$s = $_GET['s'] ?? '';
-$login = new Login($pdo,$s);
+
+// login routine for redesign
+// old design uses f2 security instead
+
+// use digitalmx\flames\Login;
+// $s = $_GET['s'] ?? '';
+// $login = new Login($pdo,$s);
 	
 // #build db
 // $container = new Container();
@@ -174,7 +178,7 @@ class Init
 	
 	public function setPDO(){
 		$platform = $this->platform;
-		if ($platform == 'pair'){
+		if (true || $platform == 'pair'){
 			$pdo = MyPDO::instance();
 		} elseif ($platform == 'ayebook') {
 			$pdo = new \digitalmx\MxPDO('production',$platform,$this->db_ini);

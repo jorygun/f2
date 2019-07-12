@@ -563,7 +563,7 @@ function get_id_from_name($name){
     }
 
 function get_user_data_by_id ($id){
-    require_once 'MyPDO.php' ;
+    require_once 'MyPDO.class.php' ;
     $sql="SELECT username,user_email from `members_f2` WHERE user_id=$id;";
     #echo "SQL = $sql<br>\n";
 
