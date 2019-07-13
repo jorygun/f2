@@ -413,7 +413,7 @@ echo "Message saved .\n";
 
 #now build mail list
 
-$sql = get_send_list($select_all_valid);
+$sql = get_send_sql($select_all_valid,$_POST,$pdo);
 if (! $result = $pdo->query($sql) ){
 		echo "No results from query for ${_POST['sendto']} \n"; 
 		exit;
@@ -496,13 +496,15 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 }
 
 ######### Get the send list ##########
-function get_send_list ($select_all_valid) {
+function get_send_sql ($select_all_valid,$post,$pdo) {
+// supply sql for select_all_valid; 
+// add AND clauses to restrict mailing to small segment.
 
 $pdo = MyPDO::instance();
 $field_list = "*";
 $sql = "SELECT $field_list FROM `members_f2` ";
 $order_by = "ORDER BY test_status DESC"; 
-#get test users first.
+#get test users first so you see a problem early
  	
     // if selected admin only, then use admin code = J; otherwise, exclude these.
  	if ($_POST['sendto'] == 'admin'){
