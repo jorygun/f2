@@ -13,7 +13,7 @@ use digitalmx\flames\Definitions as Defs;
 	$pdo = MyPDO::instance();
 	
 	
-	require 'BulkMail.php';
+	require_once 'BulkMail.php';
 	$bulkmail = new BulkMail();
 	
 	
@@ -414,7 +414,7 @@ echo "Message saved .\n";
 #now build mail list
 
 $sql = get_send_list($select_all_valid);
-if (!$result = $pdo->query($sql) ){
+if (! $result = $pdo->query($sql) ){
 		echo "No results from query for ${_POST['sendto']} \n"; 
 		exit;
 }
