@@ -153,29 +153,27 @@ function process_uploads($dir) {
         $default_title = '';
         $default_caption = '';
 
-        $first_line = fgets($captionfh);
-        try {
-         list($gfile,$caption,$title) = explode("\t",$first_line);
-         }
-         catch (Exception $e){
-            echo "Error: " . $e->getMessage() . "First line of title file does not contain file, caption, title" . BRNL;
-            exit;
-         }
-        $default_title = $title;
-        $default_caption = $caption;
-        $titles[$gfile] = $title;
-        $captions[$gfile] = $caption;
 
         while (($line = fgets($captionfh))!==false){
          $params = explode("\t",$line );
            if ( empty($params) ){ #may be 2 or 3 vars
             continue;
          }
+
+         if (empty($default_title) ){
+            $default_title = $params[1];
+            $default_caption = $params[2];
+            if (empty($default_title)) {
+             throw new Exception ("Default title not set");
+            }
+         }
          $gfile = $params[0];
          $caption = $params[1] ?? $default_caption;
          $title = $params[2] ?? $default_title;
-         $captions[$gfile] = $caption;
+
          $titles[$gfile] = $title;
+         $captions[$gfile] = $caption;
+
         }
 
         u\echor($titles,'Titles');
