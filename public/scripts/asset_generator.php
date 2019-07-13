@@ -177,10 +177,10 @@ function process_uploads($dir) {
 
         }
 
-        u\echor($titles,'Titles');
+        u\echor($captions,'Captions');
     }
     else {die ("No titles.txt file found in folder.");}
-exit;
+
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $new_ids = [];
 
