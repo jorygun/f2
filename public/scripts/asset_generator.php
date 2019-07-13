@@ -164,6 +164,7 @@ function process_uploads($dir) {
          if (empty($default_title) ){
             $default_title = $params[1];
             $default_caption = $params[2];
+            echo "Set default title, caption: $default_title; $default_caption" . BRNL;
             if (empty($default_title)) {
              throw new Exception ("Default title not set");
             }
@@ -176,8 +177,11 @@ function process_uploads($dir) {
          $captions[$gfile] = $caption;
 
         }
+      echo "<h3>Titles and Captions</h3>";
+      foreach ($titles as $f=>$t){
+         echo "$f: $t, " . $captions[$f] . BRNL;
+      }
 
-        u\echor($captions,'Captions');
     }
     else {die ("No titles.txt file found in folder.");}
 
