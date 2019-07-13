@@ -501,7 +501,8 @@ function get_send_list ($select_all_valid) {
 $pdo = MyPDO::instance();
 $field_list = "*";
 $sql = "SELECT $field_list FROM `members_f2` ";
-
+$order_by = "ORDER BY test_status DESC"; 
+#get test users first.
  	
     // if selected admin only, then use admin code = J; otherwise, exclude these.
  	if ($_POST['sendto'] == 'admin'){
@@ -515,17 +516,16 @@ $sql = "SELECT $field_list FROM `members_f2` ";
 
 
 	elseif ($_POST['sendto'] == 'all'){
-			$sql .= "WHERE $select_all_valid ;";
+			$sql .= "WHERE $select_all_valid $order_by;";
 	 		echo "Sending to all valid emails <br>";
 
 	}
 	elseif ($_POST['sendto'] == 'req'){
-			$sql .= "WHERE $select_all_valid AND no_bulk = FALSE
-			ORDER BY user_id;";
+			$sql .= "WHERE $select_all_valid AND no_bulk = FALSE $order_by";
 	 		echo "Sending only to those without No_Bulk flag <br>";
 	}
 	elseif ($_POST['sendto'] == 'nobulk'){
-			$sql .= "WHERE $select_all_valid AND no_bulk = TRUE;";
+			$sql .= "WHERE $select_all_valid AND no_bulk = TRUE $order_by;";
 	 		echo "Sending only to those WITH No_Bulk flag<br>";
 
 	}
@@ -537,31 +537,31 @@ $sql = "SELECT $field_list FROM `members_f2` ";
 	        $admin_status_string .= "'" . $char . "',";
 	    }
 	    $admin_status_string = substr($admin_status_string,0,-1); #drop last ,
-		$sql .= "WHERE $select_all_valid  AND admin_status in ($admin_status_string) ;";
+		$sql .= "WHERE $select_all_valid  AND admin_status in ($admin_status_string) $order_by;";
 	 		echo "Sending only to those with admin tag in $admin_status_string <br>";
 
 	}
 		elseif ($_POST['sendto'] == 'news'){
-		$sql .= "WHERE $select_all_valid  AND status like 'M_';";
+		$sql .= "WHERE $select_all_valid  AND status like 'M_' $order_by ;";
 	 		echo "Sending only to those with status = M_ <br>";
 
 	}
 		elseif ($_POST['sendto'] == 'aged_out'){
-		$sql .= "WHERE status in (" . Defs::getMemberInSet() . ") AND email_status = 'LA' ;";
+		$sql .= "WHERE status in (" . Defs::getMemberInSet() . ") AND email_status = 'LA' $order_by;";
 
 	 		echo "Sending only to those marked as Lost - Aged Out <br>";
 	}
 	    elseif ($_POST['sendto'] == 'not_lost'){
 	    #choosee records validated yesterday
 	    $sql .= "WHERE DATE (email_last_validated) = SUBDATE(CURDATE(),1)
-	        AND previous_ems in ('A4','LA','LE','LB');" ;
+	        AND previous_ems in ('A4','LA','LE','LB') $order_by;" ;
 
 	        echo "Sending only to newly not_lost Flames.<br>\n";
 
 	}
 		elseif ($_POST['sendto'] == 'this'){
 			if (is_valid_email($_POST['sendtothis'])){
-				$sql .= "WHERE user_email = '${_POST['sendtothis']}'";
+				$sql .= "WHERE user_email = '${_POST['sendtothis']}' $order_by";
 			}
 			else {die ("Invalid email address requested");}
 			
