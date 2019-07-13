@@ -60,7 +60,7 @@ function f2_security_below($min)
 
 function login($pw){
 	#echoAlert ("logging in with $pw"); 
-	$pdo = digitalmx\MyPDO::instance();
+	$pdo = MyPDO::instance();
 	
 	if ($pw == '0'){logout();}
 	
@@ -230,7 +230,7 @@ EOT;
  function randPW() {
  //Generate a 5 digit password from 20 randomly selected characters
 	global $GV;
-	$pdo =  digitalmx\MyPDO::instance();
+	$pdo =  MyPDO::instance();
 	 static $tb1 = array (0,1,2,3,4,5,6,7,8,9,'P','Q','W','X','V','b','r','z','k','n');
 	 static $iterations = 0;
 	 if ($iterations > 5){die ("Too many iterations of random password");}
@@ -262,7 +262,7 @@ function echoAlert($text) {
 
 function get_row_for_login ($login){
 	// returns record id for valid record for this login
-	$pdo =  digitalmx\MyPDO::instance();
+	$pdo =  MyPDO::instance();
 
 	if (strlen($login) < 6){return false;} #illegal
 	
@@ -286,7 +286,7 @@ function split_login($login){
 
 
 function get_member_by_id($id){
-	$pdo =  digitalmx\MyPDO::instance();
+	$pdo =  MyPDO::instance();
 	if (!$id){die ("get member by id called with no id");}
 	
 	if ($id){
