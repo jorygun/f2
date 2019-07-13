@@ -170,11 +170,11 @@ function process_uploads($dir) {
          $gfile = $params[0];
          $caption = $params[1] ?? $default_caption;
          $title = $params[2] ?? $default_title;
-
-         $titles[$gfile] = (!empty($title))? $title : $default_title;
+         $captions[$gfile] = $caption;
+         $titles[$gfile] = $title;
         }
 
-        echo "Got titles and captions. ";
+        u\echor($titles,'Titles');
     }
     else {die ("No titles.txt file found in folder.");}
 
@@ -186,7 +186,9 @@ function process_uploads($dir) {
         if (substr($this_file,0,1) == '.') {continue;}
         if (empty($this_file)){continue;}
         if ($this_file == "titles.txt"){continue;}
-
+       if (empty($titles[$this_file])){
+         throw new Exception ("There is no title for $this_file");
+      }
       echo "Processing file $this_file" . BRNL;
 
         #build the post array, starting with stuff from form
