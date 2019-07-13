@@ -166,7 +166,7 @@ function get_asset_by_id($id,$style='thumb'){
 
 
     $title_line = spchar($row['title']);
-
+	$caption_line = spchar($row['caption']);
     $click_line = (!empty($target))? "<p class='small centered'> (Click image for link.)</p>":'';
 
      $thumb_url = "/assets/thumbs/${row['thumb_file']}";
@@ -198,9 +198,10 @@ function get_asset_by_id($id,$style='thumb'){
 
         $out .= "
             <a href='$href' target='asset' decoration='none'>
+             <p class='caption'>$title_line</p>
             <img src='$thumb_url'></a>
-            <p class='caption'>$title_line</p>
-            <p class='source'>$source_line</p>
+            <p class='caption'>$caption_line</p>
+           
             $click_line
         ";
 
