@@ -144,8 +144,9 @@ function process_uploads($dir) {
     }
     $file_count = count($filelist);
     echo "found $file_count files in $dirpath. ";
+   $titles=array();
+   $captions = array();
 
-    $have_captions=false;
     if (file_exists("$dirpath/titles.txt")){
         $captionfh = fopen("$dirpath/titles.txt",'r');
         #got caption file
@@ -166,7 +167,8 @@ function process_uploads($dir) {
         $captions[$gfile] = $caption;
 
         while (($line = fgets($captionfh))!==false){
-           if (empty( $params = explode("\t",$line ))){ #may be 2 or 3 vars
+         $params = explode("\t",$line );
+           if ( empty($params) ){ #may be 2 or 3 vars
             continue;
          }
          $gfile = $params[0];
@@ -179,7 +181,7 @@ function process_uploads($dir) {
         u\echor($titles,'Titles');
     }
     else {die ("No titles.txt file found in folder.");}
-
+exit;
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $new_ids = [];
 
