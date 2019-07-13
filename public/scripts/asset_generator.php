@@ -3,6 +3,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (login_security_below(-1)){exit;}
 
+use digitalmx as u;
 
 //END START
 
@@ -47,6 +48,7 @@ are NOT moved or renamed. </p>
 <p>  The directory must also include a file called "titles.txt". This file needs to have 3 tab-dlimited fields: filename, caption, and title.  These will be used when the assets are created.</p>
 <p>The first record MUST have all 3 fields: filename, caption, and title. THose will become the default caption and title to be used for any files that don't have their own.
 </p>
+
 <hr>
 <?php
 
