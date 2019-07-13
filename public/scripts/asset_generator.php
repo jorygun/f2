@@ -44,7 +44,8 @@ that have been uploaded).
 from the upload directory to the /assets/files directory (and renamed
 with the asset id, like 1013.jpg).  If the files are in any other directory, they
 are NOT moved or renamed. </p>
-<p>  The directory must also include a file called "titles.txt". This file needs to have 3 tab-dlimited fields: filename, title, and caption.  These will be used when the assets are created.
+<p>  The directory must also include a file called "titles.txt". This file needs to have 3 tab-dlimited fields: filename, caption, and title.  These will be used when the assets are created.</p>
+<p>The first record MUST have all 3 fields: filename, caption, and title. THose will become the default caption and title to be used for any files that don't have their own.
 </p>
 <hr>
 <?php
@@ -115,10 +116,10 @@ global $asset_types;
 (from web root)</td><td><input type='text' name='dir' value='${itemdata['dir']}' size='100'></td></tr>
 
 
-<tr><td>Contributor:</td><td><input type='text' name='contributor' value='${itemdata['contributor']}' onfocus="form.contributor_id.value='';"> id: <input type='text' name='contributor_id' id='contributor_id' value='${itemdata['contributor_id']}'><br>$Aliastext</td></tr>
+<tr><td>Contributor:</td><td><input type='text' name='contributor'  <input type='hidden' name='contributor_id' id='contributor_id' value=0><br>$Aliastext</td></tr>
 
 
-<tr><td>From</td><td>vintage (year): <input type='text' name='vintage' value = "${itemdata['vintage']}" size="6"> Event/Pub<input type='text' name='source' value="${itemdata['source']}" size="40"> </td></tr>
+<tr><td>From</td><td>vintage (year): <input type='text' name='vintage'  size="6"> Event/Pub<input type='text' name='source'  size="40"> </td></tr>
 
 
 
@@ -146,17 +147,36 @@ function process_uploads($dir) {
     if (file_exists("$dirpath/titles.txt")){
         $captionfh = fopen("$dirpath/titles.txt",'r');
         #got caption file
+        $default_title = '';
+        $default_caption = '';
+
+        $first_line = fgets($captionfh);
+        try {
+         list($gfile,$caption,$title) = explode("\t",$first_line);
+         }
+         catch (Exception $e){
+            echo "Error: " . $e->getMessage() . "First line of title file does not contain file, caption, title" . BRNL;
+            exit;
+         }
+        $default_title = $title;
+        $default_caption = $caption;
+        $titles[$gfile] = $title;
+        $captions[$gfile] = $caption;
+
         while (($line = fgets($captionfh))!==false){
-            @list($gfile ,$title, $caption)=explode("\t",$line);
-            $captions[$gfile] = $caption ?? '';
-            $titles[$gfile] = $title;
-            if (empty($title)){die ("No title for file $gfile");}
+           if (empty( $params = explode("\t",$line )){ #may be 2 or 3 vars
+            continue;
+         }
+         $gfile = $params[0];
+         $caption = $params[1] ?? $default_caption;
+         $title = $params[2] ?? $default_title;
+
+         $titles[$gfile] = (!empty($title))? $title : $default_title;
         }
 
-        $have_captions = true;
-        echo "have titles. ";
+        echo "Got titles and captions. ";
     }
-    else {die ("No title file found in folder.");}
+    else {die ("No titles.txt file found in folder.");}
 
     $finfo = new finfo(FILEINFO_MIME_TYPE);
     $new_ids = [];
