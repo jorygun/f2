@@ -162,8 +162,8 @@ function process_uploads($dir) {
          }
 
          if (empty($default_title) ){
-            $default_title = $params[1];
-            $default_caption = $params[2];
+            $default_title = $params[2];
+            $default_caption = $params[1];
             echo "Set default title, caption: $default_title; $default_caption" . BRNL;
             if (empty($default_title)) {
              throw new Exception ("Default title not set");
