@@ -190,7 +190,6 @@ EOT;
         $credit = 'From ' . hte($row['source']);
     }
     if ( $row['contributor'] != $row['source']
-        && strncasecmp($row['contributor'],'flames',6) != 0
         ){
             $credit .= " via " . $row['contributor'] ;
     }
