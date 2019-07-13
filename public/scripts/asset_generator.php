@@ -46,6 +46,7 @@ from the upload directory to the /assets/files directory (and renamed
 with the asset id, like 1013.jpg).  If the files are in any other directory, they
 are NOT moved or renamed. </p>
 <p>  The directory must also include a file called "titles.txt". This file needs to have 3 tab-dlimited fields: filename, caption, and title.  These will be used when the assets are created.</p>
+<p><b>CAUTION: </b> Be sure tabs are not converted to spaces in the file.</p>
 <p>The first record MUST have all 3 fields: filename, caption, and title. THose will become the default caption and title to be used for any files that don't have their own.
 </p>
 
