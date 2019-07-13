@@ -469,7 +469,7 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
         touch ("$queue/$job"); #mtime = now
 
         echo "Queued for now.  Starting bulk_mail_processor.<br>\n";
-       shell_exec ("/usr/local/bin/php " . "$bulk_processor");
+       echo `/usr/local/bin/php  $bulk_processor`;
        
     }
     elseif ($_POST['go'] == 'Schedule') {
