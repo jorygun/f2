@@ -187,7 +187,7 @@ EOT;
 
     $credit = '';
     if (!empty($row['source'])){
-        $credit = 'From ' . hte($row['source']);
+        $credit =  hte($row['source']);
     }
     if ( $row['contributor'] != $row['source']
         ){
