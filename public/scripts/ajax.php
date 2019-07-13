@@ -13,10 +13,12 @@ updated voting panel to the user.
 
 $repo_path = dirname(dirname(__DIR__));
 require_once $repo_path . '/config/init.php';
+require_once  $repo_path .'/code/BulkMail.php';
 
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
 use Voting;
+use BulkMail;
 
 
 if (empty($_SESSION['user_id'])){
@@ -68,7 +70,7 @@ function vote_action($post){
 }
 
 function cancel_bulk($job) {
-	require_once  'BulkMail.php';
+	
 	$bulkmail = new BulkMail;
 	$queue = PROJ_PATH . '/bulk_jobs/queue';
 	rename ($queue . "/$job" , $queue . "/${job}-cancelled");
