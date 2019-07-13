@@ -61,7 +61,7 @@ EOT;
       if (in_array('votes',$options)) {
          $t .= "
          <link rel='stylesheet' href='/css/votes.css' />
-         <script src='/js/voting3.js'></script>
+
          ";
       }
 

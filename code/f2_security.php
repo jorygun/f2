@@ -6,7 +6,7 @@
 
 
 use digitalmx\flames\Definitions as Defs;
-use digitalmx\MyPDO;
+
 
 function security_below($min) {
 	return f2_security_below($min);
@@ -301,7 +301,7 @@ function get_member_by_id($id){
 	return $row;	
 }
 function get_member_by_uid($uid){
-	$pdo = digitalmx\MyPDO::instance();
+	$pdo = MyPDO::instance();
 	
 	if (!$uid){die ("get member by uid called with no uid");}
 	$stmt = $pdo -> prepare("SELECT * FROM members_f2 WHERE user_id = ? ORDER BY id DESC;");
