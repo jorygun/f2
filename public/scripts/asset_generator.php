@@ -164,7 +164,7 @@ function process_uploads($dir) {
         $captions[$gfile] = $caption;
 
         while (($line = fgets($captionfh))!==false){
-           if (empty( $params = explode("\t",$line )){ #may be 2 or 3 vars
+           if (empty( $params = explode("\t",$line ))){ #may be 2 or 3 vars
             continue;
          }
          $gfile = $params[0];
