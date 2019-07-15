@@ -588,7 +588,7 @@ function initialize_row () {
         'status'	=>	'N',
         'id'    => 0,
         'source_date' => date('d M, Y'),
-        'content'	=>	"<p class='quoted'></p>",
+        'content'	=>	"",
         'take_comments'	=>	true,
         'take_votes' => true,
 
