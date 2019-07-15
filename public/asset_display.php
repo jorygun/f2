@@ -3,13 +3,16 @@
 ini_set('error_reporting', E_ALL);
 
 
-
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(0)){exit;}
 
 //END START
+use digitalmx\flames\Member;
+use digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
 
+$member = new Member($pdo);
 
 require_once SITE_PATH ."/scripts/news_functions.php";
 #require_once HOMEPATH . "/security/f2_disqus.php";
