@@ -55,7 +55,7 @@ $GV = $GLOBALS = setGlobals();
 require_once 'Definitions.php';
 require_once 'Member.php';
 require_once "utilities.php";
-require_once 'MxPDO.php'; 
+#require_once 'MxPDO.php'; 
 require_once 'MxUtilities.php';
 require_once 'MyPDO.class.php'; #not in namespace
 require_once 'DocPage.php';
@@ -181,7 +181,7 @@ class Init
 		if (true || $platform == 'pair'){
 			$pdo = MyPDO::instance();
 		} elseif ($platform == 'ayebook') {
-			$pdo = new \digitalmx\MxPDO('production',$platform,$this->db_ini);
+			$pdo = MyPDO::instance();
 			
 		} else {
 			throw new Exception ("Platform not known $platform");
