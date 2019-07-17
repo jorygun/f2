@@ -12,6 +12,7 @@
 #ignore site-specific config in .htaccess
 .user.ini
 test.php
+favicon.ico
 
 #ignore backup files
 *~
