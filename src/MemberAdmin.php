@@ -211,7 +211,7 @@ EOT;
 	if (!empty($P_new_email)){ #new email address; update and send verify
 		$new_email = trim($P_new_email);
 		echo "<p>New Email: $new_email</p>";
-		if (!filter_var($new_email, FILTER_VALIDATE_EMAIL) ){
+		if (filter_var($new_email, FILTER_VALIDATE_EMAIL) === false){
 			echo "Invalid Email address $new_email<br>\n";
 		}
 		
