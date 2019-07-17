@@ -15,7 +15,8 @@ use digitalmx\flames\DocPage;
 
 $pdo = MyPDO::instance();
 $member = new Member($pdo);
-$messenger = new Messenger($pdo,$member);
+$messenger = new Messenger(); 
+$messenger->setMode(true); #false = test is default
 
 $page = new DocPage();
 
@@ -59,13 +60,14 @@ if (empty ($P_uid)){ #?? think there should always be something here
 	$updates = array(); 
 	
 	if (!empty($P_new_email)){ #new email address; update and send verify
-		echo "<p>New Email: $P_new_email</p>";
-		if (! u\isValidEmail($P_new_email)){
-			echo "Invalid Email address $P_new_email<br>\n";
+		$new_email = trim($P_new_email);
+		echo "<p>New Email: $new_email</p>";
+		if (! u\isValidEmail($new_email)){
+			echo "Invalid Email address $new_email<br>\n";
 			exit;
 		}
 		// put new email in place for messenger
-		$member->setEmail ($uid,$P_new_email);
+		$member->setEmail ($uid,$new_email);
 		$informant = 'you';
 		if (!empty ($P_informant)){
 			$informant = $P_informant;
@@ -76,17 +78,19 @@ if (empty ($P_uid)){ #?? think there should always be something here
 			'informant' => $informant,
 			'prior_email' => $mdd['user_email'],
 			);
-		$messenger->sendMessages($uid,'em_change',$extra);
+		$messenger->sendMessages($uid,'em-change',$extra);
 		$P_email_status = 'E1';
-		$use_email = $P_new_email;
+		$use_email = $new_email;
 
 
 	}
 
 	if (!empty ($P_email_status)){
-		echo "<p>New Email Status: $P_email_status</p>";
+		echo "<p>New Email Status: $P_email_status for member $uid.</p>";
 	
-		$member->setEmailStatus($uid,$P_new_status);
+		if (! $member->setEmailStatus($uid,$P_email_status) ){
+			throw new Exception ("email status did not update");
+		}
 		$messenger->sendMessages($uid,$P_email_status);
 	
 	}
@@ -326,7 +330,7 @@ EOT;
 <hr>
     <form action='../level8.php' method='post'>
     Search for another name <input type='text' name='name'>
-    <input type='hidden' name='submit' value='Search'>
+    <input type='hidden' name='search' value='Search'>
     <input type='submit' >
 </form>
 </body></html>

@@ -125,10 +125,14 @@ and change it in your profile.
 		);
 	
 	
-	public function __construct($pdo,$member,$test=false) {
-		$this->pdo = $pdo;
-		$this->test = $test;
-		$this->member = $member;
+	public function __construct() {
+		#$this->pdo = $pdo;
+		$this->pdo = \MyPDO::instance();
+		
+		$this->test = true; #use setMode(true) to set test=false
+		#$this->member = $member;
+		$this->member = new Member();
+		
 		$this->mailer = new PHPMailer();
 		
 		$this->mailer->setFrom('admin@amdflames.org',"AMD Flames Admin");
@@ -136,7 +140,11 @@ and change it in your profile.
 		$this->mailer->CharSet = 'UTF-8'; 
 		$this->mailer->isSendmail();
 	}
-	
+	public function setMode($mode=false ) {
+		// false = test mode
+		$this->test = ! $mode;
+	}
+		
 	public function sendLogins($tag,$msg){
 		 $message = $this->getUserText ('logins');
 		if (empty($message )){
@@ -181,7 +189,7 @@ and change it in your profile.
 		$row = $this->getUser($uid);
 		
 		// add codes to placeholders
-			
+#echo "Preparing to send message to user $uid ${row['username']} for event $event" . BRNL;
 			$this->replacements ['::code_description::'] = self::$admin_codes[$event] ?? '';
 			$this->replacements ['::event::'] = $event;
 			

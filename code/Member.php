@@ -304,10 +304,10 @@ private static $long_profile_fields = array (
   
     # plus record count and data
     
- public function __construct($pdo)
+ public function __construct()
     {
        
-	$this->pdo = $pdo;
+	$this->pdo  = \MyPDO::instance();
 	$this->std_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
 	
 	

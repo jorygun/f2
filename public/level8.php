@@ -16,19 +16,7 @@ $navbar = $nav -> build_menu();
      $members_db = 'members_f2';
 		// get the most recent sweep and bounce logs
 
-		$latest_sweep = get_recent_files (1, SITE_PATH . "/logs/sweep_logs");
-		$latest_bounce = get_recent_files (1,SITE_PATH . "/logs/bounce_logs");
-		$latest_validation = get_recent_files (1,SITE_PATH . "/logs/validation_logs");
-		$latest_bulk = get_recent_files (1,SITE_PATH . "/logs/bulk_mail_logs");
-
-		$latest_sweeps = get_recent_files(7,SITE_PATH . "/logs/sweep_logs");
-	#	echo print_r($latest_sweeps,true);
-		$latest_sweep_list = "<ul>\n";
-			// foreach ($latest_sweeps as $f){
-// 				 $latest_sweep_list .= "<li><a href='/logs/sweep_logs/$f' target='sweep_log'>$f</a></li>";
-// 			}
-		$latest_sweep_list .= "</ul>\n";
-
+		
 
 
 //END START
@@ -254,40 +242,5 @@ here. Name and email can be partials.
 <input type=submit name='search' value='Search'>
 </form>
 
-<p><b>Bounce Processor</b></p>
-<p>The bounce processor lets you enter email addresses that have bounced, and it
-returns a list of users, statuses, and recommended next action.  You can choose to
-accept a recommendation or do something else.  When you submit the result,
-email statuses are updated, and verification emails sent out if appropriate.</p>
-<p><a href="/scripts/bounce_processor.php" target="_blank">Run Bounce Processor</a> &nbsp;&nbsp;&nbsp;<a href = "/logs/bounce_logs/<?=$latest_bounce?>" target="_blank">View Last Bounce Log</a> </p>
-
-<p><b>Validation Processor</b></p>
-<p>The validation processor lets you enter email addresses that are known good, and it
-returns a list of users, statuses, and recommended next action.  You can choose to
-accept a recommendation or do something else.  When you submit the result,
-email statuses are updated SILENTLY.  No notifications are sent out.
-<p><a href="/scripts/validate_processor.php" target="_blank">Run Validation  Processor</a>&nbsp;&nbsp;&nbsp;<a href = "/logs/validation_logs/<?=$latest_validation?>" target="_blank">View Last Validation Log</a> </p>
-
-<p><b>Run Sweep</b></p>
-<p>The Sweep script runs by cron file every night, but it can be run manually from here.
-It reviews all the various email statuses and the time they have been in place, and then
-makes appropriate updates and sends out verification emails and/or notifies
-the admin.  </p>
-<p>Mode: <input type='radio' name='mode' value='Test' checked>Test &nbsp;&nbsp;&nbsp;<input type='radio' name='mode' value='Real'>Real<br>
-To Only: <input type='radio' name='onlyid' value ='all' checked>All
-<input type='radio' name='onlyid' value ='4950' >(Teddy - 4950);
-<input type='radio' name='onlyid' value ='other'>Other ID: <input type=text name='otherid' id='otherid'>
-<br>
-<button name="runsweep" onClick='run_sweep()' >Run Sweep</button>
-</p>
-
-<p><a href = "/logs/sweep_logs/<?=$latest_sweep?>" target="_blank">View Last Sweep Log</a> </p>
-<p>Recent Logs</p>
-
-<?=$latest_sweep_list ?>
-
-
-
-</div>
 </body></html>
 
