@@ -38,7 +38,7 @@ $page = new DocPage();
 	if (isset($_GET['email_status'])){
 		$_POST['ems'] = $_GET['email_status'];
 	}
-	echo "uid=$uid ";
+	#echo "uid=$uid ";
 	// start by getting users record.  Needed for both get and put
 	$md = $member->getMemberData($uid);
 	$mdd = $md['data'];

@@ -9,6 +9,9 @@ ini_set('error_reporting', -1);
 
 	if (f2_security_below(8)){die ("NOt allowed");}
 //END START
+$nav = new navBar(1);
+$navbar = $nav -> build_menu();
+
 
      $members_db = 'members_f2';
 		// get the most recent sweep and bounce logs

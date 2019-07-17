@@ -350,7 +350,7 @@ private static $long_profile_fields = array (
         $limitplusone = $limit + 1;
         $fields = implode(',',$this->std_fields);
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
-        echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
+       # echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
         $idcnt = $stmt->rowCount();
@@ -489,7 +489,7 @@ private static $long_profile_fields = array (
     $table = $this->memberTable;
     
    $sql = "INSERT into `$table` ($fields) VALUES ($values);";
-   echo "sql: $sql" . BRNL;
+   #echo "sql: $sql" . BRNL;
    #u\echoR($data,'data array');
   
    
@@ -749,7 +749,7 @@ public function getLogins($tag) {
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		$sql = "SELECT * FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
-echo $sql .  BRNL;
+#echo $sql .  BRNL;
 		
 		
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
