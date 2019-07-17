@@ -13,6 +13,12 @@ class DocPage {
    public function __construct ()
 
       {
+         // see if new login has been used
+         if (! isset($_SESSION['menu'])){
+            $nav = new navBar(1);
+            $navbar = $nav -> build_menu(0);
+            $_SESSION['menu'] = $navbar;
+         }
 
    }
    public function getHead($title, $min = 0, $options=[]){
