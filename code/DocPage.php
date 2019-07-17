@@ -15,8 +15,10 @@ class DocPage {
       {
          // see if new login has been used
          if (! isset($_SESSION['menu'])){
+
             require 'nav.class.php';
             $nav = new \navBar(1);
+
             $navbar = $nav -> build_menu(0);
             $_SESSION['menu'] = $navbar;
          }
