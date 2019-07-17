@@ -21,7 +21,15 @@ class navBar {
 	private $t;
 	private $menulist = array();
 	private $level, $text;
-	public $header;
+	private $header;
+	
+	private static $headers = array(
+	0 => '',
+	1 => 
+		"<p><img src='/graphics/logo69x89.png' ><span style='font-size:1.5em;'>AMD Flames - The AMD Alumni Site </span> </p>",
+	2 => 
+		"<p><img src='/graphics/logo69x89.png' ><span style='font-size:1.5em;'>AMD Flames - The AMD Alumni Site </span> </p>",
+	);
 
 #these people get different nav header. see show_exp_menu;
 	private $expnames = array(
@@ -32,8 +40,9 @@ class navBar {
 	);
 	
 		
-	public function __construct ($header=0) {
-		 $this->header = $header;
+	public function __construct ($header=1) {
+		// header is 0 for none, 1 for news, 2 for other
+		 $this->header = $headers[$header];
 	 
 	}
 
@@ -101,7 +110,7 @@ EOT;
 		return $vname;
 	}
 	
-	private function closeLine ($level,$thisMenu){
+private function closeLine ($level,$thisMenu){
 		// add a closing menu item and end the ul.
 		// decided to NOT add the last menu item.
 		$t='';
@@ -117,7 +126,7 @@ EOT;
 	}
 
 
-	public function build_menu ($extra='') 
+public function build_menu ($extra='') 
 	{
 		$version = $this->get_version();
 
@@ -169,10 +178,9 @@ EOT;
 	<style>$stylelink</style>
 	<nav id='nav'>
 EOT;
+
 	#$t .= "nav header: " . $this->header;
-	if ($this->header == 1){ $t .=
-	"<p><img src='/graphics/logo69x89.png' ><span style='font-size:1.5em;'>AMD Flames - The AMD Alumni Site </span> </p>";
-	}
+	$t .= $this->header;
 	#$t .= "<p>session level ${_SESSION['level']}; lvl $lvl; name $username<p>";
 	$t .=  <<<EOT
 	<ul>

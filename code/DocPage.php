@@ -15,16 +15,15 @@ class DocPage {
       {
          // see if new login has been used
          if (! isset($_SESSION['menu'])){
-
-            require 'nav.class.php';
-            $nav = new \navBar(1);
-
-            $navbar = $nav -> build_menu(0);
-            $_SESSION['menu'] = $navbar;
+            $nav = new \navBar(0);
+            $_SESSION['menu'] =  $nav -> build_menu();
          }
 
    }
-   public function getHead($title, $min = 0, $options=[]){
+   public function getHead ($title, $min = 0, $options=[]) {
+      $this->startHead($title,$min,$options);
+   }
+   public function startHead($title, $min = 0, $options=[]){
       /* options:
          'tiny' = include tinymce
          'ajax' = include jquery, ajax
