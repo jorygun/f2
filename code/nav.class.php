@@ -42,7 +42,7 @@ class navBar {
 		
 	public function __construct ($header=1) {
 		// header is 0 for none, 1 for news, 2 for other
-		 $this->header = $headers[$header];
+		 $this->header = $this->headers[$header];
 	 
 	}
 
