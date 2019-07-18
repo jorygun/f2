@@ -3,11 +3,15 @@
 #copy this page to index-down.php to bring the site down.
 
 function down_notice (){
+
+	
 	$msg = "Notice: 
 	amdflames.org is currently down. 
-	Access was attempted at " . date('h:i a') . " from 
-	" . $_SERVER['REMOTE_HOST'] ." query: " . $_SERVER['QUERY_STRING'] 
-	;
+	Access was attempted at " . date('h:i a') . "\n"
+	. "From: " . $_SERVER['REMOTE_HOST'] . "\n"
+	. " Query: " . $_SERVER['QUERY_STRING'] . "\n"
+	. "URI: " . $S_SERVER['REQUEST_URI']
+	. "\n";
 	
 	mail ('admin@amdflames.org','Site down notice', $msg);
 }

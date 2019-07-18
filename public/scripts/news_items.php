@@ -32,7 +32,7 @@ then marked as published.
 
 
 
-$my_login = $_SESSION['pwid'];
+
 
 
 $now = sql_now();
