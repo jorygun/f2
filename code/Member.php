@@ -513,7 +513,7 @@ private static $long_profile_fields = array (
   
   }
 	public function setEmail ($uid,$email){
-		$sql = "UPDATE `members_f2` SET user_email = '$email'";
+		$sql = "UPDATE `members_f2` SET user_email = '$email' where user_id = '$uid' ";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -522,7 +522,7 @@ private static $long_profile_fields = array (
 	}
 	
 	public function setAdminStatus ($uid,$status) {
-	$sql = "UPDATE `members_f2` SET admin_status = '$status'";
+	$sql = "UPDATE `members_f2` SET admin_status = '$status'  where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -532,7 +532,7 @@ private static $long_profile_fields = array (
 	
 	
 	public function setStatus ($uid,$status){
-		$sql = "UPDATE `members_f2` SET status = '$status'";
+		$sql = "UPDATE `members_f2` SET status = '$status'  where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
