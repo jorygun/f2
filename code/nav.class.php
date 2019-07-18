@@ -23,7 +23,7 @@ class navBar {
 	private $level, $text;
 	private $header;
 	
-	private static $headers = array(
+	private  $headers = array(
 	0 => '',
 	1 => 
 		"<p><img src='/graphics/logo69x89.png' ><span style='font-size:1.5em;'>AMD Flames - The AMD Alumni Site </span> </p>",
