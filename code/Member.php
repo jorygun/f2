@@ -913,6 +913,7 @@ public function getLogins($tag) {
    
     public function verifyEmail ($id) {
 		 if ($this->setEmailStatus($id,'Y') ){
+		 	
 			return true;
 		 } else {
 			return false;
@@ -1044,7 +1045,14 @@ public function getLogins($tag) {
         return $v;
     }
 	public function  setEmailStatus($uid,$ems) {
+		// if ems is a Y, then also update the last_verified data.
+		// if ems is a Y and old ems was a Y, it won't caatch the
+		// update in the trigger.
+		$validated = ($ems == 'Y') ?
+			', email_last_validated = now() ' : '';
+			
 		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
+			$validated
 			WHERE user_id = '$uid';";
 		
 		if (! $result = $this->pdo->query($sql) ){
