@@ -129,7 +129,7 @@ and change it in your profile.
 		#$this->pdo = $pdo;
 		$this->pdo = \MyPDO::instance();
 		
-		$this->test = true; #use setMode(true) to set test=false
+		$this->test = false; #use setMode(true) to set test=false
 		#$this->member = $member;
 		$this->member = new Member();
 		
@@ -140,7 +140,7 @@ and change it in your profile.
 		$this->mailer->CharSet = 'UTF-8'; 
 		$this->mailer->isSendmail();
 	}
-	public function setMode($mode=false ) {
+	public function setMode($mode=true ) {
 		// false = test mode
 		$this->test = ! $mode;
 	}
