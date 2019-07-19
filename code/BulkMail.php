@@ -57,7 +57,7 @@ class BulkMail {
 				$jcancel = '';
 				$jsub = fgets(fopen("$jmsg", 'r')); #first line of message
 				if ($jstat == 'queued' or $jstat == 'running'){
-					$jcancel = "<button type='button' onClick='cancel_bulk($job)'>Cancel</button>";
+					$jcancel = "<button type='button' onClick='cancel_bulk($jobid)'>Cancel</button>";
 				}
 				$joblist .= "<li class='$jstat'>$jobid $jstat: '$jsub' to $jcnt recipients runs after: $starttime $jcancel<br>\n";
 		
