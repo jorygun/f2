@@ -71,7 +71,7 @@ use digitalmx\flames\Definitions as Defs;
     	$edition_name = 'no name';
     	$latest_pointer = 'news_';
     }
-  	$interval = 6;
+  	$interval = 15;
 
 	
 
