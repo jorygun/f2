@@ -13,17 +13,15 @@ ini_set('display_errors', 1);
 ini_set('error_reporting', -1);
 //BEGIN START
 
-#	require_once 'init.php';
+	require_once 'init.php';
+	use digitalmx\flames\Definitions as Defs;
 
 	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	
 	use digitalmx\flames\Member;
 	use digitalmx\flames\Messenger;
 	use digitalmx\flames\DocPage;
-	#use digitalmx\MyPDO;
-	
+	use digitalmx\MyPDO;
+
 	
 //END START
 
@@ -39,14 +37,14 @@ class MemberAdmin {
 	
 	
 	
-	public function __construct(){
-		$this->pdo = \MyPDO->instance();
-		$this->member = new Member ();
+	public function __construct($member){
+		$this->pdo = MyPDO::instance();
+		$this->member = new $member
 		$this->page = new DocPage();
-		$this->messenger = new Messenger();
+		$this->messenger = new Messenger($this->pdo);
 	}
 	
-//	this function just echos out the data in a list of found members.
+	// this function just echos out the data in a list of found members.
 	private function echo_user_row ($row,$post=''){
        #$fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
 		 $uid = $row['user_id'];
@@ -54,8 +52,7 @@ class MemberAdmin {
 		   $username = u\entity_spec($row['username']);
 		  $last_login = date('d M, Y',strtotime($row['last_login']));
 		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
-		  	$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid);
-		  	$markContributeButton = f\actionButton('Contributed','markContribute',$uid);
+		  	$validateEmailButton = $this->actionButton('Validate Email','verifyEmail',$uid);
 		  	
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
        
@@ -66,7 +63,7 @@ class MemberAdmin {
         $user_login_link = "https://amdflames.org/?s=$login";
      
       $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
-		$o .= f\actionButton('Send Login','sendLogin',$uid);
+		$o .= $this->actionButton('Send Login','sendLogin',$uid);
 		$o .= "</td></tr>\n";
 		
        $o .= "<tr style='text-align:center'>
@@ -89,10 +86,10 @@ class MemberAdmin {
         $o .=   "<td align='center'>$validateEmailButton</td>";
         $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
-        $o .=   "<td align='center'>$markContributeButton</td>";
-      
+        $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
+       // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
         $o .=   "<td align='center'> " 
-        		. f\actionButton('X-out','xout',$uid) 
+        		. $this->actionButton('X-out','xout',$uid) 
         		. "</td></tr>\n";
         		
 		return $o;
@@ -102,9 +99,15 @@ class MemberAdmin {
 		$this->members->setStatus($uid,'X');
 	
 	}
-	
-	 
-   
+	 public function actionButton($label,$action,$uid) {
+   	// script to buld button for ajax
+   	$button = '<button type="button" onClick="takeAction('
+   		. $uid
+   		. ",'$action')\">"
+   		. $label
+   		. "</button>";
+   	return $button;
+   }
 	public function listMembers($post){
    //save search so can be repeated
      $_SESSION['last_member_search'] = $post;
@@ -145,6 +148,9 @@ class MemberAdmin {
 
 }
 
+	
+	
+
  public function showSearch(){
  	$status_options = "<option value=''>Choose...</option>";
 	foreach (array('M','G','MC','MU','MN','N','T','I') as $v){
@@ -180,7 +186,7 @@ here. Name and email can be partials.
 EOT;
 	return $o;
 	
-}
+	}
 	
 	
 
@@ -192,33 +198,29 @@ EOT;
 
 */
 
-//convert Get data yo Post data
-
+// convert Get data yo Post data
  public function updateMember ($post){
 	$uid = $post['uid'];
-	//start by getting users record.  Needed for both get and put
+	// start by getting users record.  Needed for both get and put
 	$md = $this->member->getMemberData($uid);
 	$mdd = $md['data'];
 	$username = $mdd ['username'];
 	
-//process any data in the post array
+// process any data in the post array
 	extract ($post,EXTR_PREFIX_ALL,'P');
 	if (empty ($P_uid)){ #?? think there should always be something here 
 		exit;
 	}
 	//go over data and find updates and perform as encountered
-	#u/echor($post); exit;
 	
 	if (!empty($P_new_email)){ #new email address; update and send verify
-		$new_email = trim($P_new_email);
-		echo "<p>New Email: $new_email</p>";
-		if (filter_var($new_email, FILTER_VALIDATE_EMAIL) === false){
-			echo "Invalid Email address $new_email<br>\n";
+		echo "<p>New Email: $P_new_email</p>";
+		if (! u\isValidEmail($P_new_email)){
+			echo "Invalid Email address $P_new_email<br>\n";
+			exit;
 		}
-		
-
-		//put new email in place for messenger
-		$this->member->setEmail ($uid,$new_email);
+		// put new email in place for messenger
+		$this->member->setEmail ($uid,$P_new_email);
 		if (substr($mdd['status'],0,1) == 'L'){ #member was lost
 			$informant = 'you';
 			if (!empty ($P_informant)){
@@ -237,7 +239,7 @@ EOT;
 			$this->messenger->sendMessages($uid,'em-change');
 		}
 		$P_email_status = 'E1';
-		$use_email = $new_email;
+		$use_email = $P_new_email;
 
 
 	}
@@ -311,62 +313,14 @@ EOT;
 
 	
 	
-	//reset my row with updated data
+	// reset my row with updated data
 	$md = $this->member->getMemberData($uid);
 	$mdd = $md['data'];
 }
 ## end of update
 
 
-//GEt PAGE
-public function showMemberSummary($mdd) {
-	
-	
-	$username = $mdd ['username'];
-	$uid = $mdd['user_id'];
-    $login_string = "https://amdflames.org/?s=${mdd['upw']}${mdd['user_id']}";
-	$sendLoginButton = f\actionButton('Send Login','sendLogin',$uid);
- $summary = "
- 	<div id='memberSummary'>
-  	 <table border='1' cellpadding='2' cellspacing='0'>
-  	 ";
-  	$summary .= "<tr>
-  	<th>Name</th><td>$username</td><th>Login</th><td colspan='2'>$login_string</td><td>$sendLoginButton</td></tr>
-";
-  	
-//Set headings
-	$fields = array(
-		'status','status_updated','admin_status', 'last_login','profile_updated','profile_validated');
-	$summary .= "<tr>";
-	foreach ($fields as $field){
-		$summary .= "<th>$field</th>";
-	}
-	$summary .= "</tr><tr>";
-	foreach ($fields as $field){
-		$summary .= "<td>${mdd[$field]}</td>";
-	}
-	$summary .= "</tr><tr>";
-	
-	$fields = array('user_email','email_status','email_status_time','email_last_validated','email_chg_date','prior_email');
-	$summary .= "<tr>";
-	foreach ($fields as $field){
-		$summary .= "<th>$field</th>";
-	}
-	$summary .= "</tr><tr>";
-	foreach ($fields as $field){
-		$summary .= "<td>" . nl2br($mdd[$field]) . "</td>";
-	}
-	$summary .= "</tr>
-	</table>\n";
-	$summary .= "<p><b>Subscriber</b>: " ;
-	$summary .= ($mdd['no_bulk'])? 'No' : 'Yes' . "</p>\n";
-	$summary .=  "<p><b>At AMD: </b>${mdd['user_amd']}</p>\n";
-	$summary .= "</div>\n";
-	
-	return $summary;
-}
-
-
+// GEt PAGE
 public function showUpdate($uid) {
 	$md = $this->member->getMemberData($uid);
 	
@@ -376,10 +330,30 @@ public function showUpdate($uid) {
 	
 	$username = $mdd ['username'];
 	$uid = $mdd['user_id'];
-    // Start a display table
-   
+     // Start a display table
+    $login_string = "https://amdflames.org/?s=${mdd['upw']}${mdd['user_id']}";
 
-    //build option fields
+  echo <<<EOT
+  <h3 class='y_row'>${mdd['username']}</h3>
+  (user_id = ${mdd['user_id']})
+
+
+  <form action="$_SERVER[PHP_SELF]" method="POST">
+  <input type='hidden' name='uid' value='$uid'>
+  
+	
+  <table border='1' cellpadding='2' cellspacing='0'>
+
+EOT;
+// Set headings
+	$cn_fields = array(
+		'status','status_updated','admin_status', 'last_login','profile_updated','profile_validated','no_bulk');
+
+	$en_fields = array('user_email','email_status','email_status_time','email_last_validated','email_chg_date','prior_email');
+
+
+
+    // build option fields
 		$target_status = $mdd['status'];
 		$nm = ($target_status == 'N')?'(Send Welcome)':'';
 		
@@ -409,7 +383,31 @@ public function showUpdate($uid) {
 		  else {$show_email = '';}
 
 
-		
+			// now show target data
+
+			//print heading row
+         echo '<tr>';
+         foreach ($cn_fields as  $v){echo "<th>$v</th>";}
+         echo "</tr>\n";
+		// print data for cn fields
+				echo "<tr class = 'y_row'>";
+				foreach ($cn_fields as $k){
+					echo "<td>$mdd[$k]</td>";
+				}
+				echo "</tr>
+
+				</table><table><tr>\n";
+				foreach ($en_fields as $k){
+					echo "<th>$k</th>";
+				}
+				echo "</tr><tr class = 'y_row'>";
+				foreach ($en_fields as $k){
+					echo "<td>$mdd[$k]</td>";
+				}
+				echo "</tr></table>\n";
+
+				echo "<p><b>At AMD: </b>${mdd['user_amd']}</p>\n";
+				
 
 
 	  #now show action fields
@@ -419,17 +417,14 @@ public function showUpdate($uid) {
 
 	  	$nobulkchecked = $mdd['no_bulk'] ? 'checked':'';
 
-	  	$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid);
-		$sendLoginButton = f\actionButton('Send Login','sendLogin',$uid);
-		
-	echo $this->showMemberSummary($mdd);
-	
+	  	$validate_email_click = verify_click_email($mdd['id'],'');
+	  	$validateEmailButton = $this->actionButton('Validate Email','validateEmail',$uid);
+		$sendLoginButton = $this->actionButton('Send Login','sendLogin',$uid);
     echo <<<EOT
-	
+
 	  <h3 style="border-top:1px solid black;">Actions on this record</h3>
 Fields left blank will not be changed.
-	<form method="post">
-		<input type='hidden' name ='uid' value ='$uid'>
+
 	 	<table>
 	 		<columns>
 	 		<col width="50%">
@@ -455,13 +450,13 @@ Fields left blank will not be changed.
 	  	<input type='hidden' name='nobulkchecked' value='$nobulkchecked' >
 	  	</td></tr>
 
-	  	<tr><td><b>Change Email Status</b> $validateEmailButton</td> <td>email_status (currently ${mdd['email_status']} ):
+	  	<tr><td><b>Change Email Status</b> </td><td>email_status (currently ${mdd['email_status']} ):
 	  	<select name='email_status'><option value=''>Leave as ${mdd['email_status']}</option>
 	  		$email_status_options</select><br>
 	  		(Note: changing to A1 will send a validation email.)
 
 	  	</td></tr>
-	  		
+	  		<tr><td></td><td>$validateEmailButton</td></tr>
 	  	<tr><td><b>Admin Status</b></td><td>(currently ${mdd['admin_status']}):
 	  	<input type="text" size="4" name="admin_status">
 	  	</td></tr>
@@ -478,7 +473,9 @@ Fields left blank will not be changed.
 	  	<tr><td><p><b>Update the Admin Note.</b>  </td><td>
 	  	<textarea  name='admin_note' cols = '40' rows = '8'>${mdd['admin_note']}</textarea></td></tr>
 
-	  
+	  	<tr><td><b>Send Lost Link to this user.</b>  This will happen immediately.</td><td> 
+	  	$sendLoginButton
+	  	</td></tr>
 
 
 	  	<tr><td ><input type='submit' name='Update' value='Update' style='background:#6F6; width:12em;'></td><td></td></tr>
@@ -491,6 +488,88 @@ Fields left blank will not be changed.
 
 EOT;
 
+}
+
+#####  FUNCTIONS ############
+
+
+function update_email ($row,$new_email){ #$id,$name,$old_email,$new_email){
+
+   
+	//  if email is changed, send message to old email and verify to new email
+	//
+	$id = $row['id'];
+	$old_email = $row['user_email'];
+	$name = $row['username'];
+	$login="s=${row['upw']}${row['user_id']}";
+	$login_string = "https://amdflames.org/?$login";
+	$verify_string = "https://amdflames.org/scripts/verify_email.php?$login";
+    if ($old_email == $new_email){
+        echo "Email not changed."; return 1;
+    }
+
+	echo "Updating Email for $name from $old_email to $new_email<br>";
+
+	$old_msg = <<< EOT
+	The email on the AMD Alumni site for $name has been changed
+	to $new_email.
+
+	If this is not correct, please contact the site administrator
+		at admin@amdflames.org, or just reply to this message.
+
+EOT;
+    $join_date_text = date('j F Y', strtotime($row['join_date']));
+    $informant = (empty($_POST['informant']))?'another member':$_POST['informant'];
+    $found_msg = <<<EOT
+    Your email address on the AMD Alumni site amdflames.org has just
+been updated to $new_email.
+
+    You have been a member of amdflames.org along with about 2000 other
+ex-AMDers since $join_date_text, but somewhere along the line we lost
+a working email for you.
+
+Each week we publish newsletter with a list of a few “lost members” -
+lost because we have no email, or the one we have bounces, or they did not
+respond to several requests to confirm their email.
+
+    Your name showed up recently, and $informant suggested that
+this is the correct email for you.  I have updated your email address with
+this one, and also set your account to receive the weekly update email.
+
+  PLEASE CLICK THE LINK BELOW TO CONFIRM THIS EMAIL ADDRESS.
+  $verify_string
+
+    Your login to the site is shown below.  You can use this to enter the site
+and provide a different email, confirm your email, update your current
+information, and block weekly emails from the site. Just
+log in and Edit Profile.
+
+Your personal login to the amdflames site:
+    $login_string
+
+Thanks
+Flames Admin
+EOT;
+
+	// record new email and set email status to Q; will be reset immediately by the verify process
+	$q = "UPDATE `members_f2` SET user_email = '$new_email',email_status='E1'  WHERE id = $id;";
+			 $result = $pdo->query($q);
+			if ($result){echo "<br>Database Updated<br>";} #prior_email and date setr by trigger}
+			else {die ("Database update in update_email failed.");}
+
+
+	mail($old_email,"AMD Alumni Site: Email for $name has been changed",$old_msg, "From: Flames Administrator <admin@amdflames.org>\n\r");
+	if (isset($_POST['suggested_email'])){
+	    mail ($new_email,
+	"AMD Alumni Site: Email for $name has been updated",
+	$found_msg, 'admin@amdflames.org');
+
+	}
+
+	else {$ems->update_ems ($id,'E1');
+	#will immediately set the status to E1 and send out verify email
+	}
+	return 1;
 }
 
 
