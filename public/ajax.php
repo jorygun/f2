@@ -115,12 +115,12 @@ function cancel_bulk($job) {
 	$bulkmail = new BulkMail;
 	$queue = REPO_PATH . '/var/bulk_queue';
 	$tfile = $queue . "/$job";
-	if (file_exists($tfile){
+	if (file_exists($tfile)){
 		echo "renaming $tfile to xx-cancelled";
 		rename ($tfile , $tfile . "-cancelled");
 	}
 	$tfile = $queue . "/$job-running";
-	if (file_exists($tfile){
+	if (file_exists($tfile)){
 		echo "renaming $tfile to xx-cancelled";
 		rename ($tfile , str_replace('-running','-cancelled',$tfile) );
 	}
