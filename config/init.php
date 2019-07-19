@@ -256,7 +256,7 @@ class Init
 		. ':' . $repo_dir . '/libmx'
 		. ':' . $repo_dir . '/lib'
 		. ':' . $repo_dir. '/config'
-		. ':' . $repo_dir. '/code'
+		. ':' . $repo_dir. '/src'
 		. ':' . $repo_dir . '/public'
 		. ':' . $repo_dir . '/public/scripts'
 		. ':' . $repo_dir . '/lib/'
