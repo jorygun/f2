@@ -31,8 +31,8 @@ use digitalmx\flames\DocPage;
 use digitalmx\flames\Member;
 
 try {
-	require 'DocPage.php';
-	require 'Login.php';
+	require_once 'DocPage.php';
+	require_once 'Login.php';
 	require_once 'Member.php';
 	require_once 'Menu.php';
 	$s = $_GET['s'] ?? '';
