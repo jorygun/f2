@@ -4,6 +4,7 @@ ErrorDocument 404 /404.html
 DirectoryIndex index.html index-down.php  index.php 
 
 Options +FollowSymLinks
+Options -Indexes
 
 RewriteEngine on
 RewriteRule ^view_asset/([0-9]+)$ /scripts/asset_c.php?id=$1

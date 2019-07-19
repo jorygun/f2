@@ -251,7 +251,7 @@ EOT;
 				}
 				echo "</tr><tr class = 'y_row'>";
 				foreach ($en_fields as $k){
-					echo "<td>$mdd[$k]</td>";
+					echo "<td>" . nl2br($mdd[$k]) . "</td>";
 				}
 				echo "</tr></table><table><tr>\n";
 

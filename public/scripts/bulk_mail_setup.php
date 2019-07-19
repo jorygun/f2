@@ -3,9 +3,12 @@
 ini_set('display_errors', 1);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
+require_once 'BulkMail.php';
+
 use digitalmx as mx;
 use digitalmx\flames\Definitions as Defs;
 use \MyPDO;
+use digitalmx\flames\BulkMail;
 
     if (f2_security_below(7)){exit;}
 	$nav = new navBar(1);
@@ -13,10 +16,10 @@ use \MyPDO;
 	$pdo = MyPDO::instance();
 	
 	
-	require_once 'BulkMail.php';
+	
 	$bulkmail = new BulkMail();
-	
-	
+
+
 	$bulk_processor = PROJ_PATH . "/crons/send_bulk.php";
 	
 	
@@ -369,6 +372,7 @@ else { #IS POST
 			}
 		}
 		else {
+			$umask = umask(0);
 			mkdir ("$job_dir",0777,1);
 		}
 

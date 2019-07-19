@@ -49,8 +49,8 @@ EOT;
 		$nextnews_dir = "$newspath/news_next";
 
 		
-		$rtime_file = "$newspath/last_update_run.txt";
- 		$ptime_file = "$newspath/last_update_published.txt";
+		$rtime_file = "$newspath/last_update_run_ts.txt";
+ 		$ptime_file = "$newspath/last_update_published_ts.txt";
  		
  		$new_location_surrogate = "$newspath/index.php";
  		$latest_pointer = "$newspath/latest_pointer.txt";
@@ -102,7 +102,7 @@ EOT;
     \$mode = 'published';
     \$condensed_date = '$condensed_date';
     \$conventional_date = '$conventional_date';
-    # \$base_line = "<base href  = '$new_base'>";
+    
     \$publish_time = '$now';
     \$title = '$title';
     \$page_title='FLAME NEWS';
@@ -136,7 +136,7 @@ file_put_contents($last_published_ts,time());
 		// now make a new news_next directory from the model
 		//echo "Copying model news to next news<br>";
 		
-		copy($newspath . "/model-index.php" , $newnext_dir . "/index.php");
+		copy($newspath . "/model-index.php" , $nextnews_dir . "/index.php");
 		
         $pdo = MyPDO::instance();
 
