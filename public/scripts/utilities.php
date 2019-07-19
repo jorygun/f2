@@ -23,7 +23,6 @@ $Aliastext = "(Aliases: " . implode(', ',array_keys($aliases)) . ")";
 
 
 
-
 function deleteDir($path) {
     if (!is_dir($path)) {
         throw new InvalidArgumentException("$path is not a directory");
@@ -1246,7 +1245,7 @@ function hted ($var) {
 function verify_click_email ($id,$email) {
     $enc_user_email = rawurlencode($email);
 	$text = <<< EOT
-	<a href="#" onclick="v_window = window.open('$GLOBALS[siteurl]/scripts/verify_email.php?m=$enc_user_email&t=click&r=$id','Verify','height=200,width=200,x=200,y=200');v_window.move_To(200,200);return false;">click here</a>
+	<a href="#" onclick="v_window = window.open(SITE_URL . '/scripts/verify_email.php?m=$enc_user_email&t=click&r=$id','Verify','height=200,width=200,x=200,y=200');v_window.move_To(200,200);return false;">click here</a>
 EOT;
 	return $text;
 }
@@ -1256,7 +1255,7 @@ function verify_click_profile ($id) {
 
 
 	$text = <<< EOT
-	<a href="#" onclick="v_window = window.open('$GLOBALS[siteurl]/scripts/verify_profile.php?t=click&r=$id','Verify','height=200,width=200,x=200,y=200');v_window.move_To(200,200); return false;">click here</a>
+	<a href="#" onclick="v_window = window.open(SITE_URL . '/scripts/verify_profile.php?t=click&r=$id','Verify','height=200,width=200,x=200,y=200');v_window.move_To(200,200); return false;">click here</a>
 EOT;
 	return $text;
 }

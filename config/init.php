@@ -68,12 +68,7 @@ if ($init->getRepo() == 'live'){
 }
 
 
-function f2_security_below ($min) {
-	global $login;
-	$login->checkLogin($min);
-   
-   return false;
-}
+require REPO_PATH . "/config/f2_transition.php";
 
 
 
@@ -164,6 +159,7 @@ class Init
 		#require_once 'MyPDO.php'; #in digitalmx\flames
 		#require_once 'MyPDO.class.php'; #not in namespace
 		#require_once 'DocPage.php';
+		require_once 'navBar.php';
 		
 		return true;
 	}
