@@ -17,6 +17,7 @@ use digitalmx as u;
 use digitalmx\flames as f;
 use digitalmx\flames\TakeAction;
 #$actor = new TakeAction();
+use digitalmx\flames\BulkMail;
 
 
 // if (empty($_SESSION['login']['user_id'])){
@@ -111,7 +112,7 @@ function vote_action($post){
 function cancel_bulk($job) {
 	// changes jobid in the bulk mail quque to xx-cancelled.  Should halt running job.
 	
-	require_once  'BulkMail.php';
+
 	$bulkmail = new BulkMail;
 	$queue = REPO_PATH . '/var/bulk_queue';
 	$tfile = $queue . "/$job";
