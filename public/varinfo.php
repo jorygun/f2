@@ -32,7 +32,7 @@ use digitalmx\flames\Member;
 
 try {
 	require_once 'DocPage.php';
-	require_once 'Login.php';
+
 	require_once 'Member.php';
 	require_once 'Menu.php';
 	$s = $_GET['s'] ?? '';
@@ -64,6 +64,12 @@ echo "<b>sitedir:</b> " . $sitedir . "<br>\n";
 echo "<b>projdir:</b> " . $projdir . "<br>";
 echo "<b>repo:</b> " . $reponame . "<br>";
 echo "<br>\n";
+
+if (!empty($ldata = $_SESSION['login'])){
+	u\echor($ldata, 'Logged In User');
+} else {
+	echo "No logged in User" . BRNL;
+}
 
 ## show envir vars
 $server_adds = array();
@@ -132,13 +138,14 @@ function echo_red ($t) {
 	echo "<p class='red'>$t</p>";
 	
 }
-require 'SiteUtilities.php';
 
 
-$member = new Member($pdo);
 
-$md = $member->getMemberList('john@digitalmx.com');
-u\echor ($md,'Member Data');
+$member = new Member();
+
+$membertag = 'john@digitalmx.com';
+$md = $member->getMemberList($membertag);
+u\echor ($md,'Member Data for ' . $membertag);
 
 // $em = new Messenger ($pdo,$test); #pdo,true for test
 // $event = 'em-found';

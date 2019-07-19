@@ -123,6 +123,7 @@ use \Exception as Exception;
 use \digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 use digitalmx\flames as f;
+use digitalmx\MyPDO;
 
 
 class Member
@@ -308,7 +309,7 @@ private static $long_profile_fields = array (
  public function __construct()
     {
        
-	$this->pdo  = \MyPDO::instance();
+	$this->pdo  = MyPDO::instance();
 	$this->std_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
 	
 	
