@@ -50,7 +50,7 @@ try {
 
 
 
-	if (empty($site_ini = parse_ini_file(REPO_PATH . '/config.ini') )){
+	if (empty($site_ini = parse_ini_file(REPO_PATH . '/config/config.ini') )){
 		throw new Exception("Cannot open site ini file");
 	}
 	
