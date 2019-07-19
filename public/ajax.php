@@ -114,7 +114,14 @@ function cancel_bulk($job) {
 	require_once  'BulkMail.php';
 	$bulkmail = new BulkMail;
 	$queue = REPO_PATH . '/var/bulk_queue';
-	rename ($queue . "/$job" , $queue . "/${job}-cancelled");
+	$tfile = $queue . "/$job";
+	if (file_exists($tifle){
+		rename ($tfile , $tfile . "-cancelled");
+	}
+	$tfile = $queue . "/$job-running";
+	if (file_exists($tifle){
+		rename ($tfile , str_replace('-running','-cancelled',$tfile) );
+	}
 	echo $bulkmail -> show_bulk_jobs();
 }
 
