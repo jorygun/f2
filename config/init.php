@@ -40,7 +40,7 @@ $init->setConstants();
 		
 		$loader->add('digitalmx\\', REPO_PATH .'/libmx/');
 		$loader->add('digitalmx\\flames\\', REPO_PATH . '/src/');
-		$loader->add('digitalmx\\flames\\', REPO_PATH . '/code/');
+
 		
 	} else {
 		throw new Exception ( "no vendor autoload file.  " );
