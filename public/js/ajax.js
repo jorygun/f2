@@ -3,7 +3,7 @@ function addVote(id,rank) {
     // test for id >0, rank = up | down
     
 	$.ajax({
-	url: "/scripts/ajax.php",
+	url: "/ajax.php",
 	data:'ajax=vote&item_id='+id+'&this_vote='+rank,
 	type: "POST",
 	beforeSend: function(){
@@ -18,7 +18,7 @@ function addVote(id,rank) {
 function cancel_bulk(job) {
      
 	$.ajax({
-	url: "/scripts/ajax.php",
+	url: "/ajax.php",
 	data:'ajax=bulkmail&job='+job,
 	type: "POST",
 	
@@ -33,7 +33,7 @@ function cancel_bulk(job) {
 
 function takeAction (uid,action) {
    $.ajax({
-   url: "/scripts/ajax.php",
+   url: "/ajax.php",
    data: 'ajax='+action+'&uid='+uid,
    type: "POST",
    success: function (response) {
