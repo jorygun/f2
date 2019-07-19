@@ -16,7 +16,7 @@ use digitalmx\flames\Messenger;
 use digitalmx as u;
 use digitalmx\flames as f;
 use digitalmx\flames\TakeAction;
-$actor = new TakeAction();
+#$actor = new TakeAction();
 
 
 // if (empty($_SESSION['login']['user_id'])){
