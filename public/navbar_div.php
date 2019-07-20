@@ -1,5 +1,5 @@
 <?php
-
+	use digitalmx\MyPDO;
 
 if (isset($_SESSION['pwid'])){
   $lvl = $_SESSION['level'];

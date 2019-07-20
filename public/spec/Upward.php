@@ -20,6 +20,7 @@ else {$user_id = 0;}
 
 $sql="SELECT user_id,username,user_amd,upwards,status,email_status from `members_f2` where upwards is NOT NULL
     ORDER BY username";
+    	use digitalmx\MyPDO;
  $pdo = MyPDO::instance();
 $flames =$pdo->query($sql)->fetchAll();
 

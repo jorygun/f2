@@ -47,7 +47,7 @@
 	if (!$my_id){die ("No id to verify profile script");}
 
 
-$pdo = MyPDO::instance();
+$pdo = digitalmx\MyPDO::instance();
 	$sql = "UPDATE $GV[members_table] SET profile_validated = '$sql_today' WHERE id = $my_id;";
 
 	 $result = $pdo->query($sql);

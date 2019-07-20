@@ -13,10 +13,11 @@
 
 
 // require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
- require_once "Voting.class.php";
+	use digitalmx\flames\Voting;
+ 	use digitalmx\MyPDO;
 #echo "Got to " . basename(__FILE__ ) . ' line ' .  __LINE__ . "<br />\n"; exit;
-$voting = new Voting();
 
+$voting = new Voting();
 
 
 function get_news_comments($id){
@@ -89,6 +90,7 @@ function echo_if ($filename,$extra='') {
 }
 function get_news_file($filename,$extra=''){
 	#pass filename, possible heding text,
+	   global $voting; #need access to voting class object
 	   
 	#look in local directory, then news_live, then  in news directory
 	   if (file_exists("./$filename")) {
@@ -112,7 +114,7 @@ function get_news_file($filename,$extra=''){
 	}
 	
 	#for news files, deal with voting
-	global $voting; #need the voting object
+
 	    	
  /*   <div class='story_comment_box clear'>
            <? echo get_commenters(1741) ?>
@@ -136,6 +138,7 @@ function get_news_file($filename,$extra=''){
                  );
                 
      #replace voting content
+     		
             $content2 = preg_replace_callback(
             	'|<!-- vote (\d+) -->|',
             	function ($matches) use ($voting){

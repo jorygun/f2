@@ -2,9 +2,11 @@
 /* contains a bunch of definitions and scripts used by multiple asset
     related scripts.
 */
+namespace digitalmx\flames;
 
 use digitalmx\flames\Definitions as Defs;
-
+	use digitalmx\MyPDO;
+	use \Imagick;
 
 $asset_types = Defs::$asset_types;
 
@@ -134,7 +136,7 @@ function get_asset_by_id($id,$style='thumb'){
     if (empty($id)){return array ();}
     $pdo = MyPDO::instance();
     $sql = "SELECT * from `assets` WHERE id = $id";
-    $row = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+    $row = $pdo->query($sql)->fetch(\PDO::FETCH_ASSOC);
     #recho($row);
 
 
@@ -304,7 +306,7 @@ function get_asset_data($id){
         $itemdata=array();
 
          $stmt->execute([$id]);
-       if (!$itemdata = $stmt ->fetch(PDO::FETCH_ASSOC)  ){
+       if (!$itemdata = $stmt ->fetch(\PDO::FETCH_ASSOC)  ){
                     die ("No assets found at $id");
         }
 
@@ -451,7 +453,7 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 	 	
 	 }
 	 
-	 $finfo = new finfo(FILEINFO_MIME_TYPE);
+	 $finfo = new \finfo(FILEINFO_MIME_TYPE);
 	 
 	 if (substr($source_path,0,4) == 'http'){
 	 	$source_mime = get_url_mime_type($source_path);
@@ -537,7 +539,7 @@ function build_im_thumbnail ($id,$source_mime,$source,$ttype,$max_dim){
     if ($source_mime == 'application/pdf'){
     	$source = trim($source) . '[0]'; #page 1
     }
-     $im = new imagick ( $source);
+     $im = new Imagick ( $source);
     $im->setImageFormat('jpg');
     
 	autoRotateImage($im); 
@@ -724,7 +726,8 @@ function update_asset($post_array){
     global $auto_fields;
 
     $pdo = MyPDO::instance();
-
+	$member = new Member();
+	
     $id = $post_array['id'];
     if ($id == 0) {throw new Exception ("attempt to update asset with id = 0");}
 
@@ -732,8 +735,11 @@ function update_asset($post_array){
     #if contributor id not set, look up from name.
     if (empty($post_array['contributor_id'])){
     echo "Getting contributor id for ${post_array['contributor']}" . BRNL;
-        list ($post_array['contributor'],$post_array['contributor_id']) =
-            set_userid( $post_array['contributor'],$post_array['contributor_id']);
+        $post_array['contributor_id'] =
+            $member->getMemberId($post_array['contributor']);
+         if (!$post_array['contributor_id']){
+         	echo "Contributor " . $post_array['contributor'] . " not found";
+         }
    }
 // recho ($post_array,'after setuid');
 // exit;
@@ -857,7 +863,7 @@ function update_galleries($galleryid,$ids){
              #use _FILES array to look like an upload
             */
             
-         $finfo = new finfo(FILEINFO_MIME_TYPE);
+         $finfo = new \finfo(FILEINFO_MIME_TYPE);
        
         $file_data = array(
             'tmp_name' => $loc,
@@ -889,12 +895,13 @@ function post_asset($post_array){
      if ($id == 0){
 
         $title = "temp holding place";
-        $sql = "INSERT into `assets` (status,title,date_entered) values ('T','$title',NOW() );";
+        $sql = "INSERT into `assets` (status,title,date_entered,type) values ('T','$title',NOW() ,'');";
         echo $sql . BRNL;
         $pdo->query($sql);
         $last_id = $pdo->lastInsertId();
         $post_array['id'] = $id = $last_id;
         $post_array['status'] = 'T';
+        $post_array['type'] = '';
         echo "New ID created (temp): $id<br>\n";
     }
 
@@ -954,7 +961,7 @@ function post_asset($post_array){
     		$link = $form_link;
     	}
     if (substr($link,0,1) == '/') { #local file
-    	 $finfo = new finfo(FILEINFO_MIME);
+    	 $finfo = new \finfo(FILEINFO_MIME);
 		 $post_array['mime'] = $finfo->file(SITE_PATH . "/$link");
 		 $post_array['sizekb'] =  round(filesize(SITE_PATH . "/$link")/1000,0);
    	 $post_array['link'] = $link;
@@ -984,7 +991,7 @@ function post_asset($post_array){
   
 
  #test to see if url has changed; if so update thumb
-     $row = $pdo->query("SELECT link,url from `assets` where id = $id;")->fetch(PDO::FETCH_ASSOC);
+     $row = $pdo->query("SELECT link,url from `assets` where id = $id;")->fetch(\PDO::FETCH_ASSOC);
 		$orig_link = $row['link'];
 		$orig_url = $row['url'];
 		
@@ -1103,15 +1110,15 @@ function check_file_uploads ($upload_name){
         case UPLOAD_ERR_OK:
            break;
         case UPLOAD_ERR_NO_FILE:
-            throw new RuntimeException('No file sent.');
+            throw new \RuntimeException('No file sent.');
         case UPLOAD_ERR_INI_SIZE:
         case UPLOAD_ERR_FORM_SIZE:
-            throw new RuntimeException('Exceeded filesize limit.');
+            throw new \RuntimeException('Exceeded filesize limit.');
         default:
-            throw new RuntimeException('Unknown errors.');
+            throw new \RuntimeException('Unknown errors.');
     }
     if (!file_exists($_FILES[$upload_name]['tmp_name'] )){
-    	throw new RuntimeException ("uploaded $upload_name does not exists.");
+    	throw new \RuntimeException ("uploaded $upload_name does not exists.");
     }
     $fmime = $_FILES[$upload_name]['type'];
     $original = $_FILES[$upload_name]['name'];
@@ -1136,7 +1143,7 @@ function relocate ($id,$type,$link=''){
     
 **/
     echo "Starting relocation $type ... " . BRNL;
-    $finfo = new finfo(FILEINFO_MIME);
+    $finfo = new \finfo(FILEINFO_MIME);
 	switch ($type) {
 		case 'link_upload' :
 			
@@ -1163,7 +1170,7 @@ function relocate ($id,$type,$link=''){
 		case 'uploads':
 			$orig_path = PROJ_PATH . '/' . $link;
 			if (! file_exists($orig_path)) {
-				throw new RuntimeException ("file $link does not exist");
+				throw new \RuntimeException ("file $link does not exist");
 			}
 			$new_mime = $finfo->file($orig_path) ;
 			$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
@@ -1191,7 +1198,7 @@ function relocate ($id,$type,$link=''){
 		
 			break;
 		default:
-			throw new RuntimeException ("file relocate type $type not recognized");
+			throw new \RuntimeException ("file relocate type $type not recognized");
 			
 	}
 	echo "WIll now move $orig_path to $new_path" . BRNL;

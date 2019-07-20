@@ -7,7 +7,8 @@ ini_set('error_reporting', E_ALL);
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 use digitalmx\flames\Member;
-
+	use digitalmx\MyPDO;
+	
 $proj_dir = dirname(__DIR__); #flames
 require_once "$proj_dir/vendor/autoload.php";
 
@@ -127,7 +128,7 @@ and change it in your profile.
 	
 	public function __construct() {
 		#$this->pdo = $pdo;
-		$this->pdo = \MyPDO::instance();
+		$this->pdo = MyPDO::instance();
 		
 		$this->test = false; #use setMode(true) to set test=false
 		#$this->member = $member;

@@ -6,7 +6,7 @@ ini_set('error_reporting',E_ALL);
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	if (f2_security_below(7)){exit;}
-
+	use digitalmx\MyPDO;
 //END START
 require_once "news_functions.php";
 require_once "asset_functions.php";

@@ -14,7 +14,8 @@
 //			extra is text to add below the menu (like another link back)
 
 //
-
+	use digitalmx\MyPDO;
+	
 class navBar {
 
 	private $thisMenu;

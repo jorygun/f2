@@ -29,6 +29,7 @@ $sql = "SELECT * FROM (
     SELECT `issue`,`read_cnt` FROM `read_table` ORDER BY issue DESC LIMIT 60
     ) as t
     ORDER by t.issue;";
+    	use digitalmx\MyPDO;
 $pdo = MyPDO::instance();
 $result = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 

@@ -1,6 +1,7 @@
 <?php
 // miscellaneous utility scripts
 
+use digitalmx\MyPDO as MyPDO;
 
 
 $aliases = array (
@@ -800,24 +801,6 @@ function make_links($input){
 
 
     return $input;
-}
-function set_userid($user,$userid){
-    if (!empty($user) && empty($userid)){
-    #looks up user to see if valid ,checking aliases, and returns
-        global $aliases;
-        if (array_key_exists($user,$aliases)){
-                $user = $aliases[$user] ;
-        }
-        list($cid,$cname) = get_id_from_name($user);
-        if ($cid != 0){
-            $userid = $cid;
-            $user = $cname;
-        }
-        else {
-           $userid = 0;
-        }
-    }
-    return array($user,$userid);
 }
 
 

@@ -6,7 +6,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (login_security_below(6)){exit;}
     require_once 'asset_functions.php';
-
+	use digitalmx\MyPDO;
 //END START
 
 

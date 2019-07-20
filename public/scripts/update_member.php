@@ -12,7 +12,8 @@ use digitalmx as u;
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
 use digitalmx\flames\DocPage;
-
+	use digitalmx\MyPDO;
+	
 $pdo = MyPDO::instance();
 $member = new Member($pdo);
 $messenger = new Messenger(); 

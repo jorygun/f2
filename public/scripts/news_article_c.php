@@ -8,7 +8,7 @@
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(1)){exit;}
-
+	use digitalmx\MyPDO;
 //END START
 
 

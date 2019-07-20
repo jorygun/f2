@@ -39,7 +39,7 @@ class MemberAdmin {
 	
 	public function __construct($member){
 		$this->pdo = MyPDO::instance();
-		$this->member = new $member
+		$this->member = $member;
 		$this->page = new DocPage();
 		$this->messenger = new Messenger($this->pdo);
 	}

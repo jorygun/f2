@@ -1,7 +1,7 @@
 <?php
 //BEGIN START
 	require_once "init.php";
-	if(login_security_below(7)){exit;};
+	if(f2_security_below(7)){exit;};
 //END START
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();

@@ -7,7 +7,7 @@ require_once 'BulkMail.php';
 
 use digitalmx as mx;
 use digitalmx\flames\Definitions as Defs;
-use \MyPDO;
+	use digitalmx\MyPDO;
 use digitalmx\flames\BulkMail;
 
     if (f2_security_below(7)){exit;}

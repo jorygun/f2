@@ -5,7 +5,7 @@ ini_set('error_reporting', -1);
 	require_once 'init.php';
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx as dmx;
-	use  MyPDO;
+		use digitalmx\MyPDO;
 
 	if (f2_security_below(8)){die ("NOt allowed");}
 //END START

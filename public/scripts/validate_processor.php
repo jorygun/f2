@@ -143,7 +143,7 @@ EOT;
 			if ($email){$qv = "SELECT $select_fields FROM $db_members WHERE user_email = '$email' AND status NOT LIKE 'X';";}
 			elseif ($id){$qv = "SELECT $select_fields FROM $db_members WHERE user_id = '$id' AND status NOT LIKE 'X';";}
 				#if ($rt){print ">>>>>>\$qv: $qv<br><br>\n";}
-			$pdo = MyPDO::instance();
+			$pdo = digitalmx\MyPDO::instance();
 			 $row = $pdo->query($qv)->fetch();
 
 			

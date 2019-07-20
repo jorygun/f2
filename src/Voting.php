@@ -1,5 +1,7 @@
 <?php
+namespace digitalmx\flames;
 
+	use \digitalmx\MyPDO;
 class Voting {
 
 	private $pdo;
@@ -7,7 +9,7 @@ class Voting {
 
 	function __construct() {
 		#$this->pdo = $pdo;
-		$this->pdo = \MyPDO::instance();
+		$this->pdo = MyPDO::instance();
 	}
 
 	public function show_panel($item_id,$user_id){

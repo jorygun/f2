@@ -205,7 +205,7 @@ function png_or_jpg_exists($dir,$id){
 function post_asset_update($post) {
         $id = $post['id'];
         echo "updating asset $id for post_asset_update" . BRNL;
-        $pdo = MyPDO::instance();
+        $pdo = digitalmx\MyPDO::instance();
         $sql = "UPDATE `assets` 
         	SET title=?, caption=?, vintage=? ,tags=? , status=?
         	WHERE id = $id";

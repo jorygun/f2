@@ -2,6 +2,7 @@
 //BEGIN START
 	require_once 'init.php';
 	require_once "./scripts/asset_functions.php";
+	use digitalmx\MyPDO;
 	if (f2_security_below(1)){exit;}
 
 //END START

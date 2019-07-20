@@ -12,3 +12,9 @@ function f2_security_below ($min) {
    
    return false;
 }
+
+function security_below($min) {
+   $login = new digitalmx\flames\Login();
+	   $login->checkLogin($min);
+	return false;
+}

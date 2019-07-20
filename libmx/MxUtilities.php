@@ -239,14 +239,6 @@ function pdoPrep($data,$include=[], $key=''){
             if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
             $db[$var] = htmlspecialchars_decode($val);
-            if (empty($db[$var])){
-            	$db[$var] = '';
-            	if ($var == 'asset_id'){ 
-            		unset ($db[$var]);
-            		continue; 
-            	} #leave out of list
-   
-            }
 				
             $ufields[] = "$var = :$var";
             $ifields[] = $var;

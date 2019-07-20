@@ -1,5 +1,5 @@
 <?php
-// ini_set('display_errors', 1);
+ ini_set('display_errors', 1);
 // ini_set('error_reporting', E_ALL);
 
 //BEGIN START
@@ -7,10 +7,16 @@
 	if (f2_security_below(0)){exit;}
 	
 	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\DocPage;
 	
-	
+	$page = new DocPage();
+	$title = 'AMD Flames';
+	echo $page -> startHead($title,0);
+	echo $page -> startBody($title,1);
+
 //END START
-if (isset($_SESSION['pwid'])){ #user is logged in
+/*
+if (isset($_SESSION['login'])){ #user is logged in
     $my_id = $_SESSION['recid'];
 	$sl = $_SESSION['level'];
 
@@ -91,13 +97,11 @@ $navbar = $nav -> build_menu();
 
 
 <?=$navbar ?>;
-<!-- start of content -->
 
+*/
 
-
-
-
-<?php
+ 
+// <?php
 
 #get latest newsletter date
 

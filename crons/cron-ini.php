@@ -76,8 +76,8 @@ try {
 
 	// require 'MxPDO.php';
 // 	$pdo = new \digitalmx\MxPDO ('production',$platform,PROJ_PATH . '/config/db.ini');
-	require 'MyPDO.class.php';
-	$pdo = \MyPDO::instance();
+	require 'MyPDO.php';
+	$pdo = MyPDO::instance();
 	
 }catch (Exception $e){
 	echo 'Error: '
