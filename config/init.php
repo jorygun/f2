@@ -21,6 +21,9 @@ ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 use digitalmx\MyPDO;
 use digitalmx as u;
+use digitalmx\flames\Definitions as Defs;
+use digitalmx\flames\DocPage;
+
 
 // test to avoid re-running.  cron-ini  also sets this var.
 if (defined ('INIT')){ return; } //some init has already run
@@ -71,6 +74,8 @@ if ($init->getRepo() == 'live'){
 require REPO_PATH . "/config/f2_transition.php";
 
 
+	
+	$page = new DocPage();
 
 // #build db
 // $container = new Container();
@@ -354,12 +359,9 @@ class Login
 		$user_level = $_SESSION['level'] ?? 0;
 		if ($user_level < $min) {
 			#failed security      
-				
 				#u\echor ($_SESSION['login'], 'login');
-				$header = "location:/401.html";
+				$header = "location:/403.html";
 				header($header);
-				#echo "Failed security < $min" . BRNL;
-			  #header($header);
 				exit;
 
 			}

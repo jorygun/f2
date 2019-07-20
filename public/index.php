@@ -6,173 +6,99 @@
 	require_once "init.php";
 	if (f2_security_below(0)){exit;}
 	
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	
-	$page = new DocPage();
+use digitalmx\MyPDO;
+use digitalmx as u;
+use digitalmx\flames\Definitions as Defs;
+use digitalmx\flames as f;
+
+// 	$page = new DocPage();
 	$title = 'AMD Flames';
-	echo $page -> startHead($title,0);
-	echo $page -> startBody($title,1);
-
+	echo $page -> startHead($title,['ajax']);
+	echo "<meta name='google-site-verification' content='VIIA7KGTqXjwzC6nZip4pvYXtFVLx7Th7VpWNGpWzpo' />";
+	
+	echo $page -> startBody($title,3);
+#u\echor($_SESSION, 'Session'); 
 //END START
-/*
-if (isset($_SESSION['login'])){ #user is logged in
-    $my_id = $_SESSION['recid'];
-	$sl = $_SESSION['level'];
-
-	$username = $_SESSION['DB']['username'];
-	$join_date = age( $_SESSION['DB']['join_date'])[1];
-
-	$user_status = $_SESSION['DB']['status'];
-	list ($profile_age,$last_profile) = age($_SESSION['DB']['profile_updated']);
-    list ($profile_validated_age,$profile_validated_date) = age($_SESSION['DB']['profile_validated']);
-
-}
-else {
-    $my_id=$sl=0;
-    $username = "Nobody";
-    $user_status = '';
-}
-
- $news_latest = SITE_PATH . "/news/news_latest";
-
-$nav = new navBar(false);
-$navbar = $nav -> build_menu();
 
 
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
+ //  $my_id = $_SESSION['login']['user_id'];
+	$news_latest = SITE_PATH . "/news/news_latest";
 
- <meta name="viewport" content="width=device-width, initial-scale=1">
- <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	$username = $_SESSION['login']['username'];
+	$user_level = $_SESSION['level'];
+	$user_status = $_SESSION['login']['status'];
+	$breaking = '';
+	$notice = '';
 
- <link rel="stylesheet" href="/css/flames2.css">
-
-<script type='text/javascript' src="js/f2js.js"></script>
-<script type='text/javascript'>
-    function logmein (){
-        var stext = document.getElementById('litext').value;
-        var re = /(\w{5}\d{1,6})/;
-        var reArray = re.exec(stext);
-        if (! reArray){alert ("The password you entered is not valid");}
-        var logincode = reArray[1];
-        //alert ("Login code: "+logincode);
-        if (logincode){
-            var loginurl='/?s=' + logincode;
-            alert ("Loggin in to "+loginurl);
-            window.location.href = loginurl;
-        }
-        else{alert ("The password you entered is not valid");}
-    }
-</script>
-<script type="application/ld+json">
-{
-  "@context": "http://schema.org",
-  "@type": "Organization",
-  "url": "https://amdflames.org",
-  "logo": "https://amdflames.org/graphics/logo-FLAMEs.gif"
-}
-</script>
-<meta name="google-site-verification" content="VIIA7KGTqXjwzC6nZip4pvYXtFVLx7Th7VpWNGpWzpo" />
-<title>Welcome to AMD FLAMES</title>
-</head>
-<body>
-
-
- <div style="color: #009900; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">
-	<div style="position:relative;float:left;vertical-align:bottom;margin-left:100px;">
-		<div style=" float:left;"><img alt="" src="graphics/logo-FLAMEs.gif"></div>
-
-		<div style= 'position:absolute; bottom:0;margin-left:100px;width:750px;'>FLAMES - The Official AMD Alumni Site
-		</div>
-	</div>
-		<p style="font-size:14pt;clear:both;text-align:center;width:750px;margin-left:100px;">
-		Keeping thousands of ex-AMDers connected since 1997<br>
-	<span style="font-size:12pt;color:#030;font-style:italic;">AMD was probably the best place any of us ever worked.</span></p>
-
-</div>
-
-
-<?=$navbar ?>;
-
-*/
-
+#set breaking news
  
-// <?php
-
-#get latest newsletter date
-
- $pub_date = 'Published '
-    . get_latest_pub_date('conventional')
-    .'. ';
  if (file_exists("$news_latest/breaking_at.txt")){
             $update_time = strtotime(file_get_contents("$news_latest/breaking_at.txt"));
-                #file_get_contents("$news_latest/breaking_at.txt");
-
+               
 		    $pub_date .=  "(Breaking update at "
 		        . date ('M d H:i T', $update_time)
 		      # . $update_time
 		        . '.)' ;
-		        }
+		        $breaking = 
+			"<div id='block2' style='border:0px solid black; padding:5px;' >"
+			. file_get_contents("$news_latest/breaking_at.txt")
+			.	"</div>";
 
-if (isset($_SESSION['pwid'])){
-    if(in_array($user_status,Defs::getMemberInList()) or $user_status == 'GA'){
+}
+#set notice 
+ if (file_exists("index_notice.html")){
+		        $notice = 
+			"<div id='block2' style='border:0px solid black; padding:5px;' >"
+			. file_get_contents('index_notice.html')
+			.	"</div>";
+
+}
+
+
+# for logged in users
+if ($_SESSION['level'] > 0){
+    	$last_profile = $_SESSION['login']['profile_date'];
+		$profile_age = $_SESSION['login']['profile_age'];
+   	$join_date =  $_SESSION['login']['join_date'];
+		$user_current = $_SESSION['login']['user_current'];
+		$email_status = $_SESSION['login']['email_status'];
+		
+ 		$news_latest = SITE_PATH . "/news/news_latest";
+		$pub_date =  get_latest_pub_date('conventional');
+		
+	
 		echo <<< EOT
-		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#efe;'>
+		<div style='border:1px solid #360;padding:5px;background-color:#efe;'>
 
 		<h3>Welcome Back, $username</h3>
-
-		<p>Flames Member since $join_date.  Profile last updated on $last_profile.</p>
 
 		<p style="text-align:center"> <a href="/news/" target="_blank"><b>The latest FLAMEs Newsletter is HERE</b></a>.
 		    <br> $pub_date
 		</p>
 
-		<p>Use the menus above to:</p>
+		<p>Use the menus above to update your profile, view old newsletters and photo galleries, search for members.
+		</p>
+		<h3>Your current information:</h3>
 		<ul>
-		<li>Your Name: Update your Profile, so others can see what you're doing now, Help, About this Site, Log out.
+		<li>Flames Member since $join_date.  
+		<li>You are currently located in $user_current
+		<li>Your profile was last updated on $last_profile.
 		
-		<li>Dig In: Current newsletter, index to old newsletters, photo galleries, and special one-off pages.
-		<li>Search: Search in newsletters, search for a member, or search assets (pics and a/v).
-		<li>Opportunties: Look for opportunities posted by members
-		<li>Other menu items may appear for special purposes.
-		</ul>
-
 EOT;
-
-		echo age_warnings($my_id);
-
-    } #end if logged in
-
-		echo
-			"<div id='block2' style='border:0px solid black; padding:5px;' >",
-			file_get_contents('index_notice.html'),
-			"</div>";
-
-
-		echo  "<div><h3>In This Week's Newsletter:</h3>";
-
-		if (file_exists("$news_latest/updates.txt")){
-		    echo thtml(file_get_contents ("$news_latest/updates.txt"));
-		    }
-		if (file_exists("$news_latest/calendar.txt")){
-		    echo thtml(file_get_contents("$news_latest/calendar.txt"));
-		    }
-		if (file_exists("$news_latest/headlines.txt")){
-		    echo nl2br (file_get_contents("$news_latest/headlines.txt"));
+	if  (1 or $email_status<>'Y' and $email_status <>'Q') {
+			echo email_warning($_SESSION['login']);
 		}
-		echo "</div>";
-
-		echo "</div>";
+		echo "</ul></div>
+		";
+		
+		echo this_newsletter($news_latest);
+		
 }
 
 elseif ($user_status=='N'){
 		echo <<< EOT
-		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#cfc;'>
-		<h3>Welcome Back, $username</h3>
+		<div  style='border:1px solid #360;padding:5px;background-color:#cfc;'>
+		<h3>Welcome, $username</h3>
 		<p>Thanks for signing up for FLAMEs.  You should received your permanent login soon.</p>
 		<p>Until then, you can still <a href="/news/">view the latest newsletter</a>.</p>
 		</div>
@@ -181,7 +107,7 @@ EOT;
 
 elseif ($user_status=='I'){
 		echo <<< EOT
-		<div id='block1' style='border:1px solid #360;padding:5px;background-color:#cfc;'>
+		<div style='border:1px solid #360;padding:5px;background-color:#cfc;'>
 		<h3>Welcome Back, $username</h3>
 		<p>You have requested an "Inactive" status, which limits the
 		information you can retrieve from the site.</p>
@@ -195,71 +121,93 @@ EOT;
 
 else {
 	echo <<< EOT
-	<div id='block1' style='border:1px solid #360;padding:5px;background-color:#cfc;'>
+	<div style='border:1px solid #360;padding:5px;background-color:#cfc;'>
 	<h3>Welcome AMD Alumni and Friends</h3>
 	<p>This site is for former employees and associates of Advanced Micro Devices.</p>
 	<p>You must access the site with your FLAMES-supplied link to enter the site. <br>
 	If you are already a member and have lost your login link, retrieve it <a href="#logininfo">below</a>.<br>
-	If you are not a member but would like to be, <a href="/scripts/signup.php"><b>Sign Up</a> here.</b></p>
+	If you are not a member but would like to be,choose the sign-up option under the menu above.</p>
 	</div>
 EOT;
 }
 
 
 
-echo "
-<div id='block5'><a name='logininfo'></a>
-<hr>
-";
-
-
 $siteurl = SITE_URL;
-if (!array_key_exists('level',$_SESSION) || $_SESSION['level']<1) {echo <<< EOT
+if (!array_key_exists('level',$_SESSION) || $_SESSION['level']<1) {
+	echo <<< EOT
 <p>You must access the site with your FLAMES-supplied link to view the rest of the site.</p>
-<form action="/scripts/send_lost_link.php" method="post">
-<p>If you are member and need to retrieve your password, enter your email below: <br>Email: <input type="text" name="email" size="40"> <input type="submit" value="Send Login"><br>
-(If your email has changed, please contact the admin using the link below.)</p>
-<p>If you know your password (it's the 8-11 characters following 's=' in the link we frequently send out), you can enter it here to log in: <br>Login: s=<input type="password" name="stext" id="litext" > <input type=button value="Go" onclick="logmein();"></p>
-<p>If all else fails, contact the admin: <a href="mailto:admin@amdflames.org" target="_blank">admin@amdflames.org</a>.</p>
-</form>
-
 
 EOT;
 }
-echo "
+
+echo <<<EOT
+
 </div>
 <p style='text-align:center;clear:both'></p>
-";
+</div>
+</body></html>
+EOT;
 
-if (isset($_SESSION['pwid'])){echo "<p><small>user: $username S:$sl </small></p>";
-//echo "<p>Current login: $_SESSION[username]; status: $_SESSION[status] ($_SESSION[type] on $_SESSION[status_updated]) seclev $_SESSION[level]</p>\n";
+exit;
+
+###########################
+function this_newsletter($news_latest){
+		$t =  "<div><h3>In This Week's Newsletter:</h3>";
+
+		if (file_exists("$news_latest/updates.txt")){
+		    $t .= thtml(file_get_contents ("$news_latest/updates.txt"));
+		    }
+		if (file_exists("$news_latest/calendar.txt")){
+		   $t .= thtml(file_get_contents("$news_latest/calendar.txt"));
+		    }
+		if (file_exists("$news_latest/headlines.txt")){
+		    $t .= nl2br (file_get_contents("$news_latest/headlines.txt"));
+		}
+		$t .= "</div>";
+	return $t;
 }
-echo "</div></body></html>\n";
 
+	function email_warning ($data) {
+		$validateEmailButton = f\actionButton('Validate Email','verifyEmail',$data['user_id']);
+			$t = "<li><span class='red'>There is a problem with your email: " . $data['user_email'] . "</span>";
+			$t .= "<br>Current status is: " 
+				. Defs::getEmsName($data['email_status'])
+			   . ", set on " . date('M d, Y',strtotime($data['email_status_time']))
+			   . ", and we've sent emails to you
+				that have not been responded to yet.";
 
-############################
-function age_warnings ($id){
+			$t .= "<br>If your email has changed, please update it in your profile.  If it's right, just "
+			. $validateEmailButton
+			. "to validate it or respond to one of the emails we've sent you.
+			";
+
+	return $t;
+	}
 	
-	if ($_SESSION['status'] == 'GA'){return;} #anonymous guest
+	
+function age_warnings (){
+	
+	
 
 	// set up all varioables
-	$my_id = $id;
+	
 	//refresh the local datanbase
 	#$row = get_member_by_id($my_id);
 
-	$email_status = $_SESSION['DB']['email_status'];
-	$email_status_time = $_SESSION['DB']['email_status_time'];
+	$email_status = $_SESSION['login']['email_status'];
+	$email_status_time = $_SESSION['login']['email_status_time'];
 	$email_status_description = Defs::getEmsName($email_status);
 
-	list ($profile_age,$last_profile) = age( $_SESSION['DB']['profile_updated']);
-    list ($email_age,$last_verify) = age ( $_SESSION['DB']['email_last_validated']);
-    list ($profile_validated_age,$profile_last_validated) = age ($_SESSION['DB']['profile_validated']);
+	list ($profile_age,$last_profile) = age( $_SESSION['login']['profile_updated']);
+    list ($email_age,$last_verify) = age ( $_SESSION['login']['email_last_validated']);
+    list ($profile_validated_age,$profile_last_validated) = age ($_SESSION['login']['profile_validated']);
 
 
 
 
-	$user_status = $_SESSION['DB']['status'];
-	$user_email = 	 $_SESSION['DB']['user_email'];
+	$user_status = $_SESSION['login']['status'];
+	$user_email = 	 $_SESSION['login']['user_email'];
 	$H_user_email = h("<$user_email>");
 	$enc_user_email = rawurlencode($user_email);
 
@@ -314,6 +262,3 @@ EOT;
 		return $update_msg;
 }
 
-
-
-?>

@@ -431,6 +431,9 @@ function make_links($input){
 
 
 
+function daysAgo($date_str = '1') {
+	return days_ago ($date_str);
+}
 
 function days_ago ($date_str = '1') {
 	//takes a date and returns the age from today in days and a formatted version of date

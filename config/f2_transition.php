@@ -5,16 +5,17 @@
    
  */
  
-   
+use digitalmx\flames\Login;
+
 function f2_security_below ($min) {
-	   $login = new digitalmx\flames\Login();
+	   $login = new Login();
 	   $login->checkLogin($min);
    
    return false;
 }
 
 function security_below($min) {
-   $login = new digitalmx\flames\Login();
+   $login = new Login();
 	   $login->checkLogin($min);
 	return false;
 }

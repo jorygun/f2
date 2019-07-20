@@ -11,8 +11,16 @@ use Digitalmx\Flames\Member;
 
 
 
-   
-   
+function actionButton($label,$action,$uid) {
+   	// script to buld button for ajax
+   	$button = '<button type="button" onClick="takeAction('
+   		. $uid
+   		. ",'$action')\">"
+   		. $label
+   		. "</button>";
+   	return $button;
+}
+
 function splitLogin($login){
 		$user_id=$pw='';
 		$pw = substr($login,0,5); // Split user_id from upw (user password)

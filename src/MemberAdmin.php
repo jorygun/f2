@@ -21,6 +21,7 @@ ini_set('error_reporting', -1);
 	use digitalmx\flames\Messenger;
 	use digitalmx\flames\DocPage;
 	use digitalmx\MyPDO;
+	use digitalmx\flames as f;
 
 	
 //END START
@@ -52,7 +53,7 @@ class MemberAdmin {
 		   $username = u\entity_spec($row['username']);
 		  $last_login = date('d M, Y',strtotime($row['last_login']));
 		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
-		  	$validateEmailButton = $this->actionButton('Validate Email','verifyEmail',$uid);
+		  	$validateEmailButton = f\actionButton('Validate Email','verifyEmail',$uid);
 		  	
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
        
@@ -63,7 +64,7 @@ class MemberAdmin {
         $user_login_link = "https://amdflames.org/?s=$login";
      
       $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
-		$o .= $this->actionButton('Send Login','sendLogin',$uid);
+		$o .= f\actionButton('Send Login','sendLogin',$uid);
 		$o .= "</td></tr>\n";
 		
        $o .= "<tr style='text-align:center'>
@@ -89,7 +90,7 @@ class MemberAdmin {
         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
        // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
         $o .=   "<td align='center'> " 
-        		. $this->actionButton('X-out','xout',$uid) 
+        		. f\actionButton('X-out','xout',$uid) 
         		. "</td></tr>\n";
         		
 		return $o;
@@ -99,15 +100,7 @@ class MemberAdmin {
 		$this->members->setStatus($uid,'X');
 	
 	}
-	 public function actionButton($label,$action,$uid) {
-   	// script to buld button for ajax
-   	$button = '<button type="button" onClick="takeAction('
-   		. $uid
-   		. ",'$action')\">"
-   		. $label
-   		. "</button>";
-   	return $button;
-   }
+	 
 	public function listMembers($post){
    //save search so can be repeated
      $_SESSION['last_member_search'] = $post;
@@ -418,8 +411,8 @@ EOT;
 	  	$nobulkchecked = $mdd['no_bulk'] ? 'checked':'';
 
 	  	$validate_email_click = verify_click_email($mdd['id'],'');
-	  	$validateEmailButton = $this->actionButton('Validate Email','validateEmail',$uid);
-		$sendLoginButton = $this->actionButton('Send Login','sendLogin',$uid);
+	  	$validateEmailButton = f\actionButton('Validate Email','validateEmail',$uid);
+		$sendLoginButton = f\actionButton('Send Login','sendLogin',$uid);
     echo <<<EOT
 
 	  <h3 style="border-top:1px solid black;">Actions on this record</h3>

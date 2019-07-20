@@ -158,12 +158,14 @@ private static $long_profile_fields = array (
  	'user_id',
  	'status',
  	'email_last_validated',
+ 	'email_status_time',
  	'user_email',
  	'email_public',
  	'seclevel',
  	'user_current',
  	'user_from',
  	'at_amd',
+ 	'profile_date',
  	'profile_age',
  	'join_date',
  	'email_status',
@@ -432,7 +434,7 @@ private static $long_profile_fields = array (
   
   }
 	public function setEmail ($uid,$email){
-		$sql = "UPDATE `members_f2` SET user_email = '$email'";
+		$sql = "UPDATE `members_f2` SET user_email = '$email' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -441,7 +443,7 @@ private static $long_profile_fields = array (
 	}
 	
 	public function setAdminStatus ($uid,$status) {
-	$sql = "UPDATE `members_f2` SET admin_status = '$status'";
+	$sql = "UPDATE `members_f2` SET admin_status = '$status' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -451,7 +453,7 @@ private static $long_profile_fields = array (
 	
 	
 	public function setStatus ($uid,$status){
-		$sql = "UPDATE `members_f2` SET status = '$status'";
+		$sql = "UPDATE `members_f2` SET status = '$status' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -984,7 +986,13 @@ public function getLogins($tag) {
         return $v;
     }
 	public function  setEmailStatus($uid,$ems) {
+		//if status is Y but is alread Y, status time won't get updated
+		// without this intervention
+		$set_time = ($ems == 'Y') ?
+		', email_status_time = now()' : '';
+			
 		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
+			$set_time
 			WHERE user_id = '$uid';";
 		
 		if (! $result = $this->pdo->query($sql) ){
