@@ -64,7 +64,7 @@ function echo_user_row ($row,$post=''){
         echo "<td align='center'><a href='/scripts/update_member.php?id=$id&email_status=LB' target='$username'>Bounces</a></td>";
         echo "<td align='center'><a href='/scripts/verify_email.php?r=$id' target='verify'>Verify Email</a></td>";
         echo "<td align='center'><a href='/scripts/update_member.php?id=$id' target='$username'>Update</a></td>";
-        echo "<td align='center'><a href='/scripts/edit_member.php?id=$id' target='$username'>Edit</a></td>";
+       # echo "<td align='center'><a href='/scripts/edit_member.php?id=$id' target='$username'>Edit</a></td>";
         echo "<td align='center'><a href='/scripts/mark_contributor.php?id=$id' target='_blank'> Donor</a></td>";
        // echo "<td align='center'><a href='/scripts/xout.php?xid=$id&post=$post' target='_blank'>X out</a></td>";
         echo "<td align='center'><button name='xout' value='$id' type='submit'>Xout</button></td>";

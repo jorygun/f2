@@ -86,7 +86,7 @@ class MemberAdmin {
         $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
         $o .=   "<td align='center'>$validateEmailButton</td>";
         $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
+      #  $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
         $o .=   "<td align='center'><a href='/scripts/mark_contributor.php?id=$uid' target='_blank'> Donor</a></td>";
        // echo "<td align='center'><a href='/scripts/xout.php?xid=$uid&post=$post' target='_blank'>X out</a></td>";
         $o .=   "<td align='center'> " 
