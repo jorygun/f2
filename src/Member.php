@@ -989,7 +989,7 @@ public function getLogins($tag) {
 		//if status is Y but is alread Y, status time won't get updated
 		// without this intervention
 		$set_time = ($ems == 'Y') ?
-		', email_status_time = now()' : '';
+		', email_last_validated = now()' : '';
 			
 		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
 			$set_time
