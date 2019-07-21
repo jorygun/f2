@@ -133,9 +133,9 @@ public function build_menu ($extra='')
 
 	if (! empty($_SESSION['level']) ){
 	  $lvl = $_SESSION['level'];
-	  $linkedin= $_SESSION['linkedin'];
-	  $username = $_SESSION['username'];
-	  $usertype = $_SESSION['type'];
+	  $linkedin= $_SESSION['linkedin'] ??	'';
+	  $username = $_SESSION['username'] ?? '';
+	  $usertype = $_SESSION['type'] ?? '';
 	}
 	else {
 		 $_SESSION['level'] = 0;

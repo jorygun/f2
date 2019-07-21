@@ -18,7 +18,7 @@ if (!empty($req)){
 }
 $initial_include = get_include_path();
 
-$init_file = '../config/init.php';
+$init_file = $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 require $init_file;
 
 
@@ -40,7 +40,7 @@ try {
 
 	
 	$page = new DocPage;
-	echo $page->getHead('my title',1);
+	echo $page->startHead('my title');
 	echo $page ->startBody('page title' );
 }
 catch (Exception $e){

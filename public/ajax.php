@@ -65,6 +65,9 @@ switch ($_POST['ajax']) {
 	case 'setNewsTitle':
 		echo setNewsTitle($_POST['title']);
 		break;
+	case 'bounceEmail':
+		echo bounceEmail($_POST['uid']);
+		break;
 		
 	default:
 		echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true); 
@@ -175,4 +178,15 @@ function xoutUser($uid) {
 	} else {
 		echo "Failed User x-out";
 	}
+}
+
+function bounceEmail($uid) {
+	$member = new Member();
+	if ($member->setEmailStatus($uid,'LB')) {
+		echo "Email Bounced";
+	} else {
+		echo "Failed";
+	}
+
+
 }

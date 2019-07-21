@@ -16,14 +16,18 @@ class DocPage {
 
    }
 
-    public function startHead ($title, $options=[]){
+    public function startHead ($title, $options = []){
       /* options:
          'tiny' = include tinymce
          'ajax' = include jquery, ajax
          'votes' = iinclude voting script/css
       */
-      if (empty($options)){$options = array ();}
+      if (! is_array($options)){
+      	throw new RuntimeException ("start head options not an array");
+      }
+      
       if (REPO != 'live'){ $title .= " (" . REPO . ")";}
+
 
      $t =  <<<EOT
 <!DOCTYPE html>
@@ -35,19 +39,19 @@ class DocPage {
    <link rel='stylesheet' href = '/css/news3.css' />
    <script src='/js/f2js.js'></script>
 EOT;
-      if (in_array('tiny',$options)){
+      if (!empty($options) && in_array('tiny',$options)){
          $t .= "
          <script src='/jsmx/tinymce/tinymce.min.js'></script>
          <script src='/jsmx/tiny_init.js'></script>
          ";
       }
-      if (in_array('ajax',$options)){
+      if (!empty($options) && in_array('ajax',$options)){
          $t .= "
          <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
          <script src='/js/ajax.js'></script>
          ";
       }
-      if (in_array('votes',$options)) {
+      if (!empty($options) && in_array('votes',$options)) {
          $t .= "
          <link rel='stylesheet' href='/css/votes.css' />
          <script src='/js/voting3.js'></script>
