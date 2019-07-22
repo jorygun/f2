@@ -39,7 +39,7 @@ try {
 	$login = new Login($pdo,$s);
 
 	
-	$page = new DocPage;
+
 	echo $page->getHead('my title',1);
 	echo $page ->startBody('page title' );
 }

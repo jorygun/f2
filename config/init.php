@@ -226,7 +226,7 @@ class Init
 
 		define ('SITE', $this->site);
 		define ('SITE_URL', 'https://' . SITE);
-
+		define ('CONFIG_INI', REPO_PATH .'/config.ini');
 	}
 		
 	private function setPlatform(){
