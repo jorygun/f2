@@ -296,7 +296,7 @@ function get_asset_data($id){
     	}
     	$itemdata['status'] = 'N';
     	$itemdata['date_entered'] = 'NOW()';
-    	$itemdata['contributor'] = $_SESSION['username'];
+    	$itemdata['contributor'] = $_SESSION['login']['username'];
 	}
 
     else{
