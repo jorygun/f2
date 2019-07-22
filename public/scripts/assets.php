@@ -25,7 +25,7 @@ require_once "asset_functions.php";
 $sql_now = sql_now('date');
    
 $title = 'Manage Assets';
-$page -> startHead($title,1);
+$page -> startHead($title,);
 $page->startBody($title);
 
 

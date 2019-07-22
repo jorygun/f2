@@ -73,9 +73,7 @@ if ($init->getRepo() == 'live'){
 
 require REPO_PATH . "/config/f2_transition.php";
 
-
-	
-	$page = new DocPage();
+$page = new DocPage();
 
 // #build db
 // $container = new Container();
