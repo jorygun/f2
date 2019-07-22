@@ -29,7 +29,7 @@ use digitalmx\flames\DocPage;
 if (defined ('INIT')){ return; } //some init has already run
 
 class Exception extends \Exception {}
-
+class RuntimeException extends \RuntimeException {}
 
 
    /**
@@ -319,6 +319,7 @@ class Login
 			$_SESSION['login'] = array();
 			$_SESSION['level'] = 0;
 			$_SESSION['menu'] = '';
+			
 			// reset eveyyhing but keep existing user
 		
 		} else {

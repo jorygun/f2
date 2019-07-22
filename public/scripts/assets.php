@@ -1,8 +1,11 @@
 <?php
+namespace digitalmx\flames;
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(1)){exit;}
 	use digitalmx\MyPDO;
+	use digitalmx as u;
+	use digitalmx\flames as f;
 //END START
 
 
@@ -18,13 +21,13 @@
 
 require_once "asset_functions.php";
 
-$pdo = MyPDO::instance();
 
 $sql_now = sql_now('date');
    
+$title = 'Manage Assets';
+$page -> startHead($title,1);
+$page->startBody($title);
 
-$nav = new navBar(1);
-$navbar = $nav -> build_menu();
 
 ?>
 <html>
@@ -259,7 +262,7 @@ function show_assets_from_list($ids){
                 $image = "(Image Deleted)";
             }
             else {
-             $image = get_asset_by_id($id);
+             $image = f\get_asset_by_id($id);
 
             }
              $show_thumb= ($row['has_thumb'])? "&radic;" : "";

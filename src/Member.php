@@ -193,6 +193,7 @@ private static $long_profile_fields = array (
  	'seclevel' => 0,
  	'status_name' => "Not a Member",
  	'linkedin' => '',
+ 	'status' => 'Y'
  	
  	);
  	
@@ -203,7 +204,7 @@ private static $long_profile_fields = array (
  	'seclevel' => -1,
  	'status_name' => "Invalid Login",
  	'linkedin' => '',
- 	
+ 	'status' => 'Y'
  	);
  
  
