@@ -7,8 +7,9 @@
 
 require_once "scripts/news_functions.php";
 
-$my_login = $_SESSION['pwid'];
-$my_id = $_SESSION['user_id'];
+
+$my_id = $_SESSION['login']['user_id'];
+$my_username = $_SESSION['login']['username'];
 
 #$ifile='../news/news_next/newsitems.html';
 $now = sql_now();
@@ -38,10 +39,10 @@ queued or unqueued up until the moment the newsletter is
 actually published.</p>
 
 
-<h2>Personal News Contributions <?=$_SESSION['username']?></h2>
+<h2>Personal News Contributions <?=$my_username?></h2>
 <p><i>Note: Some images may show as broken links on this page</i></p>
 <hr>
-<h3 class="highlight"> Unpublished News Items from YOU: <?=$_SESSION['username']?>
+<h3 class="highlight"> Unpublished News Items from YOU: <?=$_SESSION['login']['username']?>
 <?php echo show_edit(0,'Create New Item'); ?>
 </h3>
 <p>(You can create new articles or edit existing ones here.)</p>

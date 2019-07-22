@@ -171,7 +171,8 @@ EOT;
 
 		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='_blank'>User Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/level7.php'>News Admin</a>");
-		 $t .= self::if_level(8,"<li><a href='/info.php' target='_blank'>Site Info</a>");
+		 $t .= self::if_level(8,"<li><a href='/varinfo.php' target='_blank'>Var Info</a>");
+		  $t .= self::if_level(8,"<li><a href='/phpinfo.php' target='_blank'>PHP Info</a>");
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");
 

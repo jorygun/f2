@@ -593,8 +593,8 @@ function initialize_row () {
 			'asset_id' => '',
 			'asset_list'=>'',
 			
-        'contributor'	=>	$_SESSION['username'],
-        'contributor_id'	=>	$_SESSION['user_id'],
+        'contributor'	=>	$_SESSION['login']['username'],
+        'contributor_id'	=>	$_SESSION['login']['user_id'],
         'status'	=>	'N',
         'id'    => 0,
         'source_date' => date('d M, Y'),
@@ -604,7 +604,7 @@ function initialize_row () {
 
     );
 
-    if ($_SESSION['username'] == 'FLAMES admin'){
+    if ($_SESSION['login']['username'] == 'FLAMES admin'){
 
        $form [ 'contributor']	=	'FLAMES editor';
         $form ['contributor_id']	=	'';

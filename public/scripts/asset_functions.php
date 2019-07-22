@@ -6,6 +6,8 @@ namespace digitalmx\flames;
 
 use digitalmx\flames\Definitions as Defs;
 	use digitalmx\MyPDO;
+use digitalmx as u;
+
 	use \Imagick;
 
 $asset_types = Defs::$asset_types;
@@ -452,7 +454,9 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 	 	$source_path = $fsource;
 	 	
 	 }
-	 
+	 if (! file_exists($source_path)){
+	 	throw new Exception ("No file found at $source_path");
+	 }
 	 $finfo = new \finfo(FILEINFO_MIME_TYPE);
 	 
 	 if (substr($source_path,0,4) == 'http'){
@@ -730,7 +734,9 @@ function update_asset($post_array){
 	
     $id = $post_array['id'];
     if ($id == 0) {throw new Exception ("attempt to update asset with id = 0");}
-
+	if (empty($post_array['sizekb'] )){$post_array['sizekb'] = (int)0;}
+	if (empty($post_array['width'] )){$post_array['width'] = (int)0;}
+	if (empty($post_array['height'] )){$post_array['height'] = (int)0;}
 
     #if contributor id not set, look up from name.
     if (empty($post_array['contributor_id'])){
@@ -750,10 +756,9 @@ function update_asset($post_array){
 #echo "<p>Valid:</p>\n"; print_r ($valid_keys);
 
     $prep = pdoPrep($post_array,$valid_keys,'id');
-#   echo "<p>Prep:</p>\n"; print_r ($prep);
     $id = $prep['key'];
     $sql = "UPDATE `assets` SET ${prep['update']} WHERE id=${prep['key']};";
-    #echo $sql,"<br>";
+    echo "sql:<br>$sql<br>" . u\echor($prep['data'],'data');
     $stmt = $pdo->prepare($sql);
      $stmt->execute($prep['data']);
 	echo ".. done. " . BRNL;
@@ -779,9 +784,11 @@ function add_link_data($url){
         elseif (substr($url,0,1) == '/'){# local
              $filepath = SITE_PATH .  "$url";
              $mime = mime_content_type($filepath);
-             $size = filesize($filepath);
+             $size = filesize($filepath) ?? 0;
              if (substr($mime,0,5) == 'image'){
-                list($width, $height) =  getimagesize($filepath);
+                if (!list($width, $height) =  getimagesize($filepath) ){
+                	$width=0;$height=0;
+                }
             }
         }
         elseif ( strpos($url,'youtube') !== false

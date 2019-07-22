@@ -1,7 +1,10 @@
 <?php
+namespace digitalmx\flames;
+
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (login_security_below(1)){exit;}
+	$login->checkLevel(1);
+	
 
 //END START
 

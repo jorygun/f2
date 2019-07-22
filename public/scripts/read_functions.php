@@ -142,7 +142,7 @@ function get_news_file($filename,$extra=''){
             $content2 = preg_replace_callback(
             	'|<!-- vote (\d+) -->|',
             	function ($matches) use ($voting){
-            		$user = $_SESSION['user_id'];
+            		$user = $_SESSION['login']['user_id'];
             		
             		$vp = $voting->show_panel($matches[1],$user);
             		return $vp;

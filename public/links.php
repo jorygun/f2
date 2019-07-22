@@ -54,7 +54,7 @@ function update_link_db($url,$article_id){
 		#if url exists, update it; otherwise add
 
        $pdo = MyPDO::instance();
-        $add_user_cnt  =   (empty ($_SESSION['username'])) ? 0 : 1 ;
+        $add_user_cnt  =   (empty ($_SESSION['login']['username'])) ? 0 : 1 ;
 
 	$sql_user = "INSERT INTO digitalm_db1.links
 		    (url, article_id, count, user_count, last)

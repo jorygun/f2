@@ -119,4 +119,11 @@ function setCaretPosition(elemId, caretPos) {
         }
     }
 }
-
+// selects all  used in asset screen??
+function check_select_all(obj) {
+	var sbox = document.getElementById('all_active');
+	if (obj.value == ''){
+		sbox.checked = true;
+	}
+	else {sbox.checked = false;}
+}

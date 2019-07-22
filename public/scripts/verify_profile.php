@@ -48,7 +48,7 @@
 
 
 $pdo = digitalmx\MyPDO::instance();
-	$sql = "UPDATE $GV[members_table] SET profile_validated = '$sql_today' WHERE id = $my_id;";
+	$sql = "UPDATE `members_f2` SET profile_validated = '$sql_today' WHERE id = $my_id;";
 
 	 $result = $pdo->query($sql);
 	// if ($_SESSION['DB'][id] = $my_id){

@@ -30,22 +30,16 @@ use digitalmx\flames\Menu;
 use digitalmx\flames\DocPage;
 use digitalmx\flames\Member;
 
-try {
-	require_once 'DocPage.php';
-
-	require_once 'Member.php';
-	require_once 'Menu.php';
-	$s = $_GET['s'] ?? '';
-	$login = new Login($pdo,$s);
 
 	
-	$page = new DocPage;
-	echo $page->startHead('my title');
-	echo $page ->startBody('page title' );
+$pagetitle="Varinfo()";
+$pageoptions=['ajax'];
+if ($login->checkLevel(5)){
+	echo $page -> startHead($pagetitle,$pageoptions);
+	echo $page->startBody($pagetitle);
 }
-catch (Exception $e){
-	echo "<h3>DocPage not loaded</h3>" . $e->getMessage() . "\n";
-}
+
+
 echo " Mode: $test";
 
 

@@ -12,8 +12,7 @@ $mydir = dirname(__DIR__); #~/Sites/flames/<repo>
 		define ('SITE','amdflames.org');
 	defined ('SITE_URL') or
 		define ('SITE_URL','http://amdflames.org');
-	defined ('NAVBAR') or
-		define ('NAVBAR', SITE_PATH . '/navbar_div.php');
+
 
   if (!defined ('DB')) {
  		define('DB','digitalm_db1');

@@ -2,7 +2,7 @@
 //BEGIN START
 	require_once "init.php";
 	if (f2_security_below(0)){exit;}
-	$pdo = digitalmx\MyPDO::instance();
+
 	$nav = new navBar(false);
 	$navbar = $nav -> build_menu();
 //END START

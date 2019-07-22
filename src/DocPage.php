@@ -61,23 +61,15 @@ EOT;
       return $t;
    }
 
-  # getHead is alias for StartHead
-   public function getHead ($title, $min = 0, $options=[])
-   {
-   	#echo "Hit getHead() FIle: " . __FILE__ . (__LINE__) BRNL;exit;
-      return $this->startHead ($title, $min, $options);
-   }
-   
-   
 
 
-   public function startBody($title,$heading=2,$subtitle='') {
-	//heading 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page
+   public function startBody($title,$style=2,$subtitle='') {
+	//style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page
       $t = "\n</head>\n<body>\n";
       $t .= "<div class='page_head'>\n";
 
-    #choose a heading by number
-      switch ($heading) {
+    #choose a style by number
+      switch ($style) {
       case 3: #for home page
          $t .= <<<EOT
 <div style="color: #009900; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">

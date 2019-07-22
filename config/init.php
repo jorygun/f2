@@ -63,6 +63,7 @@ echo implode("<br>",$init->getNotices() );
 $pdo = MyPDO::instance();
 $member = new Member();
 $login = new Login();
+$page = new DocPage();
 	
 if ($init->getRepo() == 'live'){
 	ini_set('display_errors',0);
@@ -73,7 +74,7 @@ if ($init->getRepo() == 'live'){
 
 require REPO_PATH . "/config/f2_transition.php";
 
-$page = new DocPage();
+
 
 // #build db
 // $container = new Container();
@@ -279,7 +280,7 @@ class Login
 	private $pdo;
 	private $members;
 
-	// mays supply old style login string in $user with empty pass
+	
 	public function __construct () 
 	{
 		
@@ -353,7 +354,7 @@ class Login
 			
 	}
 	
-	//checks security level and issues 401
+	//checks security level and issues 403
 	public function checkLevel($min)  {
 		$user_level = $_SESSION['level'] ?? 0;
 		if ($user_level < $min) {
