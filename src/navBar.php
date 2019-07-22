@@ -1,19 +1,5 @@
 <?php
 
-// ini_set('display_errors', 1);
-// ini_set('error_reporting', E_ALL);
-
-// routine to build menus and return them as html text.
-// also includes some javascript to close the open
-//  menus on mobile, because they stick open.
-// get the menus by
-// 	require nav.class.php
-//		$nav = new navBar($header);
-//				header = 1, add header graphic
-//		echo build_menus (extra)
-//			extra is text to add below the menu (like another link back)
-
-//
 	use digitalmx\MyPDO;
 class navBar {
 

@@ -85,7 +85,7 @@ if ($_SESSION['level'] > 0){
 		<li>Your profile was last updated on $last_profile.
 		
 EOT;
-	if  (1 or $email_status<>'Y' and $email_status <>'Q') {
+	if  (0 or $email_status<>'Y' and $email_status <>'Q') {
 			echo email_warning($_SESSION['login']);
 		}
 		echo "</ul></div>
