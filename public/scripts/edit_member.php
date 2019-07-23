@@ -40,10 +40,10 @@ additional actions, except those controlled by automatic triggers.
 </p>
 
 <?php
-if ($_SERVER[REQUEST_METHOD] == 'GET'){
-    if (!$id = $_GET[id]){die( "No ?id=n");}
-    if(!($row = get_member_by_id($id))){die ("No user for id $id");}
-    show_form($id,$show_field_list,$edit_field_list);
+if ($_SERVER['REQUEST_METHOD'] == 'GET'){
+    if (!$id = $_GET['id']){die( "No ?id=n");}
+    
+    show_form($member, $id,$show_field_list,$edit_field_list);
 
 }
 
@@ -60,13 +60,17 @@ elseif ($_SERVER[REQUEST_METHOD] = 'POST'){
 	}
 	update_record_for_id($id,$UPD);
 
-	show_form($id,$show_field_list,$edit_field_list);
+	show_form($member,$id,$show_field_list,$edit_field_list);
 }
 
 
-function show_form($id,$showfields,$editfields){
-	if (!$id){die( "No ?id=n");}
-    if(!($row = get_member_by_id($id))){die ("No user for id $id");}
+function show_form($member, $id,$showfields,$editfields){
+		$md = $member->getMemberData($id);
+    if ($md['count'] > 0 ){
+    	$row = $md['data'];
+    }
+    else {throw new Exception ("No user for id $id");
+    }
 
     echo "<br><hr><form method='POST'>";
     echo "<input type='hidden' name='id' value='$id'>";
