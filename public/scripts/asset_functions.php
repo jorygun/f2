@@ -741,7 +741,7 @@ function update_asset($post_array){
     #if contributor id not set, look up from name.
     if (empty($post_array['contributor_id'])){
     echo "Getting contributor id for ${post_array['contributor']}" . BRNL;
-        $post_array['contributor_id'] =
+        list ($post_array['contributor_id'],$post_array['contributor_id']) =
             $member->getMemberId($post_array['contributor']);
          if (!$post_array['contributor_id']){
          	echo "Contributor " . $post_array['contributor'] . " not found";
