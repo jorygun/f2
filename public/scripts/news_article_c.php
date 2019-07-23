@@ -180,6 +180,17 @@ EOT;
    
    $page->startHead($page_title,$page_options);
   echo " <base href = '$new_base'>";
+  echo <<<EOT
+  <script type='text/javascript'>
+    function stoppedTyping(){
+        if(document.getElementById('comment').value.length > 0) {
+            document.getElementById('submit_button').disabled = false;
+        } else {
+            document.getElementById('submit_button').disabled = true;
+        }
+    }
+ </script>
+EOT;
    $page->startBody($page_title);
    
 
