@@ -905,7 +905,8 @@ public function getLogins($tag) {
         	);
     }
     
-    public function getMemberBasic($tag)
+    
+    public function getMemberBasic ($tag)
     {
     	 $md = $this->getMemberData($tag);
        # u\echor ($md);

@@ -4,7 +4,7 @@ namespace digitalmx\flames;
 #this script reproduces a single article with the flames comments attached.
 
 //BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	if (f2_security_below(1)){exit;}
 	use digitalmx\MyPDO;
 	use digitalmx\flames as f;
@@ -93,7 +93,7 @@ $sql = "SELECT * from `$itemdb` WHERE id = $item_id;";
      }
     $discussion = $row['take_comments'];
      $contributor_id = $row['contributor_id'];
-     $contributor_email = $member->getMemberBasic ($contributor_id)[2];
+     $contributor_email = $member->getMemberData ($contributor_id)[2];
      $title = $row['title'];
 
      
