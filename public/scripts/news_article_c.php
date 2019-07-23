@@ -21,13 +21,12 @@ require_once "asset_functions.php";
 
 require_once "comments.class.php";
 
-$pdo = MyPDO::instance();
 
 
 if(isset($_GET['id'])){$item_id = $_GET['id'];}
 else {echo "No article requested"; exit;}
 
-$this_userid = $_SESSION['user_id'] + 0; #force numeric.
+$this_userid = $_SESSION['login']['user_id'] + 0; #force numeric.
 $ucom = new \Comment($this_userid);
 
 if (isset($_SERVER['HTTP_REFERER'])){
