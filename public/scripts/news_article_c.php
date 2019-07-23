@@ -177,7 +177,7 @@ EOT;
    $page_title = 'News Article Comments';
    $page_options = ['votes'];
    
-   $page->startHead($page_title,$page_options);
+   echo $page->startHead($page_title,$page_options);
   echo " <base href = '$new_base'>";
   echo <<<EOT
   <script type='text/javascript'>
@@ -190,7 +190,7 @@ EOT;
     }
  </script>
 EOT;
-   $page->startBody($page_title);
+  echo  $page->startBody($page_title);
    
 
 
