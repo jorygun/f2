@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 if (f2_security_below(1)){exit;}
 	$nav = new navBar(1);
 	$navbar = $nav -> build_menu();
+		use digitalmx\MyPDO;
 	$pdo = MyPDO::instance();
 //END START
 

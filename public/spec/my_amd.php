@@ -31,7 +31,7 @@ EOT;
 
 
 
-
+	use digitalmx\MyPDO;
 $pdo = MyPDO::instance();
 $get_id = $_SERVER['QUERY_STRING'];
 if (! is_numeric($get_id)){ die ("Invalid Id requested");}

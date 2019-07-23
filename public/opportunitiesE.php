@@ -4,7 +4,7 @@
 	if (f2_security_below(0)){exit;}
 //END START
 #ini_set('display_errors', 1);
-
+	use digitalmx\MyPDO;
 $nav = new navBar(false);
 $navbar = $nav -> build_menu();
 

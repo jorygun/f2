@@ -1,6 +1,7 @@
 <?php
 // miscellaneous utility scripts
 
+use digitalmx\MyPDO as MyPDO;
 
 
 $aliases = array (
@@ -20,7 +21,6 @@ $aliases = array (
         );
 
 $Aliastext = "(Aliases: " . implode(', ',array_keys($aliases)) . ")";
-
 
 
 
@@ -802,24 +802,6 @@ function make_links($input){
 
     return $input;
 }
-function set_userid($user,$userid){
-    if (!empty($user) && empty($userid)){
-    #looks up user to see if valid ,checking aliases, and returns
-        global $aliases;
-        if (array_key_exists($user,$aliases)){
-                $user = $aliases[$user] ;
-        }
-        list($cid,$cname) = get_id_from_name($user);
-        if ($cid != 0){
-            $userid = $cid;
-            $user = $cname;
-        }
-        else {
-           $userid = 0;
-        }
-    }
-    return array($user,$userid);
-}
 
 
 
@@ -1246,7 +1228,7 @@ function hted ($var) {
 function verify_click_email ($id,$email) {
     $enc_user_email = rawurlencode($email);
 	$text = <<< EOT
-	<a href="#" onclick="v_window = window.open('$GLOBALS[siteurl]/scripts/verify_email.php?m=$enc_user_email&t=click&r=$id','Verify','height=200,width=200,x=200,y=200');v_window.move_To(200,200);return false;">click here</a>
+	<a href="#" onclick="v_window = window.open(SITE_URL . '/scripts/verify_email.php?m=$enc_user_email&t=click&r=$id','Verify','height=200,width=200,x=200,y=200');v_window.move_To(200,200);return false;">click here</a>
 EOT;
 	return $text;
 }
@@ -1256,7 +1238,7 @@ function verify_click_profile ($id) {
 
 
 	$text = <<< EOT
-	<a href="#" onclick="v_window = window.open('$GLOBALS[siteurl]/scripts/verify_profile.php?t=click&r=$id','Verify','height=200,width=200,x=200,y=200');v_window.move_To(200,200); return false;">click here</a>
+	<a href="#" onclick="v_window = window.open(SITE_URL . '/scripts/verify_profile.php?t=click&r=$id','Verify','height=200,width=200,x=200,y=200');v_window.move_To(200,200); return false;">click here</a>
 EOT;
 	return $text;
 }

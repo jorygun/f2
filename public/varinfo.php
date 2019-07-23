@@ -18,7 +18,7 @@ if (!empty($req)){
 }
 $initial_include = get_include_path();
 
-$init_file = '../config/init.php';
+$init_file = $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 require $init_file;
 
 
@@ -30,22 +30,18 @@ use digitalmx\flames\Menu;
 use digitalmx\flames\DocPage;
 use digitalmx\flames\Member;
 
-try {
-	require_once 'DocPage.php';
-	require_once 'Login.php';
-	require_once 'Member.php';
-	require_once 'Menu.php';
-	$s = $_GET['s'] ?? '';
-	$login = new Login($pdo,$s);
 
 	
-	$page = new DocPage();
-	echo $page->getHead('my title',1);
-	echo $page ->startBody('page title' );
+	
+$pagetitle="Varinfo()";
+$pageoptions=['ajax'];
+if ($login->checkLevel(5)){
+	echo $page -> startHead($pagetitle,$pageoptions);
+	echo $page->startBody($pagetitle);
+>>>>>>> m-src
 }
-catch (Exception $e){
-	echo "<h3>DocPage not loaded</h3>" . $e->getMessage() . "\n";
-}
+
+
 echo " Mode: $test";
 
 
@@ -64,6 +60,12 @@ echo "<b>sitedir:</b> " . $sitedir . "<br>\n";
 echo "<b>projdir:</b> " . $projdir . "<br>";
 echo "<b>repo:</b> " . $reponame . "<br>";
 echo "<br>\n";
+
+if (!empty($ldata = $_SESSION['login'])){
+	u\echor($ldata, 'Logged In User');
+} else {
+	echo "No logged in User" . BRNL;
+}
 
 ## show envir vars
 $server_adds = array();
@@ -132,13 +134,14 @@ function echo_red ($t) {
 	echo "<p class='red'>$t</p>";
 	
 }
-require 'SiteUtilities.php';
 
 
-$member = new Member($pdo);
 
-$md = $member->getMemberList('john@digitalmx.com');
-u\echor ($md,'Member Data');
+$member = new Member();
+
+$membertag = 'john@digitalmx.com';
+$md = $member->getMemberList($membertag);
+u\echor ($md,'Member Data for ' . $membertag);
 
 // $em = new Messenger ($pdo,$test); #pdo,true for test
 // $event = 'em-found';

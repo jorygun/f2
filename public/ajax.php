@@ -43,13 +43,13 @@ switch ($_POST['ajax']) {
 		break;
 		
 	case 'sendLogin' :
-		return sendLogin($_POST['uid'],$pdo);
+		return sendLogin($_POST['uid']);
 		break;
 	case 'verifyEmail' :
-		echo $this-> verifyEmail($_POST['uid']);
+		echo  verifyEmail($_POST['uid']);
 		break;
 	case 'xout' :
-		return xoutUser($_POST['uid'],$pdo);
+		return xoutUser($_POST['uid']);
 		break;
 		
 	case 'getmess' :
@@ -57,13 +57,16 @@ switch ($_POST['ajax']) {
 		echo getmess($_POST['type']);
 		break;
 	case 'markContribute':
-		return markContribute($_POST['uid'],$pdo);
+		return markContribute($_POST['uid']);
 		break;
 	case 'initNext': 
 		echo initNext();
 		break;
 	case 'setNewsTitle':
 		echo setNewsTitle($_POST['title']);
+		break;
+	case 'bounceEmail':
+		echo bounceEmail($_POST['uid']);
 		break;
 		
 	default:
@@ -128,11 +131,11 @@ function cancel_bulk($job) {
 	echo $bulkmail -> show_bulk_jobs();
 }
 
-function sendLogin($tag,$pdo) {
+function sendLogin($tag) {
 	//tag may be uid or email
-	$member = new Member($pdo);
+	$member = new Member();
 	$login_msg = $member->getLogins($tag);
-	$messenger = new Messenger($pdo); #true = test
+	$messenger = new Messenger(); #true = test
 	if ( $messenger->sendLogins($tag,$login_msg) ){
 		echo "Logins sent";
 	}else {
@@ -147,19 +150,19 @@ function setNewsTitle($title) {
 	return "Done";
 }
 
-function verifyEmail($uid,$pdo) {
+function verifyEmail($uid) {
 	//tag may be uid or email
-	$member = new Member($pdo);
+	$member = new Member();
 	
 	if ($member->verifyEmail($uid)) {
-		echo "Email Verified";
+		echo "Email Verified for member $uid";
 	} else {
 		echo "Failed";
 	}
 }
 
-function markContribute($uid,$pdo) {
-	$member = new Member($pdo);
+function markContribute($uid) {
+	$member = new Member();
 	if ($member->markContribute($uid)) {
 		echo "Contribution Marked";
 	} else {
@@ -167,12 +170,23 @@ function markContribute($uid,$pdo) {
 	}
 }
 	
-function xoutUser($uid,$pdo) {
+function xoutUser($uid) {
 	
-	$member = new Member($pdo);
+	$member = new Member();
 	if ( $member->xoutUser($uid) ){
 		echo "User xed out";
 	} else {
 		echo "Failed User x-out";
 	}
+}
+
+function bounceEmail($uid) {
+	$member = new Member();
+	if ($member->setEmailStatus($uid,'LB')) {
+		echo "Email Bounced";
+	} else {
+		echo "Failed";
+	}
+
+
 }

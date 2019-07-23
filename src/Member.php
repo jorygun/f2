@@ -2,6 +2,13 @@
 namespace digitalmx\flames;
 $proj_path = dirname(__DIR__);
 
+use \Exception as Exception;
+use \digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
+use digitalmx\flames as f;
+use digitalmx\MyPDO;
+
+
 #require_once '../config/init.php';
 #require_once $proj_path . '/mx-libs/phpmx' . '/MxPDO.php';
  /**
@@ -38,112 +45,14 @@ $proj_path = dirname(__DIR__);
 
     public function getMemberDisplayEmail($tag) // email or message
     public function getMemberName($tag) /
-    public function getMemberEmail($tag)
-    public function getMemberEmailLinked($tag)
-    public function getMemberId($tag)
-    public function getLastLogin($tag)
-    public function getDonors() // list of liinked emails
-    public function getAuthors() // list of liinked emails
-    public function updateEms($uid,$ems)
-
-
+    
 */
-
-/* member fields:
-'admin_status'
-'aka' --
-'alt_contact'
-'amd_dept'
-'amd_when'
-'amd_where'
-'contributed' @
-'email_chg_date' @
-'email_hide'
-'email_last_validated' @
-'email_status_time' @ ++
-'email_status'
-'id' --
-'image_url'
-'join_date' @
-'last_login' @
-'linkedin'
-'no_bulk'
-'previous_ems' ++
-'prior_email' ++ 
-'prior_username' ++ 
-'profile_updated' @ * ++ 
-'profile_validated' @
-'record_updated' @ ++ 
-'status_updated' @ ++
-'status'
-'test_status'
-'upw'
-'upwards'
-'user_about'
-'user_amd'
-'user_current'
-'user_email'
-'user_from'
-'user_greet'
-'user_id'
-'user_interests'
-'user_memories'
-'user_web'
-'username'
-
-
-#-- deprecated, ++ trigger @ timestamp
- (* on user_about,user_interests,user_current,user_from,user_memories)
- 
-Generated fields:
-	'decades',
-	'departments',
-	'email_age',
-	'email_public',
-	'email_status_name',
-	'is_member',
-	'join_date',
-	'login_string',
-	'profile_age',
-	'profile_date',
-	'seclevel',
-	'status_name',         
-	'subscriber',
-
-
-Long profile fields
-	'user_memories',
-	'user_about',
-	'user_interests',
-	
-*/ 
-
-
-use \Exception as Exception;
-use \digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
-use digitalmx\flames as f;
-
 
 class Member
 {
-   
-
-  /*
-   *  Model class for member data.                                            *
-   *  Only class that access the member db.                                   *
-   *  Returns data from db, or various fields computed from it.               *
-   *  Also updates member info, records login date, contributor, etc.         *
-   *  Searches for members by any tag including uid, login, email, name,      *
-   *  exact name.             
-   
- 
     
-    
-   *
-   */
-   #all database fiels
-   private static $member_fields = array (
+#all database fiels
+   private static $member_fields = array (    
 'admin_note',
 'admin_status',
 'alt_contact',
@@ -222,7 +131,6 @@ private static $long_profile_fields = array (
 	'user_about',
 );
 
-#additional fields genereated from main data
  private static $added_fields = array (
  	'decades',
 	'departments',
@@ -250,12 +158,14 @@ private static $long_profile_fields = array (
  	'user_id',
  	'status',
  	'email_last_validated',
+ 	'email_status_time',
  	'user_email',
  	'email_public',
  	'seclevel',
  	'user_current',
  	'user_from',
  	'at_amd',
+ 	'profile_date',
  	'profile_age',
  	'join_date',
  	'email_status',
@@ -283,9 +193,21 @@ private static $long_profile_fields = array (
  	'seclevel' => 0,
  	'status_name' => "Not a Member",
  	'linkedin' => '',
+ 	'status' => 'Y'
  	
  	);
  	
+ private static $bad_member = array(
+ 	'username' => 'Not a Member',
+ 	'user_id' => -1,
+ 	'user_email' => '',
+ 	'seclevel' => -1,
+ 	'status_name' => "Invalid Login",
+ 	'linkedin' => '',
+ 	'status' => 'Y'
+ 	);
+ 
+ 
  	private static $login_regex =  '/^(\w{5})(\d{5})$/';
     private  $memberTable = 'members_f2';
     private $pdo;
@@ -297,7 +219,6 @@ private static $long_profile_fields = array (
  	*/
     private  $std_fields = array();   
 
-
     // data for return
     private $info='';
     private $error='';
@@ -308,7 +229,7 @@ private static $long_profile_fields = array (
  public function __construct()
     {
        
-	$this->pdo  = \MyPDO::instance();
+	$this->pdo = MyPDO::instance();
 	$this->std_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
 	
 	
@@ -335,6 +256,7 @@ private static $long_profile_fields = array (
 
         // Methods: email, login, name_exact, uid, 
         // method generally selected automtically from the tag format
+         //
         
         */
        if (empty($tag)){throw new Exception ("Attempt to getMemberData on empty tag");}
@@ -351,7 +273,7 @@ private static $long_profile_fields = array (
         $limitplusone = $limit + 1;
         $fields = implode(',',$this->std_fields);
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
-       # echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
+        echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
         $idcnt = $stmt->rowCount();
@@ -410,7 +332,7 @@ private static $long_profile_fields = array (
     
        $profile_date = (empty($row['profile_validated']))? "(Never)" :
             u\make_date($row['profile_validated']);
-        
+         
         $addons= array(
         
         'seclevel' => Defs::getSecLevel($row['status']) ,
@@ -490,7 +412,7 @@ private static $long_profile_fields = array (
     $table = $this->memberTable;
     
    $sql = "INSERT into `$table` ($fields) VALUES ($values);";
-   #echo "sql: $sql" . BRNL;
+  # echo "sql: $sql" . BRNL;
    #u\echoR($data,'data array');
   
    
@@ -513,7 +435,7 @@ private static $long_profile_fields = array (
   
   }
 	public function setEmail ($uid,$email){
-		$sql = "UPDATE `members_f2` SET user_email = '$email' where user_id = '$uid' ";
+		$sql = "UPDATE `members_f2` SET user_email = '$email' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -522,7 +444,7 @@ private static $long_profile_fields = array (
 	}
 	
 	public function setAdminStatus ($uid,$status) {
-	$sql = "UPDATE `members_f2` SET admin_status = '$status'  where user_id = '$uid'";
+	$sql = "UPDATE `members_f2` SET admin_status = '$status' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -532,7 +454,7 @@ private static $long_profile_fields = array (
 	
 	
 	public function setStatus ($uid,$status){
-		$sql = "UPDATE `members_f2` SET status = '$status'  where user_id = '$uid'";
+		$sql = "UPDATE `members_f2` SET status = '$status' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -598,7 +520,7 @@ private static $long_profile_fields = array (
             $searchfor = [$tag];
         } elseif ($field == 'login' or $this->isLogin($tag)) { #looks like a login code
             $searchfield = $search_fields['login'];
-            $searchfor = splitLogin($tag);
+            $searchfor = f\splitLogin($tag);
         } elseif ($field == 'uid' or 
         		(is_numeric($tag) && (int)$tag >= 10000)) { #is a userid
             $searchfield = $search_fields['uid'];
@@ -607,17 +529,29 @@ private static $long_profile_fields = array (
         		(is_numeric($tag) && (int)$tag < 10000)) { #is a id
             $searchfield = $search_fields['id'];
             $searchfor = [$tag];
-        } elseif ($field == 'name_exact' or (in_array($tag[0], ["'",'"']))) {
-            $searchfield = $search_fields['name_exact'];
-            $searchfor = [substr($tag, 1, strlen($tag)-2)];
+            // if name has quotes around it, or is a single word of text
+        } elseif ($field == 'name_exact' ){
+        		$searchfield = $search_fields['name_exact'];
+            $searchfor = [$tag];
+         } elseif (  preg_match ('/^[\'"](.+)[\'"]$/',$tag,$match)
+        		) {
+        			$searchfield = $search_fields['name_exact'];
+            	$searchfor = [$match[1]];
+         } elseif ( preg_match('/^(\w+)$/',$tag,$match) ){     	
+        		$alias_repl = Defs::replaceAlias($match[1]);
+        		if ($alias_repl != $match[1]) {
+            	$searchfield = $search_fields['name_exact'];
+            	$searchfor = [Defs::replaceAlias($match[1])];
+            }
         }
         
+        
+        if (empty ($searchfield) &&  preg_match('/^[\w \'\.\-]+$/u', $tag)) {
         #probably matches anything ??
-        elseif ($field == 'name_loose'
-           or preg_match('/^[\w \'\.\-]+$/u', $tag)) {
             $searchfield = $search_fields['name_loose'];
             $searchfor = ["%$tag%"];
-        } else {
+        } 
+        if (empty ($searchfield)) {
             $this->error .= "Cannot understand tag $tag for member lookup";
             return false;
         }
@@ -750,7 +684,7 @@ public function getLogins($tag) {
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		$sql = "SELECT * FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
-#echo $sql .  BRNL;
+#		echo $sql .  BRNL;
 		
 		
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
@@ -798,7 +732,7 @@ public function getLogins($tag) {
         
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield ";
   //       echo $sql . BRNL; u\echoR($searchfor,'search data');
-        
+
         $stmt = $this->pdo-> prepare($sql);
         $stmt->execute($searchfor);
     
@@ -863,7 +797,7 @@ public function getLogins($tag) {
         return $data;
     }
         
-    public function getInfoFromLogin($user,$pass='')
+    public function getLoginInfo($user,$pass='')
     {
     	if (empty($user)) {
     		return self::$no_member;
@@ -881,7 +815,7 @@ public function getLogins($tag) {
     	
     	$result = $this->pdo->query($sql)->fetch();
     	
-    	if (! $result){return self::$no_member;}
+    	if (! $result){return self::$bad_member;}
     	//add fields and filter result
     	$result = $this->enhanceData($result,self::$info_fields);
     	return $result;
@@ -913,7 +847,6 @@ public function getLogins($tag) {
    
     public function verifyEmail ($id) {
 		 if ($this->setEmailStatus($id,'Y') ){
-		 	
 			return true;
 		 } else {
 			return false;
@@ -956,20 +889,27 @@ public function getLogins($tag) {
         }
         return u\linkEmail($md['data'][0]['user_email'], $md['data']['username']);
     }
+    
+    // returns [username,id]
     public function getMemberId($tag)
     {
         $md = $this->getMemberData($tag);
-        if ($md['records'] == 0 or !empty($mb['error'])) {
+       # u\echor ($md);
+        if (empty($md['count']) or !empty($mb['error'])) {
             return false;
         }
-        return $md['data']['user_id'];
+        
+        return array(
+        	$md['data']['username'],
+        	$md['data']['user_id']
+        	);
     }
-    // returns fully filled in member data on one member.
+    
    
     public function getLastLogin($tag)
     {
         $md = $this->getMemberData($tag);
-        if ($md['records'] == 0 or !empty($mb['error'])) {
+        if ($md['count'] == 0 or !empty($mb['error'])) {
             return false;
         }
         $last = $md ['data']['last_login'];
@@ -1014,7 +954,9 @@ public function getLogins($tag) {
         
     }
     
-   
+   public function getNoMember() {
+   	return self::$no_member;
+   } 
 
   private function buildDisplayEmail($email, $ems, $hide)
     {
@@ -1045,14 +987,13 @@ public function getLogins($tag) {
         return $v;
     }
 	public function  setEmailStatus($uid,$ems) {
-		// if ems is a Y, then also update the last_verified data.
-		// if ems is a Y and old ems was a Y, it won't caatch the
-		// update in the trigger.
-		$validated = ($ems == 'Y') ?
-			', email_last_validated = now() ' : '';
+		//if status is Y but is alread Y, status time won't get updated
+		// without this intervention
+		$set_time = ($ems == 'Y') ?
+		', email_last_validated = now()' : '';
 			
 		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
-			$validated
+			$set_time
 			WHERE user_id = '$uid';";
 		
 		if (! $result = $this->pdo->query($sql) ){
@@ -1069,5 +1010,14 @@ public function getLogins($tag) {
 		}
 		return true;
 	}
+	public function markContribute ($uid) {
+		$sql = "UPDATE `members_f2` SET contributed = now() 
+			WHERE user_id = '$uid'";
+		if (! $result = $this->pdo->query($sql) ){
+			return false;
+		}
+		return true;
+	}
+	
 } #end class
 

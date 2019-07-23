@@ -14,7 +14,7 @@ class MyPDO
     protected $pdo;
 
     protected function __construct() {
-    	$this->db_ini = REPO_PATH . '/config.ini';
+    	$this->db_ini = REPO_PATH . '/config/config.ini';
     	
         $opt  = array(
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,

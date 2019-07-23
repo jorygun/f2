@@ -12,7 +12,8 @@ use digitalmx as u;
 use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
 use digitalmx\flames\DocPage;
-
+	use digitalmx\MyPDO;
+	
 $pdo = MyPDO::instance();
 $member = new Member($pdo);
 $messenger = new Messenger(); 
@@ -48,8 +49,14 @@ $page = new DocPage();
 	$uid = $mdd['user_id']; #corrrect if orig id was id insted of uid
 	
 	
-echo $page->getHead('Member Update');
-echo $page ->startBody("Act On Member : $username");
+
+$pagetitle="Member Update: $username";
+$pageoptions=['ajax'];
+if ($login->checkLevel(5)){
+	echo $page -> startHead($pagetitle,$pageoptions);
+	echo $page->startBody($pagetitle);
+}
+
 
 // process any data in the post array
 extract ($_POST,EXTR_PREFIX_ALL,'P');

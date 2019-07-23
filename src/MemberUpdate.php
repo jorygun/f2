@@ -13,10 +13,6 @@ use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
 use digitalmx\flames\DocPage;
 
-$pdo = digitalmx\MyPDO::instance();
-$messenger = new Messenger($pdo);
-$member = new Member($pdo);
-$page = new DocPage();
 
 
 #require_once 'EmsMessaging.php';
@@ -44,8 +40,12 @@ $page = new DocPage();
 	$username = $mdd ['username'];
 	
 
-echo $page->getHead('Member Update');
-echo $page ->startBody("Act On Member : $username");
+$pagetitle="Member Update: $username";
+$pageoptions=['ajax'];
+if ($login->checkLevel(5)){
+	echo $page -> startHead($pagetitle,$pageoptions);
+	echo $page->startBody($pagetitle);
+}
 
 // process any data in the post array
 extract ($_POST,EXTR_PREFIX_ALL,'P');

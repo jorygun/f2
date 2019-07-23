@@ -6,6 +6,9 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(2)){exit;}
 	use digitalmx\flames\Definitions as Defs;
+	use digitalmx as u;
+	use digitalmx\flames as f;
+
 
 //END START
 
@@ -20,49 +23,26 @@ for this script id = user_id
 ********************************************************* */
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
+	use digitalmx\MyPDO;
 $pdo = MyPDO::instance();
 
 
-	$session_id = $_SESSION['recid'];
-	if ($user_id = $_SESSION['user_id']){ #local logged in user
-		$level = $_SESSION['level'];
+
+	$user_id = $_SESSION['login']['user_id']; #local logged in user
+   $edit_id = $_GET['id'];
+   if ($edit_id != $user_id and $_SESSION['level'] < 8){
+	   die ("Cannot update profile if not logged in");
 	}
-	else {die ("Cannot update profile if not logged in");}
 
 
 	//get the requested record id from get or post
 
-	if (!empty($_GET['id']) && is_numeric($_GET['id']) ) {
-		$get_id = $_GET['id'];
-	}
-	elseif (!empty($_POST['id']) && is_numeric($_POST['id']) ){
-		$get_id = $_POST['id'];
-	}
-	else {$get_id = 0;}
+
+   $mrow = $member->getMemberData($edit_id);
+   $row = $mrow['data'];
 
 
-	//if there was one posted, but it's same as session, use the current session
-	if (!empty($get_id) ){
-		if ($get_id != $user_id && $level <8 ){
-	// if a different id was requested, user must have seclev of 8 or more
-			die ("Cannot edit a profile that's not your own.");
-		}
-	}
-	else {	$get_id = $user_id;}
 
-
-	// now set the target id to the requested one
-	if ($get_id < 10000){#is id, not userid
-		$where = "id = $get_id";
-	}else{
-		$where = "user_id = $get_id";
-	}
-	$sql = "Select * from `members_f2` WHERE $where";
-	if (! $row = $pdo->query($sql)->fetch() ){
-
-		die ("User id  not found<br>");
-	}
-	#user being updated
 	$username = $row['username'];
 	$id = $row['id'];
 	$uid = $row['user_id'];
@@ -263,19 +243,19 @@ Last Login: <?=$row['last_login'] ?>
 	<td  class="instr">
 			Enter anything you'd like to say about yourself. </td></tr>
 	<tr><td></td><td>
-			<textarea rows="15" cols="60" name="user_about" class="input useredit"  ><?=$row['user_about']?></textarea></td></tr>
+			<textarea rows="15" cols="60" name="user_about" class="input"  ><?=$row['user_about']?></textarea></td></tr>
 
 
 <tr><td >Working at AMD</td><td class='instr'>Share some memories about working at AMD. What made it the best place you ever worked?</td></tr>
 
 	<tr><td></td><td>
-			<textarea rows="10" cols="60" name="user_memories" class="input useredit"  ><?=$row['user_memories']?></textarea></td></tr>
+			<textarea rows="10" cols="60" name="user_memories" class="input "  ><?=$row['user_memories']?></textarea></td></tr>
 
 <tr><td>Interests</td>
 	<td class='instr'>Enter any special interests you have.</td>
 </tr>
 		<tr><td >
-		</td><td><textarea name="user_interests" rows="3" cols="60" class="input useredit"><?=$row['user_interests']?></textarea>
+		</td><td><textarea name="user_interests" rows="3" cols="60" class="input "><?=$row['user_interests']?></textarea>
 		</td></tr>
 
 	<tr><td colspan="2" class="h3"><input name="Submit" value="Submit" style="background:#9F9;" type="submit">

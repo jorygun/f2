@@ -23,8 +23,8 @@ $nav = new navBar(1);
 $navbar = $nav -> build_menu();
 
 
-$pdo = MyPDO::instance();
-$this_userid = $_SESSION['user_id'] + 0; #force numeric.
+$pdo = digitalmx\MyPDO::instance();
+$this_userid = $_SESSION['login']['user_id'] + 0; #force numeric.
 $ucom = new Comment($this_userid);
 if( isset ($_GET['id'])){$item_id = $_GET['id'];}
 elseif ($item_id = $_SERVER['QUERY_STRING']){}

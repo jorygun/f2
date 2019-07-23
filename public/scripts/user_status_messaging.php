@@ -14,7 +14,7 @@ ini_set('error_reporting', -1);
 */
 
 require_once 'init.php';
-
+	use digitalmx\MyPDO;
 function add_user($id,$new_status){
         $pdo = MyPDO::instance();
 

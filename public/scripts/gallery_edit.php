@@ -4,34 +4,18 @@
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (login_security_below(6)){exit;}
+	
     require_once 'asset_functions.php';
-
+	
 //END START
 
+use digitalmx\MyPDO;
 
-//  ini_set('max_execution_time',3600);
-//     ini_set('set_time_limit',3600);
-//     ini_set('max_input_time',3600);
-
-
-$gallery_status = array(
-    'G' => 'Good.  Publish',
-    'D' => 'Delete',
-    'N' => 'New'
-    );
-
-$nav = new navBar(1);
-$navbar = $nav -> build_menu();
-
-
-
-?>
-
-<html>
-<head>
-<title>Gallery Editor</title>
-<link rel='stylesheet' href='/css/news3.css'>
+$pagetitle="Galler Edit";
+$pageoptions=[];
+if ($login->checkLevel(5)){
+	echo $page -> startHead($pagetitle,$pageoptions);
+	echo <<<EOT
 <script>
 function choose_gallery(id=''){
     var gid = 0;
@@ -42,12 +26,18 @@ function choose_gallery(id=''){
     window.location.href='/scripts/gallery_edit.php?id=' + gid ;
 }
 </script>
-<script src='/js/f2js.js'></script>
-</head>
-<body>
-<?=$navbar?>
+EOT;
+	echo $page->startBody($pagetitle);
+}
 
-<?php
+
+$gallery_status = array(
+    'G' => 'Good.  Publish',
+    'D' => 'Delete',
+    'N' => 'New'
+    );
+
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
@@ -59,7 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 }
 
 // SHOW FORM
-if (!empty($id = $_GET['id'])){
+$id = $_GET['id'] ?? 0;
+if (!empty($id)){
     $itemdata = get_gallery_data($id);
     #recho ($itemdata,'result from get_gallery_data');
 

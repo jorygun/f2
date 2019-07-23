@@ -2,6 +2,7 @@
 namespace digitalmx\flames;
 use \Exception as Exception;
 
+
 /* This file contains tables of names, lists, etc
 	used throughout the site and grouped into
 	  Definitions (db tables, )
@@ -238,6 +239,20 @@ public static $test = 'you win';
 		$Aliastext = "(Aliases: " . implode(', ',array_keys(self::$user_aliases)) . ")";
 		return $Aliastext;
 	}
+	
+	public static function replaceAlias ($alias){
+    // looks for maybe in alias list and replaces with alias name if any
+    if (preg_match('/^\w+$/',$alias)){ # match alias format
+        if (in_array($alias,array_keys(Definitions::$user_aliases))){
+            $lookup = Definitions::$user_aliases[$alias];
+            return $lookup;
+        }
+    }
+    return alias;
+ }
+
+
+		
 	public static function getAssetArchivalTags() {
 		return self::$archival_tags;
 	}

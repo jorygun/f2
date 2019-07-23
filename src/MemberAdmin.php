@@ -22,7 +22,6 @@ ini_set('error_reporting', -1);
 	use digitalmx\flames\Member;
 	use digitalmx\flames\Messenger;
 	use digitalmx\flames\DocPage;
-	#use digitalmx\MyPDO;
 	
 	
 //END START
@@ -40,10 +39,10 @@ class MemberAdmin {
 	
 	
 	public function __construct(){
-		$this->pdo = \MyPDO->instance();
-		$this->member = new Member ();
+		$this->pdo = u\MyPDO::instance();
+		$this->member = new Member ($this->pdo);
 		$this->page = new DocPage();
-		$this->messenger = new Messenger();
+		$this->messenger = new Messenger($this->pdo);
 	}
 	
 //	this function just echos out the data in a list of found members.
@@ -56,6 +55,7 @@ class MemberAdmin {
 		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
 		  	$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid);
 		  	$markContributeButton = f\actionButton('Contributed','markContribute',$uid);
+		  	$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid);
 		  	
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
        
@@ -85,7 +85,7 @@ class MemberAdmin {
 
         $o .=   "<tr>";
         $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/update_member.php?id=$uid&email_status=LB' target='$username'>Bounces</a></td>";
+        $o .=  "<td align='center'>$bounceEmailButton</td>";
         $o .=   "<td align='center'>$validateEmailButton</td>";
         $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
         $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
@@ -212,7 +212,9 @@ EOT;
 	if (!empty($P_new_email)){ #new email address; update and send verify
 		$new_email = trim($P_new_email);
 		echo "<p>New Email: $new_email</p>";
+
 		if (filter_var($new_email, FILTER_VALIDATE_EMAIL) === false){
+
 			echo "Invalid Email address $new_email<br>\n";
 		}
 		
@@ -261,8 +263,9 @@ EOT;
 			(empty($mdd['status']) or $mdd['status'] == 'N') 
 			&& in_array($P_new_status,Defs::getMemberInList())
 			){
+				throw new Exception ( "##FIX THIS###" );
 				$extra = array(
-##FIX THIS###
+				
 				'login' => 'login',
 				);
 				$this->messenger->sendMessages($uid,'welcome',$extra);
@@ -420,6 +423,7 @@ public function showUpdate($uid) {
 	  	$nobulkchecked = $mdd['no_bulk'] ? 'checked':'';
 
 	  	$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid);
+	  	$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid);
 		$sendLoginButton = f\actionButton('Send Login','sendLogin',$uid);
 		
 	echo $this->showMemberSummary($mdd);

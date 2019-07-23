@@ -6,26 +6,26 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(2)){exit;}
 	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\DocPage;
+	use digitalmx\flames\Member;
+	use digitalmx as u;
+	
 	
 //END START
 $nav = new navBar(1);
 $navbar = $nav -> build_menu();
 
-$session_id = $_SESSION['recid'];
+
 $my_sec_level = $_SESSION['level'];
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['login']['user_id'];
 
 #figure out what profile to view
 
 
 	if (!empty($_GET['id']) && is_numeric($_GET['id'] ) ){
-		if ($_GET['id'] < 10000 ){
-			$get_id = $_GET['id'];
-		}
-		else {$get_uid = $_GET['id'];}
-	}
-	elseif ( isset ($_POST['id'])){
-	    $get_id = $_POST['id'];
+			$get_uid = $_GET['id'];
+	} elseif ( isset ($_POST['id'])){
+	    $get_uid = $_POST['id'];
 	}
 	elseif ( isset ($_GET['uid'])){
 	    $get_uid = $_GET['uid'];
@@ -37,15 +37,15 @@ $user_id = $_SESSION['user_id'];
 
 
     #if profile requested by user_id instead of record id,
-    if (isset($get_uid)){$row = get_member_by_uid($get_uid);}
-    else {
-	    $row = get_member_by_id($get_id);
-	}
+    if (isset($get_uid)){$row = $member->getMemberData($get_uid);}
+   
 	
 	
-	extract($row,EXTR_PREFIX_ALL,'D');
+	
+	extract($row['data'],EXTR_PREFIX_ALL,'D');
+#u\echor($row['data'],'data');
 
-	$vis_email =  display_email($row);
+	$vis_email =  $D_email_public;
 
 	$linkedinlink=  ($D_linkedin)?
          " <p><a href='$D_linkedin' target='_blank'><img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /><br />$D_linkedin </a></p>":'';
@@ -89,7 +89,7 @@ $user_id = $_SESSION['user_id'];
 EOT;
     $edit_button = ($user_id ==  $D_user_id or $_SESSION['level']>7 )?
     	$button_text:'';
-	$member_type = Defs::getMemberDescription($row['status']);
+	$member_type = Defs::getMemberDescription($D_status);
 ?>
 
 

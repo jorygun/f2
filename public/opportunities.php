@@ -2,6 +2,7 @@
 //BEGIN START
 	require_once 'init.php';
 	if (f2_security_below(0)){exit;}
+		use digitalmx\MyPDO;
 //END START
 
 $pdo = MyPDO::instance();

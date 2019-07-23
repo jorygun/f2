@@ -1,8 +1,14 @@
 <?php
+namespace digitalmx\flames;
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	if (f2_security_below(6)){exit;}
-
+	use digitalmx\MyPDO;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\Member;
+	use digitalmx as u;
+	
+	
 //END START
 
 // script to enter/update a news item
@@ -110,14 +116,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
          }
 
     // if contributor id not set, look up from name.
-        $c = set_userid($itemdata['contributor'],$itemdata['contributor_id']);
-        if ($c[1] == 0){ #user not found
+    $member = new Member();
+        $c = $member->getMemberId($itemdata['contributor']);
+        if (!$c){ #user not found
 			echo "Error: contributor ${itemdata['contributor']} is not a flames member";
 			echo "<button type=button onClick = 'window.history.back();'>Back</button>";
 			
            	exit;
         }
-        list ($itemdata['contributor'] ,$itemdata['contributor_id']) = $c;
+       list ( $itemdata['contributor'] ,$itemdata['contributor_id']) = $c;
         
 
 
@@ -202,10 +209,13 @@ $itemdata['id'] = $id;
 
 	else {
 		//new record
+		if (empty($itemdata['asset_id']) ){
+			$itemdata['asset_id'] = 0;
+		}
 		
-		$prep = pdoPrep($itemdata,$ifields, $key='id');
+		$prep = u\pdoPrep($itemdata,$ifields, $key='id');
 		$sql = "INSERT into `news_items` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-		#echo $sql . BRNL; #exit;
+		#echo $sql . BRNL; u\echor($prep['data'],'data'); 
        	$stmt = $pdo->prepare($sql)->execute($prep['data']);
        	$id = $pdo->lastInsertId();
 		
@@ -223,8 +233,8 @@ $itemdata['id'] = $id;
 
 
 
-    $alias_keys = '';
-foreach (array_keys($aliases) as $j){$alias_keys .= "$j, ";}
+    $alias_keys = Defs::getMemberAliasList();
+
 
 $istatus = array (
 	'N'	=> 'New',
@@ -583,8 +593,8 @@ function initialize_row () {
 			'asset_id' => '',
 			'asset_list'=>'',
 			
-        'contributor'	=>	$_SESSION['username'],
-        'contributor_id'	=>	$_SESSION['user_id'],
+        'contributor'	=>	$_SESSION['login']['username'],
+        'contributor_id'	=>	$_SESSION['login']['user_id'],
         'status'	=>	'N',
         'id'    => 0,
         'source_date' => date('d M, Y'),
@@ -594,7 +604,7 @@ function initialize_row () {
 
     );
 
-    if ($_SESSION['username'] == 'FLAMES admin'){
+    if ($_SESSION['login']['username'] == 'FLAMES admin'){
 
        $form [ 'contributor']	=	'FLAMES editor';
         $form ['contributor_id']	=	'';

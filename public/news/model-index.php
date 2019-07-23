@@ -70,7 +70,7 @@ else {$subtitle = '';}
 increment_reads($condensed_date);
 $nav = new navBar(false);
 $navbar = $nav -> build_menu();
-$voting = new Voting();
+
 
 ?>
 <!DOCTYPE html>

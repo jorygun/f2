@@ -2,6 +2,7 @@
 //BEGIN START
 	require_once 'init.php';
 	require_once "./scripts/asset_functions.php";
+	use digitalmx\MyPDO;
 	if (f2_security_below(1)){exit;}
 
 //END START
@@ -133,7 +134,7 @@ function get_gallery_asset($id){
 
      $thumb_url = "/assets/thumbs/${row['thumb_file']}";
 
-     $editable = (strcasecmp ($_SESSION['username'] ,$row['contributor']) == 0) ? true : false;
+     $editable = (strcasecmp ($_SESSION['login']['username'] ,$row['contributor']) == 0) ? true : false;
         if ($_SESSION['level'] > 7) {$editable=true;}
 
 

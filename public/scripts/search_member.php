@@ -100,7 +100,7 @@ function radio_choices($field,$array){
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-		$pdo = MyPDO::instance();
+		$pdo = digitalmx\MyPDO::instance();
 		echo "<h3>Search Results</h3>
 		<p>Click on a Member's Name to view Profile.</p>";
 

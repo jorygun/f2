@@ -360,26 +360,7 @@ class News {
         return $button;
     }
 
-    function set_userid($user,$userid){
-        if (!empty($user) && empty($userid)){
-        #looks up user to see if valid and returns
-            global $aliases;
-            if (array_key_exists($user,$aliases)){
-                    $user = $aliases[$user] ;
-            }
-            list($cid,$cname) = get_id_from_name($user);
-            if ($cid != 0){
-                $userid = $cid;
-                $user = $cname;
-            }
-            else {
-               $userid = 0;
-            }
-        }
-        return array($user,$userid);
-    }
-
-
+    
 
     function build_news_arrays($result,$show_schedule,$these_sections,$show_edit=false,$show_discuss=true){
             #show_edit and show_schedule are flags to show/hide edit button adn schedule

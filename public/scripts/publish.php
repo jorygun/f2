@@ -5,7 +5,7 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(4)){exit;}
 //END START
-
+	use digitalmx\MyPDO;
 
 
 	$now = date ('M j, Y H:i');

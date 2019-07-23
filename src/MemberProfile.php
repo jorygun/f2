@@ -3,9 +3,11 @@ namespace Digitalmx\Flames;
 
 use digitalmx as u;
 use digitalmx\flames\Member;
+use digitalmx\MyPDO;
 
 
-class MemberController {
+
+class MemberProfile {
 
     // needed classes
     private $member; #instance of Member lass
@@ -22,9 +24,9 @@ class MemberController {
     private $table_defs = [];
     private $pdo;
 
-public function __construct($pdo) {
+public function __construct() {
     		$this->member = new Member();
-        $this->pdo = $pdo;
+        $this->pdo = MyPDO::instance();
     }
     
     /// routines to prepare data for forms ///
@@ -84,19 +86,6 @@ private function getMemberData($tag) {
  }
 
  
-public function verifyEmail ($id) {
-   
-    $this->member->setEmailStatus($id,'Y');
-
-    return $newstat;
-}
-
-public function verifyProfile ($id) {
-  
-    $newstat = $this->member->setProfileVerified($id);
-    
-    return $newstat;
-}
 
 
 public function getMemberEditData ($id){
@@ -198,9 +187,7 @@ public function getProfileEditData ($tag) {
         $post['email_status'] = 'LB';
        
     }
-    if (isset($post['send_login'] )) {
-        #email login to user
-    }
+   
     $post['profile_verified'] = date('Y-m-d');
     $post['email_status'] = 'Y';
     

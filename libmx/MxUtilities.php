@@ -239,14 +239,6 @@ function pdoPrep($data,$include=[], $key=''){
             if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
             $db[$var] = htmlspecialchars_decode($val);
-            if (empty($db[$var])){
-            	$db[$var] = '';
-            	if ($var == 'asset_id'){ 
-            		unset ($db[$var]);
-            		continue; 
-            	} #leave out of list
-   
-            }
 				
             $ufields[] = "$var = :$var";
             $ifields[] = $var;
@@ -439,6 +431,9 @@ function make_links($input){
 
 
 
+function daysAgo($date_str = '1') {
+	return days_ago ($date_str);
+}
 
 function days_ago ($date_str = '1') {
 	//takes a date and returns the age from today in days and a formatted version of date

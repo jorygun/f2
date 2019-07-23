@@ -73,7 +73,7 @@ class Comment
     {
         $ucom = null;
         $this->user_id = $user_id;
-        self::$_dbcon  = MyPDO::instance();
+        self::$_dbcon  = digitalmx\MyPDO::instance();
         /* moved the setting of username and email
             into an option so the class can be
             instantiated with being logged in.

@@ -1,8 +1,11 @@
 <?php
+namespace digitalmx\flames;
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(1)){exit;}
-
+	use digitalmx\MyPDO;
+	use digitalmx as u;
+	use digitalmx\flames as f;
 //END START
 
 
@@ -18,44 +21,17 @@
 
 require_once "asset_functions.php";
 
-$pdo = MyPDO::instance();
 
 $sql_now = sql_now('date');
-   
 
-$nav = new navBar(1);
-$navbar = $nav -> build_menu();
-
-?>
-<html>
-<head>
-<title>Assets</title>
-<link rel='stylesheet' href='/css/news3.css'>
-
-
-
-<script type='text/javascript' src = '/js/f2js.js'></script>
-<script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-<script type='text/javascript' src = '/js/voting2.js'></script>
-
-
-<link rel='stylesheet' href='/css/news3.css'>
-<script>
-function check_select_all(obj) {
-	var sbox = document.getElementById('all_active');
-	if (obj.value == ''){
-		sbox.checked = true;
-	}
-	else {sbox.checked = false;}
+$title = 'Manage Assets';
+$pageoptions=['ajax'];
+if ($login->checkLevel(1)){
+	echo $page -> startHead($title,$pageoptions);
+	echo $page->startBody($title);
 }
-</script>
-
-</head>
-<body>
-<?=$navbar?>
 
 
-<?php
 $asset_limit = 25;
 
 if ($_SESSION['level'] >= 6){
@@ -107,7 +83,7 @@ if (!empty ($_GET['get_next'])){
 
 
 if (($_SERVER['REQUEST_METHOD'] == 'POST') ||  $get_token){
-
+	$pdo = MyPDO::instance();
     if (!empty($_POST['delete'])){
         $id = $_POST['delete'];
         delete_asset($id);
@@ -129,7 +105,7 @@ if (($_SERVER['REQUEST_METHOD'] == 'POST') ||  $get_token){
     echo "<div style='border:1px solid gray;'> $sql</div><br>";
     echo "<p>Selected Assets are shown below.</p>";
     #$stmt = $pdo -> query($sql);
-    $id_list = $pdo -> query($sql) ->fetchAll(PDO::FETCH_COLUMN);
+    $id_list = $pdo -> query($sql) ->fetchAll(\PDO::FETCH_COLUMN);
     $id_count = sizeof ($id_list);
     if ($id_count >= $asset_limit){
        $last_id = $id_list[$asset_limit - 1];
@@ -259,7 +235,7 @@ function show_assets_from_list($ids){
                 $image = "(Image Deleted)";
             }
             else {
-             $image = get_asset_by_id($id);
+             $image = f\get_asset_by_id($id);
 
             }
              $show_thumb= ($row['has_thumb'])? "&radic;" : "";
@@ -295,7 +271,7 @@ EOT;
         
 	}
         
-  if ($dt = DateTime::createFromFormat('Y-m-d H:i:s',$row['date_entered'])){
+  if ($dt = \DateTime::createFromFormat('Y-m-d H:i:s',$row['date_entered'])){
   	$date_entered = $dt->format('d M Y');
   }
   else {$date_entered = $row['date_entered'];}

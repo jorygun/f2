@@ -1,5 +1,5 @@
 <?php
-
+	use digitalmx\MyPDO;
 $itemdb = 'news_items';
 
 

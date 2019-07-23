@@ -182,7 +182,7 @@ else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
 
-	$q = "SELECT username,join_date,id,user_id,email_status,status from $GV[members_table] where user_email like '$SAFE[email]' AND status  IN ($G_member_status_set) ";
+	$q = "SELECT username,join_date,id,user_id,email_status,status from `members_f2` where user_email like '$SAFE[email]' AND status  IN ($G_member_status_set) ";
 
 	 $result = mysqli_query($GLOBALS['DB_link'],$q);
 
@@ -228,7 +228,7 @@ correct current email address.</p>
 
 //check for duplicate name
 
-	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from $GV[members_table] where username like '%${SAFE[name]}%'   AND status   REGEXP 'm|g|r|a' ;"; #basically looking for exact match, not similar
+	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from `members_f2` where username like '%${SAFE[name]}%'   AND status   REGEXP 'm|g|r|a' ;"; #basically looking for exact match, not similar
 
 	 $result = mysqli_query($GLOBALS['DB_link'],$q);
 
@@ -276,7 +276,7 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 	$source_message = sprintf("From %s at %s\n",$source_ip,date('Y-m-d H:i'));
 
 	  $sql = <<< EOT
-	INSERT INTO $GV[members_table] SET
+	INSERT INTO `members_f2` SET
 	   user_id = $user_id,
 	   upw = '$upw',
 	   status = 'N',

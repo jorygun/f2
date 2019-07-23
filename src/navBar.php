@@ -1,31 +1,23 @@
 <?php
-namespace digitalmx\flames;
-// ini_set('display_errors', 1);
-// ini_set('error_reporting', E_ALL);
 
-// routine to build menus and return them as html text.
-// also includes some javascript to close the open
-//  menus on mobile, because they stick open.
-// get the menus by
-// 	require nav.class.php
-//		$nav = new navBar($header);
-//				header = 1, add header graphic
-//		echo build_menus (extra)
-//			extra is text to add below the menu (like another link back)
-
-//
-
-class Menu {
+	use digitalmx\MyPDO;
+class navBar {
 
 	private $thisMenu;
 	private $t;
 	private $menulist = array();
 	private $level, $text;
-	public $header;
-	private $login = array();
-	private $css;
+	private $header;
+	
+	private  $headers = array(
+	0 => '',
+	1 => 
+		"<p><img src='/graphics/logo69x89.png' ><span style='font-size:1.5em;'>AMD Flames - The AMD Alumni Site </span> </p>",
+	2 => 
+		"<p><img src='/graphics/logo69x89.png' ><span style='font-size:1.5em;'>AMD Flames - The AMD Alumni Site </span> </p>",
+	);
 
-#these people get experiemtnal nav header. see show_exp_menu;
+#these people get different nav header. see show_exp_menu;
 	private $expnames = array(
 		'FLAMES editor',
 		'Mark McClain',
@@ -34,10 +26,9 @@ class Menu {
 	);
 	
 		
-	public function __construct ($log_info,$header='') {
-		 $this->login = $log_info;
-			$this->header = $header;
-			$this->css = $this->choose_css($this->expnames);
+	public function __construct ($header=1) {
+		// header is 0 for none, 1 for news, 2 for other
+		 $this->header = $this->headers[$header];
 	 
 	}
 
@@ -46,27 +37,26 @@ class Menu {
 	}
 
 	private function if_level($level,$text){
-		 if ($this->login['seclevel'] >= $level){return "$text";}
+		 if ($_SESSION['level'] >= $level){return "$text";}
 		 return '';
 	}
 
 	private function count_opps(){
-		return 0;
-		
-		 $pdo = digitalmx\MyPDO::instance();
-		 $sql = "SELECT count(*) FROM opportunities WHERE
-					expired = '0000-00-00' OR
-					expired > NOW();";
-
-		 $opp_rows = $pdo -> query($sql) -> fetchColumn();
-		 return $opp_rows;
+		 // $pdo = MyPDO::instance();
+// 		 $sql = "SELECT count(*) FROM opportunities WHERE
+// 					expired = '0000-00-00' OR
+// 					expired > NOW();";
+// 
+// 		 $opp_rows = $pdo -> query($sql) -> fetchColumn();
+// 		 return $opp_rows;
+	return "Several";
 
 	}
 
 
 	private function addMenu ($level,$id,$title=''){
 		$text='';
-		if ($this->login['seclevel'] >= $level){
+		if ($_SESSION['level'] >= $level){
 			if (empty($title)){$title = $id;}
 			$text = <<<EOT
 		
@@ -100,18 +90,18 @@ EOT;
 		
 		#echo "vl $vfile $vlatest";
 		
-		list($vnum,$vdesc) = preg_split("/\s+/",$vlatest);
+		list($vnum,$vdesc) = explode ("\t",$vlatest,2);
 		
-		$vname = "<div class='vbox'>[$vroot] $vnum <br>($vrel)</div>";
+		$vname = "<div class='vbox'><hr>[$vroot] $vnum <br>($vrel)<br>$vdesc</div>";
 		
 		return $vname;
 	}
 	
-	private function closeLine ($level,$thisMenu){
+private function closeLine ($level,$thisMenu){
 		// add a closing menu item and end the ul.
 		// decided to NOT add the last menu item.
 		$t='';
-		if ($this->login['seclevel'] >= $level) {
+		if ($_SESSION['level'] >= $level) {
 			$t = <<<EOT
 		<li><a href="#" onClick="closeMenu('${thisMenu}')" >Close Menu</a></li>
 		</ul>
@@ -123,63 +113,77 @@ EOT;
 	}
 
 
-	private function choose_css($experimental_users){
-
-		if (in_array ($this->login['username'],$experimental_users)){
-			$stylelink =  '/css/navbar2.css' ;
-		} else {
-			$stylelink =  '/css/navbar2.css' ;
-		}
-		return $stylelink;
-	}
-
-	public function getMenuBar ($extra='') 
+public function build_menu ($extra='') 
 	{
 		$version = $this->get_version();
-		
-		if (empty($this->login)){
-			throw new Exception ("No data for NavBar user"); 
-		}
-		
-		$username = $this->login['username'];
-		$usertype = $this->login['status_name'];
-		$userlevel = $this->login['seclevel'];
-		$userlinkedin = $this->login['linkedin'] ?? '';
 
-		$css_file = $this->css;
-	
-		$t = <<<EOT
-		<link rel='stylesheet' href='$css_file'>
-		<script>
-		function closeMenu(close_list){
-			for (var i=0;i < close_list.length;i++){
-				document.getElementById(close_list[i]).blur();
-				document.getElementById(close_list[i] +'_child').blur();
-				//alert ("Closing item " + close_list[i]);
-			}
-				return false;
-		}
-
-		</script>
-
-		<nav id='nav'>
-EOT;
-	#$t .= "nav header: " . $this->header;
-	if ($this->header == 1){ $t .=
-	"<p><img src='/graphics/logo69x89.png' ><span style='font-size:1.5em;'>AMD Flames - The AMD Alumni Site </span> </p>";
+	if (! empty($_SESSION['level']) ){
+	  $lvl = $_SESSION['level'];
+	  $linkedin= $_SESSION['linkedin'] ??	'';
+	  $username = $_SESSION['username'] ?? '';
+	  $usertype = $_SESSION['type'] ?? '';
+	}
+	else {
+		 $_SESSION['level'] = 0;
+		 $lvl = 0;
+		 $linkedin = '';
+		 $username = '(Not logged in)';
+		 $usertype = '';
 	}
 	
-	$t .=  "<ul>\n";
+	$show_exp_menu = false;
+	$exp_names = $this->expnames;
+	
+	foreach ($exp_names as $expname){
+		if (strcasecmp($username, $expname) == 0 ){
+			$show_exp_menu = true;
+			
+		}
+	}
+	
+	if ($show_exp_menu){
+	    $stylelink = file_get_contents(SITE_PATH . '/css/navbar2.css') ;
+	    $navflag = '(nav v2)';
+	}
+	else {
+		$stylelink = file_get_contents(SITE_PATH . '/css/navbar2.css') ;
+		$navflag = '';
+	}
+	
+	$t = <<<EOT
+	<script>
+	function closeMenu(close_list){
+		for (var i=0;i < close_list.length;i++){
+			document.getElementById(close_list[i]).blur();
+			document.getElementById(close_list[i] +'_child').blur();
+			//alert ("Closing item " + close_list[i]);
+		}
+			return false;
+	}
 
+	</script>
+	<style>$stylelink</style>
+	<nav id='nav'>
+EOT;
+
+	#$t .= "nav header: " . $this->header;
+	$t .= $this->header;
+	#$t .= "<p>session level ${_SESSION['level']}; lvl $lvl; name $username<p>";
+	$t .=  <<<EOT
+	<ul>
+	
+EOT;
+
+	
 
 	$thisMenu = 'Admin';
 
 		$t .= self::addMenu(7,$thisMenu);
-		if ($userlevel >= 7){$menulist[] = $thisMenu;}
+		if ($_SESSION['level'] >= 7){$menulist[] = $thisMenu;}
 
 		$t .= self::if_level(8,"<li><a href='/level8.php' target='_blank'>User Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/level7.php'>News Admin</a>");
-		 $t .= self::if_level(8,"<li><a href='/info.php' target='_blank'>Site Info</a>");
+		 $t .= self::if_level(8,"<li><a href='/varinfo.php' target='_blank'>Site Info</a>");
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");
 
@@ -192,7 +196,7 @@ EOT;
 	$t .=  self::closeLine(7,$thisMenu);
 
 	$thisMenu = 'Authoring';
-	if ($userlevel >= 6){$menulist[] = $thisMenu;}
+	if ($_SESSION['level'] >= 6){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu (6,$thisMenu);
 		$t .= self::if_level(6,"<li><a href='/level6.php'>Add/View Pending Articles</a> ");
 		 $t .=  self::if_level(6,"<li><a href='/scripts/assets.php' target='assets'>Add/Find Graphics</a> ");
@@ -202,7 +206,7 @@ EOT;
 	$t .=  self::closeLine(6, $thisMenu) ;
 
 	$thisMenu = 'Opportunities';
-	$menulist[] = $thisMenu;
+	if ($_SESSION['level'] >= 0){$menulist[] = $thisMenu;}
 	$opp_rows = self::count_opps();
 	$t .= self::addMenu (0,$thisMenu);
 	$t .=  "<li><a href='/opportunitiesE.php' target='_blank'> $opp_rows Listed</a>";
@@ -211,7 +215,7 @@ EOT;
 
 	$thisMenu = 'Search';
 	$t .=  self::addMenu(4,$thisMenu);
-	if ($userlevel >= 4){$menulist[] = $thisMenu;}
+	if ($_SESSION['level'] >= 4){$menulist[] = $thisMenu;}
 	$t .= self::if_level(4,"
 		<li><a href='/scripts/search_news.php' target='_blank'>Search Newsletters</a>
 		<li><a href='/scripts/search_member.php' target='_blank'>Search For a Member</a>
@@ -222,7 +226,7 @@ EOT;
 
 
 	$thisMenu = 'Dig In';
-	if ($userlevel >= 2){$menulist[] = $thisMenu;}
+	if ($_SESSION['level'] >= 2){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu(2,$thisMenu);
 	$t .= self::if_level(2,"
 		 <li><a href='/news/' target='newsletter'>Latest Newsletter</a>
@@ -239,19 +243,16 @@ EOT;
 	$t .=  self::closeLine(2, $thisMenu);
 
 	
+
 	$thisMenu = 'Member';
-	#if ($this->login['seclevel'] >= 0){$menulist[] = $thisMenu;}
+	#if ($_SESSION['level'] >= 0){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu (0,$thisMenu,$username);
 	$t .= self::if_level(1,"
-		 <li >$username <br> &nbsp;&nbsp;<i>$usertype</i><hr style='height:2px;margin:1px;'>
+		 <li >$username<br> &nbsp;&nbsp;<i>$usertype</i><hr style='height:2px;margin:1px;'>
 		<li><a href='/'>Home</a>
 		 <li><a href='/scripts/profile_view.php' target='profile'>View/Edit My Profile</a>
-		 ");
-	$t .= ($userlevel > 1 and !empty ($userlinkedin))? 
-		"<li><a href='$userlinkedin' target='_blank'>My LinkedIn Page</a>" : '';
-	
-	$t .= self::if_level(1,"
-		<li><a href='/?s=-1'>Log Out</a>
+		<li><a href='$linkedin' target='_blank'>My LinkedIn Page</a>
+		<li><a href='/?s=0'>Log Out</a>
 		");
 	$t .= self::if_level(0,"
 		<li>-------------
@@ -274,7 +275,11 @@ EOT;
 	<ul><li>Touchscreen users <a href='#' onClick='closeMenu($js_menulist)' style='text-decoration:underline;'>click</a> to close open menus </ul>
 ";	 
 
+	
+		
 	$t .=  "	</ul>\n";
+	
+
 
 	if (! empty($extra)){ $t .= $extra;}
 	

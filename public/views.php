@@ -21,7 +21,7 @@ $month = array(
 
 
 #$count_file = SITE_PATH . "/views_data/reads.txt";
-$out_file = "./graphics/views_2016.png";
+$out_file = REPO_PATH . "/var/data/graphic/views_2016.png";
 
 #update the access counts
 #get the last 52 entries, then reorder Ascending.
@@ -29,7 +29,7 @@ $sql = "SELECT * FROM (
     SELECT `issue`,`read_cnt` FROM `read_table` ORDER BY issue DESC LIMIT 60
     ) as t
     ORDER by t.issue;";
-$pdo = MyPDO::instance();
+
 $result = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 
 $dString = '';
@@ -102,7 +102,7 @@ div.head {text-align:center;}
 <p>(started Jan 18, 2016)</p>
 </div>
 
-<img src="/graphics/views_2016.png">
+<img src="/graphic_data/views_2016.png">
 
 </body></html>
 
