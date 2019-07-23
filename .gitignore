@@ -24,7 +24,7 @@ vendor/
 *.log
 logs/
 unused/
-data/
+var/
 
 
 #files conaining live data

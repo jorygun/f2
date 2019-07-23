@@ -38,7 +38,6 @@ $pageoptions=['ajax'];
 if ($login->checkLevel(5)){
 	echo $page -> startHead($pagetitle,$pageoptions);
 	echo $page->startBody($pagetitle);
->>>>>>> m-src
 }
 
 

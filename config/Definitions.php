@@ -230,7 +230,7 @@ public static $test = 'you win';
 		#for sql IN clause
 		return "'" . implode("','",self::$member_array) . "'";
 	}
-	public  static function  getMemberDescription($code='Y'){
+	public  static function  getMemberDescription($code){
 		return self::$member_codes[$code][0];
 	}
 	
