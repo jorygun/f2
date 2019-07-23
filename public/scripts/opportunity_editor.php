@@ -53,7 +53,7 @@ if ($_SERVER[REQUEST_METHOD] == 'GET'){
 
 else if ($_SERVER[REQUEST_METHOD] == 'POST'){
     $pdo = MyPDO::instance();
-	#list ($clean,$safe) = clear_safe[$_POST];
+	
 	$id = $_POST[id];
 	$sqla = array ();
 

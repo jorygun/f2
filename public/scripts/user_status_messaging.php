@@ -284,4 +284,25 @@ return array(
 
 
 }
+function get_profile_message($row,$type='html'){
+
+        list($profile_days,$profile_date) = age ($row['profile_updated']);
+        $login = get_login_from_row($row,'code'); #just the code
+        $profile_url = SITE_URL . "/scripts/profile_update.php?s=$login";
+
+
+	    $html =
+			"<p>Your profile was lasted updated on $profile_date.
+			If you'd like to update it, here's the link:<br>
+			<span class='url'><a href='$profile_url'>Update Your Profile</a></span></p>"
+			;
+		$text =
+			"
+    Your profile was lasted updated on $profile_date.
+    If you'd like to update it.  Here's the link:
+        $profile_url
+        "
+			;
+		return ($type=='html')?$html:$text;
+ }
 

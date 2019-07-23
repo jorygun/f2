@@ -88,7 +88,7 @@ class MemberAdmin {
         $o .=  "<td align='center'>$bounceEmailButton</td>";
         $o .=   "<td align='center'>$validateEmailButton</td>";
         $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
-        $o .=   "<td align='center'><a href='/scripts/edit_member.php?id=$uid' target='$username'>Edit</a></td>";
+        $o .=   "<td align='center'></td>";
         $o .=   "<td align='center'>$markContributeButton</td>";
       
         $o .=   "<td align='center'> " 

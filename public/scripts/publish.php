@@ -1,12 +1,19 @@
 <?php
+namespace digitalmx\flames;
 
 //BEGIN START
 #ini_set('display_errors', 1);
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (f2_security_below(4)){exit;}
+	
 //END START
 	use digitalmx\MyPDO;
+	use digitalmx as u;
 
+   $login->checkLevel(4);
+   $page_title = 'Publish News';
+   $page_options = [];
+   $page->startHead($page_title,$page_options);
+   $page->startBody($page_title);
 
 	$now = date ('M j, Y H:i');
 
@@ -15,21 +22,8 @@
 
 
 
-$Nav = new navBar(1);
-
-
-echo <<<EOT
-<html><head>
-<title>Publish News</title>
-<link rel='stylesheet' href='/css/flames2.css'>
-</head>
-<body>
-
-EOT;
-
-
 //
-	$pubdate = new DateTime();
+	$pubdate = new \DateTime();
 
 	$condensed_date = $pubdate -> format('ymd');
 	$conventional_date = $pubdate -> format('M j, Y');
@@ -46,17 +40,18 @@ EOT;
 
 	// set all the directories and files
 	$newspath = SITE_PATH . "/news"; #development
+	$datapath = REPO_PATH . "/var/data";
+	
 		$nextnews_dir = "$newspath/news_next";
 
 		
-		$rtime_file = "$newspath/last_update_run_ts.txt";
- 		$ptime_file = "$newspath/last_update_published_ts.txt";
- 		
+		$rtime_file = "$datapath/last_update_run_ts.txt";
+ 		$ptime_file = "$datapath/last_update_published_ts.txt";
+ 		$latest_pointer = "$datapath/latest_pointer.txt";
+		$last_published_ts =  "$datapath/last_published_ts.txt";
+		
  		$new_location_surrogate = "$newspath/index.php";
- 		$latest_pointer = "$newspath/latest_pointer.txt";
  		
- 		
-		$last_published_ts = "$newspath/last_published_ts.txt";
 
 
 	$latest_dir = "$newspath/news_latest";
@@ -70,7 +65,7 @@ EOT;
 		$news_index = "$newspath/index.php";
 
 
-	$new_location = "/newsp/news_$condensed_date"; #url to latest news folder
+	$new_location = "/newsp/$newnews_dir"; #url to latest news folder
 
 
 	// files to manage date of search for updates.
@@ -88,8 +83,8 @@ EOT;
 
 	// copy the news_next to the news_latest directory
 	echo "Copying news_next to news_latest<br>";
-	deleteDir($latest_dir);
-	full_copy($nextnews_dir,$latest_dir);
+	u\deleteDir($latest_dir);
+	u\full_copy($nextnews_dir,$latest_dir);
 	
 
 	echo "Adding publish parameters to news_latest directory<br>";
@@ -120,7 +115,7 @@ file_put_contents($last_published_ts,time());
 
 
 		echo "Copying latest to $new_location<br>";
-		full_copy($latest_dir,$newnews_path);
+		u\full_copy($latest_dir,$newnews_path);
 
 	    #write new location in news/latest_pointer
 
@@ -138,7 +133,7 @@ file_put_contents($last_published_ts,time());
 		
 		copy($newspath . "/model-index.php" , $nextnews_dir . "/index.php");
 		
-        $pdo = MyPDO::instance();
+       
 
         echo "Marking News Items as published<br>";
         $sql_today = sql_today();
@@ -180,7 +175,7 @@ file_put_contents($last_published_ts,time());
         require PROJ_PATH . '/crons/recent_articles.php';
         
 	 echo "Updating recent assets" . BRNL ;
-        require PROJ_PATH . 'crons/recent_assets.php';
+        require PROJ_PATH . '/crons/recent_assets.php';
         
     echo "Done.  <button type='button' onClick='window.close()'>Close Window</button>";
 

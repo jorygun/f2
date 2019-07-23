@@ -905,6 +905,21 @@ public function getLogins($tag) {
         	);
     }
     
+    public function getMemberBasic($tag)
+    {
+    	 $md = $this->getMemberData($tag);
+       # u\echor ($md);
+        if (empty($md['count']) or !empty($mb['error'])) {
+            return false;
+        }
+        
+        return array(
+        	$md['data']['username'],
+        	$md['data']['user_id'],
+        	$md['data']['user_email']
+        	);
+    }
+    
    
     public function getLastLogin($tag)
     {

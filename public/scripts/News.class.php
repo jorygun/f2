@@ -1,25 +1,14 @@
 <?php
+namespace digitalmx\flames;
+
+use digitalmx\flames\Definitions as Defs;
 
 class News {
 
     //shortcuts for contributor names
-    public static $aliases = array (
-                'z' => 'Steve Zelencik',
-                'bob' => 'Bob McConnell',
-                'js' => 'John Springer',
-                'editor' => 'Flames Editor',
-                'admin' => 'Flames Admin',
-                'rick' => 'Rick Marz',
-                'dave' => 'David Laws',
-                'es' => 'Elliott Sopkin',
-                'jm' => 'John McKean',
-                'glen' => 'Glen Balzer'
+   
 
-            );
-
-    public  $Aliastext = "(Aliases: " . implode(', ',array_keys($aliases)) . ")";
-
-
+ 
 
     #article types available for individual entries
     private  $ptypes = array(

@@ -105,8 +105,7 @@ function search($post,$members_db){
 		
 
 		if ($email = $post['email']){
-			#if (!is_valid_email($email = trim($email))){die ("Invalid email $email");}
-
+			
 			$q[] = " user_email LIKE '%$email%' ";
 		}
 		if ($status = $post['status']){

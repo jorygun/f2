@@ -288,7 +288,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if (!$_POST['user_from']){
 			array_push($er_msg,'Location must be filled in');
 		}
-		if (! is_valid_email($_POST['user_email'])){
+		if (! u\is_valid_email($_POST['user_email'])){
 			array_push ($er_msg,'Email address not valid');
 		}
 

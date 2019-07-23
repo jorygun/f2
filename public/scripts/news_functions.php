@@ -1,7 +1,13 @@
 <?php
+	namespace digitalmx\flames;
+	
 	use digitalmx\MyPDO;
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
 $itemdb = 'news_items';
 
+require 'asset_functions.php';
 
 //shortcuts for contributor names
 
@@ -280,7 +286,7 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
 
     global $itypes;
     require_once 'asset_functions.php';
-    
+    if (function_exists('digitalmx\flames\get_asset_by_id')) {echo "have it";} else {echo 'nope';}
 
     #convert line breaks and add entities, except for protected area in content
     $webready = $row;
@@ -439,13 +445,13 @@ EOT;
 
         $story .= "<div class='body' >\n";
         if ($row['asset_id']){
-            $story .= get_asset_by_id($row['asset_id'],'thumb');
+            $story .= f\get_asset_by_id($row['asset_id'],'thumb');
         }
          if (!empty($row['asset_list'])){
             $ids = preg_split('/\s+/ms',$row['asset_list']);
             $ids = array_filter($ids, 'is_numeric');
             foreach($ids as $n){
-                $story .= get_asset_by_id($n,'thumb');
+                $story .= f\get_asset_by_id($n,'thumb');
             }
             $story .= "<div class='clear'></div>";
         }

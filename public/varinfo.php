@@ -125,7 +125,7 @@ try {
 try {
 	echo "make_date (now,rfc): " . u\make_date('now','rfc') . BRNL;
 } catch (Error $e) {
-	echo_red ('pretty_date function not available.') . BRNL;
+	echo_red ('make_date function not available.') . BRNL;
 }
 
 ###33#####

@@ -127,16 +127,7 @@ global $G_member_status_set;
 			<script src="js/main.js"></script>
  -->
 
-			<!-- Google Analytics: change UA-XXXXX-X to be your site's ID.
-			<script>
-				(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-				function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-				e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-				e.src='//www.google-analytics.com/analytics.js';
-				r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-				ga('create','UA-XXXXX-X','auto');ga('send','pageview');
-			</script>
-			-->
+			
 
 <?php
 	}
@@ -146,10 +137,7 @@ else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')
      //  include_once "verify_utilities.php";
 	// Gather info (strip any slashes added by the POST function)
 
-	list ($CLEAR,$SAFE) = clear_safe($_POST);
-
-
-
+	
 	// Notify user if error
 		$invalid='0';
 
@@ -163,14 +151,14 @@ else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')
 		}
 	//// Skip if bogus data
 		$bogus = '';
-		if (strpos($CLEAR[name],"?")){$bogus = 1;} // If username contains ?'s skip adding to DB
-		$strange_count = preg_match_all ('/[^\w\.\ \']/',$CLEAR[name]); #count strange chars
+		if (strpos($_POST[name],"?")){$bogus = 1;} // If username contains ?'s skip adding to DB
+		$strange_count = preg_match_all ('/[^\w\.\ \']/',$_POST[name]); #count strange chars
 
 
 
-		if (! filter_var($CLEAR[email], FILTER_VALIDATE_EMAIL)) {
+		if (! filter_var($_POST[email], FILTER_VALIDATE_EMAIL)) {
 			$bogus=1;
-  			echo "<p>Bad Address - $CLEAR[email] is not a valid email address.</p>";
+  			echo "<p>Bad Address - $_POST[email] is not a valid email address.</p>";
  			 echo "<p><a href='$_SERVER[PHP_SELF]'>Try again.</a></p>";
 
  			 if ($bogus){exit;} #silently close
@@ -182,7 +170,7 @@ else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 
 
-	$q = "SELECT username,join_date,id,user_id,email_status,status from `members_f2` where user_email like '$SAFE[email]' AND status  IN ($G_member_status_set) ";
+	$q = "SELECT username,join_date,id,user_id,email_status,status from `members_f2` where user_email like '$_POST[email]' AND status  IN ($G_member_status_set) ";
 
 	 $result = mysqli_query($GLOBALS['DB_link'],$q);
 
@@ -194,23 +182,23 @@ else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')
 			while ($row = mysqli_fetch_assoc($result)){
 				$obscure_names[] = obscure_name($row[username]);
 			}
-			$urlemail = rawurlencode($SAFE[email]);
+			$urlemail = rawurlencode($_POST[email]);
 
 			echo	"
 <h3>Already here?</h3>
-<p>The email you entered &lt;$SAFE[email]&gt;
+<p>The email you entered &lt;$_POST[email]&gt;
 is already in the member database for one or more users named: <br>
 ";
 
 			foreach($obscure_names as $v){echo "$v, ";}
 			echo "
 </p>
-<p>  Should I send the login link for those members to $SAFE[email]?
+<p>  Should I send the login link for those members to $_POST[email]?
 Note: the same email can be used by more than one member, but each member
 has their own profile and login.  If you are one of the people listed
 above, then click to have the member logins associated with this email
 address sent to you.
-<a href='#' onclick=\"window.open('send_lost_link.php?email=$urlemail','lostlink','height=200,width=400,x=200,y=200');return false;\">Send existing logins to $SAFE[email]</a>
+<a href='#' onclick=\"window.open('send_lost_link.php?email=$urlemail','lostlink','height=200,width=400,x=200,y=200');return false;\">Send existing logins to $_POST[email]</a>
 </p>
 <p>If you are NOT one of the people named above, then you can
 get your own member account at the same address.
@@ -228,7 +216,7 @@ correct current email address.</p>
 
 //check for duplicate name
 
-	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from `members_f2` where username like '%${SAFE[name]}%'   AND status   REGEXP 'm|g|r|a' ;"; #basically looking for exact match, not similar
+	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from `members_f2` where username like '%${_POST[name]}%'   AND status   REGEXP 'm|g|r|a' ;"; #basically looking for exact match, not similar
 
 	 $result = mysqli_query($GLOBALS['DB_link'],$q);
 
@@ -237,14 +225,14 @@ correct current email address.</p>
 			if ($row_count>0){
 				$dup_found = TRUE;
 				echo "<h3>Already signed up?</h3>
-				<p>I found $row_count members named $SAFE[name]</p>\n";
+				<p>I found $row_count members named $_POST[name]</p>\n";
 				$this_email = $row[user_email];
 				$urlemail=rawurlencode($this_email);
 				$obscure_mail = obscure_email($this_email);
 
 				if ($this_email){
 					echo "
-<p>The name $SAFE[name] is already in the member database with what
+<p>The name $_POST[name] is already in the member database with what
 appears to be a valid email
 address like this: <code>$obscure_mail</code>.</p>
 <p>If that is you and your email, should I send a login link to that
@@ -269,7 +257,7 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 	$upw = randPW(); #temporary password until data is confirmed
 	$user_id = 0;
 	$login = $upw . $user_id;
-	$user_email	=	$CLEAR[email];
+	$user_email	=	$_POST[email];
 	$uemenc = rawurlencode($user_email);
 
 	$source_ip = $_SERVER['REMOTE_ADDR'];
@@ -281,18 +269,18 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 	   upw = '$upw',
 	   status = 'N',
 	   status_updated = NOW(),
-	   username = "$SAFE[name]",
-	   user_email = "$CLEAR[email]",
-	   user_from = "$SAFE[location]",
+	   username = "$_POST[name]",
+	   user_email = "$_POST[email]",
+	   user_from = "$_POST[location]",
 	   email_status = 'N1',
-	   user_amd = "$SAFE[affiliation]",
-	   alt_contact = "$SAFE[altc]",
-	   admin_note = "$source_message  $SAFE[admin_note]"
+	   user_amd = "$_POST[affiliation]",
+	   alt_contact = "$_POST[altc]",
+	   admin_note = "$source_message  $_POST[admin_note]"
 
 	   ;
 EOT;
 
-  	$user_name = htmlentities($CLEAR[username]);
+  	$user_name = htmlentities($_POST[username]);
 
 	 $result = mysqli_query($GLOBALS['DB_link'],$sql);
 

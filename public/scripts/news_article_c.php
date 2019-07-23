@@ -1,7 +1,5 @@
-#!/usr/local/bin/php
 <?php
-// ini_set('display_errors', 1);
-// ini_set('error_reporting', E_ALL);
+namespace digitalmx\flames;
 
 #this script reproduces a single article with the flames comments attached.
 
@@ -9,10 +7,16 @@
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(1)){exit;}
 	use digitalmx\MyPDO;
+	use digitalmx\flames as f;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
+	
 //END START
 
 
 require_once "news_functions.php";
+require_once "asset_functions.php";
+
 #require_once HOMEPATH . "/security/f2_disqus.php";
 
 require_once "comments.class.php";
@@ -24,7 +28,7 @@ if(isset($_GET['id'])){$item_id = $_GET['id'];}
 else {echo "No article requested"; exit;}
 
 $this_userid = $_SESSION['user_id'] + 0; #force numeric.
-$ucom = new Comment($this_userid);
+$ucom = new \Comment($this_userid);
 
 if (isset($_SERVER['HTTP_REFERER'])){
     $referer = $_SERVER['HTTP_REFERER'];
@@ -80,14 +84,16 @@ $these_sections = array_keys($sections); #all
 #echo "<pre>1. sections \n" , var_dump ($these_sections) , "</pre>";
 $show_edit = $show_schedule = 0;
 $discussion_topics = array ('nostalgia'); #prevent discussion link from showing up.
-$pdo = MyPDO::instance();
 
 $sql = "SELECT * from `$itemdb` WHERE id = $item_id;";
    
-     $row = $pdo->query($sql)->fetch();
+     if (! $row = $pdo->query($sql)->fetch() ){
+     	echo "No article found at $item_id";
+     	exit;
+     }
     $discussion = $row['take_comments'];
      $contributor_id = $row['contributor_id'];
-     $contributor_email = get_user_data_by_id ($contributor_id)[1];
+     $contributor_email = $member->getMemberBasic ($contributor_id)[2];
      $title = $row['title'];
 
      
@@ -96,7 +102,7 @@ $sql = "SELECT * from `$itemdb` WHERE id = $item_id;";
     $stories = build_news_arrays($sql,$show_schedule,$these_sections, $show_edit,$show_discussion);
 
    #echo "<pre>stories \n" , var_dump($stories) , "</pre>";
-    $story_text = build_news_files($stories);
+    $story_text = f\build_news_files($stories);
    # echo "<pre>text \n" , print_r ($story_text) , "</pre>";;
 
     foreach (array_keys($story_text) as $key){
@@ -168,51 +174,19 @@ EOT;
 
 
 ############
-$nav = new navBar(1);
-$navbar = $nav -> build_menu();
-?>
+   $login -> checkLevel(2);
+   $page_title = 'News Article Comments';
+   $page_options = ['votes'];
+   
+   $page->startHead($page_title,$page_options);
+  echo " <base href = '$new_base'>";
+   $page->startBody($page_title);
+   
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-	"http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
 
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<meta name="ROBOTS" content="NONE">
-<meta http-equiv="PRAGMA" content="NO-CACHE">
-<title>FLAMES on '<?=$title?>' </title>
-<base href = '<?=$new_base?>'>
-<link rel="stylesheet" type="text/css" href="/css/news3.css">
-<script type='text/javascript'>
-    function stoppedTyping(){
-        if(document.getElementById('comment').value.length > 0) {
-            document.getElementById('submit_button').disabled = false;
-        } else {
-            document.getElementById('submit_button').disabled = true;
-        }
-    }
-    /* function verify(){
-//         if myText is empty{
-//             alert "Put some text in there!"
-//             return
-//         }
-//         else{
-//             do button functionality
-//         }
-    }
-*/
 
-</script>
-<script type='text/javascript' src='/js/f2js.js'></script>
-<style type="text/css">
+echo $story;
 
-</style>
-</head>
-<body>
-<?=$navbar?>
-<h3>Discuss AMD Flames Story</h3>
-<?=$story?>
-<?php
 if ($discussion){
 echo <<<EOF
 

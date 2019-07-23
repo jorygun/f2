@@ -4,91 +4,7 @@
 use digitalmx\MyPDO as MyPDO;
 
 
-$aliases = array (
-            'z' => 'Steve Zelencik',
-            'bob' => 'Bob McConnell',
-            'john' => 'John Springer',
-            'editor' => 'Flames Editor',
-            'rick' => 'Rick Marz',
-            'dave' => 'David Laws',
-            'elliott' => 'Elliott Sopkin',
-        
-            'glen' => 'Glen Balzer',
-            'jeff' => 'Jeff Drobman',
-            'kc' => 'K.C. Murphy',
-            'jp' => 'Jean Pierre Velly',
 
-        );
-
-$Aliastext = "(Aliases: " . implode(', ',array_keys($aliases)) . ")";
-
-
-
-function deleteDir($path) {
-    if (!is_dir($path)) {
-        throw new InvalidArgumentException("$path is not a directory");
-    }
-    if (substr($path, strlen($path) - 1, 1) != '/') {
-        $path .= '/';
-    }
-    $dotfiles = glob($path . '.*', GLOB_MARK);
-    $files = glob($path . '*', GLOB_MARK);
-    $files = array_merge($files, $dotfiles);
-    foreach ($files as $file) {
-        if (basename($file) == '.' || basename($file) == '..') {
-            continue;
-        } else if (is_dir($file)) {
-            deleteDir($file);
-        } else {
-            unlink($file);
-        }
-    }
-    rmdir($path);
-}
-
-
-function is_valid_email($email){
-	return (filter_var($email, FILTER_VALIDATE_EMAIL)) ? 1 : 0;
-
-
-   /* regex /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
-   */
-
-}
-function is_valid_id($t){
-	#checks for valid id or userlogin in $t.
-	$t = trim($t);
-	if (is_numeric($t) 
-		&& $t < 10000
-		){
-			
-			return true;
-		}
-		
-	
-	else { return false;}
-}
-function is_valid_login($t){
-	#checks for valid id or userlogin in $t.
-	$t = trim($t);
-	if ( preg_match('/^\w{5}\d+$/',$t )
-			){
-		
-		return true;
-	}
-	else {return false;}
-}
-function is_valid_uid($t) {
-	$t = trim($t);
-	if (
-		is_numeric($t)
-		&& $t >= 10000
-			){
-			
-		return true;
-	}
-	else {return false;}
-}
 function send_admin($subject='FLAMEs Admin Notice',$info,$from='admin@amdflames.org'){
 
 	if(empty($info)){$info = "No Reason Provided";}
@@ -221,27 +137,6 @@ If any questions, contact the admin by replying to this email."
 
 
 
-function get_profile_message($row,$type='html'){
-
-        list($profile_days,$profile_date) = age ($row['profile_updated']);
-        $login = get_login_from_row($row,'code'); #just the code
-        $profile_url = SITE_URL . "/scripts/profile_update.php?s=$login";
-
-
-	    $html =
-			"<p>Your profile was lasted updated on $profile_date.
-			If you'd like to update it, here's the link:<br>
-			<span class='url'><a href='$profile_url'>Update Your Profile</a></span></p>"
-			;
-		$text =
-			"
-    Your profile was lasted updated on $profile_date.
-    If you'd like to update it.  Here's the link:
-        $profile_url
-        "
-			;
-		return ($type=='html')?$html:$text;
- }
 
 
 function detab_text($message){
@@ -262,19 +157,7 @@ function get_login_from_row($row,$form='code'){
 
 
 
-function remove_dir($dir) {
-    // deletes all the files and subdirectories; then the directory
-   if (is_dir($dir)) {
-     $objects = scandir($dir);
-     foreach ($objects as $object) {
-       if ($object != "." && $object != "..") {
-         if (filetype($dir."/".$object) == "dir") remove_dir($dir."/".$object); else unlink($dir."/".$object);
-       }
-     }
-     reset($objects);
-     rmdir($dir);
-   }
-}
+
 function get_recent_files($number,$path){
 	#returns name of n most recent files in directory.
 	#returns a string if only 1; otherwise an array
@@ -409,22 +292,7 @@ function remove_slashes($element){
 		return $w;
 	}
 }
-function clear_safe ($Post){
-		
-		foreach ($Post as $param => $value){
-			if (is_string($value)){
-                $clear = remove_slashes($value);
-                $clear = trim($clear);
 
-                $safe =  $clear;
-
-                $CLEAR[$param] = $clear;
-                $SAFE[$param] = $safe;
-                #echo "$param -> $value, $clear, $safe <br>\n";
-		    }
-		}
-		return array($CLEAR,$SAFE);
-	}
 function stripslashes_text ($value){
     $value = is_array($value) ?
                 array_map('stripslashes_text', $value) :
@@ -432,16 +300,7 @@ function stripslashes_text ($value){
    return $value;
 }
 
-function unslashed($data){
-    foreach ($data as $param => $value){
-			if (is_string($value)){
-                $clear = remove_slashes($value);
-                $clear = trim($clear);
-            }
-        $cleardata[$param] = $value;
-    }
-    return $cleardata;
-}
+
 
 function safe_like ($text){
 	$safe = preg_replace('/%/','\%',$text);
@@ -449,11 +308,7 @@ function safe_like ($text){
 	return $safe;
 }
 
-function validateMysqlDate( $date )
-{
-    return preg_match( '#^(?P<year>\d{2}|\d{4})([- /.])(?P<month>\d{1,2})\2(?P<day>\d{1,2})$#', $date, $matches )
-           && checkdate($matches['month'],$matches['day'],$matches['year']);
-}
+
 function thtml($text){
 	// returns text coverting line feeds to <br>s and entities
 	$text = htmlentities($text,ENT_QUOTES);
@@ -539,14 +394,6 @@ function pdoPrep($data,$include=[], $key=''){
         return $prepared;
     }
 
-function stripslashes_deep ($value){
-    $value = is_array($value) ?
-                array_map('stripslashes_deep', $value) :
-                stripslashes($value);
-
-    return $value;
-}
-
 
 
 function get_id_from_name($name){
@@ -577,47 +424,8 @@ function get_user_data_by_id ($id){
 }
 
 
-function update_record_for_id_pdo ($id,$data){
-  $pdo = MyPDO::instance();
-    end($data);
-  $lastField = key($data);
-  $bindString = ' ';
-  foreach($data as $field => $val){
-    $bindString .= $field . '=:' . $field;
-    $bindString .= ($field === $lastField ? ' ' : ',');
-  }
 
 
-$query = "UPDATE `members_f2` SET " . $bindString .
-    " WHERE id = $id;" ;
-
-#echo "bind: $bindString<br>";
-$stmnt = $pdo->prepare($query);
-$stmnt->execute($data);
-#echo $stmnt->rowCount() . " rows affected<br>\n";
-}
-
-function update_record_for_id ($id,$vars){
-	// supply id and array of field => data
-	$pdo = MyPDO::instance();
-
-
-	#make sure id exists
-	if($row = get_member_by_id ($id)){
-		$q = "UPDATE `members_f2` SET ";
-		foreach ($vars as $k => $v){
-			$q .= " $k = '$v', ";
-		}
-		$q = substr($q,0,-2); #chop last 2 chars off to get rid of ,
-		$q .= " WHERE id = $id;";
-
-		
-			 $result = $pdo->query($q);
-		
-		return $result;
-	}
-	else {die ("no id supplied to update_record_for_id");}
-}
 function build_options($val_array,$check=''){
 	$opt = "<option value=''>Choose One...</option>";
 	#if 2 dimmensional array
@@ -700,22 +508,7 @@ function choose_graphic_url($dir,$id){
          return false;
 }
 
-function get_member_security($code){
-	global $G_member_sec;
-	$sec = $G_member_sec[$code];
 
-	return $sec;
-}
-
-// function getMemberDescription($code){
-// 	global $G_member_desc;
-// 	$desc = $G_member_desc[$code];
-// 	return $desc;
-// }
-
-function im_here(){
-	echo "Utilities are here.";
-}
 
 
  function full_copy( $source, $target ) {
@@ -817,10 +610,6 @@ function opportunity_count(){
 }
 
 
-function if_admin ($text) {
-    if ($_SESSION ['level'] > 8 ){  return $text;}
-    else {return '';}
-}
 
  function send_verify($id,$new_status){
  	
@@ -1313,7 +1102,7 @@ function get_latest_pub_date($form='timestamp')
         timestamp: 2023409823408
     */
 
-    $file1 = REPO_PATH .  '/public/news/last_published_ts.txt';
+    $file1 = REPO_PATH .  '/var/data/last_published_ts.txt';
 
     if (!file_exists($file1)){
         return "Latest pub date file not found";

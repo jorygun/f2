@@ -113,9 +113,29 @@ function profile_message($row){
     	Thanks for verifying your email at AMD Flames.
     	We thought you were lost.');
     	
-    
+}
 
+function is_valid_uid($t) {
+	$t = trim($t);
+	if (
+		is_numeric($t)
+		&& $t >= 10000
+			){
+			
+		return true;
+	}
+	else {return false;}
+}
 
+function is_valid_login($t){
+	#checks for valid id or userlogin in $t.
+	$t = trim($t);
+	if ( preg_match('/^\w{5}\d+$/',$t )
+			){
+		
+		return true;
+	}
+	else {return false;}
 }
 ?>
 

@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 require_once 'BulkMail.php';
 
-use digitalmx as mx;
+use digitalmx as u;
 use digitalmx\flames\Definitions as Defs;
 	use digitalmx\MyPDO;
 use digitalmx\flames\BulkMail;
@@ -433,12 +433,12 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
 	 // Assemble the list
 		
 			$profile_updated_age = days_ago($row['profile_updated']);
-			$profile_updated_date = mx\make_date($row['profile_updated'],'human','date');
+			$profile_updated_date = u\make_date($row['profile_updated'],'human','date');
 		
 	  #list($profile_age,$last_profile_date) = age($row['profile_updated']);
 	 # list($p_val_age,$profile_validated) = age($row['profile_validated']);
 	  $profile_validated_age = days_ago($row['profile_validated']);
-	$profile_validated_date = mx\make_date($row['profile_validated'],'human','date');
+	$profile_validated_date = u\make_date($row['profile_validated'],'human','date');
 
 	  $age_flag =  ($profile_updated_age > 365)?1:0; #flag to print age warning
 	  
@@ -566,7 +566,7 @@ $order_by = "ORDER BY test_status DESC";
 
 	}
 		elseif ($_POST['sendto'] == 'this'){
-			if (is_valid_email($_POST['sendtothis'])){
+			if (u\is_valid_email($_POST['sendtothis'])){
 				$sql .= "WHERE user_email = '${_POST['sendtothis']}' $order_by";
 			}
 			else {die ("Invalid email address requested");}

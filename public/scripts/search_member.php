@@ -104,25 +104,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		echo "<h3>Search Results</h3>
 		<p>Click on a Member's Name to view Profile.</p>";
 
-		list ($CLEAR,$SAFE) = clear_safe($_POST);
+		
 	$is_member = 'status is NOT NULL ';
 #    $is_member = "status IN ($G_member_status_set) ";
 	$fields = 'username,user_email,user_amd,user_from,TIMESTAMP(profile_updated) as profile_updated';
 	
 	$sql = "SELECT * FROM `members_f2` WHERE $is_member ";
 	$q=false;
-	if (! empty ($CLEAR['amd_where'])) {
-			$v=trim ($CLEAR['amd_where']);
+	if (! empty ($_POST['amd_where'])) {
+			$v=trim ($_POST['amd_where']);
 			$sql .= " AND amd_where like '%$v%' ";
 			$q=true;
 		}
-	if(! empty ($CLEAR['amd_when'])){
-			$v=trim ($CLEAR['amd_when']);
+	if(! empty ($_POST['amd_when'])){
+			$v=trim ($_POST['amd_when']);
 			$sql .= " AND amd_when like '%$v%' ";
 			$q=true;
 		}
-	if(! empty ($CLEAR['amd_dept'])){
-			$v=trim ($CLEAR['amd_dept']);
+	if(! empty ($_POST['amd_dept'])){
+			$v=trim ($_POST['amd_dept']);
 			$sql .= " AND amd_dept like '%$v%' ";
 			$q=true;
 		}
@@ -138,7 +138,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	
 
 	// if no name request, then one search and yer done.
-	if (!empty($name = $CLEAR['name'])){
+	if (!empty($name = $_POST['name'])){
 		$sql .= " AND username like '%$name%' " ;
 		
 	}
