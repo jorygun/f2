@@ -396,7 +396,7 @@ private static $long_profile_fields = array (
     $valid_vars = array('upw','username','user_email','status',
     'user_from','user_amd','admin_note','email_status');
 // switch to pdo_prep
-    $prepared =  u\prepareVars($post,$valid_vars);
+    $prepared =  u\pdoPrep($post,$valid_vars);
     $fieldlist = $prepared['field_list'];
     $data = $prepared['data'];
  //      echo "Fields: $fields <br>Prepared data: "; u\echoR($data); 
@@ -612,15 +612,15 @@ private static $long_profile_fields = array (
             $_SESSION['login_user']['needs_update'] = false;
             $_SESSION['login_user']['email_status'] = 'Y';
     }
+    if (empty($post['no_bulk'])){$post['no_bulk'] = 0;}
+    if (!$prepared =  u\pdoPrep($post,self::$update_fields, 'user_id') ) {throw new Exception ("failed to prepare vars: " . print_r($post,true) ) ;}
     
-    if (!$prepared =  u\prepareVars($post,self::$member_update_fields, 'user_id') ) {throw new Exception ("failed to prepare vars: " . print_r($post,true) ) ;}
-    
-       $fields = $prepared['fields'];
+       $fields = $prepared['update'];
        $data = $prepared['data'];
     #   echo "Prepared data: "; u\echoR($data); 
        $key = $prepared['key'];
           
-    $sql = "UPDATE `members_f2` set $fields where user_id = $key;";
+    $sql = "UPDATE `members_f2` set $fields  where user_id = $key;";
 
    if (! $stmt = $this->pdo->prepare($sql)){
      throw new Exception ("pdo prepare failed. ");

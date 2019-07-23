@@ -1,8 +1,10 @@
 <?php
-
+	namespace digitalmx\flames;
+	
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(6)){exit;}
+	use digitalmx as u;
 //END START
 
 //Script displays and updates member record without anyt ancillary actions, other than triggers
@@ -41,39 +43,34 @@ additional actions, except those controlled by automatic triggers.
 
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-    if (!$id = $_GET['id']){die( "No ?id=n");}
-    
+    if (!$id = $_GET['id']){die( "No id");}
     show_form($member, $id,$show_field_list,$edit_field_list);
 
 }
 
 elseif ($_SERVER[REQUEST_METHOD] = 'POST'){
-	$UPD= array();
-    $id = $_POST[id];
 
-	list($CLEAN,$SAFE) = clear_safe($_POST);
-	foreach (array_keys($_POST) as $field){
-		if ($SAFE[$field]){
-			$UPD[$field] = $SAFE[$field];
-		}
-		#echo "$field, ";
-	}
-	update_record_for_id($id,$UPD);
+   u\echor($_POST,'post');
+   
 
+	$member->updateMember($_POST);
+	$id = $_POST['user_id'];
+	
 	show_form($member,$id,$show_field_list,$edit_field_list);
 }
 
 
 function show_form($member, $id,$showfields,$editfields){
+	
 		$md = $member->getMemberData($id);
     if ($md['count'] > 0 ){
     	$row = $md['data'];
     }
     else {throw new Exception ("No user for id $id");
     }
-
+	$uid = $row['user_id']; 
     echo "<br><hr><form method='POST'>";
-    echo "<input type='hidden' name='id' value='$id'>";
+    echo "<input type='hidden' name='user_id' value='$uid'>";
 	echo "<table>
 		<thead><td>Field</td><td  class='data'>Current</td><td '>Change to</td></tr>
 		</thead>

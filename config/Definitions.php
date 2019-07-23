@@ -220,7 +220,7 @@ public static $test = 'you win';
 		}
 		return $opt;
 	}
-	public  static function getSecLevel($code='N'){
+	public  static function getSecLevel($code='Y'){
 		return self::$member_codes[$code][1] ;
 	}
 	public static function getMemberInList(){
@@ -230,7 +230,7 @@ public static $test = 'you win';
 		#for sql IN clause
 		return "'" . implode("','",self::$member_array) . "'";
 	}
-	public  static function  getMemberDescription($code='N'){
+	public  static function  getMemberDescription($code='Y'){
 		return self::$member_codes[$code][0];
 	}
 	
