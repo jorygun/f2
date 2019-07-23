@@ -286,7 +286,7 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
 
     global $itypes;
     require_once 'asset_functions.php';
-    if (function_exists('digitalmx\flames\get_asset_by_id')) {echo "have it";} else {echo 'nope';}
+   # if (function_exists('digitalmx\flames\get_asset_by_id')) {echo "have it";} else {echo 'nope';}
 
     #convert line breaks and add entities, except for protected area in content
     $webready = $row;
@@ -347,7 +347,7 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
     case 'toon':
         $story = "<div><div class='toon'>";
          if ($row['asset_id']){
-            $story .= get_asset_by_id($row['asset_id'],'toon');
+            $story .= f\get_asset_by_id($row['asset_id'],'toon');
         }
 	
        $story .= "<div class='content'><p>${webready['content']}</p></div>\n";
@@ -372,13 +372,13 @@ EOT;
         #adds linked "source name" instead of contributor
 
         if ($row['asset_id']){
-            $story .= get_asset_by_id($row['asset_id'],'thumb');
+            $story .= f\get_asset_by_id($row['asset_id'],'thumb');
         }
         if (!empty($row['asset_list'])){
             $ids = preg_split('/\s+/ms',$row['asset_list']);
             $ids = array_filter($ids, 'is_numeric');
             foreach($ids as $n){
-                $story .= get_asset_by_id($n,'thumb');
+                $story .= f\get_asset_by_id($n,'thumb');
             }
         }
 
@@ -400,7 +400,7 @@ EOT;
 
         
          if ($row['asset_id']){
-            $story .= get_asset_by_id($row['asset_id']);
+            $story .= f\get_asset_by_id($row['asset_id']);
         }
 
         $story .= " <div class='left'>
