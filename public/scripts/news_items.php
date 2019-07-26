@@ -1,5 +1,5 @@
 <?php
-
+namespace digitalmx\flames;
 //ini_set('display_errors', 1);
 ini_set('error_reporting',E_ALL);
 
@@ -7,7 +7,8 @@ ini_set('error_reporting',E_ALL);
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	if (f2_security_below(7)){exit;}
 	use digitalmx\MyPDO;
-	use digitialmx\flames as f;
+	use digitalmx\flames as f;
+	use digitalmx as u;
 //END START
 require_once "news_functions.php";
 require_once "asset_functions.php";
