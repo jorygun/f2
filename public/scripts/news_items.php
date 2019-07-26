@@ -7,6 +7,7 @@ ini_set('error_reporting',E_ALL);
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	if (f2_security_below(7)){exit;}
 	use digitalmx\MyPDO;
+	use digitialmx\flames as f;
 //END START
 require_once "news_functions.php";
 require_once "asset_functions.php";
@@ -193,7 +194,7 @@ while ($row = $result->fetch()){
     $row['ed_comment']=stripslashes($row['ed_comment']);
     $image_size = round(strlen($row['image_data'])/1000,2);
     if (!empty($row['asset_id'])){
-         $image=get_asset_by_id($row['asset_id']);
+         $image= f\get_asset_by_id($row['asset_id']);
          #$image_link="<a href=\"asset_display.php?${row['asset_id']}\" target='asset'>Show Asset</a>";
         # $image_thumb_link="<a href=\"$image\" target='asset'>Show Thumbnail</a>";
     }
