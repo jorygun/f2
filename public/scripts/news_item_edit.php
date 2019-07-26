@@ -7,6 +7,7 @@ namespace digitalmx\flames;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\flames\Member;
 	use digitalmx as u;
+	use digitalmx\flames as f;
 	
 	
 //END START
@@ -368,7 +369,7 @@ $take_comments_checked = $row['take_comments']?'checked':'';
 $take_votes_checked = $row['take_votes']?'checked':'';
  $typeoptions = build_options($mytypes,$row['type']);
 
-if (!empty($row['asset_id'])){$image = get_asset_by_id($row['asset_id']);}
+if (!empty($row['asset_id'])){$image = f\get_asset_by_id($row['asset_id']);}
 
 
 
@@ -526,7 +527,7 @@ function new_asset_form ($asset_id,$asset_types) {
 
 
     if ($asset_id > 0){
-        $image = get_asset_by_id($asset_id);
+        $image = f\get_asset_by_id($asset_id);
         $button = <<<EOT
          <button type='button' onClick = "window.open('/scripts/asset_edit.php?id=$asset_id','asset_edit')" >Edit Asset $asset_id</button>
 EOT;

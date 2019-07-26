@@ -273,7 +273,7 @@ private static $long_profile_fields = array (
         $limitplusone = $limit + 1;
         $fields = implode(',',$this->std_fields);
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
-        echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
+       # echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
         $idcnt = $stmt->rowCount();
@@ -425,7 +425,7 @@ private static $long_profile_fields = array (
     $id = $this->pdo->lastInsertId();
     $login_string = SITE_URL . '/?s=' . $post['upw'] . $id;
     
-    echo "New id $id" . BRNL;
+   # echo "New id $id" . BRNL;
     $data=array(
         'email'=>$post['user_email'],
         'loginstring' => $login_string,
