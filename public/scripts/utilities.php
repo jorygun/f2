@@ -2,7 +2,7 @@
 // miscellaneous utility scripts
 
 use digitalmx\MyPDO as MyPDO;
-
+use digitalmx as u;
 
 
 function send_admin($subject='FLAMEs Admin Notice',$info,$from='admin@amdflames.org'){
@@ -205,7 +205,7 @@ function display_email(&$row){
 // 		list ($addr,$hide) = $row;
 // 	}
 	if (!$addr){return "No email on file";}
-	if (! is_valid_email ($addr)){
+	if (! u\is_valid_email ($addr)){
 		echo "Invalid email address ($addr) in display_email.";
 		return "Invalid email address";
 	}
