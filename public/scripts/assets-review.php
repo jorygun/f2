@@ -1,8 +1,24 @@
 <?php
+namespace digitalmx\flames;
+#ini_set('display_errors', 1);
+
 //BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (f2_security_below(1)){exit;}
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\MyPDO;
+	
+   $login->checkLogin(6);
+   
+	$page_title = "Asset Tag Review";
+	$page_options = []; # ['ajax','tiny','votes']
+	
+   echo $page->startHead($page_title,$page_options); 
+ 	echo $page ->startBody($page_title);
+
+	
 //END START
 
 
@@ -22,7 +38,6 @@
 
 require_once "asset_functions.php";
 
-$pdo = MyPDO::instance();
 
 $sql_now = sql_now('date');
 // $rcodes = array (
@@ -38,23 +53,7 @@ $andwhere = '' ; #additional where clauses
 #$andwhere = "AND status = 'N'";
 
 
-?>
-<html>
-<head>
-<title>Asset Tag Review</title>
 
-
-
-<script type='text/javascript' src = '/js/f2js.js'></script>
-
-
-<link rel='stylesheet' href='/css/flames2.css'>
-<link rel='stylesheet' href='/css/news3.css'>
-</head>
-<body>
-
-
-<?php
 
 if (($_SERVER['REQUEST_METHOD'] == 'GET') ){
    //  if ( ! isset($_SERVER['QUERY_STRING'])

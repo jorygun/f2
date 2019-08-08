@@ -19,7 +19,7 @@ require_once "asset_functions.php";
 
 #require_once HOMEPATH . "/security/f2_disqus.php";
 
-require_once "comments.class.php";
+
 
 
 
@@ -27,7 +27,7 @@ if(isset($_GET['id'])){$item_id = $_GET['id'];}
 else {echo "No article requested"; exit;}
 
 $this_userid = $_SESSION['login']['user_id'] + 0; #force numeric.
-$ucom = new \Comment($this_userid);
+$ucom = new Comment($this_userid);
 
 if (isset($_SERVER['HTTP_REFERER'])){
     $referer = $_SERVER['HTTP_REFERER'];
@@ -92,7 +92,7 @@ $sql = "SELECT * from `$itemdb` WHERE id = $item_id;";
      }
     $discussion = $row['take_comments'];
      $contributor_id = $row['contributor_id'];
-     $contributor_email = $member->getMemberData ($contributor_id)[2];
+     $contributor_email = $member->getMemberBasic ($contributor_id)[2];
      $title = $row['title'];
 
      

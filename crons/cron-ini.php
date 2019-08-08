@@ -16,11 +16,19 @@ else {$init=true; } #tentative
 ini_set('display_errors', 1);
 
 	$opts = getopt('tq',['repo:']);
+	/* looks for start up options
+		-q = quiet
+		-t = test mode
+		--repo <repo-name>
+	*/
+	
 	#var_dump($opts);
 
 define ('REPO_PATH' , dirname(__DIR__) );
 define ('PROJ_PATH', dirname(REPO_PATH) ); # script is in .../project/crons
 $repo = basename(REPO_PATH);
+use digitalmx\flames as f;
+use digitalmx as u;
 
 // get platfomr first
 if (stristr(PROJ_PATH,'/usr/home/digitalm') !== false) {
@@ -47,7 +55,7 @@ try {
 	define ('SITE_PATH', REPO_PATH . "/public");
 	define ('SITE', $site);
 	define ('SITE_URL', 'http://' . SITE);
-
+	define ('CONFIG_INI', REPO_PATH . "/config/config.ini");
 
 
 	if (empty($site_ini = parse_ini_file(REPO_PATH . '/config/config.ini') )){
@@ -77,7 +85,7 @@ try {
 	// require 'MxPDO.php';
 // 	$pdo = new \digitalmx\MxPDO ('production',$platform,PROJ_PATH . '/config/db.ini');
 	require 'MyPDO.php';
-	$pdo = MyPDO::instance();
+	$pdo = u\MyPDO::instance();
 	
 }catch (Exception $e){
 	echo 'Error: '

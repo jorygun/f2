@@ -14,3 +14,5 @@ Hi ::name::.  Please confirm you're still around.
 	occasionally .)
 
    ::bulk::
+   
+   ::closing::

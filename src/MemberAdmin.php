@@ -259,17 +259,24 @@ EOT;
 		if ($P_new_status == 'D'){ #deceased
 			$this->member->setEmailStatus($uid,'LD');
 		}
+		/* is this a new member?
+		// no do this in a signup function, not here.
+		- move from signup table
+		to mmember table, sned welcome.
+		
+		
 		if (
 			(empty($mdd['status']) or $mdd['status'] == 'N') 
 			&& in_array($P_new_status,Defs::getMemberInList())
 			){
-				throw new Exception ( "##FIX THIS###" );
+				// send welcome message
 				$extra = array(
 				
 				'login' => 'login',
 				);
 				$this->messenger->sendMessages($uid,'welcome',$extra);
 		}
+		*/
 	}
 	
 	if (!empty($P_admin_status)){

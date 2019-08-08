@@ -1,9 +1,23 @@
 <?php
+namespace digitalmx\flames;
 
 //BEGIN START
-	require_once 'init.php';
-	if (f2_security_below(6)){exit;}
-//END START
+require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\MyPDO; #if need to get more $pdo
+
+
+   $login->checkLogin(6);
+      #or checkLevel(min) if already logged in.
+
+	$page_title = "New Contributions";
+	$page_options = ['tiny']; # ['ajax','tiny','votes']
+
+   echo $page->startHead($page_title,$page_options);
+ 	echo $page ->startBody($page_title);
 
 require_once "scripts/news_functions.php";
 
@@ -13,20 +27,7 @@ $my_username = $_SESSION['login']['username'];
 
 #$ifile='../news/news_next/newsitems.html';
 $now = sql_now();
-$nav = new navBar(1);
-	$navbar = $nav -> build_menu();
 ?>
-<html>
-<head>
-<title>News Contributor Page</title>
-<link rel="stylesheet" href="/css/flames2.css">
-<link rel="stylesheet" href="/css/news3.css">
-
-</head>
-
-<body >
-
-<?=$navbar?>
 
 
 
@@ -43,7 +44,7 @@ actually published.</p>
 <p><i>Note: Some images may show as broken links on this page</i></p>
 <hr>
 <h3 class="highlight"> Unpublished News Items from YOU: <?=$_SESSION['login']['username']?>
-<?php echo show_edit(0,'Create New Item'); ?>
+<?php echo f\show_edit(0,'Create New Item'); ?>
 </h3>
 <p>(You can create new articles or edit existing ones here.)</p>
 <table>
@@ -82,7 +83,7 @@ $show_edit=FALSE;
 $show_schedule = TRUE;
 $stories = build_news_arrays($sql,$show_schedule,$these_sections,$show_edit);
 if (!empty($stories)){
-    $story_text = build_news_files($stories);
+    $story_text = f\build_news_files($stories);
      foreach ($these_sections as $section){
         if (array_key_exists($section,$story_text)){
             echo $story_text[$section];

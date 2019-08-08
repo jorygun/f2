@@ -1,29 +1,54 @@
 <?php
-//ini_set('display_errors', 1);
-ini_set('error_reporting', E_ALL);
-
+namespace digitalmx\flames;
 
 //BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	if (f2_security_below(0)){exit;}
+	require_once 'init.php';
 
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+
+	
+
+	$title = "Asset Display";
+   echo $page->startHead($title,['ajax']); 
+echo <<<EOT
+   <script language="JavaScript">
+
+function autoResize(id){
+    var newheight;
+    var newwidth;
+
+    if(document.getElementById && typeof document.getElementById(id).contentDocument === 'object' ){
+    
+        newheight = document.getElementById(id).contentDocument.body.scrollHeight;
+        newwidth = document.getElementById(id).contentDocument.body.scrollWidth;
+        document.getElementById(id).height = (newheight) + "px";
+    	document.getElementById(id).width = (newwidth) + "px";
+    }
+    else {
+    	document.write ("Content of this frame cannot be displayed");
+    }
+    
+}
+
+function isObject(obj) {
+ 	var type = typeof obj;
+  	return  type === 'object' && !!obj;
+  
+}
+</script>
+EOT;
+
+ 	echo $page ->startBody($title);
+
+	
 //END START
-use digitalmx\flames\Member;
-use digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
-
-$member = new Member($pdo);
+	
 
 require_once SITE_PATH ."/scripts/news_functions.php";
-#require_once HOMEPATH . "/security/f2_disqus.php";
-#require_once "MyPDO.class.php" ;
-require_once SITE_PATH ."/scripts/comments.class.php";
-
-$nav = new navBar(1);
-$navbar = $nav -> build_menu();
 
 
-$pdo = digitalmx\MyPDO::instance();
 $this_userid = $_SESSION['login']['user_id'] + 0; #force numeric.
 $ucom = new Comment($this_userid);
 if( isset ($_GET['id'])){$item_id = $_GET['id'];}
@@ -87,7 +112,7 @@ if (! $stmt = $pdo->query($sql) ){
 	echo "Asset $item_id not found.";
 	exit;
 }
-$row = $stmt->fetch(PDO::FETCH_ASSOC);
+$row = $stmt->fetch(\PDO::FETCH_ASSOC);
 
     if (
          empty($row)
@@ -211,52 +236,7 @@ function myUrlEncode($string) {
 
 ?>
 
-<html><head>
-        <title><?=$hte['title']?></title>
-        <style type='text/css'>
-        iframe {
-            border:1px solid green;
-            margin-left:10px;
-            max-width:1024px;
-            width:800px;
-            height:600px;
 
-            background:#ccc;
-            scrolling:auto;
-
-        }
-        </style>
-<script language="JavaScript">
-
-function autoResize(id){
-    var newheight;
-    var newwidth;
-
-    if(document.getElementById && typeof document.getElementById(id).contentDocument === 'object' ){
-    
-        newheight = document.getElementById(id).contentDocument.body.scrollHeight;
-        newwidth = document.getElementById(id).contentDocument.body.scrollWidth;
-        document.getElementById(id).height = (newheight) + "px";
-    	document.getElementById(id).width = (newwidth) + "px";
-    }
-    else {
-    	document.write ("Content of this frame cannot be displayed");
-    }
-    
-}
-
-function isObject(obj) {
- 	var type = typeof obj;
-  	return  type === 'object' && !!obj;
-  
-}
-</script>
-
-        </head>
-
-        <body>
-        <?=$navbar?>
-         <p><b>AMD Flames Asset Display</b></p>
         <h3><?=$hte['title']?></h3>
 <p>(Note: display size on this page is limited to 1024px wide. Use URL below to retrieve raw file.)<br>
 	

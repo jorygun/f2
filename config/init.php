@@ -4,21 +4,22 @@ namespace digitalmx\flames;
  Every script run from web must start by running this script
 	(scripts run from cron must take care of their own stuff)
 	
+  Sets 
+	constants
+	$pdo
+	$page
+	$member
+	$login
 	
-		session lifetimes
-		include_path
-		autoload: vendor +
-			PSR4:
-			files: Definitions
-			
-		adds std constnats/utilities (mx)
-		requires Definitions
+	Sets $_SESSION['menu'],['level'], and ['login'] array
+	
 
 
 **/
 
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
+
 use digitalmx\MyPDO;
 use digitalmx as u;
 use digitalmx\flames\Definitions as Defs;
@@ -202,7 +203,7 @@ class Init
 		define ('SITE_PATH', REPO_PATH . "/public");
 
 		define ('SITE', $this->site);
-		define ('SITE_URL', 'https://' . $this->site);
+		define ('SITE_URL', 'http://' . $this->site);
 		define ('PLATFORM',$this->platform);
 		define ('CONFIG_INI',$paths['config_ini']);
 

@@ -2,15 +2,25 @@
 namespace digitalmx\flames;
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
-	if (f2_security_below(6)){exit;}
-	use digitalmx\MyPDO;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\Member;
+
 	use digitalmx as u;
 	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\MyPDO; #if need to get more $pdo
+
 	
+   $login->checkLogin(6); 
+      #or checkLevel(min) if already logged in.
+   
+	$page_title = "Create News Item";
+	$page_options = ['tiny']; # ['ajax','tiny','votes']
+	
+   echo $page->startHead($page_title,$page_options); 
+ 	echo $page ->startBody($page_title);
+
 	
 //END START
+
 
 // script to enter/update a news item
 // call with ?id=nnn for edit.
@@ -41,20 +51,6 @@ $page_text='';
 // );
 // does not include id, , date_entered,date_edited
 
-echo <<<EOT
-<html>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-<head>
-<title>News Item</title>
-<link rel='stylesheet' href='/css/news3.css' />
-<script type='text/javascript' src='/js/f2js.js'></script>
-<script src="/jsmx/tinymce/tinymce.min.js"></script>
-<script src="/jsmx/tiny_init.js"></script>
-</head>
-<body >
-$page_text
-
-EOT;
 
 
 
@@ -467,13 +463,18 @@ $about_articles
 
 
 <tr><td >Item Title $required_text</td><td><input type='text' size='60' name='title' id='title' value="${row['title']}"></td></tr>
-
+EOT;
+if ($mode !== 'user'){echo <<<EOT
 <tr><td>Contributed by: </td><td><input type='text' name='contributor' value='${row['contributor']}' onfocus="form.contributor_id.value='';">
 
 id: <input type='text' name='contributor_id' id='contributor_id' value='${row['contributor_id']}' size='6'><br>
 (Aliases: $alias_keys.)
 
 </td></tr>
+
+EOT;
+}
+echo <<<EOT
 
 <tr><td >Source</td><td><input type='text' name='source' value="${row['source']}" size="30"> date: <input type='text' name='source_date' value = "${row['source_date']}" size="15"></td></tr>
 

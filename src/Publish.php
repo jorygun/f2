@@ -1,23 +1,6 @@
 <?php
 namespace digitalmx\flames;
 
-
-//BEGIN START
-	/*  STARTUP */
-ini_set('display_errors', 1);
-
-use \digitalmx\flames\Definitions as Defs;
-
-$root = $_SERVER['DOCUMENT_ROOT'];
-if (empty($root)){
-	$root = '/usr/home/digitalm/Sites/flames/beta/public';
-	echo "Cannot determine root; using beta site." . "<br>\n";
-}
- require_once $root . '/init.php';;
- 
-$repo_path = REPO_PATH;
-//END START
-
 /* Script to retrieve recenbt updates to user data and produce html for newsletter
 	Also generates calendar file from the events source file to incorporate
 	into newsletter.
@@ -27,65 +10,64 @@ $repo_path = REPO_PATH;
 */
 
 
- $nowsql = date("Y-m-d H:i:s"); #sql-ready
- $nowh	=	date('M d, Y'); #human ready
+
+use digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
+
+
+if (! defined ('INIT')){require '../config/init.php';}
+
+
+class Publish()
+{
+
+	/* files used to store data */
+	
+	private static $rtime_file = "$repo_path/public/news/last_update_run_ts.txt";
+	private static $ptime_file = "$repo_path/public/news/last_update_published_ts.txt";
  
+	private static $updates_html_file= "$repo_path/public/news/news_next/news_updates.html";
+	private static $update_teaser_file =  "$repo_path/public/news/news_next/tease_updates.txt";
  
- $member_status_set = Defs::getMemberInSet();
+	private static $opportunity_html_file = "$repo_path/public/news/news_next/news_opportunities.html";
+	
+	private static $member_status_set;
+	
+	private $pdo;
+	private $member;
+	
+	public function __construct() {
+		$this->$member_status_set = Defs::getMemberInSet();
+		$this->pdo = MyPDO::instance();
+		$this->member = new Member();
+		
+	}
+	
+	public function getUpdates($since) {
+		$sql_start_time = u\makeDate($since,'sql','time');
+		$human_start_time = u\makeDate($since,'human','time');
+		$now = date('d M, Y');
+		
+		#get membership
+		list ($active,$lost,$total) = $this->member->getMemberCounts();
+		
+
+	echo "<br>Active Members: $active.  (Plus $lost lost contact; total $total.) <br> ";
+
+		
+	
+	
+	
+	}
+	
+	
+	
+		
+
+
  
-#$G_member_status_array = array('M', 'MA','MN','MC','MU','R','G');
-
+ #
  
- $rtime_file = "$repo_path/public/news/last_update_run_ts.txt";
- $ptime_file = "$repo_path/public/news/last_update_published_ts.txt";
- 
- $updates_html_file= "$repo_path/public/news/news_next/news_updates.html";
- $update_teaser_file =  "$repo_path/public/news/news_next/tease_updates.txt";
- # not used.  Only list of names is used.
- 
- $updates_html = $updates_text = ''; #containers for building reports in
- $opportunity_html_file = "$repo_path/public/news/news_next/news_opportunities.html";
- 
-#report status changes
-//Find date to begin looking from //
-if(! empty($ptime = $_GET['ptime'] )){
-    $ptimex = strtotime($ptime);
-    
-}
-if (!$ptimex){ #get from last published file  timestamp!
-    $ptimex = get_start_time($ptime_file);
-}
-if (!$ptimex){
-	echo "No starting time in either parameter or last published file. ";
-	echo "Setting to one week ago.";
-	$ptimex = strtotime('-7 days');
-}
-
-$ptimeh  = date('M d, Y',$ptimex);
-$ptimes = date('Y-m-d H:i', $ptimex);
-
-#echo "Start times:<br>$ptimex = $ptimeh = $ptimes<br>\n";
-
-/* List All Updates Since Last Newsletter */
-
-
-
-//Get total membership
-$q = "SELECT count(*) as count FROM members_f2
-	WHERE status in ($member_status_set)
-	;";
-	 $total_members = $pdo->query($q)->fetchColumn();
-
-
-$q = "SELECT count(*) as count FROM members_f2
-	WHERE status in ($member_status_set) AND
-	email_status LIKE 'L_'
-	;";
-
-	$lost_members = $pdo->query($q)->fetchColumn();
-	$active_members = $total_members - $lost_members;
-
-	echo "<br>Active Members: $active_members.  (Plus $lost_members lost contact; total $total_members.) <br> ";
 
 
 
@@ -114,10 +96,9 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 
 //Get New Members
 	$q = "SELECT $name_fields FROM members_f2
-	WHERE status in ($member_status_set)
+	WHERE status in (self::$member_status_set)
 	AND test_status != 'M'
-	AND join_date > '$ptimes'
-	ORDER BY username;
+	AND join_date > '$sql_start_time'
 	";
 // 	echo "sql: $q" . BRNL;
 // 	exit;

@@ -1,8 +1,9 @@
 <?php
 namespace digitalmx\flames;
 
+
 ini_set('display_errors', 1);
-ini_set('error_reporting', E_ALL);
+
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
@@ -17,12 +18,12 @@ use PHPMailer\PHPMailer\Exception ;
 
 
 
-
-
 /*
 	Sends an email message to a user based on an event.
 	
-	$msg = new Messenger ($pdo,$test); (if test is true, doesn't send mail)
+	$msg = new Messenger ();
+	$msg ->setMode (false) ; changes it to test mode.  show and don't send
+	
 	$result = sendMessages($uid,$event,$exta)
 	
 	@ uid is the user_id of the user
@@ -30,6 +31,9 @@ use PHPMailer\PHPMailer\Exception ;
 	@ extra is array of key->value for additional text replacements
 	
 	There are text files in templates for each event code.
+	
+	Script requires pdo, member, and phpmailer classes.
+	Requires a preceeding init or cron-init to set paths
 	
 	The system retrieves the user data from Member, builds an arrasy
 	of 'replacement' vawriables, then retrieves requested message text,
@@ -54,13 +58,13 @@ private static $profile_age_limit_days = 600;
 private static $admin_codes = array(
 // only these codes get an admin notice
 
-	'ems-A4' => "No response to several requests to verify email address.",
-	'ems-LA' => "Gave up trying to contact",
-	'ems-B2' => "Email has repeatedly bounced.",
-	'ems-E2' => "New email address not confirmed",
-	'ems-LO' => "Lost other. No code supplied.",
-	'ems-LS' => "New signup failed to confirm email.",
-	'ems-LE' => "User never confirmed change of email.",
+	'A4' => "No response to several requests to verify email address.",
+	'LA' => "Gave up trying to contact",
+	'B2' => "Email has repeatedly bounced.",
+	'E2' => "New email address not confirmed",
+	'LO' => "Lost other. No code supplied.",
+	'LS' => "New signup failed to confirm email.",
+	'LE' => "User never confirmed change of email.",
 	);
 
 
@@ -73,7 +77,7 @@ private static $admin_codes = array(
 
 	::user_dataset::
 	
-	::event::
+	Event: ::event::
 EOT;
 
 
@@ -85,9 +89,9 @@ Anything new?  Log in, go to profile, and edit.
     ";
     
     private static $bulk_warn =	"
-The FLAMEsite sends out an email whenever a new newsletter is
-published, typically once a week.  YOU ARE NOT CURRENTLY RECEIVING
-THIS.  If you'd like to keep informed about AMD alumni, log in,
+The FLAMEsite sends out an email about once a week.  
+	YOU ARE NOT CURRENTLY SUBSCRIBED TO THIS.  
+If you'd like to keep informed about AMD alumni, log in,
 go to your profile, edit,  and UNcheck the box 'No Email Updates'.
 	";
 	
@@ -117,13 +121,7 @@ and change it in your profile.
 	private $mailer;
 	
 	private $user_dataset;
-	
-	// std header for outgoing emails, but can be changed before using
-	private static $email_header_array = array(
-		"Errors-to" => "postmaster@amdflames.org",
-		"Content-type" => 'text/plain; charset=utf8',
-		"From" => 'AMD Flames Admin <admin@amdflames.org>'
-		);
+
 	
 	
 	public function __construct() {
@@ -133,13 +131,12 @@ and change it in your profile.
 		$this->test = false; #use setMode(true) to set test=false
 		#$this->member = $member;
 		$this->member = new Member();
-		
 		$this->mailer = new PHPMailer();
 		
-		$this->mailer->setFrom('admin@amdflames.org',"AMD Flames Admin");
 		$this->mailer->addCustomHeader('Errors-to','postmaster@amdflames.org');
 		$this->mailer->CharSet = 'UTF-8'; 
 		$this->mailer->isSendmail();
+		$this->mailer->SMTPKeepAlive = true; 
 	}
 	public function setMode($mode=true ) {
 		// false = test mode
@@ -157,7 +154,7 @@ and change it in your profile.
 		#$message = u\email_std($message);
 		
 		if (is_numeric($tag)){
-			$email = $this->member->getMemberEmail($tag);
+			list($name,$uid,$email) = $this->member->getMemberBasic($tag);
 		}
 		elseif (u\isValidEmail($tag)){
 			$email = $tag;
@@ -167,7 +164,7 @@ and change it in your profile.
 		$em['subject'] = $message_subject;
 		$em['message'] = $message;
 		$em['to'] = $email;
-		$em['header'] =  self::$email_header_array;
+		$em['name'] = $name;
 		$em['header']['BCC'] = 'admin@amdflames.org';
 	
 
@@ -224,9 +221,10 @@ and change it in your profile.
 				$em['subject'] = $message_subject;
 				$em['message'] = $message;
 				$em['to'] = $row['user_email'];
-				$em['header'] = self::$email_header_array;
-#u\echor ($em, 'message'); exit;
-			$this->send_mail($em);
+				$em['name'] = $row['username'];
+				
+#u\echor ($em, 'message'); 
+			echo $this->send_mail($em);
 			}
 		
 		  /* prepare email to admin
@@ -244,8 +242,9 @@ and change it in your profile.
 				$em['subject'] = $message_subject;
 				$em['message'] = $message;
 				$em['to'] = 'admin@amdflames.org';
-				$em['header'] =  self::$email_header_array;
-				$em['header']['From'] = $row['user_email'];
+				$em['name'] = 'Flames Admin';
+				
+				$em['from'] = $row['user_email'];
 
 
 
@@ -314,8 +313,10 @@ and change it in your profile.
 	$dataset = "
 User: ${row['username']}
 ---------------------
-   Email: ${row['user_email']} 
-      (Previously: ${row['prior_email']})
+   Email: ${row['user_email']}; 
+   Previous emails:
+   ${row['prior_email']}
+   
    Receives weekly newsletter: ${row['subscriber']}
    Current Email Status: ${row['email_status']} ${row['email_status_name']}
 
@@ -337,29 +338,34 @@ Activity
 		//header is array to be joined to make header
 		$header='';
 		$header_array = $data['header'];
+		
+		
 		foreach ($header_array as $key=>$val){
-			$header .= $key . ': ' . $val . "\r\n";
+			 $this->mailer->addCustomHeader($key,$val);
 		}
 	
 		if ($this->test) {
 			$response =  "<h3>send email Test:</h3>" ;
-			$response .= "Header:";
-			$response .= u\echopre ($header) ;
+			
+			
 			$response .= u\echor ($data,'data array');
 			return $response;
 			
 		} else  {	
 			#mail ($data['to'],$data['subject'],$data['message'],$header);
+			$from = $data['from'] ?? 'admin@amdflames.org';
+			$this->mailer->setFrom($from);
 			
-			$this->mailer->addAddress($data['to']);
+			$this->mailer->addAddress($data['to'],$data['name']);
 			$this->mailer->Subject = $data['subject'];
 			$this->mailer->Body = $data['message'];
 			try{
-			$this->mailer->send();
+				$this->mailer->send();
 			} catch (Exception $e) {
 				echo "Error in mailer: " . $e->getMessage(); 
 			}
-			
+			$this->mailer->clearAddresses();
+				
 			return "Mailed: " . $data['subject'] . "\n";
 		}
 

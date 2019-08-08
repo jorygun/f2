@@ -697,7 +697,23 @@ public function getLogins($tag) {
 		}
 		return $this->returnResult($final);
 	}
-    
+    public function getMemberCounts() {
+		 $member_status_set =  Defs::getMemberInSet();
+	 
+		 $q = "SELECT count(*) as count FROM members_f2
+		WHERE status in ($member_status_set) AND email_status ='Y'
+		;";
+		$actives = $this->pdo->query($q)->fetchColumn();
+	
+		$q = "SELECT count(*) as count FROM members_f2
+		WHERE status in ($member_status_set) AND
+		email_status LIKE 'L_'
+		;";
+		$lost = $this->pdo->query($q)->fetchColumn();
+		$total = $actives + $lost;
+		return [$actives,$lost,$total];
+	}
+	 
     public function getMembers($post){
          $q=[]; $messages=[];
        // returns list of members based on either a generic

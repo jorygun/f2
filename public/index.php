@@ -4,7 +4,7 @@
 
 //BEGIN START
 	require_once "init.php";
-	if (f2_security_below(0)){exit;}
+	 $login -> checkLogin(0);
 	
 use digitalmx\MyPDO;
 use digitalmx as u;
