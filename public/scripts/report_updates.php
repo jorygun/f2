@@ -16,7 +16,7 @@ if (empty($root)){
 }
  require_once $root . '/init.php';;
  use digitalmx\MyPDO;
- $pdo = MyDPO::instance();
+ $pdo = MyPDO::instance();
  
 $repo_path = REPO_PATH;
 //END START
