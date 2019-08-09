@@ -684,7 +684,7 @@ public function getLogins($tag) {
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		if (empty($q)){
-			throw new Exception ("No search fields provided");
+			throw new Exception ("No search fields provided" . u\echor ($post,'post') );
 		}
 		
 		$sql = "SELECT * FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
