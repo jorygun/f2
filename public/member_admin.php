@@ -4,7 +4,7 @@ namespace digitalmx\flames;
 ini_set('display_errors', 1);
 
 //BEGIN START
-	require_once 'init.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
 	use digitalmx as u;
 	use digitalmx\flames as f;
