@@ -12,7 +12,7 @@ ini_set('display_errors', 1);
 	use digitalmx\flames\DocPage;
 	use digitalmx\flames\MemberAdmin;
 	
-	$admin = new MemberAdmin($pdo);
+	$admin = new MemberAdmin();
 	$page = new DocPage();
 
 	
