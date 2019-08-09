@@ -40,9 +40,9 @@ class MemberAdmin {
 	
 	public function __construct(){
 		$this->pdo = u\MyPDO::instance();
-		$this->member = new Member ($this->pdo);
+		$this->member = new Member ();
 		$this->page = new DocPage();
-		$this->messenger = new Messenger($this->pdo);
+		$this->messenger = new Messenger();
 	}
 	
 //	this function just echos out the data in a list of found members.
