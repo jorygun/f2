@@ -683,6 +683,10 @@ public function getLogins($tag) {
 		if ($admin_status = $post['admin_status']){
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
+		if (empty($q)){
+			throw new Exception ("No search fields provided");
+		}
+		
 		$sql = "SELECT * FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
 		echo $sql .  BRNL;
 		
