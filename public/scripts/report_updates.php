@@ -143,7 +143,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	ORDER BY username
 	";
 
-	 $result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
+	 $result = $pdo->query($q)->fetchAll(\PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'updates');
 	$updates_html .= $report_data;
@@ -158,7 +158,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	AND join_date <= '$ptimes'
 	ORDER BY username";
 
-	$result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
+	$result = $pdo->query($q)->fetchAll(\PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'email');
 	$updates_html .= $report_data;
@@ -187,7 +187,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	AND previous_ems not like 'L%'
 	ORDER BY username
 	";
-	$result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
+	$result = $pdo->query($q)->fetchAll(\PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'lost');
 	$updates_html .= $report_data;
@@ -202,7 +202,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 		LIMIT 5
 		;
 	";
-	$result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
+	$result = $pdo->query($q)->fetchAll\PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'long lost');
 	$updates_html .= $report_data;
