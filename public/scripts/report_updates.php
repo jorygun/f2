@@ -126,7 +126,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 // 	exit;
 	$stmt = $pdo->query($q);
 	$new_member_count = $stmt->rowCount();
-   $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+   $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'new');
 	$updates_html .= $report_data;
