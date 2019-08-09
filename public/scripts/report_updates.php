@@ -7,6 +7,7 @@ namespace digitalmx\flames;
 ini_set('display_errors', 1);
 
 use \digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
 
 $root = $_SERVER['DOCUMENT_ROOT'];
 if (empty($root)){
@@ -14,6 +15,8 @@ if (empty($root)){
 	echo "Cannot determine root; using beta site." . "<br>\n";
 }
  require_once $root . '/init.php';;
+ use digitalmx\MyPDO;
+ $pdo = MyDPO::instance();
  
 $repo_path = REPO_PATH;
 //END START
