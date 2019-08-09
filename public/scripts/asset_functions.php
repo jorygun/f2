@@ -902,7 +902,7 @@ function post_asset($post_array){
      if ($id == 0){
 
         $title = "temp holding place";
-        $sql = "INSERT into `assets` (status,title,date_entered,type) values ('T','$title',NOW() ,'');";
+        $sql = "INSERT into `assets` (status,title,date_entered,type,thumb_file) values ('T','$title',NOW() ,'','');";
         echo $sql . BRNL;
         $pdo->query($sql);
         $last_id = $pdo->lastInsertId();
