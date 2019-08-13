@@ -395,7 +395,7 @@ class Login
 	private function logout(){
 // If it's desired to kill the session, also delete the session cookie.
 // Note: This will destroy the session, and not just the session data!
-		echo "Logging out now."; 
+		#echo "Logging out now."; 
 		$_SESSION = array();
 		if (ini_get('session.use_cookies'))
 		{
