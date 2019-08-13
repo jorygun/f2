@@ -404,6 +404,7 @@ class Login
 		 }
 		session_unset();
 		session_destroy();
+		session_start();
 		
 		header ("Location: /\n\n");
 
