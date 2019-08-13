@@ -323,7 +323,7 @@ class Login
 			#relogin current user
 			echo "Code 1.  Relogin.";
 			$this->logout();
-			$log_info = $this->member->getLogInfo($current_login);
+			$log_info = $this->member->getLoginInfo($current_login);
 			$this->setLogin($log_info);
 		}	
 		
