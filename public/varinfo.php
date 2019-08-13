@@ -35,7 +35,7 @@ use digitalmx\flames\Member;
 	
 $pagetitle="Varinfo()";
 $pageoptions=['ajax'];
-if ($login->checkLevel(5)){
+if ($login->checkLogin(0)){
 	echo $page -> startHead($pagetitle,$pageoptions);
 	echo $page->startBody($pagetitle);
 }

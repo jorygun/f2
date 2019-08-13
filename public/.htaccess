@@ -7,6 +7,5 @@ Options +FollowSymLinks
 Options -Indexes
 
 RewriteEngine on
-RewriteRule ^view_asset/([0-9]+)$ /scripts/asset_c.php?id=$1
-RewriteRule init.php /init.php
+RewriteRule ^view_asset/([0-9]+)$ /scripts/asset_c.php?id=$1 [L]
 

@@ -2,6 +2,7 @@ body, .normal {padding:6px;
 	font-family: "New Times Roman",Times,serif;
 	font-size: 1em; color: black;
 	max-width:1200px;
+	 width:100vw;
 	padding:5px;
 	color:black;
 	font-style: normal;

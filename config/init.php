@@ -61,7 +61,7 @@ echo implode("<br>",$init->getNotices() );
 
 
 
-$pdo = MyPDO::instance();
+$pdo = $init->pdo;
 $member = new Member();
 $login = new Login();
 $page = new DocPage();
@@ -128,7 +128,7 @@ class Init
 		$this->setConstants($this->paths );
 		$this->setRequires() ;
 		$this->setAutoload() ;
-				
+		$this->pdo = MyPDO::instance();
 		define ('INIT',1);
 	
 	}
@@ -230,6 +230,7 @@ class Init
 	}
 	
 	
+	
 	private function setIncludes($repo_dir){
 	#initial include path set in .user.ini to include this folder.
 	#add other paths here so can just call <repo>/config/init.php for shell scripts.
@@ -289,68 +290,78 @@ class Login
 		$this->member = new Member();
 	}
 	
-	
 
-	//receives login/security request checks s= for login, logout, no change
-	public function checkLogin ($min=0) 
-	{
-		$login_code = $_GET['s'] ?? '';
+	/*
+		receives login/security request checks s= for login, logout, no change
+		check for get[s].
+		if empty, is there a current login
+			if yes, go on
+			if no, log in as non-member.
+		else
+			is login same as existing login
+				if yes, go on
+				if not, logout old user; log in new uyser
+		check min level
 		
-		// if login code, take action or conditionally log in
-		//  then always check min against session level
-		if (empty($login_code)){ #do 
-			if (empty($_SESSION['login'])){ #login as not a mmeber
-				$log_info = $this->member->getNoMember();
-				#u\echor ($log_info, 'no member loginfo');
-			}
 			
-		}
-		elseif ($login_code == -1){
-			#echo "Logging Out." . BRNL;
+		
+	*/
+	public function checkLogin ($min=0) 
+	{		
+		$login_code = $_GET['s'] ;
+		$current_login = $_SESSION['login']['user_id'] ?? 0;
+		
+		echo "code: $login_code; current: $current_login" . BRNL;
+
+		if ($login_code == 'logout' or $login_code == '-1'){
+			echo "code -1. Logging Out." . BRNL;
 			$this->logout();
 			
 		}
-		// relogin
-		elseif ($login_code == 1) {
-			#echo "login_code: $login_code" . BRNL;
-			if (! $log_info = $_SESSION['login'] ){
-				throw new Exception ("No current login; cannot re-login");
+		
+		elseif ($login_code == 'relogin'  or $login_code == '1') {
+			#relogin current user
+			echo "Code 1.  Relogin.";
+			$this->logout();
+			$log_info = $this->member->getLogInfo($current_login);
+			$this->setLogin($log_info);
+		}	
+		
+		elseif (empty($login_code) && empty ($current_login)){ 
+			echo "no login; no current.  Non-member login";
+			#login as not a mmeber
+			$log_info = $this->member->getLoginInfo(0);
+			$this->setLogin($log_info);
+		}
+		elseif (empty($login_code) && ! empty ($current_login)){
+			echo "No code; already logged in";
+			#do nothing
+		} 
+		
+		elseif (!empty ($login_code) && empty ($current_login)){
+			echo "Fresh code.  logging in.";
+			$uid = $this->member->checkPass($login_code);
+			echo "uid $uid.";
+			$log_info = $this->member->getLoginInfo($uid);	
+			$this->setLogin($log_info);
+		}
+		
+		elseif (!empty($login_code) && !empty ($current_login)){
+			echo "code and current. ";
+			$uid = $this->member->checkPass($login_code);
+			if ($uid == $current_login){
+				echo "no change;";
+				#same user; do nothing
 			}
-			$_SESSION['login'] = array();
-			$_SESSION['level'] = 0;
-			$_SESSION['menu'] = '';
-			
-			// reset eveyyhing but keep existing user
-		
-		} else {
-			// check login with member db
-			#echo "login_code: $login_code" . BRNL;
-			$log_info = $this->member->getLoginInfo($login_code);
-			
-	  }
-
-		$current_userid = $_SESSION['login']['user_id'] ?? null;
-		
-		if (!empty ($log_info)){ #nedd to do a login
-		
-			if (empty($current_userid) ) {
-			#	echo "no current user, logging in." . BRNL;
-				$this->setLogin($log_info);
-				//
-			}
-			// same user?
-			elseif ($log_info['user_id'] == $current_userid) {
-					#echo "same user, go on." . BRNL;
-			//
-		
-			} else {
-				#echo "different user to log in" . BRNL;	
+			else {
+				echo "different user to log in" . BRNL;
+				$log_info = $this->member->getLoginInfo($uid);
 				u\echoAlert("Changing logged in user to " . $log_info['username']);
 				$this->setLogin($log_info);
 			}
 		}
 		
-			return $this->checkLevel($min);
+		return $this->checkLevel($min);
 		
 			
 	}
@@ -377,6 +388,7 @@ class Login
 		$_SESSION['login'] = $log_info;
 		$_SESSION['menu'] = $menu -> getMenuBar();
 		$_SESSION['level'] = $log_info['seclevel'];
+		$_SESSION['listring'] = '';
 		return true;
 	}
 
@@ -394,7 +406,7 @@ class Login
 		session_destroy();
 		
 		header ("Location: /\n\n");
-	exit;	 
+
 		#"<script>window.location.href='/';</script>\n";
 	
 	

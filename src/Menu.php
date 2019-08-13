@@ -3,19 +3,25 @@ namespace digitalmx\flames;
 // ini_set('display_errors', 1);
 // ini_set('error_reporting', E_ALL);
 
-// routine to build menus and return them as html text.
+/* routine to build menus and return them as html text.
 // also includes some javascript to close the open
 //  menus on mobile, because they stick open.
+	run this at login to set the menu in the session file.
+	
+*/
+use digitalmx\MyPDO;
+use digitalmx\flames\Opportunities;
 
 class Menu {
 
 	private $thisMenu;
-	private $t;
 	private $menulist = array();
 	private $level, $text;
 	public $header;
 	private $login = array();
-	private $css;
+	private $opp;
+	private $pdo;
+	private $opp_count;
 
 #these people get experiemtnal nav header. see show_exp_menu;
 	private $expnames = array(
@@ -27,9 +33,11 @@ class Menu {
 	
 		
 	public function __construct ($log_info,$header='') {
+		$this->pdo = MyPDO::instance();
+		
 		 $this->login = $log_info;
 			$this->header = $header;
-			$this->css = $this->choose_css($this->expnames);
+		$this->opp = new Opportunities;
 	 
 	}
 
@@ -42,18 +50,7 @@ class Menu {
 		 return '';
 	}
 
-	private function count_opps(){
-		return 0;
-		
-		 $pdo = digitalmx\MyPDO::instance();
-		 $sql = "SELECT count(*) FROM opportunities WHERE
-					expired = '0000-00-00' OR
-					expired > NOW();";
 
-		 $opp_rows = $pdo -> query($sql) -> fetchColumn();
-		 return $opp_rows;
-
-	}
 
 
 	private function addMenu ($level,$id,$title=''){
@@ -138,7 +135,7 @@ EOT;
 		$userlevel = $this->login['seclevel'];
 		$userlinkedin = $this->login['linkedin'] ?? '';
 
-		$css_file = $this->css;
+		$css_file = $this->choose_css($this->expnames);;
 	
 		$t = <<<EOT
 		<link rel='stylesheet' href='$css_file'>
@@ -194,13 +191,18 @@ EOT;
 
 	$t .=  self::closeLine(6, $thisMenu) ;
 
-	$thisMenu = 'Opportunities';
+	$opp_rows = $this->opp->getOppCount() ?? 0;
+	$thisMenu = "Opportunities ($opp_rows)";
 	$menulist[] = $thisMenu;
-	$opp_rows = self::count_opps();
+	$opp_list = $this->opp->linkOppList();
 	$t .= self::addMenu (0,$thisMenu);
-	$t .=  "<li><a href='/opportunitiesE.php' target='_blank'> $opp_rows Listed</a>";
-	$t .=  self::closeLine(0, $thisMenu) ;
 
+	foreach ($opp_list as $line){
+		$t .=  "<li>$line";
+	}
+	$t .= "<li><a href='/show_opp.php'>Add/Edit Opportunity</a>";
+	$t .=  self::closeLine(0, $thisMenu) ;
+	
 
 	$thisMenu = 'Search';
 	$t .=  self::addMenu(4,$thisMenu);
@@ -233,7 +235,7 @@ EOT;
 
 	
 	$thisMenu = 'Member';
-	#if ($this->login['seclevel'] >= 0){$menulist[] = $thisMenu;}
+	$menulist[] = $thisMenu;
 	$t .=  self::addMenu (0,$thisMenu,$username);
 	$t .= self::if_level(1,"
 		 <li >$username <br> &nbsp;&nbsp;<i>$usertype</i><hr style='height:2px;margin:1px;'>

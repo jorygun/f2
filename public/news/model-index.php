@@ -179,7 +179,7 @@ echo_if('calendar.html');
 
 echo_if ("news_updates.html", news_head("Membership Updates"));
 
-echo  get_slogan();
+
 
 echo "<p><small><?=$footer_line?></small></p>";
 

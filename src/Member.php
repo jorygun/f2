@@ -199,7 +199,7 @@ private static $long_profile_fields = array (
  	
  private static $bad_member = array(
  	'username' => 'Not a Member',
- 	'user_id' => -1,
+ 	'user_id' => 0,
  	'user_email' => '',
  	'seclevel' => -1,
  	'status_name' => "Invalid Login",
@@ -816,29 +816,32 @@ public function getLogins($tag) {
         $data['donors'] = $donors;
         return $data;
     }
-        
-    public function getLoginInfo($user,$pass='')
+   public function checkPass($login){
+   	 
+   	if ($m = $this->parseLogin($login) ){
+   		list($pass,$uid) = $m;
+   		$sql = "SELECT count(*) from `members_f2` where user_id = $uid
+   		and upw = '$pass';";
+   		$r = $this->pdo->query($sql)->fetchColumn();
+   		if ($r == 1){return $uid;}
+   	}
+   	return 0;
+   }
+   
+    public function getLoginInfo($user)
     {
+    	$login_info = self::$no_member; #initialize
     	if (empty($user)) {
-    		return self::$no_member;
+    		return $login_info;
     	}
-    	if (empty($pass) and $m = $this->parseLogin($user) ){
-    		list($pass,$uid) = $m;
+    	
+    	$sql = "SELECT * from `members_f2` where user_id = $user ";  	
+    	if (!$result = $this->pdo->query($sql)->fetch() ){
+    		throw new Exception ("Attempt to Login with invalid user id");
     	}
-    	else {
-    		return self::$no_member;
-    	}
-
-    	
-    	$sql = "SELECT * from `members_f2` where user_id = $uid and upw = '$pass';";
-    	#echo "$sql" . BRNL;
-    	
-    	$result = $this->pdo->query($sql)->fetch();
-    	
-    	if (! $result){return self::$bad_member;}
     	//add fields and filter result
-    	$result = $this->enhanceData($result,self::$info_fields);
-    	return $result;
+    	$login_info = $this->enhanceData($result,self::$info_fields);
+    	return $login_info;
     }
     	
     
