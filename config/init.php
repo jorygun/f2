@@ -404,7 +404,7 @@ class Login
 		 }
 		session_unset();
 #		session_destroy();
-		$this->checkLogin();
+		$_GET['s'] = 0;
 		
 		header ("Location: /\n\n");
 
