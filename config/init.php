@@ -404,9 +404,8 @@ class Login
 		 }
 		session_unset();
 #		session_destroy();
-		$_GET['s'] = 0;
 		
-		header ("Location: /\n\n");
+		header ("Location: /?s=0\n\n");
 
 		#"<script>window.location.href='/';</script>\n";
 	
