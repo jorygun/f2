@@ -309,37 +309,37 @@ class Login
 	public function checkLogin ($min=0) 
 	{		
 		$login_code = $_GET['s'] ;
-		$current_login = $_SESSION['login']['user_id'] ?? 0;
+		#$current_login = $_SESSION['login']['user_id'] ?? 0;
 		
-		echo "code: $login_code; current: $current_login" . BRNL;
+		#echo "code: $login_code; current: $current_login" . BRNL;
 
 		if ($login_code == 'logout' or $login_code == '-1'){
-			echo "code -1. Logging Out." . BRNL;
+			#echo "code -1. Logging Out." . BRNL;
 			$this->logout();
 			
 		}
 		
 		elseif ($login_code == 'relogin'  or $login_code == '1') {
 			#relogin current user
-			echo "Code 1.  Relogin.";
+		#	echo "Code 1.  Relogin.";
 			$this->logout();
 			$log_info = $this->member->getLoginInfo($current_login);
 			$this->setLogin($log_info);
 		}	
 		
 		elseif (empty($login_code) && empty ($current_login)){ 
-			echo "no login; no current.  Non-member login";
+		#	echo "no login; no current.  Non-member login";
 			#login as not a mmeber
 			$log_info = $this->member->getLoginInfo(0);
 			$this->setLogin($log_info);
 		}
 		elseif (empty($login_code) && ! empty ($current_login)){
-			echo "No code; already logged in";
+		#	echo "No code; already logged in";
 			#do nothing
 		} 
 		
 		elseif (!empty ($login_code) && empty ($current_login)){
-			echo "Fresh code.  logging in.";
+		#	echo "Fresh code.  logging in.";
 			$uid = $this->member->checkPass($login_code);
 			echo "uid $uid.";
 			$log_info = $this->member->getLoginInfo($uid);	
@@ -347,14 +347,14 @@ class Login
 		}
 		
 		elseif (!empty($login_code) && !empty ($current_login)){
-			echo "code and current. ";
+		#	echo "code and current. ";
 			$uid = $this->member->checkPass($login_code);
 			if ($uid == $current_login){
 				echo "no change;";
 				#same user; do nothing
 			}
 			else {
-				echo "different user to log in" . BRNL;
+			#	echo "different user to log in" . BRNL;
 				$log_info = $this->member->getLoginInfo($uid);
 				u\echoAlert("Changing logged in user to " . $log_info['username']);
 				$this->setLogin($log_info);
@@ -403,8 +403,8 @@ class Login
 			 setcookie(session_name(), '', time() - 31536000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
 		 }
 		session_unset();
-#		session_destroy();
-		
+		session_destroy();
+		session_start();
 		header ("Location: /?s=0\n\n");
 
 		#"<script>window.location.href='/';</script>\n";
