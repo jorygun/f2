@@ -350,7 +350,7 @@ class Login
 		#	echo "code and current. ";
 			$uid = $this->member->checkPass($login_code);
 			if ($uid == $current_login){
-				echo "no change;";
+				#echo "no change;";
 				#same user; do nothing
 			}
 			else {
