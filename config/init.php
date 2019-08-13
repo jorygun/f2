@@ -308,7 +308,7 @@ class Login
 	*/
 	public function checkLogin ($min=0) 
 	{		
-		$login_code = $_GET['s'] ;
+		$login_code = $_GET['s'] ?? 0 ;
 		$current_login = $_SESSION['login']['user_id'] ?? 0;
 		
 		#echo "code: $login_code; current: $current_login" . BRNL;
