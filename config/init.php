@@ -403,8 +403,8 @@ class Login
 			 setcookie(session_name(), '', time() - 31536000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
 		 }
 		session_unset();
-		session_destroy();
-		session_start();
+#		session_destroy();
+		$this->checkLogin();
 		
 		header ("Location: /\n\n");
 
