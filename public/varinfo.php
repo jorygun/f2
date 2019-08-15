@@ -6,7 +6,7 @@ $verbose = false; $test = false;
 ini_set('display_errors', 1);
 $mtimet = date('d M H:i',filemtime(__FILE__));
 $mtime = filemtime(__FILE__);
-session_start();
+
 #collect initial data prior to session_start running
 $pre_out = '';
 $repo = basename(dirname(__DIR__));
@@ -21,7 +21,6 @@ $initial_include = get_include_path();
 $init_file = $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 require $init_file;
 
-
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 
@@ -31,10 +30,12 @@ use digitalmx\flames\DocPage;
 use digitalmx\flames\Member;
 
 
-	
-	
+
 $pagetitle="Varinfo()";
 $pageoptions=['ajax'];
+
+u\echor ($_SESSION,'Session file at after page setup');
+#exit;
 if ($login->checkLogin(0)){
 	echo $page -> startHead($pagetitle,$pageoptions);
 	echo $page->startBody($pagetitle);

@@ -20,6 +20,8 @@ namespace digitalmx\flames;
 ini_set('error_reporting', E_ALL);
 ini_set('display_errors', 1);
 
+session_start();
+
 use digitalmx\MyPDO;
 use digitalmx as u;
 use digitalmx\flames\Definitions as Defs;
@@ -27,7 +29,7 @@ use digitalmx\flames\DocPage;
 
 
 // test to avoid re-running.  cron-ini  also sets this var.
-if (defined ('INIT')){ return; } //some init has already run
+#if (defined ('INIT')){ return; } //some init has already run
 
 class Exception extends \Exception {}
 class RuntimeException extends \RuntimeException {}
@@ -46,9 +48,6 @@ class RuntimeException extends \RuntimeException {}
 		#ini_set('session.gc_maxlifetime', 86400);
 
 
-	if (session_status() == PHP_SESSION_NONE) {
-		 session_start();
-	}
 
 #use Pimple\Container;
 #use digitalmx\
@@ -56,26 +55,28 @@ class RuntimeException extends \RuntimeException {}
 // sets up everything.  var is name of config file with db stuff et al,
 // and is located in config dir
 
+
+
 $init = new Init();
-echo implode("<br>",$init->getNotices() );
+//echo implode("<br>",$init->getNotices() );
 
 
 
-$pdo = $init->pdo;
-$member = new Member();
-$login = new Login();
-$page = new DocPage();
+
 	
-if ($init->getRepo() == 'live'){
+if (REPO == 'live'){
 	ini_set('display_errors',0);
 } else {
 	ini_set('display_errors',1);
 }
 
 
+
 require REPO_PATH . "/config/f2_transition.php";
 
-
+$login = new Login();
+$page = new DocPage();
+$pdo = MyPDO::instance();
 
 // #build db
 // $container = new Container();
@@ -129,6 +130,7 @@ class Init
 		$this->setRequires() ;
 		$this->setAutoload() ;
 		$this->pdo = MyPDO::instance();
+
 		define ('INIT',1);
 	
 	}
@@ -159,11 +161,9 @@ class Init
 		require_once 'Definitions.php';
 		require_once 'MxUtilities.php';
 		require_once 'SiteUtilities.php';
-		#require_once 'Member.php';
+	
 		require_once "utilities.php";
-		#require_once 'MyPDO.php'; #in digitalmx\flames
-		#require_once 'MyPDO.class.php'; #not in namespace
-		#require_once 'DocPage.php';
+	
 		require_once 'navBar.php';
 		
 		return true;
@@ -252,27 +252,27 @@ class Init
 	}
 	
 	#################################
-	public function get_platform() {
-		return $this->platform;
-	}
-	public function get_home() {
-		return $this->home;
-	}
-	public static function get_db_ini() {
-		return $this->config_ini;
-	}
-	public function get_site() {
-		return $this->site;
-	}
-	public function getPath($label) {
-		return $this->paths[$label];
-	}
-	public function getRepo(){
-		return $this->paths['repo'];
-	}
-	public function getNotices() {
-		return $this->notices;
-	}
+	// public function getPlatform() {
+// 		return $this->platform;
+// 	}
+// 	public function get_home() {
+// 		return $this->home;
+// 	}
+// 	public static function get_db_ini() {
+// 		return $this->config_ini;
+// 	}
+// 	public function get_site() {
+// 		return $this->site;
+// 	}
+// 	public function getPath($label) {
+// 		return $this->paths[$label];
+// 	}
+// 	public function getRepo(){
+// 		return $this->paths['repo'];
+// 	}
+// 	public function getNotices() {
+// 		return $this->notices;
+// 	}
 	
 } #end class init
 
@@ -280,7 +280,7 @@ class Init
 class Login
 {
 	private $pdo;
-	private $members;
+	private $member;
 
 	
 	public function __construct () 
@@ -306,65 +306,89 @@ class Login
 			
 		
 	*/
-	public function checkLogin ($min=0) 
-	{		
-		$login_code = $_GET['s'] ?? 0 ;
-		$current_login = $_SESSION['login']['user_id'] ?? 0;
-		
-		echo "code: $login_code; current: $current_login" . BRNL;
 
-		if ($login_code == 'logout' or $login_code == '-1'){
-			echo "code -1. Logging Out." . BRNL;
-			$this->logout();
+	
+	public function checkLogin ($min = 0) 
+	{
+			if (isset ($_GET['s']) ){ 
+				$login_code = $_GET['s'] ;
+				#uid 0 for non-member
+				$uid = $this->member->checkPass($login_code) ;
+				#u\echoAlert ("new login user $uid");
+	
+			} else {
+				$login_code = '';
+				$uid = 0;
+			}
 			
-		}
-		
-		elseif ($login_code == 'relogin'  or $login_code == '1') {
-			#relogin current user
-			echo "Code 1.  Relogin.";
-		
-			$log_info = $this->member->getLoginInfo($current_login);
-			$this->setLogin($log_info);
-		}	
-		
-		elseif (empty($login_code) && empty ($current_login)){ 
-			echo "no login; no current.  Non-member login";
-			#login as not a mmeber
-			$log_info = $this->member->getLoginInfo(0);
-			$this->setLogin($log_info);
-		}
-		elseif (empty($login_code) && ! empty ($current_login)){
-			echo "No code; already logged in";
-			#do nothing
-		} 
-		
-		elseif (!empty ($login_code) && empty ($current_login)){
-			echo "Fresh code.  logging in.";
-			$uid = $this->member->checkPass($login_code);
-			echo "uid $uid.";
-			$log_info = $this->member->getLoginInfo($uid);	
-			$this->setLogin($log_info);
-		}
-		
-		elseif (!empty($login_code) && !empty ($current_login)){
-			echo "code and current. ";
-			$uid = $this->member->checkPass($login_code);
-			if ($uid == $current_login){
-				echo "no change;";
-				#same user; do nothing
+			
+			if (isset ($_SESSION['login'])){ #already logged in, as member or non-member
+				$login_user = $_SESSION['login']['user_id'];
+				#u\echoAlert ("Reading session " . session_id() . " logged in uid: " . $login_user);
 			}
 			else {
-				echo "different user to log in" . BRNL;
-				$log_info = $this->member->getLoginInfo($uid);
-				u\echoAlert("Changing logged in user to " . $log_info['username']);
-				$this->setLogin($log_info);
+				$login_user = -1; #flag for no login at all
 			}
-		}
+			
+	
+			if ($login_code){
+				#echo " s-code: $login_code" . BRNL;
+				if ($login_code == 'logout' ){
+					if ($login_user > 0) {
+						$this->logout();
+					}
+					else {
+						u\echoAlert ( "Not logged in; cannot log out." );
+						exit;
+					}
+				}
+	
+				elseif ($login_code == 'relogin'  ) {
+					#relogin current user
+					if ($login_user > 0) {
+						#u\echoAlert ( " Re-login as $login_user." );
+						$log_info = $this->member->getLoginInfo($login_user);
+						$this->setSession($log_info);
+					}
+					else {
+						u\echoAlert ("Not logged in; cannot re-login.");
+						exit;
+					}
+				
+				}
+				
+				else { #any other login code
+					
+					if ($uid == $login_user) { 
+						#if no login, uid = 0 but login = -1; it won't match
+						#same user; do nothing
+					}
+					else  {
+						#u\echoAlert ("new login " );
+						#$this->logOut($_SERVER['REQUEST_URI']); #relog in with same uri
+						session_unset();
+						$log_info = $this->member->getLoginInfo($uid);
+						$this->setSession($log_info);
+					}
+					
+
+				}
+		#no login code
+		} elseif ($login_user >= 0) {
+				#u\echoAlert ( "No s-code; already logged in. Done.");
+				
+		} else { 
+			#login as non mmeber
+				#u\echoAlert ( "no login; no current.  Non-member login");
+				$log_info = $this->member->getLoginInfo(0);
+				$this->setSession($log_info);
+		} 
 		
+		return true;
 		return $this->checkLevel($min);
+	}
 		
 			
-	}
 	
 	//checks security level and issues 403
 	public function checkLevel($min)  {
@@ -372,27 +396,25 @@ class Login
 		if ($user_level < $min) {
 			#failed security      
 				#u\echor ($_SESSION['login'], 'login');
-				$header = "location:/403.html";
-				header($header);
-				exit;
-
-			}
+				header ( "location:/403.html");
+	
+		}
 		return true;
 }
 		
-	private function setLogin ($log_info) {
+	private function setSession ($log_info) {
 		// sets vars in session
-		#echo "setLogin for " . u\echor($log_info, 'log info') ;
-		$menu = new Menu($log_info);
+		#u\echor($log_info, 'Saving session ' . session_id() ) ;
 		
+		$menu = new Menu($log_info);
 		$_SESSION['login'] = $log_info;
 		$_SESSION['menu'] = $menu -> getMenuBar();
 		$_SESSION['level'] = $log_info['seclevel'];
-		$_SESSION['listring'] = '';
+		
 		return true;
 	}
 
-	private function logout(){
+	private function logOut($next ='/'){
 // If it's desired to kill the session, also delete the session cookie.
 // Note: This will destroy the session, and not just the session data!
 		#echo "Logging out now."; 
@@ -404,7 +426,9 @@ class Login
 		 }
 		session_unset();
 		session_destroy();
-		header ("Location: /?s=0\n\n");
+		$location = $next;
+
+		header ("Location: $location");
 
 		#"<script>window.location.href='/';</script>\n";
 	

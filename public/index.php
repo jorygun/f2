@@ -3,13 +3,16 @@
 // ini_set('error_reporting', E_ALL);
 
 //BEGIN START
-	require_once "init.php";
-	 $login -> checkLogin(0);
-	
-use digitalmx\MyPDO;
-use digitalmx as u;
-use digitalmx\flames\Definitions as Defs;
-use digitalmx\flames as f;
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\MyPDO; #if need to get more $pdo
+
+
+
+   $login->checkLogin(); 
+   
 
 // 	$page = new DocPage();
 	$title = 'AMD Flames';
