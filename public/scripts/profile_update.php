@@ -21,10 +21,15 @@ for this script id = user_id
 
 
 ********************************************************* */
-$nav = new navBar(1);
-$navbar = $nav -> build_menu();
-	use digitalmx\MyPDO;
-$pdo = MyPDO::instance();
+
+   $login->checkLogin(3);
+      #or checkLevel(min) if already logged in.
+
+	$page_title = "Edit Profile";
+	$page_options = []; # ['ajax','tiny','votes']
+
+   echo $page->startHead($page_title,$page_options);
+ 	echo $page ->startBody($page_title);
 
 
 
