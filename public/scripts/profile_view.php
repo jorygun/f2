@@ -14,7 +14,7 @@
 //END START
 
 	
-   $login->checkLogin(min); 
+   $login->checkLogin(3); 
       #or checkLevel(min) if already logged in.
    
 	$page_title = "Profile";

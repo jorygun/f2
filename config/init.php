@@ -77,6 +77,7 @@ require REPO_PATH . "/config/f2_transition.php";
 $login = new Login();
 $page = new DocPage();
 $pdo = MyPDO::instance();
+$member = new Member();
 
 // #build db
 // $container = new Container();
