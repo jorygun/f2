@@ -372,12 +372,12 @@ function report_changes (&$result,$type){
 					default:
 						$note = '';
 				}
-                $report .= "<tr class='brow'>
-                    <td class='username'><a href= " . SITE_URL . "/scripts/profile_view.php?id='$id' target = '_blank'>$name</a></td>
+                $report .= <<<EOT
+                <tr class='brow'>
+                    <td class='username'><a href= '/scripts/profile_view.php?id=$id' target = '_blank'>$name</a></td>
                     <td class='location'>$location</td>
                     <td>$contact</td></tr>
-
-                    ";
+EOT;
 
                 if (in_array($type,array('new','updates','lost') )){
                     $report .= "
