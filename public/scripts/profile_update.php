@@ -29,6 +29,31 @@ for this script id = user_id
 	$page_options = []; # ['ajax','tiny','votes']
 
    echo $page->startHead($page_title,$page_options);
+   echo <<<EOT;
+   	<script type="text/javascript" >
+    	function validate_profile(theForm) {
+		 var s = '';
+		 var v = '';
+			//alert ('in script');
+			v = document.getElementById('email').value;
+			//s=v;
+
+ 		  if (! validateEmail(v)){
+ 		  	s += " Email address is not valid. "; }
+
+
+			  v = document.getElementById('affiliation').value;
+			if (v.length <5) {s += 'Affilation not filled in. ';}
+
+ 			  v = document.getElementById('location').value;
+ 			 if (v.length < 5){s += "Location field incomplete.";}
+
+			  if (s != ''){alert (s); return false;}
+ 			 return true;
+
+		}
+   </script>
+EOT;
  	echo $page ->startBody($page_title);
 
 
@@ -54,54 +79,6 @@ for this script id = user_id
 
 	#extract($row,EXTR_PREFIX_ALL,'D');
 
- ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-	 <link rel="stylesheet" href="../css/news3.css">
-
-	<script type="text/javascript" src="/js/f2js.js"></script>
-	<script src="/jsmx/tinymce/tinymce.min.js"></script>
-    <script src="/js/tiny_init.js"></script>
-	<script type="text/javascript" >
-    	function validate_profile(theForm) {
-		 var s = '';
-		 var v = '';
-			//alert ('in script');
-			v = document.getElementById('email').value;
-			//s=v;
-
- 		  if (! validateEmail(v)){
- 		  	s += " Email address is not valid. "; }
-
-
-			  v = document.getElementById('affiliation').value;
-			if (v.length <5) {s += 'Affilation not filled in. ';}
-
- 			  v = document.getElementById('location').value;
- 			 if (v.length < 5){s += "Location field incomplete.";}
-
-			  if (s != ''){alert (s); return false;}
- 			 return true;
-
-		}
-
-
-</script>
-<link rel=stylesheet href='/css/news3.css'>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<title>FlameSite Profile Editor (<?=$username?>)</title>
-</head>
-
-<body >
-<?=$navbar?>
-
-
-<?php
     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
