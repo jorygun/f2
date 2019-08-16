@@ -450,7 +450,7 @@ function prepare_opp_report ($pdo,$ptimes){
 
         foreach ($result as $row){
             $oppclass=''; $oppnew='';$opp_is_new=false;
-            $dtr = new DateTime($row['created']);
+            $dtr = new \DateTime($row['created']);
    			if ($dtr > $dtp){
                 $oppclass='yellow';
                 $oppnew='<b>New</b>';
