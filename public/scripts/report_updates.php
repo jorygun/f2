@@ -146,11 +146,11 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	AND username not like 'Flames %'
 	ORDER BY username
 	";
-echo $q;
+//echo $q;
 
 	 $result = $pdo->query($q)->fetchAll(\PDO::FETCH_ASSOC);
-u\echor ($result , 'fetchall');
-exit;
+// u\echor ($result , 'fetchall');
+// exit;
 
 	list ($report_data,$name_data) = report_changes($result,'updates');
 	$updates_html .= $report_data;
