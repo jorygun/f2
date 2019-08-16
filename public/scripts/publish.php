@@ -144,7 +144,11 @@ file_put_contents($last_published_ts,time());
             use_me = 0
             WHERE use_me > 0;
             ";
-         $result = $pdo->query($sql);
+         if (REPO == 'live'){
+        		$result = $pdo->query($sql);
+        	}
+        	else {echo "News items not updated on repo " . REPO . BRNL;}
+        	
         if (! $result){echo "Failed to set pub date on news items.<br>";}
 
         
