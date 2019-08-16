@@ -1,13 +1,13 @@
 <?php
 namespace digitalmx\flames;
+ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
 
 
 //BEGIN START
 	/*  STARTUP */
 ini_set('display_errors', 1);
 
-use \digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
 
 $root = $_SERVER['DOCUMENT_ROOT'];
 if (empty($root)){
@@ -15,6 +15,10 @@ if (empty($root)){
 	echo "Cannot determine root; using beta site." . "<br>\n";
 }
  require_once $root . '/init.php';;
+ 
+use \digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
+
  use digitalmx\MyPDO;
  $pdo = MyPDO::instance();
  
@@ -142,8 +146,11 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	AND username not like 'Flames %'
 	ORDER BY username
 	";
+echo $q;
 
 	 $result = $pdo->query($q)->fetchAll(\PDO::FETCH_ASSOC);
+u\echor ($result , 'fetchall');
+exit;
 
 	list ($report_data,$name_data) = report_changes($result,'updates');
 	$updates_html .= $report_data;

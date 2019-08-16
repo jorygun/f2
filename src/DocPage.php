@@ -42,7 +42,7 @@ EOT;
       if (!empty($options) && in_array('tiny',$options)){
          $t .= "
          <script src='/jsmx/tinymce/tinymce.min.js'></script>
-         <script src='/jsmx/tiny_init.js'></script>
+         <script src='/js/tiny_init.js'></script>
          ";
       }
       if (!empty($options) && in_array('ajax',$options)){

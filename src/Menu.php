@@ -246,7 +246,7 @@ EOT;
 		"<li><a href='$userlinkedin' target='_blank'>My LinkedIn Page</a>" : '';
 	
 	$t .= self::if_level(1,"
-		<li><a href='/?s=-1'>Log Out</a>
+		<li><a href='/?s=logout'>Log Out</a>
 		");
 	$t .= self::if_level(0,"
 		<li>-------------
