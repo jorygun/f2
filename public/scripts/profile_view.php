@@ -101,22 +101,6 @@ EOT;
 
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	 
-	 <link rel="stylesheet" href="/css/news3.css">
-	<script src="/js/f2js.js"></script>
-	<style type = 'text/css'>
-		.profile_frame {width:350px; padding:0px 1em 1em 1em; float:left;}
-		.current {border:1px solid green;}
-	</style>
-	<title>FlameSite Profile  - <?=$D_username?></title>
-</head>
-<body >
-<?=$navbar?>
 
 <h3 ><?=$D_username?>
 	<span class='normal'><?=$member_type?>
