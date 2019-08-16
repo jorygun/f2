@@ -12,9 +12,16 @@
 	
 	
 //END START
-$nav = new navBar(1);
-$navbar = $nav -> build_menu();
 
+	
+   $login->checkLogin(min); 
+      #or checkLevel(min) if already logged in.
+   
+	$page_title = "Profile";
+	$page_options = []; # ['ajax','tiny','votes']
+	
+   echo $page->startHead($page_title,$page_options); 
+ 	echo $page ->startBody($page_title);
 
 $my_sec_level = $_SESSION['level'];
 $user_id = $_SESSION['login']['user_id'];
