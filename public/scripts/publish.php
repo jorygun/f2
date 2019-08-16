@@ -9,7 +9,7 @@ namespace digitalmx\flames;
 	use digitalmx\MyPDO;
 	use digitalmx as u;
 
-   $login->checkLevel(4);
+   $login->checkLogin(4);
    $page_title = 'Publish News';
    $page_options = [];
    $page->startHead($page_title,$page_options);
