@@ -209,7 +209,7 @@ exit;
 		LIMIT 5
 		;
 	";
-	$result = $pdo->query($q)->fetchAll\PDO::FETCH_ASSOC);
+	$result = $pdo->query($q)->fetchAll(\PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'long lost');
 	$updates_html .= $report_data;
