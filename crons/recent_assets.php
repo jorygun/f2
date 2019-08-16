@@ -34,7 +34,7 @@ use \digitalmx\flames\Definitions as Defs;
 echo "Starting $script " . BRNL;
 
 
-$recent_asset_file = REPO_PATH . "/public/news/news_latest/recent_assets.html";
+$recent_asset_file = REPO_PATH . "/public/news/news_live/recent_assets.html";
 
 $archival_tags = Defs::$archival_tags;
 
@@ -75,7 +75,7 @@ $recent_report = report_recent_assets ($pst,$rowc,$cutoff);
 if ($test){ echo ($recent_report);}
 file_put_contents($recent_asset_file, $recent_report );
 if (! $quiet)
-echo "Recent assets updated" . BRNL;
+echo "$recent_asset_file updated" . BRNL;
 
 #####################
 
