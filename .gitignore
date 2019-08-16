@@ -24,7 +24,11 @@ vendor/
 *.log
 logs/
 unused/
-var/
+var/bulk_jobs/
+var/data/
+var/logs/
+var/queue/
+
 
 
 #files conaining live data

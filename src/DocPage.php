@@ -112,7 +112,7 @@ EOT;
 
    }
 
-  ( $t .= $_SESSION['menu']) || ($t .= 'Menu not created') ;
+   $t .= $_SESSION['menu'] ?? 'Menu not created' ;
    $t .= "<hr style='width: 100%; height: 2px;clear:both;'>";
 
    $t .= "</div>\n";

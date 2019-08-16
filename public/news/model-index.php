@@ -68,8 +68,6 @@ else {$subtitle = '';}
 
 
 increment_reads($condensed_date);
-$nav = new navBar(false);
-$navbar = $nav -> build_menu();
 
 
 ?>
@@ -102,7 +100,7 @@ $navbar = $nav -> build_menu();
 
 <?php
 
-echo $navbar;
+echo $_SESSION['menu'];
 
 
 
