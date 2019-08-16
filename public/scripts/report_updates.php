@@ -179,7 +179,7 @@ $name_fields = "username,user_amd,user_current,user_from,id, user_greet,user_abo
 	AND test_status = ''
 
 	";
-	$result = $pdo->query($q)->fetchAll(PDO::FETCH_ASSOC);
+	$result = $pdo->query($q)->fetchAll(\PDO::FETCH_ASSOC);
 
 	list ($report_data,$name_data) = report_changes($result,'deceased');
 	$updates_html .= $report_data;
