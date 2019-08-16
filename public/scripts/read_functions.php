@@ -97,7 +97,7 @@ function get_news_file($filename,$extra=''){
 	   		$file = "./$filename";
 	   # return "Found $file";
 	    
-	   elseif (file_exists (SITE_PATH . "/news/news_live/$filename")) {
+	   } elseif (file_exists (SITE_PATH . "/news/news_live/$filename")) {
 	   	$file = SITE_PATH . "/news/news_live/$filename"; 
 	   } elseif (file_exists (SITE_PATH ."/news/$filename")){
 	   	$file = SITE_PATH ."/news/$filename";
