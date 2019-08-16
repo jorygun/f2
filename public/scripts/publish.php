@@ -146,34 +146,36 @@ file_put_contents($last_published_ts,time());
             ";
          if (REPO == 'live'){
         		$result = $pdo->query($sql);
-        	}
-        	else {echo "News items not updated on repo " . REPO . BRNL;}
         	
-        if (! $result){echo "Failed to set pub date on news items.<br>";}
+        
+       		 if (! $result){echo "Failed to set pub date on news items.<br>";}
 
         
-        require_once "newsletter_index.class.php";
-        if ( $nli = new NewsletterIndex(true) ){
-        	echo "Updating Newsletter Index" . BRNL;
-        	#echo "$nli" . BRNL;
-        }
-        else{
-        	echo "NewsletterIndex failed";
-        }
-            #true forces rebuild
+			  require_once "newsletter_index.class.php";
+			  if ( $nli = new NewsletterIndex(true) ){
+				echo "Updating Newsletter Index" . BRNL;
+				#echo "$nli" . BRNL;
+			  }
+			  else{
+				echo "NewsletterIndex failed";
+			  }
+					#true forces rebuild
 
-        echo "Adding $condensed_date to reads database<br>";
-        $sql = "INSERT INTO `read_table` SET issue = '$condensed_date',read_cnt=0;";
-        $result = $pdo->query($sql);
-         if (! $result){echo "Add to reads database failed.<br>";}
+			  echo "Adding $condensed_date to reads database<br>";
+			  $sql = "INSERT INTO `read_table` SET issue = '$condensed_date',read_cnt=0;";
+			  $result = $pdo->query($sql);
+				if (! $result){echo "Add to reads database failed.<br>";}
 
-         #set count for preview issue to 0
-         $sql = "UPDATE read_table SET read_cnt=0 WHERE issue = 999999;";
-         $result = $pdo->query($sql);
+				#set count for preview issue to 0
+				$sql = "UPDATE read_table SET read_cnt=0 WHERE issue = 999999;";
+				$result = $pdo->query($sql);
 
-        #now rebuild the files
-        include './news_files2.php';
-		
+			  #now rebuild the files
+			  include './news_files2.php';
+			} else {
+				echo "News items not updated on repo " . REPO . BRNL;
+			}
+        	
 		 /* Now build the recent article and assets file */
     echo "Updating recent article titles" . BRNL ;
         require PROJ_PATH . '/crons/recent_articles.php';
