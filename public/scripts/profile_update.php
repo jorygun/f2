@@ -29,7 +29,7 @@ for this script id = user_id
 	$page_options = []; # ['ajax','tiny','votes']
 
    echo $page->startHead($page_title,$page_options);
-   echo <<<EOT;
+   echo <<<EOT
    	<script type="text/javascript" >
     	function validate_profile(theForm) {
 		 var s = '';
