@@ -1,0 +1,9 @@
+Welcome back, ::name:: !
+
+Happy days.  You just verified your email address,
+and we thought you were lost forever.
+
+Your personal login to the amdflames site: 
+   ::login::
+
+::closing::

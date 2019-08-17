@@ -1026,7 +1026,7 @@ public function getLogins($tag) {
         return $v;
     }
 	public function  setEmailStatus($uid,$ems) {
-		//if status is Y but is alread Y, status time won't get updated
+		//if status is Y but is already Y, status time won't get updated
 		// without this intervention
 		$set_time = ($ems == 'Y') ?
 		', email_last_validated = now()' : '';

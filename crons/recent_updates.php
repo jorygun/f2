@@ -1,54 +1,94 @@
 <?php
 namespace digitalmx\flames;
 
-use digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
+
 
 /**
-	callwith php recent.php [-t] [--repo <repo> ]
-	uses repo for where to put the result file
-	displays output if -t on
-	
-    * This script retrieves
+    * This script produces two reports:
+    * recent_assets.html - archival assets added to assets
+    * recent_articles.html - comments and votes on recent articles.
+    
+    does two things: it retrieves
     * the title and link for the most recently published
-    * articles, and reports on number of comments and vote status.
+    * articles, AND
+    * it retrieves the comments
+    * made on articles.
     *
-    * It then combines this data to produce a small html file in the
-    * /news_lastest directory called 'recent_articles.html'.
-    * This file is included in the newsletter index file.
     *
-    *This script is run by cron ... 
-	
-
- 
+    *This script is run by cron or other triggers
+    
 */
 
+/*  needs: Defs, pdo
 /*  STARTUP */
-
 $script = basename(__FILE__);
+
 if (! @defined ('INIT')) { include './cron-ini.php';}
 if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
 
-/**************   MAIN      ************/
- if (!$quiet)
+use \digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
+
+/* MAIN */
+ if (!$quiet) 
 echo "Starting $script " . BRNL;
+$recent_article_file = REPO_PATH . '/var/live/recent_articles.html';
+$recent_asset_file = REPO_PATH . "/var/live/recent_assets.html";
 
-$recent_articles = REPO_PATH . '/var/live/recent_articles.html';
-
+#get latest pub date
 $lastest_ts = trim(file_get_contents(REPO_PATH . "/var/data/last_published_ts.txt"));
 if (empty ($latest_ts)){ $latest_ts = strtotime(' - 14 days'); }
 
 $latest_pub_date = date('Y-m-d H:i',$lastest_ts);
- if (!$quiet)
-echo "Using latest pub date: $latest_pub_date" . BRNL;
+
+$archival_tags = Defs::$archival_tags;
+$archive_tag_set = '';
+foreach ( str_split($archival_tags) as $t){
+    $archive_tag_set .= "'$t',";
+}
+$archive_tag_set = rtrim($archive_tag_set,',') ;
 
 
-$recent_report = prepare_recent_report ($pdo, '',$latest_pub_date,'');
+#build asset report
+// any tag ('UI') has code ('U') contained in the set or archival_tags ('ABCUW');
+    $sql = "
+        SELECT id,title,type,status,vintage,tags,sizekb, date_entered from `assets`
+        WHERE date_entered > CURRENT_DATE - INTERVAL 3 WEEK
+            AND status in ('R','S')
+            AND tags is NOT NULL
+            AND tags REGEXP '[$archival_tags]'
+        ORDER BY date_entered DESC ;
+        ";
+
+
+    $pst = $pdo -> query ($sql);
+
+    $rowc = $pst -> rowCount();
+	$cutoff = date('d M Y',strtotime('-2 weeks'));
+    # echo  "$rowc articles found.\n";
+    if ($rowc == 0) {
+        if (file_exists($recent_asset_file)){unlink ($recent_asset_file);}
+        if (!$quiet) echo "No recent assets to report";
+        exit;
+    }
+
+$recent_assets = report_recent_assets ($pst,$rowc,$cutoff);
+
+if ($test){ echo ($recent_assets);}
+file_put_contents($recent_asset_file, $recent_assets );
+if (! $quiet)
+echo "$recent_asset_file updated" . BRNL;
+
+
+#build article report
+$recent_articles = report_recent_articles ($pdo, '',$latest_pub_date,'');
 // pdo, from, to
 // defaults to from 3 wks ago, to today, limit 30 articles
 
-if ($test){ echo ($recent_report);}
-else {file_put_contents($recent_articles, $recent_report );}
+if ($test){ echo ($recent_articles);}
+else {file_put_contents($recent_article_file, $recent_articles );}
+
+
 
 ###################################
 
@@ -205,3 +245,61 @@ function convert_dates ($to,$from) {
 
     return array($to_date,$from_date);
 }
+
+#####################
+
+
+function report_recent_assets ($pst,$rowc,$cutoff) {
+    if (!$asset_tags = Defs::$asset_tags) {
+    	die ("Did not get asset_tags");
+    }
+   
+
+    
+	$report = "<div style='margin-left:2em;float:left'>";
+    $report .=  "<h4>$rowc new Archival Assets</h4>";
+    $report .= "<p style='font-size:0.9em;'>(This list shows archival assets only, not all assets.  Find any asset on the site by using Search &gt; Search Graphics/Video. 'Multimedia' means streaming audio/video. )</p>";
+   $report .=  "<table class='alternate article_list'>";
+   $report .= "
+        <tr style='background:#cfc;'><th>Title (click to view)</th><th>Tags</th><th>Type</th><th>Vintage</th><th>MB</th></tr>
+        ";
+
+    foreach ($pst as $row) {
+        $id = $row['id'];
+        $link = "<a href='/scripts/asset_display.php?id=$id' target='asset_view'>"
+            . htmlspecialchars($row['title'],ENT_QUOTES)
+            .  "</a>";
+
+        $tags = $row['tags']; $tagnames=[];
+        foreach (str_split($tags) as $tag){
+            $tagnames[] =  $asset_tags[$tag];
+        }
+        $tagtext = implode(", ",$tagnames);
+        $vintage = (empty($row['vintage']))?'?':$row['vintage'];
+		$sizemb = round($row['sizekb'] / 1000,0);
+		
+        $report .=  <<<EOT
+ <tr >
+	<td>$link</td>
+	<td>$tagtext </td><td>${row['type']}</td>
+	<td style='text-align:center'>$vintage</td>
+	<td style='text-align:center'>$sizemb</td>
+</tr>
+
+EOT;
+    }
+    $report .=  "</table>\n";
+     $report .= "<small>Updated ". date('d M H:i T') . "</small></div>\n\n";
+
+
+    return $report;
+}
+
+
+
+//
+
+
+
+
+

@@ -3,6 +3,7 @@ namespace digitalmx\flames;
 
 /*
 Script called by ajax.js 
+or called by a ajax.php?ajax=request GET command.
 
 
 */
@@ -20,15 +21,14 @@ use digitalmx\flames\TakeAction;
 use digitalmx\flames\BulkMail;
 
 
-// if (empty($_SESSION['login']['user_id'])){
-// 	echo ("Not logged in.");
-// 	exit;
-// }
 
+if (!empty ($_GET['ajax']){
+	$_POST['ajax'] = $_GET['ajax'];
+	$_POST 
+	
 
-if (empty($_POST['ajax'] )){
+if (!empty($_POST['ajax'] )){
 	echo "No ajax request";
-	u\echor($_POST,'post');
 	exit;
 }
 
