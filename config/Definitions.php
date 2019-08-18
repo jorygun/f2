@@ -82,7 +82,7 @@ public static $ems_codes = array(
 		'E1'	=> ['Email change being validated','E2',3],
 		'E2'	=> ['Email change being validated (2nd)','LE',3],
 		'N1'	=> ['New Signup','N2',2],
-		'N2'	=> ['New Signup (2nd)','XX',3],
+		'N2'	=> ['New Signup (2nd)','NX',3],
 		'D'     => ['Lost but logging in. (Deferred lost)','',7],
 
 		);

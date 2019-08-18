@@ -271,7 +271,7 @@ $log .=  "\n#### Testing last activity more than $limit days\n";
         $incidents += $rows_found;
 
 		foreach ($result as $row){
-			echo "Processing ${row['username']}\n";
+			#echo "Processing ${row['username']}\n";
 			$uid = $row['user_id'];
 
 			$this_email = $row['user_email'];
