@@ -29,63 +29,60 @@ if (!empty($_SERVER['QUERY_STRING'])) {
             $_POST['uid'] = substr($a, 1); #rest of string
             break;
         default:
-            $_POST['ajax'] = '';
+           
     }
 }
-   
 
-if (empty($_POST['ajax'])) {
-    echo "No action request";
-    exit;
-}
 
- 
-switch ($_POST['ajax']) {
-    case 'vote':
-        return vote_action($_POST);
-      break;
+if (! empty ($_POST)) {
+	switch ($_POST['ajax']) {
+		case 'vote':
+			return vote_action($_POST);
+		  break;
    
-    case 'bulkmail':
-        return cancel_bulk($_POST['job']);
-      break;
-      
-    case 'sendLogin':
-        return sendLogin($_POST['uid'], $member);
-      break;
-    case 'verifyEmail':
-		echo  verifyEmail($_POST['uid'], $member) ;
+		case 'bulkmail':
+			return cancel_bulk($_POST['job']);
+		  break;
+	  
+		case 'sendLogin':
+			return sendLogin($_POST['uid'], $member);
+		  break;
+		case 'verifyEmail':
+			echo  verifyEmail($_POST['uid'], $member) ;
 			
-        break;
-     case 'verifyEmailQ':
-		if ($r = verifyEmail($_POST['uid'], $member)) {
-			echo "Email Validated $r";
-		}
-		else {echo "Failed";}
-        break;
-    case 'xout':
-        return xoutUser($_POST['uid'], $member);
-      break;
-      
-    case 'getmess':
-       #echo 'at get mess';
-        echo getmess($_POST['type']);
-        break;
-    case 'markContribute':
-        return markContribute($_POST['uid'], $member);
-      break;
-    case 'initNext':
-        echo initNext();
-        break;
-    case 'setNewsTitle':
-        echo setNewsTitle($_POST['title']);
-        break;
-    case 'bounceEmail':
-        echo bounceEmail($_POST['uid'], $member);
-        break;
-      
-    default:
-        echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true);
+			break;
+		 case 'verifyEmailQ':
+			if ($r = verifyEmail($_POST['uid'], $member)) {
+				echo "Email Validated $r";
+			}
+			else {echo "Failed";}
+			break;
+		case 'xout':
+			return xoutUser($_POST['uid'], $member);
+		  break;
+	  
+		case 'getmess':
+		   #echo 'at get mess';
+			echo getmess($_POST['type']);
+			break;
+		case 'markContribute':
+			return markContribute($_POST['uid'], $member);
+		  break;
+		case 'initNext':
+			echo initNext();
+			break;
+		case 'setNewsTitle':
+			echo setNewsTitle($_POST['title']);
+			break;
+		case 'bounceEmail':
+			echo bounceEmail($_POST['uid'], $member);
+			break;
+	  
+		default:
+			echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true);
+	}
 }
+// else, just load the script so the functions can be used.
 
 function getmess($type)
 {
