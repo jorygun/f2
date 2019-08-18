@@ -37,7 +37,7 @@ $test_status_select = ($test)? " AND test_status != '' " : '' ;
 
 $member = new Member();
 $messenger = new Messenger(); 
-$messenger->setTestMode($test); #false = test mode
+$messenger->setTestMode($test); #true = test mode
 
 
 
@@ -105,18 +105,22 @@ $log .=  "\n#### Testing x-ed out records\n";
 $sql = "SELECT $sweep_fields FROM members_f2 WHERE
     status like 'X%'  ;";
 
-if ( $result = $pdo->query($sql) ){
-		$incident_count = $result->rowCount();
-        $log .=  "Deleting $incident_count records\n";
+$result = $pdo->query($sql);
+$incident_count = $result->rowCount();
+
+if ( $incident_count ){
         $sql = "DELETE FROM `members_f2` WHERE status like 'X%' ";
    if (! $test ){
+   	$log .=  "Deleting $incident_count records\n";
         $result = $pdo->query($sql);
     }
     else { 
-    	echo "Test mode: records not deleted";
+    	$log .= "Test mode: $incident_count records found but not deleted\n";
     }
-    $incidents += $incident_count;
 }
+ echo "$incident_count X-ed out records found.\n\n";
+ $incidents += $incident_count;
+$incident_count = 0;
 
 // test for each of the transitional status ages
 #sequence is critical! or you'll catch one you just changed.
@@ -146,6 +150,7 @@ foreach ($ems_test_sequence as $this_ems){
 	# u\echor($row,'data row');
 	
 			++$tags;
+			
 			 $id = $row['id'];
 			 $uid = $row['user_id'];
 			 $username=$row['username'];
@@ -163,13 +168,14 @@ foreach ($ems_test_sequence as $this_ems){
 				else {
 					  $log .=  "Failed update_ems  on uid $uid to status $next_ems.\n" ;
 				 }
-				 
-
 	  }
-	  $incidents += $tags;
-		$log .= "    $tags found.\n";
+	  $incident_count += $tags;
+		$log .= "    $tags aged out records $this_ems found.\n";
 }
-
+ 
+ $incidents += $incident_count;
+echo "$incident_count records with aged out ems found\n\n";
+$incident_count = 0;
 
 // test for new members verified but not welcomed
 
@@ -206,6 +212,7 @@ $sql = "SELECT $sweep_fields FROM `members_f2` WHERE
 		 }
 		 $incidents += $rows_found;
 	}
+echo "$rows_found new users needing welcome\n";
 
 #echo "Line " . __LINE__ . "\n";
 
@@ -260,7 +267,7 @@ $log .=  "\n#### Testing last activity more than $limit days\n";
 	if ( $result = $pdo->query($sql) ){
 		$rows_found = $result->rowCount();
 		$log .= "Users aged out: $rows_found\n";
-		echo "$rows_found found.\n";
+		echo "$rows_found aged out users found.\n";
         $incidents += $rows_found;
 
 		foreach ($result as $row){
@@ -290,7 +297,8 @@ $log .=  "\n#### Testing last activity more than $limit days\n";
 			);
 		}
 	}
-
+		$incidents += $rows_found;
+	echo "Total incidents: $incidents\n\n";
 
 
 #####################

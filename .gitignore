@@ -28,7 +28,7 @@ var/bulk_jobs/
 var/data/
 var/logs/
 var/queue/
-
+var/live/
 
 
 #files conaining live data
