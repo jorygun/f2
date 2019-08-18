@@ -171,8 +171,11 @@ function setNewsTitle($title)
 
 function verifyEmail($uid, $member)
 {
-   //tag may be uid or email
-   
+	$ems = $member->getEmailStatus($uid);
+	if (substr($ems,0,1) == 'L'){
+		 $messenger = new Messenger(); #true = test
+		 $messenger->sendMessages($uid,'not-lost');
+		}
   return $member->verifyEmail($uid) ;
 }
 

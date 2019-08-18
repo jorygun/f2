@@ -66,6 +66,7 @@ private static $admin_codes = array(
 	'LO' => "Lost other. No code supplied.",
 	'LS' => "New signup failed to confirm email.",
 	'LE' => "User never confirmed change of email.",
+	
 	);
 
 
@@ -225,7 +226,7 @@ and change it in your profile.
 				$em['name'] = $row['username'];
 				
 #u\echor ($em, 'message'); 
-			echo $this->send_mail($em);
+			$this->send_mail($em);
 			}
 		
 		  /* prepare email to admin
@@ -249,7 +250,7 @@ and change it in your profile.
 
 
 
-			echo $this->send_mail($em);
+			 $this->send_mail($em);
 		}
 		
 	

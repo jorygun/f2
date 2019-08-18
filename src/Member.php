@@ -956,7 +956,13 @@ public function getLogins($tag) {
         return u\make_date( $last,'human','time');
     }
     
-    
+    public function getEmailStatus($uid) {
+    	$md = $this->getMemberData($uid) ;
+    	if ($md['count'] == 0 or !empty($mb['error'])) {
+            return false;
+        }
+        return $md ['data']['email_status'];
+    }
     
      public function setProfileVerified ($id) {
         $sql = "Update `$this->memberTable` set profile_validated = NOW(),email_status='Y'
