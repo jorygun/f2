@@ -15,7 +15,9 @@ ini_set('display_errors', 1);
 $script = basename(__FILE__);
 $dir=dirname(__FILE__);
 
-include "$dir/cron-ini.php";
+if (! @defined ('INIT')) {
+	include "$dir/cron-ini.php";
+}
 /* sets BRNL, etc; 
 	REPO_PATH, PROJ_PATH, SITE, SITE_URL, SITE_PATH, CONFIG_INI
 	$pdo, $test, $quiet  
@@ -31,7 +33,7 @@ use digitalmx\flames\Member;
 
 // set older test flags
 $mode = ($test)? 'Test':'Real';
-$test_select = ($test)? " AND test_status != '' " : '' ;
+$test_status_select = ($test)? " AND test_status != '' " : '' ;
 
 $member = new Member();
 $messenger = new Messenger(); 
@@ -41,7 +43,8 @@ $messenger->setMode(true); #false = test mode
 
 $sleep_interval = 10;// delay in seconds between emails.
 set_time_limit(300); // 30sec. is default 0 is none;
- $limit = 365; #days without activity
+
+$limit = 365; #days without activity
     $limit2=$limit*2;
     
 $member_status_set = Defs::getMemberInSet();
@@ -71,22 +74,20 @@ $sweep_fields = '
 	profile_validated
 ';
 $dt = new DateTime();
-$sql_now = $dt->format('Y-m-d');
-$timestamp = $dt->format('Ymd_His');
-$english_now = $dt->format("M j, H:i a");
-
-
+$now_sql = $dt->format('Y-m-d');
+$now_datestamp = $dt->format('Ymd_His');
+$now_human = $dt->format("M j, H:i a");
 
 
 $sweep_log_dir = REPO_PATH . "/var/logs/sweep_logs";
-$sweep_log = $sweep_log_dir . "/${timestamp}-${mode}.txt";
+$sweep_log = $sweep_log_dir . "/${now_datestamp}-${mode}.txt";
 if (! $quiet)
 echo "Logging to $sweep_log" . BRNL;
 
 
 
 
-$log = sprintf ("Sweep run %s at %s\n\n",$mode, Date ("Y-m-d H:i"));
+$log = sprintf ("Sweep run %s at %s\n\n",$mode,$now_human;
 $log_format1 = "(%s) %-25s  %-20s (id %4d) status %2s %4d days. Change to %s.\n";
 $log_format2 = "(%s) %-25s  %-20s (id %4d) Ems %2s. Change to %s. \n\tLogin %10s; Em-valid %10s; Prof-valid %10s.\n";
 
@@ -105,7 +106,9 @@ if ( $result = $pdo->query($sql) ){
         $sql = "DELETE FROM `members_f2` WHERE status like 'X%' ";
    if (! $test ){
         $result = $pdo->query($sql);
-       
+    }
+    else { 
+    	echo "Test mode: records not deleted";
     }
     $incidents += $incident_count;
 }
@@ -118,7 +121,7 @@ $log .= "##### MAIN TEST SEQUENCE ###\n";
 $main_test = "SELECT $sweep_fields FROM `members_f2` 
 	WHERE
 	status in ($member_status_set)
-	$test_select
+	$test_status_select
 	AND email_status = ?
 	AND email_status_time <  DATE_SUB(NOW(), INTERVAL ? day)
 	 ;";
@@ -142,7 +145,7 @@ foreach ($ems_test_sequence as $this_ems){
 			 $uid = $row['user_id'];
 			 $username=$row['username'];
 			 #$log .=  "retrieving user id $uid $username<br>\n";
-			 $ems_date = u\make_date($row['email_status_time'],'human' ); #is a timestamp
+			 $ems_date = u\make_date($row['email_status_time'],'human' ); #is a time stamp
 			$ems_age = u\days_ago($row['email_status_time']);
 				
 			if (
@@ -179,7 +182,7 @@ $sql = "SELECT $sweep_fields FROM `members_f2` WHERE
 		foreach($result as $row){
 			$uid = $row['user_id'];
 
-			 $ems_date = u\make_date($row['email_status_time'],'human'); #is a timestamp
+			 $ems_date = u\make_date($row['email_status_time'],'human'); #is a now_datestamp
 			$ems_age = u\days_ago($row['email_status_time']);
 
 			$log .=  sprintf ( $log_format1, $mode, $row['user_email'],$row['username'],$uid,$this_ems,$ems_age,'Send Welcome');
@@ -204,37 +207,15 @@ $sql = "SELECT $sweep_fields FROM `members_f2` WHERE
 // Finally test last contact a long long time ago
 
 $log .=  "\n#### Testing last activity more than $limit days\n";
-// 	$sql = "SELECT $sweep_fields FROM `members_f2` WHERE
-// 		STATUS in ($member_status_set)
-// 		AND email_status in ('Q','Y')
-// 		AND
-// 			(last_login IS NULL
-// 			OR
-// 			last_login < NOW() - INTERVAL $limit DAY
-// 			)
-// 		AND
-//             (
-//                 email_last_validated IS NULL
-//                 OR
-//                 email_last_validated < NOW() - INTERVAL $limit2 DAY
-//             )
-// 
-// 		AND
-// 			(
-// 				profile_validated IS NULL or
-// 				profile_validated  <  NOW() - INTERVAL $limit2 DAY
-// 			)
-//          
-// 		$test_select
-// 			ORDER BY profile_validated
-// 			LIMIT 2
-// 			;";
-// 			#echo $sql,"<br>";
-// 	//simpler sql for testing
-  $sql = "SELECT $sweep_fields FROM `members_f2` WHERE
+	if (!$test){
+	$sql = "SELECT $sweep_fields FROM `members_f2` WHERE
 		STATUS in ($member_status_set)
 		AND email_status in ('Q','Y')
-		
+		AND
+			(last_login IS NULL
+			OR
+			last_login < NOW() - INTERVAL $limit DAY
+			)
 		AND
             (
                 email_last_validated IS NULL
@@ -242,11 +223,35 @@ $log .=  "\n#### Testing last activity more than $limit days\n";
                 email_last_validated < NOW() - INTERVAL $limit2 DAY
             )
 
-		
-		$test_select
+		AND
+			(
+				profile_validated IS NULL or
+				profile_validated  <  NOW() - INTERVAL $limit2 DAY
+			)
+         
 			ORDER BY profile_validated
-		
+			LIMIT 2
 			;";
+			#echo $sql,"<br>";
+	
+	} else { //simpler sql for testing
+	  $sql = "SELECT $sweep_fields FROM `members_f2` WHERE
+			STATUS in ($member_status_set)
+			AND email_status in ('Q','Y')
+		
+			AND
+					(
+						 email_last_validated IS NULL
+						 OR
+						 email_last_validated < NOW() - INTERVAL $limit DAY
+					)
+
+		
+			$test_status_select
+				ORDER BY profile_validated
+		
+		;";
+		}
 	if ( $result = $pdo->query($sql) ){
 		$rows_found = $result->rowCount();
 		$log .= "Users aged out: $rows_found\n";
@@ -260,12 +265,12 @@ $log .=  "\n#### Testing last activity more than $limit days\n";
 			$this_email = $row['user_email'];
 			$next_ems = 'A1';
 
-			$ems_date = u\make_date($row['email_status_time'],'human'); #is a timestamp
+			$ems_date = u\make_date($row['email_status_time'],'human'); #is a now_datestamp
 			$ems_age = u\days_ago($row['email_status_time']);
 
 			if (1 
 				 && $messenger->sendMessages($uid,$next_ems)
-				# && $member->setEmailStatus($uid,$next_ems) 
+				 && $member->setEmailStatus($uid,$next_ems) 
 				 ){
 				#ok
 			 } else {
@@ -304,7 +309,7 @@ EOF;
 if ($test) {
 	echo $admin_notice;
 } elseif ($incidents > 0) {
-    mail('admin@amdflames.org',"Cron - $sql_now: $incidents incidents",$admin_notice);
+    mail('admin@amdflames.org',"Cron - $now_sql: $incidents incidents",$admin_notice);
 }
 
 exit;

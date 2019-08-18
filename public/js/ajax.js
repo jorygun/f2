@@ -3,7 +3,7 @@ function addVote(id,rank) {
     // test for id >0, rank = up | down
     
 	$.ajax({
-	url: "/ajax.php",
+	url: "/action.php",
 	data:'ajax=vote&item_id='+id+'&this_vote='+rank,
 	type: "POST",
 	beforeSend: function(){
@@ -18,7 +18,7 @@ function addVote(id,rank) {
 function cancel_bulk(job) {
      
 	$.ajax({
-	url: "/ajax.php",
+	url: "/action.php",
 	data:'ajax=bulkmail&job='+job,
 	type: "POST",
 	
@@ -31,13 +31,31 @@ function cancel_bulk(job) {
 
 // this scriput used for verifyEmail, sendLogin,
 
-function takeAction (uid,action) {
+function verifyEmail(uid) {
+
+    $.ajax({
+        url: "/action.php",
+        data: 'ajax=verifyEmail&uid='+uid,
+        type: "POST",
+        success: function(response) {
+            $('#emver').html(response);
+            $('#emstat').html('Y');
+        }
+    });
+}
+function takeAction (uid,action,affects='',message='') {
+    var objid='#'+affects;
    $.ajax({
-   url: "/ajax.php",
+   url: "/action.php",
    data: 'ajax='+action+'&uid='+uid,
    type: "POST",
    success: function (response) {
-               alert (response);
+                if (message != ''){
+                    alert (message);
+                }
+               if (affects != '') {
+                    $(objid).html(response);
+                }
         }
  });  
 }

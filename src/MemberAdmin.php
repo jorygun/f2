@@ -53,10 +53,11 @@ class MemberAdmin {
 		   $username = u\entity_spec($row['username']);
 		  $last_login = date('d M, Y',strtotime($row['last_login']));
 		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
-		  	$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid);
-		  	$markContributeButton = f\actionButton('Contributed','markContribute',$uid);
-		  	$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid);
-		  	
+		  	#$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid);
+		  	$validateEmailButton = "<button type='button' onClick='verifyEmail($uid)'>Verify</button>";
+		  	$markContributeButton = f\actionButton('Contributed','markContribute',$uid,'cdate');
+		  	$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid,'emstat');
+		  	$cdate = date('d M, Y', strtotime($row['contributed']));
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
        
       $o .=  "<tr>
@@ -71,12 +72,12 @@ class MemberAdmin {
 		
        $o .= "<tr style='text-align:center'>
        <td>${row['status']}</td>
-       <td>${row['email_status']}</td>
-        <td>$email_last_validated</td>
+       <td id='emstat'>${row['email_status']}</td>
+        <td id='emver'>$email_last_validated</td>
         <td>$last_login</td>
 
           <td>${row['no_bulk']}</td>
-          <td></td>
+          <td id='cdate'>$cdate</td>
           <td></td>
 
        </tr>";

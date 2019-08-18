@@ -11,11 +11,15 @@ use Digitalmx\Flames\Member;
 
 
 
-function actionButton($label,$action,$uid) {
+function actionButton($label,$action,$uid,$affects='',$message='') {
    	// script to buld button for ajax
+   	// label is the text on the button
+   	// action is the action defined in action.php script
+   	// uid is the uid which all scripts using this function require
+   	// affects is the #id of the object that should get new text returned,
    	$button = '<button type="button" onClick="takeAction('
    		. $uid
-   		. ",'$action')\">"
+   		. ",'$action','$affects','$message')\">"
    		. $label
    		. "</button>";
    	return $button;

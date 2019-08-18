@@ -174,6 +174,7 @@ private static $long_profile_fields = array (
  	'no_bulk',
  	'upw',
  	'linkedin',
+ 	'contributed',
  
  );
  #limited fields returned from member listss
@@ -870,7 +871,7 @@ public function getLogins($tag) {
    
     public function verifyEmail ($id) {
 		 if ($this->setEmailStatus($id,'Y') ){
-			return true;
+			return date('d M, Y');
 		 } else {
 			return false;
 		 }
@@ -1035,10 +1036,10 @@ public function getLogins($tag) {
 			$set_time
 			WHERE user_id = '$uid';";
 		
-		if (! $result = $this->pdo->query($sql) ){
-			return false;
+		if ($this->pdo->query($sql) ){
+			return date('d M, Y');
 		}
-		return true;
+		return false;
 	}
 	
 	public function xoutUser ($uid) {
@@ -1055,7 +1056,7 @@ public function getLogins($tag) {
 		if (! $result = $this->pdo->query($sql) ){
 			return false;
 		}
-		return true;
+		return date('d M, Y');
 	}
 	
 } #end class

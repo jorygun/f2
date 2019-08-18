@@ -9,6 +9,7 @@ use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 use digitalmx\flames\Member;
 	use digitalmx\MyPDO;
+use digitalmx\flames as f;
 	
 $proj_dir = dirname(__DIR__); #flames
 require_once "$proj_dir/vendor/autoload.php";
@@ -165,7 +166,7 @@ and change it in your profile.
 		$em['message'] = $message;
 		$em['to'] = $email;
 		$em['name'] = $name;
-		$em['header']['BCC'] = 'admin@amdflames.org';
+		$em['header'] = array('BCC' => 'admin@amdflames.org');
 	
 
 		$response = $this->send_mail($em) ;
@@ -284,8 +285,9 @@ and change it in your profile.
 		
 	private function buildPlaceholders ($row) {
 		$login = $row['login_string'] ;
+		$uid = f\splitLogin($login)[0];
 		$this->replacements ['::login::'] = 'https://amdflames.org/?s=' . $login;
-		$verify_code =  SITE_URL . "/scripts/verify_email.php?s=$login";
+		$verify_code =  SITE_URL . "/action.php?V" . $uid;
 		$this->replacements ['::verify::'] = $verify_code;
 		$this->replacements['::name::'] = $row['username'];
 		$this->replacements['::current_email::'] = $row['user_email'];
@@ -336,13 +338,12 @@ Activity
 	private function send_mail($data) {
 		//$data arry for to,subj,msg, and header
 		//header is array to be joined to make header
-		$header='';
-		$header_array = $data['header'];
 		
-		
-		foreach ($header_array as $key=>$val){
-			 $this->mailer->addCustomHeader($key,$val);
-		}
+		if (!empty($data['header'])){
+			foreach ($data['header'] as $key=>$val){
+				 $this->mailer->addCustomHeader($key,$val);
+			}
+	}
 	
 		if ($this->test) {
 			$response =  "<h3>send email Test:</h3>" ;
