@@ -16,24 +16,49 @@ use digitalmx\flames\Member;
 use digitalmx\flames\Messenger;
 use digitalmx as u;
 use digitalmx\flames as f;
-use digitalmx\flames\TakeAction;
-#$actor = new TakeAction();
+#use digitalmx\flames\ActionCodes;
+
 use digitalmx\flames\BulkMail;
 
+// if request came in from a get, the
+// query string tells you what to do.
 if (!empty($_SERVER['QUERY_STRING'])) {
-	$a =$_SERVER['QUERY_STRING'];
+	$q =$_SERVER['QUERY_STRING'];
+	#list ($action,$uid) = ;
+	$action = substr($q,0,1);
+	$uid = substr($q, 1); #rest of string
+	$page_options = []; # ['ajax','tiny','votes']
+	
 	#echo "Action: " . $a . BRNL;
-    switch (substr($a, 0, 1)) {
+	
+    switch ($action) {
         case 'V':
-            $_POST['ajax'] = 'verifyEmailQ';
-            $_POST['uid'] = substr($a, 1); #rest of string
+            $page_title = "AMD Flames Email Validation";
             break;
+            
         default:
+        	$page_title = 'AMD Flames Action Handler';
            
     }
+    
+	echo $page->startHead($page_title,$page_options); 
+ 	echo $page ->startBody($page_title,0);
+ 	
+ 	switch ($action) {
+ 		case 'V':
+ 			if ($r = verifyEmail($uid, $member)) {
+				echo "Email Validated $r";
+			}
+			else {echo "Failed";}
+ 			break;
+ 		default:
+ 			echo "No Action Requested";
+ 
+ 	}
+ 		
 }
 
-
+// from ajax, it's a post
 if (! empty ($_POST)) {
 	switch ($_POST['ajax']) {
 		case 'vote':
@@ -51,12 +76,8 @@ if (! empty ($_POST)) {
 			echo  verifyEmail($_POST['uid'], $member) ;
 			
 			break;
-		 case 'verifyEmailQ':
-			if ($r = verifyEmail($_POST['uid'], $member)) {
-				echo "Email Validated $r";
-			}
-			else {echo "Failed";}
-			break;
+		 
+			
 		case 'xout':
 			return xoutUser($_POST['uid'], $member);
 		  break;

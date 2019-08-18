@@ -8,7 +8,7 @@ use Digitalmx\Lib as u;
 */
 
 
-class TakeAction  {
+class ActionCodes  {
 
 
 private $table_defs = [];
@@ -18,13 +18,6 @@ private $news;
 
 
 public function __construct(\Slim\Container $ci) {;
-        $settings = $ci->get('settings');
-        $this->table_defs  = $settings['appvars']['DB_TABLES'];
-        $this->pdo = $ci->get('pdo');
-        $this->member_controller = $ci->get('member_controller');
-        $this->member = $ci->get('member');
-        $this->messenger = $ci->get('messenger');
-        $this->news = $ci->get('news');
         
 }
     

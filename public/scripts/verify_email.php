@@ -4,34 +4,16 @@
 
 */
 
-
-//BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames as f;
-	#if (f2_security_below(0)){exit;}
-//END START
-
-
-$error_msg = "No record found. Please contact administrator at admin@digitalmx.com";
-
-
-	$page_title = "Email Validation";
-	$page_options = []; # ['ajax','tiny','votes']
-	
-   echo $page->startHead($page_title,$page_options); 
- 	echo $page ->startBody($page_title);
-
 if ($ident = $_GET['s']){
   		$uid = substr($ident,-5); #last 5
-  	}
+  		if (!is_numeric($uid)){
+  			throw new Exception ("Could not determine correct action.  
+  			Please contact admin at admin@amdflames.org .");
+  		}
+	header ("location: /action.php/?V" . $uid);
 
-	include $_SERVER['DOCUMENT_ROOT'] . '/action.php';
-	if ($r = f\verifyEmail($uid, $member)) {
-			echo "Email Validated $r";
-		}
-		else {echo "Failed";}
-
-	
-
-	
+} else {throw new Exception ("Could not determine correct action.  
+  			Please contact admin at admin@amdflames.org .");
+  		}
+  		
+  	

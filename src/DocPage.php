@@ -63,7 +63,7 @@ EOT;
 
 
 
-   public function startBody($title,$style=2,$subtitle='') {
+   public function startBody($title='Someone Forgot To Enter The Title',$style=2,$subtitle='') {
 	//style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page
       $t = "\n</head>\n<body>\n";
       $t .= "<div class='page_head'>\n";
@@ -84,25 +84,29 @@ EOT;
 </div>
 EOT;
          break;
-      case 1:
+      case 1: #for newsletter
          $t .= <<<EOT
          <img class='left' alt='AMD Flames' src='/graphics/logo-FLAMEs.gif'>
          <p class='title'>FLAME<i>news</i><br>
          <span style='font-size:0.5em;'>$subtitle</span>
          </p>
+         ${_SESSION['menu']}
 EOT;
+
          break;
-         case 2:
+         case 2: #other pages
          $t .= <<<EOT
          <img class='left' alt='AMD Flames' src='/graphics/logo69x89.png'>
          <p class='title'>$title<br>
          <span style='font-size:0.5em;'>$subtitle</span>
          </p>
+          ${_SESSION['menu']}
 EOT;
          break;
-               case 0:
+         case 0: #nothing at top of page
          $t .= <<<EOT
-         
+          <img class='left' alt='AMD Flames' src='/graphics/logo69x89.png'>
+         <p class='title'>$title</p>
          
 EOT;
          break;
@@ -112,7 +116,7 @@ EOT;
 
    }
 
-   $t .= $_SESSION['menu'] ?? 'Menu not created' ;
+   
    $t .= "<hr style='width: 100%; height: 2px;clear:both;'>";
 
    $t .= "</div>\n";
