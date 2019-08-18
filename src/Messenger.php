@@ -140,9 +140,8 @@ and change it in your profile.
 		$this->mailer->isSendmail();
 		$this->mailer->SMTPKeepAlive = true; 
 	}
-	public function setMode($mode=true ) {
-		// false = test mode
-		$this->test = ! $mode;
+	public function setTestMode($test=false ) {
+		$this->test = $test;
 	}
 		
 	public function sendLogins($tag,$msg){

@@ -37,7 +37,7 @@ $test_status_select = ($test)? " AND test_status != '' " : '' ;
 
 $member = new Member();
 $messenger = new Messenger(); 
-$messenger->setMode(true); #false = test mode
+$messenger->setTestMode($test); #false = test mode
 
 
 
@@ -48,7 +48,12 @@ $limit = 365; #days without activity
     $limit2=$limit*2;
     
 $member_status_set = Defs::getMemberInSet();
+
+
+#sequence is critical! or you'll catch one you just changed.
 $ems_test_sequence = array ('N2','N1','E2','E1','A4','A3','A2','A1','B2','B1','D');
+
+
 #frields from members needed for processing.
 // $sweep_fields = '
 // 	id,
@@ -87,7 +92,7 @@ echo "Logging to $sweep_log" . BRNL;
 
 
 
-$log = sprintf ("Sweep run %s at %s\n\n",$mode,$now_human;
+$log = sprintf ("Sweep run %s at %s\n\n",$mode,$now_human);
 $log_format1 = "(%s) %-25s  %-20s (id %4d) status %2s %4d days. Change to %s.\n";
 $log_format2 = "(%s) %-25s  %-20s (id %4d) Ems %2s. Change to %s. \n\tLogin %10s; Em-valid %10s; Prof-valid %10s.\n";
 
@@ -148,15 +153,15 @@ foreach ($ems_test_sequence as $this_ems){
 			 $ems_date = u\make_date($row['email_status_time'],'human' ); #is a time stamp
 			$ems_age = u\days_ago($row['email_status_time']);
 				
-			if (
-				$messenger->sendMessages($uid,$next_ems)
-				# && $member->setEmailStatus($uid,$next_ems) 
+			if (! $test
+				&& $messenger->sendMessages($uid,$next_ems)
+				 && $member->setEmailStatus($uid,$next_ems) 
 				 
 				){
 					$log .= "\t($mode) Updated $uid $username to $next_ems\n";
 				 }
 				else {
-					  $log .=  "Failed update_ems  on uid $uid to status $next_ems." ;
+					  $log .=  "Failed update_ems  on uid $uid to status $next_ems.\n" ;
 				 }
 				 
 
@@ -268,7 +273,7 @@ $log .=  "\n#### Testing last activity more than $limit days\n";
 			$ems_date = u\make_date($row['email_status_time'],'human'); #is a now_datestamp
 			$ems_age = u\days_ago($row['email_status_time']);
 
-			if (1 
+			if (!$test 
 				 && $messenger->sendMessages($uid,$next_ems)
 				 && $member->setEmailStatus($uid,$next_ems) 
 				 ){
