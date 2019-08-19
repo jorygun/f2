@@ -13,8 +13,6 @@
 	
   
 	
-	$pagetitle="";
-$pageoptions=[]; #ajax, votes, tiny 
 
 if ($login->checkLogin(0)){
 	$page_title = "Current Opportunities";

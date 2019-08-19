@@ -224,11 +224,13 @@ private static $long_profile_fields = array (
     private $info='';
     private $error='';
     private $credential; #not sure what this is for
+    private $test;
   
     # plus record count and data
     
- public function __construct()
+ public function __construct($test=false)
     {
+    $this->test = $test;
        
 	$this->pdo = MyPDO::instance();
 	$this->std_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
@@ -1036,14 +1038,23 @@ public function getLogins($tag) {
 		//if status is Y but is already Y, status time won't get updated
 		// without this intervention
 		$set_time = ($ems == 'Y') ?
-		', email_last_validated = now()' : '';
-			
+		', email_last_validated = NOW()' : '';
+		
 		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
 			$set_time
 			WHERE user_id = '$uid';";
-		
-		if ($this->pdo->query($sql) ){
-			return date('d M, Y');
+		if ($this->test){
+			echo "Test mode.  SQL \n" . $sql . "\n";
+			return;
+		}
+		try {
+			if ($this->pdo->query($sql) ){
+				return date('d M, Y');
+			}
+		} catch (Exception $e) {
+			echo "PDO failed: " . $e->getMessage();
+			echo "SQL: " . $sql  . BRNL . BRNL;;
+			exit;
 		}
 		return false;
 	}
