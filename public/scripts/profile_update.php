@@ -8,6 +8,7 @@
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx as u;
 	use digitalmx\flames as f;
+	use digitalmx\flames\DocPage;
 
 
 //END START

@@ -58,10 +58,12 @@ class MemberAdmin {
 		  	$markContributeButton = f\actionButton('Contributed','markContribute',$uid,'cdate');
 		  	$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid,'emstat');
 		  	$cdate = date('d M, Y', strtotime($row['contributed']));
+		  
+		  	
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
        
       $o .=  "<tr>
-        <td colspan='2'><b>$username</b></td>
+        <td colspan='2'><b>$username</b</td>
 			<td colspan='2' >" . u\linkHref($row['user_email']) . "</td>";
          $login = $row['upw'] . $row['user_id'];
         $user_login_link = "https://amdflames.org/?s=$login";
@@ -75,26 +77,28 @@ class MemberAdmin {
        <td id='emstat'>${row['email_status']}</td>
         <td id='emver'>$email_last_validated</td>
         <td>$last_login</td>
-
-          <td>${row['no_bulk']}</td>
+ <td>${row['profile_date']}</td>
+          
           <td id='cdate'>$cdate</td>
-          <td></td>
+         <td>${row['no_bulk']}</td>
 
        </tr>";
 
   
 
         $o .=   "<tr>";
-        $o .=   "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
+       $o .=   "<td align='center'> " 
+        		. f\actionButton('X-out','xout',$uid) 
+        		. "</td>";
         $o .=  "<td align='center'>$bounceEmailButton</td>";
         $o .=   "<td align='center'>$validateEmailButton</td>";
         $o .=   "<td align='center'><a href='/member_admin.php?id=$uid' target='$username'>Update</a></td>";
-        $o .=   "<td align='center'></td>";
+       
+         $o .=  "<td align='center'><a href='/scripts/profile_view.php?id=$uid' target='profile'>Profile</a></td>";
         $o .=   "<td align='center'>$markContributeButton</td>";
-      
-        $o .=   "<td align='center'> " 
-        		. f\actionButton('X-out','xout',$uid) 
-        		. "</td></tr>\n";
+     
+      $o .= "</tr>\n";
+       
         		
 		return $o;
 	}
@@ -127,10 +131,10 @@ class MemberAdmin {
             	<th>Email Status</th>
             	<th>Email Validated</th>
             	<th>Last Login</th>
+            	
+            	<th>Profile Validated</th>
+            	<th>Contributed</th>
             	<th>No Bulk</th>
-
-            	<th></th>
-            	<th></th>
 
             	</tr>";
             	
