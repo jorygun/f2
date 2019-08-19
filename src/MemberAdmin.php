@@ -57,7 +57,13 @@ class MemberAdmin {
 		  	$validateEmailButton = "<button type='button' onClick='verifyEmail($uid)'>Verify</button>";
 		  	$markContributeButton = f\actionButton('Contributed','markContribute',$uid,'cdate');
 		  	$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid,'emstat');
-		  	$cdate = date('d M, Y', strtotime($row['contributed']));
+		  	$contribute_time = strtotime($row['contributed']);
+		  	if ($contribute_time == 0){
+		  		$cdate = 'Never';
+		  	} else {
+		  		$cdate = date('d M, Y', $contribute_time);
+		  	}
+		  	
 		  
 		  	
     $o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
