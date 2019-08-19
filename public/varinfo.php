@@ -31,8 +31,8 @@ use digitalmx\flames\Member;
 
 
 
-$page_title="Varinfo  ";
-$page+options=[]; #ajax, votes, tiny 
+$page_title = "Varinfo  ";
+$page_options = []; #ajax, votes, tiny 
 
 if ($login->checkLogin(0)){
 	$page = new DocPage($page_title);
