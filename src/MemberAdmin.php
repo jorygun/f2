@@ -84,7 +84,7 @@ class MemberAdmin {
         $user_login_link = "https://amdflames.org/?s=$login";
      
       $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
-		$o .= f\actionButton('Send Logins','sendLogin',$uid,'','Login Sent');
+		$o .= f\actionButton('Send Login','sendLogin',$uid,'','Login Sent');
 		$o .= "</td></tr>\n";
 		
        $o .= "<tr style='text-align:center'>
