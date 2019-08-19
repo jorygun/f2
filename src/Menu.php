@@ -200,7 +200,7 @@ EOT;
 	foreach ($opp_list as $line){
 		$t .=  "<li>$line";
 	}
-	$t .= "<li><a href='/show_opp.php'>Add/Edit Opportunity</a>";
+
 	$t .=  self::closeLine(0, $thisMenu) ;
 	
 

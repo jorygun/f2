@@ -14,14 +14,15 @@ ini_set('display_errors', 1);
 	
 	$admin = new MemberAdmin();
 	
-	$page_title = 'Member Admin';
-	$page_options = ['ajax'];
 	
 	
     $login->checkLogin(6); 
+    $page_title = 'Member Admin';
+	$page_options = ['ajax'];
+	
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
-	echo $page -> startBody(3);
+	echo $page -> startBody();
 
 	
 //END START
