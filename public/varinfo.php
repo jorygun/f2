@@ -31,12 +31,12 @@ use digitalmx\flames\Member;
 
 
 
-$pagetitle="Varinfo  ";
-$pageoptions=[]; #ajax, votes, tiny 
+$page_title="Varinfo  ";
+$page+options=[]; #ajax, votes, tiny 
 
 if ($login->checkLogin(0)){
 	$page = new DocPage($page_title);
-	echo $page -> startHead($pageoptions);
+	echo $page -> startHead($page_options);
 	echo $page->startBody();
 }
 
