@@ -38,8 +38,8 @@ function verifyEmail(uid) {
         data: 'ajax=verifyEmail&uid='+uid,
         type: "POST",
         success: function(response) {
-            $('#emver').html(response);
-            $('#emstat').html('Y');
+            $('#emver-'+uid).html(response);
+            $('#emstat-'+uid).html('Y');
         }
     });
 }

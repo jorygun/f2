@@ -49,20 +49,29 @@ class MemberAdmin {
 	private function echo_user_row ($row,$post=''){
        #$fields = array('status','email_status', 'email_last_validated','record_updated','last_login','no_bulk');
 		 $uid = $row['user_id'];
+		 
+		$status_id = "stat-$uid";
+		 $emstat_id = "emstat-$uid";
+		 $emver_id = "emver-$uid";	
+		$cdate_id = "cdate-$uid";
+		   
+		$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid,$emstat_id);
 		  $urlemail = rawurlencode($row['user_email']);
 		   $username = u\entity_spec($row['username']);
 		  $last_login = date('d M, Y',strtotime($row['last_login']));
 		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
 		  	#$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid);
 		  	$validateEmailButton = "<button type='button' onClick='verifyEmail($uid)'>Verify</button>";
-		  	$markContributeButton = f\actionButton('Contributed','markContribute',$uid,'cdate');
-		  	$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid,'emstat');
+		  
+		 
+		  	 $markContributeButton = f\actionButton('Contributed','markContribute',$uid,"$cdate_id");
 		  	$contribute_time = strtotime($row['contributed']);
 		  	if ($contribute_time == 0){
 		  		$cdate = 'Never';
 		  	} else {
 		  		$cdate = date('d M, Y', $contribute_time);
 		  	}
+		 
 		  	
 		  
 		  	
@@ -75,17 +84,17 @@ class MemberAdmin {
         $user_login_link = "https://amdflames.org/?s=$login";
      
       $o .=  "<td colspan='4'><a href='$user_login_link' target='_blank'>$user_login_link</a> ";
-		$o .= f\actionButton('Send Login','sendLogin',$uid);
+		$o .= f\actionButton('Send Login','sendLogin',$uid,'','Login Sent');
 		$o .= "</td></tr>\n";
 		
        $o .= "<tr style='text-align:center'>
-       <td>${row['status']}</td>
-       <td id='emstat'>${row['email_status']}</td>
-        <td id='emver'>$email_last_validated</td>
+       <td id = '$status_id'>${row['status']}</td>
+       <td id='$emstat_id'>${row['email_status']}</td>
+        <td id='$emver_id'>$email_last_validated</td>
         <td>$last_login</td>
  <td>${row['profile_date']}</td>
           
-          <td id='cdate'>$cdate</td>
+          <td id='$cdate_id'>$cdate</td>
          <td>${row['no_bulk']}</td>
 
        </tr>";
@@ -94,7 +103,7 @@ class MemberAdmin {
 
         $o .=   "<tr>";
        $o .=   "<td align='center'> " 
-        		. f\actionButton('X-out','xout',$uid) 
+        		. f\actionButton('X-out','xout',$uid,$status_id) 
         		. "</td>";
         $o .=  "<td align='center'>$bounceEmailButton</td>";
         $o .=   "<td align='center'>$validateEmailButton</td>";
