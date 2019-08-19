@@ -15,11 +15,12 @@
 
 	
    
-	$page_title = "Profile";
-	$page_options = []; # ['ajax','tiny','votes']
+	
 	
 
 if ($login->checkLogin(3)){
+	$page_title = $_SESSION['login']['username'] . " Profile";
+	$page_options = []; # ['ajax','tiny','votes']
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	echo $page->startBody();

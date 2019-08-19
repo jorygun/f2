@@ -74,7 +74,7 @@ increment_reads($condensed_date);
 $page_options = ['votes','ajax'];
 
 
-if ($login->checkLogin(0)){
+if ($login->checkLogin(1)){
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	echo $page->startBody(1);

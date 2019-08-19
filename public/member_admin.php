@@ -18,7 +18,7 @@ ini_set('display_errors', 1);
 	$page_options = ['ajax'];
 	
 	
-    $login->checkLogin(); 
+    $login->checkLogin(6); 
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	echo $page -> startBody(3);
