@@ -31,7 +31,7 @@ use digitalmx\flames\Member;
 
 
 
-$pagetitle="Varinfo";
+$pagetitle="Varinfo Page";
 $pageoptions=[]; #ajax, votes, tiny 
 
 if ($login->checkLogin(0)){
