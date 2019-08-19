@@ -10,23 +10,25 @@ namespace digitalmx\flames;
 use digitalmx as u;
 
 class DocPage {
-
-   public function __construct ()
+	private $title;
+   public function __construct ($title = 'Someone forgot to put in the title')
    {
-
+   	 if (REPO != 'live'){ $title .= " (" . REPO . ")";}
+		$this->title = $title;
    }
 
-    public function startHead ($title, $options = []){
+    public function startHead ($options = []){
       /* options:
          'tiny' = include tinymce
          'ajax' = include jquery, ajax
          'votes' = iinclude voting script/css
       */
+      $title = $this->title;
       if (! is_array($options)){
       	throw new RuntimeException ("start head options not an array");
       }
       
-      if (REPO != 'live'){ $title .= " (" . REPO . ")";}
+     
 
 
      $t =  <<<EOT
@@ -63,9 +65,10 @@ EOT;
 
 
 
-   public function startBody($title='Someone Forgot To Enter The Title',$style=2,$subtitle='') {
+   public function startBody($style=2,$subtitle='') {
 	//style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page
-      $t = "\n</head>\n<body>\n";
+     $title = $this->title;
+     $t = "\n</head>\n<body>\n";
       $t .= "<div class='page_head'>\n";
 
     #choose a style by number
@@ -81,7 +84,9 @@ EOT;
 		Keeping thousands of ex-AMDers connected since 1997<br>
 	<span style="font-size:12pt;color:#030;font-style:italic;">AMD was probably the best place any of us ever worked.</span>
 </p>
+
 </div>
+${_SESSION['menu']}
 EOT;
          break;
       case 1: #for newsletter

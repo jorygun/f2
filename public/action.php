@@ -12,12 +12,12 @@ or called by a ajax.php?ajax=request GET command.
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-use digitalmx\flames\Member;
-use digitalmx\flames\Messenger;
 use digitalmx as u;
 use digitalmx\flames as f;
+use digitalmx\flames\Member;
+use digitalmx\flames\Messenger;
+use digitalmx\flames\DocPage;
 #use digitalmx\flames\ActionCodes;
-
 use digitalmx\flames\BulkMail;
 
 // if request came in from a get, the
@@ -40,9 +40,9 @@ if (!empty($_SERVER['QUERY_STRING'])) {
         	$page_title = 'AMD Flames Action Handler';
            
     }
-    
-	echo $page->startHead($page_title,$page_options); 
- 	echo $page ->startBody($page_title,0);
+    $page = new DocPage($page_title);
+	echo $page->startHead($page_options); 
+ 	echo $page ->startBody(0);
  	
  	switch ($action) {
  		case 'V':

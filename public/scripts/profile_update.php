@@ -22,13 +22,14 @@ for this script id = user_id
 
 ********************************************************* */
 
-   $login->checkLogin(3);
-      #or checkLevel(min) if already logged in.
-
 	$page_title = "Edit Profile";
 	$page_options = []; # ['ajax','tiny','votes']
 
-   echo $page->startHead($page_title,$page_options);
+
+if ($login->checkLogin(3)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+
    echo <<<EOT
    	<script type="text/javascript" >
     	function validate_profile(theForm) {
@@ -54,7 +55,9 @@ for this script id = user_id
 		}
    </script>
 EOT;
- 	echo $page ->startBody($page_title);
+ 		echo $page->startBody();
+}
+
 
 
 

@@ -11,10 +11,14 @@
 
 use digitalmx\MyPDO;
 
-$pagetitle="Galler Edit";
-$pageoptions=[];
-if ($login->checkLevel(5)){
-	echo $page -> startHead($pagetitle,$pageoptions);
+$page_title="Gallery Edit";
+$page_options=[];
+
+	
+    $login->checkLogin(5); 
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+
 	echo <<<EOT
 <script>
 function choose_gallery(id=''){
@@ -27,7 +31,7 @@ function choose_gallery(id=''){
 }
 </script>
 EOT;
-	echo $page->startBody($pagetitle);
+	echo $page->startBody();
 }
 
 

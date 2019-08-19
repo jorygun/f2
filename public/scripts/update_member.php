@@ -50,13 +50,14 @@ $page = new DocPage();
 	
 	
 
-$pagetitle="Member Update: $username";
-$pageoptions=['ajax'];
-if ($login->checkLevel(5)){
-	echo $page -> startHead($pagetitle,$pageoptions);
-	echo $page->startBody($pagetitle);
-}
+$page_title="Member Update: $username";
+$page_options=['ajax'];
 
+if ($login->checkLogin(0)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page->startBody();
+}
 
 // process any data in the post array
 extract ($_POST,EXTR_PREFIX_ALL,'P');

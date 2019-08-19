@@ -90,42 +90,40 @@ function echo_if ($filename,$extra='') {
 }
 function get_news_file($filename,$extra=''){
 	#pass filename, possible heding text,
-	   global $voting; #need access to voting class object
+	 
 	   
 	#look in local directory, then news_live, then  in news directory
-	   if (file_exists("./$filename")) {
-	   		$file = "./$filename";
-	   # return "Found $file";
-	    
-	   } elseif (file_exists (SITE_PATH . "/news/news_live/$filename")) {
-	   	$file = SITE_PATH . "/news/news_live/$filename"; 
-	   } elseif (file_exists (SITE_PATH ."/news/$filename")){
-	   	$file = SITE_PATH ."/news/$filename";
-	  	
-	  } else {
-	  	#return "echo_if: $filename not found";
-	  	return false;
-	  }
-
-	   $content = file_get_contents($file);
-	   
-	if (substr($filename,0,5) !== 'news_') {
+	$dirs = array(
+		'.',
+		SITE_PATH . '/var/live',
+		SITE_PATH . '/news'
+	);
+	$hit = false;
+	$content = '';
+	foreach ($dirs as $dir ) {
+	   if (!$hit && file_exists("$dir/$filename") ) {
+	   	$hit = "$dir/$filename";
+	   	#echo "hit on $hit" . BRNL;
+	   	 $content = file_get_contents($hit);
+	   	 if (substr($filename,0,5) == 'news_') { #need to prepocess news files
+	   	 	#echo "preprocessing $hit." . BRNL;
+				$content = replace_old_discussion($content);
+				
+				$content = replace_voting_content($content);
+				#echo "2:<br>" . $content2;
+				$content = "$extra\n" . replace_new_discussion($content);
+				return $content;
+			}
+			else {return $content;}
+		}
 		return $content;
-	}
-	
-	#for news files, deal with voting
 
-	    	
- /*   <div class='story_comment_box clear'>
-           <? echo get_commenters(1741) ?>
-           <br>
-           <a href='/scripts/news_article_c.php?id=1741' target='cpage'>Discuss this article</a>
-           </div>
-*/
+	}
+
+}
 	
-			
-    #replace disucssion old style
-			$content1 = preg_replace_callback (
+	function replace_old_discussion ($content) {
+		$content1 = preg_replace_callback (
 				'|<\? echo get_commenters\((\d+)\) .*?</div>|s',
 				function ($matches) {
 					$cp = "<!-- comment ${matches[1]} -->
@@ -137,22 +135,28 @@ function get_news_file($filename,$extra=''){
                 $content
                  );
                 
-     #replace voting content
-     		
-            $content2 = preg_replace_callback(
-            	'|<!-- vote (\d+) -->|',
-            	function ($matches) use ($voting){
-            		$user = $_SESSION['login']['user_id'];
-            		
-            		$vp = $voting->show_panel($matches[1],$user);
-            		return $vp;
-            	}
-				,
-                $content1
-                );
-                       
+		return $content1;
+	}
+	function replace_voting_content ($content) {
+	  global $voting; #need access to voting class object
+		return preg_replace_callback(
+			'|<!-- vote (\d+) -->|',
+			function ($matches) use ($voting){
+				$user = $_SESSION['login']['user_id'];
+				
+				$vp = $voting->show_panel($matches[1],$user);
+				
+				return $vp;
+			}
+		,
+			 $content
+			 );
+     
+}  
+
+function replace_new_discussion ($content) {
         #replace discussion content - new style
-        	$content3 = preg_replace_callback(
+        	$content1 = preg_replace_callback(
             	'|<!-- comment (\d+) -->|',
             	function ($matches){
             		$cp = "
@@ -161,13 +165,11 @@ function get_news_file($filename,$extra=''){
             		return $cp;
             	}
 				,
-                $content2
+                $content
                 );
-                
-         //    echo $extra;
-//         	echo $content3;
-//    
-        	return "$extra\n$content3"; #replace echo with using return value
+      
+   
+        	return "$content1"; #replace echo with using return value
 
 	}
 

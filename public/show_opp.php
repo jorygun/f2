@@ -10,14 +10,16 @@
 	use digitalmx\MyPDO; #if need to get more $pdo
 
 	
-   $login->checkLogin(0); 
-      #or checkLevel(min) if already logged in.
-   
+  
 	$page_title = "Current Opportunities";
 	$page_options = ['tiny']; # ['ajax','tiny','votes']
-	
-   echo $page->startHead($page_title,$page_options); 
-   echo <<<EOT
+	$pagetitle="";
+$pageoptions=[]; #ajax, votes, tiny 
+
+if ($login->checkLogin(0)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($pageoptions);
+	echo <<<EOT
 <script>
 function setToNow(id) {
 	document.getElementById(id).value = new Date().toISOString().slice(0, 10);
@@ -25,8 +27,10 @@ function setToNow(id) {
 }
 </script>
 EOT;
- 	echo $page ->startBody($page_title);
-
+	echo $page->startBody();
+}
+   
+ 
 	
 //END START
 	use digitalmx\flames\Opportunities;

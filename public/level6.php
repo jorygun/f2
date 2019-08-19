@@ -15,8 +15,10 @@ $login->checkLogin(0);
 	$page_title = "New Contributions";
 	$page_options = ['tiny']; # ['ajax','tiny','votes']
 
-   echo $page->startHead($page_title,$page_options);
- 	echo $page ->startBody($page_title);
+    $login->checkLogin(3);
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page -> startBody(3);
 
 require_once "scripts/news_functions.php";
 

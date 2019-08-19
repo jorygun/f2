@@ -1,4 +1,6 @@
 <?php
+namespace digitalmx\flames;
+
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 require_once "read_functions.php";
 
@@ -63,46 +65,25 @@ elseif (isset($conventional_date)) {
 else {$subtitle = '';}
 
 
-// can't check security until it's been set above.
-	if (security_below($min_security)){exit;}
+
 
 
 increment_reads($condensed_date);
 
 
-?>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script type='text/javascript' src = '/js/f2js.js'></script>
-<link rel="stylesheet" type="text/css" href="/css/news3.css">
-
-<title><?=$page_title?></title>
+$page_options = ['votes','ajax'];
 
 
-<link rel='stylesheet' href='/css/votes.css' />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
-</script>
-<script src='/js/ajax.js'></script>
-</head>
-<body>
-
-<div class='head'>
-	<img class="left" alt="AMD Flames" src="/graphics/logo-FLAMEs.gif">
-	<p class='title'>FLAME<i>news</i><br>
-	<span style='font-size:0.5em;'><?=$subtitle?></span>
-	</p>
-</div>
-<?=$preview?>
-<hr style="width: 100%; height: 2px;clear:both;">
-
-<?php
-
-echo $_SESSION['menu'];
+if ($login->checkLogin(0)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page->startBody(1);
+	echo $preview;
+}
 
 
+
+echo "<hr style='width: 100%; height: 2px;clear:both;'>\n";
 
 
 #breaking news added after publication
@@ -180,9 +161,7 @@ echo_if ("news_updates.html", news_head("Membership Updates"));
 
 
 echo "<p><small><?=$footer_line?></small></p>";
+echo "</body></html>\n";
 
 
-?>
 
-
-</body></html>

@@ -13,11 +13,15 @@ ini_set('display_errors', 1);
 	use digitalmx\flames\MemberAdmin;
 	
 	$admin = new MemberAdmin();
-	$page = new DocPage();
-
 	
-   echo $page->startHead('Member Admin',['ajax']); 
- 	echo $page ->startBody("Search for Member");
+	$page_title = 'Member Admin';
+	$page_options = ['ajax'];
+	
+	
+    $login->checkLogin(); 
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page -> startBody(3);
 
 	
 //END START

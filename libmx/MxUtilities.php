@@ -15,7 +15,7 @@ use \Exception as Exception;
 	bool = is_valid_email (email) /checks with filter
 	array = get_url(url) /uses curl, content is in [content=>xxx]
 	string = detab_text(string) / replaces tabs with spaces
-	array = get_recent_files ($path,number) / list of file names in path
+	array = list_recent_files ($path,number) / list of file names in path
 	string = sqldate(format,when) /date or time, now or a date
 	string = safelike($string) / excapes _ and %
 	

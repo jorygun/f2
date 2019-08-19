@@ -6,12 +6,19 @@ namespace digitalmx\flames;
 
 	use digitalmx as u;
 	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
+	use f\Definitions as Defs;
+	#use digitalmx\flames\DocPage;
+
+	$page_title = 'Asset Display';
+	$page_options = ['ajax'];
+	
+	
+    $login->checkLogin(3); 
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+
 
 	
-
-	$title = "Asset Display";
-   echo $page->startHead($title,['ajax']); 
 echo <<<EOT
    <script language="JavaScript">
 
@@ -40,7 +47,7 @@ function isObject(obj) {
 </script>
 EOT;
 
- 	echo $page ->startBody($title);
+ 	echo $page ->startBody();
 
 	
 //END START

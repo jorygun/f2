@@ -8,18 +8,26 @@
 	use digitalmx\flames as f;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\MyPDO; #if need to get more $pdo
+	use digitalmx\flames\DocPage;
 
 
 
-   $login->checkLogin(); 
    
+   
+	$page_title = 'AMD Flames';
+	$page_options = ['ajax']; # ajax, votes, tiny
 
-// 	$page = new DocPage();
-	$title = 'AMD Flames';
-	echo $page -> startHead($title,['ajax']);
-	echo "<meta name='google-site-verification' content='VIIA7KGTqXjwzC6nZip4pvYXtFVLx7Th7VpWNGpWzpo' />";
+
+if ($login->checkLogin(0)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+		echo "<meta name='google-site-verification' content='VIIA7KGTqXjwzC6nZip4pvYXtFVLx7Th7VpWNGpWzpo' />";
 	
-	echo $page -> startBody($title,3);
+	echo $page->startBody(3);
+}
+
+
+
 #u\echor($_SESSION, 'Session'); 
 //END START
 

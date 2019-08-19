@@ -9,11 +9,16 @@ namespace digitalmx\flames;
 	use digitalmx\MyPDO;
 	use digitalmx as u;
 
-   $login->checkLogin(4);
+   
    $page_title = 'Publish News';
-   $page_options = [];
-   $page->startHead($page_title,$page_options);
-   $page->startBody($page_title);
+
+$page_options=[]; #ajax, votes, tiny 
+
+if ($login->checkLogin(4)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page->startBody();
+}
 
 	$now = date ('M j, Y H:i');
 

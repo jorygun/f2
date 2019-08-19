@@ -9,14 +9,17 @@ namespace digitalmx\flames;
 	use digitalmx\MyPDO; #if need to get more $pdo
 
 	
-   $login->checkLogin(6); 
-      #or checkLevel(min) if already logged in.
+  
    
 	$page_title = "Create News Item";
 	$page_options = ['tiny']; # ['ajax','tiny','votes']
 	
-   echo $page->startHead($page_title,$page_options); 
- 	echo $page ->startBody($page_title);
+
+if ($login->checkLogin(6)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page->startBody();
+}
 
 	
 //END START

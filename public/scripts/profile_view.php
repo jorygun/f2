@@ -14,14 +14,17 @@
 //END START
 
 	
-   $login->checkLogin(3); 
-      #or checkLevel(min) if already logged in.
    
 	$page_title = "Profile";
 	$page_options = []; # ['ajax','tiny','votes']
 	
-   echo $page->startHead($page_title,$page_options); 
- 	echo $page ->startBody($page_title);
+
+if ($login->checkLogin(3)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page->startBody();
+}
+
 
 $my_sec_level = $_SESSION['level'];
 $user_id = $_SESSION['login']['user_id'];

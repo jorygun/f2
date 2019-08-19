@@ -173,11 +173,14 @@ EOT;
 
 
 ############
-   $login -> checkLevel(2);
+  
    $page_title = 'News Article Comments';
    $page_options = ['votes'];
-   
-   echo $page->startHead($page_title,$page_options);
+
+if ($login->checkLogin(3)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+
   echo " <base href = '$new_base'>";
   echo <<<EOT
   <script type='text/javascript'>
@@ -190,7 +193,9 @@ EOT;
     }
  </script>
 EOT;
-  echo  $page->startBody($page_title);
+	echo $page->startBody();
+}
+
    
 
 

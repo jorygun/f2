@@ -31,15 +31,20 @@ use digitalmx\flames\Member;
 
 
 
-$pagetitle="Varinfo()";
-$pageoptions=['ajax'];
+$pagetitle="";
+$pageoptions=[]; #ajax, votes, tiny 
+
+if ($login->checkLogin(0)){
+	$page = new DocPage($page_title);
+	echo $page -> startHead($pageoptions);
+	echo $page->startBody();
+}
 
 u\echor ($_SESSION,'Session file at after page setup');
-#exit;
-if ($login->checkLogin(0)){
-	echo $page -> startHead($pagetitle,$pageoptions);
-	echo $page->startBody($pagetitle);
-}
+
+
+
+
 
 
 echo " Mode: $test";

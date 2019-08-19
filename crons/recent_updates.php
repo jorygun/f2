@@ -7,7 +7,8 @@ namespace digitalmx\flames;
     * This script produces two reports:
     * recent_assets.html - archival assets added to assets
     * recent_articles.html - comments and votes on recent articles.
-    
+     (replaces old recent_assets and recent_articles)
+     
     does two things: it retrieves
     * the title and link for the most recently published
     * articles, AND
@@ -20,17 +21,18 @@ namespace digitalmx\flames;
 */
 
 /*  needs: Defs, pdo
-/*  STARTUP */
-$script = basename(__FILE__);
+
+*/
+
 
 if (! @defined ('INIT')) { include './cron-ini.php';}
 if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
 
-use \digitalmx\flames\Definitions as Defs;
+use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 
 /* MAIN */
- if (!$quiet) 
+if (!$quiet) 
 echo "Starting $script " . BRNL;
 $recent_article_file = REPO_PATH . '/var/live/recent_articles.html';
 $recent_asset_file = REPO_PATH . "/var/live/recent_assets.html";
@@ -38,8 +40,12 @@ $recent_asset_file = REPO_PATH . "/var/live/recent_assets.html";
 #get latest pub date
 $lastest_ts = trim(file_get_contents(REPO_PATH . "/var/data/last_published_ts.txt"));
 if (empty ($latest_ts)){ $latest_ts = strtotime(' - 14 days'); }
-
 $latest_pub_date = date('Y-m-d H:i',$lastest_ts);
+
+
+
+
+#build asset report
 
 $archival_tags = Defs::$archival_tags;
 $archive_tag_set = '';
@@ -49,35 +55,30 @@ foreach ( str_split($archival_tags) as $t){
 $archive_tag_set = rtrim($archive_tag_set,',') ;
 
 
-#build asset report
 // any tag ('UI') has code ('U') contained in the set or archival_tags ('ABCUW');
-    $sql = "
-        SELECT id,title,type,status,vintage,tags,sizekb, date_entered from `assets`
-        WHERE date_entered > CURRENT_DATE - INTERVAL 3 WEEK
-            AND status in ('R','S')
-            AND tags is NOT NULL
-            AND tags REGEXP '[$archival_tags]'
-        ORDER BY date_entered DESC ;
-        ";
+ $sql = "
+	  SELECT id,title,type,status,vintage,tags,sizekb, date_entered from `assets`
+	  WHERE date_entered > CURRENT_DATE - INTERVAL 3 WEEK
+			AND status in ('R','S')
+			AND tags is NOT NULL
+			AND tags REGEXP '[$archival_tags]'
+	  ORDER BY date_entered DESC ;
+	  ";
 
 
-    $pst = $pdo -> query ($sql);
+ $pst = $pdo -> query ($sql);
 
-    $rowc = $pst -> rowCount();
-	$cutoff = date('d M Y',strtotime('-2 weeks'));
-    # echo  "$rowc articles found.\n";
-    if ($rowc == 0) {
-        if (file_exists($recent_asset_file)){unlink ($recent_asset_file);}
-        if (!$quiet) echo "No recent assets to report";
-        exit;
-    }
+ $rowc = $pst -> rowCount();
+$cutoff = date('d M Y',strtotime('-2 weeks'));
+ # echo  "$rowc articles found.\n";
+ if ($rowc == 0) {
+	  if (file_exists($recent_asset_file)){unlink ($recent_asset_file);}
+	  if (!$quiet) echo "No recent assets to report";
+	  exit;
+ }
 
 $recent_assets = report_recent_assets ($pst,$rowc,$cutoff);
-
-if ($test){ echo ($recent_assets);}
 file_put_contents($recent_asset_file, $recent_assets );
-if (! $quiet)
-echo "$recent_asset_file updated" . BRNL;
 
 
 #build article report
@@ -92,7 +93,7 @@ else {file_put_contents($recent_article_file, $recent_articles );}
 
 ###################################
 
-function prepare_recent_report ( $pdo, $from='', $to='', $max_articles = 30) {
+function report_recent_articles ( $pdo, $from='', $to='', $max_articles = 30) {
 	
     /*
     $max_articles = #maximum number of articles to show. 0 = no limit
@@ -266,7 +267,7 @@ function report_recent_assets ($pst,$rowc,$cutoff) {
 
     foreach ($pst as $row) {
         $id = $row['id'];
-        $link = "<a href='/scripts/asset_display.php?id=$id' target='asset_view'>"
+        $link = "<a href='/scripts/asset_display.php?$id' target='asset_view'>"
             . htmlspecialchars($row['title'],ENT_QUOTES)
             .  "</a>";
 

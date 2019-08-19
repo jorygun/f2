@@ -24,12 +24,13 @@ require_once "asset_functions.php";
 
 $sql_now = sql_now('date');
 
-$title = 'Manage Assets';
-$pageoptions=['ajax'];
-if ($login->checkLevel(1)){
-	echo $page -> startHead($title,$pageoptions);
-	echo $page->startBody($title);
-}
+$page_title = 'Manage Assets';
+$page_options=['ajax'];
+	
+    $login->checkLogin(3); 
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page -> startBody();
 
 
 $asset_limit = 25;

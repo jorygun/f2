@@ -15,9 +15,11 @@ namespace digitalmx\flames;
 	$page_title = "Asset Tag Review";
 	$page_options = []; # ['ajax','tiny','votes']
 	
-   echo $page->startHead($page_title,$page_options); 
- 	echo $page ->startBody($page_title);
-
+	
+    $login->checkLogin(); 
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page -> startBody();
 	
 //END START
 
