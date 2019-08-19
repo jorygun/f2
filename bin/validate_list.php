@@ -37,6 +37,8 @@ $sql_get_prep = $pdo->prepare($sql_get);
 
  while(! feof($lh))  {
 	$em = trim(fgets($lh));
+	if (empty($em)){continue;}
+	
 	if (filter_var($em,FILTER_VALIDATE_EMAIL) === false){
 		echo "Invalid email $em\n";
 		continue;
