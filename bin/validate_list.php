@@ -51,17 +51,13 @@ $sql_get_prep = $pdo->prepare($sql_get);
 	
 	++$found;
 	
-	echo $member->verifyEmail($uid);
 	
-	if ($found > 3){exit;}
+	if ($r = $member->verifyEmail($uid)){
+		echo "User $uid updated\n";
+	}
+	else {echo $r . "\n";}
 	
-	
-	
-	
-	
-	
-	
-	
+	#if ($found > 3){exit;}
 	
 	
 	
