@@ -19,7 +19,7 @@
 	
 
 if ($login->checkLogin(3)){
-	$page_title = $_SESSION['login']['username'] . " Profile";
+	$page_title ="Profile " . ' - ' . $_SESSION['login']['username'] ;
 	$page_options = []; # ['ajax','tiny','votes']
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);

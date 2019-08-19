@@ -10,13 +10,15 @@ namespace digitalmx\flames;
 	use digitalmx as u;
 
    
-   $page_title = 'Publish News';
-
-$page_options=[]; #ajax, votes, tiny 
 
 if ($login->checkLogin(4)){
+   $page_title = 'Publish News';
+	$page_options=[]; #ajax, votes, tiny 
+	
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
+	# other heading code here
+	
 	echo $page->startBody();
 }
 

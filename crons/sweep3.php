@@ -201,7 +201,7 @@ $sql = "SELECT $sweep_fields FROM `members_f2` WHERE
 			$msg = "Sweeps has encountered members with validated email, but status = N.
 			This user has not received welcome message.\n\n
 			${row['username']}:
-			    " . SITE_URL . "/scripts/update_member.php?uid=$uid
+			   
 			";
 
 

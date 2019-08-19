@@ -8,17 +8,19 @@
 	use digitalmx\flames as f;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\MyPDO; #if need to get more $pdo
+	use digitalmx\flames\DocPage;
 
 	
   
-	$page_title = "Current Opportunities";
-	$page_options = ['tiny']; # ['ajax','tiny','votes']
+	
 	$pagetitle="";
 $pageoptions=[]; #ajax, votes, tiny 
 
 if ($login->checkLogin(0)){
+	$page_title = "Current Opportunities";
+	$page_options = ['tiny']; # ['ajax','tiny','votes']
 	$page = new DocPage($page_title);
-	echo $page -> startHead($pageoptions);
+	echo $page -> startHead($page_options);
 	echo <<<EOT
 <script>
 function setToNow(id) {

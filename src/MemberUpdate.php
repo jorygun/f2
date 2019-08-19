@@ -40,11 +40,13 @@ use digitalmx\flames\DocPage;
 	$username = $mdd ['username'];
 	
 
-$pagetitle="Member Update: $username";
-$pageoptions=['ajax'];
+
 if ($login->checkLevel(5)){
-	echo $page -> startHead($pagetitle,$pageoptions);
-	echo $page->startBody($pagetitle);
+	$page_title="Member Update: $username";
+	$page_options=['ajax'];
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	echo $page->startBody();
 }
 
 // process any data in the post array
@@ -320,7 +322,7 @@ EOT;
 
 		</form>
 <hr>
-    <form action='../level8.php' method='post'>
+    <form action='/member_admin.php' method='post'>
     Search for another name <input type='text' name='name'>
     <input type='hidden' name='submit' value='Search'>
     <input type='submit' >
