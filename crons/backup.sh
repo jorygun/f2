@@ -4,6 +4,9 @@
 
 #see if its a Wed make weekly backup from oldest daily)
 day=`date +%u`
+datecode=`/bin/date +\%Y\%m\%d`
+echo datecode $datecode
+
 cd /usr/home/digitalm/backups
 
 #on Wed, copy newest daily to weekly
@@ -32,7 +35,7 @@ ls -tp1 weekly.site.* | tail -n +4 |  xargs -r -d '\n' rm --
 #clean up old logs and mailings
 for dir in public_html/amdflames.org/logs  bmail
  do
-find /usr/home/digitalm/$dir/ -type f -mtime +30 -delete;
+#find /usr/home/digitalm/$dir/ -type f -mtime +30 -delete;
 #find /usr/home/digitalm/$dir/ -type d -empty -delete;
 #ls  /usr/home/digitalm/public_html/amdflames.org/$dir ;
 
