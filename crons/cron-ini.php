@@ -1,4 +1,5 @@
 <?php
+namespace digitalmx\flames;
 
 /*  STARTUP 
 Does not use init/boot

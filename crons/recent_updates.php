@@ -30,87 +30,56 @@ if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
+use digitalmx\flames as f;
+use digitalmx\MyPDO;
 
 /* MAIN */
-if (!$quiet) 
-echo "Starting $script " . BRNL;
+
 $recent_article_file = REPO_PATH . '/var/live/recent_articles.html';
 $recent_asset_file = REPO_PATH . "/var/live/recent_assets.html";
 
 #get latest pub date
-$lastest_ts = trim(file_get_contents(REPO_PATH . "/var/data/last_published_ts.txt"));
-if (empty ($latest_ts)){ $latest_ts = strtotime(' - 14 days'); }
-$latest_pub_date = date('Y-m-d H:i',$lastest_ts);
 
+$latest_sql = date('Y-m-d H:i',f\getLastPub () );
+$from = date('Y-m-d',strtotime('-2 weeks'));
 
-
-
+echo "From $from To $latest_sql\n"; 
 #build asset report
 
-$archival_tags = Defs::$archival_tags;
-$archive_tag_set = '';
-foreach ( str_split($archival_tags) as $t){
-    $archive_tag_set .= "'$t',";
+if( $recent_asset_report = report_recent_assets ($from,0,30 ) ){
+	if ($test){ echo ($recent_asset_report);}
+	file_put_contents($recent_asset_file, $recent_asset_report );
+} else {
+	if(file_exists ("$recent_asset_file")){unlink ("$recent_asset_file");}
+	echo "No asset report\n";
 }
-$archive_tag_set = rtrim($archive_tag_set,',') ;
-
-
-// any tag ('UI') has code ('U') contained in the set or archival_tags ('ABCUW');
- $sql = "
-	  SELECT id,title,type,status,vintage,tags,sizekb, date_entered from `assets`
-	  WHERE date_entered > CURRENT_DATE - INTERVAL 3 WEEK
-			AND status in ('R','S')
-			AND tags is NOT NULL
-			AND tags REGEXP '[$archival_tags]'
-	  ORDER BY date_entered DESC ;
-	  ";
-
-
- $pst = $pdo -> query ($sql);
-
- $rowc = $pst -> rowCount();
-$cutoff = date('d M Y',strtotime('-2 weeks'));
- # echo  "$rowc articles found.\n";
- if ($rowc == 0) {
-	  if (file_exists($recent_asset_file)){unlink ($recent_asset_file);}
-	  if (!$quiet) echo "No recent assets to report";
-	  exit;
- }
-
-$recent_assets = report_recent_assets ($pst,$rowc,$cutoff);
-file_put_contents($recent_asset_file, $recent_assets );
 
 
 #build article report
-$recent_articles = report_recent_articles ($pdo, '',$latest_pub_date,'');
-// pdo, from, to
-// defaults to from 3 wks ago, to today, limit 30 articles
 
-if ($test){ echo ($recent_articles);}
-else {file_put_contents($recent_article_file, $recent_articles );}
+if ($recent_article_report = report_recent_articles ($from,0,30) ){
+	if ($test){ echo ($recent_article_report);}
+	file_put_contents($recent_article_file, $recent_article_report );
+} else {
+	if(file_exists ("$recent_article_file")){unlink ("$recent_article_file");}
+	echo "No article report\n";
+}
 
 
 
 ###################################
 
-function report_recent_articles ( $pdo, $from='', $to='', $max_articles = 30) {
-	
-    /*
-    $max_articles = #maximum number of articles to show. 0 = no limit
-
-    $from = staryting date in text form. defaults to ending date - 24 days
-    $to = ending date in text form, defaults to last publication date,
-    which it gets from news/last_pubication.txt
-    */
+function report_recent_articles ( $from, $to, $max=0) {
+	$pdo = MyPDO::instance();
 
 	// get article links into an array
-	$link_counts = count_links($pdo);
-	
+	$link_counts = count_links($pdo);	
 #	u\echor ($link_counts, 'link counts');
-	
 
-    $limit = ($max_articles>0)? " LIMIT $max_articles" : '';
-    list ($to_date,$from_date) =  convert_dates($to,$from);
+    $limit = ($max>0) ? " LIMIT $max" : '';
+    
+    $to_date = ($to) ? date('Y-m-d') : date('Y-M-d',strtotime($to));
+   $from_date = date('Y-M-d',strtotime($from));
 
     $sql = "
        SELECT n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source, c.comments, v.net_votes
@@ -118,7 +87,7 @@ function report_recent_articles ( $pdo, $from='', $to='', $max_articles = 30) {
         LEFT JOIN  (
             SELECT item_id, on_db, count(*) as comments
             FROM `comments` 
-            GROUP BY item_id 
+            GROUP BY item_id , on_db
             ) c ON c.item_id = n.id AND c.on_db = 'news_items'
         LEFT JOIN (
             SELECT news_fk, sum(vote_rank) as net_votes 
@@ -127,60 +96,54 @@ function report_recent_articles ( $pdo, $from='', $to='', $max_articles = 30) {
             ) v ON v.news_fk = n.id
         WHERE
 		n.date_published >= '$from_date' AND
-		n.date_published < '$to_date' - INTERVAL 2 DAY
-        GROUP BY n.id
+		n.date_published < '$to_date' - INTERVAL 1 DAY
+        GROUP BY n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source, c.comments, v.net_votes
         ORDER BY n.date_published DESC
 	    $limit
 	    ;
 	    ";
 
-   # echo $sql . BRNL;
-	#echo "$from_date,$to_date" . BRNL;
-	
-	
-    $pst = $pdo->query ($sql);
-
+ 
+    if (!$pst = $pdo->query ($sql) ){return false;}
     $rowc = $pst -> rowCount();
-	
-    # echo  "$rowc articles found.\n";
+     if ($rowc == 0) {return false;}
+     
      $report = "<div style='margin-left:2em;float:left'>";
     $report .=  "<h4>Recent Article Activity</h4>";
-    if ($rowc == 0) {
-        $report .=  "<p>Nothing found</p>";
-    }
-    else {
+   
+   
      $report .=  "<table class='alternate article_list'>";
      $report .= "
         <tr><th>Article</th><th>Contributor</th><th>Published</th>
         <th>Comments</th><th>Link Clicks</th><th>Interesting?</th></tr>
         ";
       while ($row = $pst->fetch()) {
-      	$article_id = $row['id'];
-        $link = "<a href='/scripts/news_article_c.php?id=$article_id' target='discussion'>" .
-        $row['title'] .
-        "</a>";
-		$contributor = (strcmp($row['contributor'] ,'FLAMES editor') == 0)? '' : $row['contributor'];
-		
-         $ccount = $row['comments'];
-        $votes = ($row['take_votes'])? $row['net_votes'] : '-';
-        $dt = \DateTime::createfromformat('Y-m-d',$row['date_published']);
-		$pub_date = $dt->format('M d');
-		$clicks = $link_counts[$article_id] ?? '-';
+			$article_id = $row['id'];
+			$link = "<a href='/scripts/news_article_c.php?id=$article_id' target='discussion'>" .
+			$row['title'] .
+			"</a>";
+			$contributor = (strcmp($row['contributor'] ,'FLAMES editor') == 0)? '' : $row['contributor'];
 
-            $report .=  <<<EOT
-            <tr >
-            <td>$link</td>
-            <td>$contributor</td>
-             <td style='text-align:center'>$pub_date</td>
-            <td style='text-align:center'>$ccount</td>
-            <td style='text-align:center'>$clicks</td>
-            <td style='text-align:center'>$votes</td>
+			$ccount = $row['comments'];
+			$votes = ($row['take_votes'])? $row['net_votes'] : '-';
+			$dt = \DateTime::createfromformat('Y-m-d',$row['date_published']);
+			$pub_date = $dt->format('M d');
+			$clicks = $link_counts[$article_id] ?? '-';
 
-            </tr>
+			$report .=  <<<EOT
+			<tr >
+			<td>$link</td>
+			<td>$contributor</td>
+			 <td style='text-align:center'>$pub_date</td>
+			<td style='text-align:center'>$ccount</td>
+			<td style='text-align:center'>$clicks</td>
+			<td style='text-align:center'>$votes</td>
+
+			</tr>
 EOT;
       }
       $report .=  "</table>\n";
-    }
+    
      $report .= "<small>Updated ". date('d M H:i T') . "</small></div>\n\n";
 
 
@@ -191,16 +154,6 @@ EOT;
 
 //
 
-function str_to_ts($str,$interval=0)
-{
-        // returns sql formatted date of date in string, offset by interval in days
-    if (($timestamp = strtotime($str)) === false) {
-          die("invalid string $str in str_to_ts");
-    } else {
-        $offset = $interval*60*60*24;
-        return $timestamp-$offset;
-    }
-}
 
 
 function count_links($pdo) {
@@ -219,38 +172,36 @@ function count_comments_cron($id,$pdo){
     return $nRows;
 }
 
-function convert_dates ($to,$from) {
-    //takes date and coverts to sql dates using default values
-    // if no to, it's today
-    // if no from, it's 21 days before to-date
 
-    if ($to != '') {
-        $to_date = $to;
-    } elseif ( $to_date = date('Y-m-d')) {
-    } else {
-         die ("No valid ending date");
-
-    }
-  # echo "To: $to -> $to_date\n";
-
-    if (empty($from)) {
-        $from_ts = str_to_ts($to_date, 21);
-    } elseif ($from_ts = str_to_ts($from)) {
-
-
-    } else {
-        die ("No valid starting date");
-    }
-
-     $from_date = date('Y-m-d', $from_ts);
-
-    return array($to_date,$from_date);
-}
 
 #####################
 
 
-function report_recent_assets ($pst,$rowc,$cutoff) {
+function report_recent_assets ($from,$to,$max=0) {
+	$pdo = MyPDO::instance();
+
+	 $limit = ($max > 0) ? " LIMIT $max" : '';
+    $to_date = ($to) ? date('Y-m-d') : date('Y-M-d',strtotime($to));
+   $from_date = date('Y-M-d',strtotime($from));
+   $archival_tags = Defs::$archival_tags;
+   
+// any tag ('UI') has code ('U') contained in the set of archival_tags ('ABCUW');
+// regexp [abc] matches if string contains any of those characters.
+ $sql = "
+	  SELECT id,title,type,status,vintage,tags,sizekb, date_entered from `assets`
+	  WHERE date_entered > '$from_date'
+			AND status in ('R','S')
+			AND tags is NOT NULL
+			AND tags REGEXP '[$archival_tags]'
+	  ORDER BY date_entered DESC ;
+	  ";
+
+
+if (! $pst = $pdo -> query ($sql) ) {return false;} 
+ $rowc = $pst -> rowCount();
+ # echo  "$rowc articles found.\n";
+ if ($rowc == 0) { return false;}
+ 
     if (!$asset_tags = Defs::$asset_tags) {
     	die ("Did not get asset_tags");
     }
@@ -258,11 +209,11 @@ function report_recent_assets ($pst,$rowc,$cutoff) {
 
     
 	$report = "<div style='margin-left:2em;float:left'>";
-    $report .=  "<h4>$rowc new Archival Assets</h4>";
-    $report .= "<p style='font-size:0.9em;'>(This list shows archival assets only, not all assets.  Find any asset on the site by using Search &gt; Search Graphics/Video. 'Multimedia' means streaming audio/video. )</p>";
-   $report .=  "<table class='alternate article_list'>";
-   $report .= "
-        <tr style='background:#cfc;'><th>Title (click to view)</th><th>Tags</th><th>Type</th><th>Vintage</th><th>MB</th></tr>
+	$report .=  "<h4>$rowc new Archival Assets</h4>";
+	$report .= "<p style='font-size:0.9em;'>(This list shows archival assets only, not all assets.  Find any asset on the site by using Search &gt; Search Graphics/Video. 'Multimedia' means streaming audio/video. )</p>";
+	$report .=  "<table class='alternate article_list'>";
+	$report .= "
+	  <tr style='background:#cfc;'><th>Title (click to view)</th><th>Tags</th><th>Type</th><th>Vintage</th><th>MB</th></tr>
         ";
 
     foreach ($pst as $row) {
@@ -271,13 +222,16 @@ function report_recent_assets ($pst,$rowc,$cutoff) {
             . htmlspecialchars($row['title'],ENT_QUOTES)
             .  "</a>";
 
-        $tags = $row['tags']; $tagnames=[];
-        foreach (str_split($tags) as $tag){
-            $tagnames[] =  $asset_tags[$tag];
-        }
-        $tagtext = implode(", ",$tagnames);
+			$tagnames=[];
+        if ($tags = $row['tags'] ){
+        
+			  foreach (str_split($tags) as $tag){
+					$tagnames[] =  $asset_tags[$tag];
+			  }
+			  $tagtext = implode(", ",$tagnames);
+			}
         $vintage = (empty($row['vintage']))?'?':$row['vintage'];
-		$sizemb = round($row['sizekb'] / 1000,0);
+			$sizemb = round($row['sizekb'] / 1000,0);
 		
         $report .=  <<<EOT
  <tr >
@@ -289,11 +243,10 @@ function report_recent_assets ($pst,$rowc,$cutoff) {
 
 EOT;
     }
-    $report .=  "</table>\n";
-     $report .= "<small>Updated ". date('d M H:i T') . "</small></div>\n\n";
+   $report .=  "</table>\n";
+   $report .= "<small>Updated ". date('d M H:i T') . "</small></div>\n\n";
 
-
-    return $report;
+   return $report;
 }
 
 

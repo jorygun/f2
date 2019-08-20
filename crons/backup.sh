@@ -3,7 +3,7 @@
 #new daily sql dump, then remove oldest
 
 #see if its a Wed make weekly backup from oldest daily)
-day=`date +%u`
+day=`/bin/date +%u`
 datecode=`/bin/date +\%Y\%m\%d`
 echo datecode $datecode
 
@@ -18,18 +18,18 @@ fi
 
 
 #daily backups
-/usr/local/bin/mysqldump -hdb151d.pair.com -udigitalm_r -pSTjzyHFr digitalm_db1 > daily.sql.`/bin/date +\%Y\%m\%d`.sql
+/usr/local/bin/mysqldump -hdb151d.pair.com -udigitalm_r -pSTjzyHFr digitalm_db1 > daily.sql.$datecode.sql
 
-/usr/bin/tar -czf /usr/home/digitalm/backups/daily.site.`/bin/date +\%Y\%m\%d`.tar.gz /usr/home/digitalm/Sites/flames/live
+/usr/bin/tar -czf /usr/home/digitalm/backups/daily.site.$datecode.tar.gz /usr/home/digitalm/Sites/flames/live
 
 
 #remove older files leaving 1 less than +n
-ls -tp1 daily.sql.* | tail -n +7 |  xargs -r -d '\n' rm --
-ls -tp1 daily.site.* | tail -n +4 |  xargs -r -d '\n' rm --
+/bin/ls -tp1 daily.sql.* | tail -n +7 |  xargs -r -d '\n' rm --
+/bin/ls -tp1 daily.site.* | tail -n +4 |  xargs -r -d '\n' rm --
 
 
-ls -tp1 weekly.sql.* | tail -n +3 |  xargs -r -d '\n' rm --
-ls -tp1 weekly.site.* | tail -n +4 |  xargs -r -d '\n' rm --
+/bin/ls -tp1 weekly.sql.* | tail -n +3 |  xargs -r -d '\n' rm --
+/bin/ls -tp1 weekly.site.* | tail -n +4 |  xargs -r -d '\n' rm --
 
 
 #clean up old logs and mailings

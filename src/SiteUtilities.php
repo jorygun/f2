@@ -10,8 +10,15 @@ use Digitalmx\Flames\Member;
 
 
 function getLastPub() {
-	$ts = file_get_contents(REPO_PATH . '/var/data/last_published_ts.txt');
-	return trim($ts);
+	$lts_file = REPO_PATH . '/var/data/last_published_ts.txt';
+	if (file_exists($lts_file)){
+		$ts = trim( file_get_contents($lts_file) );
+	}
+	else {
+		echo "No last_published_file; using -2 weeks";
+		$ts = strtotime('-2 weeks');
+	}
+	return $ts;
 }
 
 function actionButton($label,$action,$uid,$affects='',$message='') {
