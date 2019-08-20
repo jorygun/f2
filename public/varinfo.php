@@ -23,6 +23,7 @@ require $init_file;
 
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
+use digitalmx\flames as f;
 
 use digitalmx\flames\Login;
 use digitalmx\flames\Menu;
@@ -112,7 +113,11 @@ if ($verbose) {
 }
 echo "<br><hr><br />";
 
-
+echo "Last Newsletter Date" . BRNL;
+	$last = f\getLastPub();
+	echo date('d M Y',$last);
+	exit;
+	
 
 
 try {

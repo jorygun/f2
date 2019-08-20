@@ -156,7 +156,7 @@ function make_date ($when, $form='human',$type = 'date'){
 			break;
 		case 'human' :
 			$format = ($type=='time')?
-		'd M, Y H:i' : 'd M, Y';
+		'd M, Y H:i' : 'd M Y';
 			break;
 		case 'rfc' :
 			$format = DATE_RFC822;

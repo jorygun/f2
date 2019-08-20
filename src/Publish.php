@@ -1,3 +1,4 @@
+WORK IN PROGRESS
 <?php
 namespace digitalmx\flames;
 
@@ -46,7 +47,7 @@ class Publish()
 	public function getUpdates($since) {
 		$sql_start_time = u\makeDate($since,'sql','time');
 		$human_start_time = u\makeDate($since,'human','time');
-		$now = date('d M, Y');
+		$now = date('d M Y');
 		
 		#get membership
 		list ($active,$lost,$total) = $this->member->getMemberCounts();

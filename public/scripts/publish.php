@@ -33,7 +33,7 @@ if ($login->checkLogin(4)){
 	$pubdate = new \DateTime();
 
 	$condensed_date = $pubdate -> format('ymd');
-	$conventional_date = $pubdate -> format('M j, Y');
+	$conventional_date = $pubdate -> format('j M Y');
 	echo "$conventional_date translates to $condensed_date<br>";
 
 #get title from news_next

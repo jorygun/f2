@@ -602,7 +602,7 @@ function initialize_row () {
         'contributor_id'	=>	$_SESSION['login']['user_id'],
         'status'	=>	'N',
         'id'    => 0,
-        'source_date' => date('d M, Y'),
+        'source_date' => date('d M Y'),
         'content'	=>	"",
         'take_comments'	=>	true,
         'take_votes' => true,

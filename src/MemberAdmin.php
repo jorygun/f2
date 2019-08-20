@@ -58,8 +58,8 @@ class MemberAdmin {
 		$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid,$emstat_id);
 		  $urlemail = rawurlencode($row['user_email']);
 		   $username = u\entity_spec($row['username']);
-		  $last_login = date('d M, Y',strtotime($row['last_login']));
-		  $email_last_validated = date('d M, Y', strtotime($row['email_last_validated']));
+		  $last_login = date('d M Y',strtotime($row['last_login']));
+		  $email_last_validated = date('d M Y', strtotime($row['email_last_validated']));
 		  	#$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid);
 		  	$validateEmailButton = "<button type='button' onClick='verifyEmail($uid)'>Verify</button>";
 		  
@@ -69,7 +69,7 @@ class MemberAdmin {
 		  	if ($contribute_time == 0){
 		  		$cdate = 'Never';
 		  	} else {
-		  		$cdate = date('d M, Y', $contribute_time);
+		  		$cdate = date('d M Y', $contribute_time);
 		  	}
 		 
 		  	

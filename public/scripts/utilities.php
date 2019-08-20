@@ -1115,7 +1115,7 @@ function get_latest_pub_date($form='timestamp')
         case 'sql':
             $rdate = date('Y-m-d',$tstamp); break;
         case 'conventional':
-            $rdate = date('d M, Y',$tstamp); break;
+            $rdate = date('d M Y',$tstamp); break;
         case 'sqldt':
             $rdate = date('Y-m-d H:m',$tstamp); break;
         case 'timestamp':

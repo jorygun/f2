@@ -873,7 +873,7 @@ public function getLogins($tag) {
    
     public function verifyEmail ($id) {
 		 if ($this->setEmailStatus($id,'Y') ){
-			return date('d M, Y');
+			return date('d M Y');
 		 } else {
 			return false;
 		 }
@@ -1049,7 +1049,7 @@ public function getLogins($tag) {
 		}
 		try {
 			if ($this->pdo->query($sql) ){
-				return date('d M, Y');
+				return date('d M Y');
 			}
 		} catch (Exception $e) {
 			echo "PDO failed: " . $e->getMessage();
@@ -1073,7 +1073,7 @@ public function getLogins($tag) {
 		if (! $result = $this->pdo->query($sql) ){
 			return false;
 		}
-		return date('d M, Y');
+		return date('d M Y');
 	}
 	
 } #end class

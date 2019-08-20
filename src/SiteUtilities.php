@@ -9,7 +9,10 @@ use Digitalmx\Flames\Member;
 #use Digitalmx\Flames\Configuration;
 
 
-
+function getLastPub() {
+	$ts = file_get_contents(REPO_PATH . '/var/data/last_published_ts.txt');
+	return trim($ts);
+}
 
 function actionButton($label,$action,$uid,$affects='',$message='') {
    	// script to buld button for ajax

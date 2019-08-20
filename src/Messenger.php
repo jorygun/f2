@@ -294,7 +294,7 @@ and change it in your profile.
 		$this->replacements ['::prior_email::'] = $row['prior_email'];
 		$this->replacements ['::informant::'] = "another member" ;
 		$this->replacements ['::user_dataset::'] = $this->user_dataset;
-		$this->replacements ['::join_date::'] = date('d M, Y',strtotime($row['join_date']));
+		$this->replacements ['::join_date::'] = date('d M Y',strtotime($row['join_date']));
 		$this->replacements ['::closing::'] = self::$closing;
 		
 		$this->replacements ['::profile::'] =  
