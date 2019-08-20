@@ -1,14 +1,32 @@
 <?php
-//BEGIN START
-	require_once 'init.php';
-	require_once "./scripts/asset_functions.php";
-	use digitalmx\MyPDO;
-	if (f2_security_below(1)){exit;}
+namespace digitalmx\flames;
+#ini_set('display_errors', 1);
 
+//BEGIN START
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\DocPage;
+	use digitalmx\MyPDO;
+	
+
+
+if ($login->checkLogin(1)){
+   $page_title = 'Galleries';
+	$page_options=[]; #ajax, votes, tiny 
+	
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	# other heading code here
+	
+	echo $page->startBody();
+}
+	
 //END START
 
-
-
+require 'asset_functions.php';
 
 
 if ($gal = $_SERVER['QUERY_STRING']){display_gallery($gal);}
@@ -17,8 +35,6 @@ exit;
 
 #########################################
 function display_gallery($gal){
-    $nav = new navBar(1);
-    $navbar = $nav -> build_menu("<p><a href='/galleries.php/' target='gallery'>Return to All Galleries</a></p>");
     $pdo = MyPDO::instance();
 
     if (! is_numeric($gal)){
@@ -62,32 +78,11 @@ function display_gallery($gal){
 
 	}
     else {
-        $assets = list_numbers($row['gallery_items']);
+        $assets = f\list_numbers($row['gallery_items']);
     }
     if (empty($assets)){$notice = "No assets found";}
 
-    $title = hte($row['title']);
-    $caption = hte ($row['caption']);
-   if ($row['title'] != $row['caption']){ $comments = "<p>" . nl2br($caption). "</p>";}
-
    
-    echo <<<EOT
-    <html>
-    <head>
-    <title>$title</title>
-    <link rel='stylesheet' href='/css/news3.css'>
-    </head>
-    <body>
-    $navbar
-    <h4>$title</h4>
-    $comments
-    $note
-    <p>$notice</p>
-
-    <hr>
-EOT;
-   # echo "nav option: " , $nav -> get_option();
-
     foreach ($assets as $asset){
         if (is_numeric($asset) ){
             if (!empty( $out = get_gallery_asset($asset) )){
@@ -182,17 +177,10 @@ function get_gallery_asset($id){
 
 
 function show_galleries($note=''){
-    $nav = new navBar(true);
-    $navbar = $nav -> build_menu();
+  
     $pdo = MyPDO::instance();
-
-    echo <<<EOT
-    <html><head><title>Galleries</title>
-     <link rel='stylesheet' href='/css/news3.css'>
-    </head>
-    <body>
-    $navbar
-    <p>$note</p>
+echo <<<EOT
+      <p>$note</p>
     <h4>Choose a Gallery</h4>
     <p>Galleries are collections of photos that have been uploaded
     to the AMDFlames site.  Each photo is about 350px wide,
