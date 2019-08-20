@@ -78,7 +78,7 @@ function report_recent_articles ( $from, $to, $max=0) {
 
     $limit = ($max>0) ? " LIMIT $max" : '';
     
-    $to_date = ($to) ? date('Y-m-d') : date('Y-M-d',strtotime($to));
+    $to_date = ($to) ?  date('Y-M-d',strtotime($to)): date('Y-m-d') ;
    $from_date = date('Y-M-d',strtotime($from));
 
     $sql = "
@@ -103,7 +103,7 @@ function report_recent_articles ( $from, $to, $max=0) {
 	    ;
 	    ";
 
- 
+ echo $sql . BRNL;
     if (!$pst = $pdo->query ($sql) ){return false;}
     $rowc = $pst -> rowCount();
      if ($rowc == 0) {return false;}
