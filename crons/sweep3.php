@@ -84,8 +84,8 @@ $now_datestamp = $dt->format('Ymd_His');
 $now_human = $dt->format("M j, H:i a");
 
 
-$sweep_log_dir = REPO_PATH . "/var/logs/sweep_logs";
-$sweep_log = $sweep_log_dir . "/${now_datestamp}-${mode}.txt";
+$sweep_log_dir = REPO_PATH . "/var/logs";
+$sweep_log = $sweep_log_dir . '/sweep-' . "${now_datestamp}-${mode}.txt";
 if (! $quiet)
 echo "Logging to $sweep_log" . BRNL;
 

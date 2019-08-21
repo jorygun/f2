@@ -47,18 +47,14 @@ EOT;
          <script src='/js/tiny_init.js'></script>
          ";
       }
-      if (!empty($options) && in_array('ajax',$options)){
+      if (!empty($options) &&
+      	(in_array('ajax',$options) ||  in_array('votes',$options) )){
          $t .= "
          <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
          <script src='/js/ajax.js'></script>
          ";
       }
-      if (!empty($options) && in_array('votes',$options)) {
-         $t .= "
-         <link rel='stylesheet' href='/css/votes.css' />
-         <script src='/js/voting3.js'></script>
-         ";
-      }
+     
 
       return $t;
    }
@@ -77,7 +73,7 @@ EOT;
          $t .= <<<EOT
 <div style="color: #009900; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">
 <div style="position:relative;float:left;vertical-align:bottom;margin-left:100px;">
-   <div style=" float:left;"><img alt="" src="graphics/logo-FLAMEs.gif"></div>
+   <div style=" float:left;"><img alt="" src="/graphics/logo-FLAMEs.gif"></div>
    <div style= 'position:absolute; bottom:0;margin-left:100px;width:750px;'>FLAMES - The Official AMD Alumni Site </div>
 </div>
 <p style="font-size:14pt;clear:both;text-align:center;width:750px;margin-left:100px;">

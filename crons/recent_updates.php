@@ -103,7 +103,7 @@ function report_recent_articles ( $from, $to, $max=0) {
 	    ;
 	    ";
 
- echo $sql . BRNL;
+# echo $sql . BRNL;
     if (!$pst = $pdo->query ($sql) ){return false;}
     $rowc = $pst -> rowCount();
      if ($rowc == 0) {return false;}

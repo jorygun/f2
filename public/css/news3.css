@@ -371,89 +371,16 @@ div.apology {
 	border:2px solid gray;margin-left:1em;padding:1em;
 }
 
-/* 
-#rightframe{
-	max-width:700px;
-	width:70%;	margin-left:5px;
-	float:left;
-	padding-left:5px;
-	overflow:auto;
-}
+.btn-votes {cursor:pointer; float:left;}
+.net-votes {float:left;}
 
-#navframe  {
-	background: #060;
-	padding-left:10px;
-	padding-right:10px;
-	max-width:10em;	width:180px;
-	height:100%;	margin:0;
-	text-align:center;
-	float:left;
-	}
-.navbar {width:180px;flex:1}
+.btn-votes button {border: 0; background: transparent;}
 
-.navbar h2 {font-size:1.2em;
-    font-weight:bold;
-    font-family:times,serif;
-	color:white;
-	text-align:center;
-	}
-.navbar h3 {font-size:1em;
-    font-weight:bold;
-    font-family:times,serif;
-	color:white;
-	text-align:center;
-	}
-.navbar h4 {
-    font-size:1em;
-    font-weight:normal;
-    font-family:times,serif; font-weight: bold;
-	color:white;
-	text-align:center;
-	}
+.label-votes {font-weight:bold;margin-bottom:0;}
+.vpanel p {margin:4px;}
 
-.navbar ul
-{
-list-style-type:none;
-margin:0px;
-padding:0px;
-
-}
-
-.navbar li
-{
-
-display:block;
-font-family:arial;
-font-weight:bold;
-color:#060;
-background-color:yellow;
-margin:4px;
-text-align:center;
-font-size:0.8em;
-padding:4px;
-text-decoration:none;
-text-transform:uppercase;
-}
-
-
-.navbar a:link,a:visited
-{
-text-decoration:none;
-color:#060;
-
-}
-
-.navbar a:hover,a:active
-{
-background-color:#7A991A;
-color:yellow;
-}
-
-.navbar li.action:hover,li.action:active
-{
-cursor:pointer;
-background-color:#7A991A;
-color:yellow;
-}
- */
+/* used in news page to display both discussion and voting choices */
+table.voting {width:100%; border:0;}
+table.voting td {text-align:center;vertical-align:top;}
+div.vpanel {text-align:center;}
 
