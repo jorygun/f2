@@ -2,7 +2,7 @@
 namespace digitalmx;
 // same as MyPDO.class.php except this one in digitalmx ns.
 
-
+use \Exception as Exception;
 
 /* singleton instancts of PDO.  Uses constants for server config,
 	or uses <repo>/config/config.ini  if not already set.

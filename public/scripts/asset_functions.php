@@ -4,9 +4,10 @@
 */
 namespace digitalmx\flames;
 
-use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\MyPDO;
-use digitalmx as u;
+	use digitalmx as u;
+	use digitalmx\flames as f;
 
 	use \Imagick;
 
@@ -297,6 +298,7 @@ function get_asset_data($id){
     	$itemdata['status'] = 'N';
     	$itemdata['date_entered'] = 'NOW()';
     	$itemdata['contributor'] = $_SESSION['login']['username'];
+    	$itemdata['vintage'] = date('Y');
 	}
 
     else{
@@ -754,15 +756,24 @@ function update_asset($post_array){
    $valid_keys = array_merge($editable_fields,$auto_fields);
 #echo "<p>Post:</p>\n"; print_r ($post_array);
 #echo "<p>Valid:</p>\n"; print_r ($valid_keys);
-
+try {
     $prep = pdoPrep($post_array,$valid_keys,'id');
     $id = $prep['key'];
     $sql = "UPDATE `assets` SET ${prep['update']} WHERE id=${prep['key']};";
-    echo "sql:<br>$sql<br>" . u\echor($prep['data'],'data');
     $stmt = $pdo->prepare($sql);
+
      $stmt->execute($prep['data']);
 	echo ".. done. " . BRNL;
     return true;
+} catch (\Exception $e){
+	$edata = array(
+		'sql' => $sql,
+		'data' => $prep['data']
+	);
+	u\catchError($e,$edata);
+	exit;
+}
+	
 }
 
 function add_link_data($url){
@@ -1054,7 +1065,9 @@ function post_asset($post_array){
 
 #recho ($post_array,"Ready to Update"); exit;
     // Decomptress the tag options
-    $post_array['tags'] = charListToString($post_array['tags']);
+    if (!empty($post_array['tags'])){
+    	$post_array['tags'] = charListToString($post_array['tags']) ;
+    }
 
     #remove entities from title, caption, notes
     foreach (['caption','title','notes'] as $v){

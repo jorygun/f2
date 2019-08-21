@@ -12,7 +12,7 @@ use \Exception as Exception;
 	string = spchard($string / restores spec chars
 	
 	bool = delete_dir(path) /removes files, subs, and dir
-	bool = is_valid_email (email) /checks with filter
+	bool = isValidEmail (email) /checks with filter
 	array = get_url(url) /uses curl, content is in [content=>xxx]
 	string = detab_text(string) / replaces tabs with spaces
 	array = list_recent_files ($path,number) / list of file names in path
@@ -27,6 +27,7 @@ use \Exception as Exception;
 	string = charListToString(list) / implodes list
 	string = makelinks(strings) / replaces urls with links
 	d = days_ago(date) /days since date
+	void = catchError ($e, $more)
 	
 */
 
@@ -48,6 +49,22 @@ function entity_spec($var){
 	return htmlspecialchars($var,ENT_QUOTES);
 }
 
+function catchError ( $e , $more=[]){
+	echo "<p class='red'>Failed " . $e->getFile() . ' at ' . $e->getLine() . ': </p>' . BRNL;
+	echo $e->getMessage() . BRNL;
+	if ($more) {
+		echo "------------" .BRNL ;
+		foreach ($more as $var => $val){
+			if (is_array($val)){
+				echor($val,$var);
+				continue;
+			}
+			echo "<b>$var: </b><br> $val" . BRNL;
+		}
+	}
+				
+	echo "<hr>\n";
+}
 
 
 function deleteDir($path) {
@@ -125,6 +142,9 @@ function list_recent_files($number,$path){
     $files = array_values(array_slice($mtimes, 0, $number, true));
     $fnames = array_filter($files,function($f){return basename($f);});
     return $fnames;
+}
+function makeDate($when, $form='human',$type = 'date') {
+	return  make_date ($when, $form,$type);
 }
 
 function make_date ($when, $form='human',$type = 'date'){
@@ -239,6 +259,14 @@ function pdoPrep($data,$include=[], $key=''){
             if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
             $db[$var] = htmlspecialchars_decode($val);
+            if (empty($db[$var])){
+            	$db[$var] = '';
+            	if ($var == 'asset_id'){ 
+            		unset ($db[$var]);
+            		continue; 
+            	} #leave out of list
+   
+            }
 				
             $ufields[] = "$var = :$var";
             $ifields[] = $var;
@@ -431,9 +459,6 @@ function make_links($input){
 
 
 
-function daysAgo($date_str = '1') {
-	return days_ago ($date_str);
-}
 
 function days_ago ($date_str = '1') {
 	//takes a date and returns the age from today in days and a formatted version of date
