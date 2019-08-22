@@ -1,17 +1,21 @@
 <?php
 namespace digitalmx\flames;
+#ini_set('display_errors', 1);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 require_once "ReadNews.php";
+
 
 use digitalmx as u;
 use digitalmx\flames as f;
 use digitalmx\flames\ReadNews;
 
 $read = new ReadNews();
+// contains routines needed for the news page
 
 
-#ini_set('display_errors', 1);
+
+
 
 // PUBLISH DATA INSERTED
 //     \$mode = 'published';
@@ -31,9 +35,9 @@ $read = new ReadNews();
 
 //PUBLISH DATA
 
+// set up for unpublished newsletter
+	$publish_time = '';
 
-$subtitle = '';
-$preview='';
 #test to see if newsletter has been publsihed or not
 if (file_exists("publish.txt")){
    include "publish.txt"; #publish data block
@@ -49,23 +53,24 @@ if (file_exists("publish.txt")){
 
 else {
 #Set up data for preview edition
-    $preview = "<p class='centered'>(Preview Edition)</p>";
     $page_title = 'Flame News Preview';
 	$min_security = 4;
-	$condensed_date = 999999; #for updating reads count
-
+	$date_code = 999999; #for updating reads count
+	
 }
 $latest_file = u\list_recent_files (1,getcwd())[0];
 $updatetime = date ("m/d/y H:i T", filectime($latest_file));
 $footer_line = "Updated at $updatetime";
 
+$page_title = "AMD Flames News $pub_date";
+$preview='';
 
 if (file_exists("title.txt")){
    $subtitle = file_get_contents('title.txt');
 
 }
 elseif (isset($conventional_date)) {
-    $subtitle = $conventional_date;
+    $title = $conventional_date;
     #from the publish data block
 }
 else {$subtitle = '';}
@@ -77,7 +82,7 @@ $page_options = ['ajax'];
 if ($login->checkLogin(0)){
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
-	echo $page->startBody(3);
+	echo $page->startBody(1,$subtitle);
 	echo $preview;
 }
 

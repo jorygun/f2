@@ -73,7 +73,7 @@ function display_gallery($gal){
 	    $crit = $m[1];
 	    $sql = "Select id from `assets` where status not in ('E','X','D') AND $crit";
 	    $note =  "<p>Searching assets where: $crit </p>";
-	    $assets = $pdo->query($sql)->fetchAll(PDO::FETCH_COLUMN);
+	    $assets = $pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
 	    #recho ($assets,"Found $crit");
 
 	}
@@ -101,7 +101,7 @@ function get_gallery_asset($id){
    if (empty($id)){return '';}
     $pdo = MyPDO::instance();
     $sql = "SELECT * from `assets` WHERE id = $id";
-    $row = $pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+    $row = $pdo->query($sql)->fetch(\PDO::FETCH_ASSOC);
     if (empty($row)){return '';}
     #recho($row);
 

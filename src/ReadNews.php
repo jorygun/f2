@@ -82,17 +82,19 @@ class ReadNews {
 	}
 
 	public function echo_if ($filename,$extra='') {
+		#echo "Called echo_if on $filename<br>\n";
 		if ($var = $this->get_news_file($filename,$extra='') ){
 			echo $var;
 		}
 	}
 	private function get_news_file($filename,$extra=''){
 		#pass filename, possible heding text,
-	 
+	 	#echo "looking for filename $filename .. ";
 		
 		#look in local directory, then news_live, then  in news directory
 		$dirs = array(
 			'.',
+			SITE_PATH . '/news/live',
 			SITE_PATH . '/var/live',
 			SITE_PATH . '/news'
 		);
@@ -101,7 +103,7 @@ class ReadNews {
 		foreach ($dirs as $dir ) {
 			if (!$hit && file_exists("$dir/$filename") ) {
 				$hit = "$dir/$filename";
-				#echo "hit on $hit" . BRNL;
+				#echo "hit on $hit " ;
 				 $content = file_get_contents($hit);
 				 if (substr($filename,0,5) == 'news_') { #need to prepocess news files
 					#echo "preprocessing $hit." . BRNL;
@@ -112,12 +114,10 @@ class ReadNews {
 					$content = "$extra\n" . $this->replace_new_discussion($content);
 					return $content;
 				}
-				else {return $content;}
+				else {return $content;} #no special processing
 			}
-			return $content;
-
 		}
-
+		#echo "No file. <br>\n";
 	}
 	
 		private function replace_old_discussion ($content) {

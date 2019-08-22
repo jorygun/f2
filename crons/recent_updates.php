@@ -1,6 +1,8 @@
 <?php
 namespace digitalmx\flames;
 
+ini_set('display_errors', 1);
+ini_set('error_reporting', E_ALL);
 
 
 /**
@@ -35,8 +37,8 @@ use digitalmx\MyPDO;
 
 /* MAIN */
 
-$recent_article_file = REPO_PATH . '/var/live/recent_articles.html';
-$recent_asset_file = REPO_PATH . "/var/live/recent_assets.html";
+$recent_article_file = REPO_PATH . '/public/news/live/recent_articles.html';
+$recent_asset_file = REPO_PATH . "/public/news/live/recent_assets.html";
 
 #get latest pub date
 
@@ -57,7 +59,7 @@ if( $recent_asset_report = report_recent_assets ($from,0,30 ) ){
 
 #build article report
 
-if ($recent_article_report = report_recent_articles ($from,0,30) ){
+if ($recent_article_report = report_recent_articles ($from,0,30,$test) ){
 	if ($test){ echo ($recent_article_report);}
 	file_put_contents($recent_article_file, $recent_article_report );
 } else {
@@ -69,20 +71,25 @@ if ($recent_article_report = report_recent_articles ($from,0,30) ){
 
 ###################################
 
-function report_recent_articles ( $from, $to, $max=0) {
+function report_recent_articles ( $from, $to, $max=0,$test) {
 	$pdo = MyPDO::instance();
-
+	
 	// get article links into an array
 	$link_counts = count_links($pdo);	
 #	u\echor ($link_counts, 'link counts');
 
     $limit = ($max>0) ? " LIMIT $max" : '';
-    
-    $to_date = ($to) ?  date('Y-m-d',strtotime($to)): date('Y-m-d') ;
+    $to_date = ($to)?   date('Y-m-d',strtotime($to)) :  date('Y-m-d');
+    if ($test){
+    	$tomorrow = new \DateTime('+2 days');
+    	$to_date = $tomorrow->format('Y-m-d');
+   }
+   
    $from_date = date('Y-m-d',strtotime($from));
 
-    $sql = "
-       SELECT n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source, c.comments, v.net_votes
+
+    $sql = "SELECT n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source, 
+       c.comments, v.net_votes
 	    FROM news_items n
         LEFT JOIN  (
             SELECT item_id, on_db, count(*) as comments
@@ -94,16 +101,15 @@ function report_recent_articles ( $from, $to, $max=0) {
             FROM `votes`
             GROUP BY news_fk
             ) v ON v.news_fk = n.id
-        WHERE
-		n.date_published >= '$from_date' AND
-		n.date_published < '$to_date' - INTERVAL 1 DAY
+        WHERE n.date_published >= '$from_date' AND n.date_published < '$to_date' - INTERVAL 1 DAY
         GROUP BY n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source, c.comments, v.net_votes
         ORDER BY n.date_published DESC
 	    $limit
 	    ;
 	    ";
 
-# echo $sql . BRNL;
+if ($test) {echo "starting article report from $from_date to $to_date.\n" ; }
+
     if (!$pst = $pdo->query ($sql) ){return false;}
     $rowc = $pst -> rowCount();
      if ($rowc == 0) {return false;}
