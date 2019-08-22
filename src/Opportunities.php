@@ -16,9 +16,11 @@ class Opportunities
 	private $level;
 
 
-	public function __construct ($level) {
+	public function __construct ($level=0) {
 		$this->pdo = MyPDO::instance();
-		$this->level = $level;
+		// need to pass level for menu because session not set yet.
+		// otherwise, use the session level
+		$this->level = ($level > 0)? $level : $_SESSION['level'];
 		$this->opp_list = $this->getOppList();
 		 $this->opp_count = count($this->opp_list);
 		# echo $this->opp_count . " Opps retrieved" . BRNL;

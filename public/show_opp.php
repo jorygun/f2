@@ -78,7 +78,7 @@ EOT;
 
 	function show_data($row) {
 		$description = $row['description'] ?? '';
-		$status = $row['active']? 'Inactive':'Active';
+		$status = $row['active']? 'Active':'Inactive';
 		$id = $row['id'];
 			echo <<<EOT
 	<h3>{$row['title']}</h3>
