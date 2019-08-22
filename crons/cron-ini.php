@@ -67,7 +67,7 @@ try {
 
 	ini_set('include_path', 
 		'.'
-		. ':' . PROJ_PATH . '/libmx'
+		. ':' . REPO_PATH . '/libmx'
 		. ':' . REPO_PATH . '/config'
 		. ':' . REPO_PATH . '/code'
 		. ':' . REPO_PATH . '/src'
