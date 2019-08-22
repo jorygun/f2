@@ -63,7 +63,7 @@ class Opportunities
 				
 			$list[] = $line . $button;
 		}
-		if (true or $level > 0) {$list[] = "<a href='/show_opp.php?id=0&edit=true'> Create New Opp</a> ";}
+		if ($level > 0) {$list[] = "<a href='/show_opp.php?id=0&edit=true'> Create New Opp</a> ($level) ";}
 		#u\echor($list,'list'); exit;
 		return $list;
 	}
