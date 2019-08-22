@@ -22,7 +22,7 @@ class ReadNews {
 		$this->voting = new Voting();
 		$this->pdo = MyPDO::instance();
 		$this->member = new Member();
-		$this->opps = new Opportunities();
+		$this->opps = new Opportunities($_SESSION['level']);
 	
 	}
 	
