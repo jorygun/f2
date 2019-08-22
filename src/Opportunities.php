@@ -13,11 +13,12 @@ class Opportunities
 	private $opp_count = 0;
 	private $pdo;
 	private $opp_list = array();
+	private $level;
 
 
-	public function __construct () {
+	public function __construct ($level) {
 		$this->pdo = MyPDO::instance();
-	
+		$this->level = $level;
 		$this->opp_list = $this->getOppList();
 		 $this->opp_count = count($this->opp_list);
 		# echo $this->opp_count . " Opps retrieved" . BRNL;
@@ -44,7 +45,7 @@ class Opportunities
 		// uses user_id to determine if user has editing privieges or not.
 		
 		$list = [];
-		$level = $_SESSION['level'] ?? 0;
+		$level = $this->level;
 		foreach ($this->opp_list as $opp_row){
 			$line = $button = '';
 			$id = $opp_row['id'];

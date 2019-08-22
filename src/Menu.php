@@ -37,7 +37,7 @@ class Menu {
 		
 		 $this->login = $log_info;
 			$this->header = $header;
-		$this->opp = new Opportunities;
+		$this->opp = new Opportunities($log_info['seclevel']);
 	 
 	}
 
