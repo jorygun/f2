@@ -24,7 +24,6 @@ class Opportunities
 		$this->opp_list = $this->getOppList();
 		 $this->opp_count = count($this->opp_list);
 		# echo $this->opp_count . " Opps retrieved" . BRNL;
-	
 	}
 	
 			
