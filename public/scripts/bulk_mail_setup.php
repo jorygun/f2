@@ -17,10 +17,10 @@ namespace digitalmx\flames;
 	use digitalmx\flames\BulkMail;
 
 	
-
-	$page = new DocPage;
-	$title = "Bulk Mail Setup"; 
-	echo $page->startHead($title, 3,['ajax']);
+	$page_title  = "Bulk Mail Setup";
+	$page = new DocPage($page_title);
+	 
+	echo $page->startHead(['ajax']);
 	
 	echo <<<EOT
 	<style type='text/css'>
@@ -39,7 +39,7 @@ EOT;
 
 
 
-	echo $page->startBody($title ,2);
+	echo $page->startBody(2);
 
 //END START
 	

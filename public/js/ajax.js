@@ -31,7 +31,7 @@ function cancel_bulk(job) {
 function setTitle() {
      var title = $('#title_text').val();
 	$.ajax({
-	url: "/ajax.php",
+	url: "/action.php",
 
 	data:'ajax=setNewsTitle&title='+title,
 	type: "POST",
@@ -45,7 +45,7 @@ function setTitle() {
 
 function takeAction (uid,action) {
    $.ajax({
-   url: "/ajax.php",
+   url: "/action.php",
    data: 'ajax='+action+'&uid='+uid,
    type: "POST",
    success: function (response) {
@@ -56,7 +56,7 @@ function takeAction (uid,action) {
 
 function getMessage (type) {
    $.ajax({
-   url: "/ajax.php",
+   url: "/action.php",
    data: 'ajax=getmess&type='+type,
    dataType: 'json',
   method: 'post',

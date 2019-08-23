@@ -5,10 +5,8 @@ ini_set('display_errors', 1);
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 use digitalmx as u;
 use digitalmx\flames\Definitions as Defs;
-	use digitalmx\MyPDO;
-   if (f2_security_below(7)){exit;}
-	$nav = new navBar(1);
-	$navbar = $nav -> build_menu();
+use digitalmx\MyPDO;
+   
 	
 
 class BulkMailSetup 
