@@ -1,26 +1,53 @@
 <?php
+namespace digitalmx\flames;
+
+#ini_set('display_errors', 1);
+
+
 //BEGIN START
-ini_set('display_errors', 1);
+	require_once '../init.php';
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-require_once 'BulkMail.php';
+	#require others
+#	require_once 'BulkMail.php';
+	
+	use digitalmx\flames\DocPage;
+	use digitalmx as u;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames as f;
+	use digitalmx\flames\BulkMail;
 
-use digitalmx as u;
-use digitalmx\flames\Definitions as Defs;
-	use digitalmx\MyPDO;
-use digitalmx\flames\BulkMail;
+	
+	$page_title  = "Bulk Mail Setup";
+	$page = new DocPage($page_title);
+	 
+	echo $page->startHead(['ajax']);
+	
+	echo <<<EOT
+	<style type='text/css'>
+.highgreen {background-color:#9C6;}
+#in_bulk_queue li.error {color:red;}
+#in_bulk_queue li.queued {color:green;}
+#in_bulk_queue li.cancelled{color:blue;}
+#in_bulk_queue li.running {color:orange;}
 
-    if (f2_security_below(7)){exit;}
-	$nav = new navBar(1);
-	$navbar = $nav -> build_menu();
-	$pdo = MyPDO::instance();
+.red {color:red;}
+.
+</style>
+
+
+EOT;
+
+
+
+	echo $page->startBody(2);
+
+//END START
 	
-	
-	
+
 	$bulkmail = new BulkMail();
-
-
-	$bulk_processor = PROJ_PATH . "/crons/send_bulk.php";
+	
+	
+	$bulk_processor = REPO_PATH . "/crons/send_bulk.php";
 	
 	
 
@@ -49,7 +76,7 @@ use digitalmx\flames\BulkMail;
 	$assets = $news_latest . "/assets.txt";
 
 
-	$queue = PROJ_PATH . '/bulk_jobs/queue'; #directory.  put jobs in here
+	$queue = REPO_PATH . '/var/bulk_queue'; #directory.  put jobs in here
 
 	
 	$comments = $news_latest . "/current_comments.txt";
@@ -74,95 +101,11 @@ use digitalmx\flames\BulkMail;
     	$edition_name = 'no name';
     	$latest_pointer = 'news_';
     }
-  	$interval = 15;
+  	$interval = 6;
 
 	
 
 ##########################
-$standard_message = <<<EOT
-Dear ::name,
-
-The AMD FLAMEs News, $edition_name edition, is ready. 
-Here's your personal link directly to the most current newsletter:
-	::newslink
-
-(To view any of the nearly 1000 back issues, 
-log in and choose Dig In > Newsletter Index.)
-
-::profile
-
-IN THIS ISSUE
-
-::teaser
-
-We send these messages to all of our members that have not
-asked to opt out. If you want to stop receiving these emails,
-log in and change the setting in your profile,
-or email the admin by replying to this email.
-
-EOT;
-
-$js_standard = ml_script($standard_message);
-$subj_standard = "FLAME News $edition_name for ::name";
-####################
-$html_standard = <<<EOT
-<html><body>
-Dear ::name,
-<table style='border:0;width:90%;'><tr><td >
-<img src='https://amdflames.org/graphics/logo69x89.png' /></td><td>
-The AMD FLAMEs News, $edition_name edition, is ready. 
-Here's your personal link to the most current newsletter:
-    ::newslink
-
-(To view any of the nearly 1000 back issues, 
-log in and choose Dig In > Newsletter Index.)
-
-</td></tr><tr><td colspan='2'>::profile</td></tr>
-<tr><td></td><td>
-<b>IN THIS ISSUE</b>
-<pre>
-::teaser
-</pre>
-
-</td></tr><tr><td colspan='2'>
-We send these messages to all of our members that have not asked to opt out. If you want to stop receiving these emails, log in and change the setting in your profile, or email the admin by replying to this email.
-</td></tr></table>
-EOT;
-$js_html_standard = ml_script($html_standard);
-$subj_standard = "FLAME News $edition_name for ::name";
-
-######################
-$periodic_lost_message = <<<EOT
-::name,
-
-I'm sending this email because you are listed on the AMD alumni site
-amdflames.org as Lost.
-
-It means we tried to contact you to see if your email address was
-still right, the email didn't bounce, but we did not receive a reply.
-Sometimes those emails don't get through or you may not have noticed.
-
-This email was sent to: ::uemail
-
-If you get this email and are NOT LOST, please just click on the link
-below to verify your email.
-   ::verify
-
-If you would like to update your status or change to a different email,
-just log in using this link, and edit your profile.
-   ::link
-
-I've listed below the headlines in the current newsletter.
-If you weren't lost you would have received this in an email.
--------------------------------------------------------
-::teaser
-
-EOT;
-
-$js_periodic_lost = ml_script($periodic_lost_message);
-$subj_periodic_lost = "AMD Flames Site Thinks You're Lost.";
-
-#################
 
 
 
@@ -183,63 +126,9 @@ $subj_periodic_lost = "AMD Flames Site Thinks You're Lost.";
 
 
 
-echo <<<EOT
-<html>
-<head>
-<meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
-<title>Bulk Mail Setup</title>
-<style type='text/css'>
-.highgreen {background-color:#9C6;}
-#in_bulk_queue li.error {color:red;}
-#in_bulk_queue li.queued {color:green;}
-#in_bulk_queue li.cancelled{color:blue;}
-#in_bulk_queue li.running {color:orange;}
-
-.red {color:red;}
-.
-</style>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js">
-</script>
-<script src='/js/ajax.js'></script>
-<script type='text/javascript'>
-
-var standard_message = "$js_html_standard";
-var standard_subject = "$subj_standard";
-
-var pl_message = "$js_periodic_lost";
-var pl_subject = "$subj_periodic_lost";
-
-function set_message(type){
-   
-     if (type=='standard'){
-        document.getElementById('message').value = standard_message;
-        document.getElementById('msubject').value = standard_subject;
-         document.sendchoices.sendto[0].checked=true;
-    }
-    else if (type=='periodic_lost'){
-        document.getElementById('message').value = pl_message;
-        document.getElementById('msubject').value = pl_subject;
-         document.sendchoices.sendto[0].checked=true;
-    }
-    else {
-        document.getElementById('message').value = '';
-        document.getElementById('msubject').value = '';
-         document.sendchoices.sendto[0].checked=true;
-    }
-}
-
-</script>
-</head>
-<body>
-$navbar
-
-
-
-EOT;
-
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-$pdo = MyPDO::instance();
+
 
 // get counts for the  mail sets
 
@@ -273,39 +162,38 @@ echo <<<EOT
 
 <p><b>Create the Email</b></p>
 <p>You may use the following placeholders:<ul>
-<li>::link  User's personal link to log in
-<li>::slink s=users_code
-<li>::newslink to link to latest newsletter for this user
-<li>::name  User's name in db
-<li>::profile_date Date user's profile last updated if > 1 year<br>
-<li>::donor_date Date of last contribution
-<li>::teaser  Combination of highlights from current newsletter
-<li>::preview Headlines in Preview (News_Next) edition
-<li>::verify URL to verify email
-<li>::uemail User's email address
-<li>::no_bulk Notice to users not subscribing to weekly email
+<li>::link::  User's personal link to log in
+<li>::slink:: s=users_code
+<li>::newslink:: to link to latest newsletter for this user
+<li>::name::  User's name in db
+<li>::profile_date:: Date user's profile last updated if > 1 year<br>
+<li>::donor_date:: Date of last contribution
+<li>::teaser::  Combination of highlights from current newsletter
+<li>::preview:: Headlines in Preview (News_Next) edition
+<li>::verify:: URL to verify email
+<li>::uemail:: User's email address
+<li>::no_bulk:: Notice to users not subscribing to weekly email
 <li> [image nnn] replaced by image link to thumb file nnn.jpg
-
+<li> ::edition:: Edition name
 </ul>
 
 <div id='in_bulk_queue'>$jobs_in_queue</div>
 
 <p>
-<button  onclick="set_message('standard');">News Ready (html)</button>
-<button onclick="set_message('not_lost');">Not Lost</button>
-<button onclick="set_message('periodic_lost');">Periodic Lost</button>
-<button  onclick="set_message('');">Blank</button>
+<button  onclick="getMessage('bm-std-plain');">News Ready (html)</button>
+<button onclick="getMessage('bm-lost');">Periodic Lost</button>
+
 </p>
 <form  method="post" name='sendchoices'>
 
 
 <br><hr><br>
 
-<p>Subject <input type="text" name="subject" size="100" id='msubject'></p>
+<p>Subject <input type="text" name="subject" size="100" id='msubject'  ></p>
 
 
 Message Body<br>
-<textarea name="body" rows="15" cols="78" id='message'>
+<textarea name="body" rows="15" cols="78" id='mcontent'>
 
 
 </textarea>
@@ -351,11 +239,10 @@ EOT;
 ############## POST #####################
 else { #IS POST
  
-	echo  "<HTML><head><title>Bulk Email Plan</title></head>";
-
+	
 	#ge job id and set paths
-	$working = PROJ_PATH . "/bulk_jobs";
-	$queue = $working . "/queue";
+	$working = REPO_PATH . "/var/bulk_jobs";
+	$queue = REPO_PATH . "/var/bulk_queue";
 	
 	
 	#set up job as datecode, and make sure it doesn't already exist
@@ -372,7 +259,6 @@ else { #IS POST
 			}
 		}
 		else {
-			$umask = umask(0);
 			mkdir ("$job_dir",0777,1);
 		}
 
@@ -388,7 +274,7 @@ else { #IS POST
 	$teaser = build_teaser(SITE_PATH . "/news/news_latest" );
 
 	$message = $_POST['body'];
-	$message = str_replace('::teaser',$teaser , $message);
+	$message = str_replace('::teaser::',$teaser , $message);
 	$message = preg_replace('/\t/',"    ",$message);
 
 
@@ -396,7 +282,7 @@ else { #IS POST
 
 $starttimestamp = strtotime($_POST['start']);
 
-$dt = new DateTime(); #sets to MDT because server
+$dt = new \DateTime(); #sets to MDT because server
 $dt->setTimestamp($starttimestamp);
 echo "start date set to " . $dt->format('M d H:i T') .';' ;
 #$dt->setTimeZone(new DateTimeZone('America/Los_Angeles'));
@@ -417,8 +303,8 @@ echo "Message saved .\n";
 
 #now build mail list
 
-$sql = get_send_sql($select_all_valid,$_POST,$pdo);
-if (! $result = $pdo->query($sql) ){
+$sql = get_send_list($select_all_valid);
+if (!$result = $pdo->query($sql) ){
 		echo "No results from query for ${_POST['sendto']} \n"; 
 		exit;
 }
@@ -472,8 +358,8 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
     if ($_POST['go'] == 'Run Now'){
         touch ("$queue/$job"); #mtime = now
 
-        echo "Queued for now.  Starting $bulk_processor.<br>\n";
-       exec ("/usr/local/bin/php  $bulk_processor");
+        echo "Queued for now.  Starting bulk_mail_processor.<br>\n";
+       shell_exec ("/usr/local/bin/php " . "$bulk_processor");
        
     }
     elseif ($_POST['go'] == 'Schedule') {
@@ -500,15 +386,12 @@ Jack Smith	jsmithseamill@yahoo.co.uk	5132W12318	2632	Oct 1, 2009		1	1	no_date
 }
 
 ######### Get the send list ##########
-function get_send_sql ($select_all_valid,$post,$pdo) {
-// supply sql for select_all_valid; 
-// add AND clauses to restrict mailing to small segment.
+function get_send_list ($select_all_valid) {
 
-$pdo = MyPDO::instance();
+
 $field_list = "*";
 $sql = "SELECT $field_list FROM `members_f2` ";
-$order_by = "ORDER BY test_status DESC"; 
-#get test users first so you see a problem early
+
  	
     // if selected admin only, then use admin code = J; otherwise, exclude these.
  	if ($_POST['sendto'] == 'admin'){
@@ -522,16 +405,17 @@ $order_by = "ORDER BY test_status DESC";
 
 
 	elseif ($_POST['sendto'] == 'all'){
-			$sql .= "WHERE $select_all_valid $order_by;";
+			$sql .= "WHERE $select_all_valid ;";
 	 		echo "Sending to all valid emails <br>";
 
 	}
 	elseif ($_POST['sendto'] == 'req'){
-			$sql .= "WHERE $select_all_valid AND no_bulk = FALSE $order_by";
+			$sql .= "WHERE $select_all_valid AND no_bulk = FALSE
+			ORDER BY user_id;";
 	 		echo "Sending only to those without No_Bulk flag <br>";
 	}
 	elseif ($_POST['sendto'] == 'nobulk'){
-			$sql .= "WHERE $select_all_valid AND no_bulk = TRUE $order_by;";
+			$sql .= "WHERE $select_all_valid AND no_bulk = TRUE;";
 	 		echo "Sending only to those WITH No_Bulk flag<br>";
 
 	}
@@ -543,31 +427,31 @@ $order_by = "ORDER BY test_status DESC";
 	        $admin_status_string .= "'" . $char . "',";
 	    }
 	    $admin_status_string = substr($admin_status_string,0,-1); #drop last ,
-		$sql .= "WHERE $select_all_valid  AND admin_status in ($admin_status_string) $order_by;";
+		$sql .= "WHERE $select_all_valid  AND admin_status in ($admin_status_string) ;";
 	 		echo "Sending only to those with admin tag in $admin_status_string <br>";
 
 	}
 		elseif ($_POST['sendto'] == 'news'){
-		$sql .= "WHERE $select_all_valid  AND status like 'M_' $order_by ;";
+		$sql .= "WHERE $select_all_valid  AND status like 'M_';";
 	 		echo "Sending only to those with status = M_ <br>";
 
 	}
 		elseif ($_POST['sendto'] == 'aged_out'){
-		$sql .= "WHERE status in (" . Defs::getMemberInSet() . ") AND email_status = 'LA' $order_by;";
+		$sql .= "WHERE status in (" . Defs::getMemberInSet() . ") AND email_status = 'LA' ;";
 
 	 		echo "Sending only to those marked as Lost - Aged Out <br>";
 	}
 	    elseif ($_POST['sendto'] == 'not_lost'){
 	    #choosee records validated yesterday
 	    $sql .= "WHERE DATE (email_last_validated) = SUBDATE(CURDATE(),1)
-	        AND previous_ems in ('A4','LA','LE','LB') $order_by;" ;
+	        AND previous_ems in ('A4','LA','LE','LB');" ;
 
 	        echo "Sending only to newly not_lost Flames.<br>\n";
 
 	}
 		elseif ($_POST['sendto'] == 'this'){
-			if (u\is_valid_email($_POST['sendtothis'])){
-				$sql .= "WHERE user_email = '${_POST['sendtothis']}' $order_by";
+			if (is_valid_email($_POST['sendtothis'])){
+				$sql .= "WHERE user_email = '${_POST['sendtothis']}'";
 			}
 			else {die ("Invalid email address requested");}
 			
@@ -587,10 +471,6 @@ function get_publish_data($var,$publish_file){
    return '';
 }
 
-function ml_script($text){
-	    $js = str_replace("\n", "\\n", $text);
-	    return $js;
-	}
 
 function build_teaser($dir) {
 

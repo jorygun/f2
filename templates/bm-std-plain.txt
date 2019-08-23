@@ -1,0 +1,22 @@
+FLAME News ::edition:: for ::name::
+Dear ::name::,
+
+The AMD FLAMEs News, ::edition:: edition, is ready. 
+Here's your personal link directly to the most current newsletter:
+	::newslink::
+
+(To view any of the nearly 1000 back issues, 
+log in and choose Dig In > Newsletter Index.)
+
+::profile::
+
+IN THIS ISSUE
+
+::teaser::
+
+We send these messages to all of our members that have not
+asked to opt out. If you want to stop receiving these emails,
+log in and change the setting in your profile,
+or email the admin by replying to this email.
+
+

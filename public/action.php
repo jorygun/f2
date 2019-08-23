@@ -111,9 +111,14 @@ function getmess($type)
    // return text message for bulk mail setup script
     $tp_path = REPO_PATH . "/templates/${type}.txt";
    #return "Getting $tp_path";
-    $message = file_get_contents($tp_path);
-    list($subject,$text) = explode("\n", $message, 2);
-    $result['text']=$text;
+    if (!$message = file_get_contents($tp_path) ) {
+    	throw new Exception ("File $tp_path does not exist") ;
+    }
+    #$subject = strtok($message,"\n"); #first line	
+	#$text = u\email_std($message);
+    list ($subject,$text) = explode("\n",$message,2);
+    
+    $result['text']= $text;
     $result['subject']=$subject;
    #return "sub: " . $result['subject'] . 'mess: ' . $result['text'] . "\n";
     return json_encode($result);

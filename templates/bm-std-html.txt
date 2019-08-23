@@ -1,0 +1,22 @@
+The Flame News is Ready for ::name::
+<html><body>
+Dear ::name::,
+<table style='border:0;width:90%;'><tr><td >
+<img src='https://amdflames.org/graphics/logo69x89.png' /></td><td>
+The AMD FLAMEs News, ::edition:: edition, is ready. 
+Here's your personal link to the most current newsletter:
+    ::newslink::
+
+(To view any of the nearly 1000 back issues, 
+log in and choose Dig In > Newsletter Index.)
+
+</td></tr><tr><td colspan='2'>::profile::</td></tr>
+<tr><td></td><td>
+<b>IN THIS ISSUE</b>
+<pre>
+::teaser::
+</pre>
+
+</td></tr><tr><td colspan='2'>
+We send these messages to all of our members that have not asked to opt out. If you want to stop receiving these emails, log in and change the setting in your profile, or email the admin by replying to this email.
+</td></tr></table>
