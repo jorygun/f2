@@ -41,7 +41,7 @@ if (stristr(PROJ_PATH,'/usr/home/digitalm') !== false) {
 		$repo = $opts['repo'] ?? 'f2';
 		$site = 'f2.local';
 	}
-	echo "Platform: $platform; $site, $repo \n";
+	
 try {
 	
 	
