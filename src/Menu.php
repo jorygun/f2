@@ -16,7 +16,7 @@ class Menu {
 
 	private $thisMenu;
 	private $menulist = array();
-	private $level, $text;
+	private $userlevel, $text;
 	public $header;
 	private $login = array();
 	private $opp;
@@ -36,6 +36,7 @@ class Menu {
 		$this->pdo = MyPDO::instance();
 		
 		 $this->login = $log_info;
+		 $this->userlevel = $log_info['seclevel'];
 			$this->header = $header;
 		$this->opp = new Opportunities($log_info['seclevel']);
 	 
@@ -46,7 +47,7 @@ class Menu {
 	}
 
 	private function if_level($level,$text){
-		 if ($this->login['seclevel'] >= $level){return "$text";}
+		 if ($this->userlevel >= $level){return "$text";}
 		 return '';
 	}
 
@@ -55,7 +56,7 @@ class Menu {
 
 	private function addMenu ($level,$id,$title=''){
 		$text='';
-		if ($this->login['seclevel'] >= $level){
+		if ($this->userlevel >= $level){
 			if (empty($title)){$title = $id;}
 			$text = <<<EOT
 		
@@ -100,7 +101,7 @@ EOT;
 		// add a closing menu item and end the ul.
 		// decided to NOT add the last menu item.
 		$t='';
-		if ($this->login['seclevel'] >= $level) {
+		if ($this->userlevel >= $level) {
 			$t = <<<EOT
 		<li><a href="#" onClick="closeMenu('${thisMenu}')" >Close Menu</a></li>
 		</ul>
@@ -257,7 +258,7 @@ EOT;
 	");
 		
 	$t .= " <li>.
-		<li>$version";
+		<li>$version - $this->userlevel";
 	
 	
 	$t .=  self::closeLine(0, $thisMenu);

@@ -37,7 +37,7 @@ $read = new ReadNews();
 
 // set up for unpublished newsletter
 	$publish_time = '';
-
+$date_code = 000000;
 #test to see if newsletter has been publsihed or not
 if (file_exists("publish.txt")){
    include "publish.txt"; #publish data block
@@ -79,7 +79,7 @@ else {$subtitle = '';}
 $page_options = ['ajax'];
 
 
-if ($login->checkLogin(2)){
+if ($login->checkLogin($min_security)){
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	echo $page->startBody(1,$subtitle);

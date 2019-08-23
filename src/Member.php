@@ -819,14 +819,18 @@ public function getLogins($tag) {
         $data['donors'] = $donors;
         return $data;
     }
-   public function checkPass($login){
-   	 
+   public function checkPass($login=''){
+   	 if (!$login){return 0;}
    	if ($m = $this->parseLogin($login) ){
    		list($pass,$uid) = $m;
    		$sql = "SELECT count(*) from `members_f2` where user_id = $uid
    		and upw = '$pass';";
-   		$r = $this->pdo->query($sql)->fetchColumn();
-   		if ($r == 1){return $uid;}
+   		try {
+   			$r = $this->pdo->query($sql)->fetchColumn();
+   			if ($r == 1){return $uid;}
+   		} catch (Exception $e){
+   			return 0;
+   		}
    	}
    	return 0;
    }

@@ -13,14 +13,14 @@ class Opportunities
 	private $opp_count = 0;
 	private $pdo;
 	private $opp_list = array();
-	private $level;
+	private $level=0;
 
 
 	public function __construct ($level=0) {
 		$this->pdo = MyPDO::instance();
 		// need to pass level for menu because session not set yet.
 		// otherwise, use the session level
-		$this->level = ($level > 0)? $level : $_SESSION['level'];
+		$this->level = ($level > 0) ? $level : $_SESSION['level'] ?? 0;
 		$this->opp_list = $this->getOppList();
 		 $this->opp_count = count($this->opp_list);
 		# echo $this->opp_count . " Opps retrieved" . BRNL;
