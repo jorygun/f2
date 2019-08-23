@@ -332,7 +332,7 @@ class Login
 					}
 					else {
 						u\echoAlert ( "Not logged in; cannot log out." );
-						exit;
+						$this->loginNonmember();
 					}
 				}
 	
