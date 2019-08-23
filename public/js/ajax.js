@@ -28,48 +28,34 @@ function cancel_bulk(job) {
 	});
 }
 
-function setTitle() {
-     var title = $('#title_text').val();
-	$.ajax({
-	url: "/action.php",
 
-	data:'ajax=setNewsTitle&title='+title,
-	type: "POST",
-	
-	success: function(response){
-		alert (response);
-	}
-	});
-}
 // this scriput used for verifyEmail, sendLogin,
 
-function takeAction (uid,action) {
+function verifyEmail(uid) {
+
+    $.ajax({
+        url: "/action.php",
+        data: 'ajax=verifyEmail&uid='+uid,
+        type: "POST",
+        success: function(response) {
+            $('#emver-'+uid).html(response);
+            $('#emstat-'+uid).html('Y');
+        }
+    });
+}
+function takeAction (uid,action,affects='',message='') {
+    var objid='#'+affects;
    $.ajax({
    url: "/action.php",
    data: 'ajax='+action+'&uid='+uid,
    type: "POST",
    success: function (response) {
-               alert (response);
+                if (message != ''){
+                    alert (message);
+                }
+               if (affects != '') {
+                    $(objid).html(response);
+                }
         }
  });  
-}
-
-function getMessage (type) {
-   $.ajax({
-   url: "/action.php",
-   data: 'ajax=getmess&type='+type,
-   dataType: 'json',
-  method: 'post',
-  
-   success: function (messdata) {
-      console.log(messdata);
-      var result = messdata;
-     
-      $('#mcontent').html(result['text']);
-      $('#msubject').val(result['subject']);
-   },
-   error: function( jqXhr, textStatus, errorThrown ){
-                    console.log( errorThrown );
-   },
-   });
 }
