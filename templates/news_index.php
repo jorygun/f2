@@ -79,7 +79,7 @@ else {$subtitle = '';}
 $page_options = ['ajax'];
 
 
-if ($login->checkLogin(0)){
+if ($login->checkLogin(2)){
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	echo $page->startBody(1,$subtitle);
@@ -89,7 +89,7 @@ if ($login->checkLogin(0)){
 
 
 echo "<hr style='width: 100%; height: 2px;clear:both;'>\n";
-$read->increment_reads($condensed_date);
+$read->increment_reads($date_code);
 
 #breaking news added after publication
 $read->echo_if('breaking.html');
