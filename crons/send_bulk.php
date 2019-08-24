@@ -37,11 +37,11 @@ use \digitalmx\flames\Definitions as Defs;
 
 	
    
-	$bulk = REPO_PATH . "/var/bulk_jobs";
-	$queue = REPO_PATH . "/var/queue"; #
+	$bulk = PROJ_PATH . "/var/bulk_jobs";
+	$queue = PROJ_PATH . "/var/queue"; #
 	
 	#where info needed for bulk mail is located
-	$news_info = REPO_PATH . "/public/news";
+	$news_info = PROJ_PATH . "/live/public/news";
 	
 
 #needed??
