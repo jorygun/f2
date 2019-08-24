@@ -36,10 +36,11 @@ if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 use \digitalmx\flames\Definitions as Defs;
 
 	
-   
+
 	$bulk = REPO_PATH . "/var/bulk_jobs";
 	$queue = REPO_PATH . "/var/queue"; #
 	
+	if (!$quiet){ echo "Queue is at $queue.";}
 	#where info needed for bulk mail is located
 	$news_info = REPO_PATH . "/public/news";
 	
