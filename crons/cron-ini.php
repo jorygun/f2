@@ -97,8 +97,9 @@ try {
 
 if (!$quiet)
 echo 
-	"[Cron-start on Site: " . SITE . "(platform $platform) " . NL
-	. "   Repo: $repo" . "; Test: " . $test_state . "; Quiet: " . $quiet_state .  "]" . NL;
+	"[Cron-ini on Site: " . SITE . "(platform $platform) " . NL
+	. "   Repo: $repo" . "; Test: " . $test_state . "; Quiet: " . $quiet_state .  "]" . NL
+	. "REPO_PATH: " . REPO_PATH . NL;
 
 if ( $init){
 	define ('INIT',1);
