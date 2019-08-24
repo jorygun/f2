@@ -49,7 +49,7 @@ use \digitalmx\flames\Definitions as Defs;
 #set_include_path(get_include_path() . ':/usr/home/digitalm/Sites/flames/libmx/phpmx:/usr/home/digitalm/Sites/flames/live/code');
 
 // Load Composer's autoloader
-require PROJ_PATH . "/vendor/autoload.php";
+require_once REPO_PATH . "/vendor/autoload.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;

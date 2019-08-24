@@ -41,7 +41,7 @@ if (stristr(PROJ_PATH,'/usr/home/digitalm') !== false) {
 		$repo = $opts['repo'] ?? 'f2';
 		$site = 'f2.local';
 	}
-	echo "Platform: $platform; $site, $repo \n";
+	
 try {
 	
 	
@@ -74,7 +74,7 @@ try {
 	);
 
 	require 'MxConstants.php'; #in libmx: NL, BRNL, etc.
-	require PROJ_PATH . '/vendor/autoload.php';
+	require REPO_PATH . '/vendor/autoload.php';
 	require 'Member.php';
 	require 'Messenger.php';
 	require 'Definitions.php';  #config is in path
@@ -97,7 +97,7 @@ try {
 
 if (!$quiet)
 echo 
-	"[Cron-start on Site: " . SITE . "(platform $platform) " . NL
+	"[Cron-ini on Site: " . SITE . "(platform $platform) " . NL
 	. "   Repo: $repo" . "; Test: " . $test_state . "; Quiet: " . $quiet_state .  "]" . NL
 	. "REPO_PATH: " . REPO_PATH . NL;
 
