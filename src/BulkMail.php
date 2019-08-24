@@ -4,13 +4,12 @@ namespace digitalmx\flames;
 
 class BulkMail {
 
-	private $queue = REPO_PATH  . "/var/queue";
-	private $working= REPO_PATH . "/var/bulk_jobs";
+	private $queue = PROJ_PATH . "/bulk_jobs/queue";
+	private $working= PROJ_PATH . "/bulk_jobs";
 	
 	
 	public function show_bulk_jobs(){
-		#looks for jobs in queue, and returns a 
-		// ul list with status and a cancel button
+		#looks for jobs in queue, and displays info about them
 	   		$queue = $this->queue;
 	   		$working = $this->working;
 	   		

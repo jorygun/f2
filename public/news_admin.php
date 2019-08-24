@@ -26,17 +26,17 @@ if ($login->checkLogin(4)){
 
 //END START
 
-      $ptime_dt = new \DateTime();
-      $ptime_dt ->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
+      $dt = new \DateTime();
+      $dt ->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
 
     // get latest published update date
-    if ($ptime_stamp = f\getLastPub() ){
-      $ptime_dt->setTimestamp($ptime_stamp);
+    if ($last_ptime = f\getLastPub() ){
+      $dt->setTimestamp($last_ptime);
     } else {
 		echo "Could not get last pub date. Setting to one week ago." . BRNL;
-		$ptime_dt -> modify (" - 7 days");
+		$dt -> modify (" - 7 days");
 	}
-    $ptime = $ptime_dt->format('M j H:i T');
+    $ptime = $dt->format('M j H:i T');
 
     //get current title, if any
     $titlefile = SITE_PATH . '/news/news_next/title.txt';
