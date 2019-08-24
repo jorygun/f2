@@ -74,7 +74,7 @@ try {
 	);
 
 	require 'MxConstants.php'; #in libmx: NL, BRNL, etc.
-	require PROJ_PATH . '/vendor/autoload.php';
+	require REPO_PATH . '/vendor/autoload.php';
 	require 'Member.php';
 	require 'Messenger.php';
 	require 'Definitions.php';  #config is in path
