@@ -4,11 +4,12 @@
 
 PATH=/bin:/usr/bin:/usr/local/bin
 HOME=/usr/home/digitalm
+SITE={$HOME}/Sites/live
 
 #see if its a Wed make weekly backup from oldest daily)
 day=`date +%u`
 datecode=`date +\%Y\%m\%d`
-
+#datecode = '000000'
 cd ${HOME}/backups
 
 echo datecode $datecode on day $day in $(pwd).
@@ -24,7 +25,8 @@ fi
 #daily backups
 mysqldump -hdb151d.pair.com -udigitalm_r -pSTjzyHFr digitalm_db1 | gzip > daily.sql.$datecode.sql.gz
 
-tar -czf /usr/home/digitalm/backups/daily.site.$datecode.tar.gz  ${HOME}/Sites/flames/live
+
+tar  -czf ${HOME}/backups/daily.site.${datecode}.tar.gz --exclude=${SITE}/vendor  $SITE
 
 
 #remove older files leaving 1 less than +n
