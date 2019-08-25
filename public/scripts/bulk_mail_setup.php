@@ -276,6 +276,13 @@ else { #IS POST
 	$message = $_POST['body'];
 	$message = str_replace('::teaser::',$teaser , $message);
 	$message = preg_replace('/\t/',"    ",$message);
+	// replacements in univeral message
+	// replace ref to image with image
+	$message = preg_replace(
+		'/\[image (\d+)\]/',
+		"<img src='https://amdflames.org/assets/thumbs/$1.jpg' style='margin-right:auto;margin-left:auto;text-align:center;'>",
+		$message
+		);
 
 
 

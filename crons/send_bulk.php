@@ -35,9 +35,7 @@ if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 
 use \digitalmx\flames\Definitions as Defs;
 
-	
-
-	$bulk = REPO_PATH . "/var/bulk_jobs";
+	$bulk	= 	REPO_PATH . "/var/bulk_jobs";
 	$queue = REPO_PATH . "/var/queue"; #
 	
 	if (!$quiet){ echo "Queue is at $queue.";}
@@ -54,13 +52,10 @@ require_once REPO_PATH . "/vendor/autoload.php";
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-
-
 	ignore_user_abort(false);
-	$interval = 15; #seconds/msg    
+	$interval = 3; #seconds/msg    
    set_time_limit(86400);
 	$termination = 'normally';
-
 
 #---Check for any jobs in the bulk queue
 
@@ -101,9 +96,7 @@ echo "Checking for files in $queue" . BRNL;
 	
 	fwrite ($logh,"Job $job started at " . $startdate . " \n ") ;
 	
-
-	
-	// [subject,content,html]
+// [subject,content,html]
 	$msg_array = read_msg_file($bmail_msg);
 	$message = $msg_array['content'];
 	
