@@ -34,32 +34,26 @@ include "$dir/cron-ini.php";
 if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 
 use \digitalmx\flames\Definitions as Defs;
+use \digitalmx\flames\BulkMail.php;
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-	
-   
-	$bulk = REPO_PATH . "/var/bulk_jobs";
+$bulk = new BulkMail;
+
+
+	$bulk	= 	REPO_PATH . "/var/bulk_jobs";
 	$queue = REPO_PATH . "/var/queue"; #
 	
+	if (!$quiet){ echo "Queue is at $queue.";}
 	#where info needed for bulk mail is located
 	$news_info = REPO_PATH . "/public/news";
 	
 
-#needed??
-#set_include_path(get_include_path() . ':/usr/home/digitalm/Sites/flames/libmx/phpmx:/usr/home/digitalm/Sites/flames/live/code');
 
-// Load Composer's autoloader
-require_once REPO_PATH . "/vendor/autoload.php";
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-
-
-	ignore_user_abort(false);
-	$interval = 15; #seconds/msg    
+#	ignore_user_abort(false);
+	$interval = 3; #seconds/msg    
    set_time_limit(86400);
 	$termination = 'normally';
-
 
 #---Check for any jobs in the bulk queue
 
@@ -72,7 +66,9 @@ echo "Checking for files in $queue" . BRNL;
 	the date set to the scheduled run date/time.
 */
 		
-	if (empty($job = checkfiles($queue)) ){
+// this retrieves one job from the queue.  If multiple jobs
+// next one will be picked up on next run.
+	if (empty($job = $bulk->getNextJob($queue)) ){
 		exit;
 	}
 
@@ -100,19 +96,11 @@ echo "Checking for files in $queue" . BRNL;
 	
 	fwrite ($logh,"Job $job started at " . $startdate . " \n ") ;
 	
-
-	
-	// [subject,content,html]
+// [subject,content,html]
 	$msg_array = read_msg_file($bmail_msg);
 	$message = $msg_array['content'];
 	
-// replacements in univeral message
-	// replace ref to image with image
-	$message = preg_replace(
-		'/\[image (\d+)\]/',
-		"<img src='https://amdflames.org/assets/thumbs/$1.jpg' style='margin-right:auto;margin-left:auto;text-align:center;'>",
-		$message
-		);
+
 
 #get address of current newsletter
 	$latest_pointer = file_get_contents("$news_info/latest_pointer.txt") ;
@@ -183,6 +171,7 @@ EOT;
 			$profile_updated_age,$profile_updated_date,
 			$no_bulk, $age_flag,$profile_validated_date
 			) = explode("\t",$line);
+
 
 		#creat personalized vars
             $logincode="s=$slink";
