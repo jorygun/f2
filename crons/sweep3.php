@@ -309,7 +309,7 @@ echo "Saving file $sweep_log \n";
 
 echo exec("
 	unlink $sweep_log_dir/last_sweep;
-	ln -s $sweep_log $sweep_log_dir/last_sweep;
+	/bin/ln -s $sweep_log $sweep_log_dir/last_sweep;
 	");
 
 $admin_notice =<<<EOF
