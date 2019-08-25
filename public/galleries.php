@@ -26,7 +26,7 @@ if ($login->checkLogin(1)){
 	
 //END START
 
-require 'asset_functions.php';
+require_once 'asset_functions.php';
 
 
 if ($gal = $_SERVER['QUERY_STRING']){display_gallery($gal);}

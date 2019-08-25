@@ -7,7 +7,7 @@
 	use digitalmx\flames\Definitions as Defs;
 $itemdb = 'news_items';
 
-require 'asset_functions.php';
+require_once 'asset_functions.php';
 
 //shortcuts for contributor names
 
