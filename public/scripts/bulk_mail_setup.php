@@ -437,8 +437,7 @@ $sql = "SELECT $field_list FROM `members_f2` ";
 		$sql .= "WHERE $select_all_valid  AND admin_status in ($admin_status_string) ;";
 	 		echo "Sending only to those with admin tag in $admin_status_string <br>";
 
-	}
-		elseif ($_POST['sendto'] == 'news'){
+	} elseif ($_POST['sendto'] == 'news'){
 		$sql .= "WHERE $select_all_valid  AND status like 'M_';";
 	 		echo "Sending only to those with status = M_ <br>";
 
