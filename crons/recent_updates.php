@@ -48,7 +48,7 @@ $dt_to = new \DateTime('@' . $latest_pub);
 $dt_to -> modify('-1 day');
 $to = $dt_to->format('Y-m-d');
 
-echo "From $from To $latest_sql\n"; 
+echo "From $from To $to\n"; 
 #build asset report
 
 if( $recent_asset_report = report_recent_assets ($from,0,30 ) ){
@@ -61,7 +61,7 @@ if( $recent_asset_report = report_recent_assets ($from,0,30 ) ){
 
 
 #build article report
-$to = $latest_sql;
+
 if ($recent_article_report = report_recent_articles ($from,$to,30,$test) ){
 	if ($test){ echo ($recent_article_report);}
 	file_put_contents($recent_article_file, $recent_article_report );
