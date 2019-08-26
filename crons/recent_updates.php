@@ -58,8 +58,8 @@ if( $recent_asset_report = report_recent_assets ($from,0,30 ) ){
 
 
 #build article report
-
-if ($recent_article_report = report_recent_articles ($from,0,30,$test) ){
+$to = $latest_sql;
+if ($recent_article_report = report_recent_articles ($from,$to,30,$test) ){
 	if ($test){ echo ($recent_article_report);}
 	file_put_contents($recent_article_file, $recent_article_report );
 } else {
@@ -72,6 +72,7 @@ if ($recent_article_report = report_recent_articles ($from,0,30,$test) ){
 ###################################
 
 function report_recent_articles ( $from, $to, $max=0,$test) {
+// from and to need to be in sql format already
 	$pdo = MyPDO::instance();
 	
 	// get article links into an array
@@ -79,7 +80,7 @@ function report_recent_articles ( $from, $to, $max=0,$test) {
 #	u\echor ($link_counts, 'link counts');
 
     $limit = ($max>0) ? " LIMIT $max" : '';
-    $to_date = ($to)?   date('Y-m-d',strtotime($to)) :  date('Y-m-d');
+    $to_date = $to ??  date('Y-m-d');
     if ($test){
     	$tomorrow = new \DateTime('+2 days');
     	$to_date = $tomorrow->format('Y-m-d');
