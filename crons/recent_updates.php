@@ -44,6 +44,9 @@ $recent_asset_file = REPO_PATH . "/public/news/live/recent_assets.html";
 
 $latest_sql = date('Y-m-d H:i',f\getLastPub () );
 $from = date('Y-m-d',strtotime('-2 weeks'));
+$dt_to = new \DateTime('@' . $latest_sql);
+$dt_to -> modify('-1 day');
+$to = $dt_to->format('Y-m-d');
 
 echo "From $from To $latest_sql\n"; 
 #build asset report
