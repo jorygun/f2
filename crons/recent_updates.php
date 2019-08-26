@@ -43,7 +43,7 @@ $recent_asset_file = REPO_PATH . "/public/news/live/recent_assets.html";
 #get latest pub date
 
 $latest_pub = f\getLastPub () ;
-$from = date('Y-m-d',strtotime('-2 weeks'));
+$from = date('Y-m-d',strtotime('-3 weeks'));
 $dt_to = new \DateTime('@' . $latest_pub);
 $dt_to -> modify('-1 day');
 $to = $dt_to->format('Y-m-d');
