@@ -1080,5 +1080,17 @@ public function getLogins($tag) {
 		return date('d M Y');
 	}
 	
+	public function getUpdatedEmails ($since) {
+		// returns list of members with updated emails
+		$since_dt = new \DateTime("$since");
+		$since_sql = $since_dt->format(Y-m-d);
+		
+		$sql = "SELECT user_id,username,user_email FROM `members_f2`
+			WHERE email_update > '$since_sql';";
+			
+		$list = $this->pdo->query($sql) -> fetchAll (\PDO::FETCHARRAY);
+		return $list;
+	}
+	
 } #end class
 

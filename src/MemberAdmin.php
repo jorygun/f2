@@ -396,7 +396,14 @@ public function showMemberSummary($mdd) {
 	return $summary;
 }
 
+public function change_report($since) {
+	// get changed emails
+	$email_changed = $this->Member->getUpdatedEmails($since);
+	u\echor $email_changed;
+	exit;
 
+
+}
 public function showUpdate($uid) {
 	$md = $this->member->getMemberData($uid);
 	
