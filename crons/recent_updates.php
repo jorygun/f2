@@ -105,7 +105,7 @@ function report_recent_articles ( $from, $to, $max=0,$test) {
             FROM `votes`
             GROUP BY news_fk
             ) v ON v.news_fk = n.id
-        WHERE n.date_published >= '$from_date' AND n.date_published < '$to_date' - INTERVAL 1 DAY
+        WHERE n.date_published >= '$from_date' AND n.date_published < '$to_date'
         GROUP BY n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source, c.comments, v.net_votes
         ORDER BY n.date_published DESC
 	    $limit
