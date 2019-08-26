@@ -89,7 +89,7 @@ function report_recent_articles ( $from, $to, $max=0,$test) {
     	$to_date = $tomorrow->format('Y-m-d');
    }
    
-   $from_date = date('Y-m-d',strtotime($from));
+   $from_date = $from ;
 
 
     $sql = "SELECT n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source, 
@@ -192,7 +192,7 @@ function report_recent_assets ($from,$to,$max=0) {
 
 	 $limit = ($max > 0) ? " LIMIT $max" : '';
     $to_date = ($to) ? date('Y-m-d') : date('Y-M-d',strtotime($to));
-   $from_date = date('Y-M-d',strtotime($from));
+   $from_date = $from;
    $archival_tags = Defs::$archival_tags;
    
 // any tag ('UI') has code ('U') contained in the set of archival_tags ('ABCUW');
