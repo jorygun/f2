@@ -163,6 +163,7 @@ private static $long_profile_fields = array (
  	'email_public',
  	'seclevel',
  	'user_current',
+ 	'user_greet',
  	'user_from',
  	'at_amd',
  	'profile_date',
@@ -177,6 +178,8 @@ private static $long_profile_fields = array (
  	'contributed',
  
  );
+ 
+
  #limited fields returned from member listss
  private static $min_fields = array (
  'username', 
@@ -1083,12 +1086,18 @@ public function getLogins($tag) {
 	public function getUpdatedEmails ($since) {
 		// returns list of members with updated emails
 		$since_dt = new \DateTime("$since");
-		$since_sql = $since_dt->format(Y-m-d);
+		$since_sql = $since_dt->format('Y-m-d');
+		$member_status_set = Defs::getMemberInSet();
 		
-		$sql = "SELECT user_id,username,user_email FROM `members_f2`
-			WHERE email_update > '$since_sql';";
-			
-		$list = $this->pdo->query($sql) -> fetchAll (\PDO::FETCHARRAY);
+		$list = array();
+		$sql = "SELECT  * FROM `members_f2`
+			WHERE status in ($member_status_set)
+			AND email_chg_date > '$since_sql';";
+
+		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
+		foreach ($result as $row){
+			$list[] = $this->enhanceData($row,self::$info_fields);
+		}
 		return $list;
 	}
 	
