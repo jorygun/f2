@@ -27,7 +27,13 @@ ini_set('error_reporting', E_ALL);
 */
 
 
-if (! @defined ('INIT')) { include './cron-ini.php';}
+$script = basename(__FILE__);
+$dir=dirname(__FILE__);
+
+if (! @defined ('INIT')) {
+	include "$dir/cron-ini.php";
+}
+
 if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
 
 use digitalmx\flames\Definitions as Defs;
