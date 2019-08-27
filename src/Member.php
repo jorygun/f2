@@ -1085,14 +1085,16 @@ public function getLogins($tag) {
 	
 	public function getUpdatedEmails ($since) {
 		// returns list of members with updated emails
-		$since_dt = new \DateTime("$since");
-		$since_sql = $since_dt->format('Y-m-d');
+		// since must be in Y-m-d
+		if (! u\validateDate($since )){
+			throw new Exception ("$since is not a valid sql date");
+		}
 		$member_status_set = Defs::getMemberInSet();
 		
 		$list = array();
 		$sql = "SELECT  * FROM `members_f2`
 			WHERE status in ($member_status_set)
-			AND email_chg_date > '$since_sql';";
+			AND email_chg_date > '$since';";
 
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
 		foreach ($result as $row){
@@ -1100,6 +1102,23 @@ public function getLogins($tag) {
 		}
 		return $list;
 	}
-	
+	public function getDeceased ($since) {
+		if (! u\validateDate($since )){
+			throw new Exception ("$since is not a valid sql date");
+		}
+		$member_status_set = Defs::getMemberInSet();
+		$list = array();
+		$sql = "SELECT  * FROM `members_f2`
+			WHERE status_updated > '$since'
+			AND status like 'D'
+			AND test_status= ''
+			";
+
+		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
+		foreach ($result as $row){
+			$list[] = $this->enhanceData($row,self::$info_fields);
+		}
+		return $list;
+	}
 } #end class
 
