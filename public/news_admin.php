@@ -65,9 +65,10 @@ newsletter and the email. <br>
 <a href="/scripts/calendar.php"  target='calendar'>Run Calendar</a><br>
 <br>
 <li>Set the Newsletter title<br>
-    <form method='post' action='/scripts/set_title.php'>
-    Title: <input type='text' name='title' value='<?=$current_title_decoded?>'><input type='submit'>
-    </form>
+
+    Title: <input type='text' name='title' id='title_text' value='<?=$current_title_decoded?>'>
+    <button type='button' onClick = "setTitle()">Set Title</button>
+
 
 <li> Check the newsletter carefully before you publish!!  It's hard to fix after it's published.
 <form><a href="/news/news_next/" target="preview">View Next newsletter</a> </form></li>

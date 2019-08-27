@@ -41,7 +41,7 @@ function setTitle() {
 }
 // this scriput used for verifyEmail, sendLogin,
 
-function takeAction (uid,action) {
+function takeAction (uid,action,update='') {
    $.ajax({
    url: "/action.php",
    data: 'ajax='+action+'&uid='+uid,
