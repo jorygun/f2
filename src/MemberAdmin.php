@@ -55,12 +55,12 @@ class MemberAdmin {
 		 $emver_id = "emver-$uid";	
 		$cdate_id = "cdate-$uid";
 		   
-		$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid,$emstat_id);
+		$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid,$emstat_id,'bounced');
 		  $urlemail = rawurlencode($row['user_email']);
 		   $username = u\entity_spec($row['username']);
 		  $last_login = date('d M Y',strtotime($row['last_login']));
 		  $email_last_validated = date('d M Y', strtotime($row['email_last_validated']));
-		  	#$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid);
+		  	#$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid,'emver-id');
 		  	$validateEmailButton = "<button type='button' onClick='verifyEmail($uid)'>Verify</button>";
 		  
 		 
@@ -399,7 +399,7 @@ public function showMemberSummary($mdd) {
 public function change_report($since) {
 	// get changed emails
 	$email_changed = $this->Member->getUpdatedEmails($since);
-	u\echor $email_changed;
+	u\echor ($email_changed);
 	exit;
 
 

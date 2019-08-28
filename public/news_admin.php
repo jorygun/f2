@@ -15,7 +15,7 @@ namespace digitalmx\flames;
 
 if ($login->checkLogin(4)){
    $page_title = 'News Admin';
-	$page_options=[]; #ajax, votes, tiny
+	$page_options=['ajax']; #ajax, votes, tiny
 
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
@@ -39,7 +39,7 @@ if ($login->checkLogin(4)){
     $ptime = $dt->format('M j H:i T');
 
     //get current title, if any
-    $titlefile = SITE_PATH . '/news/news_next/title.txt';
+    $titlefile = SITE_PATH . '/news/next/title.txt';
     if (file_exists($titlefile)){$current_title = file_get_contents($titlefile);}
     else {$current_title = 'Title Not Set';}
     $current_title_decoded = htmlspecialchars_decode($current_title);

@@ -41,15 +41,31 @@ function setTitle() {
 }
 // this scriput used for verifyEmail, sendLogin,
 
-function takeAction (uid,action,update='') {
+function takeAction (uid,action,affectid='',message='') {
    $.ajax({
    url: "/action.php",
    data: 'ajax='+action+'&uid='+uid,
    type: "POST",
    success: function (response) {
-               alert (response);
+            if (message != '') {alert (message);}
+            if (affectid != '') { $('#'+affectid).html(response);}
         }
  });  
+}
+
+function verifyEmail(uid) {
+    $.ajax ({
+        url: "/action.php",
+        data: 'ajax=verifyEmail&uid='+uid,
+        type: "POST",
+        success: function (response) {
+            alert ("Verified");
+            $('#emver-'+uid).html(response);
+            $('#emstat-'+uid).html('Y');
+        }
+       
+    
+ });
 }
 
 function getMessage (type) {

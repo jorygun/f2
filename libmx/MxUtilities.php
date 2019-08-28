@@ -266,8 +266,9 @@ function pdoPrep($data,$include=[], $key=''){
             if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
             $db[$var] = htmlspecialchars_decode($val);
-            if (empty($db[$var])){
-            	$db[$var] = '';
+            
+            if (empty($db[$var])){ #catches 0, '', and false
+            	#$db[$var] = '';  NO loses real data
             	if ($var == 'asset_id'){ 
             		unset ($db[$var]);
             		continue; 
