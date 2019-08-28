@@ -10,7 +10,7 @@ SITE={$HOME}/Sites/flames/live
 day=`date +%u`
 datecode=`date +\%Y\%m\%d`
 #datecode = '000000'
-cd ${HOME}/backups
+cd $HOME/backups
 
 echo datecode $datecode on day $day in $(pwd).
 
@@ -26,7 +26,7 @@ fi
 mysqldump -hdb151d.pair.com -udigitalm_r -pSTjzyHFr digitalm_db1 | gzip > daily.sql.$datecode.sql.gz
 
 
-tar  -czf ${HOME}/backups/daily.site.${datecode}.tar.gz --exclude=${SITE}/vendor  $SITE
+tar  -czf $HOME/backups/daily.site.$datecode.tar.gz --exclude=$SITE/vendor  $SITE
 
 
 #remove older files leaving 1 less than +n
