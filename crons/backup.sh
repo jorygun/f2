@@ -4,7 +4,7 @@
 
 PATH=/bin:/usr/bin:/usr/local/bin
 HOME=/usr/home/digitalm
-SITE={$HOME}/Sites/flames/live
+SITE=$HOME/Sites/flames/live
 
 #see if its a Wed make weekly backup from oldest daily)
 day=`date +%u`
