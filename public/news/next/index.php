@@ -133,7 +133,7 @@ by clicking on the 'Opportunities' menu</p>\n";
 
 if ($current_opps>0){
     echo
-   "<p>There are $current_opps current employment openings listed. <a href='/opportunitiesE.php' target='_blank'>Click here for details.</a>.</p>
+   "<p>There are $current_opps current employment openings listed. <a href='/show_opp.php' target='_blank'>Click here for details.</a>.</p>
    ";
 }
 
@@ -162,7 +162,7 @@ just let the <a href='mailto:editor@amdflames.org'>editor know</a>.</p>
 
 $read->echo_if('calendar.html');
 
-$read->echo_if ("news_updates.html", $read->news_head("Membership Updates"));
+$read->echo_if ("status_report.html", $read->news_head("Membership Updates"));
 
 
 

@@ -293,66 +293,70 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	// check for profile update
 
 	//use the safe value of these fields in the update without modification
-	$direct_fields = array ('user_from','user_email','email_hide','no_bulk','alt_contact','user_amd','user_greet','user_memories','user_about','uid');
-	$update = array();
-	foreach ($direct_fields as $fld){
-		$update[$fld] = $_POST[$fld];
-	}
-	#decode the entities in the text fields.
+u\echor ($_POST,'post');
+
+	$update = $_POST; # copy all the fields over and then adjust ones that need modifying
+    unset ($update['Submit']); // except that one
+    unset ($update['emailvis']); // and that one
+
 	foreach (['user_memories','user_interests','user_about'] as $fld ){
-		$update[$fld] = spchard($_POST[$fld]);
+		$update[$fld] = spchard($_POST[$fld]) ?? '';
 	}
 	#fix up the multiple choice fields
-		if ($set = $_POST['amd_where'] ){
-			$update['amd_where']  = charListToString($set);
-		}
+    if ($set = $_POST['amd_where'] ){
+        $update['amd_where']  = charListToString($set);
+    }
 
-		if ($set = $_POST['amd_when'] ){
-			$update['amd_when'] = charListToString($set);
-		}
-		if ($set = $_POST['amd_dept'] ){
-			$update['amd_dept']  = charListToString($set);
-		}
+    if ($set = $_POST['amd_when'] ){
+        $update['amd_when'] = charListToString($set);
+    }
+    if ($set = $_POST['amd_dept'] ){
+        $update['amd_dept']  = charListToString($set);
+    }
 
 
-		$update['email_hide']= ($_POST[emailvis] == 'on') ? 1:0;
-		$update['no_bulk']= ($_POST[no_bulk] == 'on') ? 1:0;
+    if (isset($_POST['emailvis'] )){
+        $update['email_hide'] = 1;
+    } else {
+        $update['email_hide']= 0;
+    }
+    $update['no_bulk']= ($_POST['no_bulk'] == 'on') ? 1:0;
 
-		if ($linkedin = $_POST['linkedin'] and $linkedin <> $row['linkedin']){
-			if (substr($linkedin,0,4) != 'http'){
-				$update['linkedin'] = "http://$linkedin";
-			}
-			else {$update['linkedin'] = $linkedin;}
-		}
+    if ($linkedin = $_POST['linkedin'] and $linkedin <> $row['linkedin']){
+        if (substr($linkedin,0,4) != 'http'){
+            $update['linkedin'] = "http://$linkedin";
+        }
+        else {$update['linkedin'] = $linkedin;}
+    }
 
 /*     IF (new.user_about != old.user_about
-         OR
-         new.user_interests != old.user_interests
-         OR
-         new.user_current != old.user_current
-         OR
-         new.user_from != old.user_from
-         OR
-         new.user_memories != old.user_memories
-        ) THEN
-         set new.profile_updated = now();
-      END IF;
- */
+     OR
+     new.user_interests != old.user_interests
+     OR
+     new.user_current != old.user_current
+     OR
+     new.user_from != old.user_from
+     OR
+     new.user_memories != old.user_memories
+    ) THEN
+     set new.profile_updated = now();
+  END IF;
+*/
 
-		#assume user also checked email
-		$update['email_last_validated'] = sql_now();
-		$update['email_status'] = 'Y';
-		$update['profile_validated'] = sql_now();
-		if ($profile_changed) {
-			$update['profile_updated'] = sql_now();
-		}
-    	notify_admin($username,$id);
+    #assume user also checked email
+    $update['email_last_validated'] = sql_now();
+    $update['email_status'] = 'Y';
+    $update['profile_validated'] = sql_now();
+    if ($profile_changed) {
+        $update['profile_updated'] = sql_now();
+    }
+    notify_admin($username,$id);
 
 
 // recho($update,'update array');
 // 	exit;
 
-	$prep = pdoPrep($update,[],'uid');
+	$prep = u\pdoPrep($update,[],'uid');
 
  /**
  	$prep = pdoPrep($post_data,$allowed_list,'id');
@@ -365,6 +369,7 @@ elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
        $stmt = $pdo->prepare($sql)->execute($prep['data']);
 
   **/
+u\echor ($prep['data'],'data');
 
   	$sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id = ${prep['key']} ;";
        $stmt = $pdo->prepare($sql)->execute($prep['data']);

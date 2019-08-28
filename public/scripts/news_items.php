@@ -125,7 +125,7 @@ id: <input type='text' size='6' name='show_id' id='show_id' value=''>
 <button type='button'  onclick="document.getElementById('article_items_form').submit();"> Build Files </button>
 </p>
 
-<p><input type='button' onclick='window.open("/news/news_next","preview");'
+<p><input type='button' onclick='window.open("/news/next/","preview");'
 value='Preview' style='color:green'>
 <p style='border:1px solid black;background:#ccc;'><b>Test Files</b><br>
 

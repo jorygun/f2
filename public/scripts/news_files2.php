@@ -15,7 +15,7 @@ ini_set('error_reporting',E_ALL);
 
 
 $news_directory = SITE_PATH . '/news';
-$next_directory = "$news_directory/news_next";
+$next_directory = "$news_directory/next";
 $itemdb = 'news_items';
 $now = sql_now();
 

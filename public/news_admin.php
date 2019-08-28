@@ -13,6 +13,7 @@ namespace digitalmx\flames;
 
 
 
+
 if ($login->checkLogin(4)){
    $page_title = 'News Admin';
 	$page_options=['ajax']; #ajax, votes, tiny
@@ -26,10 +27,13 @@ if ($login->checkLogin(4)){
 
 //END START
 
-      $dt = new \DateTime();
-      $dt ->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
+    $titlefile = SITE_PATH . '/news/next/title.txt';
 
-    // get latest published update date
+
+// get latest published update date
+    $dt = new \DateTime();
+    $dt ->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
+
     if ($last_ptime = f\getLastPub() ){
       $dt->setTimestamp($last_ptime);
     } else {
@@ -38,11 +42,13 @@ if ($login->checkLogin(4)){
 	}
     $ptime = $dt->format('M j H:i T');
 
-    //get current title, if any
-    $titlefile = SITE_PATH . '/news/next/title.txt';
+//get current title, if any
+
     if (file_exists($titlefile)){$current_title = file_get_contents($titlefile);}
     else {$current_title = 'Title Not Set';}
     $current_title_decoded = htmlspecialchars_decode($current_title);
+
+    $indexaction = f\actionButton('Update','newsIndex',0,'','Done');
 
 ?>
 
@@ -57,8 +63,8 @@ if ($login->checkLogin(4)){
 
 
 <li>Run the change report.  This creates a report of all the member changes since the  date/time of the last update report that was published. Also pulls any new opportunities from the database. If necessary, set the Last Published Time.  This simply sets the time that the update report will work against.  It is set automatically during publish, but if you want to set it to something else, you can.<br>
-    <form method='get' action="/scripts/report_updates.php" target="_blank" >
-   From: <input type=text name='ptime' value="<?=$ptime?>"><input type=submit value="Run Change Report"></form><br>
+    <input type=text id='ptime' value="<?=$ptime?>"><br>
+   <button type='button' onClick = "runStatus('ptime');">Run Report</button>
 
 <li>Run the Calendar report. Add events and create an html and text version of the calendar for use by the
 newsletter and the email. <br>
@@ -71,7 +77,7 @@ newsletter and the email. <br>
 
 
 <li> Check the newsletter carefully before you publish!!  It's hard to fix after it's published.
-<form><a href="/news/news_next/" target="preview">View Next newsletter</a> </form></li>
+<a href="/news/next/" target="preview">View Next newsletter</a></li>
 
 <li>Publish the newsletter.  This script assembles the pieces in news_next, places it into a directory at /news/news_latest, and copies that directory to newsp/news_yymmdd (the normal repository for news), and sets the path to that directory in news/index.php as a relocate command. It also rebuilds the news index.
 	<br><form><a href="/scripts/publish.php" target="_blank">Publish news</a></form><br>
@@ -96,6 +102,9 @@ In case of emergency: <a href="#"  onclick="window.open('/scripts/abort_bulk_mai
 
 
 </ol>
+<p><b>Updated Index Files</b><p>
+<?=$indexaction?>
+
 <p><b>Add a breaking news to current newsletter</b></p>
 <form method='post' action='/scripts/breaking.php'>
 <textarea name='bnews' rows=6 cols=40>
@@ -103,7 +112,8 @@ In case of emergency: <a href="#"  onclick="window.open('/scripts/abort_bulk_mai
 <input type=submit>
 </form>
 
-</div>
-</div>
+
+
+
 </body></html>
 

@@ -69,10 +69,10 @@ class Opportunities
 		return $list;
 	}
 	
-	public function newOpp(){
-		
-		return $row;
-	}
+	// public function newOpp(){
+// 		
+// 		return $row;
+// 	}
 	
 	public function getOpp($id) {
 		if ($id == 0){

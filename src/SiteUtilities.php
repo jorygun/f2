@@ -10,7 +10,7 @@ use Digitalmx\Flames\Member;
 
 
 function getLastPub() {
-	$lts_file = REPO_PATH . '/var/data/last_published_ts.txt';
+	$lts_file = REPO_PATH . '/public/news/current/last_pubdate.txt';
 	if (file_exists($lts_file)){
 		$ts = trim( file_get_contents($lts_file) );
 	}
@@ -21,15 +21,15 @@ function getLastPub() {
 	return $ts;
 }
 
-function actionButton($label,$action,$uid,$affects='',$message='') {
+function actionButton($label,$action,$uid=0,$affects='',$message='') {
    	// script to buld button for ajax
    	// label is the text on the button
    	// action is the action defined in action.php script
    	// uid is the uid which all scripts using this function require
    	// affects is the #id of the object that should get new text returned,
    	$button = '<button type="button" onClick="takeAction('
-   		. $uid
-   		. ",'$action','$affects','$message')\">"
+   		
+   		. "'$action','$uid','$affects','$message')\">"
    		. $label
    		. "</button>";
    	return $button;

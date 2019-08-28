@@ -139,6 +139,9 @@ and change it in your profile.
 		$this->mailer->CharSet = 'UTF-8'; 
 		$this->mailer->isSendmail();
 		$this->mailer->SMTPKeepAlive = true; 
+		// don't send emails from local site unless 
+		// setTestMode is run to turn it on.
+		if (REPO == 'f2'){$this->test=true;}
 	}
 	public function setTestMode($test=false ) {
 		$this->test = $test;

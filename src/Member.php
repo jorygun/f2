@@ -228,7 +228,7 @@ private static $long_profile_fields = array (
     private $error='';
     private $credential; #not sure what this is for
     private $test;
-  
+  	private $member_status_set;
     # plus record count and data
     
  public function __construct($test=false)
@@ -236,6 +236,7 @@ private static $long_profile_fields = array (
     $this->test = $test;
        
 	$this->pdo = MyPDO::instance();
+	$this->member_status_set = Defs::getMemberInSet();
 	$this->std_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
 	
 	
@@ -710,18 +711,19 @@ public function getLogins($tag) {
     public function getMemberCounts() {
 		 $member_status_set =  Defs::getMemberInSet();
 	 
-		 $q = "SELECT count(*) as count FROM members_f2
-		WHERE status in ($member_status_set) AND email_status ='Y'
-		;";
-		$actives = $this->pdo->query($q)->fetchColumn();
+	 	$sql = "SELECT count(*) from `members_f2` 
+		WHERE status in ($member_status_set)
+		";
+		$total = $this->pdo->query($sql)->fetchColumn();
+		
 	
 		$q = "SELECT count(*) as count FROM members_f2
 		WHERE status in ($member_status_set) AND
 		email_status LIKE 'L_'
 		;";
 		$lost = $this->pdo->query($q)->fetchColumn();
-		$total = $actives + $lost;
-		return [$actives,$lost,$total];
+		$active = $total - $lost;
+		return [$active,$lost,$total];
 	}
 	 
     public function getMembers($post){
@@ -1086,9 +1088,9 @@ public function getLogins($tag) {
 	public function getUpdatedEmails ($since) {
 		// returns list of members with updated emails
 		// since must be in Y-m-d
-		if (! u\validateDate($since )){
-			throw new Exception ("$since is not a valid sql date");
-		}
+		// if (! u\validateDate($since )){
+// 			throw new Exception ("$since is not a valid sql date");
+// 		}
 		$member_status_set = Defs::getMemberInSet();
 		
 		$list = array();
@@ -1103,9 +1105,9 @@ public function getLogins($tag) {
 		return $list;
 	}
 	public function getDeceased ($since) {
-		if (! u\validateDate($since )){
-			throw new Exception ("$since is not a valid sql date");
-		}
+		// if (! u\validateDate($since )){
+// 			throw new Exception ("$since is not a valid sql date");
+// 		}
 		$member_status_set = Defs::getMemberInSet();
 		$list = array();
 		$sql = "SELECT  * FROM `members_f2`
@@ -1120,5 +1122,74 @@ public function getLogins($tag) {
 		}
 		return $list;
 	}
+	
+	public function getNewMembers($since) {
+		// if (! u\validateDate($since )){
+// 			throw new Exception ("$since is not a valid sql date");
+// 		}
+		//Get New Members
+	$member_status_set = Defs::getMemberInSet();
+	$sql = "SELECT * FROM `members_f2`
+	WHERE status in ($member_status_set)
+	
+	AND join_date > '$since'
+	ORDER BY username;
+	";
+// 	echo "sql: $q" . BRNL;
+// 	exit;
+	$stmt = $this->pdo->query($sql);
+	$list = [];
+   if ($result = $stmt->fetchAll(\PDO::FETCH_ASSOC) ){
+		foreach ($result as $row){
+			$list[] = $this->enhanceData($row,self::$info_fields);
+		}
+	}
+	return $list;
+	}
+
+public function getNewLost($since) {
+		// if (! u\validateDate($since )){
+// 			throw new Exception ("$since is not a valid sql date");
+// 		}
+		//Get New Members
+	$member_status_set = Defs::getMemberInSet();
+	$sql = "SELECT * FROM `members_f2`
+	WHERE status in ($member_status_set)
+	AND email_status_time >= '$since'
+	AND email_status like 'L%'
+	AND previous_ems not like 'L%'
+	ORDER BY username;
+	";// new lost
+	
+	$result = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
+
+	foreach ($result as $row){
+			$list[] = $this->enhanceData($row,self::$info_fields);
+		}
+	return $list;
+	}
+		
+	public function getOldLost($limit=0){
+	// old lost
+		$limit_clause =  (empty($limit)) ? '' : " LIMIT $limit "; 
+		
+		$q = "SELECT * FROM members_f2
+		WHERE status in ($this->member_status_set)
+		AND test_status = ''
+		AND email_status_time < NOW() - INTERVAL 90 DAY
+		AND email_status in ('LB','LA','LN')
+		ORDER BY RAND()
+		$limit_clause
+			;
+		";
+		$result = $this->pdo->query($q)->fetchAll(\PDO::FETCH_ASSOC);
+	
+		foreach ($result as $row){
+				$list[] = $this->enhanceData($row,self::$info_fields);
+			}
+		return $list;
+	}
+	
+		
 } #end class
 

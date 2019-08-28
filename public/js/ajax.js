@@ -41,7 +41,7 @@ function setTitle() {
 }
 // this scriput used for verifyEmail, sendLogin,
 
-function takeAction (uid,action,affectid='',message='') {
+function takeAction (action,uid=0,affectid='',message='') {
    $.ajax({
    url: "/action.php",
    data: 'ajax='+action+'&uid='+uid,
@@ -66,6 +66,19 @@ function verifyEmail(uid) {
        
     
  });
+}
+function runStatus(pid) {
+    var ptime = $('#'+pid).val();
+   $.ajax ({
+    url: "/action.php",
+    data: 'ajax=runStatus&uid=' + ptime,
+    type: "POST",
+    success: function (response) {
+        alert (response);
+        }
+   
+ });
+   
 }
 
 function getMessage (type) {
