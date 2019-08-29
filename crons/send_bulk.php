@@ -34,7 +34,7 @@ include "$dir/cron-ini.php";
 if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 
 use \digitalmx\flames\Definitions as Defs;
-use \digitalmx\flames\BulkMail.php;
+use \digitalmx\flames\BulkMail;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
