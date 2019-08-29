@@ -296,7 +296,7 @@ echo " scheduled for ". $dt->format('M d H:i T') . BRNL;
 
 // Write message file
 $msg_file = <<<EOT
-${_POST['subject']}
+$subject
 $message
 EOT;
 
