@@ -38,7 +38,5 @@ last_update_run_ts.txt
 latest_pointer.txt
 #news directory contains live info.  Don't disturb
 #also on local machine these are owned by _www
-public/news/news_latest/
-public/news/news_next/
-public/news/news_live/
-public/news/live/
+public/news/
+
