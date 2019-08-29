@@ -83,7 +83,8 @@ EOT;
    
 
    
-
+	$edition = trim(file_get_contents("$news_latest/title.txt"));
+	
 	$publish_file = $news_latest . "/publish.txt";
 	if (file_exists($publish_file)){
    	$edition_name = get_publish_data('title',$publish_file);
@@ -270,13 +271,14 @@ else { #IS POST
    
 
     $subject = $_POST['subject'];
+    $subject = str_replace('::edition::',$edition,$subject);
 
 	$teaser = build_teaser(SITE_PATH . "/news/news_latest" );
-	$title = file_get_contents("$news_latest/title.txt"); 
+	
 	$message = $_POST['body'];
 	$message = str_replace('::teaser::',$teaser , $message);
 	$message = preg_replace('/\t/',"    ",$message);
-	$message = str_replace('::edition::',$title,$message);
+	$message = str_replace('::edition::',$edition,$message);
 
 
 
