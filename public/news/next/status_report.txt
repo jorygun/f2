@@ -1,0 +1,80 @@
+<h2>Member Status Report 28 Aug 2019</h2><p>Changes since 2019-08-22 18:20.</p><h3>Membership</h3><p>Active Members: 1441, plus 1016 lost contact. <br>
+    Total 2457. </p><h3>1 New Members</h3><p style='font-style:italic;margin-left:3em;'>If you recognize a new member, send them a welcome!  Click their name to get contact info.</p><table class='update_data'>						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=10117' target = '_blank'>Teddy Technical</a></td>
+							  <td class='location'>Merlin, Oregon</td>
+							  <td><a href='mailto:jorygun@gmail.com'>jorygun@gmail.com</a></td></tr>
+							  <tr class='atamd'><td class='tright'>At AMD: </td><td colspan='2'>(1960s, 1970s, 1980s, Other)</td></tr>
+							  <tr><td class='tright'>As of 2019: </td>
+							  <td class='current' colspan='2'>dada</td></tr>
+
+						<tr><td></td><td colspan = '2' class='notes'><p class='greeting'>greeting?</p></td></tr>
+						
+
+</table>
+<h3>1 Updated Email Addresses</h3><table class='update_data'>						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=10117' target = '_blank'>Teddy Technical</a></td>
+							  <td class='location'>Merlin, Oregon</td>
+							  <td><a href='mailto:jorygun@gmail.com'>jorygun@gmail.com</a></td></tr>
+
+</table>
+<h3>1 Deceased</h3><table class='update_data'>						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=13229' target = '_blank'>Ted Eiden</a></td>
+							  <td class='location'>Dallas, TX</td>
+							  <td></td></tr>
+						<tr><td></td><td colspan = '2' class='notes'>new current</td></tr>
+						
+
+</table>
+<h3>1 Recently Lost Contact</h3><p style='font-style:italic;margin-left:3em;'>We gave up attempting to contact these people this week.</p><table class='update_data'>						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=13055' target = '_blank'>Catharina Sandstedt</a></td>
+							  <td class='location'>Stockholm, Sweden</td>
+							  <td>csan@cypress.com (but it bounces)</td></tr>
+							  <tr class='atamd'><td class='tright'>At AMD: </td><td colspan='2'>Sales(1980s, 1990s, 2000s, Europe)</td></tr>
+							  <tr><td class='tright'>As of 2019: </td>
+							  <td class='current' colspan='2'>new current</td></tr>
+
+
+</table>
+<h3>8 Long Lost - sample of members with no contact info</h3><p style='font-style:italic;margin-left:3em;'>Here is a random sample of people that we have no
+				  contact information for. If you know anything about them, please
+				  <a href="mailto:admin@amdflames.org">contact the admin</a>.</p><table class='update_data'>						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=10988' target = '_blank'>Mike Gingrass</a></td>
+							  <td class='location'>Rio Vista, CA</td>
+							  <td>megingrass@comcast.net (but it bounces)</td></tr>
+
+						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=11441' target = '_blank'>Tracey Gatheral</a></td>
+							  <td class='location'>San Jose, CA</td>
+							  <td>team@gatherod.org (but it bounces)</td></tr>
+
+						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=11419' target = '_blank'>Tom Coleman</a></td>
+							  <td class='location'></td>
+							  <td>No email on file</td></tr>
+
+						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=11094' target = '_blank'>Paul Koep</a></td>
+							  <td class='location'></td>
+							  <td>No email on file</td></tr>
+
+						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=10070' target = '_blank'>Bala Mani</a></td>
+							  <td class='location'></td>
+							  <td>bmani@earthlink.net (but we can't get a response.)</td></tr>
+
+						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=10290' target = '_blank'>Danh LeNgoc</a></td>
+							  <td class='location'></td>
+							  <td>No email on file</td></tr>
+
+						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=12543' target = '_blank'>Dan Pickens</a></td>
+							  <td class='location'>Austin, TX</td>
+							  <td>No email on file</td></tr>
+
+						 <tr class='brow'>
+							  <td class='username'><a href= '/scripts/profile_view.php?id=11893' target = '_blank'>Alex Rabinovich</a></td>
+							  <td class='location'>Toronto, Canada</td>
+							  <td>arabinov@rogers.com (but it bounces)</td></tr>
+
+</table>

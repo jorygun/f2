@@ -20,6 +20,7 @@ use digitalmx\flames\Messenger;
 use digitalmx\flames\DocPage;
 #use digitalmx\flames\ActionCodes;
 use digitalmx\flames\BulkMail;
+use digitalmx\flames\StatusReport;
 
 // if request came in from a get, the
 // query string tells you what to do.
@@ -77,12 +78,20 @@ if (! empty ($_POST)) {
 			echo  verifyEmail($_POST['uid'], $member) ;
 			
 			break;
-		 
+		case 'runStatus':
+			echo runStatusReport($_POST['uid']);
+			// uid used to transfer the starting date
+			break;
 			
 		case 'xout':
 			return xoutUser($_POST['uid'], $member);
 		  break;
 	  
+	  case 'newsIndex':
+	  		// copy news index template to new next
+	  		echo copyIndex();
+	  		break;
+	  		
 		case 'getmess':
 		   #echo 'at get mess';
 			echo getmess($_POST['type']);
@@ -124,6 +133,14 @@ function getmess($type)
     return json_encode($result);
 }
 
+function copyIndex() {
+	$index = REPO_PATH . "/templates/news_index.php";
+	$nextindex = REPO_PATH . "/public/news/next/index.php";
+	
+	copy ($index,$nextindex);
+	return "Done";
+}
+	
 function initNext()
 {
    #clears the news_next diretory and copyies the model index into it.
@@ -173,6 +190,13 @@ function cancel_bulk($job)
     echo $bulkmail -> show_bulk_jobs();
 }
 
+function runStatusReport($var) {
+	$since = date('Y-m-d H:i',strtotime($var));
+	if ($sr = new StatusReport($since) ) {
+		return "Run";
+	} else {return "Failed";}
+}
+
 function sendLogin($tag, $member)
 {
    //tag may be uid or email
@@ -188,7 +212,7 @@ function sendLogin($tag, $member)
 
 function setNewsTitle($title)
 {
-    $title_file = SITE_PATH . '/news/news_next/title.txt';
+    $title_file = SITE_PATH . '/news/next/title.txt';
     file_put_contents($title_file, $title);
     return "Done";
 }
