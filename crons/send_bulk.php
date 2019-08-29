@@ -119,12 +119,12 @@ echo "Checking for files in $queue" . BRNL;
    Please consider changing this setting on your profile so you can
    hear news about AMD and other AMD Flames. 
    Your personal login for the site is:
-   ::link  )
+   ::link::  )
 
 EOT;
 
   $profile_message = "
-    Your profile was last updated on ::profile_update.  
+    Your profile was last updated on ::profile_update::.  
     To update: log in, then under your name at top right, select 'View/Edit Profile'.
 
         ";
@@ -133,7 +133,7 @@ EOT;
 ------------------------------------------------------------------
    Click to verify that this is your correct email address:
 
-       https://amdflames.org/scripts/verify_email.php?s=::slink
+       https://amdflames.org/scripts/verify_email.php?s=::slink::
 
 -------------------------------------------------------------------
 EOT;
@@ -184,35 +184,35 @@ EOT;
             
             
         #subsititute in imessage.  later subs can replace text in earlier subs
-       $imessage = str_replace('::profile_date',$profile_updated_date,$imessage);
-       $imessage = str_replace('::profile_age',$profile_updated_age,$imessage);
+       $imessage = str_replace('::profile_date::',$profile_updated_date,$imessage);
+       $imessage = str_replace('::profile_age::',$profile_updated_age,$imessage);
        
-       if ($no_bulk){$imessage = str_replace('::no_bulk',$no_bulk_message,$imessage);
+       if ($no_bulk){$imessage = str_replace('::no_bulk::',$no_bulk_message,$imessage);
          } else {
-               $imessage = str_replace('::no_bulk','',$imessage);
+               $imessage = str_replace('::no_bulk::','',$imessage);
          }
          
 			if ($age_flag > 0){
-               $imessage = str_replace('::profile',$profile_message,$imessage);
+               $imessage = str_replace('::profile::',$profile_message,$imessage);
          }else {
-             $imessage = str_replace('::profile','',$imessage);
+             $imessage = str_replace('::profile::','',$imessage);
          }
          
 			if (false) {
-				$imessage = str_replace('::verify',$verify_message,$imessage);
+				$imessage = str_replace('::verify::',$verify_message,$imessage);
 		  } else {
-				$imessage = str_replace('::verify','',$imessage);
+				$imessage = str_replace('::verify::','',$imessage);
 		  }
            
-            $isubject = str_replace('::name',$username,$isubject);
+            $isubject = str_replace('::name::',$username,$isubject);
             
-            $imessage = str_replace('::name', $username, $imessage);
-            $imessage = str_replace('::link', $login_link, $imessage);
-            $imessage = str_replace('::slink',$logincode,$imessage);
-             $imessage = str_replace('::verify',$verify_link,$imessage);
-             $imessage = str_replace('::uemail',$user_email,$imessage);
-             $imessage = str_replace('::newslink',$news_link,$imessage);
-             $imessage = str_replace('::profile_update',$profile_updated_date,$imessage);
+            $imessage = str_replace('::name::', $username, $imessage);
+            $imessage = str_replace('::link::', $login_link, $imessage);
+            $imessage = str_replace('::slink::',$logincode,$imessage);
+             $imessage = str_replace('::verify::',$verify_link,$imessage);
+             $imessage = str_replace('::uemail::',$user_email,$imessage);
+             $imessage = str_replace('::newslink::',$news_link,$imessage);
+             $imessage = str_replace('::profile_update::',$profile_updated_date,$imessage);
              
             
 	

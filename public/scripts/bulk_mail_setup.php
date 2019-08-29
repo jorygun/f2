@@ -272,10 +272,11 @@ else { #IS POST
     $subject = $_POST['subject'];
 
 	$teaser = build_teaser(SITE_PATH . "/news/news_latest" );
-
+	$title = file_get_contents("$news_latest/title.txt"); 
 	$message = $_POST['body'];
 	$message = str_replace('::teaser::',$teaser , $message);
 	$message = preg_replace('/\t/',"    ",$message);
+	$message = str_replace('::edition::',$title,$message);
 
 
 
