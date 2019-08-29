@@ -1,4 +1,6 @@
 <?php
+namespace digitalmx\flames;
+
 /*  script to build directory index file
   *
   * need a file of newsletters for building the
@@ -17,7 +19,7 @@ class NewsIndex {
     private $jfile;
   	private $hfile;
    // actual source directory for archived newsletters
-    private $newsarchivedir='/newsp';
+    private $newsarchivedir= '/newsp';
 
     private $file_index;
 	
@@ -25,7 +27,7 @@ class NewsIndex {
     function __construct($rebuild) {
     	
     	$newsdir	= SITE_PATH . $this->newsindexdir;
-   	    $this->jfile = "$newsdir/index.json";
+   	$this->jfile = "$newsdir/index.json";
   		$this->hfile = "$newsdir/index_inc.html";
   		$newsarchivedir = SITE_PATH . $this->newsarchivedir;
   		
