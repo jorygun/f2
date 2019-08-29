@@ -68,7 +68,7 @@ echo "Checking for files in $queue" . BRNL;
 		
 // this retrieves one job from the queue.  If multiple jobs
 // next one will be picked up on next run.
-	if (empty($job = $bulk->getNextJob($queue)) ){
+	if (empty($job = checkfiles($queue)) ){
 		exit;
 	}
 
