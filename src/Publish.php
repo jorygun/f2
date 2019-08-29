@@ -39,7 +39,8 @@ Separately, after verifying new newsletter..
 //END START
 	use digitalmx\MyPDO;
 	use digitalmx as u;
-	use digitalmx\Publish;
+
+	use digitalmx\flames\NewsIndex;
 
    
 
@@ -167,8 +168,8 @@ class Publish {
         	}
       
 	}
-        
-			  require_once "newsletter_index.class.php";
+        public function reindexNews() {
+			 
 			  if ( $nli = new NewsletterIndex(true) ){
 				echo "Updating Newsletter Index" . BRNL;
 				#echo "$nli" . BRNL;
@@ -177,7 +178,9 @@ class Publish {
 				echo "NewsletterIndex failed";
 			  }
 					#true forces rebuild
-
+	}
+	
+		public function addReads() {
 			  echo "Adding $pubdate_code to reads database<br>";
 			  $sql = "INSERT INTO `read_table` SET issue = '$pubdate_code',read_cnt=0;";
 			  $result = $pdo->query($sql);
@@ -186,12 +189,10 @@ class Publish {
 				#set count for preview issue to 0
 				$sql = "UPDATE read_table SET read_cnt=0 WHERE issue = 999999;";
 				$result = $pdo->query($sql);
-
-			  #now rebuild the files
+		}
+			  
 			  include './news_files2.php';
-			} else {
-				echo "News items not updated on repo " . REPO . BRNL;
-			}
+			
         	
 		 /* Now build the recent article and assets file */
     echo "Updating recent article titles" . BRNL ;
