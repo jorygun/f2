@@ -234,9 +234,10 @@ if (! $pst = $pdo -> query ($sql) ) {return false;}
 
     foreach ($pst as $row) {
         $id = $row['id'];
-        $link = "<a href='/scripts/asset_display.php?$id' target='asset_view'>"
+        $link = "<a href='/asset_display.php?$id' target='asset_view'>"
             . htmlspecialchars($row['title'],ENT_QUOTES)
             .  "</a>";
+
 
 			$tagnames=[];
         if ($tags = $row['tags'] ){
