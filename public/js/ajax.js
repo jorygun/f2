@@ -52,6 +52,7 @@ function takeAction (uid,action) {
  });  
 }
 
+// script to retrieve message text for bulk mail
 function getMessage (type) {
    $.ajax({
    url: "/action.php",

@@ -108,7 +108,7 @@ class NewsletterIndex {
             $url = "/newsp/$f";
             try {
 
-           if (! ($dt = DateTime::createFromFormat('Ymd',trim($dcode) )  ) )
+           if (! ($dt = \DateTime::createFromFormat('Ymd',trim($dcode) )  ) )
                 {throw new Exception ("Cannot create dt from $dcode");}
             }
             catch (Exception $e){
