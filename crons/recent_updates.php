@@ -62,7 +62,7 @@ if( $recent_asset_report = report_recent_assets ($from,0,30 ) ){
 	file_put_contents($recent_asset_file, $recent_asset_report );
 } else {
 	if(file_exists ("$recent_asset_file")){unlink ("$recent_asset_file");}
-	echo "No asset report\n";
+	if (!$quiet) echo "No asset report\n";
 }
 
 
@@ -73,7 +73,7 @@ if ($recent_article_report = report_recent_articles ($from,$to,30,$test) ){
 	file_put_contents($recent_article_file, $recent_article_report );
 } else {
 	if(file_exists ("$recent_article_file")){unlink ("$recent_article_file");}
-	echo "No article report\n";
+	if (!$quiet)  echo "No article report\n";
 }
 
 
