@@ -24,6 +24,7 @@ ini_set('display_errors', 1);
 	echo $page -> startHead($page_options);
 	echo $page -> startBody();
 
+	$dev_update_button = f\actionButton('Restore Dev','restore',0,'','Done');
 	
 //END START
 	
@@ -35,7 +36,7 @@ if (isset($_POST['search'])){
 }
 elseif (isset($_POST['Update'])){
 	if (empty($uid = $_POST['uid'])){
-		throw new Exception ('Attemp t update member with no uid in post');
+		throw new Exception ('Attempt update member with no uid in post');
 	}
 	
 	echo $admin->updateMember($_POST);
@@ -47,4 +48,7 @@ elseif ($uid = $_GET['id'] ?? '' ){
 
 #show search screen
 echo $admin->showSearch();
+
+echo $dev_update_button;
+
 

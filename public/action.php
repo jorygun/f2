@@ -91,7 +91,10 @@ if (! empty ($_POST)) {
 	  		// copy news index template to new next
 	  		echo copyIndex();
 	  		break;
-	  		
+	  	case 'restore':
+	  		// restore dev database from production backup
+	  		echo restore();
+	  		break;
 		case 'getmess':
 		   #echo 'at get mess';
 			echo getmess($_POST['type']);
@@ -114,6 +117,11 @@ if (! empty ($_POST)) {
 	}
 }
 // else, just load the script so the functions can be used.
+
+function restore(){
+	$script = REPO_PATH . "/crons/restore_dev.sh";
+	return `bash $script`;
+}
 
 function getmess($type)
 {

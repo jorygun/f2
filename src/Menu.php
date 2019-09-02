@@ -170,7 +170,7 @@ EOT;
 		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='_blank'>User Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/news_admin.php'>News Admin</a>");
 		 $t .= self::if_level(8,"<li><a href='/varinfo.php' target='_blank'>Var Info</a>");
-		  $t .= self::if_level(8,"<li><a href='/phpinfo.php' target='_blank'>PHP Info</a>");
+		  
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");
 
@@ -179,6 +179,7 @@ EOT;
 		  $t .=    self::if_level (7, "<li><a href='/scripts/assets.php' target='assets'>Asset Manager</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/gallery_edit.php' target='galleries'>Edit Gallery</a>");
 		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='_blank'>Web Stats</a>");
+		  
 
 	$t .=  self::closeLine(7,$thisMenu);
 
