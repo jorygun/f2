@@ -28,9 +28,13 @@ class MyPDO
          if (!	$dba = parse_ini_file($this->db_ini,true) ){
         	throw new Exception ("Unable to parse " . $this->db_in);
         }
-     	
+     		$mode = 'dev';
      		$platform = $this->getPlatform();
-        	$mode='production';
+     		$repo = REPO; #from init or cron-ini
+        	if (in_array ($repo,['live','beta'])) {
+        		$mode='production';
+        	} 
+        	
         	$dbname = $platform . '-' . $mode ;
         
         	$dbvars = $dba[$dbname];

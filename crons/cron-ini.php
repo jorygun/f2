@@ -26,6 +26,7 @@ ini_set('display_errors', 1);
 	#var_dump($opts);
 
 define ('REPO_PATH' , dirname(__DIR__) );
+define ('REPO', basename (REPO_PATH) );
 define ('PROJ_PATH', dirname(REPO_PATH) ); # script is in .../project/crons
 $repo = basename(REPO_PATH);
 use digitalmx\flames as f;
@@ -57,6 +58,7 @@ try {
 	define ('SITE', $site);
 	define ('SITE_URL', 'http://' . SITE);
 	define ('CONFIG_INI', REPO_PATH . "/config/config.ini");
+	
 
 
 	if (empty($site_ini = parse_ini_file(REPO_PATH . '/config/config.ini') )){
