@@ -56,7 +56,7 @@ function update_link_db($url,$article_id){
        $pdo = MyPDO::instance();
         $add_user_cnt  =   (empty ($_SESSION['login']['username'])) ? 0 : 1 ;
 
-	$sql_user = "INSERT INTO digitalm_db1.links
+	$sql_user = "INSERT INTO links
 		    (url, article_id, count, user_count, last)
 		VALUES ('$url',$article_id,1,$add_user_cnt, NOW() )
 		ON DUPLICATE KEY UPDATE
