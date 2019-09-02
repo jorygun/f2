@@ -168,7 +168,7 @@ EOT;
 		if ($userlevel >= 7){$menulist[] = $thisMenu;}
 
 		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='_blank'>User Admin</a>");
-		  $t .= self::if_level (7,"<li><a href='/level7.php'>News Admin</a>");
+		  $t .= self::if_level (7,"<li><a href='/news_admin.php'>News Admin</a>");
 		 $t .= self::if_level(8,"<li><a href='/varinfo.php' target='_blank'>Var Info</a>");
 		  $t .= self::if_level(8,"<li><a href='/phpinfo.php' target='_blank'>PHP Info</a>");
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
