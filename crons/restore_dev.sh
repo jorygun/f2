@@ -12,4 +12,6 @@ cd ${HOME}/backups
 # get latest daily file
 latest=$(ls -t daily.sql.* | head -1 )
 gunzip < "$latest" | mysql -udigitalm_6 -pfXFjb9ED digitalm_f2dev 
+echo "Restored from $latest";
+
 
