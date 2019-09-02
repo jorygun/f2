@@ -10,6 +10,7 @@ namespace digitalmx\flames;
 	use digitalmx\flames as f;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\flames\DocPage;
+	use digitalmx\flames\Publish;
 
 
 
@@ -28,6 +29,7 @@ if ($login->checkLogin(4)){
 //END START
 
     $titlefile = SITE_PATH . '/news/next/title.txt';
+    $publish = new Publish();
 
 
 // get latest published update date
@@ -44,11 +46,14 @@ if ($login->checkLogin(4)){
 
 //get current title, if any
 
-    if (file_exists($titlefile)){$current_title = file_get_contents($titlefile);}
-    else {$current_title = 'Title Not Set';}
-    $current_title_decoded = htmlspecialchars_decode($current_title);
+    if (empty($current_title = $publish->getTitle())){
+        $current_title = 'Title Not Set';
+    }
+    $current_title_spchar = u\entity($current_title);
 
-    $indexaction = f\actionButton('Update','newsIndex',0,'','Done');
+
+    $indexaction = f\actionButton('Update','copyIndex',0,'','Done');
+    $rebuildaction = f\actionButton('Rebuild','indexNews',0,'','Done');
 
 ?>
 
@@ -72,7 +77,7 @@ newsletter and the email. <br>
 <br>
 <li>Set the Newsletter title<br>
 
-    Title: <input type='text' name='title' id='title_text' value='<?=$current_title_decoded?>'>
+    Title: <input type='text' name='title' id='title_text' value='<?=$current_title_spchar?>'>
     <button type='button' onClick = "setTitle()">Set Title</button>
 
 
@@ -94,16 +99,16 @@ newsletter and the email. <br>
 from the news_latest directory, so they reflect last news published.
 <br><form><a href="/scripts/bulk_mail_setup.php" target = "_blank">Set up Bulk Email</a>
 </form>
-<a href = "/logs/bulk_mail_logs/log-last.txt" target="_blank">View Last Bulk Mail Log</a> &nbsp;&nbsp;&nbsp;
 
-In case of emergency: <a href="#"  onclick="window.open('/scripts/abort_bulk_mail.php','abort','height=200,width=600');return false;">Abort Bulk Mail</a>
-
-</li>
 
 
 </ol>
-<p><b>Updated Index Files</b><p>
+<hr>
+<h3>Utilities</h3>
+<p><b>Update News Index File</b><p>
 <?=$indexaction?>
+<p><b>Rebuild Newsletter Index</b></p>
+<?=$rebuildaction?>
 
 <p><b>Add a breaking news to current newsletter</b></p>
 <form method='post' action='/scripts/breaking.php'>

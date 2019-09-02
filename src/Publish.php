@@ -8,9 +8,11 @@ namespace digitalmx\flames;
 	can be made, tested, and recopied out to archive.
 	
 	process:
-	?? copy contents of live to current archive
+
+	(?? copy contents of live to current archive)
 	copy contents of next to latest
 	insert publish_data file into latest
+	
 	copy latest/ to newsp/news_datecode
 	set the current/pubdate
 	
@@ -39,6 +41,7 @@ Separately, after verifying new newsletter..
 //END START
 	use digitalmx\MyPDO;
 	use digitalmx as u;
+	use digitalmx\flames as f;
 
 	use digitalmx\flames\NewsIndex;
 
@@ -57,13 +60,13 @@ class Publish {
 	private  $latest_pointer = REPO_PATH . "/public/news/current/pointer.txt"; #link to newsp
 	
 	private  $titlefile = REPO_PATH . "/public/news/next/title.txt";
-	private  $pubfile = REPO_PATH . '/public/news/latest/pubdata.txt';
+	private  $pubdatafile = REPO_PATH . '/public/news/latest/pubdata.txt';
 	
 	
 	// timestamps
 		private  $rtime_file = REPO_PATH . "/var/data/last_update_run.txt";
  		private  $ptime_file = REPO_PATH . "/var/data/last_update_published.txt";
- 		private  $last_published =  REPO_PATH . "/public/news/current/last_pubdate.txt"; 
+ 		private  $last_published =  REPO_PATH . "/var/data/last_pubdate.txt"; 
  		
 	private $pubdate_code;
 	private $pubdate_human;
@@ -93,14 +96,14 @@ class Publish {
 	$this->new_archive = '/news_' . $this->pubdate_code;
 	
 }
-	private function getTitle(){
+	public function getTitle(){
 #get latest title from news_next
 
     if (file_exists($this->titlefile)){
-        $current_title = file_get_contents($this->titlefile);
-	    $title = htmlspecialchars($current_title);
+        $title = trim(file_get_contents($this->titlefile));
+	   
 	}
-	else {$title = ''}
+	else {$title = '';}
 	return $title;
  }
 
@@ -108,6 +111,7 @@ class Publish {
 		// these routines publish the new newsletter
 		$this->copyNextToLatest();
 		$this->addPublishFile();
+		
 	
 	}
 	public function wrapupNews() {
@@ -125,7 +129,7 @@ class Publish {
 	}
 	private function addPublishFile() {
 	// add a file with the publish date
-		file_put_contents($this->pubfile,$this->pubdate_human);
+		file_put_contents($this->pubdatafile,$this->pubdate_human);
 	}
 	
 	private function copyLatestToArchive($datecode) {
@@ -144,7 +148,7 @@ class Publish {
 	private function fixPtime(){
 		// copies the last update run time to the
 		// last published run time
-		copy (this->$rtime_file, $this->ptime_file);
+		copy ($this->rtime_file, $this->ptime_file);
 	}
 	
 	private function restoreIndex() {
@@ -191,19 +195,20 @@ class Publish {
 				$result = $pdo->query($sql);
 		}
 			  
-			  include './news_files2.php';
+}
+			//  include './news_files2.php';
 			
         	
 		 /* Now build the recent article and assets file */
-    echo "Updating recent article titles" . BRNL ;
-        require REPO_PATH . '/crons/recent_articles.php';
-        
-	 echo "Updating recent assets" . BRNL ;
-        require REPO_PATH . '/crons/recent_assets.php';
-        
-    echo "Done.  <button type='button' onClick='window.close()'>Close Window</button>";
-
-	exit;
+  //   echo "Updating recent article titles" . BRNL ;
+//         require REPO_PATH . '/crons/recent_articles.php';
+//         
+// 	 echo "Updating recent assets" . BRNL ;
+//         require REPO_PATH . '/crons/recent_assets.php';
+//         
+//     echo "Done.  <button type='button' onClick='window.close()'>Close Window</button>";
+// 
+// 	exit;
 
 
 

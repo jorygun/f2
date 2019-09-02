@@ -10,7 +10,7 @@ class News {
 
 
 	function __construct() {
-		#$this->pdo = $pdo;
+
 		$this->pdo = MyPDO::instance();
 	}
 
@@ -143,7 +143,7 @@ private function saveVote($item_id,$user_id,$vote=''){
     }
 
     public function news_subhead($title){
-        $hcode = "<h3>" . u\entity_spec($title) . "</h3>\n";
+        $hcode = "<h3>" . u\entity($title) . "</h3>\n";
         return $hcode;
     }
 

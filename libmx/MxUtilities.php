@@ -44,7 +44,7 @@ function echor($var,$title=''){
     echo "<pre>" .  print_r($var,true) . "</pre>\n";
 }
 
-function entity_spec($var){
+function entity($var){
     #convert < > " & , but not ' (default ENT_COMPAT)
 	return htmlspecialchars($var,ENT_QUOTES);
 }

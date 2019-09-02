@@ -82,12 +82,15 @@ if (! empty ($_POST)) {
 			echo runStatusReport($_POST['uid']);
 			// uid used to transfer the starting date
 			break;
+		case 'indexNews':
+			echo runNewsIndex();
+			break;
 			
 		case 'xout':
 			return xoutUser($_POST['uid'], $member);
 		  break;
 	  
-	  case 'newsIndex':
+	  case 'copyIndex':
 	  		// copy news index template to new next
 	  		echo copyIndex();
 	  		break;
@@ -131,6 +134,9 @@ function getmess($type)
     $result['subject']=$subject;
    #return "sub: " . $result['subject'] . 'mess: ' . $result['text'] . "\n";
     return json_encode($result);
+}
+function runNewsIndex(){
+	return "Not implemented";
 }
 
 function copyIndex() {

@@ -10,7 +10,7 @@ use Digitalmx\Flames\Member;
 
 
 function getLastPub() {
-	$lts_file = REPO_PATH . '/public/news/current/last_pubdate.txt';
+	$lts_file = REPO_PATH . '/var/data/last_pubdate.txt';
 	if (file_exists($lts_file)){
 		$ts = trim( file_get_contents($lts_file) );
 	}

@@ -96,55 +96,55 @@ EOT;
 		</div>
 EOT;
 		return $voting_panelb;
-}
+	}
 
-private function record_vote($item_id,$user_id,$vote=''){
-	#echo "recording $item_id, $user_id, $vote" . BRNL;
+	private function record_vote($item_id,$user_id,$vote=''){
+		#echo "recording $item_id, $user_id, $vote" . BRNL;
 	
-	if(empty($item_id) ){return;}
+		if(empty($item_id) ){return;}
 		
-	switch ($vote){
-		case 'up':
-			$votevalue=1;
-			#$update_sql ="UPDATE assets SET votes = votes+1 WHERE id='$pid'";
-			break;
-		case 'down':
-			$votevalue = -1;
-			#$update_sql ="UPDATE assets SET votes = votes-1 WHERE id='$pid'";
-			break;
+		switch ($vote){
+			case 'up':
+				$votevalue=1;
+				#$update_sql ="UPDATE assets SET votes = votes+1 WHERE id='$pid'";
+				break;
+			case 'down':
+				$votevalue = -1;
+				#$update_sql ="UPDATE assets SET votes = votes-1 WHERE id='$pid'";
+				break;
 			
-		case 'up-off':
-		case 'down-off':
-		case 'meh':	
-		default:
-			$votevalue = 0; #meh vote will set to 0;
-			#$update_sql = '';
-	}
-	if (true or !empty($votevalue)){
-	// update the user-asset vote table
-		$sql = "INSERT INTO `votes` (user_id_fk,news_fk,vote_rank)
-			VALUES ('$user_id','$item_id', $votevalue)
-		ON DUPLICATE KEY UPDATE
-		vote_rank = $votevalue "   ;
-
-	#pecho ($sql);
-		if (! $this->pdo->query($sql) ){
-			throw new Exception ("db insert/update failed ");
+			case 'up-off':
+			case 'down-off':
+			case 'meh':	
+			default:
+				$votevalue = 0; #meh vote will set to 0;
+				#$update_sql = '';
 		}
-	}
-		
-}
+		if (true or !empty($votevalue)){
+		// update the user-asset vote table
+			$sql = "INSERT INTO `votes` (user_id_fk,news_fk,vote_rank)
+				VALUES ('$user_id','$item_id', $votevalue)
+			ON DUPLICATE KEY UPDATE
+			vote_rank = $votevalue "   ;
 
-public function tally_vote ($item_id,$user_id,$vote='') {
-	if (! in_array($vote,['up','down','meh','down-off','up-off']) ){
-		throw new Exception ("Invalid vote $vote");
+		#pecho ($sql);
+			if (! $this->pdo->query($sql) ){
+				throw new Exception ("db insert/update failed ");
+			}
+		}
+		
 	}
-	if (empty($item_id) or empty($user_id)){
-		throw new Exception ("Invalid user or item id");
-	}
+
+	public function tally_vote ($item_id,$user_id,$vote='') {
+		if (! in_array($vote,['up','down','meh','down-off','up-off']) ){
+			throw new Exception ("Invalid vote $vote");
+		}
+		if (empty($item_id) or empty($user_id)){
+			throw new Exception ("Invalid user or item id");
+		}
 	
-	$this->record_vote($item_id,$user_id,$vote);
-	return $this->show_panel($item_id,$user_id);
-}
+		$this->record_vote($item_id,$user_id,$vote);
+		return $this->show_panel($item_id,$user_id);
+	}
 
 }
