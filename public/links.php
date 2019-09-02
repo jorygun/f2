@@ -41,7 +41,7 @@ $root = $_SERVER['DOCUMENT_ROOT'];
 #echo "Updating $url, $article_id, $my_name<br>";
 
 
-	update_link_db($url,$article_id,$my_name);
+	update_link_db($url,$article_id);
 
 echo header("Location: $url");
 
