@@ -48,7 +48,7 @@ elseif ($uid = $_GET['id'] ?? '' ){
 
 #show search screen
 echo $admin->showSearch();
-
+echo '<hr>';
 echo $dev_update_button;
 
 
