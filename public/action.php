@@ -82,19 +82,19 @@ if (! empty ($_POST)) {
 			echo runStatusReport($_POST['uid']);
 			// uid used to transfer the starting date
 			break;
+		case 'indexNews':
+			echo runNewsIndex();
+			break;
 			
 		case 'xout':
 			return xoutUser($_POST['uid'], $member);
 		  break;
 	  
-	  case 'newsIndex':
+	  case 'copyIndex':
 	  		// copy news index template to new next
 	  		echo copyIndex();
 	  		break;
-	  	case 'restore':
-	  		// restore dev database from production backup
-	  		echo restore();
-	  		break;
+	  		
 		case 'getmess':
 		   #echo 'at get mess';
 			echo getmess($_POST['type']);
@@ -118,11 +118,6 @@ if (! empty ($_POST)) {
 }
 // else, just load the script so the functions can be used.
 
-function restore(){
-	$script = REPO_PATH . "/crons/restore_dev.sh";
-	return `bash $script`;
-}
-
 function getmess($type)
 {
    // return text message for bulk mail setup script
@@ -140,11 +135,14 @@ function getmess($type)
    #return "sub: " . $result['subject'] . 'mess: ' . $result['text'] . "\n";
     return json_encode($result);
 }
+function runNewsIndex(){
+	return "Not implemented";
+}
 
 function copyIndex() {
 	$index = REPO_PATH . "/templates/news_index.php";
 	$nextindex = REPO_PATH . "/public/news/next/index.php";
-	
+	echo "copying $index to $nextindex";
 	copy ($index,$nextindex);
 	return "Done";
 }

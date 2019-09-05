@@ -41,18 +41,46 @@ function setTitle() {
 }
 // this scriput used for verifyEmail, sendLogin,
 
-function takeAction (uid,action) {
+function takeAction (action,uid=0,affectid='',message='') {
    $.ajax({
    url: "/action.php",
    data: 'ajax='+action+'&uid='+uid,
    type: "POST",
    success: function (response) {
-               alert (response);
+            if (message != '') {alert (message);}
+            if (affectid != '') { $('#'+affectid).html(response);}
         }
  });  
 }
 
-// script to retrieve message text for bulk mail
+function verifyEmail(uid) {
+    $.ajax ({
+        url: "/action.php",
+        data: 'ajax=verifyEmail&uid='+uid,
+        type: "POST",
+        success: function (response) {
+            alert ("Verified");
+            $('#emver-'+uid).html(response);
+            $('#emstat-'+uid).html('Y');
+        }
+       
+    
+ });
+}
+function runStatus(pid) {
+    var ptime = $('#'+pid).val();
+   $.ajax ({
+    url: "/action.php",
+    data: 'ajax=runStatus&uid=' + ptime,
+    type: "POST",
+    success: function (response) {
+        alert (response);
+        }
+   
+ });
+   
+}
+
 function getMessage (type) {
    $.ajax({
    url: "/action.php",
