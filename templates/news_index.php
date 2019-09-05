@@ -162,7 +162,8 @@ just let the <a href='mailto:editor@amdflames.org'>editor know</a>.</p>
 
 $read->echo_if('calendar.html');
 
-$read->echo_if ("news_updates.html", $read->news_head("Membership Updates"));
+echo $read->news_head("Membership Updates");
+$read->echo_if ("news_updates.html" );
 
 
 
