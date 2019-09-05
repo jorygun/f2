@@ -12,8 +12,8 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
 echo start_page();
 
-   $calendar_html_file = SITE_PATH . '/news/news_latest/calendar.html';
-    $calendar_tease_file = SITE_PATH . '/news/news_latest/tease_calendar.txt';
+   $calendar_html_file = SITE_PATH . '/news/live/calendar.html';
+    $calendar_tease_file = SITE_PATH . '/news/news_next/tease_calendar.txt';
     
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 #   echo "<pre>", print_r($_POST,true),"</pre>";
@@ -29,6 +29,8 @@ echo "text:<br><pre>",$calendar_t,"</pre><hr>\n";
 echo "html:<br>", $calendar_h,"<hr>\n";
 
 echo "<p>Generating Files</p>";
+#echo "..> $calendar_html_file" . BRNL;
+
  
 file_put_contents($calendar_html_file,$calendar_h);
 file_put_contents($calendar_tease_file, $calendar_t);
