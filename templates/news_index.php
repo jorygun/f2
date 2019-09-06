@@ -167,7 +167,7 @@ $read->echo_if ("news_updates.html" );
 
 
 
-echo "<p><small><?=$footer_line?></small></p>";
+echo "<p><small>$footer_line</small></p>";
 echo "</body></html>\n";
 
 
