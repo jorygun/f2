@@ -22,7 +22,7 @@ h2 {font-family: Arial,san-serif; font-size: 2em; color: black;
 h3 {font-family: Arial,san-serif;
 	font-size: 1.5em; color: black;
 	border-bottom: 2px solid green;
-	margin-left:1em;}
+	}
 
 h4 {font-family: Arial,san-serif; font-size: 1.0em; color: black;}
 
@@ -38,6 +38,7 @@ li {margin-bottom:0.5em;}
 
 .divh2 {font-family: Arial,san-serif; font-size: 2em; color: black; font-weight:bold;
 	border-top:5px solid green;
+	margin-top:1em;
 	}
 	
 .indent {margin: 0.5em 3em 0.5em 3em;}
@@ -85,6 +86,7 @@ blockquote, .quoted {
 blockquote p, .quoted p {
     padding-left:1em;
 }
+.inner {margin-left:1em;}
 .instr {font-style:italic;}
 .caption {font-size:0.8em;text-align:center;}
 .slogan {font-style:italic; text-align:center; border-top:1px solid green; border-bottom:1px solid green;}
@@ -286,7 +288,7 @@ table#calendar  {
 	width:600px;
 }
 table#calendar  {border:1px solid #030;}
-table#calendar  td {padding:3px;font-size:0.8em;}
+table#calendar  td {padding:3px;font-size:0.9em;}
 table#calendar tr.first {border-top:1px solid #030;}
 table#calendar td.date {width:16em;}
 
@@ -384,3 +386,25 @@ table.voting {width:100%; border:0;}
 table.voting td {text-align:center;vertical-align:top;}
 div.vpanel {text-align:center;}
 
+/* collapsible lists */
+.collapsibleList li{
+		  list-style-image:url('/graphics/button.png');
+		  cursor:auto;
+		}
+
+li.collapsibleListOpen{
+		  list-style-image:url('/graphics/tri_down_18.png');
+		  cursor:pointer;
+		}
+
+li.collapsibleListClosed{
+		  list-style-image:url('/graphics/tri_right_18.png');
+		  cursor:pointer;
+		}
+.collapsibleList li ul li {margin-bottom:4px;}
+
+
+div#in_bulk_queue ul li.error {color:red;}
+div#in_bulk_queue ul li.queued {color:green;}
+div#in_bulk_queue ul li.cancelled{color:blue;}
+div#in_bulk_queue ul li.running {color:orange;}

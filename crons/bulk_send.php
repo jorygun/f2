@@ -34,13 +34,15 @@ include "$dir/cron-ini.php";
 if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 
 use \digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
+
 
 	$bulk	= 	REPO_PATH . "/var/bulk_jobs";
 	$queue = REPO_PATH . "/var/queue"; #
 	
 	if (!$quiet){ echo "Queue is at $queue.";}
 	#where info needed for bulk mail is located
-	$news_info = REPO_PATH . "/public/news";
+	$news_dir = REPO_PATH . "/public/news";
 	
 
 #needed??
@@ -56,6 +58,7 @@ use PHPMailer\PHPMailer\Exception;
 	$interval = 3; #seconds/msg    
    set_time_limit(86400);
 	$termination = 'normally';
+	$reason = 'Normal Termination';
 
 #---Check for any jobs in the bulk queue
 
@@ -69,6 +72,7 @@ echo "Checking for files in $queue" . BRNL;
 */
 		
 	if (empty($job = checkfiles($queue)) ){
+	echo "no jobs";
 		exit;
 	}
 
@@ -109,7 +113,7 @@ echo "Checking for files in $queue" . BRNL;
 		);
 
 #get address of current newsletter
-	$latest_pointer = file_get_contents("$news_info/latest_pointer.txt") ;
+	$pointer = file_get_contents("$job_dir/pointer.txt") ;
 	
  #set up mail object
    $mail = new PHPMailer;
@@ -125,21 +129,20 @@ echo "Checking for files in $queue" . BRNL;
    Please consider changing this setting on your profile so you can
    hear news about AMD and other AMD Flames. 
    Your personal login for the site is:
-   ::link  )
+   ::link::  )
 
 EOT;
 
   $profile_message = "
-    Your profile was last updated on ::profile_update.  
+    Your profile was last updated on ::profile_update_date::.  
     To update: log in, then under your name at top right, select 'View/Edit Profile'.
-
         ";
         
 	$verify_message = <<<EOT
 ------------------------------------------------------------------
    Click to verify that this is your correct email address:
 
-       https://amdflames.org/scripts/verify_email.php?s=::slink
+       https://amdflames.org/action.php?V::uid::
 
 -------------------------------------------------------------------
 EOT;
@@ -161,58 +164,62 @@ EOT;
         #get the user vars from the file
         /*
     $fields = 
-		'username, user_email, CONCAT(upw,user_id) as slink,profile_updated,no_bulk
+		'username, user_email, CONCAT(upw,user_id) as slink,profile_updated,no_bulk,user_id
 	*/
         
          list(
-			 $username,$user_email,$slink, $profile_updated, $no_bulk) 
+			 $username,$user_email,$scode, $profile_updated, $no_bulk, $user_id) 
 			 = explode("\t",$line);
 
 		#creat personalized vars
-            $logincode="s=$slink";
-            $login_link = SITE_URL . "/?s=$slink"; 
+            $logincode="s=$scode";
+            $login_link = SITE_URL . "/?s=$scode"; 
             
-            $news_url = SITE_URL . "/news" . "/?s=$slink";
+            $news_url = SITE_URL . "/news" . "/?s=$scode";
             #$news_link = "<a href='$news_url'>$news_url</a>";
             
-            $news_this = 
-            	trim(file_get_contents("$job_dir/pointer.txt"))
-            	. $login_link;
+            $news_this = SITE_URL . $pointer . "/?s=$scode";
             $link_news_this = "<a href='$news_this'>$news_this</a>";
             	
-            $profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$slink";
+            $profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$scode";
+            $profile_age = u\days_ago($profile_updated);
+            $profile_update_date = u\make_date($profile_updated);
             
+            $verify = SITE_URL . "/action.php?V" . $user_id;
+            $verify_link = "<a href='$verify'>$verify</a>";
             
         #subsititute in imessage.  later subs can replace text in earlier subs
-       $imessage = str_replace('::profile_date',$profile_updated_date,$imessage);
-       $imessage = str_replace('::profile_age',$profile_updated_age,$imessage);
+       $imessage = str_replace('::profile_date::',$profile_update_date,$imessage);
+   #    $imessage = str_replace('::profile_age',$profile_updated_age,$imessage);
        
-       if ($no_bulk){$imessage = str_replace('::no_bulk',$no_bulk_message,$imessage);
+       if ($no_bulk){$imessage = str_replace('::no_bulk::',$no_bulk_message,$imessage);
          } else {
-               $imessage = str_replace('::no_bulk','',$imessage);
+               $imessage = str_replace('::no_bulk::','',$imessage);
          }
-         
-			if ($age_flag > 0){
-               $imessage = str_replace('::profile',$profile_message,$imessage);
+       
+			if ($profile_age > 0){
+               $imessage = str_replace('::profile::',$profile_message,$imessage);
          }else {
-             $imessage = str_replace('::profile','',$imessage);
+             $imessage = str_replace('::profile::','',$imessage);
          }
          
-			if (false) {
-				$imessage = str_replace('::verify',$verify_message,$imessage);
+			if ($profile_age > 10) {
+				$imessage = str_replace('::verify::',$verify_message,$imessage);
 		  } else {
-				$imessage = str_replace('::verify','',$imessage);
+				$imessage = str_replace('::verify::','',$imessage);
 		  }
            
-            $isubject = str_replace('::name',$username,$isubject);
+            $isubject = str_replace('::name::',$username,$isubject);
             
-            $imessage = str_replace('::name', $username, $imessage);
-            $imessage = str_replace('::link', $login_link, $imessage);
-            $imessage = str_replace('::slink',$logincode,$imessage);
-             $imessage = str_replace('::verify',$verify_link,$imessage);
-             $imessage = str_replace('::uemail',$user_email,$imessage);
-             $imessage = str_replace('::newslink',$link_news_this,$imessage);
-             $imessage = str_replace('::profile_update',$profile_updated_date,$imessage);
+            $imessage = str_replace('::name::', $username, $imessage);
+            $imessage = str_replace('::link::', $login_link, $imessage);
+            $imessage = str_replace('::scode::',$scode,$imessage);
+             $imessage = str_replace('::verify::',$verify_link,$imessage);
+             $imessage = str_replace('::uemail::',$user_email,$imessage);
+             $imessage = str_replace('::newslink::',$link_news_this,$imessage);
+             $imessage = str_replace('::profile_update::',$profile_updated,$imessage);
+             $imessage = str_replace('::uid::',$user_id,$imessage);
+             
              
             
 	
@@ -269,15 +276,15 @@ EOT;
 	
 	$end_dt = new DateTime();
 	$elapsed = time() - $starttime;
-	$endtimedate = $end_dt -> format('Y-m-d H:s');
+	$endtimedate = $end_dt -> format('Y-m-d H:i');
 	#$elapsed_ob =  = date_diff ($end_dt , $start_dt);
 	$rate = intval(3600 * $sent/($elapsed + 1)); #prevent /0
 
     $human_elapsed = human_secs($elapsed);
-
+	
 	$admin_msg = "
 ------------------------------------------------
-Batch email completed $termination on job $mypid at $endtimedate.
+Batch email completed $termination on job $job at $endtimedate.
 $reason
 
 $sent sent in $human_elapsed. ($rate/hour).
@@ -300,7 +307,7 @@ $sent sent in $human_elapsed. ($rate/hour).
 	 } else {
 		unlink ("$queue/${job}-running"); 
 		if (!$quiet) 
-		echo "Job $job removed from queue";
+		echo "Job $job removed from queue" . BRNL;
 	 }
 	
 		
@@ -397,8 +404,10 @@ function human_secs($esecs){
 }
 
 function read_msg_file($msg_file) {
-		$msg=[];
-		$mh = fopen("$msg_file", 'r');
+		$msg=[]; $message='';
+		if (!$mh = fopen("$msg_file", 'r') ){
+			die ("Cannot open $msg_file");
+		}
 		$msg['subject'] = fgets($mh); #first line
 		while (($line = fgets($mh)) !== false) {
 			$message .= $line;

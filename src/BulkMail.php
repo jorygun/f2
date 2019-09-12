@@ -7,10 +7,17 @@ use digitalmx\flames\Definitions as Defs;
 
 class BulkMail {
 
-	private static $queue_dir = REPO_PATH  . "/var/queue";
-	private static $job_dir = REPO_PATH . "/var/bulk_jobs";
-	private static $sender_program = REPO_PATH . "/crons/send_bulk.php";
+	private static $queue = FileDefs::bulk_queue;
+	private static $job_dir = FileDefs::bulk_jobs;
+	private static $sender_program = FileDefs::bulk_processor;
 	
+	public $teaser_files = array(
+		FileDefs::news_tease,
+		FileDefs::status_tease,
+		FileDefs::calendar_tease, 
+		FileDefs::opp_tease,
+		
+	);
 	
 
 // location of directory with last_published, etc
@@ -18,38 +25,17 @@ class BulkMail {
 
 	private static $news_latest = REPO_PATH . "/public/news/news_latest";
 	
-	// array of where cluases for 
-	private $sqlwhere = array();
 	
-	
-	
+
 	public function __construct() {
-		$select_all_valid	=
-	    "  status in (" . Defs::getMemberInSet() . ")
-	AND email_status NOT LIKE 'X%'
-	AND email_status NOT LIKE 'L%'
-	";
-	
-	$sqlselect = "SELECT count(*) FROM `members_f2` WHERE ";
-	
-	$sqlwhere['valid'] =  "$select_all_valid ;";
-	$sqlwhere['bulk'] = "$select_all_valid AND  no_bulk = FALSE;";
-	$sqlwhere['nobulk'] = " $select_all_valid AND  no_bulk = TRUE;";
-	$sqlwhere['admin'] = "$select_all_valid AND  test_status='M';";
-	$sqlwhere['all'] = '';
-	$sqlwhere['author'] = ;
-	$sqlwhere['lost'] = ;
-	$sqlwhere['test'] = ;
-	
-	$this->sqlwhere = $sqlwhere;
 	
 	}
 	
-	private function buildPlaceholders ($row) {
 	
-	public function getNextJob ($queue){
+	
+	public function getNextJob (){
 	$jfiles = [];
-	$qfiles = scandir($queue);
+	$qfiles = scandir(self::$queue);
 	foreach ($qfiles as $qfile){
 			/* get job id for jobs, including  a status suffix (-cancelled)
 				looking for ddddddd plus option -text
@@ -89,8 +75,8 @@ class BulkMail {
 	public function show_bulk_jobs(){
 		#looks for jobs in queue, and returns a 
 		// ul list with status and a cancel button
-	   		$queue = $this->queue;
-	   		$working = $this->working;
+	   		$queue = self::$queue;
+	   		$working = self::$job_dir;
 	   		
 			$joblist = "<b>Jobs In Bulk Queue:</b><br>";
 			$jobs_in_queue = array_filter(scandir($queue), function($v){return substr($v,0,1) != '.';}); #files not staring with .
@@ -147,7 +133,15 @@ class BulkMail {
 			return $joblist;
 	}
 
-
-
+	public function assemble_teaser() {
+	$teaser = '';
+	foreach ($this->teaser_files as $tfile){
+		if (file_exists($tfile)){
+			$teaser .= file_get_contents($tfile);
+		}
+		return $teaser;
+	
+	}
+}
 
 }

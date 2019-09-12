@@ -168,7 +168,8 @@ EOT;
 		if ($userlevel >= 7){$menulist[] = $thisMenu;}
 
 		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='_blank'>User Admin</a>");
-		  $t .= self::if_level (7,"<li><a href='/level7.php'>News Admin</a>");
+		  $t .= self::if_level (7,"<li><a href='/news_admin.php'>News Admin</a>");
+		  $t .= self::if_level (7,"<li><a href='/calendar_admin.php'>Calendar Admin</a>");
 		 $t .= self::if_level(8,"<li><a href='/varinfo.php' target='_blank'>Var Info</a>");
 		  $t .= self::if_level(8,"<li><a href='/phpinfo.php' target='_blank'>PHP Info</a>");
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
@@ -221,8 +222,8 @@ EOT;
 	if ($userlevel >= 2){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu(2,$thisMenu);
 	$t .= self::if_level(2,"
-		 <li><a href='/news/' target='newsletter'>Latest Newsletter</a>
-		 <li><a href='/newsp/' target='_blank'>Newsletter Index</a>
+		 <li><a href='/news/current/' target='newsletter'>Latest Newsletter</a>
+		 <li><a href='/news/' target='_blank'>Newsletter Index</a>
 		<li><a href='/galleries.php' target='gallery'>Photo Galleries</a>
 		<li>--- special pages ---
 		<li><a href='/spec/spirit.php' target='spirit'>The Spirit of AMD</a>

@@ -1,63 +1,64 @@
 <?php
 namespace digitalmx\flames;
 
-/*  script to build directory index file
-  *
-  * need a file of newsletters for building the
-  * newsletter index and also for feeding the
-  * search script.
-  *
-  * run with any query string like ?x
+/*  script to build news index file
+	file catalogs all the newsletters in newsp and builds a data
+	file of them, then uses data file to build an html ul of the 
+	data when can be displayed as a collapsible list.
+	
+  file has 3 functions:
+  rebuild database from scratch
+  add item to database (new issue, for example)
+  rebuild html from database.
 
 */
 
+use digitalmx\flames\FileDefs;
 
 class NewsIndex {
 	
+	// produces html ul file at this location:
+	private static $newsindexinc=FileDefs::news_index_inc;
 
-	private $newsindexdir = '/newsp';
-    private $jfile;
-  	private $hfile;
-   // actual source directory for archived newsletters
-    private $newsarchivedir= '/newsp';
+   //  source directory for archived newsletters
+    private static $newsarchivedir = FileDefs::archive_dir;
+    
+    private static $json_file = FileDefs::news_index_json;
 
-    private $file_index;
+    private $file_index = array();
 	
 	
-    function __construct($rebuild) {
+    function __construct() {
     	
-    	$newsdir	= SITE_PATH . $this->newsindexdir;
-   	$this->jfile = "$newsdir/index.json";
-  		$this->hfile = "$newsdir/index_inc.html";
-  		$newsarchivedir = SITE_PATH . $this->newsarchivedir;
+    }
   		
-   // actual source directory for archived newsletters
+  public function rebuildJson() {
+  	$this->file_index = $this->buildFileList( FileDefs::archive_dir);
+  	file_put_contents(FileDefs::news_index_json,json_encode($this->file_index ));
+  	
+  	}
       
-		echo "<p>NewsIndex is indexing $this->newsarchivedir.</p>" ;
-      $this->file_index = array ();
+	public function append_index ($datecode , $path) {
+		$this->file_index = json_decode(file_get_contents(FileDefs::news_index_json),true);
+      $this -> file_index [$datecode] = $path;
+      file_put_contents(FileDefs::news_index_json,json_encode($this->file_index ));
+      $this->buildHTML();
+        
+    }
+
+	public function buildHTML() {
+		$html = $this->jsonToHtml(FileDefs::news_index_json);
+		file_put_contents(FileDefs::news_index_inc,$html);
+	}
 	
-	
-        if ( (! file_exists($this->jfile)) or ($rebuild == true) ){
-            echo "rebuilding json file. ";
-            $this->file_index = $this->rebuild_index($newsarchivedir);
-            if (empty ($this->file_index)){throw new Exception ("empty jfile");}
-            $this->save_index ();
-        }
-       else { $this->file_index = json_decode (file_get_contents($this->jfile)); 
-       	if (empty ($this->file_index)){
-       		unlink ($this->jfile);
-       		throw new Exception ("no jfile");
-       	}
+     
+   
+    private function buildFileList($newsarchive) {
+    	
+    	echo "<p>NewsIndex is indexing $newsarchive.</p>" ;
+       if (! $dh = opendir($newsarchive) ){
+       	die ("No dir at $newsarchive");
        }
-
-    }
-    private function save_index () {
-        // flist is array of datecode => path
-        file_put_contents($this->jfile,json_encode($this->file_index ));
-    }
-
-    private function rebuild_index($newsarchive) {
-        $dh = opendir($newsarchive);
         $filecount=$dircount=0;
 
         while ($thisfile = readdir($dh)){
@@ -96,20 +97,18 @@ class NewsIndex {
         return $files;
     }
 
-    public function append_index ($datecode , $path) {
-        $this -> file_index [$datecode] = $path;
-         $this->save_index();
-    }
-
-    public function build_html() {
+  
+		
+    private function jsonToHtml ($json) {
       $letters=0; $lyear=0;
-
+		$file_index = json_decode (file_get_contents(FileDefs::news_index_json),true);
+		
         $listcode = "<ul class='collapsibleList' style='margin-bottom:6px;'>\n";
-        foreach ($this->file_index as $dcode => $f){
+        foreach ($file_index as $dcode => $f){
            # echo "$dt => $f<br>\n";
            $letters++;
             $url = "/newsp/$f";
-            $dt = DateTime::createFromFormat('Ymd',$dcode);
+            $dt = \DateTime::createFromFormat('Ymd',$dcode);
 
             $year = $dt->format('Y');
             $cdate = $dt->format('M j, Y');
@@ -133,9 +132,8 @@ class NewsIndex {
         $html = $title . $listcode;
 
 
-        file_put_contents($this->hfile,$html);
-        #echo "<pre>\n", htmlentities($html), "</pre>\n";
-
+        return $html;
+       
 
 
     }

@@ -9,7 +9,7 @@ ini_set('display_errors', 1);
 	use digitalmx\flames as f;
 	use digitalmx\flames\Definitions as Defs;
 	
-	
+	use digitalmx\flames\FileDefs;
     use digitalmx\flames\Member;
     
     
@@ -23,29 +23,21 @@ class StatusReport {
 	private $member;
 
 	private static 	$type_titles = array(
-			'email'	=>	'Updated Email Addresses',
-			'new'	=>	'New Members',
-			'deceased'	=>	'Deceased',
-			'updates'	=>	'Profile Updates',
-			'bounces'	=>	'Broken Emails',
-			'lost'	=> 'Recently Lost Contact',
-			'long lost'	=>	'Long Lost - sample of members with no contact info'
+			'email'	=>	'Updated Email Addresses|',
+			'new'	=>	'New Members|If you recognize a new member, send them a welcome!  Click their name to get contact info.',
+			'deceased'	=>	'Deceased|',
+			'updates'	=>	'Profile Updates|',
+			'bounces'	=>	'Broken Emails|',
+			'lost'	=> 'Recently Lost Contact|We gave up attempting to contact these people this week.',
+			'long lost'	=>	'Long Lost - sample of members with no contact info|Here is a random sample of people that we have no contact information for. If you know anything about them, please <a href="mailto:admin@amdflames.org">contact the admin</a>.'
 
 		);
-		
-	private static $subtitles = array(
-				  'lost' => 'We gave up attempting to contact these people this week.',
-				  'long lost' => 'Here is a random sample of people that we have no
-				  contact information for. If you know anything about them, please
-				  <a href="mailto:admin@amdflames.org">contact the admin</a>.',
-				  'new' => 'If you recognize a new member, send them a welcome!  Click their name to get contact info.'
-				 );
 
+	
 
 	private $since; // start date in Y-m-d format
 	
-	private  $report_path;
-	private $name_path;
+	
 	
 	public function __construct($since,$test=false) {
 		// if (! u\validateDate($since )){
@@ -53,14 +45,13 @@ class StatusReport {
 // 		}
 		$this->since = $since;
 		$this->test = $test;
-		$this->report_path = REPO_PATH . "/public/news/next/status_report.html";
-		$this->name_path = REPO_PATH . "/public/news/next/name_report.txt";
-		$this->member = new Member();
-		$this->report = $this->createReport($since);
-		$this->saveReport('report_path','report');
 		
-		$this->name_report  = $this->createNameReport();
-		$this->saveReport ('name_path','name_report');
+		$this->member = new Member();
+		
+		$report = $this->createReport($since);
+		file_put_contents(FileDefs::status_report,$report);
+		$name_report  = $this->createNameReport();
+		file_put_contents(FileDefs::status_tease,$name_report);
 		
 		
 	}
@@ -71,8 +62,8 @@ class StatusReport {
 	}
 	
 	private function createReport ($since) {
-		$report = "<h2>Member Status Report " . date('d M Y') . "</h2>";
-		$report .= "<p>Changes since $since.</p>";
+		$report = "<div class='inner'><p>Member Status Report " . date('d M Y') . "<br />";
+		$report .= "Changes since $since.</p>";
     
 		$report .= $this->report_members();
    
@@ -96,27 +87,27 @@ class StatusReport {
 	}
 	
 	private function report_members () {
-	list ($active_members,$lost_members,$total_members) = 
-		$this->member->getMemberCounts();
-    return "<h3>Membership</h3><p>Active Members: $active_members, plus $lost_members lost contact. <br>
-    Total $total_members. </p>";
+	$counts =  $this->member->getMemberCounts();
+ return "<h3>Membership</h3><p>Active Members: ${counts['active']}, plus ${counts['lost']} lost contact. 
+    Total ${counts['total']}. </p>";
     }
     
 	private function report_changes ($result,$type){
 	 // print info on updated users, given query result and type of report
+	 // result is list of members+data supplied from members class
 
 
 		$num_rows = count($result);
 		$num_rows_display = ($num_rows == 0)? 'No ' : $num_rows;
 
+		list ($titletext,$subtitle) = explode ('|',self::$type_titles[$type]);
 		$namelist = array();
-		$title = "$num_rows_display " . self::$type_titles[$type] ;
+		$title = "$num_rows_display " . $titletext ;
 		if ($type == 'deceased' && $num_rows_display == 0){$title .= "<small>(whew)</small>";}
 
 		echo $title,"<br>\n";
 		$report = "<h3>$title</h3>";
 		#u\echor(self::$subtitles,'subtitles'); exit;
-		$subtitle = self::$subtitles[$type] ?? '';
 		 if ($num_rows > 0 &&  !empty($subtitle) ) {
 		 	$report .= "<p style='font-style:italic;margin-left:3em;'>" . $subtitle . "</p>";
 		 }

@@ -9,6 +9,7 @@ require_once "ReadNews.php";
 use digitalmx as u;
 use digitalmx\flames as f;
 use digitalmx\flames\ReadNews;
+use digitalmx\flames\FileDefs;
 
 $read = new ReadNews();
 // contains routines needed for the news page
@@ -17,63 +18,31 @@ $read = new ReadNews();
 
 
 
-// PUBLISH DATA INSERTED
-//     \$mode = 'published';
-//     \$condensed_date = '$condensed_date';
-//     \$conventional_date = '$conventional_date';
-//     # \$base_line = "<base href  = '$new_base'>";
-//     \$publish_time = '$now';
-//     \$title = '$title';
-//
-
-
-
-##############################
-
-
-
-
 //PUBLISH DATA
 
 // set up for unpublished newsletter
-	$publish_time = '';
-$date_code = 000000;
+	$publish_time = $pubdate = $date_code = '';
 #test to see if newsletter has been publsihed or not
-if (file_exists("publish.txt")){
-   include "publish.txt"; #publish data block
-    //  \$condensed_date = '$pubdate_condensed';
-//     \$conventional_date = '$pubdate_ordinary';
-//     \$publish_time = '$now';
-//     \$title = '$title';
-//     \$footer_line = 'Published at $now';
+if (file_exists(FileDefs::pubfile)){
     $min_security = 2;
     $page_title = 'Flame News';
-
+    $pubdata = trim(file_get_contents(FileDefs::pubfile));
+    list($pubdate,$date_code)  = explode('|',$pubdata);
+   # echo "got $pubdate,$date_code" . BRNL;
 }
 
 else {
 #Set up data for preview edition
     $page_title = 'Flame News Preview';
 	$min_security = 4;
-	$date_code = 999999; #for updating reads count
+
 	
 }
 $latest_file = u\list_recent_files (1,getcwd())[0];
 $updatetime = date ("m/d/y H:i T", filectime($latest_file));
-$footer_line = "Updated at $updatetime";
+$footer_line = "Last update at $updatetime";
 
-$page_title = "AMD Flames News $pub_date";
-$preview='';
-
-if (file_exists("title.txt")){
-   $subtitle = file_get_contents('title.txt');
-
-}
-elseif (isset($conventional_date)) {
-    $title = $conventional_date;
-    #from the publish data block
-}
-else {$subtitle = '';}
+$subtitle = $read ->getTitle(__DIR__);
 
 
 $page_options = ['ajax'];
@@ -83,13 +52,10 @@ if ($login->checkLogin($min_security)){
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	echo $page->startBody(1,$subtitle);
-	echo $preview;
 }
 
 
-
-echo "<hr style='width: 100%; height: 2px;clear:both;'>\n";
-$read->increment_reads($date_code);
+if ($date_code){$read->increment_reads($date_code);}
 
 #breaking news added after publication
 $read->echo_if('breaking.html');
@@ -97,33 +63,33 @@ $read->echo_if('breaking.html');
 $read->echo_if('news_opener.html');
 
 #site news
-$read->echo_if('news_site.html',$read->news_head("Site News"));
+$read->echo_if('news_site.html',"Site News");
 
-$read->echo_if('news_amd.html',$read->news_head("On AMD"));
+$read->echo_if('news_amd.html',"On AMD");
 
 #normall news articles
-$read->echo_if('news_news.html',$read->news_head("Industry News"));
+$read->echo_if('news_news.html',"Industry News");
 #ieee
-$read->echo_if('news_technology.html',$read->news_head("Engineering Dept."));
+$read->echo_if('news_technology.html',"Engineering Dept.");
 
 #nostalgia
-$read->echo_if('news_remember.html',$read->news_head("From the Past"));
+$read->echo_if('news_remember.html',"From the Past");
 #funny stuff
-$read->echo_if('news_know.html',$read->news_head("Somewhat Off Topic"));
+$read->echo_if('news_know.html',"Somewhat Off Topic");
 #in the mailbox
-$read->echo_if('news_govt.html',$read->news_head("Government","(Optional reading for sensitive persons.  ) "));
+$read->echo_if('news_govt.html',"Government"," (Optional reading for sensitive persons."  );
 
 
 
-$read->echo_if('news_people.html',$read->news_head("Friends"));
-$read->echo_if('news_sad.html',$read->news_head("Sad News"));
+$read->echo_if('news_people.html',"Friends");
+$read->echo_if('news_sad.html',"Sad News");
 
-$read->echo_if('news_mail.html',$read->news_head("In The Mailbox"));
+$read->echo_if('news_mail.html',"In The Mailbox");
 
 
 
 echo $read->news_head("Opportunities");
-$read->echo_if('news_opps.html',$read->news_subhead("Business Opportunities"));
+$read->echo_if('news_opps.html','',"Business Opportunities");
 
 $current_opps = $read->current_ops();
 
@@ -133,7 +99,7 @@ by clicking on the 'Opportunities' menu</p>\n";
 
 if ($current_opps>0){
     echo
-   "<p>There are $current_opps current employment openings listed. <a href='/opportunitiesE.php' target='_blank'>Click here for details.</a>.</p>
+   "<p>There are $current_opps current employment openings listed. <a href='/show_opp.php' target='_blank'>Click here for details.</a>.</p>
    ";
 }
 
@@ -145,28 +111,19 @@ $read->echo_if('opportunities.html' );
 echo $read->news_head("Recent Activity");
 $read->echo_if('recent_assets.html');
 
-$read->echo_if('current_articles.html');
-echo "<div style='clear:both'></div>\n";
-
 $read->echo_if ('recent_articles.html');
 echo "<div style='clear:both'></div>\n";
 
 
-echo "<div style='clear:both'></div>\n";
 
-echo $read->news_head("Calendar");
-echo "
-<p> To add an event to the calendar,
-just let the <a href='mailto:editor@amdflames.org'>editor know</a>.</p>
-";
 
 $read->echo_if('calendar.html');
 
-$read->echo_if ("news_updates.html", $read->news_head("Membership Updates"));
+$read->echo_if ("status_report.html", "Membership Updates");
 
 
 
-echo "<p><small><?=$footer_line?></small></p>";
+echo "<hr><p><small>$footer_line</small></p>";
 echo "</body></html>\n";
 
 

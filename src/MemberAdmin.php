@@ -57,7 +57,7 @@ class MemberAdmin {
 		   
 		$bounceEmailButton = f\actionButton('Bouncer','bounceEmail',$uid,$emstat_id,'bounced');
 		  $urlemail = rawurlencode($row['user_email']);
-		   $username = u\entity($row['username']);
+		   $username = u\special($row['username']);
 		  $last_login = date('d M Y',strtotime($row['last_login']));
 		  $email_last_validated = date('d M Y', strtotime($row['email_last_validated']));
 		  	#$validateEmailButton = f\actionButton('Verify Email','verifyEmail',$uid,'emver-id');

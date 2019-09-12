@@ -40,14 +40,22 @@ function setTitle() {
 	});
 }
 // this scriput used for verifyEmail, sendLogin,
-
+/* action is name passed to action.php
+    uid is var also passed to action
+    if affectid has an entry, that id on calling page will be replaced
+        with the response from action
+    if message = 'resp', the response will be reported as an alert
+    otherwise whatever is in message fielld will be in the alert
+*/
 function takeAction (action,uid=0,affectid='',message='') {
    $.ajax({
    url: "/action.php",
    data: 'ajax='+action+'&uid='+uid,
    type: "POST",
    success: function (response) {
-            if (message != '') {alert (message);}
+            if (message == 'resp') {alert (response);}
+            else if (message != '') {alert (message);}
+            
             if (affectid != '') { $('#'+affectid).html(response);}
         }
  });  
@@ -67,6 +75,7 @@ function verifyEmail(uid) {
     
  });
 }
+// gets the user status update report
 function runStatus(pid) {
     var ptime = $('#'+pid).val();
    $.ajax ({

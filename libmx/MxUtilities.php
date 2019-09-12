@@ -44,9 +44,12 @@ function echor($var,$title=''){
     echo "<pre>" .  print_r($var,true) . "</pre>\n";
 }
 
-function entity($var){
+function special($var){
     #convert < > " & , but not ' (default ENT_COMPAT)
 	return htmlspecialchars($var,ENT_QUOTES);
+}
+function despecial($var) {
+	return htmlspecialchars_decode($var);
 }
 
 function catchError ( $e , $more=[]){
@@ -76,7 +79,7 @@ function validateDate($date, $format = 'Y-m-d')
 
 function deleteDir($path) {
     if (!is_dir($path)) {
-        throw new InvalidArgumentException("$path is not a directory");
+        throw new \InvalidArgumentException("$path is not a directory");
     }
     if (substr($path, strlen($path) - 1, 1) != '/') {
         $path .= '/';
@@ -183,7 +186,7 @@ function make_date ($when, $form='human',$type = 'date'){
 			break;
 		case 'human' :
 			$format = ($type=='time')?
-		'd M, Y H:i' : 'd M Y';
+		'd M Y H:i' : 'd M Y';
 			break;
 		case 'rfc' :
 			$format = DATE_RFC822;
@@ -469,7 +472,7 @@ function make_links($input){
 
 
 function days_ago ($date_str = '1') {
-	//takes a date and returns the age from today in days and a formatted version of date
+	//takes a date and returns the age from today in days
 	
 	
 	$dt = new \DateTime();

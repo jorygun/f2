@@ -1,7 +1,7 @@
 <?php
 
 namespace digitalmx\flames;
-#ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
@@ -49,11 +49,14 @@ if ($login->checkLogin(4)){
     if (empty($current_title = $publish->getTitle())){
         $current_title = 'Title Not Set';
     }
-    $current_title_spchar = u\entity($current_title);
+    $current_title_spchar = u\special($current_title);
 
+// action buttons for ajax stuff
+    $indexaction = f\actionButton('news_index > next','copyIndex',0,'','Done');
+    $rebuildaction = f\actionButton('Rebuild','indexNews',0,'','resp');
+    $updateaction = f\actionButton('Update','copyLatest',0,'','resp');
+    $publishaction = f\actionButton('Publish','publish',0,'','resp');
 
-    $indexaction = f\actionButton('Update','copyIndex',0,'','Done');
-    $rebuildaction = f\actionButton('Rebuild','indexNews',0,'','Done');
 
 ?>
 
@@ -64,16 +67,17 @@ if ($login->checkLogin(4)){
 
 
 <li>Prepare and build the news article collection.<br>
-<form><a href="/scripts/news_items.php" target='news_items'>Review/Edit News Items</a></form>
-
+<button type='button' onClick="window.open('/scripts/news_items.php','news_items')">News Items</button></li>
+<br>
 
 <li>Run the change report.  This creates a report of all the member changes since the  date/time of the last update report that was published. Also pulls any new opportunities from the database. If necessary, set the Last Published Time.  This simply sets the time that the update report will work against.  It is set automatically during publish, but if you want to set it to something else, you can.<br>
-    <input type=text id='ptime' value="<?=$ptime?>"><br>
+    <input type=text id='ptime' value="<?=$ptime?>">
    <button type='button' onClick = "runStatus('ptime');">Run Report</button>
 
 <li>Run the Calendar report. Add events and create an html and text version of the calendar for use by the
 newsletter and the email. <br>
-<a href="/scripts/calendar.php"  target='calendar'>Run Calendar</a><br>
+<button type='button' onClick="window.open('/scripts/calendar.php','calendar')">Run Calendar</button></li>
+
 <br>
 <li>Set the Newsletter title<br>
 
@@ -81,14 +85,14 @@ newsletter and the email. <br>
     <button type='button' onClick = "setTitle()">Set Title</button>
 
 
-<li> Check the newsletter carefully before you publish!!  It's hard to fix after it's published.
-<a href="/news/next/" target="preview">View Next newsletter</a></li>
+<li> Check the newsletter carefully before you publish!!  It's hard to fix after it's published.<br>
+<button type='button' onClick="window.open('/news/next','preview')">Preview Next</button></li>
 
-<li>Publish the newsletter.  This script assembles the pieces in news_next, places it into a directory at /news/news_latest, and copies that directory to newsp/news_yymmdd (the normal repository for news), and sets the path to that directory in news/index.php as a relocate command. It also rebuilds the news index.
-	<br><form><a href="/scripts/publish.php" target="_blank">Publish news</a></form><br>
+<li>Publish the newsletter.  This script assembles the pieces in news_next, places it into a directory at /news/news_latest, and copies that directory to newsp/news_yymmdd (the normal repository for news), and sets the path to that directory in news/current/index.php as a relocate command. It also rebuilds the news index.
+	<br><?=$publishaction?><br>
 
 <li>Check the latest news</a>, to make sure it published.
-<form><a href="/news/" target="_blank">Latest News</a></form></li>
+<button type='button' onClick="window.open('/news/current','latest_news')">Latest News</button></li>
 
 <li>If you are sure the newsletter published successfully, copy the model news to news_next, setting up the directory for the next issue.<br>
 <!-- <form><a href='#' onclick="window.open('/scripts/copy_model_to_next.php','copy','height=200,width=400');return false;">Copy Model News to Next News</a></form> -->
@@ -97,18 +101,26 @@ newsletter and the email. <br>
 
 <li>Run the bulk email to send out the Flame News Is Ready Email. Note: the email will pull "teasers"
 from the news_latest directory, so they reflect last news published.
-<br><form><a href="/scripts/bulk_mail_setup.php" target = "_blank">Set up Bulk Email</a>
+<br><form><a href="/bulk_admin.php" target = "_blank">Set up Bulk Email</a>
 </form>
 
 
 
 </ol>
 <hr>
+<h3>Tests</h3>
+
+<?php
+echo f\actionButton('test','test',0,'','resp');
+echo f\actionButton('publish->next-to-latest ','move-next',0,'','resp');
+?>
+
+<hr>
 <h3>Utilities</h3>
-<p><b>Update News Index File</b><p>
-<?=$indexaction?>
-<p><b>Rebuild Newsletter Index</b></p>
-<?=$rebuildaction?>
+<p>Update News/next Index from template <?=$indexaction?></p>
+<p>Rebuild Newsletter Index from scratch <?=$rebuildaction?></p>
+<p>Copy news/latest (updated) to copy in archive <?=$updateaction?>
+
 
 <p><b>Add a breaking news to current newsletter</b></p>
 <form method='post' action='/scripts/breaking.php'>

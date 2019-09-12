@@ -18,6 +18,14 @@ class ReadNews {
 	private $member;
 	private $opps;
 	
+	#path to search for files in
+	private $search_dirs =  array(
+			'.',
+			SITE_PATH . '/news/live',
+			SITE_PATH . '/var/live',
+			SITE_PATH . '/news'
+		);
+	
 	public function __construct ( ) {
 		$this->voting = new Voting();
 		$this->pdo = MyPDO::instance();
@@ -81,43 +89,31 @@ class ReadNews {
 		 return $opp_rows;
 	}
 
-	public function echo_if ($filename,$extra='') {
+	public function echo_if ($filename,$heading='',$subhead='') {
 		#echo "Called echo_if on $filename<br>\n";
-		if ($var = $this->get_news_file($filename,$extra='') ){
-			echo $var;
-		}
-	}
-	private function get_news_file($filename,$extra=''){
-		#pass filename, possible heding text,
-	 	#echo "looking for filename $filename .. ";
-		
-		#look in local directory, then news_live, then  in news directory
-		$dirs = array(
-			'.',
-			SITE_PATH . '/news/live',
-			SITE_PATH . '/var/live',
-			SITE_PATH . '/news'
-		);
-		$hit = false;
-		$content = '';
-		foreach ($dirs as $dir ) {
-			if (!$hit && file_exists("$dir/$filename") ) {
+		$hit = '';
+		foreach ($this->search_dirs as $dir){
+			if (file_exists("$dir/$filename") ) {
 				$hit = "$dir/$filename";
-				#echo "hit on $hit " ;
-				 $content = file_get_contents($hit);
-				 if (substr($filename,0,5) == 'news_') { #need to prepocess news files
-					#echo "preprocessing $hit." . BRNL;
-					$content = $this->replace_old_discussion($content);
-				
-					$content = $this->replace_voting_content($content);
-					#echo "2:<br>" . $content2;
-					$content = "$extra\n" . $this->replace_new_discussion($content);
-					return $content;
-				}
-				else {return $content;} #no special processing
-			}
+				break;
+			}	
 		}
-		#echo "No file. <br>\n";
+		if (!$hit){return '';}
+		$content = file_get_contents($hit);
+		if (substr($filename,0,5) == 'news_') {
+			$content = $this->filter_news($content);
+		}
+		if ($heading){echo $this->news_head($heading);}
+		if ($subhead){echo $this->news_subhead($subhead);}
+		echo $content;
+		
+	}
+	private function filter_news($content,$extra = ''){
+		
+			$content = $this->replace_old_discussion($content);
+			$content = $this->replace_voting_content($content);
+			$content = "$extra\n" . $this->replace_new_discussion($content);
+			return $content;
 	}
 	
 		private function replace_old_discussion ($content) {
@@ -249,6 +245,25 @@ class ReadNews {
 
 		return $commenters;
 	}
-
+	public function getTitle(){
+		$dir = '.';
+		$title = '';
+		if (file_exists("$dir/title.txt")) {
+			$title = trim(file_get_contents("$dir/title.txt"));
+		}
+		
+		$pubdate = '';
+		if (file_exists("$dir/publish.txt")){
+			$pubdate = explode('|',trim(file_get_contents("$dir/publish.txt")))[0];
+		}
+		
+		if ($title){
+			$title .= " &bull; $pubdate";
+		}
+		else {
+			$title = $pubdate;
+		}
+		return $title;
+	}
 }
 

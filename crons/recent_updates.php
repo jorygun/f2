@@ -34,11 +34,12 @@ use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 use digitalmx\flames as f;
 use digitalmx\MyPDO;
+use digialmx\flames\FileDefs;
 
 /* MAIN */
 
-$recent_article_file = REPO_PATH . '/public/news/live/recent_articles.html';
-$recent_asset_file = REPO_PATH . "/public/news/live/recent_assets.html";
+$recent_article_file = FileDefs::live_dir . '/recent_articles.html';
+$recent_asset_file =  FileDefs::live_dir . '/recent_assets.html';
 
 #get latest pub date
 

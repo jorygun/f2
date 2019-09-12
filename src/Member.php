@@ -710,20 +710,56 @@ public function getLogins($tag) {
 	}
     public function getMemberCounts() {
 		 $member_status_set =  Defs::getMemberInSet();
-	 
+		 $select_all_valid	=
+	    "  status in ($member_status_set)
+	AND email_status NOT LIKE 'X%'
+	AND email_status NOT LIKE 'L%'
+	";
+	 	$counts = array();
 	 	$sql = "SELECT count(*) from `members_f2` 
 		WHERE status in ($member_status_set)
 		";
-		$total = $this->pdo->query($sql)->fetchColumn();
+		$counts['total'] = $this->pdo->query($sql)->fetchColumn();
 		
 	
-		$q = "SELECT count(*) as count FROM members_f2
-		WHERE status in ($member_status_set) AND
-		email_status LIKE 'L_'
+		$sql = "SELECT count(*) as count FROM members_f2
+		WHERE $select_all_valid
 		;";
-		$lost = $this->pdo->query($q)->fetchColumn();
-		$active = $total - $lost;
-		return [$active,$lost,$total];
+		$counts['active'] = $this->pdo->query($sql)->fetchColumn();
+		
+		$sql = "SELECT count(*) as count FROM members_f2
+		WHERE status in ($member_status_set)
+		AND (email_status LIKE 'L_' OR email_status LIKE 'X%') 
+		;";
+		
+		$counts['lost'] = $this->pdo->query($sql)->fetchColumn();
+		
+		$sql = "SELECT count(*) from `members_f2` 
+		WHERE $select_all_valid
+		AND no_bulk = FALSE;
+		";
+		$counts['bulk'] = $this->pdo->query($sql)->fetchColumn();
+		
+		$sql = "SELECT count(*) from `members_f2` 
+		WHERE $select_all_valid
+		AND no_bulk= TRUE;
+		";
+		$counts['nobulk'] = $this->pdo->query($sql)->fetchColumn();
+		
+		$sql = "SELECT count(*) from `members_f2` 
+		WHERE $select_all_valid
+		AND admin_status != '' ;
+		";
+		$counts['admin'] = $this->pdo->query($sql)->fetchColumn();
+		
+		$sql = "SELECT count(*) from `members_f2` 
+		WHERE $select_all_valid
+		AND test_status != ''
+		";
+		$counts['test'] = $this->pdo->query($sql)->fetchColumn();
+		
+		
+		return $counts;
 	}
 	 
     public function getMembers($post){
@@ -1162,7 +1198,7 @@ public function getNewLost($since) {
 	";// new lost
 	
 	$result = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
-
+	$list=[];
 	foreach ($result as $row){
 			$list[] = $this->enhanceData($row,self::$info_fields);
 		}
@@ -1189,7 +1225,76 @@ public function getNewLost($since) {
 			}
 		return $list;
 	}
+	public function getSendList($type,$tag='') {
+// $mlarray = [
+//             $row['username'],
+//             $row['user_email'],
+//             $slink,
+//             "$profile_updated_age",
+//             "$profile_updated_date",
+//             "${row['no_bulk']}",
+//             "$age_flag",
+//             "$profile_validated_date"
+//         ];
+		$fields = 
+		'username,
+		user_email,
+		CONCAT(upw,user_id) as slink,
+		profile_updated,
+		no_bulk,
+		user_id'
+		;
+		
+		// these fields are retrieved in bulk_send by sequence, not name.
+        
+		$sql = "SELECT $fields FROM `members_f2` 
+			WHERE status in ($this->member_status_set)
+			AND email_status NOT LIKE 'L%'
+			";
+			
+		switch ($type) {
+			case 'test':
+				$sql .= "AND test_status != '' ";
+				echo "Sending to test_status not empty" . BRNL;
+				break;
+			case 'all':
+				$sql .= '';
+				echo "Sending to all valid emails." . BRNL;
+				break;
+			case 'bulk':
+				$sql .= 'AND no_bulk = FALSE';
+				echo "Sending to all on bulk mail." . BRNL;
+				break;
+			case 'nobulk':
+				$sql .= 'AND no_bulk = TRUE';
+				echo "Sending to all not getting bulk emails." . BRNL;
+				break;
+			case 'atag':
+				if (strlen($tag) != 1 ){
+					throw new Exception("Invalid tag $tag for sending to admin tags.");
+				}
+				$sql .= "AND admin_tag LIKE '%$tag%' ";
+				echo "Sending to admin status with $tag." . BRNL;
+				break;
+			case 'aged_out':
+				$sql .= "AND email_status = 'LA' " ;
+				echo "Sending to all valid emails." . BRNL;
+				break;
+			case 'contributors':
+				$sql .= "AND status in ('MC','MA') ";
+				echo "Sending to all valid emails." . BRNL;
+				break;
+			
+			default: 
+				throw new Exception ("Unknown bulk mal selection.");
+			}
+		
+		$sql .= " ORDER BY test_status DESC ;";
+		$list = $this->pdo->query($sql)->fetchAll();
+		return $list;
+
 	
+	}
 		
 } #end class
 

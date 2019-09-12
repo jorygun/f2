@@ -2,15 +2,16 @@
 namespace digitalmx\flames;
 // site-specific utlities
 
-use Digitalmx\Lib as u;
+use digitalmx\Lib as u;
 use \Exception;
-use Digitalmx\Flames\Definitions;
-use Digitalmx\Flames\Member;
+use digitalmx\Flames\Definitions;
+use digitalmx\Flames\Member;
+use digitalmx\flames\FileDefs;
 #use Digitalmx\Flames\Configuration;
 
 
 function getLastPub() {
-	$lts_file = REPO_PATH . '/var/data/last_pubdate.txt';
+	$lts_file = FileDefs::last_pubdate;
 	if (file_exists($lts_file)){
 		$ts = trim( file_get_contents($lts_file) );
 	}

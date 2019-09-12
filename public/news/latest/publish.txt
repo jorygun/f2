@@ -1,12 +1,1 @@
-<?php
-
-//PUBLISH DATA INSERTED
-    $mode = 'published';
-    $condensed_date = '190822';
-    $conventional_date = '22 Aug 2019';
-    
-    $publish_time = 'Aug 22, 2019 18:20';
-    $title = '22 Aug 2019';
-    $page_title='FLAME NEWS';
-    $footer_line = 'Published at Aug 22, 2019 18:20';
-?>
+12 Sep 2019|190912

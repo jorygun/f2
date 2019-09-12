@@ -45,17 +45,13 @@ EOT;
 	
 
 	$bulkmail = new BulkMail();
-	
-	
 	$bulk_processor = REPO_PATH . "/crons/send_bulk.php";
 	
 	
 
 //END START
-	global $G_member_status_set;
 	
-
-
+	
 	$select_all_valid	=
 	    "  status in (" . Defs::getMemberInSet() . ")
 	AND email_status NOT LIKE 'X%'
@@ -64,29 +60,26 @@ EOT;
 	";
 
 	
-	$news_latest = SITE_PATH . "/news/news_latest";
+	FileDefs::latest_dir = SITE_PATH . "/news/news_latest";
 	
-	$teasers = $news_latest . "/teasers.txt";
-	$headlines	= $news_latest . "/headlines.txt";
-	$publish_file = $news_latest . "/publish.txt";
+	$teasers = FileDefs::news_teaser;
+	$headlines	= FileDefs::news_headlines;
+	$publish_file = FileDefs::latest_dir . "/publish.txt";
 	$preview = SITE_PATH . "/news/news_next/headlines.txt";
-	$updates	= $news_latest . "/updates.txt";
-	$calendar	= $news_latest . "/calendar.txt";
-	$opportunities = $news_latest . "/opportunities.txt";
-	$assets = $news_latest . "/assets.txt";
+	$updates	= FileDefs::latest_dir . "/updates.txt";
+	$calendar	= FileDefs::latest_dir . "/calendar.txt";
+	$opportunities = FileDefs::latest_dir . "/opportunities.txt";
+	$assets = FileDefs::latest_dir . "/assets.txt";
 
 
-	$queue = REPO_PATH . '/var/bulk_queue'; #directory.  put jobs in here
+	$queue = FileDefs::bulk_queue; #directory.  put jobs in here
 
-	
-	$comments = $news_latest . "/current_comments.txt";
+	$comments = FileDefs::latest_dir . "/current_comments.txt";
    
-
-   
-
-	$publish_file = $news_latest . "/publish.txt";
-	if (file_exists($publish_file)){
-   	$edition_name = get_publish_data('title',$publish_file);
+	$publish_file = FileDefs::latest_dir . "/publish.txt";
+	$titlefile = FileDefs::latest_dir . '/title.txt';
+	if (file_exists($titlefile)){
+   	$edition_name = trim(file_get_contents($titlefile));
    	$pointerfile = SITE_PATH . "/news/latest_pointer.txt";
 
    	if (file_exists($pointerfile)){
