@@ -15,7 +15,10 @@ function getLastPub() {
 	if (file_exists($lts_file)){
 		return trim( file_get_contents($lts_file) );
 	}
-	
+	else {
+		echo "<p class='red'>Last Pubdate not found; setting to -7 days.</p>";
+		return strtotime('-7 days');
+	}
 	return false;
 	
 	

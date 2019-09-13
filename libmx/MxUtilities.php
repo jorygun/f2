@@ -77,27 +77,53 @@ function validateDate($date, $format = 'Y-m-d')
 }
 
 
-function deleteDir($path) {
-    if (!is_dir($path)) {
-        throw new \InvalidArgumentException("$path is not a directory");
+function deleteDir($src, $keep=false) {
+	// deletes all the contents of $path
+	// if $keep=false, also deletes the dir at path.
+    if (!is_dir($src)) {
+        throw new \InvalidArgumentException("$src is not a directory");
     }
-    if (substr($path, strlen($path) - 1, 1) != '/') {
-        $path .= '/';
-    }
-    $dotfiles = glob($path . '.*', GLOB_MARK);
-    $files = glob($path . '*', GLOB_MARK);
-    $files = array_merge($files, $dotfiles);
-    foreach ($files as $file) {
-        if (basename($file) == '.' || basename($file) == '..') {
-            continue;
-        } else if (is_dir($file)) {
-            deleteDir($file);
-        } else {
-            unlink($file);
+    
+     if (file_exists($src)) {
+        $dir = opendir($src);
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
+                $full = $src . '/' . $file;
+                if (is_dir($full)) {
+                    deleteDir($full);
+                } else {
+                    unlink($full);
+                }
+            }
         }
+        closedir($dir);
+        if ($keep){echo "Keeping dir $dir" . BRNL;}
+        elseif (! rmdir($src) ){ echo "Cannot delete $src" . BRNL;}
+        return true;
     }
-    if (! rmdir($path) ){echo "Cannot remove $path". BRNL;}
-    return true;
+    
+   
+}
+function emptyDir ($path) {
+
+      try{
+        $iterator = new \DirectoryIterator($path);
+        foreach ( $iterator as $fileinfo ) {
+          if($fileinfo->isDot())continue;
+          if($fileinfo->isDir()){
+            if(deleteContent($fileinfo->getPathname()))
+              @rmdir($fileinfo->getPathname());
+          }
+          if($fileinfo->isFile()){
+            @unlink($fileinfo->getPathname());
+          }
+        }
+      } catch ( \Exception $e ){
+         echo "Error: " . $e->getMessage();
+         return false;
+      }
+      return true;
+
 }
 
 function isValidEmail($email){

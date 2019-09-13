@@ -49,8 +49,7 @@ namespace digitalmx\flames;
 class Publish {
 
 	private $pdo;
-	private $pubdate_code;
-	private $pubdate_human;
+	
 	private $now_code;
 	private $now_human;
 	private $title;
@@ -64,10 +63,14 @@ class Publish {
 	
 	
 	private function setTimes(){
-//get date of last pub
-	$pubdate_dt = new \DateTime('@' . f\getLastPub() );
-	$this->pubdate_code = $pubdate_dt -> format('ymd');
-	$this->pubdate_human = $pubdate_dt -> format('j M Y');
+//get date of last pub (never used)
+// 	if ($last_timestamp = f\getLastPub() ){
+// 		$last_timestamp = strtotime('- 7 days');
+// 		echo "<p class='red'>No last pub timestamp; set to -7 days</p>";
+// 	}
+// 	$pubdate_dt = new \DateTime('@' . $last_timestamp() );
+// 	$this->pubdate_code = $pubdate_dt -> format('ymd');
+// 	$this->pubdate_human = $pubdate_dt -> format('j M Y');
 	
 // get current date forms
 	$this->nowtime = time();
@@ -102,8 +105,9 @@ class Publish {
 		$nli = new NewsIndex();
 		$nli->append_index($this->year_code,$this->new_archive);
 		$this->addToReads();
-		
+		$this->setPtime();
 		$this->markPublished();
+		$this->initializeNext();
 
 	
 	}
@@ -142,7 +146,7 @@ class Publish {
 	
 	}
 	
-	private function fixPtime(){
+	private function setPtime(){
 		// copies the last update run time to the
 		// last published run time
 		copy (FileDefs::rtime_file,FileDefs::ptime_file);
@@ -178,6 +182,12 @@ class Publish {
 				}
 				echo "Adding $pubdate_code to reads database<br>";
 				return true;
+	}
+	private function initializeNext() {
+		// create empty news/next with just the
+		// index file in it.
+		u\emptyDir(FileDefs::next_dir);
+		copy (FileDefs::news_template,FileDefs::next_dir . "/index.php");
 	}
 			  
 }
