@@ -22,10 +22,10 @@ $read = new ReadNews();
 
 // set up for unpublished newsletter
 	$publish_time = $pubdate = $date_code = '';
+	$page_title = 'Flame News';
 #test to see if newsletter has been publsihed or not
 if (file_exists(FileDefs::pubfile)){
     $min_security = 2;
-    $page_title = 'Flame News';
     $pubdata = trim(file_get_contents(FileDefs::pubfile));
     list($pubdate,$date_code)  = explode('|',$pubdata);
    # echo "got $pubdate,$date_code" . BRNL;
@@ -33,9 +33,7 @@ if (file_exists(FileDefs::pubfile)){
 
 else {
 #Set up data for preview edition
-    $page_title = 'Flame News Preview';
 	$min_security = 4;
-
 	
 }
 $latest_file = u\list_recent_files (1,getcwd())[0];

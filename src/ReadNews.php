@@ -256,6 +256,7 @@ class ReadNews {
 		if (file_exists("$dir/publish.txt")){
 			$pubdate = explode('|',trim(file_get_contents("$dir/publish.txt")))[0];
 		}
+		else {$pubdate = 'Preview';}
 		
 		if ($title){
 			$title .= " &bull; $pubdate";
