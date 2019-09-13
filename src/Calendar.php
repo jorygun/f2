@@ -234,7 +234,7 @@ function get_events_db(){
 
  $output_h =
 		"<tr class='first'>
-		    <td class='date'> $edate $etime</td><td><b>$event</b></td><td>$city</td></tr>\n";
+		    <td class='date'> $edate $etime</td><td class='event'><b>$event</b></td><td class='location'>$city</td></tr>\n";
 
         if (empty($row['location'])){$location = '';}
         else {
