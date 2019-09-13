@@ -27,11 +27,4 @@ unused/
 
 
 #files conaining live data
-last_published_ts.txt
-last_update_published_ts.txt
-last_update_run_ts.txt
-latest_pointer.txt
-#news directory contains live info.  Don't disturb
-#also on local machine these are owned by _www
-public/news/
-
+# live dirs containt their own .gitignore
