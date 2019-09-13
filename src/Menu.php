@@ -11,6 +11,7 @@ namespace digitalmx\flames;
 */
 use digitalmx\MyPDO;
 use digitalmx\flames\Opportunities;
+use digitalmx\flames\FileDefs;
 
 class Menu {
 
@@ -176,7 +177,7 @@ EOT;
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");
 
 		  $t .=    self::if_level (7, "<li><li><a href='/scripts/news_items.php' target='newsitems'>Review Articles</a>");
-		  $t .=   self::if_level (7, "<li><a href='/news/news_next/' target='preview'>Preview</a>");
+		  $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/assets.php' target='assets'>Asset Manager</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/gallery_edit.php' target='galleries'>Edit Gallery</a>");
 		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='_blank'>Web Stats</a>");
@@ -253,7 +254,7 @@ EOT;
 	$t .= self::if_level(0,"
 		<li>-------------
 		<li><a href='/help.html'>Help</a>
-		<li><a href='/scripts/signup.php'>New User Signup</a>
+		<li><a href='/signup.php'>New User Signup</a>
 		 <li><a href='/about.php' target='about'>About AMD Flames</a>
 		 <li><a href='mailto:admin@amdflames.org'>When all else fails, email the admin</a>
 	");
