@@ -76,7 +76,7 @@ if ($login->checkLogin(4)){
 
 <li>Run the Calendar report. Add events and create an html and text version of the calendar for use by the
 newsletter and the email. <br>
-<button type='button' onClick="window.open('/scripts/calendar.php','calendar')">Run Calendar</button></li>
+<button type='button' onClick="window.open('calendar_admin.php','calendar_admin')">Run Calendar</button></li>
 
 <br>
 <li>Set the Newsletter title<br>

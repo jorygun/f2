@@ -13,13 +13,12 @@ use digitalmx\flames\FileDefs;
 function getLastPub() {
 	$lts_file = FileDefs::last_pubdate;
 	if (file_exists($lts_file)){
-		$ts = trim( file_get_contents($lts_file) );
+		return trim( file_get_contents($lts_file) );
 	}
-	else {
-		echo "No last_published_file; using -2 weeks";
-		$ts = strtotime('-2 weeks');
-	}
-	return $ts;
+	
+	return false;
+	
+	
 }
 
 function actionButton($label,$action,$uid=0,$affects='',$message='') {
