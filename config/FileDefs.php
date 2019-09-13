@@ -35,7 +35,7 @@ class FileDefs {
 	const status_tease = REPO_PATH . "/public/news/next/tease_status.txt"; #member updates
 
 // file for index of all newsletters
-	const news_index_inc = REPO_PATH . "/public/news/current/index_inc.html";
+	const news_index_inc = REPO_PATH . "/var/data/index_inc.html";
 // json file for index
 	const news_index_json = REPO_PATH . "/var/data/news_index.json";
 	

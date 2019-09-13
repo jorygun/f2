@@ -1,7 +1,5 @@
 #!/usr/local/bin/php 
 <?php
-ini_set('display_errors', 1);
-
 
 #echo "Starting send_bulk.php\n";
 
@@ -102,8 +100,11 @@ echo "Checking for files in $queue" . BRNL;
 	
 // [subject,content,html]
 	$msg_array = read_msg_file($bmail_msg);
-	$message = $msg_array['content'];
 	
+	$message = $msg_array['content'];
+	if (empty($message)){
+		throw new Exception ("Empty message.");
+	}
 // replacements in univeral message
 	// replace ref to image with image
 	$message = preg_replace(
@@ -113,7 +114,10 @@ echo "Checking for files in $queue" . BRNL;
 		);
 
 #get address of current newsletter
-	$pointer = file_get_contents("$job_dir/pointer.txt") ;
+	if (file_exists("$job_dir/pointer.txt" )){
+		$pointer = file_get_contents("$job_dir/pointer.txt") ;
+	}
+	else {throw new Exception("No pointer file in job directory");}
 	
  #set up mail object
    $mail = new PHPMailer;
@@ -167,48 +171,40 @@ EOT;
 		'username, user_email, CONCAT(upw,user_id) as slink,profile_updated,no_bulk,user_id
 	*/
         
-         list(
+			list(
 			 $username,$user_email,$scode, $profile_updated, $no_bulk, $user_id) 
 			 = explode("\t",$line);
 
 		#creat personalized vars
-            $logincode="s=$scode";
-            $login_link = SITE_URL . "/?s=$scode"; 
+				$logincode="s=$scode";
+				$login_link = SITE_URL . "/?s=$scode"; 
+			
+				$news_url = SITE_URL . "/news" . "/?s=$scode";
+				#$news_link = "<a href='$news_url'>$news_url</a>";
+			
+				$news_this = SITE_URL . $pointer . "/?s=$scode";
+				$link_news_this = "<a href='$news_this'>$news_this</a>";
+				
+				$profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$scode";
+				$profile_age = u\days_ago($profile_updated);
+				$profile_update_date = u\make_date($profile_updated);
+			
+				$verify = SITE_URL . "/action.php?V" . $user_id;
+				$verify_link = "<a href='$verify'>$verify</a>";
             
-            $news_url = SITE_URL . "/news" . "/?s=$scode";
-            #$news_link = "<a href='$news_url'>$news_url</a>";
-            
-            $news_this = SITE_URL . $pointer . "/?s=$scode";
-            $link_news_this = "<a href='$news_this'>$news_this</a>";
-            	
-            $profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$scode";
-            $profile_age = u\days_ago($profile_updated);
-            $profile_update_date = u\make_date($profile_updated);
-            
-            $verify = SITE_URL . "/action.php?V" . $user_id;
-            $verify_link = "<a href='$verify'>$verify</a>";
-            
-        #subsititute in imessage.  later subs can replace text in earlier subs
-       $imessage = str_replace('::profile_date::',$profile_update_date,$imessage);
-   #    $imessage = str_replace('::profile_age',$profile_updated_age,$imessage);
-       
-       if ($no_bulk){$imessage = str_replace('::no_bulk::',$no_bulk_message,$imessage);
-         } else {
-               $imessage = str_replace('::no_bulk::','',$imessage);
-         }
-       
-			if ($profile_age > 0){
-               $imessage = str_replace('::profile::',$profile_message,$imessage);
-         }else {
-             $imessage = str_replace('::profile::','',$imessage);
-         }
-         
-			if ($profile_age > 10) {
-				$imessage = str_replace('::verify::',$verify_message,$imessage);
-		  } else {
-				$imessage = str_replace('::verify::','',$imessage);
-		  }
-           
+    #subsititute in imessage.  later subs can replace text in earlier subs
+				$imessage = str_replace('::profile_date::',$profile_update_date,$imessage);
+
+				$mm = ($no_bulk)? $no_bulk_message : '';
+				$imessage = str_replace('::no_bulk::',$mm,$imessage);
+
+				$mm =  ($profile_age > 0) ? $profile_message : '';
+				$imessage = str_replace('::profile::',$mm,$imessage);
+
+
+				$mm = ($profile_age > 10) ? $verify_message : '';
+				$imessage = str_replace('::verify::',$mm,$imessage);
+		 
             $isubject = str_replace('::name::',$username,$isubject);
             
             $imessage = str_replace('::name::', $username, $imessage);
@@ -219,16 +215,12 @@ EOT;
              $imessage = str_replace('::newslink::',$link_news_this,$imessage);
              $imessage = str_replace('::profile_update::',$profile_updated,$imessage);
              $imessage = str_replace('::uid::',$user_id,$imessage);
-             
-             
-            
-	
 
            
-			#if (!$html){
+			if (!$html){
 				$imessage = nl2br($imessage);
-			#}
-			
+			}
+		
             $to = "\"$username\" <$user_email>";
 
 

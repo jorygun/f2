@@ -2,7 +2,7 @@ body, .normal {padding:6px;
 	font-family: "New Times Roman",Times,serif;
 	font-size: 1em; color: black;
 	max-width:1200px;
-	 width:100vw;
+	 width:98vw;
 	padding:5px;
 	color:black;
 	font-style: normal;
@@ -102,7 +102,7 @@ button:hover {
 
 
 .input, input {background-color:#eee; }
-.required {background-color:#ffffa0;}
+input.required {background-color:#ffffa0;}
 input:invalid {color:red;}
 input:valid {color:#000;}
 

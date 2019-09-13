@@ -14,7 +14,7 @@ $pdo object
 if (defined ('INIT')){return;} #already ran
 else {$init=true; } #tentative
 
-ini_set('display_errors', 1);
+
 
 	$opts = getopt('tq',['repo:']);
 	/* looks for start up options
@@ -42,16 +42,14 @@ if (stristr(PROJ_PATH,'/usr/home/digitalm') !== false) {
 		$site = 'f2.local';
 	}
 	
-try {
-	
-	
+
 	$test = isset($opts['t']) ? true:false;
 	$test_state = $test ? 'true' : 'false';
 	$quiet = isset($opts['q']) ? true:false;
 	$quiet_state = $quiet ? 'true' : 'false';
 
-
-
+	ini_set('display_errors', ! $quiet);
+	
 	
 	define ('SITE_PATH', REPO_PATH . "/public");
 	define ('SITE', $site);
@@ -73,6 +71,7 @@ try {
 		. ':' . REPO_PATH . '/src'
 	);
 
+try {
 	require 'MxConstants.php'; #in libmx: NL, BRNL, etc.
 	require REPO_PATH . '/vendor/autoload.php';
 	require 'Member.php';
