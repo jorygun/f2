@@ -168,7 +168,7 @@ public function build_calendar () {
 				$info = u\make_links(nl2br(u\special($row['info'])));
 				$output .= 
 				"<tr class='first'><td class='date'> $edate $etime</td>
-		<td><b>$event</b></td><td>$city</td></tr>
+		<td class='event'><b>$event</b></td><td class='location'>$city</td></tr>
 		<tr><td>$contact</td><td>$info</td><td>$location</td></tr>
 		";
 			$teaser .= sprintf("%15s  %s: %s\n",$edate,$city,$event);
