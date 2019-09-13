@@ -1,13 +1,18 @@
 <?php
 echo <<<EOT
 <p><b>Create An Email</b></p>
-<p>You may use the following placeholders:<ul>
+
+
+<p>You may use the following placeholders:</p>
+<table><tr><td><ul>
 <li>::link::  User's personal link to log in
 <li>::scode:: users_code
 <li>::newslink:: link to latest newsletter for this user
 <li>::name::  User's name in db
 <li>::profile_date:: Date user's profile last updated if > 1 year<br>
+
 <li>::donor_date:: Date of last contribution
+</ul></td><td><ul>
 <li>::teaser::  Combination of highlights from current newsletter
 <li>::pointer:: URL specified below (usually latest newsletter)
 <li>::verify:: URL to verify email
@@ -16,7 +21,7 @@ echo <<<EOT
 <li> [image nnn] replaced by image link to thumb file nnn.jpg
 <li> ::edition:: Edition name
 </ul>
-
+</td></tr></table>
 <div id='in_bulk_queue'>$jobs_in_queue</div>
 
 <p>

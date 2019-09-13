@@ -405,7 +405,7 @@ li.collapsibleListClosed{
 		}
 .collapsibleList li ul li {margin-bottom:4px;}
 
-
+div#in_bulk_queue {border:1px solid blue;padding:0.5em;}
 div#in_bulk_queue ul li.error {color:red;}
 div#in_bulk_queue ul li.queued {color:green;}
 div#in_bulk_queue ul li.cancelled{color:blue;}
