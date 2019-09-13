@@ -246,10 +246,16 @@ function get_asset_by_id($id,$style='thumb'){
        if (empty ($gfile) ){
             $gfile = $row['url'];
         }
-
+		if (substr($target,0,1) == '/' ) {#on site
+             $href=  "/asset_display.php?$id' target='asset' decoration='none'";
+       } else {
+       	$href = $target;
+       }
 
        if ( ! empty($gfile)) {$out = "
+        <a href='$href' target='asset' decoration='none'>
             <img src='$gfile' width='800'>
+            </a>
             ";
 
         }
