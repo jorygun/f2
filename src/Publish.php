@@ -112,6 +112,8 @@ class Publish {
 	
 	}
 	
+	
+	
 	public function test(){
 		$this->setPointers();
 	}
@@ -188,6 +190,7 @@ class Publish {
 		// index file in it.
 		u\emptyDir(FileDefs::next_dir);
 		copy (FileDefs::news_template,FileDefs::next_dir . "/index.php");
+		copy (FileDefs::git_ignore,FileDefs::next_dir . "/.gitignore");
 	}
 			  
 }

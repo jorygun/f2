@@ -59,4 +59,8 @@ class FileDefs {
 	const bulk_processor = REPO_PATH . "/crons/bulk_send.php";
 
 
+// special
+	const git_ignore = REPO_PATH . "/templates/gitignore";
+	
+
 }

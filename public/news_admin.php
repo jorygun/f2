@@ -32,9 +32,10 @@ if ($login->checkLogin(4)){
     $publish = new Publish();
 
 
-// get latest published update date
+// get time of last status report
     $dt = new \DateTime();
     $dt ->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
+
 
     if ($last_ptime = f\getLastPub() ){
       $dt->setTimestamp($last_ptime);
@@ -94,10 +95,6 @@ newsletter and the email. <br>
 <li>Check the latest news</a>, to make sure it published.
 <button type='button' onClick="window.open('/news/current','latest_news')">Latest News</button></li>
 
-<li>If you are sure the newsletter published successfully, copy the model news to news_next, setting up the directory for the next issue.<br>
-<!-- <form><a href='#' onclick="window.open('/scripts/copy_model_to_next.php','copy','height=200,width=400');return false;">Copy Model News to Next News</a></form> -->
-<form><a href='#' onclick="window.open('/scripts/copy_model_to_next.php','copy','height=200,width=400');return false;">Copy Model News to Next News</a></form>
-<br>
 
 <li>Run the bulk email to send out the Flame News Is Ready Email. Note: the email will pull "teasers"
 from the news_latest directory, so they reflect last news published.
