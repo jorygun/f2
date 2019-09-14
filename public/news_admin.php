@@ -34,13 +34,14 @@ if ($login->checkLogin(4)){
 
 // get time of last status report
     $dt = new \DateTime();
-    $dt ->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
 
+    if ($last_ptime = file_get_contents(FileDefs::ptime_file )){
+    #echo "Got ptime $last_ptime";
 
-    if ($last_ptime = f\getLastPub() ){
       $dt->setTimestamp($last_ptime);
+       $dt ->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
     } else {
-		echo "Could not get last pub date. Setting to one week ago." . BRNL;
+		echo "Could not get last status run date. Setting to one week ago." . BRNL;
 		$dt -> modify (" - 7 days");
 	}
     $ptime = $dt->format('M j H:i T');
@@ -71,7 +72,7 @@ if ($login->checkLogin(4)){
 <button type='button' onClick="window.open('/scripts/news_items.php','news_items')">News Items</button></li>
 <br>
 
-<li>Run the change report.  This creates a report of all the member changes since the  date/time of the last update report that was published. Also pulls any new opportunities from the database. If necessary, set the Last Published Time.  This simply sets the time that the update report will work against.  It is set automatically during publish, but if you want to set it to something else, you can.<br>
+<li>Run the change report.  This creates a report of all the member changes since the  date/time of the last update report that was published.  If necessary, set some other date/time.  This simply sets the time that the update report will work against.  <br>
     <input type=text id='ptime' value="<?=$ptime?>">
    <button type='button' onClick = "runStatus('ptime');">Run Report</button>
 
