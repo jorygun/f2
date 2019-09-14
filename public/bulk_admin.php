@@ -68,32 +68,31 @@ $interval = 6; #seconds per email
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET'){
 
-	
+	  
+// Detect any existing jobs in the queue.
+    $jobs_in_queue = $bulkmail->show_bulk_jobs();
 
 // get counts for the  mail sets
 // return [$active,$lost,$total,$bulk,$nobulk];
-	$counts = array ();
-	$counts = $members->getMemberCounts();
-	
- 
-  
-// Detect any existing jobs in the queue.
-    $jobs_in_queue = $bulkmail->show_bulk_jobs();
-	// show time requeired for each category
-	$time_all = runtime_msg($counts['active'],$interval);
-	$time_bulk = runtime_msg($counts['bulk'],$interval);
-    $time_nobulk = runtime_msg($counts['nobulk'],$interval);
-    $time_lost = runtime_msg($counts['lost'],$interval);
 
+	$counts = array ();
+	#$counts = $members->getMemberCounts();
+	if (!empty($counts)){
+		// show time requeired for each category
+		$time_all = runtime_msg($counts['active'],$interval);
+		$time_bulk = runtime_msg($counts['bulk'],$interval);
+		 $time_nobulk = runtime_msg($counts['nobulk'],$interval);
+		 $time_lost = runtime_msg($counts['lost'],$interval);
+	}
 
 	$now = date('M d, Y H:i');
 
 // get latest newsletter pointer
 	$pointerfile = FileDefs::latest_pointer;
 	$pointer = '';
-	#if (file_exists($pointerfile)){
+	if (file_exists($pointerfile)){
 		$pointer = trim(file_get_contents($pointerfile));
-	#}
+	}
 
 include ('../templates/bulk_form.php');
 }
@@ -117,10 +116,13 @@ else { #IS POST; set up the job
  	echo "Edition name: $edition_name" . BRNL;
 
 	
-#set up job as datecode, and make sure it doesn't already exist
+#set up job as datecode based on UTC and make sure it doesn't already exist
 	$job = false; $c = 0;
 	while (! $job){
-		$job = date("YmdHis");
+		$now_dt = new \DateTime();
+		$now_dt->setTimestamp(time());
+		
+		$job = $now_dt->format("YmdHis");
 		$job_dir = "$working/$job";
 		if (file_exists($job_dir)){
 			$job = false;
@@ -142,6 +144,7 @@ else { #IS POST; set up the job
    
 // get subject
     $subject = $_POST['subject']; // ?specchar??
+    if (empty($subject)){throw new Exception ("no subject for bulk message");}
     $subject = str_replace('::edition::',$edition_name,$subject);
     
     
@@ -152,9 +155,13 @@ else { #IS POST; set up the job
 		
 //build message
 	$message = $_POST['body'];
+	
+	if (empty ($message)){throw new Exception ("No message ") ; }
 	$message = str_replace('::teaser::',$teaser , $message);
 	$message = str_replace('::edition::',$edition_name , $message);
+	$message = str_replace('::pointer::',$pointer , $message);
 	$message = preg_replace('/\t/',"    ",$message);
+	
 	// replacements in univeral message
 	// replace ref to image with image
 	$message = preg_replace(
@@ -164,11 +171,15 @@ else { #IS POST; set up the job
 		);
 	
 
-	$dt = new \DateTime(); #sets to PDT because server
-	$starttimestamp = strtotime($_POST['start']);
-	$dt->setTimestamp($starttimestamp);
-	echo " scheduled for ". $dt->format('M d H:i T') . BRNL;
+	$start_dt = new \DateTime(); #sets to PDT because server
+	if (! $starttimestamp = strtotime($_POST['start']) ){
+		throw new Exception ("illegal start time: " . $_POST['start']);
+	}
+	$start_dt->setTimestamp($starttimestamp);
 
+	$start_dt->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
+	$jstarttime = $start_dt->format('M d H:i T');
+	
 
 
 // Write message file
@@ -212,21 +223,25 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
 	echo "Job $job: Emails will be sent every $interval seconds.  This will take " . intval($row_count * $interval/60) . " minutes to complete.<br>\n";
 
 ## wrap it up
-
+			
+			
     if ($_POST['go'] == 'Run Now'){
         touch ("$queue/$job"); #mtime = now
 
         echo "Queued for now.  Starting bulk_mail_processor.<br>\n";
         $phploc = shell_exec('which php');
         $cmd = "$phploc " . FileDefs::bulk_processor;
-        echo "Starting $cmd" . BRNL;
-        echo shell_exec($cmd);
+        
+       # echo shell_exec($cmd);
+       // for some reason shell exec is not working.
+       require FileDefs::bulk_processor;
+       
        
        
     }
     elseif ($_POST['go'] == 'Schedule') {
         touch ("$queue/$job",$starttimestamp);
-        echo "Added $job to bulk_queue after " . $dt->format('M d, Y H:i T'). BRNL;;
+        echo "Added $job to bulk_queue after $jstarttime" .  BRNL;;
        
     }
     elseif ($_POST['go'] == 'Setup Only') {

@@ -11,10 +11,9 @@ echo <<<EOT
 <li>::name::  User's name in db
 <li>::profile_date:: Date user's profile last updated if > 1 year<br>
 
-<li>::donor_date:: Date of last contribution
-</ul></td><td><ul>
 <li>::teaser::  Combination of highlights from current newsletter
-<li>::pointer:: URL specified below (usually latest newsletter)
+</ul></td><td><ul>
+<li>::pointer:: URL specified below
 <li>::verify:: URL to verify email
 <li>::uemail:: User's email address
 <li>::no_bulk:: Notice to users not subscribing to weekly email

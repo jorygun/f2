@@ -53,13 +53,11 @@ class StatusReport {
 		$name_report  = $this->createNameReport();
 		file_put_contents(FileDefs::status_tease,$name_report);
 		
-		
+		echo "Saving run time to " . FileDefs::rtime_file . BRNL;
+		file_put_contents(FileDefs::rtime_file,time());
 	}
 	
-	private function saveReport($path,$report){
-		file_put_contents($this->$path,$this->$report);
-		if ($this->test) echo '<hr>' , $this->$report;
-	}
+	
 	
 	private function createReport ($since) {
 		$report = "<div class='inner'><p>Member Status Report " . date('d M Y') . "<br />";

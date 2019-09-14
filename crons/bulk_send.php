@@ -73,7 +73,7 @@ echo "Checking for files in $queue" . BRNL;
 	echo "no jobs";
 		exit;
 	}
-
+	$html = false;
 	#set job dir and record pid so it can be stopped if needed
 	$job_dir = "$bulk/${job}";
 	if (! is_dir($job_dir)){
@@ -105,6 +105,8 @@ echo "Checking for files in $queue" . BRNL;
 	if (empty($message)){
 		throw new Exception ("Empty message.");
 	}
+	
+	if (stripos($message,'<html>') !== false) {$html = true;}
 // replacements in univeral message
 	// replace ref to image with image
 	$message = preg_replace(
@@ -163,8 +165,9 @@ EOT;
     	
        	#create individaul copy of message and subject
         $imessage = $message; 
+        
         $isubject = $msg_array['subject'];
-             
+        
         #get the user vars from the file
         /*
     $fields = 
@@ -340,12 +343,7 @@ function checkfiles($queue){
 				continue;
 			}
 			
-			if (strpos($qfile,'-cancelled') !== false){
-				if (filemtime("$queue/$$qfile") < (time() - 86400) ) { #more than 24 hours old
-				unlink ("$queue/$qfile");
-				}
-				continue;
-			}
+			
 			if (strpos($qfile,'-') !== false){
 				// there is a -status on the job
 				continue;

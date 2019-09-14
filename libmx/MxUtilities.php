@@ -215,8 +215,8 @@ function make_date ($when, $form='human',$type = 'date'){
 		'd M Y H:i' : 'd M Y';
 			break;
 		case 'rfc' :
-			$format = DATE_RFC822;
-			$dt->setTimeZone(new \DateTimeZone('UTC'));
+			$format = 'c';
+			
 			break;
 		case 'ts' :
 			return $ts;

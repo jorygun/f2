@@ -3,7 +3,7 @@ namespace digitalmx\flames;
 
 
 use digitalmx\flames\Definitions as Defs;
-
+use digitalmx\flames\FileDefs;
 
 class BulkMail {
 
@@ -19,11 +19,8 @@ class BulkMail {
 		
 	);
 	
-
-// location of directory with last_published, etc
-	private static  $news_info = REPO_PATH . "/public/news/";
-
-	private static $news_latest = REPO_PATH . "/public/news/news_latest";
+	
+	private static $news_latest = FileDefs::latest_dir;
 	
 	
 
@@ -86,15 +83,28 @@ class BulkMail {
 			$joblist .= "<ul>";
 			foreach ($jobs_in_queue as $job){
 		 
-				$starttime = date('M d H:i  T',filemtime("$queue/$job"));
+				$starttime = filemtime("$queue/$job");
+				$start_dt = \DateTime::createFromFormat( 'U', $starttime );
+				$start_dt->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
+				$jstarttime = $start_dt->format('M d H:i T');
+				
+				
 				if ($c = strpos($job,'-cancelled')){
 					$jstat = 'cancelled';
 					$jobid = substr($job,0,$c);
+					
+					if ($starttime < (time() - 86400) ) { #more than 24 hours old
+						unlink ("$queue/$job");
+						$joblist .= "<li> $jobid was cancelled and deleted";
+						continue;
+					}
+			
 				}
 				elseif ($c = strpos($job,'-running')){
 					$jstat = 'running';
 					$jobid = substr($job,0,$c);
 				}
+				
 				elseif ($c = strpos($job,'-error')){
 					$jstat = 'error';
 					$jobid = substr($job,0,$c);
@@ -108,7 +118,7 @@ class BulkMail {
 				
 				$job_dir= "$working/$jobid";
 				if (!is_dir($job_dir)){
-					$joblist .= "<li class='error'>$job dir not found in bmail";
+					$joblist .= "<li class='error'>$job dir not found in bulk_jobs";
 					continue; #next job
 				}
 				
@@ -125,7 +135,7 @@ class BulkMail {
 				if ($jstat == 'queued' or $jstat == 'running'){
 					$jcancel = "<button type='button' onClick='cancel_bulk($jobid)'>Cancel</button>";
 				}
-				$joblist .= "<li class='$jstat'>$jobid $jstat: '$jsub' to $jcnt recipients runs after: $starttime $jcancel<br>\n";
+				$joblist .= "<li class='$jstat'>$jobid $jstat: '$jsub' to $jcnt recipients runs after: $jstarttime $jcancel<br>\n";
 		
 			}
 		
