@@ -346,7 +346,7 @@ function buildOptions($val_array,$check=''){
         }
     }
 
-	echo "check: $check.  options:", $opt,"<br>";
+	#echo "check: $check.  options:", $opt,"<br>";
 	return $opt;
 }
 

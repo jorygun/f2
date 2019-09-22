@@ -1139,6 +1139,7 @@ public function getLogins($tag) {
 		$set_time = ($ems == 'Y') ?
 		', email_last_validated = NOW()' : '';
 		
+		
 		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
 			$set_time
 			WHERE user_id = '$uid';";

@@ -1,9 +1,10 @@
-Your AMD Flames email has been changed.
+Your AMD Flames email has been updated.
 
 ::name::,
 
 Your email address on the AMD Alumni site amdflames.org has just
-been updated to ::current_email::.
+been updated to ::current_email::.  ::updater:: 
+
 
 PLEASE CLICK THE LINK BELOW TO CONFIRM THIS EMAIL ADDRESS.
   ::verify::

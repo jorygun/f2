@@ -27,7 +27,7 @@ ini_set('display_errors', 1);
 	$dev_update_button = f\actionButton('Restore Dev','restore',0,'','Done');
 	
 //END START
-	
+
 #display user data
 
 #display search results
@@ -50,13 +50,13 @@ elseif (isset($_POST['Update'])){
 	
 	echo $admin->updateMember($_POST);
 	$mdata = $admin->showUpdate($uid);
-	echo $templates->render('member_edit.tpl',$mdata);
+	echo $templates->render('member_edit',$mdata);
 
 }
 
 elseif ($uid = $_GET['uid'] ?? '' ){
-	$mdata = $admin->showUpdate($uid);
-	echo $templates->render('member_edit.tpl',$mdata);
+	 $mdata = $admin->showUpdate($uid);
+ 	echo $templates->render('member_edit',$mdata);
 }
 
 #show search screen

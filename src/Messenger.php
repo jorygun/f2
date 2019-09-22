@@ -201,7 +201,7 @@ and change it in your profile.
 			
 			//note: 'informant' should => 'you',member name, or 'another member' or 'profile change'
 			// on em-found
-			if (!empty($extra_data)){
+			if (!empty($extra_data)){ 
 				foreach ($extra_data as $key=>$val){
 					$this->replacements['::' . $key . '::'] = $val;
 				}
