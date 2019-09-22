@@ -10,7 +10,7 @@ Hi ::name::.  Please confirm you're still around.
     • confirm we have the right email
     • update your current information
     
-       ::profile::
+       ::profile_edit::
 ***************************************************
 
 (You can avoid these reminders by logging in occasionally.)
