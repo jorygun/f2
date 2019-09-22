@@ -59,27 +59,28 @@ private static $profile_age_limit_days = 600;
 private static $admin_codes = array(
 // only these codes get an admin notice
 
-	'A4' => "No response to several requests to verify email address.",
-	'LA' => "Gave up trying to contact",
+	'A3' => "No response to several requests to verify email address.",
 	'B2' => "Email has repeatedly bounced.",
 	'E2' => "New email address not confirmed",
+	
+	'LA' => "Gave up trying to contact",
 	'LO' => "Lost other. No code supplied.",
 	'LS' => "New signup failed to confirm email.",
 	'LE' => "User never confirmed change of email.",
+	'D' => "Code D undefined",
 	
 	);
 
 
     private static $admin_message =	<<<EOT
-	Notice: ::name:: ::code_description:: 
-
+	Messenger: ::name:: - ::event::
+	
 	Alert to FLAMES administrator 
 	There is a problem with this user's information on AMD Flames.
 	Please attempt to manually reconnect with this user.
 
 	::user_dataset::
-	
-	Event: ::event::
+
 EOT;
 
 
@@ -118,7 +119,7 @@ and change it in your profile.
    private $replacements = array ();
    
 	private $pdo;
-	private $test;
+	private $test=false;
 	private $member;
 	private $mailer;
 	
@@ -130,7 +131,7 @@ and change it in your profile.
 		#$this->pdo = $pdo;
 		$this->pdo = MyPDO::instance();
 		
-		$this->test = false; #use setMode(true) to set test=false
+		
 		#$this->member = $member;
 		$this->member = new Member();
 		$this->mailer = new PHPMailer();
@@ -139,9 +140,10 @@ and change it in your profile.
 		$this->mailer->CharSet = 'UTF-8'; 
 		$this->mailer->isSendmail();
 		$this->mailer->SMTPKeepAlive = true; 
+		
 		// don't send emails from local site unless 
 		// setTestMode is run to turn it on.
-		if (REPO == 'f2'){$this->test=true;}
+		
 	}
 	public function setTestMode($test=false ) {
 		$this->test = $test;
@@ -183,10 +185,12 @@ and change it in your profile.
 		 // do not send if mode = Test
 		 // can be called with extra data which will be added to replacements table.
 		 // ::key:: => val
+		 // event is next ems
 	
 		 if(empty($event)){
 			  throw new Exception ('bad Messenger call',"empty event with uid $uid");
 		 }
+		 
 		 #get all the user data from member
 		$row = $this->getUser($uid);
 		
@@ -195,7 +199,7 @@ and change it in your profile.
 			$this->replacements ['::code_description::'] = self::$admin_codes[$event] ?? '';
 			$this->replacements ['::event::'] = $event;
 			
-			//note: 'informant' should be 'you',member name, or 'another member'
+			//note: 'informant' should => 'you',member name, or 'another member' or 'profile change'
 			// on em-found
 			if (!empty($extra_data)){
 				foreach ($extra_data as $key=>$val){
@@ -203,8 +207,6 @@ and change it in your profile.
 				}
 			}
 				
-			
-			
 			
 		/* Get email template for event
 			no point in emailing if the user is marked as lost 
@@ -233,7 +235,7 @@ and change it in your profile.
 		
 		  /* prepare email to admin
 		 statuses requiring admin email are identified
-		in the $lost_reasons array
+		in the $admin_codes array
 		*/
 		if (!empty(self::$admin_codes[$event])){
 			
@@ -258,29 +260,26 @@ and change it in your profile.
 	
 		return true;
 	}
+	
+	
+	
+	
 	// retrieves enhanced user dat a from Member,
 	// builds the data set for admin reporting
 	// builds all the placeholders for replacing in message
 	private function getUser($uid) 
 	{
-		$md = $this->member->getMemberData($uid);
+		$md = $this->member->getMemberRecord($uid,true);
 		if (empty($md)){
-			throw new Exception ( "Messenger failed to getMemberData on uid $uid .");
-			return [];
-		}
-		if (!empty($md['error']) ){
-			throw new Exception ("Error retrieving member: " . $md['error']);
-			return [];
-		}
-		elseif ($md['count'] == 0){
-			throw new Exception ( "Messenger failed to getMemberData on uid $uid: not found");
-			return [];
+			echo "Messenger failed to getMemberData on uid $uid .";
+			return [];;
 		}
 		
-		$this->user_dataset = $this->buildDataset ($md['data']);
-		$this->placeholders = $this->buildPlaceholders ($md['data']);
 		
-		return $md['data'];
+		$this->user_dataset = $this->buildDataset ($md);
+		$this->placeholders = $this->buildPlaceholders ($md);
+		
+		return $md;
 	
 		
 	}	
@@ -290,8 +289,10 @@ and change it in your profile.
 		$login = $row['login_string'] ;
 		$uid = f\splitLogin($login)[0];
 		$this->replacements ['::login::'] = 'https://amdflames.org/?s=' . $login;
-		$verify_code =  SITE_URL . "/action.php?V" . $uid;
-		$this->replacements ['::verify::'] = $verify_code;
+ 
+		$this->replacements ['::verify::'] = SITE_URL . "/action.php?V" . $uid;
+		$this->replacements['::profile_edit::'] = SITE_URL . "action.php?P" . $uid;
+	
 		$this->replacements['::name::'] = $row['username'];
 		$this->replacements['::current_email::'] = $row['user_email'];
 		$this->replacements ['::prior_email::'] = $row['prior_email'];
@@ -300,13 +301,15 @@ and change it in your profile.
 		$this->replacements ['::join_date::'] = date('d M Y',strtotime($row['join_date']));
 		$this->replacements ['::closing::'] = self::$closing;
 		
-		$this->replacements ['::profile::'] =  
-			($row['profile_age'] > Defs::$old_profile_limit ) ?
+		$this->replacements ['::profile_warn::'] =  
+			($row['profile_age'] > Defs::$age_limit ) ?
 			self::$profile_message : '' ;
 		
 		$this->replacements ['::bulk::'] = 
 			($row['no_bulk'] == true) ?
 			self::$bulk_warn : '' ;
+			
+		
 
 	}
 	
@@ -314,24 +317,25 @@ and change it in your profile.
 	private function buildDataset($row) {
 
 #u\echor($row,'For dataset');
-
+	$subscriber = ( $row['subscriber'])? 'yes':'no';
 	$dataset = "
 User: ${row['username']}
 ---------------------
    Email: ${row['user_email']}; 
+   Last Email Status: ${row['email_status']} ${row['email_status_name']}
+   Receives weekly newsletter: $subscriber
+      
    Previous emails:
    ${row['prior_email']}
    
-   Receives weekly newsletter: ${row['subscriber']}
-   Current Email Status: ${row['email_status']} ${row['email_status_name']}
 
 Activity
 ---------------------
    Last login: ${row['last_login']}
-   Email last validated: ${row['email_last_validated']} 
+   Email last validated: ${row['email_valid_date']} 
       (changed on: ${row['email_chg_date']})
-   Profile last validated: ${row['profile_validated']} 
-      (updated on: ${row['profile_updated']})
+   Profile last validated: ${row['profile_valid_date']} 
+      (updated on: ${row['profile_date']})
 
 -----------------------
 ";
@@ -339,6 +343,7 @@ Activity
 }
 
 	private function send_mail($data) {
+		#$this->test = true;
 		//$data arry for to,subj,msg, and header
 		//header is array to be joined to make header
 		
@@ -349,13 +354,9 @@ Activity
 	}
 	
 		if ($this->test) {
-			$response =  "<h3>send email Test:</h3>" ;
-			
-			
-			$response .= u\echor ($data,'data array');
-			return $response;
-			
-		} else  {	
+		 	 u\echor ($data,'test mode: data array in send_mail');
+		 	 return;
+		} 
 			#mail ($data['to'],$data['subject'],$data['message'],$header);
 			$from = $data['from'] ?? 'admin@amdflames.org';
 			$this->mailer->setFrom($from);
@@ -371,7 +372,7 @@ Activity
 			$this->mailer->clearAddresses();
 				
 			return "Mailed: " . $data['subject'] . "\n";
-		}
+		
 
 		
 	}
@@ -389,7 +390,7 @@ Activity
 
 		
 	private function getUserText($code){
-		// code will be like ems-A1
+		// code will be like A1
 		$msg_file = self::$templates . '/' . $code . '.txt';
 		$message = false;
 		if ( file_exists($msg_file)){

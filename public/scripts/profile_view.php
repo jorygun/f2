@@ -9,13 +9,11 @@
 	use digitalmx\flames\DocPage;
 	use digitalmx\flames\Member;
 	use digitalmx as u;
+
 	
 	
 //END START
 
-	
-   
-	
 	
 
 if ($login->checkLogin(3)){
@@ -32,36 +30,18 @@ $user_id = $_SESSION['login']['user_id'];
 
 #figure out what profile to view
 
+$view_id = get_view_id();
+$row = $member->getMemberData($view_id,true)
 
-	if (!empty($_GET['id']) && is_numeric($_GET['id'] ) ){
-			$get_uid = $_GET['id'];
-	} elseif ( isset ($_POST['id'])){
-	    $get_uid = $_POST['id'];
-	}
-	elseif ( isset ($_GET['uid'])){
-	    $get_uid = $_GET['uid'];
-	}
-	else $get_uid = $user_id;   #current user
-	
+extract($row,EXTR_PREFIX_ALL,'D');
 
-	
-
-
-    #if profile requested by user_id instead of record id,
-    if (isset($get_uid)){$row = $member->getMemberData($get_uid);}
-   
-	
-	
-	
-	extract($row['data'],EXTR_PREFIX_ALL,'D');
-#u\echor($row['data'],'data');
 
 	$vis_email =  $D_email_public;
 
 	$linkedinlink=  ($D_linkedin)?
          " <p><a href='$D_linkedin' target='_blank'><img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /><br />$D_linkedin </a></p>":'';
-    $member_type = Defs::getMemberDescription($D_status);
-	$html_greeting = $D_user_greet;
+  
+	$html_greeting = u\special($D_user_greet);
 	$email_status = Defs::getEmsName($D_email_status);
 	$message_link ='';
 	if ($D_email_hide){
@@ -84,9 +64,10 @@ $user_id = $_SESSION['login']['user_id'];
 	$last_profile_date = age($D_profile_updated)[1];
 	$last_profile_validated = age($D_profile_validated)[1];
 
-	$joindate = age($D_join_date)[1];
+	$joindate = u\make_date($D_join_date);
 	$user_current = $D_user_current ;
 	if (!empty($D_user_from)){$user_current .= " ... $D_user_from";}
+	
    $user_web= (!empty($D_user_web))? 
    	"<p><a href='$D_user_web' target='_blank' >Relevant Web Site</a></p>"
    	:
@@ -101,6 +82,38 @@ EOT;
     $edit_button = ($user_id ==  $D_user_id or $_SESSION['level']>7 )?
     	$button_text:'';
 	$member_type = Defs::getMemberDescription($D_status);
+	
+	$tdata = array(
+		'username' => $row['username'],
+		'member_type' => Defs::getMemberDescription($D_status),
+		'image_link' => $image_link,
+		'html_greeting' => u\special($D_user_greet),
+		'edit_button' => $edit_button,
+		'user_current' => u\special($D_user_current)  ,
+	);
+	
+	
+	
+	
+########################
+
+function get_view_id () {
+	if (!empty($_GET['id']) && is_numeric($_GET['id'] ) ){
+			$get_uid = $_GET['id'];
+	} elseif ( isset ($_POST['id'])){
+	    $get_uid = $_POST['id'];
+	}
+	elseif ( isset ($_GET['uid'])){
+	    $get_uid = $_GET['uid'];
+	}
+	else $get_uid = $_SESSION['login']['user_id'];   #current user
+	
+	if (!$get_uid){throw new Exception ("No user for profile view");}
+	return $get_uid;
+
+}
+
+
 ?>
 
 
@@ -117,7 +130,7 @@ EOT;
 
 <?=$imagelink?><?=$html_greeting?>
 	<h4>Currently</h4> 
-	<?=$user_current?>
+	<?=$D_user_current?>
 
 
 	<h4>At AMD</h4>

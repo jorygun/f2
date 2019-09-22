@@ -26,6 +26,7 @@ else {$init=true; } #tentative
 	#var_dump($opts);
 
 define ('REPO_PATH' , dirname(__DIR__) );
+define ('REPO', basename(REPO_PATH) );
 define ('PROJ_PATH', dirname(REPO_PATH) ); # script is in .../project/crons
 $repo = basename(REPO_PATH);
 use digitalmx\flames as f;
@@ -97,7 +98,7 @@ try {
 if (!$quiet)
 echo 
 	"[Cron-ini on Site: " . SITE . "(platform $platform) " . NL
-	. "   Repo: $repo" . "; Test: " . $test_state . "; Quiet: " . $quiet_state .  "]" . NL
+	. "   REPO: " . REPO .  "; Test: " . $test_state . "; Quiet: " . $quiet_state .  "]" . NL
 	. "REPO_PATH: " . REPO_PATH . NL;
 
 if ( $init){

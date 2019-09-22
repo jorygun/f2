@@ -36,22 +36,15 @@ class Exception extends \Exception {}
 class RuntimeException extends \RuntimeException {}
 
 
-   /**
-   	SESSION SETUP
-    * test if session already started                                         *
-    * every protected script needs session to get                             *
-    * logiin user info                                                        *
-   **/
 
-
-	// set up for longer session lifes
-		#ini_set('session.cookie_lifetime', 86400);
-		#ini_set('session.gc_maxlifetime', 86400);
+// set up for longer session lifes
+	#ini_set('session.cookie_lifetime', 86400);
+	#ini_set('session.gc_maxlifetime', 86400);
 
 
 
 #use Pimple\Container;
-#use digitalmx\
+
 
 // sets up everything.  var is name of config file with db stuff et al,
 // and is located in config dir
@@ -79,6 +72,8 @@ $login = new Login();
 
 $pdo = MyPDO::instance();
 $member = new Member();
+$templates = new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
+$madmin = new MemberAdmin();
 
 // #build db
 // $container = new Container();
@@ -399,7 +394,29 @@ class Login
 		}
 		return true;
 }
+	private function setWarnings ($log){
+		$warn = '';
+		$pcode = 'P' . $log['user_id'];
 		
+		if ($log['email_status'] != 'Y'){
+			$warn .= "There is a problem with your email.";
+		}
+		if ($log['profile_age']> Defs::$profile_warning){
+			$warn .= "Your profile is quite old. ";
+		}
+		if ($warn){
+			$warn .= "Choose Profile under your name in the menu to review and update your profile.";
+		
+			echo "<script>
+				window.alert('$warn') ;
+				</script>
+				";
+		}
+	
+	}
+	
+	
+
 	private function setSession ($log_info) {
 		// sets vars in session
 		#u\echor($log_info, 'Saving log_info '  ) ;
@@ -409,9 +426,11 @@ class Login
 		$_SESSION['level'] = $log_info['seclevel'];
 		$_SESSION['menu'] = $menu -> getMenuBar(); #needs login and level already set
 		#u\echor($_SESSION['login'],'session saved login ' . session_id() );
+		$_SESSION['warnings'] = $this->setWarnings($log_info);
+		
 		return true;
 	}
-
+	
 	private function logOut($next ='/'){
 // If it's desired to kill the session, also delete the session cookie.
 // Note: This will destroy the session, and not just the session data!

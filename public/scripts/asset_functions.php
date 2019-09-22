@@ -212,8 +212,11 @@ function get_asset_by_id($id,$style='thumb'){
 
         $out .= "</div>";
         break;
-
-
+	case 'photo':
+		$out = "<div>";
+		$out .= "<img src='$thumb_url>
+			<p class='caption'>$caption_line</p>
+			";
     case 'link':
         $out = "<a href='$target' target='_blank'>$title_line</a>";
         break;
@@ -905,7 +908,6 @@ function post_asset($post_array){
  if (! isset($post_array['id'])){throw new Exception ("Posting asset with no id.");}
     $id = $post_array['id'];
 
-    
 
      global $image_extensions;
      $pdo = MyPDO::instance();
@@ -941,7 +943,7 @@ function post_asset($post_array){
 	 
 	 From asset form:
 	 	
-	 	'link_sourcc' used for both source file and link to.
+	 	'link_source' used for both source file and link to.
 	 	'thumb_source' used for additional file just to use for thumbnail
 	 	in either one, you can have
 	 	* a url
@@ -991,9 +993,9 @@ function post_asset($post_array){
   
     	#now check for separate thumb file source
 	 	#remove old duplicate of link
-	 	if ($post_array['url'] == $post_array['link'] ){
-	 		$post_array['url'] = '';
-	 	}
+	 	// if ($post_array['url'] == $post_array['link'] ){
+// 	 		$post_array['url'] = '';
+// 	 	}
 	 	
 	 	if (!empty($_FILES['upfile']['name'])) {
 	 		$thumb_source = relocate ($id,'thumb_upload' );

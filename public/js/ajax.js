@@ -61,6 +61,21 @@ function takeAction (action,uid=0,affectid='',message='') {
  });  
 }
 
+function verifyProfile(uid) {
+     $.ajax ({
+        url: "/action.php",
+        data: 'ajax=verifyProfile&uid='+uid,
+        type: "POST",
+        success: function (response) {
+            $('#profver').html(response);
+            $('#warning').hide();
+         
+        }
+       
+    
+ });
+}
+
 function verifyEmail(uid) {
     $.ajax ({
         url: "/action.php",

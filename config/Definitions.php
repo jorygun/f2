@@ -15,15 +15,12 @@ use \Exception as Exception;
 */
 class Definitions {
 	
-	public static $asset_types = array(
-    'Image' ,
-    'Multimedia' ,
-    'Document' ,
-    'Web Page' ,
-    'Other'
-    );
-
-
+	// days before warnings start on profile or email
+	public static $age_limit = 720;
+	public static $profile_warning = 365; #days since update
+	public static $lost_warning = 365; #days since login
+	
+	
 	public static $asset_tags = array(
     'A' => 'Ad *',
 
@@ -73,17 +70,16 @@ public static $ems_codes = array(
 		'LE'	=> ['Lost - After email change','',0],
 		'LS'    => ['Lost at signup','',0],
 		'LD'    => ['Lost - Deceased','',0],
-		'B1'	=> ['May be bouncing','B2',3],
+		'B1'	=> ['May be bouncing','LB',3],
 		'B2'	=> ['Bounced twice','LB',3],
 		'A1'	=> ['Being revalidated','A2',3],
-		'A2'	=> ['Being revalidated (2nd attempt)','A4',7],
+		'A2'	=> ['Being revalidated (2nd attempt)','A3',7],
 		'A3'	=> ['Being revalidated (Final attempt)','LA',3],
 		'A4'	=> ['Being revalidated (Final attempt)','LA',3],
-		'E1'	=> ['Email change being validated','E2',3],
+		'E1'	=> ['Email change being validated','LE',3],
 		'E2'	=> ['Email change being validated (2nd)','LE',3],
-		'N1'	=> ['New Signup','N2',2],
-		'N2'	=> ['New Signup (2nd)','NX',3],
-		'D'     => ['Lost but logging in. (Deferred lost)','',7],
+		'N1'	=> ['New Signup','XN',2],
+		'D'  => ['Status D','D',1],
 
 		);
 	
@@ -134,15 +130,16 @@ public static $user_aliases = array (
 
         );
         
-public static $asset_type_names = array(
-    'I' =>'Image' ,
-     'C' =>'Cartoon' ,
-     'M' =>'Multimedia' ,
-     'P' =>'Document' ,
-     'A' =>'Album' ,
-     'W' =>'Web Page',
-     'V' => 'Web Video',
-     'O' =>'Other'
+public static $asset_types = array(
+	'Image' ,
+	'Cartoon' ,
+ 	'Multimedia' ,
+	'Document' ,
+	'Album' ,
+	'Web Page',
+	 'Web Video',
+	'Other',
+   'Member Photo'
     );
 
 public static $asset_status_names = array(
@@ -256,9 +253,7 @@ public static $test = 'you win';
 	public static function getAssetArchivalTags() {
 		return self::$archival_tags;
 	}
-	public static function getAssetTypeName($type) {
-		return self::$asset_type_names($type);
-	}
+
 	public static function getAssetTagArray () {
 		return self::$asset_tags;
 	}

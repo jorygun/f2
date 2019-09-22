@@ -66,8 +66,8 @@ class Member
 'email_status_time',
 'email_status',
 'id' ,
-'image_url',
-'join_date' ,
+'photo_asset',
+'joined' ,
 'last_login',
 'linkedin',
 'no_bulk',
@@ -96,21 +96,23 @@ class Member
 );
 
 #db fields not including ones controlled by trigger
+public function getUpdateFields(){
+	return self::$update_fields;
+}
 private static $update_fields = array(
 'admin_status',
-'alt_contact',
+
 'amd_dept',
 'amd_when',
 'amd_where',
 'contributed' ,
 'email_hide',
 'email_status',
-'image_url',
+'photo_asset',
 'linkedin',
 'no_bulk',
 'status',
 'test_status',
-'upw',
 'upwards',
 'user_about',
 'user_amd',
@@ -122,19 +124,42 @@ private static $update_fields = array(
 'user_memories',
 'user_web',
 'username',
+'email_last_validated',
+'profile_updated',
+'profile_validated',
+'admin_status',
+'upwards',
 
 );
-#long text fields only needed for profile
-private static $long_profile_fields = array (
-	'user_interests',
-	'user_memories',
-	'user_about',
-);
+
 
  private static $added_fields = array (
  	'decades',
 	'departments',
 	'locations',
+	'email_age',
+	'email_public',
+	'email_status_name',
+	'is_member',
+	'join_date',
+	'login_string',
+	'profile_age',
+	'profile_date',
+	'profile_valid_date',
+	'seclevel',
+	'status_name',         
+	'subscriber',
+	'linkedinlink',
+	'at_amd',
+	'needs_update',
+	'email_valid_date',
+	'login_age',
+
+ );
+ // fields filled in for any get, but not 
+ // actually in the db
+  private static $virtual_fields = array (
+
 	'email_age',
 	'email_public',
 	'email_status_name',
@@ -149,7 +174,7 @@ private static $long_profile_fields = array (
 	'linkedinlink',
 	'at_amd',
 	'needs_update',
-
+	
  );
  
  //fields returned for log-in
@@ -176,6 +201,7 @@ private static $long_profile_fields = array (
  	'upw',
  	'linkedin',
  	'contributed',
+ 	'login_age',
  
  );
  
@@ -185,6 +211,8 @@ private static $long_profile_fields = array (
  'username', 
  'user_id', 
  'user_email', 
+ 'seclevel',
+ 'status_name',
  'email_status',
  'status', 
  'upw'
@@ -219,14 +247,14 @@ private static $long_profile_fields = array (
 
  
  /* fields normally delivered.
- 	db fields plus added fields less long profile fields
+ 	db fields plus added fields 
  	*/
     private  $std_fields = array();   
 
     // data for return
     private $info='';
     private $error='';
-    private $credential; #not sure what this is for
+   
     private $test;
   	private $member_status_set;
     # plus record count and data
@@ -237,36 +265,33 @@ private static $long_profile_fields = array (
        
 	$this->pdo = MyPDO::instance();
 	$this->member_status_set = Defs::getMemberInSet();
-	$this->std_fields = array_diff(array_merge(self::$member_fields,self::$added_fields),self::$long_profile_fields);
-	
-	
-	
-
+	$this->std_fields = array_merge(self::$member_fields,self::$added_fields);
     }
 
    /* searches are returned an array containing these fields */
- private function returnResult ($data=[] ) {
-    #mnenomic rdc  
+ private function returnResult ($data=[] ) { 
     $r['data'] = $data;
     $r['info'] = $this->info;
     $r['error'] = $this->error;
     $r['count'] = count($data);
 
-    $r['credential'] = $this->credential;
     return $r;
  }
 
   public function getMemberData($tag,$method='')
     {
          /*returns all the member data for one member,
-         // enhanced with computed fields, except profile text
+         // enhanced with computed fields
 
         // Methods: email, login, name_exact, uid, 
         // method generally selected automtically from the tag format
          //
         
         */
-       if (empty($tag)){throw new Exception ("Attempt to getMemberData on empty tag");}
+       if (empty($tag)){
+       	$this->info = "New Member"; 
+       	return $this->returnResult(self::$no_member);
+       	}
        
        #get searchfield for to prepare sql, then searchfor to execute
         if (! list ($searchfield,$searchfor) = $this->setSearchCriteria($tag,$method)){
@@ -296,13 +321,11 @@ private static $long_profile_fields = array (
         }
         
         $mdata = $stmt->fetch();
-       # u\echor($mdata,'Mdata');
         
-     
+       # u\echor($mdata,'Mdata');
         $user_array = $this->enhanceData($mdata,$this->std_fields);
-       
-       # u\echor ($user_array,'post-filter');
-     
+			
+     	
         return $this->returnResult($user_array);
             
     }
@@ -334,12 +357,27 @@ private static $long_profile_fields = array (
         
         $is_member = in_array($row['status'], Defs::getMemberInList());
         
-        $image_url = SITE_PATH . "/assets/users/{$id}.jpg";
-        if (!file_exists($image_url)){$image_url = '';}
-    
-       $profile_date = (empty($row['profile_validated']))? "(Never)" :
-            u\make_date($row['profile_validated']);
+      $profile_date =  u\make_date($row['profile_updated']);
+      
+      $profile_age = u\days_ago($row['profile_validated']);
+      
          
+      $decade_choices = u\decompress($row['amd_when'],Defs::$decades);
+		$location_choices = u\decompress($row['amd_where'],Defs::$locations);
+			$department_choices = u\decompress($row['amd_dept'],Defs::$departments);
+
+		$amd_box_data = '';
+		if (!empty($department_choices) || !empty($location_choices) ||  !empty($decade_choices) ) {
+		$amd_box_data .= "I worked at AMD ";
+		}
+		$amd_box_data .= (!empty($department_choices)) ? "in " . $department_choices :'';
+		$amd_box_data .= (!empty($location_choices)) ? " in " . $location_choices : '';
+		$amd_box_data .= (!empty($decade_choices)) ? " during the " . $decade_choices: '' ;
+	
+		$member_photo = ($row['photo_asset']) ? 
+   		 get_asset_by_id($row['photo_asset'],'photo') : '' ;
+   	$linkedinlink = ($row['linkedin'])? "<a href='${row['linkedin']}'>
+   		<img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /> </a>" : '' ;
         $addons= array(
         
         'seclevel' => Defs::getSecLevel($row['status']) ,
@@ -349,35 +387,23 @@ private static $long_profile_fields = array (
         'subscriber' => $row['no_bulk']?false:true ,
         'is_member' => $is_member ,     
         'email_age' => u\days_ago($row['email_last_validated']),
-        'profile_age' => u\days_ago ($row['profile_validated']),
+        'email_valid_date' => u\make_date($row['email_last_validated']),
         
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
-        'join_date' => u\make_date($row['join_date']),
-        'linkedinlink' => u\linkHref($row['linkedin'],'Me on Linked In'),
+        'join_date' => u\make_date($row['joined']),
+        'linkedinlink' => $linkedinlink,
         'email_status_name' => Defs::getEmsName($row['email_status']),
-        'image_url' => $image_url,
-        'decades' => u\decompress (
-            $row ['amd_when'], Defs::$decades ),
-       'departments' => u\decompress (
-            $row['amd_dept'], Defs::$departments),
-         'locations' => u\decompress (
-         	$row['amd_where'], Defs::$locations),
+        'member_photo' => $member_photo,
+      	'profile_age' => $profile_age,
         'profile_date' => $profile_date,
-         'at_amd' => $row['user_amd'] 
-         	. "("
-         	. u\decompress( $row ['amd_when'], Defs::$decades )
-         	. ', '
-         	. u\decompress ( $row['amd_where'], Defs::$locations)
-         	. ')',
+        'profile_valid_date' => u\make_date($row['profile_validated']),
+         'at_amd' => $amd_box_data,
+         'needs_update' => 
+            $profile_age > Defs::$age_limit && $row['status'] != 'D',
+         'login_age' => u\days_ago($row['last_login']),
      );
        
-       $addons ['needs_update'] = (
-            $addons['profile_age'] > 365
-            or
-            $addons['email_age'] > 365
 
-            )?
-            true:false;
             
       # u\echoR($addons,'addons');
        
@@ -442,6 +468,7 @@ private static $long_profile_fields = array (
   
   }
 	public function setEmail ($uid,$email){
+		
 		$sql = "UPDATE `members_f2` SET user_email = '$email' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
@@ -567,16 +594,16 @@ private static $long_profile_fields = array (
     }
  
     // same as implode??
-     private function array_to_string($arr){
-        if (is_string($arr)){return $arr;}
-        if (is_array($arr)){
-            $vstring = '';
-            foreach ($arr as $v){
-                    $vstring .= $arr;
-            }
-            return $vstring;
-        }
-    }  
+ //     private function array_to_string($arr){
+//         if (is_string($arr)){return $arr;}
+//         if (is_array($arr)){
+//             $vstring = '';
+//             foreach ($arr as $v){
+//                     $vstring .= $arr;
+//             }
+//             return $vstring;
+//         }
+//     }  
 
 
     private function randPW() {
@@ -605,22 +632,29 @@ private static $long_profile_fields = array (
  }
  
   public function updateMember($post){
-    if (empty ($post['user_id'])){
+    if (empty ($uid = $post['user_id'] ?? '')){
         throw new Exception ("update Member called with no user_id.");
     }
-    
-   
-    // build array to execute with prepared post
-    // If logged in user has modified their own profile, update
-    //  the session loginuser so they don't get false warnings.
-    
-    if (isset($post['updated']) 
-        and $post['user_id'] == $_SESSION['login_user']['user_id'] ){
-            $_SESSION['login_user']['needs_update'] = false;
-            $_SESSION['login_user']['email_status'] = 'Y';
-    }
-    if (empty($post['no_bulk'])){$post['no_bulk'] = 0;}
-    if (!$prepared =  u\pdoPrep($post,self::$update_fields, 'user_id') ) {throw new Exception ("failed to prepare vars: " . print_r($post,true) ) ;}
+	
+	// first get existing record
+	$sql = "SELECT * from `members_f2` where user_id = $uid";
+	$md = $this->pdo->query($sql)->fetch();
+	
+	// now compare incoming record with existing and build $upd 
+	foreach ($post as $var=>$val){
+		if ($md[$var] != $val){
+			$upd[$var] = $val;
+		}
+	}
+	
+	if (empty($upd)) {return true;} #no changes
+	
+	$upd['user_id'] = $uid;
+	
+	$upd = $this->check_auto_fields($upd);
+	
+	// prepare update data
+    if (!$prepared =  u\pdoPrep($upd,self::$update_fields, 'user_id') ) {throw new Exception ("failed to prepare vars: " . print_r($post,true) ) ;}
     
        $fields = $prepared['update'];
        $data = $prepared['data'];
@@ -638,6 +672,14 @@ private static $long_profile_fields = array (
     return true;
   }
 
+private function check_auto_fields($upd) {
+	
+	if (isset ($upd['user_email'])){ #changed email
+		$upd['email_chg_date'] = 'now()';
+	}
+
+
+}
 public function getLogins($tag) {
         // can receive a user_id or an email as input
         if (is_numeric($tag)){
@@ -695,7 +737,7 @@ public function getLogins($tag) {
 		}
 		
 		$sql = "SELECT * FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
-		echo $sql .  BRNL;
+	#	echo $sql .  BRNL;
 		
 		
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
@@ -708,6 +750,8 @@ public function getLogins($tag) {
 		}
 		return $this->returnResult($final);
 	}
+	
+	
     public function getMemberCounts() {
 		 $member_status_set =  Defs::getMemberInSet();
 		 $select_all_valid	=
@@ -894,16 +938,16 @@ public function getLogins($tag) {
     	
     
 
-	public function getMemberDataAll ($uid){
-		$sql = "SELECT * from `members_f2` WHERE uid = $uid";
+	public function getMemberRecord($uid, $enhanced=false)
+	{
+		$sql = "SELECT * from `members_f2` WHERE user_id = $uid";
 		$row = $this->pdo->query($sql) -> fetch();
-		$user_data = $this->enhanceData($row);
-		return $user_data;
+		if ($enhanced){$row = $this->enhanceData($row);}
+		return $row;
 	}
 		
    
 
-   
   
    
     public function getMemberDisplayEmail($tag)
@@ -917,19 +961,24 @@ public function getLogins($tag) {
     
    
     public function verifyEmail ($id) {
-		 if ($this->setEmailStatus($id,'Y') ){
-			return date('d M Y');
-		 } else {
-			return false;
-		 }
+    	 $sql = "Update `members_f2` set email_status='Y',
+    	 	email_last_validated = NOW()
+            WHERE user_id = $id;";
+		  $stmt = $this->pdo->query($sql);
+      
+        return  date ('M d Y');
 	}
 
 	public function verifyProfile ($id) {
-    if ($this->setProfileVerified($id) ){
-    	return true;
-    } else {
-    	return false;
-    }
+     $sql = "Update `$this->memberTable` set 
+     profile_validated = NOW(),email_status='Y',
+     email_last_validated = NOW()
+            WHERE user_id = $id;";
+            
+        $stmt = $this->pdo->query($sql);
+       
+        return  date ('M d Y');
+
     
 	}
 
@@ -1000,7 +1049,7 @@ public function getLogins($tag) {
             return false;
         }
         $last = $md ['data']['last_login'];
-        return u\make_date( $last,'human','time');
+        return u\make_date( $last,'human','datetime');
     }
     
     public function getEmailStatus($uid) {
@@ -1012,17 +1061,21 @@ public function getLogins($tag) {
     }
     
      public function setProfileVerified ($id) {
-        $sql = "Update `$this->memberTable` set profile_validated = NOW(),email_status='Y'
+        $sql = "Update `$this->memberTable` set profile_validated = NOW(),email_status='Y',email_last_validated = NOW()
             WHERE user_id = $id;";
             
         $stmt = $this->pdo->query($sql);
-        $md = $this->getMemberData($id);
-        // u\echoR($md);
-//         exit;
-        
-        $newstat = $md['data']['profile_validated'];
-        
-        return  true;
+       
+        return  date ('M d Y');
+
+    }
+     public function setEmailVerified ($id) {
+        $sql = "Update `$this->memberTable` set profile_validated = NOW(),email_status='Y',email_last_validated = NOW()
+            WHERE user_id = $id;";
+            
+        $stmt = $this->pdo->query($sql);
+       
+        return  date ('M d Y');
 
     }
     
@@ -1226,6 +1279,7 @@ public function getNewLost($since) {
 		return $list;
 	}
 	public function getSendList($type,$tag='') {
+	// gets list of members for bulk mail
 // $mlarray = [
 //             $row['username'],
 //             $row['user_email'],

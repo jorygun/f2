@@ -98,6 +98,15 @@ function validateEmail(email) {
     return re.test(email);
 }
 
+function showWarn(content){
+    var warn = window.open('','warn')
+    warn.writeln ('<html><body onLoad="self.focus()">'
+    +'test message'
+    +'</body></html');
+    warn.document.close()
+    }
+    
+    
 function setCaretPosition(elemId, caretPos) {
 // use to determine how many characcters have been typed in a text area
 // to prevent submitting sparse data

@@ -40,6 +40,7 @@ function echopre($text){
 }
 
 function echor($var,$title=''){
+
     echo "<h4>$title:</h4>";
     echo "<pre>" .  print_r($var,true) . "</pre>\n";
 }
@@ -184,10 +185,10 @@ function makeDate($when, $form='human',$type = 'date') {
 }
 
 function make_date ($when, $form='human',$type = 'date'){
-	/* returns formated date or time
-		@ when is either text date/time or unix timestamp or 'now'
+	/* returns formated date or datetime or 'never'
+		@ when is either text date/time or unix timestamp or 'now' or empty (= never)
 		@ form is human, sql, rfc or ts (time-stamp)
-		@ type is date or time
+		@ type is date or datetime
 		
 	// when is either timestampe text data/time
 	*/
@@ -202,16 +203,18 @@ function make_date ($when, $form='human',$type = 'date'){
 		$ts = (int)strtotime($when);
 	}
 	
+	if ($ts <= 1){return 'Never';}
+	
 	$dt = new \DateTime();
 	$dt->setTimestamp($ts);
 	
 	switch ($form){
 		case 'sql' :
-			$format = ($type == 'time')?
+			$format = ($type == 'datetime')?
 		'Y-m-d H:i:s' : 'Y-m-d';
 			break;
 		case 'human' :
-			$format = ($type=='time')?
+			$format = ($type=='datetime')?
 		'd M Y H:i' : 'd M Y';
 			break;
 		case 'rfc' :
@@ -294,16 +297,16 @@ function pdoPrep($data,$include=[], $key=''){
             // ignore any fields not listed in valid fields
             if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
-            $db[$var] = htmlspecialchars_decode($val);
             
-            if (empty($db[$var])){ #catches 0, '', and false
-            	#$db[$var] = '';  NO loses real data
+            
+            if (empty($val)){ #catches 0, '', and false
             	if ($var == 'asset_id'){ 
-            		unset ($db[$var]);
             		continue; 
             	} #leave out of list
    
             }
+            
+				$db[$var] = htmlspecialchars_decode($val);
 				
             $ufields[] = "$var = :$var";
             $ifields[] = $var;
@@ -464,6 +467,7 @@ function linkHref($url,$label='',$target='' ){
 		return "<a href='$url' $target >$label</a>" ;
 	}
 }
+
 
 function make_links($input){
     // replaces http:... with a link

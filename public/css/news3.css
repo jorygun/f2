@@ -2,11 +2,13 @@ body, .normal {padding:6px;
 	font-family: "New Times Roman",Times,serif;
 	font-size: 1em; color: black;
 	max-width:1200px;
-	 width:98vw;
+	 width:95vw;
 	padding:5px;
 	color:black;
 	font-style: normal;
 	font-weight: normal;
+	margin-left:1em;
+	margin-right:1em;
 	}
 
 
@@ -253,7 +255,12 @@ div.thumb {
 
 
 
-
+div.warning {
+    border:1px solid black;
+    color:red;
+    padding:3px;
+    width: 50%;
+}
 
 
 

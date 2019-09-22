@@ -32,20 +32,19 @@ use digitalmx\flames\Messenger;
 use digitalmx\flames\Member;
 
 // set older test flags
+
 $mode = ($test)? 'Test':'Real';
 $test_status_select = ($test)? " AND test_status != '' " : '' ;
 
 $member = new Member();
 $messenger = new Messenger(); 
+
 $messenger->setTestMode($test); #true = test mode
-
-
 
 $sleep_interval = 10;// delay in seconds between emails.
 set_time_limit(300); // 30sec. is default 0 is none;
 
-$limit = 365; #days without activity
-    $limit2=$limit*2;
+$limit = Defs::$age_limit; #limit for aging out in days
     
 $member_status_set = Defs::getMemberInSet();
 
@@ -71,6 +70,7 @@ $sweep_fields = '
 	id,
 	user_id,
 	username,
+	status,
 	email_status_time,
 	user_email,
 	last_login,
@@ -87,7 +87,7 @@ $now_human = $dt->format("M j, H:i a");
 $sweep_log_dir = REPO_PATH . "/var/logs";
 $sweep_log = $sweep_log_dir . '/sweep-' . "${now_datestamp}-${mode}.txt";
 if (! $quiet)
-echo "Logging to $sweep_log" . BRNL;
+echo "Logging to $sweep_log " . "testing is $test" . BRNL;
 
 
 
@@ -99,28 +99,16 @@ $log_format2 = "(%s) %-25s  %-20s (id %4d) Ems %2s. Change to %s. \n\tLogin %10s
 
 $incidents = 0;  #actual number of incidentst
 ####################
+
 //remove x-ed out records
+
 $log .=  "\n#### Testing x-ed out records\n";
+$count = removex($pdo,$log,$sweep_fields); echo "$count X-ed out records found.\n\n";
+$incidents += $count;
+ 
 
-$sql = "SELECT $sweep_fields FROM members_f2 WHERE
-    status like 'X%'  ;";
 
-$result = $pdo->query($sql);
-$incident_count = $result->rowCount();
 
-if ( $incident_count ){
-        $sql = "DELETE FROM `members_f2` WHERE status like 'X%' ";
-   if (! $test ){
-   	$log .=  "Deleting $incident_count records\n";
-        $result = $pdo->query($sql);
-    }
-    else { 
-    	$log .= "Test mode: $incident_count records found but not deleted\n";
-    }
-}
- echo "$incident_count X-ed out records found.\n\n";
- $incidents += $incident_count;
-$incident_count = 0;
 
 // test for each of the transitional status ages
 #sequence is critical! or you'll catch one you just changed.
@@ -141,20 +129,16 @@ foreach ($ems_test_sequence as $this_ems){
 	list ($ems_name,$next_ems,$ems_life) = Defs::getEmsData($this_ems);
 	
 	$log .= "...Testing ems $this_ems age $ems_life; next $next_ems.\n";
-	
-   $limit_date = date('Y-m-d', strtotime( "- $ems_life days" ));
+
 	$main_stmt -> execute([$this_ems,$ems_life]) ;
 
     $tags=0;
 	foreach($main_stmt as $row){
-	# u\echor($row,'data row');
-	
+#	u\echor($row,'data row');exit;
 			++$tags;
-			
-			 $id = $row['id'];
 			 $uid = $row['user_id'];
 			 $username=$row['username'];
-			 #$log .=  "retrieving user id $uid $username<br>\n";
+		
 			 $ems_date = u\make_date($row['email_status_time'],'human' ); #is a time stamp
 			$ems_age = u\days_ago($row['email_status_time']);
 				
@@ -206,10 +190,10 @@ $sql = "SELECT $sweep_fields FROM `members_f2` WHERE
 
 
 		}
-		if (!$test){
+		
 		 mail('admin@amdflames.org',"User needs welcome - ${row['username']}", $msg,"From: admin@amdflames.org\n\r");
 		 
-		 }
+		 
 		 $incidents += $rows_found;
 	}
 echo "$rows_found new users needing welcome\n";
@@ -219,7 +203,7 @@ echo "$rows_found new users needing welcome\n";
 // Finally test last contact a long long time ago
 
 $log .=  "\n#### Testing last activity more than $limit days\n";
-	if (!$test){
+	if (! $test){
 	$sql = "SELECT $sweep_fields FROM `members_f2` WHERE
 		STATUS in ($member_status_set)
 		AND email_status in ('Q','Y')
@@ -280,7 +264,7 @@ $log .=  "\n#### Testing last activity more than $limit days\n";
 			$ems_date = u\make_date($row['email_status_time'],'human'); #is a now_datestamp
 			$ems_age = u\days_ago($row['email_status_time']);
 
-			if (!$test 
+			if (!$test && false 
 				 && $messenger->sendMessages($uid,$next_ems)
 				 && $member->setEmailStatus($uid,$next_ems) 
 				 ){
@@ -328,3 +312,23 @@ if ($test) {
 exit;
 ########################################################
 
+function removex($pdo,$log,$test) {
+	$where = "status like 'X%' ";
+	if ($test){$where .= " AND test_status != '' ";}
+	
+	$sql = "SELECT count(*) FROM members_f2 WHERE $where";
+	$incident_count = $pdo->query($sql)->fetchColumn();
+	
+	if ( $incident_count ){
+			 
+		if (! $test ){
+			$log .=  "Deleting $incident_count records\n";
+			$sql = "DELETE from `members_f2` WHERE $where";
+			 $pdo->query($sql);
+		 }
+		 else { 
+			$log .= "Test mode: $incident_count records found but not deleted\n";
+		 }
+	}
+	return $incident_count;
+}

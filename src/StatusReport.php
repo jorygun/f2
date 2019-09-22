@@ -43,7 +43,7 @@ class StatusReport {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
-		$this->since = $since;
+		$this->since = $since; is UTC timestamp
 		$this->test = $test;
 		
 		$this->member = new Member();

@@ -26,7 +26,11 @@ use digitalmx\flames\Publish;
 use digitalmx\flames\NewsIndex;
 
 
+
+
   $publish = new Publish();
+ 	
+ 	
   
 // if request came in from a get, the
 // query string tells you what to do.
@@ -44,12 +48,14 @@ if (!empty($_SERVER['QUERY_STRING'])) {
         case 'V':
             $page_title = "AMD Flames Email Validation";
             break;
-            
+         case 'P':
+         	$page_title = 'Profile Editor';
+				$page_options=['tiny','ajax']; #ajax, votes, tiny 
         default:
         	$page_title = 'AMD Flames Action Handler';
            
     }
-    $page = new DocPage($page_title);
+   $page = new DocPage($page_title);
   
 	echo $page->startHead($page_options); 
  	echo $page ->startBody(0);
@@ -61,6 +67,9 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 			}
 			else {echo "Failed";}
  			break;
+ 		case 'P':
+ 			edit_profile($uid,$madmin,$templates);
+         break;
  		default:
  			echo "No Action Requested";
  
@@ -78,7 +87,9 @@ if (! empty ($_POST)) {
 		case 'bulkmail':
 			return cancel_bulk($_POST['job']);
 		  break;
-	  
+	  case 'verifyProfile':
+	  		echo verifyProfile($_POST['uid'],$member);
+	  		break;
 		case 'sendLogin':
 			return sendLogin($_POST['uid'], $member);
 		  break;
@@ -141,6 +152,20 @@ function atest($x=''){
 	$ni->append_index('20191225','news_191215');
 	return "adone";
 	
+}
+
+function edit_profile($uid,$madmin,$templates) {
+	
+	$profile_data = $madmin->getProfileData($uid);
+   echo  $templates->render('profile-edit', $profile_data);
+	exit;
+}
+
+
+function verifyProfile($uid,$member) {
+
+	$cdate = $member->verifyProfile($uid);
+	return $cdate;
 }
 function getmess($type)
 {
@@ -248,7 +273,7 @@ function sendLogin($tag, $member)
    //tag may be uid or email
 
     $login_msg = $member->getLogins($tag);
-    $messenger = new Messenger(); #true = test
+    $messenger = new Messenger(); 
     if ($messenger->sendLogins($tag, $login_msg)) {
         echo "Logins sent";
     } else {
