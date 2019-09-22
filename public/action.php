@@ -21,12 +21,11 @@ use digitalmx\flames\DocPage;
 #use digitalmx\flames\ActionCodes;
 use digitalmx\flames\BulkMail;
 use digitalmx\flames\StatusReport;
-<<<<<<< HEAD
-=======
+
 use digitalmx\flames\FileDefs;
 use digitalmx\flames\Publish;
 use digitalmx\flames\NewsIndex;
->>>>>>> m-bulk
+
 
 
 
@@ -268,7 +267,7 @@ function cancel_bulk($job)
 }
 
 function runStatusReport($var) {
-<<<<<<< HEAD
+
 
 	if (empty($var)){return "Error: no date supplied";}
 	$since = date('Y-m-d H:i',strtotime($var));

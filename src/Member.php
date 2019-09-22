@@ -322,7 +322,7 @@ private static $update_fields = array(
         
         $mdata = $stmt->fetch();
         
-       # u\echor($mdata,'Mdata');
+        #u\echor($mdata,'Mdata');
         $user_array = $this->enhanceData($mdata,$this->std_fields);
 			
      	
@@ -350,6 +350,7 @@ private static $update_fields = array(
     {
     	// takes row from select *, adds computed fields, and
     	// returns the fields requested in fieldlist
+    	#u\echor($row,'input to enhancer');
     	
         $id = $row['user_id'];
         // creates array of other fields to be added to the db fields
@@ -374,7 +375,7 @@ private static $update_fields = array(
 		$amd_box_data .= (!empty($location_choices)) ? " in " . $location_choices : '';
 		$amd_box_data .= (!empty($decade_choices)) ? " during the " . $decade_choices: '' ;
 	
-		$member_photo = ($row['photo_asset']) ? 
+		$member_photo = (isset($row['photo_asset'])) ? 
    		 get_asset_by_id($row['photo_asset'],'photo') : '' ;
    	$linkedinlink = ($row['linkedin'])? "<a href='${row['linkedin']}'>
    		<img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /> </a>" : '' ;
@@ -1193,6 +1194,19 @@ public function getLogins($tag) {
 		}
 		return $list;
 	}
+	public function getUpdatedProfiles($since) {
+		$member_status_set = Defs::getMemberInSet();
+		$list = array();
+		$sql = "SELECT  * FROM `members_f2`
+			WHERE status in ($member_status_set)
+			AND profile_updated > '$since';";
+
+		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
+		foreach ($result as $row){
+			$list[] = $this->enhanceData($row,self::$info_fields);
+		}
+		return $list;
+	}
 	public function getDeceased ($since) {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
@@ -1221,7 +1235,7 @@ public function getLogins($tag) {
 	$sql = "SELECT * FROM `members_f2`
 	WHERE status in ($member_status_set)
 	
-	AND join_date > '$since'
+	AND joined > '$since'
 	ORDER BY username;
 	";
 // 	echo "sql: $q" . BRNL;

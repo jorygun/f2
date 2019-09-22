@@ -4,3 +4,5 @@
 2.13	Using Defs for most variables
 2.5	Using new login script
 2.6	Modified MyPDO; workinig on both mac and pair
+2.9	Substnatial rewrite of all the member stuff and crons
+

@@ -8,6 +8,7 @@ Does not send session
 Opens required files
 creates 
 $pdo object
+Modeled after init.php
 
 */
 
@@ -25,24 +26,24 @@ else {$init=true; } #tentative
 	
 	#var_dump($opts);
 
-define ('REPO_PATH' , dirname(__DIR__) );
-define ('REPO', basename (REPO_PATH) );
-define ('PROJ_PATH', dirname(REPO_PATH) ); # script is in .../project/crons
-$repo = basename(REPO_PATH);
+
 use digitalmx\flames as f;
 use digitalmx as u;
 
 // get platfomr first
-if (stristr(PROJ_PATH,'/usr/home/digitalm') !== false) {
-		$platform = 'pair';
-		$site = 'amdflames.org';
-		
-	} else {
-		$platform = 'ayebook';
-		$repo = $opts['repo'] ?? 'f2';
-		$site = 'f2.local';
-	}
+$platform = setPlatform();
+$paths = setPaths($platform);
+$repo = basename($paths['repo']);
+$site = ($platform == 'ayebook')? 'f2.local' :
+	($repo == 'live') ? 'amdflames.org' :
+	"$repo.amdflames.org";
+
+	define ('REPO', $repo);
+	define ('SITE',$site);
+	define ('SITE_URL', 'http://' . $site);
+	define ('PLATFORM',$platform);
 	
+setConstants($paths);
 
 	$test = isset($opts['t']) ? true:false;
 	$test_state = $test ? 'true' : 'false';
@@ -50,19 +51,7 @@ if (stristr(PROJ_PATH,'/usr/home/digitalm') !== false) {
 	$quiet_state = $quiet ? 'true' : 'false';
 
 	ini_set('display_errors', ! $quiet);
-	
-	
-	define ('SITE_PATH', REPO_PATH . "/public");
-	define ('SITE', $site);
-	define ('SITE_URL', 'http://' . SITE);
-	define ('CONFIG_INI', REPO_PATH . "/config/config.ini");
-	
 
-
-	if (empty($site_ini = parse_ini_file(REPO_PATH . '/config/config.ini') )){
-		throw new Exception("Cannot open site ini file");
-	}
-	
 	
 
 	ini_set('include_path', 
@@ -84,7 +73,7 @@ try {
 	
 	require "SiteUtilities.php";
 
-	// require 'MxPDO.php';
+
 // 	$pdo = new \digitalmx\MxPDO ('production',$platform,PROJ_PATH . '/config/db.ini');
 	require 'MyPDO.php';
 	$pdo = u\MyPDO::instance();
@@ -110,3 +99,62 @@ if ( $init){
 }
 
 
+#################
+function setPlatform(){
+	// using PWD because it seems to alwasy work, even in cron
+		$sig = $_SERVER['DOCUMENT_ROOT'];
+		$sig2 = getenv('PWD');
+		if (
+			stristr ($sig,'usr/home/digitalm') !== false 
+			|| stristr ($sig2,'usr/home/digitalm') !== false 
+			) {	
+				$platform = 'pair';
+		} elseif (
+			stristr ($sig,'Users/john') !== false 
+			|| stristr ($sig2,'Users/john') !== false 
+			) {	
+				$platform = 'ayebook';
+		} else {
+				throw new Exception( "Init cannot determine platform from ROOT '$sig' or PWD '$sig2'");
+		}
+		return $platform;
+	}
+	
+	 function setPaths($platform) {
+		$paths = array();
+		$my_dir = __DIR__;
+		 $homes = array(
+		'pair' => '/usr/home/digitalm',
+		'ayebook' => '/Users/john'
+		);
+		$paths['repo'] = dirname($my_dir);  #/usr/home...flames/live
+		$paths['proj'] = dirname($paths['repo']);  #/usr/home...flames
+		$paths['home'] = $homes[$platform];
+		$paths['config_ini'] = $paths['repo'] . '/config/config.ini'; 
+		
+	
+		return $paths; //array
+	}
+	
+function setConstants($paths)
+	{
+		
+		/* Define site constants
+			HOME
+			PROJ_PATH (..../flames)
+			REPO_PATH (..../flames/beta)
+			SITE_PATH (..../flames/beta/public
+			SITE (amdflames.org)
+			SITE_URL (http://SITE)
+			REPO (beta)
+			PLATFORM (ayebook or pair)
+		*/
+		define ('HOME', $paths['home']);
+		define ('PROJ_PATH',$paths['proj']);
+
+		define ('REPO_PATH',$paths['repo']);
+	
+		define ('SITE_PATH', REPO_PATH . "/public");	
+		define ('CONFIG_INI',$paths['config_ini']);
+
+	}

@@ -670,7 +670,7 @@ EOT;
     }
   #  u\echor($post,'Incoming post');  exit;
   	#	u\echor($md,'MD'); exit;
-
+	$profile_changed = false;
     foreach ($post as $key=>$val){
     	if (in_array($key,['Submit'])){continue;}
     	
@@ -684,6 +684,7 @@ EOT;
     	if ( strcmp($md[$key],$val) == 0){continue;} #no change
   //  else {echo "Changed data in $key -> $val" . BRNL; }
    	$update=[];
+   	
     	switch ($key){
    	
     		case 'user_email':
@@ -707,11 +708,15 @@ EOT;
 			case 'user_greet':
 			case 'user_web':
 			 	$update[$key] = $val;
+			 	$profile_changed = true;
 				break;
-			case 'linkedin':
+
 			case 'user_amd':
 				$update[$key] = $val;
+				$profile_changed = true;
 				break;
+				
+			case 'linkedin':
 			case 'email_hide':
 			case 'no_bulk':
 				$update[$key] = $val;
@@ -742,27 +747,25 @@ EOT;
 	}
 			
 
-
-  //   #assume user also checked email
-   if (!isset($update['email_status'])){
-    $update['email_status'] = 'Y';
-   }
-    $update['profile_validated'] = sql_now();
-   $update['profile_updated'] = sql_now();
+	if ($profile_changed){  
+	  	 $update['profile_updated'] = sql_now();
     
-    $subj = "Profile Update " . $md['username'];
-    $msg = $md['username'] . " has updated their profile";
-    mail ('admin@amdflames.org',$subj,$msg);
-    
-
+	    $subj = "Profile Update " . $md['username'];
+	    $msg = $md['username'] . " has updated their profile";
+	    mail ('admin@amdflames.org',$subj,$msg);
+    }
 
 //  u\echor($update,'update array');
 // 	exit;
- 	if (empty ($update)){  return;}  #nothing to do
- 	
+ //   #assume user also checked email
+ 	 if (!isset($update['email_status'])){ #could already be set to E1
+    $update['email_status'] = 'Y'; #will autoset verified
+   }
+ 	 $update['profile_validated'] = sql_now();
 	$update ['user_id'] = $uid;
-	$prep = u\pdoPrep($update,[],'user_id');
 	
+	
+	$prep = u\pdoPrep($update,[],'user_id');
  /**
  	$prep = pdoPrep($post_data,$allowed_list,'id');
 

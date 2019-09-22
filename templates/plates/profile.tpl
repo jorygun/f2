@@ -35,7 +35,7 @@ endif ?>
 	<p><b>Email:</b> <?=$email_public?> <em><?=$email_status_name?></em>
 		</p>
 
-	<p><b>At AMD: </b><?=$this->e($user_amd )?><br><?= $at_amd ?></p>
+	<p><b>At AMD: </b><br><?=$this->e($user_amd )?><br><?= $at_amd ?></p>
 	
 	<p><b>Now</b> <br><?=$this->e($user_today )?></p>
 	<p><b>Interests:</b><br><?=$this->e($user_interests )?></p>

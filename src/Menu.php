@@ -81,19 +81,21 @@ EOT;
 		
 		#$vnum = $init->getVersion();
 		$vfh = fopen($vfile,'r');
-		while (($line = fgets($vfh)) !== false) {
-   		 if (!empty($line)) {
+		$ln = 0;
+		while (!feof($vfh)) {
+			$line = fgets($vfh);
+			++$ln;
+   		 if (strlen($line) > 6) {
    		 	$vlatest = $line;
+   		 	
    		 }
    	}
 		
 		#gets last line
 		
-		#echo "vl $vfile $vlatest";
-		
 		list($vnum,$vdesc) = preg_split("/\s+/",$vlatest);
-		
-		$vname = "<div class='vbox'>[$vroot] $vnum <br>($vrel)</div>";
+		$sec = $_SESSION['login']['seclevel'];
+		$vname = "<div class='vbox'>[$vroot]#$vnum <br>L$sec ($vrel)</div>";
 		
 		return $vname;
 	}
@@ -262,7 +264,7 @@ EOT;
 	");
 		
 	$t .= " <li>.
-		<li>$version - $this->userlevel";
+		<li>$version";
 	
 	
 	$t .=  self::closeLine(0, $thisMenu);

@@ -26,7 +26,7 @@ class StatusReport {
 			'email'	=>	'Updated Email Addresses|',
 			'new'	=>	'New Members|If you recognize a new member, send them a welcome!  Click their name to get contact info.',
 			'deceased'	=>	'Deceased|',
-			'updates'	=>	'Profile Updates|',
+			'profile'	=>	'Profile Updates|',
 			'bounces'	=>	'Broken Emails|',
 			'lost'	=> 'Recently Lost Contact|We gave up attempting to contact these people this week.',
 			'long lost'	=>	'Long Lost - sample of members with no contact info|Here is a random sample of people that we have no contact information for. If you know anything about them, please <a href="mailto:admin@amdflames.org">contact the admin</a>.'
@@ -34,7 +34,6 @@ class StatusReport {
 		);
 
 	
-
 	private $since; // start date in Y-m-d format
 	
 	
@@ -43,7 +42,7 @@ class StatusReport {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
-		$this->since = $since; is UTC timestamp
+		$this->since = $since; #is UTC timestamp
 		$this->test = $test;
 		
 		$this->member = new Member();
@@ -72,6 +71,10 @@ class StatusReport {
 #    u\echor ($list, 'email updates');
 		$report .= $this->report_changes($list,'email');
 
+		$list = $this->member->getUpdatedProfiles($since);
+#    u\echor ($list, 'email updates');
+		$report .= $this->report_changes($list,'profile');
+		
 		$list = $this->member->getDeceased($since);
 		$report .= $this->report_changes($list,'deceased');
 
@@ -135,11 +138,11 @@ class StatusReport {
 							$contact = '';
 							break;
 						case 'new':
-							$note = "<p class='greeting'>$greeting</p>";
+							$note = $greeting;
 
 							break;
-						case 'updates':
-							$note = "<p class='greeting'>$greeting</p>";
+						case 'profile':
+							$note = $greeting;
 							break;
 
 						default:
@@ -152,19 +155,24 @@ class StatusReport {
 							  <td>$contact</td></tr>
 EOT;
 
-						 if (in_array($type,array('new','updates','lost') )){
+						 if (in_array($type,array('new','profile','lost') )){
+						  if ($greeting != ''){$report .= "
+								<tr><td class='tright'></td><td colspan = '2' >&ldquo;$greeting&rdquo;</td></tr>\n";
 							  $report .= "
-							  <tr class='atamd'><td class='tright'>At AMD: </td><td colspan='2'>$amd</td></tr>
 							  <tr><td class='tright'>As of $profile_year: </td>
-							  <td class='current' colspan='2'>$current</td></tr>\n";
+							  <td class='current' colspan='2'>$current</td></tr>\n
+							   <tr class='atamd'><td class='tright'>At AMD: </td><td colspan='2'>$amd</td></tr>
+							   <tr><td colspan='3'>&nbsp;</td></tr>\n";
+							   
+							 
+								}
+						
+							}
 						 }
-					if ($note != ''){$report .= "
-						<tr><td></td><td colspan = '2' class='notes'>$note</td></tr>
-						";
-					}
+					
 					$report .= "\n\n";
 
-				} #end while
+				 #end while
 				$report .= "</table>";
 			}
 

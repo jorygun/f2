@@ -231,7 +231,7 @@ class Init
 	private function setIncludes($repo_dir){
 	#initial include path set in .user.ini to include this folder.
 	#add other paths here so can just call <repo>/config/init.php for shell scripts.
-	$proj_dir = dirname($repo_dir);
+	
 	
 	ini_set('include_path',
 		  '.'

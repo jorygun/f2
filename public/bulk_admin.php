@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
 // return [$active,$lost,$total,$bulk,$nobulk];
 
 	$counts = array ();
-	#$counts = $members->getMemberCounts();
+	$counts = $members->getMemberCounts();
 	if (!empty($counts)){
 		// show time requeired for each category
 		$time_all = runtime_msg($counts['active'],$interval);

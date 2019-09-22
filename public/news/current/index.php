@@ -1,2 +1,2 @@
 <?php
- header('location:/newsp/news_190914');
+ header('location:/newsp/news_190922');

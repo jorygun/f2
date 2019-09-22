@@ -224,7 +224,8 @@ $itemdata['id'] = $id;
 
     $_GET['id'] = $id;
 
-    #echo "<script>window.close()</script>\n";
+    echo "<script>window.close()</script>\n";
+    exit;
 }
 
 
