@@ -31,11 +31,11 @@ tar  -czf $HOME/backups/daily.site.$datecode.tar.gz --exclude=$SITE/vendor  $SIT
 
 #remove older files leaving 1 less than +n
 ls -tp1 daily.sql.* | tail -n +7 |  xargs -r -d '\n' rm --
-ls -tp1 daily.site.* | tail -n +4 |  xargs -r -d '\n' rm --
+ls -tp1 daily.site.* | tail -n +7 |  xargs -r -d '\n' rm --
 
 
 ls -tp1 weekly.sql.* | tail -n +3 |  xargs -r -d '\n' rm --
-ls -tp1 weekly.site.* | tail -n +4 |  xargs -r -d '\n' rm --
+ls -tp1 weekly.site.* | tail -n +3 |  xargs -r -d '\n' rm --
 
 
 #clean up old logs and mailings

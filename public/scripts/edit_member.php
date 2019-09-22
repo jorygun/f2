@@ -62,12 +62,9 @@ elseif ($_SERVER[REQUEST_METHOD] = 'POST'){
 
 function show_form($member, $id,$showfields,$editfields){
 	
-		$md = $member->getMemberData($id);
-    if ($md['count'] > 0 ){
-    	$row = $md['data'];
-    }
-    else {throw new Exception ("No user for id $id");
-    }
+		if (!$row = $member->getMemberRecord($id) ){
+    		throw new Exception ("No user for id $id");
+    	}
 	$uid = $row['user_id']; 
     echo "<br><hr><form method='POST'>";
     echo "<input type='hidden' name='user_id' value='$uid'>";

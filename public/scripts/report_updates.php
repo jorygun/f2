@@ -42,31 +42,25 @@ $repo_path = REPO_PATH;
  
 #$G_member_status_array = array('M', 'MA','MN','MC','MU','R','G');
 
+$news_dir = "$repo_path/public/news";
+$data_dir = "$repo_path/var/data";
  
- $rtime_file = "$repo_path/public/news/last_update_run_ts.txt";
- $ptime_file = "$repo_path/public/news/last_update_published_ts.txt";
+ $rtime_file = "$data_dir/last_update_run.txt";
+ $ptime_file = "$data_dir/last_update_published.txt";
  
- $updates_html_file= "$repo_path/public/news/news_next/news_updates.html";
- $update_teaser_file =  "$repo_path/public/news/news_next/tease_updates.txt";
+ $updates_html_file= "$news_dir/next/news_updates.html";
+ $update_teaser_file =  "$news_dir/next/tease_updates.txt";
  # not used.  Only list of names is used.
  
  $updates_html = $updates_text = ''; #containers for building reports in
- $opportunity_html_file = "$repo_path/public/news/news_next/news_opportunities.html";
+
  
 #report status changes
 //Find date to begin looking from //
-if(! empty($ptime = $_GET['ptime'] )){
-    $ptimex = strtotime($ptime);
-    
-}
-if (!$ptimex){ #get from last published file  timestamp!
-    $ptimex = get_start_time($ptime_file);
-}
-if (!$ptimex){
-	echo "No starting time in either parameter or last published file. ";
-	echo "Setting to one week ago.";
-	$ptimex = strtotime('-7 days');
-}
+
+$ptime = $_GET['ptime'] ?? '';
+
+$ptimex = (!empty($ptime))? strtotime($ptime) : strtotime('- 2 weeks');
 
 $ptimeh  = date('M d, Y',$ptimex);
 $ptimes = date('Y-m-d H:i', $ptimex);
@@ -230,7 +224,7 @@ echo "Saving member updates to $updates_html_file" . BRNL;
 // prepare teaser report
 	#$teaser_report = prepare_headline_report($pdo);
 	$teaser_report =  prepare_name_report ($name_list);
-	$teaser_report .= prepare_opp_report($pdo,$ptimes);
+#	$teaser_report .= prepare_opp_report($pdo,$ptimes);
 	
 	
 	
@@ -247,7 +241,7 @@ file_put_contents($rtime_file,time());
 
 
 ######################
-$opportunities_html = file_get_contents( $opportunity_html_file);
+#$opportunities_html = file_get_contents( $opportunity_html_file);
 echo <<<EOT
 <html><head> 
 <title>Show Updates</title>
@@ -255,15 +249,9 @@ echo <<<EOT
 
 </head><body>
 <p>Showing updated since $ptimeh</p>
-<h3>recent_articles</h3>
-
-<h3>Recent_assets</h3>
 
 <h3>Member Updates</h3>
 $updates_html 
-
-<h3>Opportunities</h3>
-$opportunities_html
 
 <hr>
 

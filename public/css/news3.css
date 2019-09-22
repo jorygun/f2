@@ -2,11 +2,13 @@ body, .normal {padding:6px;
 	font-family: "New Times Roman",Times,serif;
 	font-size: 1em; color: black;
 	max-width:1200px;
-	 width:100vw;
+	 width:95vw;
 	padding:5px;
 	color:black;
 	font-style: normal;
 	font-weight: normal;
+	margin-left:1em;
+	margin-right:1em;
 	}
 
 
@@ -22,7 +24,7 @@ h2 {font-family: Arial,san-serif; font-size: 2em; color: black;
 h3 {font-family: Arial,san-serif;
 	font-size: 1.5em; color: black;
 	border-bottom: 2px solid green;
-	margin-left:1em;}
+	}
 
 h4 {font-family: Arial,san-serif; font-size: 1.0em; color: black;}
 
@@ -38,6 +40,7 @@ li {margin-bottom:0.5em;}
 
 .divh2 {font-family: Arial,san-serif; font-size: 2em; color: black; font-weight:bold;
 	border-top:5px solid green;
+	margin-top:1em;
 	}
 	
 .indent {margin: 0.5em 3em 0.5em 3em;}
@@ -85,6 +88,7 @@ blockquote, .quoted {
 blockquote p, .quoted p {
     padding-left:1em;
 }
+.inner {margin-left:1em;}
 .instr {font-style:italic;}
 .caption {font-size:0.8em;text-align:center;}
 .slogan {font-style:italic; text-align:center; border-top:1px solid green; border-bottom:1px solid green;}
@@ -100,7 +104,7 @@ button:hover {
 
 
 .input, input {background-color:#eee; }
-.required {background-color:#ffffa0;}
+input.required {background-color:#ffffa0;}
 input:invalid {color:red;}
 input:valid {color:#000;}
 
@@ -251,7 +255,12 @@ div.thumb {
 
 
 
-
+div.warning {
+    border:1px solid black;
+    color:red;
+    padding:3px;
+    width: 50%;
+}
 
 
 
@@ -281,14 +290,16 @@ div.thumb {
 .assets .title {}
 
 table#calendar  {
-	border:1px solid black; border-collapse:collapse;
-	margin-left:2em;
-	width:600px;
+	border:1px solid #030; border-collapse:collapse;
+	margin-left:2em; margin-right:2em;
+	
 }
-table#calendar  {border:1px solid #030;}
-table#calendar  td {padding:3px;font-size:0.8em;}
+
+table#calendar  td {padding:3px;font-size:0.9em;}
 table#calendar tr.first {border-top:1px solid #030;}
-table#calendar td.date {width:16em;}
+table#calendar td.date {width:20%}
+table#calendar td.event {width:40%}
+table#calendar td.location {width:40%}
 
 
 table td.gtop {border-top:1px solid gray;}
@@ -384,3 +395,25 @@ table.voting {width:100%; border:0;}
 table.voting td {text-align:center;vertical-align:top;}
 div.vpanel {text-align:center;}
 
+/* collapsible lists */
+.collapsibleList li{
+		  list-style-image:url('/graphics/button.png');
+		  cursor:auto;
+		}
+
+li.collapsibleListOpen{
+		  list-style-image:url('/graphics/tri_down_18.png');
+		  cursor:pointer;
+		}
+
+li.collapsibleListClosed{
+		  list-style-image:url('/graphics/tri_right_18.png');
+		  cursor:pointer;
+		}
+.collapsibleList li ul li {margin-bottom:4px;}
+
+div#in_bulk_queue {border:1px solid blue;padding:0.5em;}
+div#in_bulk_queue ul li.error {color:red;}
+div#in_bulk_queue ul li.queued {color:green;}
+div#in_bulk_queue ul li.cancelled{color:blue;}
+div#in_bulk_queue ul li.running {color:orange;}

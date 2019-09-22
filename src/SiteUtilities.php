@@ -2,34 +2,37 @@
 namespace digitalmx\flames;
 // site-specific utlities
 
-use Digitalmx\Lib as u;
+use digitalmx\Lib as u;
 use \Exception;
-use Digitalmx\Flames\Definitions;
-use Digitalmx\Flames\Member;
+use digitalmx\Flames\Definitions;
+use digitalmx\Flames\Member;
+use digitalmx\flames\FileDefs;
 #use Digitalmx\Flames\Configuration;
 
 
 function getLastPub() {
-	$lts_file = REPO_PATH . '/var/data/last_published_ts.txt';
+	$lts_file = FileDefs::last_pubdate;
 	if (file_exists($lts_file)){
-		$ts = trim( file_get_contents($lts_file) );
+		return trim( file_get_contents($lts_file) );
 	}
 	else {
-		echo "No last_published_file; using -2 weeks";
-		$ts = strtotime('-2 weeks');
+		echo "<p class='red'>Last Pubdate not found; setting to -7 days.</p>";
+		return strtotime('-7 days');
 	}
-	return $ts;
+	return false;
+	
+	
 }
 
-function actionButton($label,$action,$uid,$affects='',$message='') {
+function actionButton($label,$action,$uid=0,$affects='',$message='') {
    	// script to buld button for ajax
    	// label is the text on the button
    	// action is the action defined in action.php script
    	// uid is the uid which all scripts using this function require
    	// affects is the #id of the object that should get new text returned,
    	$button = '<button type="button" onClick="takeAction('
-   		. $uid
-   		. ",'$action','$affects','$message')\">"
+   		
+   		. "'$action','$uid','$affects','$message')\">"
    		. $label
    		. "</button>";
    	return $button;

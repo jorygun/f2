@@ -2,33 +2,35 @@
 namespace digitalmx\flames;
 
 /* 
+
 	
 	note: the latest news is already archived in newsp, and that's
 	the copy people read.  The copy in latest is so alterations
 	can be made, tested, and recopied out to archive.
 	
 	process:
-	?? copy contents of live to current archive
+
+	(?? copy contents of live to current archive for preservation)
+	
 	copy contents of next to latest
-	insert publish_data file into latest
+	insert publish_data file into latest (pub date...)
+
 	copy latest/ to newsp/news_datecode
 	set the current/pubdate
 	
+
 	set the current/pointer
 	add datecode to read index
 	
 	add to news_index
 	
-	update recent artiles and assets
+	update recent
 	
-Separately, after verifying new newsletter..
 	copy data/last_update_run to last_update_published
 	set all the news items to published
 	remove everything from next and copy the index template
 
 
-	
-	
 	
 */
 
@@ -39,67 +41,63 @@ Separately, after verifying new newsletter..
 //END START
 	use digitalmx\MyPDO;
 	use digitalmx as u;
-	use digitalmx\Publish;
+	use digitalmx\flames as f;
+	use digitalmx\flames\FileDefs;
+
+	use digitalmx\flames\NewsIndex;
 
    
 
 class Publish {
 
-
-
-	private  $next_dir = REPO_PATH . "/public/news/next";
-	private  $latest_dir = REPO_PATH . "/public/news/latest";
-	private  $archive_dir = SITE_PATH . "/newsp";
-	private  $current_dir = REPO_PATH . '/public/news/current';
+	private $pdo;
 	
-	private  $news_template = REPO_PATH . "/templates/news_index.php";
-	private  $latest_pointer = REPO_PATH . "/public/news/current/pointer.txt"; #link to newsp
-	
-	private  $titlefile = REPO_PATH . "/public/news/next/title.txt";
-	private  $pubfile = REPO_PATH . '/public/news/latest/pubdata.txt';
-	
-	
-	// timestamps
-		private  $rtime_file = REPO_PATH . "/var/data/last_update_run.txt";
- 		private  $ptime_file = REPO_PATH . "/var/data/last_update_published.txt";
- 		private  $last_published =  REPO_PATH . "/public/news/current/last_pubdate.txt"; 
- 		
-	private $pubdate_code;
-	private $pubdate_human;
 	private $now_code;
 	private $now_human;
 	private $title;
-	private $new_archive; #path to new dir in newsp
+	private $new_archive; #name of  new dir:  news_yymmdd
 
 	public function __construct( ){
-	
+		$this->pdo = MyPDO::instance();
 		$this->setTimes();
 		$this->title = $this->getTitle();
 	}
+
 	
 	
+	public function wrapupNews() {
+		// these routines clean up everything once
+		// publish is successful
+	}
 	private function setTimes(){
-//get date of last pub
-	$pubdate_dt = new \DateTime('@' . f\getLastPub() );
-	$this->pubdate_code = $pubdate_dt -> format('ymd');
-	$this->pubdate_human = $pubdate_dt -> format('j M Y');
+//get date of last pub (never used)
+// 	if ($last_timestamp = f\getLastPub() ){
+// 		$last_timestamp = strtotime('- 7 days');
+// 		echo "<p class='red'>No last pub timestamp; set to -7 days</p>";
+// 	}
+// 	$pubdate_dt = new \DateTime('@' . $last_timestamp() );
+// 	$this->pubdate_code = $pubdate_dt -> format('ymd');
+// 	$this->pubdate_human = $pubdate_dt -> format('j M Y');
 	
+
 // get current date forms
+	$this->nowtime = time();
 	$now_dt = new \DateTime();
 	$this->now_code = $now_dt -> format ('ymd');
+	$this->year_code = $now_dt -> format ('Ymd');
 	$this->now_human = $now_dt -> format ('j M Y');
 	
-	$this->new_archive = '/news_' . $this->pubdate_code;
+	$this->new_archive = 'news_' . $this->now_code;
 	
 }
-	private function getTitle(){
+	public function getTitle(){
 #get latest title from news_next
 
-    if (file_exists($this->titlefile)){
-        $current_title = file_get_contents($this->titlefile);
-	    $title = htmlspecialchars($current_title);
+    if (file_exists(FileDefs::titlefile)){
+        $title = trim(file_get_contents(FileDefs::titlefile));
+	   
 	}
-	else {$title = ''}
+	else {$title = '';}
 	return $title;
  }
 
@@ -107,50 +105,64 @@ class Publish {
 		// these routines publish the new newsletter
 		$this->copyNextToLatest();
 		$this->addPublishFile();
+		$this->setPointers();
+		shell_exec ("chmod -R g+w " . FileDefs::latest_dir);
+
+
+		$this->copyLatestToArchive();
+		$nli = new NewsIndex();
+		$nli->append_index($this->year_code,$this->new_archive);
+		$this->addToReads();
+		$this->setPtime();
+		$this->markPublished();
+		$this->initializeNext();
+
 	
 	}
-	public function wrapupNews() {
-		// these routines clean up everything once
-		// publish is successful
 	
 	
+	
+	public function test(){
+		$this->setPointers();
 	}
 	
-	private function copyNextToLatest() {
+	public function copyNextToLatest() {
 	// copy the news_next to the news_latest directory
-		u\deleteDir($latest_dir);
-		u\full_copy($next_dir,$latest_dir);
+		if (file_exists (FileDefs::latest_dir)) {
+			u\deleteDir(FileDefs::latest_dir); 
+		}
+		u\full_copy(FileDefs::next_dir,FileDefs::latest_dir);
 	
 	}
+	
 	private function addPublishFile() {
-	// add a file with the publish date
-		file_put_contents($this->pubfile,$this->pubdate_human);
+	// add a file with the publish date to latest dir.
+		file_put_contents(FileDefs::pubfile,$this->now_human . '|' . $this->now_code);
 	}
 	
-	private function copyLatestToArchive($datecode) {
-		$new = $this->archive_dir . '/' . $this->new_archive;
-		u\full_copy($this->latest_dir,$new);
-	}
-
-	private function setPubdate() {
-		file_put_contents ($last_published,time());
-	}
-
-	private function setPointer() {
-		file_put_contents ($this->current_dir.'/pointer.txt', "/newsp/" . $this->new_archive);
+	private function copyLatestToArchive() {
+		$new = FileDefs::archive_dir  . '/' . $this->new_archive;
+		u\full_copy(FileDefs::latest_dir,$new);
+		
 	
 	}
-	private function fixPtime(){
+
+
+	private function setPointers() {
+		$pointer="/newsp/" . $this->new_archive;
+		file_put_contents (FileDefs::latest_pointer,  $pointer);
+		file_put_contents (FileDefs::current_dir.'/index.php', "<?php\n header('location:$pointer');\n");
+		file_put_contents (FileDefs::last_pubdate,$this->nowtime);
+	
+	}
+	
+	private function setPtime(){
 		// copies the last update run time to the
 		// last published run time
-		copy (this->$rtime_file, $this->ptime_file);
+		copy (FileDefs::rtime_file,FileDefs::ptime_file);
 	}
 	
-	private function restoreIndex() {
-		// copies the news_index template to the next dir
-		copy($this->news_template, $this->next_dir . "/index.php");
-	}
-       
+	     
 	private function markPublished() {
        
         $sql = "
@@ -162,53 +174,32 @@ class Publish {
             ";
          // only change db on live, beta, or f2 repos
          // not on test or trial or dev
-         if (in_array(REPO ,['live','beta','f2'])){
-        		$result = $pdo->query($sql);
+         if (in_array(REPO ,['live','f2'])){
+        		$result = $this->pdo->query($sql);
         	}
       
 	}
-	
-	private function reindexNews(){
-		
-        
-			  require_once "newsletter_index.class.php";
-			  if ( $nli = new NewsletterIndex(true) ){
-				echo "Updating Newsletter Index" . BRNL;
-				#echo "$nli" . BRNL;
-			  }
-			  else{
-				echo "NewsletterIndex failed";
-			  }
-					#true forces rebuild
-
-			  echo "Adding $pubdate_code to reads database<br>";
+  
+	public function addToReads() {
+			$pubdate_code = $this->now_code;
+			  
 			  $sql = "INSERT INTO `read_table` SET issue = '$pubdate_code',read_cnt=0;";
-			  $result = $pdo->query($sql);
-				if (! $result){echo "Add to reads database failed.<br>";}
-
-				#set count for preview issue to 0
-				$sql = "UPDATE read_table SET read_cnt=0 WHERE issue = 999999;";
-				$result = $pdo->query($sql);
-
-			  #now rebuild the files
-			  include './news_files2.php';
-			} else {
-				echo "News items not updated on repo " . REPO . BRNL;
-			}
-        	
-		 /* Now build the recent article and assets file */
-    echo "Updating recent article titles" . BRNL ;
-        require REPO_PATH . '/crons/recent_articles.php';
-        
-	 echo "Updating recent assets" . BRNL ;
-        require REPO_PATH . '/crons/recent_assets.php';
-        
-    echo "Done.  <button type='button' onClick='window.close()'>Close Window</button>";
-
-	exit;
-
-
-
-
-
+			  try {
+			 	$result = $this->pdo->query($sql);
+			 	} catch (\Exception $e){
+					echo "Add to $pubdate_code to reads database failed. Probably already exists.<br>";
+					return false;
+				}
+				echo "Adding $pubdate_code to reads database<br>";
+				return true;
+	}
+	private function initializeNext() {
+		// create empty news/next with just the
+		// index file in it.
+		u\emptyDir(FileDefs::next_dir);
+		copy (FileDefs::news_template,FileDefs::next_dir . "/index.php");
+		copy (FileDefs::git_ignore,FileDefs::next_dir . "/.gitignore");
+	}
+			  
+}
 

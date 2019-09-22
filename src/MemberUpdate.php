@@ -35,8 +35,8 @@ use digitalmx\flames\DocPage;
 	}
 	
 	// start by getting users record.  Needed for both get and put
-	$md = $member->getMemberData($uid);
-	$mdd = $md['data'];
+	$mdd = $member->getMemberRecord($uid);
+	
 	$username = $mdd ['username'];
 	
 
@@ -75,7 +75,7 @@ if (empty ($P_uid){ #?? think there should always be something here
 			'informant' => $informant,
 			'prior_email' => $mdd['user_email'],
 			);
-		$messenger->sendMessages($uid,'em_change',$extra);
+		$messenger->sendMessages($uid,'E1',$extra);
 		$P_email_status = 'E1';
 		$use_email = $P_new_email;
 
@@ -149,8 +149,8 @@ if (empty ($P_uid){ #?? think there should always be something here
 	
 
 	// reset my row with updated data
-	$md = $member->getMemberData($uid);
-	$mdd = $md['data'];
+	$mdd = $member->getMemberRecord($uid);
+
 	
 ## end of update
 

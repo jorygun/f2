@@ -1,7 +1,5 @@
 #!/usr/local/bin/php 
 <?php
-ini_set('display_errors', 1);
-
 
 #echo "Starting send_bulk.php\n";
 
@@ -34,11 +32,7 @@ include "$dir/cron-ini.php";
 if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 
 use \digitalmx\flames\Definitions as Defs;
-use \digitalmx\flames\BulkMail;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-$bulk = new BulkMail;
+use digitalmx as u;
 
 
 	$bulk	= 	REPO_PATH . "/var/bulk_jobs";
@@ -46,14 +40,23 @@ $bulk = new BulkMail;
 	
 	if (!$quiet){ echo "Queue is at $queue.";}
 	#where info needed for bulk mail is located
-	$news_info = REPO_PATH . "/public/news";
+	$news_dir = REPO_PATH . "/public/news";
 	
 
+#needed??
+#set_include_path(get_include_path() . ':/usr/home/digitalm/Sites/flames/libmx/phpmx:/usr/home/digitalm/Sites/flames/live/code');
 
-#	ignore_user_abort(false);
+// Load Composer's autoloader
+require_once REPO_PATH . "/vendor/autoload.php";
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+	ignore_user_abort(false);
 	$interval = 3; #seconds/msg    
    set_time_limit(86400);
 	$termination = 'normally';
+	$reason = 'Normal Termination';
 
 #---Check for any jobs in the bulk queue
 
@@ -66,12 +69,11 @@ echo "Checking for files in $queue" . BRNL;
 	the date set to the scheduled run date/time.
 */
 		
-// this retrieves one job from the queue.  If multiple jobs
-// next one will be picked up on next run.
 	if (empty($job = checkfiles($queue)) ){
+	echo "no jobs";
 		exit;
 	}
-
+	$html = false;
 	#set job dir and record pid so it can be stopped if needed
 	$job_dir = "$bulk/${job}";
 	if (! is_dir($job_dir)){
@@ -98,12 +100,26 @@ echo "Checking for files in $queue" . BRNL;
 	
 // [subject,content,html]
 	$msg_array = read_msg_file($bmail_msg);
-	$message = $msg_array['content'];
 	
-
+	$message = $msg_array['content'];
+	if (empty($message)){
+		throw new Exception ("Empty message.");
+	}
+	
+	if (stripos($message,'<html>') !== false) {$html = true;}
+// replacements in univeral message
+	// replace ref to image with image
+	$message = preg_replace(
+		'/\[image (\d+)\]/',
+		"<img src='https://amdflames.org/assets/thumbs/$1.jpg' style='margin-right:auto;margin-left:auto;text-align:center;'>",
+		$message
+		);
 
 #get address of current newsletter
-	$latest_pointer = file_get_contents("$news_info/latest_pointer.txt") ;
+	if (file_exists("$job_dir/pointer.txt" )){
+		$pointer = file_get_contents("$job_dir/pointer.txt") ;
+	}
+	else {throw new Exception("No pointer file in job directory");}
 	
  #set up mail object
    $mail = new PHPMailer;
@@ -124,16 +140,15 @@ echo "Checking for files in $queue" . BRNL;
 EOT;
 
   $profile_message = "
-    Your profile was last updated on ::profile_update::.  
+    Your profile was last updated on ::profile_update_date::.  
     To update: log in, then under your name at top right, select 'View/Edit Profile'.
-
         ";
         
 	$verify_message = <<<EOT
 ------------------------------------------------------------------
    Click to verify that this is your correct email address:
 
-       https://amdflames.org/scripts/verify_email.php?s=::slink::
+       https://amdflames.org/action.php?V::uid::
 
 -------------------------------------------------------------------
 EOT;
@@ -150,78 +165,65 @@ EOT;
     	
        	#create individaul copy of message and subject
         $imessage = $message; 
+        
         $isubject = $msg_array['subject'];
-             
+        
         #get the user vars from the file
         /*
-          $mlarray = [
-            $row['username'],
-            $row['user_email'],
-            $slink,
-            $profile_updated_age,
-            $profile_updated_date,
-            $row['no_bulk'],
-            $age_flag,
-            $profile_validated_date
-        ];
-        */
+    $fields = 
+		'username, user_email, CONCAT(upw,user_id) as slink,profile_updated,no_bulk,user_id
+	*/
         
-          list(
-			 $username,$user_email,$slink,
-			$profile_updated_age,$profile_updated_date,
-			$no_bulk, $age_flag,$profile_validated_date
-			) = explode("\t",$line);
-
+			list(
+			 $username,$user_email,$scode, $profile_updated, $no_bulk, $user_id) 
+			 = explode("\t",$line);
 
 		#creat personalized vars
-            $logincode="s=$slink";
-            $login_link = SITE_URL . "/?s=$slink"; 
+				$logincode="s=$scode";
+				$login_link = SITE_URL . "/?s=$scode"; 
+			
+				$news_url = SITE_URL . "/news" . "/?s=$scode";
+				#$news_link = "<a href='$news_url'>$news_url</a>";
+			
+				$news_this = SITE_URL . $pointer . "/?s=$scode";
+				$link_news_this = "<a href='$news_this'>$news_this</a>";
+				
+				$profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$scode";
+				$profile_age = u\days_ago($profile_updated);
+				$profile_update_date = u\make_date($profile_updated);
+			
+				$verify = SITE_URL . "/action.php?V" . $user_id;
+				$verify_link = "<a href='$verify'>$verify</a>";
             
-            $news_url = SITE_URL . "/news" . "/?s=$slink";
-            $news_link = "<a href='$news_url'>$news_url</a>";
-            
-            $profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$slink";
-            
-            
-        #subsititute in imessage.  later subs can replace text in earlier subs
-       $imessage = str_replace('::profile_date::',$profile_updated_date,$imessage);
-       $imessage = str_replace('::profile_age::',$profile_updated_age,$imessage);
-       
-       if ($no_bulk){$imessage = str_replace('::no_bulk::',$no_bulk_message,$imessage);
-         } else {
-               $imessage = str_replace('::no_bulk::','',$imessage);
-         }
-         
-			if ($age_flag > 0){
-               $imessage = str_replace('::profile::',$profile_message,$imessage);
-         }else {
-             $imessage = str_replace('::profile::','',$imessage);
-         }
-         
-			if (false) {
-				$imessage = str_replace('::verify::',$verify_message,$imessage);
-		  } else {
-				$imessage = str_replace('::verify::','',$imessage);
-		  }
-           
+    #subsititute in imessage.  later subs can replace text in earlier subs
+				$imessage = str_replace('::profile_date::',$profile_update_date,$imessage);
+
+				$mm = ($no_bulk)? $no_bulk_message : '';
+				$imessage = str_replace('::no_bulk::',$mm,$imessage);
+
+				$mm =  ($profile_age > 0) ? $profile_message : '';
+				$imessage = str_replace('::profile::',$mm,$imessage);
+
+
+				$mm = ($profile_age > 10) ? $verify_message : '';
+				$imessage = str_replace('::verify::',$mm,$imessage);
+		 
             $isubject = str_replace('::name::',$username,$isubject);
             
             $imessage = str_replace('::name::', $username, $imessage);
             $imessage = str_replace('::link::', $login_link, $imessage);
-            $imessage = str_replace('::slink::',$logincode,$imessage);
+            $imessage = str_replace('::scode::',$scode,$imessage);
              $imessage = str_replace('::verify::',$verify_link,$imessage);
              $imessage = str_replace('::uemail::',$user_email,$imessage);
-             $imessage = str_replace('::newslink::',$news_link,$imessage);
-             $imessage = str_replace('::profile_update::',$profile_updated_date,$imessage);
-             
-            
-	
+             $imessage = str_replace('::newslink::',$link_news_this,$imessage);
+             $imessage = str_replace('::profile_update::',$profile_updated,$imessage);
+             $imessage = str_replace('::uid::',$user_id,$imessage);
 
            
-			#if (!$html){
+			if (!$html){
 				$imessage = nl2br($imessage);
-			#}
-			
+			}
+		
             $to = "\"$username\" <$user_email>";
 
 
@@ -269,15 +271,15 @@ EOT;
 	
 	$end_dt = new DateTime();
 	$elapsed = time() - $starttime;
-	$endtimedate = $end_dt -> format('Y-m-d H:s');
+	$endtimedate = $end_dt -> format('Y-m-d H:i');
 	#$elapsed_ob =  = date_diff ($end_dt , $start_dt);
 	$rate = intval(3600 * $sent/($elapsed + 1)); #prevent /0
 
     $human_elapsed = human_secs($elapsed);
-
+	
 	$admin_msg = "
 ------------------------------------------------
-Batch email completed $termination on job $mypid at $endtimedate.
+Batch email completed $termination on job $job at $endtimedate.
 $reason
 
 $sent sent in $human_elapsed. ($rate/hour).
@@ -300,7 +302,7 @@ $sent sent in $human_elapsed. ($rate/hour).
 	 } else {
 		unlink ("$queue/${job}-running"); 
 		if (!$quiet) 
-		echo "Job $job removed from queue";
+		echo "Job $job removed from queue" . BRNL;
 	 }
 	
 		
@@ -341,12 +343,7 @@ function checkfiles($queue){
 				continue;
 			}
 			
-			if (strpos($qfile,'-cancelled') !== false){
-				if (filemtime("$queue/$$qfile") < (time() - 86400) ) { #more than 24 hours old
-				unlink ("$queue/$qfile");
-				}
-				continue;
-			}
+			
 			if (strpos($qfile,'-') !== false){
 				// there is a -status on the job
 				continue;
@@ -397,8 +394,10 @@ function human_secs($esecs){
 }
 
 function read_msg_file($msg_file) {
-		$msg=[];
-		$mh = fopen("$msg_file", 'r');
+		$msg=[]; $message='';
+		if (!$mh = fopen("$msg_file", 'r') ){
+			die ("Cannot open $msg_file");
+		}
 		$msg['subject'] = fgets($mh); #first line
 		while (($line = fgets($mh)) !== false) {
 			$message .= $line;

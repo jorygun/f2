@@ -1,0 +1,44 @@
+#Files to leave out of git commits.
+#Note: symbolic links in directories are
+#all relative, and will retain their
+#correct linkage on transfer to remote.
+
+
+#ignore mac files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+#ignore site-specific config in .htaccess
+.user.ini
+test.php
+favicon.ico
+
+#ignore backup files
+*~
+
+#ignore vendor directory - will be reconstruted on site
+vendor/
+
+#misc
+*.log
+logs/
+unused/
+var/bulk_jobs/
+var/data/
+var/logs/
+var/queue/
+var/live/
+
+
+#files conaining live data
+last_published_ts.txt
+last_update_published_ts.txt
+last_update_run_ts.txt
+latest_pointer.txt
+#news directory contains live info.  Don't disturb
+#also on local machine these are owned by _www
+public/news/news_latest/
+public/news/news_next/
+public/news/news_live/
+public/news/live/

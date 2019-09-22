@@ -40,13 +40,17 @@ function echopre($text){
 }
 
 function echor($var,$title=''){
+
     echo "<h4>$title:</h4>";
     echo "<pre>" .  print_r($var,true) . "</pre>\n";
 }
 
-function entity_spec($var){
+function special($var){
     #convert < > " & , but not ' (default ENT_COMPAT)
 	return htmlspecialchars($var,ENT_QUOTES);
+}
+function despecial($var) {
+	return htmlspecialchars_decode($var);
 }
 
 function catchError ( $e , $more=[]){
@@ -66,28 +70,61 @@ function catchError ( $e , $more=[]){
 	echo "<hr>\n";
 }
 
+function validateDate($date, $format = 'Y-m-d')
+{
+    $d = \DateTime::createFromFormat($format, $date);
+    // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
+    return $d && $d->format($format) === $date;
+}
 
-function deleteDir($path) {
-    if (!is_dir($path)) {
-        throw new InvalidArgumentException("$path is not a directory");
+
+function deleteDir($src, $keep=false) {
+	// deletes all the contents of $path
+	// if $keep=false, also deletes the dir at path.
+    if (!is_dir($src)) {
+        throw new \InvalidArgumentException("$src is not a directory");
     }
-    if (substr($path, strlen($path) - 1, 1) != '/') {
-        $path .= '/';
-    }
-    $dotfiles = glob($path . '.*', GLOB_MARK);
-    $files = glob($path . '*', GLOB_MARK);
-    $files = array_merge($files, $dotfiles);
-    foreach ($files as $file) {
-        if (basename($file) == '.' || basename($file) == '..') {
-            continue;
-        } else if (is_dir($file)) {
-            deleteDir($file);
-        } else {
-            unlink($file);
+    
+     if (file_exists($src)) {
+        $dir = opendir($src);
+        while (false !== ($file = readdir($dir))) {
+            if (($file != '.') && ($file != '..')) {
+                $full = $src . '/' . $file;
+                if (is_dir($full)) {
+                    deleteDir($full);
+                } else {
+                    unlink($full);
+                }
+            }
         }
+        closedir($dir);
+        if ($keep){echo "Keeping dir $dir" . BRNL;}
+        elseif (! rmdir($src) ){ echo "Cannot delete $src" . BRNL;}
+        return true;
     }
-    if (! rmdir($path) ){echo "Cannot remove $path". BRNL;}
-    return true;
+    
+   
+}
+function emptyDir ($path) {
+
+      try{
+        $iterator = new \DirectoryIterator($path);
+        foreach ( $iterator as $fileinfo ) {
+          if($fileinfo->isDot())continue;
+          if($fileinfo->isDir()){
+            if(deleteContent($fileinfo->getPathname()))
+              @rmdir($fileinfo->getPathname());
+          }
+          if($fileinfo->isFile()){
+            @unlink($fileinfo->getPathname());
+          }
+        }
+      } catch ( \Exception $e ){
+         echo "Error: " . $e->getMessage();
+         return false;
+      }
+      return true;
+
 }
 
 function isValidEmail($email){
@@ -148,10 +185,10 @@ function makeDate($when, $form='human',$type = 'date') {
 }
 
 function make_date ($when, $form='human',$type = 'date'){
-	/* returns formated date or time
-		@ when is either text date/time or unix timestamp or 'now'
+	/* returns formated date or datetime or 'never'
+		@ when is either text date/time or unix timestamp or 'now' or empty (= never)
 		@ form is human, sql, rfc or ts (time-stamp)
-		@ type is date or time
+		@ type is date or datetime
 		
 	// when is either timestampe text data/time
 	*/
@@ -166,21 +203,23 @@ function make_date ($when, $form='human',$type = 'date'){
 		$ts = (int)strtotime($when);
 	}
 	
+	if ($ts <= 1){return 'Never';}
+	
 	$dt = new \DateTime();
 	$dt->setTimestamp($ts);
 	
 	switch ($form){
 		case 'sql' :
-			$format = ($type == 'time')?
+			$format = ($type == 'datetime')?
 		'Y-m-d H:i:s' : 'Y-m-d';
 			break;
 		case 'human' :
-			$format = ($type=='time')?
-		'd M, Y H:i' : 'd M Y';
+			$format = ($type=='datetime')?
+		'd M Y H:i' : 'd M Y';
 			break;
 		case 'rfc' :
-			$format = DATE_RFC822;
-			$dt->setTimeZone(new \DateTimeZone('UTC'));
+			$format = 'c';
+			
 			break;
 		case 'ts' :
 			return $ts;
@@ -258,15 +297,16 @@ function pdoPrep($data,$include=[], $key=''){
             // ignore any fields not listed in valid fields
             if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
-            $db[$var] = htmlspecialchars_decode($val);
-            if (empty($db[$var])){
-            	$db[$var] = '';
+            
+            
+            if (empty($val)){ #catches 0, '', and false
             	if ($var == 'asset_id'){ 
-            		unset ($db[$var]);
             		continue; 
             	} #leave out of list
    
             }
+            
+				$db[$var] = htmlspecialchars_decode($val);
 				
             $ufields[] = "$var = :$var";
             $ifields[] = $var;
@@ -428,6 +468,7 @@ function linkHref($url,$label='',$target='' ){
 	}
 }
 
+
 function make_links($input){
     // replaces http:... with a link
     // replaces [asset nn] with a thumbnail to the asset item.
@@ -461,7 +502,7 @@ function make_links($input){
 
 
 function days_ago ($date_str = '1') {
-	//takes a date and returns the age from today in days and a formatted version of date
+	//takes a date and returns the age from today in days
 	
 	
 	$dt = new \DateTime();

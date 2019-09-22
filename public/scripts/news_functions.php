@@ -217,7 +217,7 @@ function build_news_files($story_array){
 
             $story_text[$section] = $contents;
         }
-        // now build teaser
+        // now build g
         $teaser = "News Stories\n--------------------------\n";
          foreach (array_keys($story_array) as $section){
             #save teaser text
@@ -233,7 +233,7 @@ function build_news_files($story_array){
             if (!empty ($story_array[$section])){
                 $teaser .= "\n$section_names[$section]\n----------------------\n";
                  foreach ($story_array[$section]['teaser'] as $t){
-                    if (! empty($t)){$teaser .= "     $t\n";}
+                    if (! empty($t)){$teaser .= "    $t\n";}
                 }
             }
         }
@@ -263,7 +263,7 @@ function save_story_files($directory,$story_text){
     foreach (array_keys($story_text) as $section){
        # echo "Got section $section for directory $directory<br>";
         if ($section == 'teaser'){
-             $myfile  = "$directory/tease_headlines.txt";
+             $myfile  = "$directory/tease_news.txt";
         }
         else{
             $myfile = "$directory/$section_files[$section]";
@@ -416,7 +416,7 @@ EOT;
 
 
 	default: #all other stories
-       $teaser  =     $row['title'] ; 
+       $teaser  =      $row['title'] ; 
        if (strcmp($row['contributor'],'FLAMES editor') !== 0) {
        	$teaser .= '(' . $row['contributor'] . ')';
        	}

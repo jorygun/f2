@@ -1,0 +1,67 @@
+<?php
+// template for profile body
+// set up $tdata array before calling
+
+extract($tdata,EXTR_PREFIX_ALL,'T');
+
+echo <<<EOT
+<h3 >$T_username
+	<span class='normal'>$T_$member_type
+	$T_edit_button
+
+</h3>
+
+	
+<div class='profile_frame current'>
+
+$T_imagelink T_$html_greeting
+	<h4>Currently</h4> 
+	$T_user_current
+
+
+	<h4>At AMD</h4>
+		$T_amd_boxes
+		
+	<h4>Contact</h4>
+	<p>Email: <?=$vis_email?><br>
+		<?=$message_link?>
+		<em>Email status: <?=$email_status?></em></p>
+	<?=$user_web?>
+	<?=$linkedinlink?>
+	
+
+</div>
+<?php
+
+if (! empty($D_user_about)){
+	echo "<div class='profile_frame'>\n";
+    echo "<h4>More About Me</b></h4>";
+	echo nl2br($D_user_about);
+	echo "</div>\n";
+}
+
+
+if (! empty($D_user_interests)){
+    echo "<div class='profile_frame'>\n";
+	echo "<h4>My Other Interests</h4>";
+	echo nl2br($D_user_interests);
+	echo "</div>\n";
+}
+if (!empty($D_user_memories)){
+	echo "<div class='profile_frame'>\n";
+	echo "<h4>Memories of Working at AMD</h4>";
+	echo nl2br($D_user_memories);
+	echo "</div>\n";
+}
+?>
+<br class='clear'>
+
+<p class='centered'>Joined FLAME site: <?=$joindate?>;
+	Profile last updated: <?=$last_profile_date?>;
+	Confirmed on <?=$last_profile_validated?>.</p>
+
+
+   
+</body></html>
+EOT;
+

@@ -32,7 +32,16 @@ ini_set('display_errors', 1);
 
 #display search results
 if (isset($_POST['search'])){
-		echo $admin->listMembers ($_POST);
+	
+	$mdata = $admin->listMembers ($_POST);
+	
+	$data = [
+		'mdata' => $mdata,
+		'info' => 'Found ' . count ($mdata)
+	];
+
+	echo $templates->render('user_admin_list',$data);
+
 }
 elseif (isset($_POST['Update'])){
 	if (empty($uid = $_POST['uid'])){
@@ -40,10 +49,14 @@ elseif (isset($_POST['Update'])){
 	}
 	
 	echo $admin->updateMember($_POST);
-	echo $admin->showUpdate($uid);
+	$mdata = $admin->showUpdate($uid);
+	echo $templates->render('member_edit.tpl',$mdata);
+
 }
-elseif ($uid = $_GET['id'] ?? '' ){
-	echo $admin->showUpdate($uid);
+
+elseif ($uid = $_GET['uid'] ?? '' ){
+	$mdata = $admin->showUpdate($uid);
+	echo $templates->render('member_edit.tpl',$mdata);
 }
 
 #show search screen

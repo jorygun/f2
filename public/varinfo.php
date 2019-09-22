@@ -41,11 +41,15 @@ if ($login->checkLogin(0)){
 	echo $page->startBody();
 }
 
-u\echor ($_SESSION,'Session file at after page setup');
 
 
 
 
+###33#####
+function echo_red ($t) {
+	echo "<p class='red'>$t</p>";
+	
+}
 
 
 echo " Mode: $test";
@@ -68,7 +72,10 @@ echo "<b>repo:</b> " . $reponame . "<br>";
 echo "<br>\n";
 
 if (!empty($ldata = $_SESSION['login'])){
-	u\echor($ldata, 'Logged In User');
+	echo "Logged in as:<br>";
+	echo $_SESSION['login']['username'] . BRNL;
+	echo $_SESSION['login']['seclevel'] . BRNL;
+	
 } else {
 	echo "No logged in User" . BRNL;
 }
@@ -77,20 +84,20 @@ if (!empty($ldata = $_SESSION['login'])){
 $server_adds = array();
 $server_changes = array();
 
-foreach ($_SERVER as $k=>$v){
-	if (!isset($_ENV[$k])){
-		$server_adds[$k] = $v;
-	}
-	elseif ($_ENV[$k] !== $v){
-		$server_changes[$k] = $v;
-	}
-}
-
-
-
-
 
 if ($verbose) {
+	u\echor ($_SESSION,'Session file at after page setup');
+	
+	foreach ($_SERVER as $k=>$v){
+		if (!isset($_ENV[$k])){
+			$server_adds[$k] = $v;
+		}
+		elseif ($_ENV[$k] !== $v){
+			$server_changes[$k] = $v;
+		}
+	}
+
+
 	u\echor ($_ENV,'$_ENV');
 
 	u\echor ($server_changes,'Changed value in $_SERVER');
@@ -111,7 +118,11 @@ if ($verbose) {
 	echo "No .htaccess";
 	}
 }
-echo "<br><hr><br />";
+echo "<br /><hr><br />";
+
+#############  EXPERIMENT BELOW HERE
+u\echor ($member->getMemberCounts(),"Members");
+exit;
 
 echo "Last Newsletter Date" . BRNL;
 	$last = f\getLastPub();
@@ -139,19 +150,16 @@ try {
 	echo_red ('make_date function not available.') . BRNL;
 }
 
-###33#####
-function echo_red ($t) {
-	echo "<p class='red'>$t</p>";
-	
-}
 
 
 
-$member = new Member();
 
-$membertag = 'john@digitalmx.com';
-$md = $member->getMemberList($membertag);
-u\echor ($md,'Member Data for ' . $membertag);
+// $member = new Member();
+// 
+// $membertag = 'john@digitalmx.com';
+// $md = $member->getMemberList($membertag);
+// u\echor ($md,'Member Data for ' . $membertag);
+
 
 // $em = new Messenger ($pdo,$test); #pdo,true for test
 // $event = 'em-found';

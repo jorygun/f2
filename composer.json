@@ -4,14 +4,15 @@
     "type": "project",
     "license": "proprietary",
     "config": {  
-            "vendor-dir": "./vendor"
+            "vendor-dir": "vendor"
     },
     "require": {
         "phpmailer/phpmailer": "^6.0",
 	"twig/twig": "^2.5",
         "monolog/monolog": "^1.24",
         "pimple/pimple": "^3.2",
-        "davefx/phplot": "^6.2"
+        "davefx/phplot": "^6.2",
+        "league/plates": "^3.3"
 
     },
     "require-dev": {
@@ -27,9 +28,9 @@
     "autoload": { 
          "psr-4": {
             "digitalmx\\": "libmx/" ,
-            "digitalmx\\flames\\" : ["src/","config/"]
+            "digitalmx\\flames\\" : ["src/","config"]
             
-	  
-            } 
+            }
+            
       } 
 }

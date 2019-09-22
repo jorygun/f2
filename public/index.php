@@ -2,6 +2,7 @@
  ini_set('display_errors', 1);
 // ini_set('error_reporting', E_ALL);
 
+
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	use digitalmx as u;
@@ -15,7 +16,7 @@
    
    
 	$page_title = 'AMD Flames';
-	$page_options = ['ajax']; # ajax, votes, tiny
+	$page_options = ['ajax','no-cache']; # ajax, votes, tiny
 
 
 if ($login->checkLogin(0)){

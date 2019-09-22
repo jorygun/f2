@@ -1,0 +1,30 @@
+#Files to leave out of git commits.
+#Note: symbolic links in directories are
+#all relative, and will retain their
+#correct linkage on transfer to remote.
+
+
+#ignore mac files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+#ignore site-specific config in .htaccess
+.user.ini
+test.php
+favicon.ico
+
+#ignore backup files
+*~
+
+#ignore vendor directory - will be reconstruted on site
+vendor/
+
+#misc
+*.log
+logs/
+unused/
+
+
+#files conaining live data
+# live dirs containt their own .gitignore

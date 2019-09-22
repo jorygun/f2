@@ -1,7 +1,7 @@
 <?php
 
 namespace digitalmx\flames;
-#ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
@@ -10,12 +10,14 @@ namespace digitalmx\flames;
 	use digitalmx\flames as f;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\flames\DocPage;
+	use digitalmx\flames\Publish;
+
 
 
 
 if ($login->checkLogin(4)){
    $page_title = 'News Admin';
-	$page_options=[]; #ajax, votes, tiny
+	$page_options=['ajax']; #ajax, votes, tiny
 
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
@@ -26,23 +28,37 @@ if ($login->checkLogin(4)){
 
 //END START
 
-      $ptime_dt = new \DateTime();
-      $ptime_dt ->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
+    $titlefile = SITE_PATH . '/news/next/title.txt';
+    $publish = new Publish();
 
-    // get latest published update date
-    if ($ptime_stamp = f\getLastPub() ){
-      $ptime_dt->setTimestamp($ptime_stamp);
+
+// get time of last status report
+    $dt = new \DateTime();
+
+    if ($last_ptime = file_get_contents(FileDefs::ptime_file )){
+    #echo "Got ptime $last_ptime";
+
+      $dt->setTimestamp($last_ptime);
+       $dt ->setTimeZone(new \DateTimeZone('America/Los_Angeles'));
     } else {
-		echo "Could not get last pub date. Setting to one week ago." . BRNL;
-		$ptime_dt -> modify (" - 7 days");
+		echo "Could not get last status run date. Setting to one week ago." . BRNL;
+		$dt -> modify (" - 7 days");
 	}
-    $ptime = $ptime_dt->format('M j H:i T');
+    $ptime = $dt->format('M j H:i T');
 
-    //get current title, if any
-    $titlefile = SITE_PATH . '/news/news_next/title.txt';
-    if (file_exists($titlefile)){$current_title = file_get_contents($titlefile);}
-    else {$current_title = 'Title Not Set';}
-    $current_title_decoded = htmlspecialchars_decode($current_title);
+//get current title, if any
+
+    if (empty($current_title = $publish->getTitle())){
+        $current_title = 'Title Not Set';
+    }
+    $current_title_spchar = u\special($current_title);
+
+// action buttons for ajax stuff
+    $indexaction = f\actionButton('news_index > next','copyIndex',0,'','Done');
+    $rebuildaction = f\actionButton('Rebuild','indexNews',0,'','resp');
+    $updateaction = f\actionButton('Update','copyLatest',0,'','resp');
+    $publishaction = f\actionButton('Publish','publish',0,'','resp');
+
 
 ?>
 
@@ -53,48 +69,57 @@ if ($login->checkLogin(4)){
 
 
 <li>Prepare and build the news article collection.<br>
-<form><a href="/scripts/news_items.php" target='news_items'>Review/Edit News Items</a></form>
+<button type='button' onClick="window.open('/scripts/news_items.php','news_items')">News Items</button></li>
+<br>
 
-
-<li>Run the change report.  This creates a report of all the member changes since the  date/time of the last update report that was published. Also pulls any new opportunities from the database. If necessary, set the Last Published Time.  This simply sets the time that the update report will work against.  It is set automatically during publish, but if you want to set it to something else, you can.<br>
-    <form method='get' action="/scripts/report_updates.php" target="_blank" >
-   From: <input type=text name='ptime' value="<?=$ptime?>"><input type=submit value="Run Change Report"></form><br>
+<li>Run the change report.  This creates a report of all the member changes since the  date/time of the last update report that was published.  If necessary, set some other date/time.  This simply sets the time that the update report will work against.  <br>
+    <input type=text id='ptime' value="<?=$ptime?>">
+   <button type='button' onClick = "runStatus('ptime');">Run Report</button>
 
 <li>Run the Calendar report. Add events and create an html and text version of the calendar for use by the
 newsletter and the email. <br>
-<a href="/scripts/calendar.php"  target='calendar'>Run Calendar</a><br>
+<button type='button' onClick="window.open('calendar_admin.php','calendar_admin')">Run Calendar</button></li>
+
 <br>
 <li>Set the Newsletter title<br>
-    <form method='post' action='/scripts/set_title.php'>
-    Title: <input type='text' name='title' value='<?=$current_title_decoded?>'><input type='submit'>
-    </form>
 
-<li> Check the newsletter carefully before you publish!!  It's hard to fix after it's published.
-<form><a href="/news/news_next/" target="preview">View Next newsletter</a> </form></li>
+    Title: <input type='text' name='title' id='title_text' value='<?=$current_title_spchar?>'>
+    <button type='button' onClick = "setTitle()">Set Title</button>
 
-<li>Publish the newsletter.  This script assembles the pieces in news_next, places it into a directory at /news/news_latest, and copies that directory to newsp/news_yymmdd (the normal repository for news), and sets the path to that directory in news/index.php as a relocate command. It also rebuilds the news index.
-	<br><form><a href="/scripts/publish.php" target="_blank">Publish news</a></form><br>
+
+<li> Check the newsletter carefully before you publish!!  It's hard to fix after it's published.<br>
+<button type='button' onClick="window.open('/news/next','preview')">Preview Next</button></li>
+
+<li>Publish the newsletter.  This script assembles the pieces in news_next, places it into a directory at /news/news_latest, and copies that directory to newsp/news_yymmdd (the normal repository for news), and sets the path to that directory in news/current/index.php as a relocate command. It also rebuilds the news index.
+	<br><?=$publishaction?><br>
 
 <li>Check the latest news</a>, to make sure it published.
-<form><a href="/news/" target="_blank">Latest News</a></form></li>
+<button type='button' onClick="window.open('/news/current','latest_news')">Latest News</button></li>
 
-<li>If you are sure the newsletter published successfully, copy the model news to news_next, setting up the directory for the next issue.<br>
-<!-- <form><a href='#' onclick="window.open('/scripts/copy_model_to_next.php','copy','height=200,width=400');return false;">Copy Model News to Next News</a></form> -->
-<form><a href='#' onclick="window.open('/scripts/copy_model_to_next.php','copy','height=200,width=400');return false;">Copy Model News to Next News</a></form>
-<br>
 
 <li>Run the bulk email to send out the Flame News Is Ready Email. Note: the email will pull "teasers"
 from the news_latest directory, so they reflect last news published.
-<br><form><a href="/scripts/bulk_mail_setup.php" target = "_blank">Set up Bulk Email</a>
+<br><form><a href="/bulk_admin.php" target = "_blank">Set up Bulk Email</a>
 </form>
-<a href = "/logs/bulk_mail_logs/log-last.txt" target="_blank">View Last Bulk Mail Log</a> &nbsp;&nbsp;&nbsp;
 
-In case of emergency: <a href="#"  onclick="window.open('/scripts/abort_bulk_mail.php','abort','height=200,width=600');return false;">Abort Bulk Mail</a>
-
-</li>
 
 
 </ol>
+<hr>
+<h3>Tests</h3>
+
+<?php
+echo f\actionButton('test','test',0,'','resp');
+echo f\actionButton('publish->next-to-latest ','move-next',0,'','resp');
+?>
+
+<hr>
+<h3>Utilities</h3>
+<p>Update News/next Index from template <?=$indexaction?></p>
+<p>Rebuild Newsletter Index from scratch <?=$rebuildaction?></p>
+<p>Copy news/latest (updated) to copy in archive <?=$updateaction?>
+
+
 <p><b>Add a breaking news to current newsletter</b></p>
 <form method='post' action='/scripts/breaking.php'>
 <textarea name='bnews' rows=6 cols=40>
@@ -102,7 +127,8 @@ In case of emergency: <a href="#"  onclick="window.open('/scripts/abort_bulk_mai
 <input type=submit>
 </form>
 
-</div>
-</div>
+
+
+
 </body></html>
 

@@ -55,6 +55,12 @@ EOT;
          ";
       }
      
+     if (!empty($options) && in_array('no-cache',$options)){
+		  $t .= '<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+			<meta http-equiv="Pragma" content="no-cache"/>
+			<meta http-equiv="Expires" content="0"/>
+			';
+		}
 
       return $t;
    }
@@ -62,9 +68,16 @@ EOT;
 
 
    public function startBody($style=2,$subtitle='') {
-	//style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page
+	//style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page, 4 for collapsible list
      $title = $this->title;
-     $t = "\n</head>\n<body>\n";
+     
+   if ($style == 4) {
+     	$t = '<script type="text/javascript" src="/js/collapsibleLists.js"></script>';
+     	$t .= "\n</head>\n<body onload='CollapsibleLists.apply();' >\n";
+   
+   } else {
+     	$t = "\n</head>\n<body>\n";
+   }
       $t .= "<div class='page_head'>\n";
 
     #choose a style by number
@@ -88,7 +101,7 @@ EOT;
       case 1: #for newsletter
          $t .= <<<EOT
          <img class='left' alt='AMD Flames' src='/graphics/logo-FLAMEs.gif'>
-         <p class='title'>FLAME<i>news</i><br>
+         <p class='title'>$title<br>
          <span style='font-size:0.5em;'>$subtitle</span>
          </p>
          ${_SESSION['menu']}
@@ -96,6 +109,7 @@ EOT;
 
          break;
          case 2: #other pages
+         case 4:
          $t .= <<<EOT
          <img class='left' alt='AMD Flames' src='/graphics/logo69x89.png'>
          <p class='title'>$title<br>

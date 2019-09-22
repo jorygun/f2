@@ -21,7 +21,20 @@ use digitalmx\flames\DocPage;
 #use digitalmx\flames\ActionCodes;
 use digitalmx\flames\BulkMail;
 use digitalmx\flames\StatusReport;
+<<<<<<< HEAD
+=======
+use digitalmx\flames\FileDefs;
+use digitalmx\flames\Publish;
+use digitalmx\flames\NewsIndex;
+>>>>>>> m-bulk
 
+
+
+
+  $publish = new Publish();
+ 	
+ 	
+  
 // if request came in from a get, the
 // query string tells you what to do.
 if (!empty($_SERVER['QUERY_STRING'])) {
@@ -30,6 +43,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 	$action = substr($q,0,1);
 	$uid = substr($q, 1); #rest of string
 	$page_options = []; # ['ajax','tiny','votes']
+
 	
 	#echo "Action: " . $a . BRNL;
 	
@@ -37,12 +51,15 @@ if (!empty($_SERVER['QUERY_STRING'])) {
         case 'V':
             $page_title = "AMD Flames Email Validation";
             break;
-            
+         case 'P':
+         	$page_title = 'Profile Editor';
+				$page_options=['tiny','ajax']; #ajax, votes, tiny 
         default:
         	$page_title = 'AMD Flames Action Handler';
            
     }
-    $page = new DocPage($page_title);
+   $page = new DocPage($page_title);
+  
 	echo $page->startHead($page_options); 
  	echo $page ->startBody(0);
  	
@@ -53,6 +70,9 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 			}
 			else {echo "Failed";}
  			break;
+ 		case 'P':
+ 			edit_profile($uid,$madmin,$templates);
+         break;
  		default:
  			echo "No Action Requested";
  
@@ -70,7 +90,9 @@ if (! empty ($_POST)) {
 		case 'bulkmail':
 			return cancel_bulk($_POST['job']);
 		  break;
-	  
+	  case 'verifyProfile':
+	  		echo verifyProfile($_POST['uid'],$member);
+	  		break;
 		case 'sendLogin':
 			return sendLogin($_POST['uid'], $member);
 		  break;
@@ -94,7 +116,11 @@ if (! empty ($_POST)) {
 	  		// copy news index template to new next
 	  		echo copyIndex();
 	  		break;
-	  		
+
+	  	case 'copyLatest':
+	  		echo copyLatest();
+	  		break;
+
 		case 'getmess':
 		   #echo 'at get mess';
 			echo getmess($_POST['type']);
@@ -111,13 +137,41 @@ if (! empty ($_POST)) {
 		case 'bounceEmail':
 			echo bounceEmail($_POST['uid'], $member);
 			break;
-	  
+	  case 'test':
+	  		echo  atest();
+	  		break;
+	  	case 'move-next':
+	  		echo $publish->copyNextToLatest();
+	  		break;
+	  	case 'publish':
+	  		echo  $publish->publishNews();
+	  		break;
 		default:
 			echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true);
 	}
 }
 // else, just load the script so the functions can be used.
 
+function atest($x=''){
+	$ni = new NewsIndex();
+	$ni->append_index('20191225','news_191215');
+	return "adone";
+	
+}
+
+function edit_profile($uid,$madmin,$templates) {
+	
+	$profile_data = $madmin->getProfileData($uid);
+   echo  $templates->render('profile-edit', $profile_data);
+	exit;
+}
+
+
+function verifyProfile($uid,$member) {
+
+	$cdate = $member->verifyProfile($uid);
+	return $cdate;
+}
 function getmess($type)
 {
    // return text message for bulk mail setup script
@@ -135,13 +189,30 @@ function getmess($type)
    #return "sub: " . $result['subject'] . 'mess: ' . $result['text'] . "\n";
     return json_encode($result);
 }
-function runNewsIndex(){
-	return "Not implemented";
+
+function runNewsIndex() {
+	
+	$ni = new NewsIndex();
+	$ni -> rebuildJson();
+	
+	$ni -> buildHTML();
+	return "html done";
+}
+
+function copyLatest() {
+	$latest = FileDefs::latest_dir;
+	$latest_arch = trim(file_get_contents(FileDefs::latest_pointer)); 
+	$archive = SITE_PATH . $latest_arch;
+	u\full_copy($latest,$archive);
+	return "Copied latest to $latest_arch";
+	
+
 }
 
 function copyIndex() {
-	$index = REPO_PATH . "/templates/news_index.php";
-	$nextindex = REPO_PATH . "/public/news/next/index.php";
+	$index = FileDefs::news_template;
+	$nextindex = FileDefs::next_dir . "/index.php";
+
 	echo "copying $index to $nextindex";
 	copy ($index,$nextindex);
 	return "Done";
@@ -182,24 +253,28 @@ function cancel_bulk($job)
    
 
     $bulkmail = new BulkMail;
-    $queue = REPO_PATH . '/var/bulk_queue';
+    $queue = FileDefs::bulk_queue;
     $tfile = $queue . "/$job";
     if (file_exists($tfile)) {
-        echo "renaming $tfile to xx-cancelled";
+        echo "Canceling queued job $job"  . BRNL;
         rename($tfile, $tfile . "-cancelled");
     }
     $tfile = $queue . "/$job-running";
     if (file_exists($tfile)) {
-        echo "renaming $tfile to xx-cancelled";
+        echo "Canceling running job $job"  . BRNL;
         rename($tfile, str_replace('-running', '-cancelled', $tfile));
     }
     echo $bulkmail -> show_bulk_jobs();
 }
 
 function runStatusReport($var) {
+<<<<<<< HEAD
+
+	if (empty($var)){return "Error: no date supplied";}
 	$since = date('Y-m-d H:i',strtotime($var));
 	if ($sr = new StatusReport($since) ) {
-		return "Run";
+		return "Report Run";
+
 	} else {return "Failed";}
 }
 
@@ -208,7 +283,7 @@ function sendLogin($tag, $member)
    //tag may be uid or email
 
     $login_msg = $member->getLogins($tag);
-    $messenger = new Messenger(); #true = test
+    $messenger = new Messenger(); 
     if ($messenger->sendLogins($tag, $login_msg)) {
         echo "Logins sent";
     } else {

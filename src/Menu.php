@@ -11,6 +11,7 @@ namespace digitalmx\flames;
 */
 use digitalmx\MyPDO;
 use digitalmx\flames\Opportunities;
+use digitalmx\flames\FileDefs;
 
 class Menu {
 
@@ -169,13 +170,15 @@ EOT;
 
 		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='_blank'>User Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/news_admin.php'>News Admin</a>");
+		  $t .= self::if_level (7,"<li><a href='/calendar_admin.php'>Calendar Admin</a>");
+
 		 $t .= self::if_level(8,"<li><a href='/varinfo.php' target='_blank'>Var Info</a>");
 		  
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");
 
 		  $t .=    self::if_level (7, "<li><li><a href='/scripts/news_items.php' target='newsitems'>Review Articles</a>");
-		  $t .=   self::if_level (7, "<li><a href='/news/news_next/' target='preview'>Preview</a>");
+		  $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/assets.php' target='assets'>Asset Manager</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/gallery_edit.php' target='galleries'>Edit Gallery</a>");
 		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='_blank'>Web Stats</a>");
@@ -222,8 +225,8 @@ EOT;
 	if ($userlevel >= 2){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu(2,$thisMenu);
 	$t .= self::if_level(2,"
-		 <li><a href='/news/' target='newsletter'>Latest Newsletter</a>
-		 <li><a href='/newsp/' target='_blank'>Newsletter Index</a>
+		 <li><a href='/news/current/' target='newsletter'>Latest Newsletter</a>
+		 <li><a href='/news/' target='_blank'>Newsletter Index</a>
 		<li><a href='/galleries.php' target='gallery'>Photo Galleries</a>
 		<li>--- special pages ---
 		<li><a href='/spec/spirit.php' target='spirit'>The Spirit of AMD</a>
@@ -242,7 +245,7 @@ EOT;
 	$t .= self::if_level(1,"
 		 <li >$username <br> &nbsp;&nbsp;<i>$usertype</i><hr style='height:2px;margin:1px;'>
 		<li><a href='/'>Home</a>
-		 <li><a href='/scripts/profile_view.php' target='profile'>View/Edit My Profile</a>
+		 <li><a href='/profile.php' target='profile'>View/Edit My Profile</a>
 		 ");
 	$t .= ($userlevel > 1 and !empty ($userlinkedin))? 
 		"<li><a href='$userlinkedin' target='_blank'>My LinkedIn Page</a>" : '';
@@ -253,7 +256,7 @@ EOT;
 	$t .= self::if_level(0,"
 		<li>-------------
 		<li><a href='/help.html'>Help</a>
-		<li><a href='/scripts/signup.php'>New User Signup</a>
+		<li><a href='/signup.php'>New User Signup</a>
 		 <li><a href='/about.php' target='about'>About AMD Flames</a>
 		 <li><a href='mailto:admin@amdflames.org'>When all else fails, email the admin</a>
 	");
