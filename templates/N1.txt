@@ -4,7 +4,7 @@ Thanks for signing up for the FLAMEs AMD Alumni News
 site, ::name::.
 
 To confirm your signup, use the link below:
-   ::verify::
+   ::signup::
 
 You must confirm within 3 days to activate this signup.
 

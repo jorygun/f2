@@ -1,60 +1,34 @@
 <?php
+namespace digitalmx\flames;
+#ini_set('display_errors', 1);
 
 //BEGIN START
-	require_once "init.php";
-	if (f2_security_below(-1)){exit;}
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\DocPage;
+	use digitalmx\flames\FileDefs;
+
+
+
+if ($login->checkLogin(0)){
+   $page_title = 'AMD Flames Signup';
+	$page_options=['ajax']; #ajax, votes, tiny
+
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	# other heading code here
+
+	echo $page->startBody();
+}
+
 //END START
-global $G_member_status_set;
-
- ?>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="iso-8859-1" />
 
-	 <meta name="viewport" content="width=device-width, initial-scale=1">
-	 <link rel="stylesheet" href="../css/flames2.css">
-
-	<script src="/js/f2js.js"></script>
-    <script type = 'text/javascript'>
-         function validate_signup(theForm) {
-             var s = '';
-             var v = '';
-			v = document.getElementById('email').value;
- 		  if (v.length < 5){s += " Email field incomplete. "; }
- 	//		if (!v.match(/\@/)){s += "Email invalid. ");}
- 	       else {if (!validateEmail(v)){s += "Email invalid. ";}
- 	       }
-
-			  v = document.getElementById('affiliation').value;
-			if (v.length <5) {s += 'Affliation not filled in. ';}
-
- 			  v = document.getElementById('name').value;
- 			 if (v.length < 5){s += "Name field incomplete.";}
-
-			  if (s != ''){alert (s); return false;}
- 			 return true;
-		}
-	</script>
-	<style type="text/css">
-
-
-		</style>
-		<title>FLAMESite Signup</title>
-		<meta name="generator" content="BBEdit 11.0" />
-
-
-</head>
-
-<body >
-
-<?php if ($_SERVER['REQUEST_METHOD'] == 'GET') {?>
-
-	<h1><strong><span style="font-size: 36pt; color: green">FLAME<em>site</em></span></strong><span style="font-size: 26pt;color:black;">
-			&nbsp; Membership Signup</span></h1>
-
+if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 	<p >
 		Membership is open to former and current AMD employees, contractors,
 	   and representatives.<br>
@@ -65,263 +39,161 @@ global $G_member_status_set;
 
 
 
-	<!-- ~~~~~~~~~~~~- FORM ~~~~~~~~~~~~~~- -->
 
-	<form  style="margin-left: 30pt" method="post" onsubmit='return validate_signup()'  >
+	<form  style="margin-left: 30pt" method="post"  >
 
 		<p > <span class="input required">Yellow fields</span> are required information</p><br />
 		<table>
-		<tr><td colspan="2"><p class="instr"><hr>Enter your name (Firstname Lastname)</td></tr>
+		<tr><td colspan="2" class="instr">Enter your name (Firstname Lastname)</td></tr>
 		<tr><td>Name</td><td><input  class="required" name="name" id="name" type="text" size="40" /></td></tr>
 
+		<tr><td colspan="2" class="instr">Enter your email address
+		</td></tr>
 
+		<tr><td>Email</td><td><input id='email' name="email" type="email" class="required" size="40"></td></tr>
 
-		<tr><td colspan="2"><p class="instr"><hr>Enter the email address you want to use to correspond with other FLAMEs
+	<tr><td colspan="2" class="instr">Enter your current location (city, state or country)
 		</p></td></tr>
 
-		<tr><td>Email</td><td><input id='email' name="email" type="text" class="required" size="40"></td></tr>
-
-	<tr><td colspan="2"><p class="instr"><hr>Enter your current location (city, state or country)
-		</p></td></tr>
-
-		<tr><td>Location</td><td><input id='email' name="location" type="text" class="required" size="40"></td></tr>
+		<tr><td>Location</td><td><input name="location" type="text" class="required" size="40"></td></tr>
 
 
-		<tr><td colspan="2"><p class="instr">	<hr>Enter the most recent position(s) you held at AMD. Include the division, location and period.<br>
+		<tr><td colspan="2" class="instr">Enter the most recent position(s) you held at AMD. Include the division, location and period: what, where, when. <br>
 		e.g. <span class="example">Marketing Eng., PLD, Sunnyvale,
 		1982-1988; Field Sales; Denver, 1988-1991<br />
-		VP Sales, 1998-Present</span><br />
 
-		If you were with an AMD rep indicate the Rep's name. <br />
-		e.g. <span class="example">FSE; ElectraRep, Tampa, 1988-2002</span><br />
-		If you have some other affiliation with AMD please describe. <br>
-		e.g. <span class="example">Recuiter 2003 - Present</span><br></p>	</td></tr>
-		<tr><td><p class="inpt">AMD Affiliation </td>
+		If you were with an AMD rep or had some other affiliation with AMD, please describe what, where, when. <br />
+			</td></tr>
+
+		<tr><td>AMD Affiliation </td>
 		<td><input  class="required" size="90" id='affiliation' name="affiliation" type="text" ></td></tr>
 
 
-		<tr><td colspan="2"><p class="instr"><hr>
-			Finally, if you'd like to send a note to the admin, enter it here.  Especially note
-			if you think you're already a member but couldn't log in successfully.
-			</p></td></tr>
+		<tr><td colspan="2"><p class="instr">
+			Finally, if you'd like to send a note to the admin, enter it here.  Especially note if you think you're already a member but couldn't log in successfully.
+			</td></tr>
 		<tr><td>Note to Admin</td><td>
-			<textarea rows="8" cols="60" name='admin_note' ></textarea></td></tr>
+			<textarea rows="8" cols="60" name='comment' ></textarea></td></tr>
 		</table>
-		<hr>
 
-
-
-		<p class="inpt">
 		<input name="Submit" value="Submit"  type="submit">
-		</p>
 	</form>
 
+<?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') :
+
+   // check data
 
 
-
-
-		 <!--
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-			<script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
-			<script src="js/plugins.js"></script>
-			<script src="js/main.js"></script>
- -->
-
-			
-
-<?php
-	}
-
-else  { # ($_SERVER['REQUEST_METHOD'] == 'POST')
-
-     //  include_once "verify_utilities.php";
-	// Gather info (strip any slashes added by the POST function)
-
-	
-	// Notify user if error
-		$invalid='0';
-
-
-		if ($invalid){
-			echoAlert( "Data submitted is not valid. Please reenter.");
-			echo "<script type='text/javascript'>
-	   window.location.assign('$_SERVER[PHP_SELF]')
-	  </script>";
-			exit;
+		if (! $email =  filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+		   echo "Email not valid.  <a href='/signup.php'>Try again</a>.";
+		   exit;
 		}
-	//// Skip if bogus data
-		$bogus = '';
-		if (strpos($_POST[name],"?")){$bogus = 1;} // If username contains ?'s skip adding to DB
-		$strange_count = preg_match_all ('/[^\w\.\ \']/',$_POST[name]); #count strange chars
 
+   // duplicat email
+	$q = "SELECT username, joined from `members_f2` where user_email like '$email' ";
 
+	 if ($result = $pdo->query($q)->fetchAll()) {
+      $send_button = f\actionButton('Send Login','sendLogin',$_POST['email'],'','resp');
 
-		if (! filter_var($_POST[email], FILTER_VALIDATE_EMAIL)) {
-			$bogus=1;
-  			echo "<p>Bad Address - $_POST[email] is not a valid email address.</p>";
- 			 echo "<p><a href='$_SERVER[PHP_SELF]'>Try again.</a></p>";
-
- 			 if ($bogus){exit;} #silently close
-}
-
-
-	$dup_found = FALSE;
-//check for duplicate email
-
-
-
-	$q = "SELECT username,join_date,id,user_id,email_status,status from `members_f2` where user_email like '$_POST[email]' AND status  IN ($G_member_status_set) ";
-
-	 $result = mysqli_query($GLOBALS['DB_link'],$q);
-
-		$row_count = mysqli_num_rows($result);
-		$obscure_names = array ();
-		if ($row_count>0){
-
-			$dup_found = TRUE;
-			while ($row = mysqli_fetch_assoc($result)){
-				$obscure_names[] = obscure_name($row[username]);
+	   	echo	"
+<p>The email you entered &lt;$email&gt;
+is already in the member database for one or more users: <br>
+<table>
+<tr><th>Name</th><th>Join Date</th></tr>
+";
+			foreach ($result as $row) {
+			   $jd = u\make_date($row['joined']);
+				echo "<tr><td>${row['username']}</td><td>$jd</td></tr>\n";
 			}
-			$urlemail = rawurlencode($_POST[email]);
 
-			echo	"
-<h3>Already here?</h3>
-<p>The email you entered &lt;$_POST[email]&gt;
-is already in the member database for one or more users named: <br>
+			echo "</table>
+<p>  If you see your self on this list, then click here to have the login
+associated with this email sent to you. $send_button </p>
 ";
-
-			foreach($obscure_names as $v){echo "$v, ";}
-			echo "
-</p>
-<p>  Should I send the login link for those members to $_POST[email]?
-Note: the same email can be used by more than one member, but each member
-has their own profile and login.  If you are one of the people listed
-above, then click to have the member logins associated with this email
-address sent to you.
-<a href='#' onclick=\"window.open('send_lost_link.php?email=$urlemail','lostlink','height=200,width=400,x=200,y=200');return false;\">Send existing logins to $_POST[email]</a>
-</p>
-<p>If you are NOT one of the people named above, then you can
-get your own member account at the same address.
-Just look for your confirmation email, and click to verify that
-it's you. </p>
-
-<p>If you entered the wrong email, then you won't receive the
-confirmation sent to that address.  Just sign up again, using your
-correct current email address.</p>
-
-<p>If all else fails, <a href='mailto:admin@amdflames.org' >contact the admin</a>.</p>
-";
-
+   }
 
 
 //check for duplicate name
 
-	$q = "SELECT username,join_date,id,user_id,email_status,status,user_email from `members_f2` where username like '%${_POST[name]}%'   AND status   REGEXP 'm|g|r|a' ;"; #basically looking for exact match, not similar
+	$q = "SELECT username,user_id,joined,user_from,status from `members_f2` where username like '${_POST['name']}' ;"; # looking for exact match, not similar
 
-	 $result = mysqli_query($GLOBALS['DB_link'],$q);
+	if ( $result = $pdo->query($q)->fetchAll() ){
 
-		$row_count = mysqli_num_rows($result);
-		while ($row = mysqli_fetch_assoc($result)){
-			if ($row_count>0){
-				$dup_found = TRUE;
-				echo "<h3>Already signed up?</h3>
-				<p>I found $row_count members named $_POST[name]</p>\n";
-				$this_email = $row[user_email];
-				$urlemail=rawurlencode($this_email);
-				$obscure_mail = obscure_email($this_email);
+      echo <<<EOT
+      <p>I found one or more members with similar names.  If one
+      of these is you, click the 'Send Login' button, to have the login
+      emailed to that user.  If you aren't sure, just send a note to
+      the admin saying you may already be in the database.  </p>
+      <table>
+      <tr><th>Name</th><th>Joined</th><th>From</th><th>Status</th><th>Send Login</th></tr>
+EOT;
+      foreach ($result as $row) {
+         $status = Defs::getMemberDescription($row['status']);
+         $joined = u\make_date($row['joined']);
+         $logbutton = f\actionButton('Send Login','sendLogin',$row['user_id'],'','resp');
 
-				if ($this_email){
-					echo "
-<p>The name $_POST[name] is already in the member database with what
-appears to be a valid email
-address like this: <code>$obscure_mail</code>.</p>
-<p>If that is you and your email, should I send a login link to that
-email address?
-<a href='#' onclick=\"window.open('send_lost_link.php?email=$urlemail','lostlink','height=200,width=400,x=200,y=200');return false;\">Yes, send login link.</a>
-</p>
+         echo "<tr><td>${row['username']}</td><td>$joined</td><td>${row['user_from']}
+         </td><td>$status</td><td>$logbutton</td></tr>
+         ";
+      }
+      echo "</table>\n";
 
-<p>Your new signup data is still being sent along as well.  If
+   }
+
+
+echo "<p>Your new signup data is still being sent along as well.  If
 all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 ";
-				 break; #only do one record
-				}
 
-			}
-		}
-
-
-    }
 
 	 // SQLify the insert
 
-	$upw = randPW(); #temporary password until data is confirmed
-	$user_id = 0;
-	$login = $upw . $user_id;
-	$user_email	=	$_POST[email];
-	$uemenc = rawurlencode($user_email);
 
 	$source_ip = $_SERVER['REMOTE_ADDR'];
-	$source_message = sprintf("From %s at %s\n",$source_ip,date('Y-m-d H:i'));
+	$upd['source_message'] = sprintf("From %s at %s\n",$source_ip,date('Y-m-d H:i'));
+   $upd['username'] = filter_var($_POST['name'],FILTER_SANITIZE_STRING);
+   $upd['user_email'] = $email;
+   $upd['user_from'] = filter_var( $_POST['location'],FILTER_SANITIZE_STRING);
+   $upd['user_amd'] = filter_var($_POST['affiliation'],FILTER_SANITIZE_STRING);
+   $upd['IP'] = $source_ip;
+   $upd['comment'] = filter_var ($_POST['comment'] ,FILTER_SANITIZE_STRING);
 
-	  $sql = <<< EOT
-	INSERT INTO `members_f2` SET
-	   user_id = $user_id,
-	   upw = '$upw',
-	   status = 'N',
-	   status_updated = NOW(),
-	   username = "$_POST[name]",
-	   user_email = "$_POST[email]",
-	   user_from = "$_POST[location]",
-	   email_status = 'N1',
-	   user_amd = "$_POST[affiliation]",
-	   alt_contact = "$_POST[altc]",
-	   admin_note = "$source_message  $_POST[admin_note]"
+   $allowed_list = ['username','user_email','user_from','user_amd','IP','comment'];
+   	$prep = u\pdoPrep($upd,$allowed_list,'');
+ /**
+ 	$prep = u\pdoPrep($post_data,$allowed_list,'id');
 
-	   ;
-EOT;
+    $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+       $new_id = $pdo->lastInsertId();
 
-  	$user_name = htmlentities($_POST[username]);
+    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
+       $stmt = $pdo->prepare($sql)->execute($prep['data']);
 
-	 $result = mysqli_query($GLOBALS['DB_link'],$sql);
+  **/
+	  $sql = "INSERT INTO `signups`
+	 ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+	   $stmt = $pdo->prepare($sql)->execute($prep['data']);
+       $new_id = $pdo->lastInsertId();
 
-	 // Get the ID for this Insert
-	  $result = mysqli_query($GLOBALS['DB_link'],"SELECT LAST_INSERT_ID() AS id;");
-	  $row = mysqli_fetch_assoc($result);
-	  $id = $row[id];
-
-
-	$dup_notice = '';
-	if ($dup_found){$dup_notice = "
-	One or more possible duplicate entries were found during your signup.
-	If you chose to have the login for one of them sent to you,
-	and want to keep that instead of signing up new,
-	just don't click the link on this email, and your new signup will be ignored.\n
-	";
-	}
-
-	// Let user know
-	 echo "<h3>Signup Submitted - Thank You</h3>
-	 <p>You will receive an email in a few minutes confirming your registration.</p> <p><b>You need to click the Verify Email link in that email within the next
-	 3 days, so we know the email got through to you.</b></p>
-
-
-	 <p>$dup_notice</p>
-	 <p>A few days after you've verified your email, you will get a welcome message with your permanent login.</p><br>";
-
-	  print "<p><a href='$GV[siteurl]'>Return to main page</a></p>";
+      $message = file_get_contents(REPO_PATH . "/templates/N1.txt");
+      $message = str_replace('::signup::',SITE_URL . "/action.php?S$new_id",$message);
+       $message = str_replace('::name::',$upd['username'],$message);
+      $header = "From: admin@amdflames.org\r\n";
+      $header .= "CC: admin@amdflames.org\n\n";
+      $to = $upd['user_email'];
+      mail ($to,'Verify your AMD Flames Signup',$message,$header);
 
 
 
+echo <<<EOT
 
+	 <h3>Signup Submitted - Thank You</h3>
+	 <p>You will receive an email in a few minutes confirming your registration.</p> <p>If you discovered you were already registered, ignore that email.  Otherwise, <b>you need to click the Verify Email link in that email within the next
+	 3 days</b>, so we know the email got through to you.</p>
 
-	send_verify($id,'N1');
+	 <p>A few days after you've verified your email, you will get a welcome message with your permanent login.</p>
 
-	  mysqli_close($DB_link);
-
-
-	#echo  "<p><a href='$GV[siteurl]ir?s=$login'>Log In</a></p>\n";
-
-}
-
-?>
 </body></html>
+EOT;
+endif;

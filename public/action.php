@@ -25,6 +25,7 @@ use digitalmx\flames\StatusReport;
 use digitalmx\flames\FileDefs;
 use digitalmx\flames\Publish;
 use digitalmx\flames\NewsIndex;
+use digitalmx\MyPDO;
 
 
 
@@ -53,6 +54,11 @@ if (!empty($_SERVER['QUERY_STRING'])) {
          case 'P':
          	$page_title = 'Profile Editor';
 				$page_options=['tiny','ajax']; #ajax, votes, tiny 
+			case 'S':
+				$page_title = 'Signup Verification';
+				$page_options=['ajax'];
+				break;
+				
         default:
         	$page_title = 'AMD Flames Action Handler';
            
@@ -72,6 +78,9 @@ if (!empty($_SERVER['QUERY_STRING'])) {
  		case 'P':
  			edit_profile($uid,$madmin,$templates);
          break;
+      case 'S':
+      	echo signup_verify($uid);
+      	break;
  		default:
  			echo "No Action Requested";
  
@@ -157,7 +166,15 @@ function atest($x=''){
 	return "adone";
 	
 }
-
+function signup_verify($uid){
+	// veirfy email in signup db
+		$sql = "UPDATE `signups` SET status = 'V' WHERE id='$uid'";
+		$pdo = MyPDO::instance();
+		if ($pdo->query($sql)) {
+			mail('admin@amdflames.org','New Signup Verified','New Signup');
+			return "Success.  You will receive your login information within a few days.";
+		} else {return "Failed";}
+	}
 function edit_profile($uid,$madmin,$templates) {
 	
 	$profile_data = $madmin->getProfileData($uid);

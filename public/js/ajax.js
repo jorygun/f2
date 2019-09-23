@@ -112,7 +112,7 @@ function runStatus(pid) {
  });
    
 }
-
+// for getting content of bulk email messages
 function getMessage (type) {
    $.ajax({
    url: "/action.php",

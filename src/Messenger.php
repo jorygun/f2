@@ -164,6 +164,8 @@ and change it in your profile.
 		}
 		elseif (u\isValidEmail($tag)){
 			$email = $tag;
+			$name = 'Flames Member';
+			
 		} else {
 			throw new Exception ("Cannot decipher tag $tag to get email address");
 		}
@@ -291,6 +293,7 @@ and change it in your profile.
 		$this->replacements ['::login::'] = 'https://amdflames.org/?s=' . $login;
  
 		$this->replacements ['::verify::'] = SITE_URL . "/action.php?V" . $uid;
+		$this->replacements ['::signup::'] = SITE_URL . "/action.php?S" . $uid;
 		$this->replacements['::profile_edit::'] = SITE_URL . "action.php?P" . $uid;
 	
 		$this->replacements['::name::'] = $row['username'];
