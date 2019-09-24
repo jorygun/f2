@@ -131,7 +131,7 @@ $row = $stmt->fetch(\PDO::FETCH_ASSOC);
      $htitle = addslashes($row['title']);
     $discussion = false;
     $contributor_id = $row['contributor_id'];
-    $contributor_email = get_user_data_by_id ($contributor_id)[1];
+    $contributor_email = ($contributor_id)? get_user_data_by_id ($contributor_id)[1] : '';
    
    // display asset
     $hte = array ();
