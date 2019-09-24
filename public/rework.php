@@ -28,7 +28,7 @@ if ($login->checkLogin(4)){
 //END START
 
 $sql1 = "SELECT id,url,link from `assets` where url like '/reunion/%' or link like '/reunion%' ";
-$sql2 = "UPDATE `assets` SET (url,link) VALUES (?,?) WHERE id = ? ;";
+$sql2 = "UPDATE `assets` SET url = ?, link = ? WHERE id = ? ;";
 $ins = $pdo->prepare($sql2);
 
 $src = $pdo->query($sql1);
@@ -42,7 +42,7 @@ foreach ($src as $row){
     echo "$url -> $rurl" . BRNL;
     $rlink = preg_replace ('|^/reunions|','/assets/reunions/',$link);
      echo "$link -> $rlink" . BRNL;
-    $sql2->execute([$rurl,$rlink,$id]);
+    $ins->execute([$rurl,$rlink,$id]);
    $count++;
 
    }
