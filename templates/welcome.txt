@@ -1,21 +1,20 @@
 Welcome to AMD Flames...
 
-Welcome to the club $name!
+Welcome to the club ::name::!
 
 You are now registered as a Member on the
 AMD Alumni site AMDflames.org.
 
 This email contains your Personal Link (below)
-to access the FLAMEsite.  Please save it.
+to access the Flames website.  Please save it.
 
 Your personal link to the FLAMEsite:
-https://amdflames.org/?s=::login::
+::login::
 
 (Instead of a user id and password, this site uses
 a unique login for each user.  Your password is the
 part after "s=", but you don't generally need that.)
 
-::bulk::
 
 We hope you will enjoy seeing what other current and
 former AMDers are up to, and hope you will contribute

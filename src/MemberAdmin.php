@@ -169,7 +169,67 @@ class MemberAdmin {
 
       }
 
-
+	public function processSignups($post) {
+		# u\echor($post,'Incoming to process');
+		
+	
+		foreach ($post as $key=>$val){
+			if (substr($key,0,1) != 'D'){continue;} #find Dnn vars
+			if (empty($val)){continue;} #no change
+			$id = substr($key,1);
+			# echo "Now do $key:$val" . BRNL;
+			$xids = []; #array of items to be deleted
+			switch ($val) {
+				case 'X': 
+				case 'R':	
+					 $sql = "UPDATE `signups` SET status = '$val' WHERE id='$id'";
+// 					echo $sql . BRNL;
+					$this->pdo->query($sql);
+					break;
+				case 'M': #add as member or guest
+				case 'G':
+					$now = u\make_date('now','sql','datetime');
+					$sql = "SELECT * FROM `signups` WHERE id = $id;";
+					$row = $this->pdo->query($sql)->fetch();
+					$srow = array(
+						
+						'status' => $val,
+						'username' => $row['username'],
+						'user_email' => $row['user_email'],
+						'admin_note' => "Entered from : " . $row['IP'] . " on " . $row['entered'] . "\n"
+								. $row['comment'] . "\n",
+						'user_from' => $row['user_from'],
+						'user_amd' => $row['user_amd'],
+						'email_status' => 'Y',
+						'email_last_validated' => $now,
+					'profile_validated' => $now,
+					'joined' => $now,
+						
+						);
+					$new_id = $this->member->addSignup($srow);
+					echo "New user_id: $new_id: ${srow['username']}" . BRNL;
+					
+					// send welcome message
+					$this->messenger->sendMessages($new_id,'welcome');
+					
+					#now remove processed drow from the signup list
+					$sql = "DELETE from `signups` WHERE id = $id";
+					$this->pdo->query($sql);
+					
+					break;
+				default:
+					echo "Unknown code on signup id $key:$val" . BRNL;
+			}
+			
+			
+		}
+		// now delete all the x'd out records
+		
+		$sql = "DELETE from `signups` WHERE status = 'X'";
+		$stmt = $this->pdo->query($sql);
+		 $stmt->rowCount() . " entries deleted". BRNL;
+		
+	}
 
  public function showSearch(){
  	$status_options = "<option value=''>Choose...</option>";
@@ -548,9 +608,11 @@ EOT;
      if (!empty( $post['amd_dept'])){
     $post['amd_dept'] = u\charListToString( $post['amd_dept'] );
     }
-  #  u\echor($post,'Incoming post');  exit;
-  	#	u\echor($md,'MD'); exit;
+ #   u\echor($post,'Incoming post');  
+  #	u\echor($md,'MD'); exit;
 	$profile_changed = false;
+	$update=[];
+	// go through each key, see if it's changed, build update array
     foreach ($post as $key=>$val){
     	if (in_array($key,['Submit'])){continue;}
     	
@@ -562,8 +624,9 @@ EOT;
     	
     	// echo "testing $key: new = $val<br>existing = ${md[$key]} ... ";
     	if ( strcmp($md[$key],$val) == 0){continue;} #no change
-  //  else {echo "Changed data in $key -> $val" . BRNL; }
-   	$update=[];
+   
+#    	echo "Changed data in $key -> $val" . BRNL; 
+   	
    	
     	switch ($key){
    	
@@ -614,8 +677,8 @@ EOT;
 			default:
 				die ("Unrecognized field in profile update: $key");
 		}
-	}
 	
+	}
 	
 // won't happen until upload turned on ini form
 	if (isset($_FILES['linkfile'])){
@@ -635,8 +698,7 @@ EOT;
 	    mail ('admin@amdflames.org',$subj,$msg);
     }
 
-//  u\echor($update,'update array');
-// 	exit;
+
  //   #assume user also checked email
  	 if (!isset($update['email_status'])){ #could already be set to E1
     $update['email_status'] = 'Y'; #will autoset verified
@@ -644,8 +706,11 @@ EOT;
  	 $update['profile_validated'] = sql_now();
 	$update ['user_id'] = $uid;
 	
-	
+#	 u\echor($update,'update array');
+#	 exit;
+	 
 	$prep = u\pdoPrep($update,[],'user_id');
+
  /**
  	$prep = pdoPrep($post_data,$allowed_list,'id');
 

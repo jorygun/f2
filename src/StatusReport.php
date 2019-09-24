@@ -150,7 +150,7 @@ class StatusReport {
 					}
 						 $report .= <<<EOT
 						 <tr class='brow'>
-							  <td class='username'><a href= '/scripts/profile_view.php?id=$id' target = '_blank'>$name</a></td>
+							  <td class='username'><a href= '/profile.php?uid=$id' target = '_blank'>$name</a></td>
 							  <td class='location'>$location</td>
 							  <td>$contact</td></tr>
 EOT;

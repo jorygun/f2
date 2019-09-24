@@ -230,13 +230,11 @@ EOT;
 		 <li><a href='/news/current/' target='newsletter'>Latest Newsletter</a>
 		 <li><a href='/news/' target='_blank'>Newsletter Index</a>
 		<li><a href='/galleries.php' target='gallery'>Photo Galleries</a>
-		<li>--- special pages ---
-		<li><a href='/spec/spirit.php' target='spirit'>The Spirit of AMD</a>
-		<li><a href='/spec/Upward.php' target='upward'>Flames who later became CEOs</a>
-		<li><a href='/spec/hbwjs80.php' target='upward'>Members on Jerry Sanders' 80th Birthday</a>
-		<li><a href='/spec/anixter.php' target='upward'>Tributes to Ben Anixter</a>
-		<li><a href='/spec/McKean.html' target='upward'>Tribute to John McKean</a>
-		 <li><a href='/special.php' target='special'>Other Special Pages</a>
+		
+		 <li><a href='/special/' target='special'>Special Tributes</a>
+		 <li><a href='/galleries?4547/' target='_blank'>Our Great Ads</a>
+		<li><a href='/special/McKean.html' target='upward'>Tribute to John McKean</a>
+		
 		 ");
 	$t .=  self::closeLine(2, $thisMenu);
 

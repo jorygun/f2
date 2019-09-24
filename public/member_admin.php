@@ -32,6 +32,12 @@ ini_set('display_errors', 1);
 
 #display search results
 if (isset($_POST['search'])){
+	if (isset($_POST['status']) &&  $_POST['status'] == 'N'){ #new members
+		$data['mdata'] = $pdo->query("SELECT * from `signups` ORDER BY status ;") -> fetchAll();
+		$data['heads'] = Defs::$signup_status_names;
+		echo $templates->render('new_member_list',$data);
+		exit;
+	}
 	
 	$mdata = $admin->listMembers ($_POST);
 	
@@ -52,6 +58,16 @@ elseif (isset($_POST['Update'])){
 	$mdata = $admin->showUpdate($uid);
 	echo $templates->render('member_edit',$mdata);
 
+}
+
+elseif (isset($_POST['Process'])){
+	#process signups
+	echo $admin->processSignups($_POST);
+	echo "done";
+	$data['mdata'] = $pdo->query("SELECT * from `signups` ORDER BY status ;") -> fetchAll();
+	$data['heads'] = Defs::$signup_status_names;
+	echo $templates->render('new_member_list',$data);
+	exit;
 }
 
 elseif ($uid = $_GET['uid'] ?? '' ){

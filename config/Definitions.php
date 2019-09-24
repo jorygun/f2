@@ -178,7 +178,15 @@ private static $member_codes = array (
 	'H' => array ('??' ,4),
 	);
 
-
+	public static $signup_status_names = array(
+		
+			'A' => 'Validated Email',
+			'R' => 'Needs Review',
+			'U' => 'New Unvalidated',
+			'X' => 'To Be Deleted',
+			'Z' => 'Other',
+		);
+	
 #these member status codes are considered members
 	private static $member_array = array(
 	'M', 'MA','MN','MC','MU','R','G'

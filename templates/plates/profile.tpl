@@ -16,7 +16,7 @@
 	<?php endif ?>
 	Click to edit profile, change email address, change subscribe options:
     <button onClick = 'window.location.href ="/profile.php/?edit=<?=$user_id?>"'>
-            Edit My Profile </button>
+            Edit Profile </button>
     
 <?php endif ?>
 </p>

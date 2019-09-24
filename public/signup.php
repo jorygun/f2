@@ -151,13 +151,13 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 
 	$source_ip = $_SERVER['REMOTE_ADDR'];
 	$upd['source_message'] = sprintf("From %s at %s\n",$source_ip,date('Y-m-d H:i'));
-   $upd['username'] = filter_var($_POST['name'],FILTER_SANITIZE_STRING);
+   $upd['username'] = $_POST['name'];
    $upd['user_email'] = $email;
-   $upd['user_from'] = filter_var( $_POST['location'],FILTER_SANITIZE_STRING);
-   $upd['user_amd'] = filter_var($_POST['affiliation'],FILTER_SANITIZE_STRING);
+   $upd['user_from'] =  $_POST['location'];
+   $upd['user_amd'] = $_POST['affiliation'];
    $upd['IP'] = $source_ip;
-   $upd['comment'] = filter_var ($_POST['comment'] ,FILTER_SANITIZE_STRING);
-
+   $upd['comment'] = $_POST['comment'];
+   $upd['status'] = 'U';
    $allowed_list = ['username','user_email','user_from','user_amd','IP','comment'];
    	$prep = u\pdoPrep($upd,$allowed_list,'');
  /**

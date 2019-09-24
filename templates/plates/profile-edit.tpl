@@ -6,7 +6,9 @@
 <?php else: ?>
 
 <h1> AMD Flames Profile and Email Editor</h1>
+<p>Saving this form marks your email address as confirmed. If you make any changes to What's New, My Interests, About Me, or Working at AMD, your profile will be updated, and will be listed as an update on the next newsletter. </p>
 <p>Fields in yellow are required.</p>
+
 	<h3 ><?= $username ?></h3>
 	<p>Profile last updated: <?= $profile_date ?><br>
 		Flame member since  <?= $join_date ?> (<?= $status_name ?>) <br>
@@ -87,7 +89,7 @@ address.  Please check and update if necessary. </td></tr>
 
 		
 		<tr><td colspan='2'><h5>Narratives (optional)</h5></td></tr>
-   	<tr><td><u>Your interests</u></td></td></tr>
+   	<tr><td><u>My interests</u></td></td></tr>
 		<tr><td colspan='2'><input size='96'  name='user_interests' type='text' value="<?= $this->e($user_interests) ?>">
 		</td></tr>
 		

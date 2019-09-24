@@ -39,7 +39,7 @@
 
 
 		<tr>
-		<td align='center'
+		<td align='center'>
 			<?= $row['x-out-button'] ?>
 			</td>
 		<td align='center'><?= $row['bounceEmailButton'] ?></td>

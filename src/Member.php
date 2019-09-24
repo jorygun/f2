@@ -606,29 +606,44 @@ private static $update_fields = array(
 //         }
 //     }  
 
+	public function addSignup($row){
+		// get new uid and passwd
+			$row['upw'] = $this->randPW();
+			$max_uid = $this->pdo->query('select max(user_id) from `members_f2`')->fetchColumn();
+			$new_uid = $max_uid + 1;
+			$row['user_id'] = $new_uid;
+		
+			
+			$prep = u\pdoPrep($row,'','id');
+ /**
+ 	$prep = u\pdoPrep($post_data,$allowed_list,'id');
 
+    $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+       $new_id = $pdo->lastInsertId();
+
+    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
+       $stmt = $pdo->prepare($sql)->execute($prep['data']);
+
+  **/
+	$sql = "INSERT into `members_f2` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+	#	echo 'Member before update.' . BRNL;
+	#	echo "sql: " . $sql . BRNL;
+	#	u\echor($prep['data'],'Data');
+		
+       $stmt = $this->pdo->prepare($sql);
+       #exit;
+       $stmt ->execute($prep['data']);
+       $new_id = $this->pdo->lastInsertId();
+       
+       return $new_uid;
+	
+	}
     private function randPW() {
  //Generate a 5 digit password from 20 randomly selected characters
 
-	
-	 static $tb1 = array (0,1,2,3,4,5,6,7,8,9,'P','Q','W','X','V','b','r','z','k','n');
-	 static $iterations = 0;
-	 if ($iterations > 5){die ("Too many iterations of random password");}
-	 $pass = "";
-	 $q = "SELECT * from `members_f2` WHERE upw = ?;";
-	 $stmt = $this-> pdo -> prepare($q);
-	 while (!$pass){
-	 	
-	 	 ++$iterations;
-		 for ($i=0; $i<5; $i++) {
-			$pass = $pass . $tb1[rand(0,19)];
-		  }
-		 
-		  #make sure it's unique
-		  
-		  $stmt->execute([$pass]);
-		  if ($stmt -> rowCount() >0 ){$pass='';}
-  	}
+	static $permitted_chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	$pass = substr(str_shuffle($permitted_chars),0,5);
 	 return $pass;
  }
  
@@ -1200,7 +1215,8 @@ public function getLogins($tag) {
 		$list = array();
 		$sql = "SELECT  * FROM `members_f2`
 			WHERE status in ($member_status_set)
-			AND profile_updated > '$since';";
+			AND profile_updated > '$since'
+			AND joined < '$since';";
 
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
 		foreach ($result as $row){

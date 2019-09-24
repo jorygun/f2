@@ -168,7 +168,7 @@ function atest($x=''){
 }
 function signup_verify($uid){
 	// veirfy email in signup db
-		$sql = "UPDATE `signups` SET status = 'V' WHERE id='$uid'";
+		$sql = "UPDATE `signups` SET status = 'A' WHERE id='$uid'";
 		$pdo = MyPDO::instance();
 		if ($pdo->query($sql)) {
 			mail('admin@amdflames.org','New Signup Verified','New Signup');

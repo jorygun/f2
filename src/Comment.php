@@ -6,6 +6,7 @@ namespace digitalmx\flames;
 	use digitalmx as u;
 	use digitalmx\flames as f;
 	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\MyPDO;
 
 
 /**
@@ -48,8 +49,8 @@ class Comment
     private $dbn;
     private $item_id;
     private $ucomment;
-    private static $_dbcon;
-
+  
+	private static $pdo;
     private $clist;
     private $stmt, $sql,$item_title;
 
@@ -80,7 +81,7 @@ class Comment
     {
         $ucom = null;
         $this->user_id = $user_id;
-        self::$_dbcon  = \digitalmx\MyPDO::instance();
+        self::$pdo  = MyPDO::instance();
         /* moved the setting of username and email
             into an option so the class can be
             instantiated with being logged in.
@@ -90,7 +91,7 @@ class Comment
         $sql = "SELECT username,user_email
         from members_f2
         where user_id = '$this->user_id';";
-        $row = self::$_dbcon->query($sql)->fetch();
+        $row = self::$pdo->query($sql)->fetch();
         $this->username = $row['username'];
         $this->user_email = $row['user_email'];
         $this->user_level = $_SESSION['level'];
@@ -190,7 +191,7 @@ class Comment
 
     // if called as single, first see if there is already a comment by this user
         if ($single){
-            $stmt_count = self::$_dbcon->query($sql_count);
+            $stmt_count = self::$pdo->query($sql_count);
             $daycount = $stmt_count->fetchColumn();
         }
 
@@ -198,21 +199,21 @@ class Comment
 
             echo "<script>alert('Your previous comment has been replaced.');</script>";
 
-            $stmt_update = self::$_dbcon->prepare($sql_update);
+            $stmt_update = self::$pdo->prepare($sql_update);
             $stmt_update->execute([$ucomment]);
             $comment_action = 'Update';
         }
         else {
             // insert new comment
 
-           $stmt_insert = self::$_dbcon->prepare($sql_insert);
+           $stmt_insert = self::$pdo->prepare($sql_insert);
             $stmt_insert -> execute([$ucomment]);
             $comment_action = 'Insert';
             $inserted_rows = $stmt_insert->rowCount();
 
     // increemnt the comment count for this item
         $sql = "UPDATE `$on_db` set comment_count = comment_count +1 where id = $item_id";
-        $cntq = self::$_dbcon->prepare($sql) -> execute();
+        $cntq = self::$pdo->prepare($sql) -> execute();
 
         }
 
@@ -331,7 +332,7 @@ private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
 
                 // now go through the list, getting the user
                 // info from the members table
-                 $liq = self::$_dbcon->prepare("SELECT username,upw,user_email FROM `members_f2` WHERE user_id = ? AND email_status not like 'L%' ");
+                 $liq = self::$pdo->prepare("SELECT username,upw,user_email FROM `members_f2` WHERE user_id = ? AND email_status not like 'L%' ");
 
 
                 foreach ($uid_list as $uid) {
@@ -450,7 +451,7 @@ This email was sent to $cclist.
             AND item_id = '$item_id' AND status is null
 
             ORDER BY cdate;";
-
+	echo "sql: $sql" . BRNL;
 
         return self::_build_comment_array($sql);
     }
@@ -461,7 +462,7 @@ public function getCommentcount($dbn,$item_id)
         $sql="SELECT count(*) FROM comments where on_db = '$this->_on_db'
             AND item_id = '$item_id' AND status is null
             ;";
-        $count = self::$_dbcon->$query($sql)->fetchColumn();
+        $count = self::$pdo->$query($sql)->fetchColumn();
         return $count;
 
 }
@@ -493,7 +494,7 @@ private function _getArticle($dbtable,$item_id)
         #$_on_db = self::nameToTable($dbn);
         $sql = "Select title,contributor,contributor_id,url from `$dbtable` where id = '$item_id'";
         // url is used for spec items, where it is the page name in /spec_items
-        $stmt = self::$_dbcon->query($sql);
+        $stmt = self::$pdo->query($sql);
         if (!$stmt){die ("Failed to ftch on $sql");}
         $row = $stmt -> fetch();
         $row['title'] = stripslashes($row['title']);
@@ -510,7 +511,7 @@ private function _getArticle($dbtable,$item_id)
     }
     public function getContactFromUserid($user_id)
     {
-        $st2 = self::$_dbcon->query(
+        $st2 = self::$pdo->query(
             "Select username,user_email from members_f2 where user_id = '$user_id';"
         );
             $row = $st2->fetch();
@@ -562,7 +563,7 @@ private function _getArticle($dbtable,$item_id)
             ORDER BY c.cdate;
             ";
     //    echo "sql: $jsql<br>";
-        $stmt = self::$_dbcon->query($jsql);
+        $stmt = self::$pdo->query($jsql);
         foreach ($stmt as $row) {
             $articleRow = self::_getArticle($row['on_db'],$row['item_id']);
             $cdata = array(
@@ -596,8 +597,11 @@ private function _getArticle($dbtable,$item_id)
     private function _build_comment_array($sql)
     {
         $cset = array();
-        $stmt = self::$_dbcon->query($sql);
+        $stmt = self::$pdo->query($sql);
+        if ($stmt->rowCount() == 0 ){echo "Nada"; exit;}
+        
         foreach ($stmt as $row) {
+        		
             list($username,$user_email) = $this->getContactFromUserid($row['user_id']);
 
             $cdata = array(
@@ -613,7 +617,8 @@ private function _getArticle($dbtable,$item_id)
                 'no_email' => $row['no_email']
 
             );
-            #echo $row['comment'],' ';
+           # u\echor ($cdata,'comment');
+           
             $cset[] = $cdata;
         }
 
