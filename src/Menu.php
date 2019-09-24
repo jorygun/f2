@@ -215,8 +215,8 @@ EOT;
 	$t .=  self::addMenu(4,$thisMenu);
 	if ($userlevel >= 4){$menulist[] = $thisMenu;}
 	$t .= self::if_level(4,"
-		<li><a href='/scripts/search_news.php' target='_blank'>Search Newsletters</a>
-		<li><a href='/scripts/search_member.php' target='_blank'>Search For a Member</a>
+		<li><a href='/member_search.php' target='_blank'>Search Newsletters</a>
+		<li><a href='/member_search.php' target='_blank'>Search For a Member</a>
 		<li><a href='/scripts/assets.php' target='assets'>Search Graphics/Video</a>
 		<li><a href='http://www.linkedin.com/groups?gid=117629&trk=myg_ugrp_ovr' target='_blank'>AMD Alumni on LinkedIn</a>
 	");
@@ -232,7 +232,7 @@ EOT;
 		<li><a href='/galleries.php' target='gallery'>Photo Galleries</a>
 		
 		 <li><a href='/special/' target='special'>Special Tributes</a>
-		 <li><a href='/galleries?4547/' target='_blank'>Our Great Ads</a>
+		 <li><a href='/galleries.php?4547/' target='_blank'>Our Great Ads</a>
 		<li><a href='/special/McKean.html' target='upward'>Tribute to John McKean</a>
 		
 		 ");

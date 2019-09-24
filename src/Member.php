@@ -184,6 +184,9 @@ private static $update_fields = array(
  	'status',
  	'email_last_validated',
  	'email_status_time',
+ 	'email_status_name',
+ 	'status_name',
+ 	
  	'user_email',
  	'email_public',
  	'seclevel',
@@ -736,16 +739,16 @@ public function getLogins($tag) {
 			$q[] = " username LIKE '%" . addslashes($post['name']) . "%' "; 
 		}
 		
-		if ($email = $post['email']){
+		if (!empty($email = $post['email'] ??'')){
 			$q[] = " user_email LIKE '%$email%' ";
 		}
-		if ($status = $post['status']){
+		if (!empty($status = $post['status'] ??'')){
 			$q[] = " status LIKE '$status' ";
 		}
-		if ($ems = $post['ems']){
+		if (!empty($ems = $post['ems'] ??'')){
 			$q[] = " email_status LIKE '$ems' ";
 		}
-		if ($admin_status = $post['admin_status']){
+		if (!empty($admin_status = $post['admin_status'] ??'')){
 			$q[] = " admin_status LIKE '$admin_status' ";
 		}
 		if (empty($q)){
