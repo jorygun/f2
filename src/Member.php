@@ -1225,17 +1225,19 @@ public function getLogins($tag) {
 		return date('d M Y');
 	}
 	
-	public function getUpdatedEmails ($since) {
+	public function getUpdatedEmails ($since,$test=false) {
 		// returns list of members with updated emails
 		// since must be in Y-m-d
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
 		$member_status_set = Defs::getMemberInSet();
-		
+		$test_clause =  ($test)? 
+		"AND test_status != '' " : "AND test_status = '' ";
 		$list = array();
 		$sql = "SELECT  * FROM `members_f2`
 			WHERE status in ($member_status_set)
+			$test_clause
 			AND email_chg_date > '$since';";
 
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
@@ -1244,11 +1246,15 @@ public function getLogins($tag) {
 		}
 		return $list;
 	}
-	public function getUpdatedProfiles($since) {
+	public function getUpdatedProfiles($since,$test=false) {
 		$member_status_set = Defs::getMemberInSet();
+		$test_clause =  ($test)? 
+		"AND test_status != '' " : "AND test_status = '' ";
+		
 		$list = array();
 		$sql = "SELECT  * FROM `members_f2`
 			WHERE status in ($member_status_set)
+			$test_clause
 			AND profile_updated > '$since'
 			AND joined < '$since';";
 
@@ -1258,16 +1264,18 @@ public function getLogins($tag) {
 		}
 		return $list;
 	}
-	public function getDeceased ($since) {
+	public function getDeceased ($since,$test=false) {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
 		$member_status_set = Defs::getMemberInSet();
+		$test_clause =  ($test)? 
+		"AND test_status != '' " : "AND test_status = '' ";
 		$list = array();
 		$sql = "SELECT  * FROM `members_f2`
 			WHERE status_updated > '$since'
 			AND status like 'D'
-			AND test_status= ''
+			$test_clause
 			";
 
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
@@ -1277,20 +1285,25 @@ public function getLogins($tag) {
 		return $list;
 	}
 	
-	public function getNewMembers($since) {
+	public function getNewMembers($since,$test=false) {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
 		//Get New Members
+	$test_clause =  ($test)? 
+		"AND test_status != '' " : "AND test_status = '' ";
+	
 	$member_status_set = Defs::getMemberInSet();
+
 	$sql = "SELECT * FROM `members_f2`
 	WHERE status in ($member_status_set)
+	$test_clause
 	
 	AND joined > '$since'
 	ORDER BY username;
 	";
-// 	echo "sql: $q" . BRNL;
-// 	exit;
+#echo "sql: $sql" . BRNL; exit;
+
 	$stmt = $this->pdo->query($sql);
 	$list = [];
    if ($result = $stmt->fetchAll(\PDO::FETCH_ASSOC) ){
@@ -1301,17 +1314,20 @@ public function getLogins($tag) {
 	return $list;
 	}
 
-public function getNewLost($since) {
+public function getNewLost($since,$test=false) {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
 		//Get New Members
+		$test_clause =  ($test)? 
+	"AND test_status != '' " : "AND test_status = '' ";
 	$member_status_set = Defs::getMemberInSet();
 	$sql = "SELECT * FROM `members_f2`
 	WHERE status in ($member_status_set)
 	AND email_status_time >= '$since'
 	AND email_status like 'L%'
 	AND previous_ems not like 'L%'
+	$test_clause
 	ORDER BY username;
 	";// new lost
 	
@@ -1326,10 +1342,13 @@ public function getNewLost($since) {
 	public function getOldLost($limit=0){
 	// old lost
 		$limit_clause =  (empty($limit)) ? '' : " LIMIT $limit "; 
+		$test = false; #no need on this segment
+		$test_clause =  ($test)? 
+		"AND test_status != '' " : "AND test_status = '' ";
 		
 		$q = "SELECT * FROM members_f2
 		WHERE status in ($this->member_status_set)
-		AND test_status = ''
+		$test_clause
 		AND email_status_time < NOW() - INTERVAL 90 DAY
 		AND email_status in ('LB','LA','LN')
 		ORDER BY RAND()
@@ -1365,16 +1384,20 @@ public function getNewLost($since) {
 		;
 		
 		// these fields are retrieved in bulk_send by sequence, not name.
+		$test = false;
+		$test_clause =  ($test) ? 
+		"AND test_status != '' " : "AND test_status = '' ";
         
 		$sql = "SELECT $fields FROM `members_f2` 
 			WHERE status in ($this->member_status_set)
 			AND email_status NOT LIKE 'L%'
+			$test_clause
 			";
-			
+		
 		switch ($type) {
 			case 'test':
-				$sql .= "AND test_status != '' ";
 				echo "Sending to test_status not empty" . BRNL;
+				$sql .= $test_clause;
 				break;
 			case 'all':
 				$sql .= '';

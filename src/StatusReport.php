@@ -54,6 +54,7 @@ class StatusReport {
 		
 		#echo "Saving run time to " . FileDefs::rtime_file . BRNL;
 		file_put_contents(FileDefs::rtime_file,time());
+	
 	}
 	
 	
@@ -63,22 +64,22 @@ class StatusReport {
 		$report .= "Changes since $since.</p>";
     
 		$report .= $this->report_members();
-   
-		$list= $this->member->getNewMembers($since);
+   $test = true;
+		$list= $this->member->getNewMembers($since,$this->test);
    	$report .= $this->report_changes($list,'new');
    	
-		$list = $this->member->getUpdatedEmails($since);
+		$list = $this->member->getUpdatedEmails($since,$this->test);
 #    u\echor ($list, 'email updates');
 		$report .= $this->report_changes($list,'email');
 
-		$list = $this->member->getUpdatedProfiles($since);
+		$list = $this->member->getUpdatedProfiles($since,$this->test);
 #    u\echor ($list, 'email updates');
 		$report .= $this->report_changes($list,'profile');
 		
-		$list = $this->member->getDeceased($since);
+		$list = $this->member->getDeceased($since,$this->test);
 		$report .= $this->report_changes($list,'deceased');
 
-		$list = $this->member->getNewLost($since);
+		$list = $this->member->getNewLost($since,$this->test);
 		$report .= $this->report_changes($list,'lost');
 
 		$list = $this->member->getOldLost(8);
@@ -152,7 +153,7 @@ class StatusReport {
 						 $report .= <<<EOT
 						 <tr class='brow'>
 							  <td class='username'><a href= '/profile.php?uid=$id' target = '_blank'>$name</a></td>
-							  <td >$location</td>
+							  <td >$location,</td>
 							  <td>$contact</td></tr>
 EOT;
 
