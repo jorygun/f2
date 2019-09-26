@@ -35,7 +35,7 @@ if ($login->checkLogin(4)){
 // get time of last status report
     $dt = new \DateTime();
 
-    if ($last_ptime = file_get_contents(FileDefs::ptime_file )){
+    if ($last_ptime = trim(file_get_contents(FileDefs::ptime_file ))){
     #echo "Got ptime $last_ptime";
 
       $dt->setTimestamp($last_ptime);

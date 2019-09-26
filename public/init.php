@@ -394,36 +394,7 @@ class Login
 		}
 		return true;
 }
-	private function setWarning ($log){
-	/* set warning as an array and add to session.
-	  msg = warning messages
-	  email = email problem
-	  profile = profile problem
-	  other = other problem
-	  seen = true/false set to turn off warning dispaly
-	  
-	*/
-		$warning = [];
-		$msgs = [];
-		if ($log['seclevel'] < 1 ){return $warn;}
-		
-		if ($log['email_status'] != 'Y'){
-			$msgs[] = "There is a problem with your email.";
-			$warning['email'] = "Current status: " . Defs::getEmsName($log['email_status']);
-		}
-		if ($log['profile_valid_age']> Defs::$profile_warning){
-			$msgs [] = "Your profile is getting a bit long in the tooth. ";
-			$warning['profile'] = "Your profile was last updated " . $log['profile_date'] ;
-		}
-		if (!empty($msgs)){
-			$msgs[] = "Please choose go to your profile (under your name in the menu bar)  and choose 'Edit Profile'.";
-			$warning['message'] = join (" ",$msgs);
-			$warning['seen'] = false;
-		}
-			
-		return $warning;
 	
-	}
 	
 	
 
@@ -437,8 +408,6 @@ class Login
 		$_SESSION['menu'] = $menu -> getMenuBar(); #needs login and level already set
 		#u\echor($_SESSION['login'],'session saved login ' . session_id() );
 	
-		$_SESSION['warning'] =   $this->setWarning($log_info) ;
-			# u\echoAlert($warning['message']);
 		
 		
 		return true;
