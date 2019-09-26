@@ -642,7 +642,7 @@ private function _getArticle($dbtable,$item_id)
                 $dblink = "/scripts/asset_c.php?id=$dbitem";
             }
             elseif ($dbtable == 'spec_items'){
-                $dblink = "/spec/";
+                $dblink = "/special/";
             }
             else {$dblink = "#";}
 

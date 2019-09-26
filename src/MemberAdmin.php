@@ -527,6 +527,7 @@ public function showUpdate($uid) {
 // 	
 
 	
+	
 	$tdata['hide_checked'] =  ($row['email_hide'])? "checked check='checked' ":'';
 	$tdata['no_bulk_checked'] = ($row['no_bulk'])? "checked check='checked' ":'';
 	
@@ -555,14 +556,22 @@ EOT;
 	$tdata['department_boxes'] = buildCheckBoxSet('amd_dept',Defs::$departments,$row['amd_dept'],6);
 
            
-        
-	$tdata['confirm_button'] = "<button type='button' onClick='verifyProfile($uid)'>Verify</button>";
+   $tdata['profile_warning'] = Defs::$profile_warning;
+	$tdata['profile_verify_button'] = 
+	#f\actionButton('Profile is Good','verifyProfile',$uid,'profver','Verified') ;
+	"<button type='button' onClick=location.assign('/profile.php?confirmed=$uid')>It's All Good</button>";
+	
+	$tdata['email_verify_button'] = 
+	f\actionButton('Confirm Email','verifyEmail',$uid,'em-stat','Verified') ;
+	
 	#f\actionButton('Bouncer','bounceEmail',$uid,$emstat_id,'bounced');
 	$tdata['info_text'] = <<<EOT
 	This is what you need to know.
 EOT;
 
+
 	$tdata['credential'] = $credential;
+	$tdata['warning'] = f\getWarning(); 
 	
  	return $tdata;
  
@@ -570,6 +579,8 @@ EOT;
  
  public function confirmProfile($uid) {
  	return $this->member->setProfileVerified($uid);
+ 	$_SESSION['warning_seen'] = true;
+ 	
 
  }
  
@@ -649,16 +660,17 @@ EOT;
 			case 'user_about':
 			case 'user_from':
 			case 'user_greet':
-			case 'user_web':
+			
 			 	$update[$key] = $val;
 			 	$profile_changed = true;
 				break;
-
+			
 			case 'user_amd':
 				$update[$key] = $val;
-				$profile_changed = true;
+				#$profile_changed = true;
 				break;
 				
+			case 'user_web':
 			case 'linkedin':
 			case 'email_hide':
 			case 'no_bulk':
@@ -700,12 +712,14 @@ EOT;
 
 
  //   #assume user also checked email
- 	 if (!isset($update['email_status'])){ #could already be set to E1
+ 	 if (isset($update['email_status']) && $update['email_status'] != 'E1'){ #could already be set to E1
     $update['email_status'] = 'Y'; #will autoset verified
    }
  	 $update['profile_validated'] = sql_now();
 	$update ['user_id'] = $uid;
 	
+	
+		
 #	 u\echor($update,'update array');
 #	 exit;
 	 

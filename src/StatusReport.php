@@ -121,6 +121,7 @@ class StatusReport {
 
 					$amd = $row['at_amd'] ;
 					$current = $row['user_current'];
+				
 
 					$location = $row['user_from'];
 					$id = $row['user_id'];
@@ -151,7 +152,7 @@ class StatusReport {
 						 $report .= <<<EOT
 						 <tr class='brow'>
 							  <td class='username'><a href= '/profile.php?uid=$id' target = '_blank'>$name</a></td>
-							  <td class='location'>$location</td>
+							  <td >$location</td>
 							  <td>$contact</td></tr>
 EOT;
 
@@ -160,7 +161,7 @@ EOT;
 								<tr><td class='tright'></td><td colspan = '2' >&ldquo;$greeting&rdquo;</td></tr>\n";
 							  $report .= "
 							  <tr><td class='tright'>As of $profile_year: </td>
-							  <td class='current' colspan='2'>$current</td></tr>\n
+							  <td class='current' colspan='2'>$current in $location</td></tr>\n
 							   <tr class='atamd'><td class='tright'>At AMD: </td><td colspan='2'>$amd</td></tr>
 							   <tr><td colspan='3'>&nbsp;</td></tr>\n";
 							   

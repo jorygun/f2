@@ -121,10 +121,11 @@ echo f\actionButton('publish->next-to-latest ','move-next',0,'','resp');
 
 
 <p><b>Add a breaking news to current newsletter</b></p>
-<form method='post' action='/scripts/breaking.php'>
-<textarea name='bnews' rows=6 cols=40>
+<form>
+<textarea name='bnews' rows=6 cols=40 id='bnews'>
 </textarea>
-<input type=submit>
+<button type='button' onClick=''></button>
+<!-- // $publish->write_breaking(bnews); -->
 </form>
 
 

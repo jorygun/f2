@@ -44,7 +44,7 @@ $sql = "SELECT * from $itemdb WHERE id = $item_id;";
 
         echo "Fetching item $item_id, $htitle<br>\n";
 
-        $header = "location:" . SITE_URL . "/spec/$spec_url";
+        $header = "location:" . SITE_URL . "/special/$spec_url";
         if ($test){
             pecho ($header);
         }

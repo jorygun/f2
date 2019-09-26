@@ -34,6 +34,9 @@ class FileDefs {
 	const status_report = REPO_PATH . "/public/news/next/status_report.html"; #member updates
 	const status_tease = REPO_PATH . "/public/news/next/tease_status.txt"; #member updates
 
+// breaking news
+	const breaking_news = self::live_dir . '/breaking.html';
+		
 // file for index of all newsletters
 	const news_index_inc = REPO_PATH . "/var/data/index_inc.html";
 // json file for index

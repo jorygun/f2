@@ -10,6 +10,7 @@
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\MyPDO; #if need to get more $pdo
 	use digitalmx\flames\DocPage;
+	use digitalmx\flames\FileDefs;
 
 
 
@@ -34,7 +35,7 @@ if ($login->checkLogin(0)){
 
 
  //  $my_id = $_SESSION['login']['user_id'];
-	$news_latest = SITE_PATH . "/news/news_latest";
+	$news_latest = SITE_PATH . FileDefs::latest_pointer;
 
 	$username = $_SESSION['login']['username'];
 	$user_level = $_SESSION['level'];
@@ -44,19 +45,11 @@ if ($login->checkLogin(0)){
 
 #set breaking news
  
- if (file_exists("$news_latest/breaking_at.txt")){
-            $update_time = strtotime(file_get_contents("$news_latest/breaking_at.txt"));
-               
-		    $pub_date .=  "(Breaking update at "
-		        . date ('M d H:i T', $update_time)
-		      # . $update_time
-		        . '.)' ;
-		        $breaking = 
-			"<div id='block2' style='border:0px solid black; padding:5px;' >"
-			. file_get_contents("$news_latest/breaking_at.txt")
-			.	"</div>";
+ $breaking = FileDefs::breaking_news;
+ if (file_exists($breaking)){
+       echo file_get_contents($breaking);
+   }
 
-}
 #set notice 
  if (file_exists("index_notice.html")){
 		        $notice = 
@@ -76,7 +69,7 @@ if ($_SESSION['level'] > 0){
 		$email_status = $_SESSION['login']['email_status'];
 		
  		$news_latest = SITE_PATH . "/news/news_latest";
-		$pub_date =  get_latest_pub_date('conventional');
+		$pub_date =  date('d M Y', f\getLastPub());
 		
 	
 		echo <<< EOT
@@ -84,8 +77,8 @@ if ($_SESSION['level'] > 0){
 
 		<h3>Welcome Back, $username</h3>
 
-		<p style="text-align:center"> <a href="/news/" target="_blank"><b>The latest FLAMEs Newsletter is HERE</b></a>.
-		    <br> $pub_date
+		<p style="text-align:center"> <a href="/news/current" target="_blank"><b>The latest FLAMEs Newsletter is HERE</b></a>.
+		    <br> Published $pub_date
 		</p>
 
 		<p>Use the menus above to update your profile, view old newsletters and photo galleries, search for members.
@@ -95,27 +88,19 @@ if ($_SESSION['level'] > 0){
 		<li>Flames Member since $join_date.  
 		<li>You are currently located in $user_current
 		<li>Your profile was last updated on $last_profile.
+		</ul>
 		
 EOT;
-	if  (0 or $email_status<>'Y' and $email_status <>'Q') {
+	if  ($email_status<>'Y') {
 			echo email_warning($_SESSION['login']);
 		}
-		echo "</ul></div>
+		echo "</div>
 		";
 		
 		echo this_newsletter($news_latest);
 		
 }
 
-elseif ($user_status=='N'){
-		echo <<< EOT
-		<div  style='border:1px solid #360;padding:5px;background-color:#cfc;'>
-		<h3>Welcome, $username</h3>
-		<p>Thanks for signing up for FLAMEs.  You should received your permanent login soon.</p>
-		<p>Until then, you can still <a href="/news/">view the latest newsletter</a>.</p>
-		</div>
-EOT;
-		}
 
 elseif ($user_status=='I'){
 		echo <<< EOT
@@ -168,13 +153,13 @@ function this_newsletter($news_latest){
 		$t =  "<div><h3>In This Week's Newsletter:</h3>";
 
 		if (file_exists("$news_latest/updates.txt")){
-		    $t .= thtml(file_get_contents ("$news_latest/updates.txt"));
+		    $t .= u\txt2html(file_get_contents (FileDefs::updates.txt));
 		    }
 		if (file_exists("$news_latest/calendar.txt")){
-		   $t .= thtml(file_get_contents("$news_latest/calendar.txt"));
+		   $t .= u\txt2html(file_get_contents("$news_latest/calendar.txt"));
 		    }
 		if (file_exists("$news_latest/headlines.txt")){
-		    $t .= nl2br (file_get_contents("$news_latest/headlines.txt"));
+		    $t .= u\txt2html(file_get_contents("$news_latest/headlines.txt"));
 		}
 		$t .= "</div>";
 	return $t;
@@ -185,15 +170,8 @@ function this_newsletter($news_latest){
 			$t = "<li><span class='red'>There is a problem with your email: " . $data['user_email'] . "</span>";
 			$t .= "<br>Current status is: " 
 				. Defs::getEmsName($data['email_status'])
-			   . ", set on " . date('M d, Y',strtotime($data['email_status_time']))
-			   . ", and we've sent emails to you
-				that have not been responded to yet.";
-
-			$t .= "<br>If your email has changed, please update it in your profile.  If it's right, just "
-			. $validateEmailButton
-			. "to validate it or respond to one of the emails we've sent you.
-			";
-
+			   . ", set on " . date('M d, Y',strtotime($data['email_status_time'])) . '.';
+	
 	return $t;
 	}
 	

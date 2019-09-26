@@ -5,22 +5,16 @@
  <p ><i><?=$this->e($user_greet) ?></i></p>
 <p> -- Last Updated: <?= $profile_date ?>. (verified <span id='profver'><?= $profile_valid_date ?></span>)</p>
 
- <?php if ($credential): ?>
-    <?php if ($needs_update) : ?>
-    <div class='warning' id='warning'>
-    <p>Your profile has not been verified since <?= $profile_valid_date ?>.<br>
-
-	If everything here is right, just to confirm it (and your email address. <?= $confirm_button ?> <br>
-	If anything needs to be changed, click the Edit button.</p>
-	</div>
+ <?php if ($credential): 
+   if (!empty($warning) && empty($_SESSION['warning_seen'] )): ?>
+    <div class='warning' id='warning'><?=$warning?></div>
 	<?php endif ?>
 	Click to edit profile, change email address, change subscribe options:
     <button onClick = 'window.location.href ="/profile.php/?edit=<?=$user_id?>"'>
             Edit Profile </button>
     
 <?php endif ?>
-</p>
- 
+
 <hr>
 
 <div style="border:1px solid green;padding:4px;width:350px;margin-left:30px; float:left;">

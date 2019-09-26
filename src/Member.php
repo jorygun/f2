@@ -146,12 +146,13 @@ private static $update_fields = array(
 	'profile_age',
 	'profile_date',
 	'profile_valid_date',
+	'profile_valid_age',
 	'seclevel',
 	'status_name',         
 	'subscriber',
 	'linkedinlink',
 	'at_amd',
-	'needs_update',
+
 	'email_valid_date',
 	'login_age',
 
@@ -196,6 +197,7 @@ private static $update_fields = array(
  	'at_amd',
  	'profile_date',
  	'profile_age',
+ 	'profile_valid_age',
  	'join_date',
  	'email_status',
  	'last_login',
@@ -399,11 +401,11 @@ private static $update_fields = array(
         'email_status_name' => Defs::getEmsName($row['email_status']),
         'member_photo' => $member_photo,
       	'profile_age' => $profile_age,
-        'profile_date' => $profile_date,
+        'profile_date' => $profile_date, #updated
         'profile_valid_date' => u\make_date($row['profile_validated']),
+        'profile_valid_age' => u\days_ago($row['profile_validated']),
          'at_amd' => $amd_box_data,
-         'needs_update' => 
-            $profile_age > Defs::$age_limit && $row['status'] != 'D',
+         
          'login_age' => u\days_ago($row['last_login']),
      );
        
@@ -1084,9 +1086,33 @@ public function getLogins($tag) {
             WHERE user_id = $id;";
             
         $stmt = $this->pdo->query($sql);
-       
+       	$this->updateSession(array(
+       		'email_status' => 'Y',
+       		'profile_validated' => date('Y-m-d'),
+       		'email_last_validated' => date('Y-m-d'),
+       		'email_verified_age' => 0,
+       		'profile_valid_age' => 0,
+       		
+       		'uid' => $id,
+       		));
+       		
         return  date ('M d Y');
 
+    }
+    public function updateSession($data) {
+    	/* after changing member vars, may need
+    	to update $_SESSION['login'] as well
+    	*/
+    	if (empty($_SESSION['login'])){return;}
+    	if ($data['uid'] != $_SESSION['login']['user_id']) {
+    		return;
+    	}
+    	foreach ($data as $var=>$val){
+    		if (!empty($_SESSION['login'][$var])){
+    			$_SESSION['login'][$var] = $val;
+    		}
+    	}
+    	
     }
      public function setEmailVerified ($id) {
         $sql = "Update `$this->memberTable` set profile_validated = NOW(),email_status='Y',email_last_validated = NOW()
@@ -1166,9 +1192,14 @@ public function getLogins($tag) {
 			return;
 		}
 		try {
-			if ($this->pdo->query($sql) ){
+			$this->pdo->query($sql) ;
+			$this->updateSession(array(
+       		'email_status' => 'Y',
+       		'email_last_validated' => date(),
+       		'uid' => $id,
+       		));
 				return date('d M Y');
-			}
+			
 		} catch (Exception $e) {
 			echo "PDO failed: " . $e->getMessage();
 			echo "SQL: " . $sql  . BRNL . BRNL;;

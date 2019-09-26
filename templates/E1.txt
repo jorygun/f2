@@ -3,7 +3,7 @@ Your AMD Flames email has been updated.
 ::name::,
 
 Your email address on the AMD Alumni site amdflames.org has just
-been updated to ::current_email::.  ::updater:: 
+been updated to ::current_email::.  ::informant:: 
 
 
 PLEASE CLICK THE LINK BELOW TO CONFIRM THIS EMAIL ADDRESS.

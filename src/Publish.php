@@ -69,6 +69,18 @@ class Publish {
 		// these routines clean up everything once
 		// publish is successful
 	}
+	private function write_breaking($content) {
+		$now = date('d M Y H:i');
+		$bnews = "<div style='border:2px solid black;padding:1em;'>"
+    . "<p style='color:red;'><b>Update posted at " .$now . "</b></p>\n"
+	. u\txt2html($content)
+	. "</div>\n";
+	file_put_contents(FileDefs::breaking_news,$bnews);
+	}
+
+	
+	
+	
 	private function setTimes(){
 //get date of last pub (never used)
 // 	if ($last_timestamp = f\getLastPub() ){

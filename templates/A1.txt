@@ -8,7 +8,7 @@ Hi ::name::.  Please confirm you're still around.
 ***************************************************
   PLEASE CLICK THE LINK BELOW NOW to 
     • confirm we have the right email
-    • update your current information
+    • verify your current information
     
        ::profile_edit::
 ***************************************************

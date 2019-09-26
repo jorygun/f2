@@ -104,7 +104,7 @@ button:hover {
 
 
 .input, input {background-color:#eee; }
-input.required {background-color:#ffffa0;}
+.required {background-color:#ffffa0;}
 input:invalid {color:red;}
 input:valid {color:#000;}
 

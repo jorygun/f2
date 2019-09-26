@@ -4,7 +4,7 @@ namespace digitalmx\flames;
 
 use digitalmx\Lib as u;
 use \Exception;
-use digitalmx\Flames\Definitions;
+use digitalmx\Flames\Definitions as Defs;
 use digitalmx\Flames\Member;
 use digitalmx\flames\FileDefs;
 #use Digitalmx\Flames\Configuration;
@@ -60,6 +60,32 @@ function isLogin($login) {
 }
         
 
-
-
+function getWarning () {
+	//retrurns warning message if set and not seen
+	
+	if (empty($_SESSION['login']['seclevel'])){return '';}
+	if ($_SESSION['login']['seclevel'] < 1 ){return '';}
+	if (!empty($_SESSION['warning_seen'])){return '';}
+			$warning = [];
+		$msgs = [];
+		
+		
+		if ($_SESSION['login']['email_status'] != 'Y'){
+			$msgs[] = "There is a problem with your email.";
+			
+		}
+		if ($_SESSION['login']['profile_valid_age']> Defs::$profile_warning){
+			$msgs [] = "Your profile is getting a bit long in the tooth. ";
+			
+		}
+		if (!empty($msgs)){
+			$msgs[] = "Please choose go to your profile (under your name in the menu bar)  and choose 'Edit Profile'.";
+			$warning = join (" ",$msgs);
+			
+		}
+			
+		return $warning;
+	
+} 
+	
 

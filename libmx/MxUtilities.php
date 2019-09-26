@@ -44,6 +44,12 @@ function echor($var,$title=''){
     echo "<h4>$title:</h4>";
     echo "<pre>" .  print_r($var,true) . "</pre>\n";
 }
+function txt2html($text){
+	// returns text coverting line feeds to <br>s and entities
+	$text = htmlspecialchars($text,ENT_QUOTES);
+	$text = nl2br($text);
+	return $text;
+}
 
 function special($var){
     #convert < > " & , but not ' (default ENT_COMPAT)
@@ -135,7 +141,9 @@ function is_valid_email($email){
 }
 
 function echoAlert($text) {
-	echo '<script>alert("' . addslashes($text) . '")</script>';
+	#$text=addslashes($text);
+	
+	echo '<script>alert("' .$text . '")</script>';
 	return ;
 }
 

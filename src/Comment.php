@@ -386,7 +386,7 @@ private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
             break;
         case 'spec_items':
         $spec_url = $articleRow['url'];
-        $item_link = "https://amdflames.org/spec/$spec_url";
+        $item_link = "https://amdflames.org/special/$spec_url";
             break;
 
         default:
@@ -654,7 +654,7 @@ private function _getArticle($dbtable,$item_id)
                 $dblink = "/scripts/asset_c.php?id=$dbitem";
             }
             elseif ($dbtable == 'spec_items'){
-                $dblink = "/spec/";
+                $dblink = "/special/";
             }
             else {$dblink = "#";}
 

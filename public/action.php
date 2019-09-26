@@ -186,7 +186,7 @@ function edit_profile($uid,$madmin,$templates) {
 function verifyProfile($uid,$member) {
 
 	$cdate = $member->verifyProfile($uid);
-	return $cdate;
+	return "Verified $cdate";
 }
 function getmess($type)
 {
@@ -321,7 +321,7 @@ function verifyEmail($uid, $member)
 		 $messenger = new Messenger(); #true = test
 		 $messenger->sendMessages($uid,'not-lost');
 		}
-  return $member->verifyEmail($uid) ;
+  return "Verified " . $member->verifyEmail($uid) ;
 }
 
 function markContribute($uid, $member)

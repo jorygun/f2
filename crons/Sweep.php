@@ -106,10 +106,10 @@ class Sweep{
 		echo "$count expired email status records found.\n\n";
 		$incidents += $count;
 
-		// test for new members verified but not welcomed
-// 		$count = $this->new_members();
-// 		echo "$count new members found.\n\n";
-// 		$incidents += $count;
+	//	test for new members verified but not welcomed
+		$count = $this->new_members();
+		echo "$count new members found.\n\n";
+		$incidents += $count;
 
 		// Finally test last contact a long long time ago
 		$count = $this->aged_out();
@@ -152,10 +152,9 @@ EOF;
 ########################################################
 	function new_members() {
 		$this->log .= "\n#### Testing new users validated but not welcomed\n";
-		$sql = "SELECT user_id, username, user_email 
-			FROM `members_f2` WHERE
-				email_status = 'Y'
-				and status = 'N' ;
+		$sql = "SELECT id, username, user_email 
+			FROM `signups` WHERE
+				 status = 'A' ;
 			";
 	 
 		$result = $this->pdo->query($sql);
@@ -163,19 +162,18 @@ EOF;
 		$this->log .=  "Users to welcome: $rows_found\n" ;
 		if ($rows_found > 0){
 			$msg = "
-Sweeps has encountered members with validated email, 
-but status = N.
-These users have not received welcome message.\n
+Sweeps has encountered entries in Signups with validated email, 
+These users have not been processed.\n
 ";
 		
 			foreach($result as $row){
-				$uid = $row['user_id'];
+				$uid = $row['id'];
 				$username = $row['username'];
 				$user_email = $row['user_email'];
 		
-				$this->log .=  sprintf ( self::$log_format1, $this->mode, $user_email,$username,$uid,'','','Send Welcome');
+				$this->log .=  sprintf ( self::$log_format1, $this->mode, $user_email,$username,$id,'','','Send Welcome');
 
-				$msg .= sprintf ("   %10s %-15s \n" ,$uid, $username);
+				$msg .= sprintf ("   %10s %-15s \n" ,$id, $username);
 		
 			}
 

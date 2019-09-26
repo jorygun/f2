@@ -6,35 +6,48 @@
 <?php else: ?>
 
 <h1> AMD Flames Profile and Email Editor</h1>
-<p>Saving this form marks your email address as confirmed. If you make any changes to What's New, My Interests, About Me, or Working at AMD, your profile will be updated, and will be listed as an update on the next newsletter. </p>
-<p>Fields in yellow are required.</p>
+<p>Saving this form marks your email address and profile as confirmed. <br>
+If you make changes to fields marked with an asterisk *, your profile will be listed as an update on the next newsletter. If you change your email address,
+that will listed on the next newsletter as well.</p>
+<p>Fields in yellow are <span class='required'>required</span>.</p>
 
 	<h3 ><?= $username ?></h3>
-	<p>Profile last updated: <?= $profile_date ?><br>
+	<p>Profile last updated: <?= $profile_date ?>, last verified <?= $profile_valid_date?><br>
 		Flame member since  <?= $join_date ?> (<?= $status_name ?>) <br>
 		</p>
 
+<?php if (!empty($warning)):
+   if ($profile_valid_age > $profile_warning): ?>
+   <div class='warning'>Your profile has not been updated since
+   <?=$profile_date?>.  Please look it over and make edits as needed.  If everything
+   is OK <i>including your email</i>, just click here to verify everything.  If you make any edits, click Update at the bottom of the page.<br>
+   <?= $profile_verify_button ?>
+   </div>
+      
+      
+<?php endif; endif; ?>
 
+   
 <form method='post' name='profile' id='profile' enctype="multipart/form-data" action='/profile.php'>
 	<input type='hidden' name='user_id' value='<?= $user_id ?>' > 
 	
-	
+
 	
 
 <table class='profile'>
  
  <tr><td colspan='2' ><h5>Quick Update</h5></td></tr>
 
-	<tr><td>What's New?<br><span class='instr'>(Tweet-sized update)</span></td><td>
+	<tr><td>* What's New?<br><span class='instr'>(Tweet-sized update)</span></td><td>
 			<textarea name='user_greet' class='input' rows=2 cols=80 ><?= $this->e($user_greet) ?></textarea></td></tr>
 			
-    <tr><td>Your current location <br>City, State/Province/Region, Country</td>
+    <tr><td>* Your current location <br>City, State/Province/Region, Country</td>
 		<td><input class='required' size='96' id='location' name='user_from' type='text' value='<?= $this->e($user_from) ?>'>
 		</td></tr>
 
 
 
-	<tr><td >Briefly, what you’re doing now </td>
+	<tr><td >* Briefly, what you’re doing now </td>
 		<td><input size='96'  name='user_current' type='text' class='required' value="<?= $this->e($user_current) ?>">
 		</td></tr>
 
@@ -47,8 +60,8 @@
 	
 		
 <?php if ($email_status != 'Y'): ?>
-<tr><td colspan=2 class='warning'>There is a problem with your current email
-address.  Please check and update if necessary. </td></tr>
+<tr><td colspan=2><div class='warning'>There is a problem with your current email
+address. If you not making any other changes in your profile, and this email is correct, then click here. <?=$profile_verify_button?> </div></td></tr>
 <?php endif; ?>
 		<tr><td colspan='2'>Current email status: <?= $email_status_name ?><br>
 		    <span class='instr'>
@@ -74,7 +87,7 @@ address.  Please check and update if necessary. </td></tr>
       <tr><td>Your personal very favorite web site</td><td><input type='url' size='60' name='user_web' value="<?= $user_web ?>" </td></tr>
       
 		<?php if (false): ?>
-      <tr><td>Photo<br> <?= $member_photo ?><br>Upload new photo: <input type='file' name='linkfile'></td></tr>
+      <tr><td>* Photo<br> <?= $member_photo ?><br>Upload new photo: <input type='file' name='linkfile'></td></tr>
       <?php endif; ?>
       
     <tr><td colspan='2' ><h5>AMD Affiliation</h5></td></tr>
@@ -89,11 +102,11 @@ address.  Please check and update if necessary. </td></tr>
 
 		
 		<tr><td colspan='2'><h5>Narratives (optional)</h5></td></tr>
-   	<tr><td><u>My interests</u></td></td></tr>
+   	<tr><td><u>* My interests</u></td></td></tr>
 		<tr><td colspan='2'><input size='96'  name='user_interests' type='text' value="<?= $this->e($user_interests) ?>">
 		</td></tr>
 		
-        <tr><td ><u>About Me</u></td><td  class='instr'>
+        <tr><td ><u>* About Me</u></td><td  class='instr'>
 			Enter anything you'd like to say about yourself.  What was your career path? What keeps
 			you busy? 
 			</td></tr>
@@ -101,7 +114,7 @@ address.  Please check and update if necessary. </td></tr>
 			<textarea rows='15' cols='120' name='user_about' class='input useredit'> <?= $this->e($user_about) ?></textarea></td></tr>
 
 
-        <tr><td ><u>Working at AMD</u></td><td  class='instr'>
+        <tr><td ><u>* Working at AMD</u></td><td  class='instr'>
 			Share some of your memories from working at AMD.
 			</td></tr>
 			<tr><td colspan='2'><textarea rows='15' cols='96' name='user_memories' class='input useredit'  ><?= $this->e($user_memories) ?></textarea></td></tr>
