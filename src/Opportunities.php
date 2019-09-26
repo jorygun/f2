@@ -110,11 +110,11 @@ class Opportunities
 		$post['active'] = 1;
 		$post['user_id'] = $_SESSION['login']['user_id'];
 		$xdt = new \DateTime(date('M d, Y',$expires));
-	echo "x time interpreted as " . $xdt->format ('M d Y') . BRNL;
+	#echo "x time interpreted as " . $xdt->format ('M d Y') . BRNL;
 		
 		$x90 = new \DateTime();
 		$x90 ->add (new \DateInterval('P90D'));
-	echo "+90 interpreted as " . $x90->format('M d Y') . BRNL;
+#	echo "+90 interpreted as " . $x90->format('M d Y') . BRNL;
 	
 		if ($xdt > $x90){$xdt = $x90;} #max 90 days
 		$post['expired'] = $xdt->format('Y-m-d');
