@@ -154,6 +154,12 @@ function get_news_file($filename,$extra=''){
      
 }  
 
+function get_latest_file($dir) {
+	$file = `ls -t $dir | head -n 1 `;
+	return "$dir/$file";
+}
+
+
 function replace_new_discussion ($content) {
         #replace discussion content - new style
         	$content1 = preg_replace_callback(
