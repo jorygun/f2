@@ -109,7 +109,8 @@ if (! empty ($_POST)) {
 			
 			break;
 		case 'runStatus':
-			echo runStatusReport($_POST['uid']);
+			$test = false;
+			echo runStatusReport($_POST['uid'],$test);
 			// uid used to transfer the starting date
 			break;
 		case 'indexNews':

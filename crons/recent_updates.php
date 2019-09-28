@@ -44,8 +44,8 @@ use digitalmx\flames\FileDefs;
 
 /* MAIN */
 
-$recent_article_file = FileDefs::live_dir . '/recent_articles.html';
-$recent_asset_file =  FileDefs::live_dir . '/recent_assets.html';
+$recent_article_file = FileDefs::current_dir . '/recent_articles.html';
+$recent_asset_file =  FileDefs::current_dir . '/recent_assets.html';
 
 #get latest pub date
 

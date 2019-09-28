@@ -134,11 +134,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
    // add /ed to editorial comment if it's not already commented
     if (    ! empty( $itemdata['ed_comment'])
        # && strrpos( substr($itemdata['ed_comment'],-30),'/') === false
-        && ! preg_match('/.*\n--\/[^\n]+\s*$/s',$itemdata['ed_comment'])
+        && ! preg_match('/.*\n--\/[\w ]+\s*$/s',$itemdata['ed_comment'])
         )
-        {   $commenter_name = $_SESSION['username'];
+        {   $commenter_name = $_SESSION['login']['username'];
             if (in_array($commenter_name, ['FLAMES admin','FLAMES editor'] )){
-                $commenter_name = 'editor';
+                $commenter_name = 'js';
             }
          $itemdata['ed_comment'] .= "\n--/$commenter_name\n";}
 

@@ -21,8 +21,7 @@ class ReadNews {
 	#path to search for files in
 	private $search_dirs =  array(
 			'.',
-			SITE_PATH . '/news/live',
-			SITE_PATH . '/var/live',
+			SITE_PATH . '/news/current',
 			SITE_PATH . '/news'
 		);
 	

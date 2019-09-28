@@ -544,7 +544,7 @@ private static $update_fields = array(
            'email' => 'user_email = ?',
            'login' => 'user_id = ? and upw = ?',
            'name_exact' => 'username = ?',
-           'name_loose' => 'CONCAT_WS (" ", username, aka) like ? ' ,
+           'name_loose' => ' username like ? ' ,
            'uid' => 'user_id = ?',
            'id' => 'id = ? ',
         );
@@ -839,11 +839,7 @@ public function getLogins($tag) {
              list ($searchfield,$searchfor) = $this->setSearchCriteria($post['searchon']);
         }
         else  {
-           //  'email' => 'user_email = ?',
-//            'login' => 'user_id = ? and upw = ?',
-//            'name_exact' => 'username = ?',
-//            'name_loose' => 'username like ? ' ,
-//            'uid' => 'user_id = ?',
+          
             $q=[];$v=[];
             foreach ($valid_keys as $key){
                 if (!empty($post[$key])){

@@ -11,13 +11,13 @@ class FileDefs {
 // contains only current pointer and index file that redirects to it
 	const  current_dir = REPO_PATH . '/public/news/current';
 // contains things updated during life of newsletter: calendr, alert, recents
-	const live_dir = REPO_PATH . '/public/news/live';
+#	const live_dir = REPO_PATH . '/public/news/live';
 	
 // model for newsletter main file
 	const  news_template = REPO_PATH . "/templates/news_index.php";
 	
 // text file contains url of latest newsletter (/newsp/news_yymmdd);
-	const  latest_pointer = REPO_PATH . "/public/news/current/pointer.txt"; 
+	const  latest_pointer =  self::current_dir . "/pointer.txt"; 
 	
 // text file containing title of newsletter
 	const  titlefile = REPO_PATH . "/public/news/next/title.txt";
@@ -26,7 +26,7 @@ class FileDefs {
 	const news_tease =  REPO_PATH . "/public/news/next/tease_news.txt";
 
 //#publish date; created in latest at publish time
-// contains publish date human|date_code
+// contains publish date human|date_code.  Stays with newsletter
 	const  pubfile = REPO_PATH . "/public/news/latest/publish.txt"; 
 	
 // tease files are created in news/next and then retrieved by news/index 
@@ -35,24 +35,24 @@ class FileDefs {
 	const status_tease = REPO_PATH . "/public/news/next/tease_status.txt"; #member updates
 
 // breaking news
-	const breaking_news = self::live_dir . '/breaking.html';
+	const breaking_news = self::current_dir . '/breaking.html';
 		
 // file for index of all newsletters
-	const news_index_inc = REPO_PATH . "/var/data/index_inc.html";
+	const news_index_inc = self::current_dir . "/index_inc.html";
 // json file for index
-	const news_index_json = REPO_PATH . "/var/data/news_index.json";
+	const news_index_json = self::current_dir . "/news_index.json";
 	
 // files for calendar
-	const calendar_html = REPO_PATH . '/public/news/live/calendar.html';
+	const calendar_html =self::current_dir . '/calendar.html';
     const calendar_tease = REPO_PATH . '/public/news/next/tease_calendar.txt';
 
 // opportunities
 	const opp_tease = REPO_PATH . '/public/news/next/tease_opps.txt';
 	
 // timestamps
-	const  rtime_file = REPO_PATH . "/var/data/last_update_run.txt";
-	const   ptime_file = REPO_PATH . "/var/data/last_update_published.txt";
-	const  last_pubdate =  REPO_PATH . "/var/data/last_pubdate.txt"; 
+	const  rtime_file = self::current_dir . "/last_update_run.txt";
+	const   ptime_file = self::current_dir . "/last_update_published.txt";
+	const  last_pubdate =  self::current_dir . "/last_pubdate.txt"; 
  	
  	
  		

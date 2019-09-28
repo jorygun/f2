@@ -1,2 +1,3 @@
 <?php
- header('location:/newsp/news_190922');
+$pointer = file_get_contents('./pointer.txt');
+header('location:' . $pointer);
