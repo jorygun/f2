@@ -172,7 +172,7 @@ function signup_verify($uid){
 		$sql = "UPDATE `signups` SET status = 'A' WHERE id='$uid'";
 		$pdo = MyPDO::instance();
 		if ($pdo->query($sql)) {
-			mail('admin@amdflames.org','New Signup Verified','New Signup');
+			mail('admin@amdflames.org','New Signup Verified','New Signup. Check Member Admin status N');
 			return "Success.  You will receive your login information within a few days.";
 		} else {return "Failed";}
 	}
