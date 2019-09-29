@@ -81,7 +81,7 @@ function display_gallery($gal){
         $assets = f\list_numbers($row['gallery_items']);
     }
     if (empty($assets)){$notice = "No assets found";}
-
+	echo "<h2>${row['title']}</h3>";
    
     foreach ($assets as $asset){
         if (is_numeric($asset) ){
