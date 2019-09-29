@@ -1,24 +1,32 @@
 <?php
 #ini_set('display_errors',true);
-
+namespace digitalmx\flames;
+#ini_set('display_errors', 1);
 
 //BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	
-    require_once 'asset_functions.php';
-	
-//END START
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-use digitalmx\MyPDO;
-
-$page_title="Gallery Edit";
-$page_options=[];
-
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\DocPage;
+	use digitalmx\flames\FileDefs;
+	use digitalmx\MyPDO;
 	
-    $login->checkLogin(5); 
+
+
+if ($login->checkLogin(6)){
+   $page_title = '';
+	$page_options=[]; #ajax, votes, tiny 
+	
+	$page_title="Gallery Edit";
+	$page_options=[];
+
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
-
+	# other heading code here
+	
+	
 	echo <<<EOT
 <script>
 function choose_gallery(id=''){
@@ -32,6 +40,16 @@ function choose_gallery(id=''){
 </script>
 EOT;
 	echo $page->startBody();
+}
+	
+//END START
+
+
+
+	
+    require_once 'asset_functions.php';
+	
+//END START
 
 
 
