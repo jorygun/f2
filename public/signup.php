@@ -79,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 		<input name="Submit" value="Submit"  type="submit">
 	</form>
 
+
 <?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
    // check data
@@ -93,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 	$q = "SELECT username, joined from `members_f2` where user_email like '$email' ";
 
 	 if ($result = $pdo->query($q)->fetchAll()) {
-      $send_button = f\actionButton('Send Login','sendLogin',$_POST['email'],'','resp');
+      $send_button = f\actionButton('Send Login','sendLogin',$email,'','resp');
 
 	   	echo	"
 <p>The email you entered &lt;$email&gt;
@@ -148,6 +149,8 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 
 	 // SQLify the insert
 
+u\echor($_POST,'post before prep');
+exit;
 
 	$source_ip = $_SERVER['REMOTE_ADDR'];
 	$upd['source_message'] = sprintf("From %s at %s\n",$source_ip,date('Y-m-d H:i'));

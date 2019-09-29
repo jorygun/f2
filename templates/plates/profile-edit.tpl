@@ -73,7 +73,7 @@ address. If you not making any other changes in your profile, and this email is 
 
 		
 		<tr><td colspan='2' class='instr' >
-		 Check here to prevent other Flames members from seeing your email address. They can still contact you through the site. </td> </tr>
+		 Check here to prevent other Flames members from seeing your email address.  </td> </tr>
 		 <tr><td>Hide Email</td><td><input type='checkbox' id='vis' value = '1' name='email_hide'  <?= $hide_checked ?> >Hide Email</td>
 		 </tr>
 
