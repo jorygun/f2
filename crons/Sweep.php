@@ -10,10 +10,11 @@
 */
 
 ini_set('display_errors', 1);
-set_time_limit(300); // 30sec. is default 0 is none;
+#set_time_limit(300); // 30sec. is default 0 is none;
 
 $script = basename(__FILE__);
 $dir=dirname(__FILE__);
+
 
 
 use digitalmx\flames\Definitions as Defs;
@@ -23,10 +24,10 @@ use digitalmx\flames\Member;
 use digitalmx\MyPDO;
 
 
-if (! @defined ('INIT')) {
+if (! defined ('INIT')) { echo "Running cron-ini \n";
 	include "$dir/cron-ini.php";
 }
-if (! @defined ('INIT')) { die ("$script halting. Init did not succeed " . INIT . " \n");}
+if (! defined ('INIT')) { die ("$script halting. Init did not succeed ");}
 
 
 
@@ -67,8 +68,8 @@ class Sweep{
 	public function __construct($dir,$test, $pdo) {
 		#	$test = true;
 		$this->test = $test;
-		$this->mode = ($test)? 'Test':'Real';
-
+		$mode = ($test)? 'Test':'Real';
+		$this->mode = $mode;
 		$this->member = new Member();
 		$this->messenger = new Messenger(); 
 		$this->messenger->setTestMode($test); #true = test mode
@@ -87,7 +88,7 @@ class Sweep{
 		$this->limit = Defs::$age_limit;
 		
 		$sweep_log_dir = REPO_PATH . "/var/logs";
-		$this->sweep_log = $sweep_log_dir . '/sweep-' . "${now_datestamp}-$this->mode.txt";
+		$this->sweep_log = $sweep_log_dir . '/sweep-' . "${now_datestamp}-${mode}.txt";
 		$this->log = sprintf ("Sweep run %s at %s\n\n",$this->mode,$now_human);
 
 		
@@ -171,7 +172,7 @@ These users have not been processed.\n
 				$username = $row['username'];
 				$user_email = $row['user_email'];
 		
-				$this->log .=  sprintf ( self::$log_format1, $this->mode, $user_email,$username,$id,'','','Send Welcome');
+				$this->log .=  sprintf ( self::$log_format1, $this->mode, $user_email,$username,$id,'','','Approve');
 
 				$msg .= sprintf ("   %10s %-15s \n" ,$id, $username);
 		

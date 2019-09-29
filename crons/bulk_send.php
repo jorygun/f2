@@ -70,7 +70,7 @@ echo "Checking for files in $queue" . BRNL;
 */
 		
 	if (empty($job = checkfiles($queue)) ){
-	echo "no jobs";
+	if (!$quiet){echo "no jobs";}
 		exit;
 	}
 	$html = false;
