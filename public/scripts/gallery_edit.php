@@ -112,7 +112,7 @@ function make_gallery_images($itemlist) {
         $fresult = $pdo->query($sql)->fetch();
         $fsource = '';
         if (! empty($fresult['url'])){$fsource = $fresult['url'];}
-        elseif (! empty($fresult['link'])){$fsource = $fresult[link];}
+        elseif (! empty($fresult['link'])){$fsource = $fresult['link'];}
         else {
         echo "Cannot find source file for thumb at asset id $id";
         	continue;
