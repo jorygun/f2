@@ -114,8 +114,8 @@ address. If you not making any other changes in your profile, and this email is 
 			<textarea rows='15' cols='120' name='user_about' class='input useredit'> <?= $this->e($user_about) ?></textarea></td></tr>
 
 
-        <tr><td ><u>* Working at AMD</u></td><td  class='instr'>
-			Share some of your memories from working at AMD.
+        <tr><td ><u>* What's great about working at AMD</u></td><td  class='instr'>
+			Share some memories.
 			</td></tr>
 			<tr><td colspan='2'><textarea rows='15' cols='96' name='user_memories' class='input useredit'  ><?= $this->e($user_memories) ?></textarea></td></tr>
 

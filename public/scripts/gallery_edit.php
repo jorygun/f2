@@ -32,7 +32,7 @@ function choose_gallery(id=''){
 </script>
 EOT;
 	echo $page->startBody();
-}
+
 
 
 $gallery_status = array(
