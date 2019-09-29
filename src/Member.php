@@ -1191,8 +1191,8 @@ public function getLogins($tag) {
 			$this->pdo->query($sql) ;
 			$this->updateSession(array(
        		'email_status' => 'Y',
-       		'email_last_validated' => date(),
-       		'uid' => $id,
+       		'email_last_validated' => date('Y-m-d'),
+       		'uid' => $uid,
        		));
 				return date('d M Y');
 			
