@@ -232,7 +232,7 @@ EOT;
 		<li><a href='/galleries.php' target='gallery'>Photo Galleries</a>
 		
 		 <li><a href='/special/' target='special'>Special Tributes</a>
-		 <li><a href='/galleries.php?4547/' target='_blank'>Our Great Ads</a>
+		 <li><a href='/galleries.php/?4547' target='_blank'>Our Great Ads</a>
 		<li><a href='/special/McKean.html' target='upward'>Tribute to John McKean</a>
 		
 		 ");

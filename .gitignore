@@ -29,3 +29,4 @@ unused/
 #files conaining live data
 
 # live dirs containt their own .gitignore
+public/news/current/*
