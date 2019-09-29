@@ -224,7 +224,7 @@ function get_gallery_data($id){
         $stmt = $pdo->prepare($sql);
 
          $stmt->execute([$id]);
-       if (!$itemdata = $stmt ->fetch(PDO::FETCH_ASSOC)  ){
+       if (!$itemdata = $stmt ->fetch(\PDO::FETCH_ASSOC)  ){
                     die ("No gallery found at $id");
         }
 
