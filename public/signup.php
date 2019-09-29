@@ -149,8 +149,8 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 
 	 // SQLify the insert
 
-u\echor($_POST,'post before prep');
-exit;
+// u\echor($_POST,'post before prep');
+// exit;
 
 	$source_ip = $_SERVER['REMOTE_ADDR'];
 	$upd['source_message'] = sprintf("From %s at %s\n",$source_ip,date('Y-m-d H:i'));
