@@ -83,7 +83,7 @@ address. If you not making any other changes in your profile, and this email is 
 		 Check here to OPT OUT of the weekly email.  (Please don't, because we can lose contact with you, and you will not hear about updates posted by your co-workers. 
 		 <b>You will still receive occasional emails.</b> If you don't want to hear from this site ever, then you should go inactive.  Contact the admin to be set to inactive. </td></tr>
 		 <tr><td>No Weekly Email</td><td><input type='checkbox' id='nobulk' name='no_bulk' value=1 <?= $no_bulk_checked ?> > Do Not Send Weekly Email.</td></tr>
-         <tr><td > Your LinkedIn address. </td><td>	<input type='url' size='60' name='linkedin' value="<?= $linkedin ?> placeholder='https://linkedin.com'  " </td></tr>
+         <tr><td > Your LinkedIn address. </td><td>	<input type='url' size='60' name='linkedin' value="<?= $linkedin ?>" placeholder='https://linkedin.com'  " </td></tr>
       <tr><td>Your personal very favorite web site</td><td><input type='url' size='60' name='user_web' value="<?= $user_web ?>" </td></tr>
       
 		<?php if (false): ?>
