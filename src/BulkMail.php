@@ -12,10 +12,10 @@ class BulkMail {
 	private static $sender_program = FileDefs::bulk_processor;
 	
 	public $teaser_files = array(
-		FileDefs::news_tease,
-		FileDefs::status_tease,
-		FileDefs::calendar_tease, 
-		FileDefs::opp_tease,
+		FileDefs::latest_dir . "/tease_calendar.txt",
+		FileDefs::latest_dir . "/tease_opps.txt",
+		FileDefs::latest_dir . "/tease_status.txt",
+		FileDefs::latest_dir . "/tease_news.txt",
 		
 	);
 	

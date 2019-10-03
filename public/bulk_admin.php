@@ -37,8 +37,7 @@ $interval = 6; #seconds per email
 	$members = new Member();
 	
 	$publish_file = FileDefs::latest_dir . "/publish.txt";
-	$calendar	= FileDefs::latest_dir . "/tease_calendar.txt";
-	$opportunities = FileDefs::latest_dir . "/opportunities.txt";
+
 	
 
 	$queue = FileDefs::bulk_queue; #directory.  put jobs in here
@@ -149,7 +148,7 @@ else { #IS POST; set up the job
     
     
 // concatenate all the teaser file in news/latest
-	$teaser = $bulkmail->assemble_teaser(SITE_PATH . "/news/latest" );
+	$teaser = $bulkmail->assemble_teaser();
 // get the pointer
 	$pointer = $_POST['pointer'] ?? '';
 		
