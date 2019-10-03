@@ -410,7 +410,7 @@ EOT;
     <table>
     <tr><td width='25%'></td><td ><button type='button' onclick="clearForm(this.form);">Clear Form</button></td></tr>
     <tr><td>Search Terms</td><td><input type='text' name='searchon' value = '$searchon_hte'></td></tr>
-    <tr><td>&nbsp;</td><td><small>Search is not case sensitive. Search terms can include spaces (like 'John East'). Separate multiple terms with commas, multiple terms are ORed.</small></td></tr>
+    <tr><td>&nbsp;</td><td><small>Search is not case sensitive. Search terms can include spaces (like 'John East'). Separate multiple terms with commas; multiple terms are ANDed.</small></td></tr>
     <tr><td>Vintage (year)</td><td><input type='text' name='vintage' size=8 value='$vintage'> +/- years: <input type=text name='plusminus'  size=3 value='$plusminus'></td></tr>
     <tr><td>Asset Type</td><td><select name='type'>$type_options</select></td></tr>
 
@@ -588,14 +588,20 @@ function token_search ($searchstring){
         $keyword_tokens
     );
 
-   $concat = "CONCAT_WS(' ', title, caption, keywords,source) ";
+   $concat = "CONCAT_WS(' ', title, caption, keywords) ";
 
-#    $sql = "SELECT * FROM tbl_address WHERE address LIKE'%";
-    $sql = '('
-        . " $concat LIKE '%"
-        . implode("%' OR $concat LIKE '%", $keyword_tokens) . "%'"
-        . ')';
-
+// #    $sql = "SELECT * FROM tbl_address WHERE address LIKE'%";
+//     $sql = '('
+//         . " $concat LIKE '%"
+//         . implode("%' OR $concat LIKE '%", $keyword_tokens) . "%'"
+//         . ')';
+   $token = array_pop($keyword_tokens); #get first token
+   $sql =  "( INSTR ($concat ,'${token}') > 0 ";
+   
+	foreach ($keyword_tokens as $token){ #OR any additional toekns
+		$sql .=  " AND INSTR ($concat ,'${token}') > 0 ";
+	}
+	$sql .= " ) ";
     return $sql;
 }
 

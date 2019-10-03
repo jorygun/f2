@@ -163,11 +163,11 @@ class AssetAdmin {
 			$source_line = $this->buildSourceLine($row);
 	function buildSourceLine($row){
 		 $source_line = $row['source']  ?? '';
-		if ($c = $row['contributor'] ?? '') {
-			if (substr($c,0,6) !== 'Flames'
-			&& 
-				
-		if
+		// if ($c = $row['contributor'] ?? '') {
+// 			if (substr($c,0,6) !== 'Flames'
+// 			&& 
+// 				
+// 		if
 		 if ($row['source'] != $row['contributor']
 			  && strncasecmp($row['contributor'], 'Flames',6) != 0
 			  ){

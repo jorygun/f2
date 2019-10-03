@@ -498,7 +498,7 @@ public function showUpdate($uid) {
 
 	  	$td['nobulkchecked']= $mdd['no_bulk'] ? 'checked':'';
 
-	  	$td['validateEmailButton']= f\actionButton('Verify Email','verifyEmail',$uid);
+	  	$td['validateEmailButton']= f\actionButton('Verify Email','verifyEmail',$uid,'resp');
 	  	$td['bounceEmailButton']= f\actionButton('Bouncer','bounceEmail',$uid);
 		$td['sendLoginButton']= f\actionButton('Send Login','sendLogin',$uid);
 		

@@ -143,7 +143,7 @@ EOF;
 		echo $admin_notice;
 	} elseif ($incidents > 0) {
 		$subj = "Cron - " . date('d M Y') . ": $incidents incidents";
-		 mail('admin@amdflames.org',$subj,$admin_notice);
+		# mail('admin@amdflames.org',$subj,$admin_notice);
 	}
 
 
@@ -232,7 +232,7 @@ function aged_out() {
 		$result = $this->pdo->query($sql) ;
 		$rows_found = $result->rowCount();
 		$this->log .= "Users aged out: $rows_found\n";
-		echo "$rows_found aged out users found.\n";
+		#echo "$rows_found aged out users found.\n";
       
 		foreach ($result as $row){
 			#echo "Processing ${row['username']}\n";
