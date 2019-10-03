@@ -1381,6 +1381,7 @@ public function getNewLost($since,$test=false) {
 		
 		// these fields are retrieved in bulk_send by sequence, not name.
 		$test = false;
+		$test = ($type == 'test');
 		$test_clause =  ($test) ? 
 		"AND test_status != '' " : "AND test_status = '' ";
         
