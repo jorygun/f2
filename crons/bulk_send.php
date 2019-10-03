@@ -31,6 +31,9 @@ $dir = dirname(__FILE__);
 include "$dir/cron-ini.php";
 if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 
+if (!isset($quiet)){$quiet = false;}
+if (!isset($test)){$test = false;}
+
 use \digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
 
@@ -188,6 +191,7 @@ EOT;
 				$news_this = SITE_URL . $pointer . "/?s=$scode";
 				$link_news_this = "<a href='$news_this'>$news_this</a>";
 				
+				
 				$profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$scode";
 				$profile_age = u\days_ago($profile_updated);
 				$profile_update_date = u\make_date($profile_updated);
@@ -216,6 +220,7 @@ EOT;
              $imessage = str_replace('::verify::',$verify_link,$imessage);
              $imessage = str_replace('::uemail::',$user_email,$imessage);
              $imessage = str_replace('::newslink::',$link_news_this,$imessage);
+             
              $imessage = str_replace('::profile_update::',$profile_updated,$imessage);
              $imessage = str_replace('::uid::',$user_id,$imessage);
 
