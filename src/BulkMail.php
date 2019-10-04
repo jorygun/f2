@@ -146,8 +146,9 @@ class BulkMail {
 	public function assemble_teaser() {
 	$teaser = '';
 	foreach ($this->teaser_files as $tfile){
+		echo "Looking for $tfile... ";
 		if (file_exists($tfile)){
-			echo "Including $tfile<br>\n";
+			echo "found.<br>\n";
 			$teaser .= file_get_contents($tfile);
 		}
 		return $teaser;
