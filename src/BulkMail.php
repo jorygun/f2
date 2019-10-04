@@ -148,9 +148,10 @@ class BulkMail {
 	foreach ($this->teaser_files as $tfile){
 		echo "Looking for $tfile... ";
 		if (file_exists($tfile)){
-			echo "found.<br>\n";
+			echo "found.";
 			$teaser .= file_get_contents($tfile);
 		}
+		echo "<br>\n";
 		return $teaser;
 	
 	}
