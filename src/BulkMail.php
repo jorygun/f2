@@ -152,6 +152,6 @@ class BulkMail {
 		}
 		return $teaser;
 	}
-}
+
 
 }
