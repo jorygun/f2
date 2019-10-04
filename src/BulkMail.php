@@ -11,7 +11,7 @@ class BulkMail {
 	private static $job_dir = FileDefs::bulk_jobs;
 	private static $sender_program = FileDefs::bulk_processor;
 	
-	public $teaser_files = array(
+	private $teaser_files = array(
 		FileDefs::latest_dir . "/tease_calendar.txt",
 		FileDefs::latest_dir . "/tease_opps.txt",
 		FileDefs::latest_dir . "/tease_status.txt",
@@ -147,6 +147,7 @@ class BulkMail {
 	$teaser = '';
 	foreach ($this->teaser_files as $tfile){
 		if (file_exists($tfile)){
+			echo "Including $tfile<br>\n";
 			$teaser .= file_get_contents($tfile);
 		}
 		return $teaser;
