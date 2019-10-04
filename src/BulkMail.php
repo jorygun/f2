@@ -144,16 +144,13 @@ class BulkMail {
 	}
 
 	public function assemble_teaser() {
-	$teaser = '';
-	foreach ($this->teaser_files as $tfile){
-		echo "Looking for $tfile... ";
-		if (file_exists($tfile)){
-			echo "found.";
-			$teaser .= file_get_contents($tfile);
+		$teaser = '';
+		foreach ($this->teaser_files as $tfile){
+			if (file_exists($tfile)){
+				$teaser .= file_get_contents($tfile);
+			}
 		}
-		echo "<br>\n";
 		return $teaser;
-	
 	}
 }
 
