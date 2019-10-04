@@ -379,9 +379,9 @@ private static $update_fields = array(
 		$amd_box_data .= (!empty($department_choices)) ? "in " . $department_choices :'';
 		$amd_box_data .= (!empty($location_choices)) ? " in " . $location_choices : '';
 		$amd_box_data .= (!empty($decade_choices)) ? " during the " . $decade_choices: '' ;
-	
-		$member_photo = (isset($row['photo_asset'])) ? 
-   		 get_asset_by_id($row['photo_asset'],'photo') : '' ;
+		$member_photo = '';
+		// $member_photo = (isset($row['photo_asset'])) ? 
+//    		 get_asset_by_id($row['photo_asset'],'photo') : '' ;
    	$linkedinlink = ($row['linkedin'])? "<a href='${row['linkedin']}'>
    		<img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /> </a>" : '' ;
         $addons= array(
