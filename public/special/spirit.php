@@ -49,7 +49,7 @@ EOT;
 require_once 'asset_functions.php';
 require_once 'news_functions.php';
 
-$bookthumb = "<img src='/assets/thumbs/4913.jpg>";
+$bookthumb = "<img src='/assets/thumbs/4913.jpg'>";
 
 #get stars
 
