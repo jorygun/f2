@@ -407,7 +407,7 @@ class Login
 		$_SESSION['level'] = $log_info['seclevel'];
 		$_SESSION['menu'] = $menu -> getMenuBar(); #needs login and level already set
 		#u\echor($_SESSION['login'],'session saved login ' . session_id() );
-	
+		$this->member->setLastLogin($log_info['user_id']);
 		
 		
 		return true;

@@ -426,6 +426,13 @@ private static $update_fields = array(
         return $enhanced;
     }
   
+  public function setLastLogin($uid) {
+  	$sql = "UPDATE members_f2 SET last_login = now() 
+  			WHERE user_id = $uid";
+  	$this->pdo->query($sql);
+  	return true;
+  }
+  	
   public function addMember ($post){
     // adds new member to the db
     // gets new id,upw
