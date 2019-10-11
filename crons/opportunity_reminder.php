@@ -8,7 +8,7 @@ if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 
 
 //END START
-ini_set('display_errors', 1);
+#ini_set('display_errors', 1);
 
 
 /*

@@ -1,6 +1,6 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('error_reporting',E_ALL);
+#ini_set('display_errors', 1);
+#ini_set('error_reporting',E_ALL);
 
 /* One-time prog to convert thumbs from png to jpeg
 */

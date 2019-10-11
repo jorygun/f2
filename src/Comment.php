@@ -408,7 +408,7 @@ private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
 #Now go though the sendlist
 #mail ('admin@amdflames.org','Script debug', print_r($sendlist,true) );
     foreach (array_keys($sendlist) as $em){
-        if ($excludelist[$em]){continue;} #skip this email
+        if (!empty($excludelist[$em])){continue;} #skip this email
         list($sendto,$xname,$xlogin) = $sendlist[$em];
 
         if(!empty($xlogin)){
@@ -535,10 +535,10 @@ private function _getArticle($dbtable,$item_id)
     private function _extract_email ($text)
     {
         $text = trim($text);
-        preg_match('/^(.\s+)?.*?([\w\.\-]+@[\w\.\-]+)/',$text,$m);
-        $email = $m[2];
-        $name = $m[1]; #anything in front of the email address
-        return $email;
+       if ( preg_match('/^(.\s+)?.*?([\w\.\-]+@[\w\.\-]+)/',$text,$m) ){
+       	 $email = $m[2];
+        	return $email;
+        }
     }
 
 
