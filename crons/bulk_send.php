@@ -221,7 +221,7 @@ EOT;
              $imessage = str_replace('::uemail::',$user_email,$imessage);
              $imessage = str_replace('::newslink::',$link_news_this,$imessage);
              
-             $imessage = str_replace('::profile_update::',$profile_updated,$imessage);
+             $imessage = str_replace('::profile_update_date::',$profile_updated,$imessage);
              $imessage = str_replace('::uid::',$user_id,$imessage);
 
            
