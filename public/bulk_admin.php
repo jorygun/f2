@@ -196,6 +196,7 @@ file_put_contents("$job_dir/pointer.txt",$pointer);
 $tag = $_POST['tag'] ?? '';
 $list = $member->getSendList($_POST['sendto'],$tag);
 
+
 if (!$list ){
 		echo "No results from query for ${_POST['sendto']} \n"; 
 		exit;

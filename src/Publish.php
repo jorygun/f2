@@ -120,7 +120,6 @@ class Publish {
 		$this->setPointers();
 		shell_exec ("chmod -R g+w " . FileDefs::latest_dir);
 
-
 		$this->copyLatestToArchive();
 		$nli = new NewsIndex();
 		$nli->append_index($this->year_code,$this->new_archive);

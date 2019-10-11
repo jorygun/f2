@@ -143,10 +143,11 @@ echo "Checking for files in $queue" . BRNL;
 EOT;
 
   $profile_message = "
-    Your profile was last updated on ::profile_update_date::.  
-    To update: log in, then under your name at top right, select 'View/Edit Profile'.
+    <p class='red'>Your profile was last updated on ::profile_date:: .  
+    To update: log in, then under your name at top right, select 'View/Edit Profile'.</p>
         ";
-        
+     
+     
 	$verify_message = <<<EOT
 ------------------------------------------------------------------
    Click to verify that this is your correct email address:
@@ -194,18 +195,18 @@ EOT;
 				
 				$profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$scode";
 				$profile_age = u\days_ago($profile_updated);
-				$profile_update_date = u\make_date($profile_updated);
+				$profile_date = u\make_date($profile_updated);
 			
 				$verify = SITE_URL . "/action.php?V" . $user_id;
 				$verify_link = "<a href='$verify'>$verify</a>";
             
     #subsititute in imessage.  later subs can replace text in earlier subs
-				$imessage = str_replace('::profile_date::',$profile_update_date,$imessage);
+				
 
 				$mm = ($no_bulk)? $no_bulk_message : '';
 				$imessage = str_replace('::no_bulk::',$mm,$imessage);
 
-				$mm =  ($profile_age > 0) ? $profile_message : '';
+				$mm =  ($profile_age > 365) ? $profile_message : '';
 				$imessage = str_replace('::profile::',$mm,$imessage);
 
 
@@ -213,7 +214,7 @@ EOT;
 				$imessage = str_replace('::verify::',$mm,$imessage);
 		 
             $isubject = str_replace('::name::',$username,$isubject);
-            
+             $imessage = str_replace('::profile_date::',$profile_date,$imessage);
             $imessage = str_replace('::name::', $username, $imessage);
             $imessage = str_replace('::link::', $login_link, $imessage);
             $imessage = str_replace('::scode::',$scode,$imessage);
@@ -221,7 +222,7 @@ EOT;
              $imessage = str_replace('::uemail::',$user_email,$imessage);
              $imessage = str_replace('::newslink::',$link_news_this,$imessage);
              
-             $imessage = str_replace('::profile_update_date::',$profile_updated,$imessage);
+            
              $imessage = str_replace('::uid::',$user_id,$imessage);
 
            
