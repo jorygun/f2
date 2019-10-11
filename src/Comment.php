@@ -243,7 +243,7 @@ private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
            $articleRow =  $this->_getArticle($on_db,$item_id);
             $item_title = $articleRow['title'];
             $contributor_id = $articleRow['contributor_id'];
-            $contributor_name = $articleRow['contributor_name'];
+            $contributor_name = $articleRow['contributor_name'] ?? ''
             #echo "Got articleRow $item_title, $contributor_id<br>";
         }
 
