@@ -169,10 +169,19 @@ function atest($x=''){
 }
 function signup_verify($uid){
 	// veirfy email in signup db
-		$sql = "UPDATE `signups` SET status = 'A' WHERE id='$uid'";
 		$pdo = MyPDO::instance();
+		$sql = "SeleCT * from `signups` WHERE id='$uid'";
+		$row = $pdo->query($sql)->fetch();
+		if (empty($row)){ #no such record
+			mail('admin@amdflames.org','New Signup Verify failed',
+				"New Signup verify failed for id $uid ." );
+			die ("An error has occured.  Please contact admin@amdflames.org");
+		}
+		
+		$sql = "UPDATE `signups` SET status = 'A' WHERE id='$uid'";
 		if ($pdo->query($sql)) {
-			mail('admin@amdflames.org','New Signup Verified','New Signup. Check Member Admin status N');
+			mail('admin@amdflames.org','New Signup Verified',
+				'New Signup: ' . $row['username']  );
 			return "Success.  You will receive your login information within a few days.";
 		} else {return "Failed";}
 	}

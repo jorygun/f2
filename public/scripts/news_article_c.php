@@ -17,7 +17,7 @@ namespace digitalmx\flames;
 require_once "news_functions.php";
 require_once "asset_functions.php";
 
-#require_once HOMEPATH . "/security/f2_disqus.php";
+
 
 
 
