@@ -45,6 +45,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 	if (!empty ($id_list = $_POST['idlist'])){
 		#all ids on the page
+		
+		// check for deletes first
+		$delete_list = implode(', ',$_POST['d_list']);
+		if (!empty($delete_list)){
+			echo "Deleting " . $delete_list . BRNL;
+			$sql = "DELETE FROM `news_items` WHERE id in ($delete_list)";
+			$pdo ->query($sql);
+		}
+		
+		
 		$sql = "UPDATE `news_items`
 			SET use_me = ?, take_comments = ?, take_votes = ?
 			WHERE id = ?";
@@ -188,6 +198,7 @@ while ($row = $result->fetch()){
     $pchk = ($row['use_me']>1)?'checked':'';
     $vchk = ($row['take_votes']>0)?'checked':'';
     $cchk = ($row['take_comments']>0)?'checked':'';
+   
     
     $row['title']=stripslashes($row['title']);
     $hcontent=tbreak(stripslashes($row['content']));
@@ -239,9 +250,10 @@ EOT;
      <input type='checkbox' name='priority[]' value='$id' $pchk > Use at Top
     <input type='checkbox' name='tc_list[]' value='$id' $cchk > Take comments 
    <input type='checkbox' name='tv_list[]' value='$id' $vchk > Take votes 
+   <input type='checkbox' name='d_list[]' value='$id' > Delete
     
     </td>
-    <td>$id</td>
+    <td>id: $id</td>
     </tr>
 EOT;
 

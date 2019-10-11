@@ -71,11 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	}
 		$id = $_POST['id']?? 0;
 		
-     if ($id > 0 && isset($_POST['deleteme']) ){
-	    $sql = "DELETE from $itemdb WHERE id = $id;";
-	     $pdo->query($sql);
-	    exit;
-	  }
+    
 
 
 	$photodata=0; #no data to process
@@ -345,7 +341,7 @@ status: <select name='status'>$statusoptions</select>
 
 EOT;
 
-  $delete_item = "<p class='red'><b>Delete Article</b><input type=checkbox name='deleteme'></p>";
+ 
 }
 
 
@@ -516,7 +512,7 @@ if ($mode == 'admin'){
 }
 echo <<<EOF
 </table><input type='submit' value='Submit Story and Asset' style='background:#CFC;'>
-$delete_item
+
 </form></div>
 
 
