@@ -47,8 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 		#all ids on the page
 		
 		// check for deletes first
-		$delete_list = implode(', ',$_POST['d_list']);
-		if (!empty($delete_list)){
+		if (!empty($_POST['d_list'])){
+		
+			$delete_list = implode(', ',$_POST['d_list']);
 			echo "Deleting " . $delete_list . BRNL;
 			$sql = "DELETE FROM `news_items` WHERE id in ($delete_list)";
 			$pdo ->query($sql);
