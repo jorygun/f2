@@ -451,7 +451,7 @@ This email was sent to $cclist.
             AND item_id = '$item_id' AND status is null
 
             ORDER BY cdate;";
-	echo "sql: $sql" . BRNL;
+	#echo "sql: $sql" . BRNL;
 
         return self::_build_comment_array($sql);
     }
