@@ -186,7 +186,7 @@ function signup_verify($uid){
 		} else {return "Failed";}
 	}
 function edit_profile($uid,$madmin,$templates) {
-
+	
 	$profile_data = $madmin->getProfileData($uid);
    echo  $templates->render('profile-edit', $profile_data);
 	exit;
@@ -327,10 +327,10 @@ function setNewsTitle($title)
 function verifyEmail($uid, $member)
 {
 	$ems = $member->getEmailStatus($uid);
-	if (substr($ems,0,1) == 'L'){
-		 $messenger = new Messenger(); #true = test
-		 $messenger->sendMessages($uid,'not-lost');
-		}
+	// if (substr($ems,0,1) == 'L'){
+// 		 $messenger = new Messenger(); #true = test
+// 		 $messenger->sendMessages($uid,'not-lost');
+// 		}
   return "Verified " . $member->verifyEmail($uid) ;
 }
 

@@ -9,6 +9,12 @@
     </p>
     <?php 
         $last_status = ''; #dummy state 
+        $heads = array(
+        'N' => 'New Unvalidated',
+        'R' => 'Hold for Review',
+        'X' => 'Remove',
+        'A' => 'New, Validated',
+    );
         
     ?>
     <form method="post">
@@ -42,6 +48,7 @@
 		<td  ><?= $row['user_email'] ?> </td>
 		<td  ><?= $row['IP'] ?> </td>
 		<td> <?= $this->e($row['user_from'] )?></td>
+		<td> <?= $row['entered'] ?> </td>
 		 <td rowspan='4'>
 		    <?php if (in_array($row['status'],[ 'A','R'])): ?>
             <input type='radio' name='<?=$label?>'  value='M' > M
