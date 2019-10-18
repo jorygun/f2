@@ -201,10 +201,7 @@ class AssetAdmin {
 		 case '':
 		 case 'thumb':
 			  $out = "<div class='thumb'>";
-			  if ($type == 'Album') {
-				$out .= "Asset type 'Album' has been removed.  Please contact admin and let them know you got this. </div>"; 
-				break;
-			  }
+			 
 			  elseif (substr($target,0,1) == '/' ) {#on site
 					if (strpos($target,'/galleries') !== false){
 						 $href = $target;

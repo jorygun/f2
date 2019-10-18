@@ -317,8 +317,7 @@ EOT;
 					if (empty($informant = $post['informant'])){
 						$informant = 'another flames member';
 					}
-					$update_msg = "This change was suggested by ${informant}.";
-					$extra['updater'] = $update_msg;
+					$extra['informant'] = $informant;
 				}
 				
 				echo "Changing User Email and sending E1" . BRNL;

@@ -1367,16 +1367,6 @@ public function getNewLost($since,$test=false) {
 	}
 	public function getSendList($type,$tag='') {
 	// gets list of members for bulk mail
-// $mlarray = [
-//             $row['username'],
-//             $row['user_email'],
-//             $slink,
-//             "$profile_updated_age",
-//             "$profile_updated_date",
-//             "${row['no_bulk']}",
-//             "$age_flag",
-//             "$profile_validated_date"
-//         ];
 		$fields = 
 		'username,
 		user_email,

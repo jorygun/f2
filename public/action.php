@@ -186,7 +186,7 @@ function signup_verify($uid){
 		} else {return "Failed";}
 	}
 function edit_profile($uid,$madmin,$templates) {
-	
+
 	$profile_data = $madmin->getProfileData($uid);
    echo  $templates->render('profile-edit', $profile_data);
 	exit;
