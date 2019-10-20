@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 
 
 
-	<form  style="margin-left: 30pt" method="post"  >
+	<form  method="post"  >
 
 		<p > <span class="input required">Yellow fields</span> are required information</p><br />
 		<table>
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 
 
 		<tr><td colspan="2"><p class="instr">
-			Finally, if you'd like to send a note to the admin, enter it here.  Especially note if you think you're already a member but couldn't log in successfully.
+			Finally, if you'd like to send a note to the admin, enter it here.
 			</td></tr>
 		<tr><td>Note to Admin</td><td>
 			<textarea rows="8" cols="60" name='comment' ></textarea></td></tr>
