@@ -223,7 +223,7 @@ function aged_out() {
 	
       $sql .= "
 			ORDER BY profile_validated
-			LIMIT 2
+			LIMIT 4
 			;";
 			
 		#echo $sql,"<br>";
@@ -231,7 +231,7 @@ function aged_out() {
 	
 		$result = $this->pdo->query($sql) ;
 		$rows_found = $result->rowCount();
-		$this->log .= "Users aged out: $rows_found\n";
+		$this->log .= "No activity for $last_warning days: $rows_found\n";
 		#echo "$rows_found aged out users found.\n";
       
 		foreach ($result as $row){
@@ -316,7 +316,7 @@ function aged_out() {
 			}
 			
 			$count += $tags;
-			$this->log .= "    $tags aged out records $this_ems found.\n";
+			$this->log .= "    $tags members aged out of status $this_ems found.\n";
 		}
 		return $count;
 	 

@@ -25,8 +25,10 @@
             <th>Name</th>
             <th>Email</th>
             <th>IP</th>
-             <th>location</th>          
+             <th>location</th>   
+             <th>Entered</th>
             <th>Disposition</th>
+            
             </tr>
 
      <?php foreach ($mdata as $row) :

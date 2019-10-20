@@ -701,7 +701,7 @@ EOT;
 	}
 			
 
-	if ($profile_changed){  
+	if ($profile_changed || $md['profile_updated'] == null){  
 	  	 $update['profile_updated'] = sql_now();
     
 	    $subj = "Profile Update " . $md['username'];

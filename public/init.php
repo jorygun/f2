@@ -20,8 +20,14 @@ namespace digitalmx\flames;
 ini_set('error_reporting', E_ALL);
 #ini_set('display_errors', 1);
 
-session_start();
+// set up for longer session lifes
+	#ini_set('session.cookie_lifetime', 3600);
+	#ini_set('session.gc_maxlifetime', 3600);
+
 mb_internal_encoding();
+
+session_start();
+
 
 use digitalmx\MyPDO;
 use digitalmx as u;
@@ -36,10 +42,6 @@ class Exception extends \Exception {}
 class RuntimeException extends \RuntimeException {}
 
 
-
-// set up for longer session lifes
-	#ini_set('session.cookie_lifetime', 86400);
-	#ini_set('session.gc_maxlifetime', 86400);
 
 
 

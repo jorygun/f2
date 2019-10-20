@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 		<p > <span class="input required">Yellow fields</span> are required information</p><br />
 		<table>
 		<tr><td colspan="2" class="instr">Enter your name (Firstname Lastname)</td></tr>
-		<tr><td>Name</td><td><input  class="required" name="name" id="name" type="text" size="40" /></td></tr>
+		<tr><td>Name</td><td><input  class="required" name="name" id="name" type="text" size="40" maxsize='50' /></td></tr>
 
 		<tr><td colspan="2" class="instr">Enter your email address
 		</td></tr>
@@ -142,7 +142,7 @@ EOT;
    }
 
 
-echo "<p>Your new signup data is still being sent along as well.  If
+echo "<p>Your new signup data has been entered.  If
 all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 ";
 
@@ -161,6 +161,7 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
    $upd['IP'] = $source_ip;
    $upd['comment'] = $_POST['comment'];
    $upd['status'] = 'U';
+
    $allowed_list = ['username','user_email','user_from','user_amd','IP','comment'];
    	$prep = u\pdoPrep($upd,$allowed_list,'');
  /**
