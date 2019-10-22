@@ -128,7 +128,7 @@ $comment_standards= <<<EOT
 <b>About Comments</b>
 <p>Comments can be applied to most newsletter articles on this site.<br>
 Comments will automatically include your name and will be emailed to the article's author and any previous commenters.</p>
-<p>If you include a url, like <code>http://someplace/somewhere</code>, it will be displayed as a link.</p>
+<p>You can use the "tinymce" editor bar to format your comment.  You can edit/modify html code by clicking the right-most icon on the toolbar.   </p>
 
 <p>You can include a graphic/photo that is already in the site's assets. Just type <code>[asset <i>nn</i>]</code>, where nn is the asset id.  The thumbnail (200 x 200 pixels) of the asset will be inserted. <br>
 
@@ -161,10 +161,11 @@ $cform = <<<EOT
 
 $comment_standards
 <br>
-	<textarea name='comment' id='comment' rows='4' cols='60' onkeyup='stoppedTyping()'></textarea>
+<p>Use the tools in the toolbar below to format your comments with HTML</p>
+	<textarea name='comment' id='comment' class='useredit' rows='4' cols='60' onkeyup='stoppedTyping()'></textarea>
 	<p>If other people comment on this thread, you will receive their comment by email, UNLESS you...<br>
 	<input type=checkbox name="no_email" value='1'> check here to block email from other commentors.</p>
-	<button type='submit' id='submit_button'  disabled >Submit Comment </button>
+	<button type='submit' id='submit_button'   >Submit Comment </button>
 	</form>
 	</div>
 	<br style="clear:both" />
@@ -175,7 +176,7 @@ EOT;
 ############
   
    $page_title = 'News Article Comments';
-   $page_options = ['votes'];
+   $page_options = ['tiny'];
 
 if ($login->checkLogin(3)){
 	$page = new DocPage($page_title);

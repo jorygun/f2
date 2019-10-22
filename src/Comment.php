@@ -7,6 +7,8 @@ namespace digitalmx\flames;
 	use digitalmx\flames as f;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\MyPDO;
+	use PHPMailer\PHPMailer\PHPMailer;
+	use PHPMailer\PHPMailer\Exception ;
 
 
 /**
@@ -70,6 +72,7 @@ class Comment
         'spec_items' => 'spec_items'
     );
 
+	private $mailer;
 /**
  * Sets up object for a specific user
  *
@@ -88,19 +91,22 @@ class Comment
             To retrieve comments, not to post
         */
         if ($user_id > 0){
-        $sql = "SELECT username,user_email
-        from members_f2
-        where user_id = '$this->user_id';";
-        $row = self::$pdo->query($sql)->fetch();
-        $this->username = $row['username'];
-        $this->user_email = $row['user_email'];
-        $this->user_level = $_SESSION['level'];
+			  $sql = "SELECT username,user_email
+			  from members_f2
+			  where user_id = '$this->user_id';";
+			  $row = self::$pdo->query($sql)->fetch();
+			  $this->username = $row['username'];
+			  $this->user_email = $row['user_email'];
+			  $this->user_level = $_SESSION['level'];
         }
-      //   echo "Class ",__CLASS__," instantiated for user
-//             $this->username,
-//             $this->user_email
-//             <br>
-//             \n";
+
+		$this->mailer = new PHPMailer();
+		
+		$this->mailer->addCustomHeader('Errors-to','postmaster@amdflames.org');
+		$this->mailer->CharSet = 'UTF-8'; 
+		$this->mailer->isSendmail();
+		$this->mailer->isHTML(TRUE);
+		
     }
 
 /**
@@ -360,11 +366,11 @@ private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
 
 
 
-                        }
-                        if ($uid == $contributor_id){
-                            $contributor_name = $comuser;
-                        }
-                        else {$sendnames[] = $comuser;} #don't include contributor in list of commentor names.
+						}
+						if ($uid == $contributor_id){
+							 $contributor_name = $comuser;
+						}
+						else {$sendnames[] = $comuser;} #don't include contributor in list of commentor names.
                 }
                  #echo "Sendlist:\n<pre>" . print_r ($sendlist) . '</pre>';
             }
@@ -407,6 +413,11 @@ private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
 
 #Now go though the sendlist
 #mail ('admin@amdflames.org','Script debug', print_r($sendlist,true) );
+	# $this->mailer->setFrom('editor@amdflames.org','AMD Flames Editor');
+	$this->mailer->Subject = "$commenter_name has commented on a FLAMES story";
+	$this->mailer->setFrom ($commenter_email,$commenter_name);  
+	
+	 
     foreach (array_keys($sendlist) as $em){
         if (!empty($excludelist[$em])){continue;} #skip this email
         list($sendto,$xname,$xlogin) = $sendlist[$em];
@@ -422,27 +433,33 @@ private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
 ";      }
 
     $elink = $item_link . $link_add;
- $emsg = "A comment has been added by $commenter_name to this item
-    you suggested or previously commented on:
+ $emsg = "<p>A comment has been added by $commenter_name to this item
+    you suggested or previously commented on:</p>
 
-$item_title
--------------------------
+<h4>$item_title</h4>
 $ucomment
---------------------------
+<hr>
+<ul>
+<li> To POST a reply on the website and email other commenters, click this link:
+    $elink<br>
 
-* To POST a reply on the website and email other commenters, click this link:
-    $elink
-
-* To email a PRIVATE reply only to $commenter_name, just reply to this email.
+<li> To email a PRIVATE reply only to $commenter_name, just reply to this email.
   (You should remove the personal login above from the reply.)
-
-This email was sent to $cclist.
+</ul>
+<p>This email was sent to $cclist.</p>
 
 " ;
 
-    mail($sendto,"$commenter_name has commented on a FLAMES story",$emsg,"From: $mailfrom\r\nReply-To: $replyto");
-        }
-     }
+   # mail($sendto,"$commenter_name has commented on a FLAMES story",$emsg,"From: $mailfrom\r\nReply-To: $replyto");
+   
+    $this->mailer->addAddress($sendto);
+    $this->mailer->Body = $emsg;
+    $this->mailer->send();
+    $this->mailer->clearAddresses();
+    
+        
+   }
+ }
 
   public function getCommentsForItem($dbn,$item_id)
     {

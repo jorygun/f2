@@ -59,7 +59,7 @@ private static $profile_age_limit_days = 600;
 private static $admin_codes = array(
 // only these codes get an admin notice
 
-	'A3' => "No response to several requests to verify email address.",
+	
 	'B2' => "Email has repeatedly bounced.",
 	'E2' => "New email address not confirmed",
 	
