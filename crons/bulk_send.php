@@ -143,14 +143,17 @@ echo "Checking for files in $queue" . BRNL;
 EOT;
 
   $profile_message = "
-    <p class='red'>Your profile was last updated on ::profile_date:: .  
-    To update: log in, then under your name at top right, select 'View/Edit Profile'.</p>
+    <p class='red'>Your profile was last updated on ::profile_date:: .
+    How about an update?  
+    To update: log in, then under your name at top right, select 'View/Edit Profile', 
+    then 'Edit'.</p>
         ";
      
      
 	$verify_message = <<<EOT
 ------------------------------------------------------------------
-   Click to verify that this is your correct email address:
+   You haven't logged in for a while.  Are you getting our
+   emails?  Please click the link below to verify.
 
        https://amdflames.org/action.php?V::uid::
 
@@ -206,11 +209,11 @@ EOT;
 				$mm = ($no_bulk)? $no_bulk_message : '';
 				$imessage = str_replace('::no_bulk::',$mm,$imessage);
 
-				$mm =  ($profile_age > 365) ? $profile_message : '';
+				$mm =  ($profile_age > 720) ? $profile_message : '';
 				$imessage = str_replace('::profile::',$mm,$imessage);
 
 
-				$mm = ($profile_age > 10) ? $verify_message : '';
+				$mm = ($profile_age > 270) ? $verify_message : '';
 				$imessage = str_replace('::verify::',$mm,$imessage);
 		 
             $isubject = str_replace('::name::',$username,$isubject);

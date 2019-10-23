@@ -294,7 +294,7 @@ and change it in your profile.
  
 		$this->replacements ['::verify::'] = SITE_URL . "/action.php?V" . $uid;
 		$this->replacements ['::signup::'] = SITE_URL . "/action.php?S" . $uid;
-		$this->replacements['::profile_edit::'] = SITE_URL . "/action.php?P" . $uid;
+	#	$this->replacements['::profile_edit::'] = SITE_URL . "/action.php?P" . $login;
 	
 		$this->replacements['::name::'] = $row['username'];
 		$this->replacements['::current_email::'] = $row['user_email'];

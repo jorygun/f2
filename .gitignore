@@ -16,6 +16,8 @@ favicon.ico
 
 #ignore backup files
 *~
+~*
+
 
 #ignore vendor directory - will be reconstruted on site
 vendor/
