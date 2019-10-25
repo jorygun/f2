@@ -118,7 +118,7 @@ class MemberAdmin {
 	}
 
 	private function xout($uid){
-		$this->members->setStatus($uid,'X');
+		$this->member->setStatus($uid,'X');
 	
 	}
 	
@@ -350,19 +350,19 @@ EOT;
 				break;
 			case 'test_status':
 				echo "Updating user's test-status" . BRNL;
-				$this->members->setTestStatus($uid,$val);
+				$this->member->setTestStatus($uid,$val);
 				break;
 			case 'current':
 				$val = u\despecial($val);
 				if (strcmp($md['user_current'],$val) !== 0){
 				echo "Updating user's current info" . BRNL;
-				$this->members->setCurrent($uid,$val);
+				$this->member->setCurrent($uid,$val);
 				}
 				break;
 			case 'admin_note':
 				if (strcmp($md['admin_note'],$val) !== 0){
 				echo "Updating users' admin note". BRNL;
-				$this->members->setAdminNote($uid,$val);
+				$this->member->setAdminNote($uid,$val);
 				}
 				break;	
 			default:
