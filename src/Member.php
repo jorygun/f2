@@ -508,6 +508,16 @@ private static $update_fields = array(
 		return true;
 		}
 	}
+	
+	public function setTestStatus ($uid,$status){
+		$sql = "UPDATE `members_f2` SET test_status = '$status' where user_id = '$uid'";
+		if (! $this->pdo->query($sql) ){
+			return false;
+		} else {
+		return true;
+		}
+	}
+	
 	public function setUserName ($uid,$name){
 	$sql = "UPDATE `members_f2` SET username = '$name' where user_id = '$uid' ";
 		if (! $this->pdo->query($sql) ){
