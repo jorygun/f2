@@ -54,7 +54,7 @@ Message Body<br>
 
 <p><input type="radio" name="sendto" value="contributors">News contributors</p>
 
-<p><input type="radio" name="sendto" value="aged_out">Lost - Aged Out (count: ${counts['lost']}; time: $time_lost)
+<p><input type="radio" name="sendto" value="aged_out">Lost - Aged Out (count: ${counts['aged']}; time: $time_aged)
 </p>
 
 

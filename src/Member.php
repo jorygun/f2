@@ -816,6 +816,13 @@ public function getLogins($tag) {
 		
 		$counts['lost'] = $this->pdo->query($sql)->fetchColumn();
 		
+		$sql = "SELECT count(*) as count FROM members_f2
+		WHERE status in ($member_status_set)
+		AND email_status = 'LA' 
+		;";
+		
+		$counts['aged'] = $this->pdo->query($sql)->fetchColumn();
+		
 		$sql = "SELECT count(*) from `members_f2` 
 		WHERE $select_all_valid
 		AND no_bulk = FALSE;
@@ -1424,7 +1431,7 @@ public function getNewLost($since,$test=false) {
 				break;
 			case 'aged_out':
 				$sql .= "AND email_status = 'LA' " ;
-				echo "Sending to all valid emails." . BRNL;
+				echo "Sending to aged out emails." . BRNL;
 				break;
 			case 'contributors':
 				$sql .= "AND status in ('MC','MA') ";

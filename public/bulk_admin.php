@@ -81,7 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
 		$time_all = runtime_msg($counts['active'],$interval);
 		$time_bulk = runtime_msg($counts['bulk'],$interval);
 		 $time_nobulk = runtime_msg($counts['nobulk'],$interval);
-		 $time_lost = runtime_msg($counts['lost'],$interval);
+		 
+		 $time_aged = runtime_msg($counts['aged'],$interval);
 	}
 
 	$now = date('M d, Y H:i');
