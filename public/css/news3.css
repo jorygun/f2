@@ -386,7 +386,9 @@ div.apology {
 .net-votes {float:left;}
 
 button.up {border: 0; background: transparent;cursor:pointer;}
+button.up:hover {border: 1; }
 button.down {border: 0; background: transparent;cursor:pointer;}
+button.down:hover {border: 1; }
 
 .label-votes {font-weight:bold;margin-bottom:0;}
 .vpanel p {margin:4px;}
