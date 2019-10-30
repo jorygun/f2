@@ -5,7 +5,7 @@ function addVote(id,rank) {
 	data:'ajax=vote&item_id='+id+'&this_vote='+rank,
 	type: "POST",
 	beforeSend: function(){
-		$('#vpanel-'+id+' .btn-votes').html("<img src='/graphics/loadericon.gif' />");
+		$('#vpanel-'+id+' .btn-votes').html("<img src='/graphics/loaderIcon.gif' />");
 	},
 	success: function(vpanel){
 		$('#vpanel-'+id).html(vpanel);
