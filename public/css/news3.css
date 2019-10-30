@@ -382,10 +382,11 @@ div.apology {
 	border:2px solid gray;margin-left:1em;padding:1em;
 }
 
-.btn-votes {cursor:pointer; float:left;}
+.btn-votes { float:left;}
 .net-votes {float:left;}
 
-.btn-votes button {border: 0; background: transparent;}
+button.up {border: 0; background: transparent;cursor:pointer;}
+button.down {border: 0; background: transparent;cursor:pointer;}
 
 .label-votes {font-weight:bold;margin-bottom:0;}
 .vpanel p {margin:4px;}
