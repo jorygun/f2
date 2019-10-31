@@ -45,17 +45,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 		<p > <span class="input required">Yellow fields</span> are required information</p><br />
 		<table>
 		<tr><td colspan="2" class="instr">Enter your name (Firstname Lastname)</td></tr>
-		<tr><td>Name</td><td><input  class="required" name="name" id="name" type="text" size="40" maxsize='50' /></td></tr>
+		<tr><td>Name</td><td><input  class="required" name="name" id="name" type="text" size="40" maxlength='50' minlength = '4' required /></td></tr>
 
 		<tr><td colspan="2" class="instr">Enter your email address
 		</td></tr>
 
-		<tr><td>Email</td><td><input id='email' name="email" type="email" class="required" size="40"></td></tr>
+		<tr><td>Email</td><td><input id='email' name="email" type="email" class="required" size="40" maxlength='60' required></td></tr>
 
 	<tr><td colspan="2" class="instr">Enter your current location (city, state or country)
 		</p></td></tr>
 
-		<tr><td>Location</td><td><input name="location" type="text" class="required" size="40"></td></tr>
+		<tr><td>Location</td><td><input name="location" type="text" class="required" size="40" maxlength='90' required></td></tr>
 
 
 		<tr><td colspan="2" class="instr">Enter the most recent position(s) you held at AMD. Include the division, location and period: what, where, when. <br>
@@ -66,14 +66,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 			</td></tr>
 
 		<tr><td>AMD Affiliation </td>
-		<td><input  class="required" size="90" id='affiliation' name="affiliation" type="text" ></td></tr>
+		<td><input  class="required" size="90" maxlength="120" id='affiliation' name="affiliation" type="text" required ></td></tr>
 
 
 		<tr><td colspan="2"><p class="instr">
 			Finally, if you'd like to send a note to the admin, enter it here.
 			</td></tr>
 		<tr><td>Note to Admin</td><td>
-			<textarea rows="8" cols="60" name='comment' ></textarea></td></tr>
+			<textarea rows="3" cols="60" name='comment' maxlength='180' ></textarea></td></tr>
 		</table>
 
 		<input name="Submit" value="Submit"  type="submit">
@@ -84,9 +84,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 
    // check data
 
-
+      $err = '';
 		if (! $email =  filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-		   echo "Email not valid.  <a href='/signup.php'>Try again</a>.";
+		   $err .= "<li> Email not valid. ";
+		}
+		if (strpos(trim($_POST['name']),' ') === false){
+		   $err .= "<li> You must enter first and last name";
+		}
+		if (!empty($err)){
+		   echo "<p class='red'>There were errors on your input.</p>";
+		   echo "<ul>";
+		   echo $err;
+		   echo "</ul>";
+		   echo " <br><button onClick='history.back();'>Try again</button>.";
 		   exit;
 		}
 
