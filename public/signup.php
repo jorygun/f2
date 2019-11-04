@@ -102,6 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 
    // duplicat email
 	$q = "SELECT username, joined from `members_f2` where user_email like '$email' ";
+echo $q;
 
 	 if ($result = $pdo->query($q)->fetchAll()) {
       $send_button = f\actionButton('Send Login','sendLogin',$email,'','resp');
