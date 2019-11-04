@@ -122,6 +122,7 @@ is already in the member database for one or more users: <br>
 associated with this email sent to you. $send_button </p>
 ";
    }
+   else {echo "Unique Email";}
 
 
 //check for duplicate name
