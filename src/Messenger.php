@@ -73,11 +73,13 @@ private static $admin_codes = array(
 
 
     private static $admin_message =	<<<EOT
-	Messenger: ::name:: - ::event::
+	Lost AMD Alumni: ::name:: - ::event::
 	
 	Alert to FLAMES administrator 
 	There is a problem with this user's information on AMD Flames.
-	Please attempt to manually reconnect with this user.
+	There is is no response to email messages to ::current_email::
+
+------------------------
 
 	::user_dataset::
 
