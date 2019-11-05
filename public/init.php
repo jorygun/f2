@@ -172,9 +172,8 @@ class Init
 	
 	private function setSite() {
 		$site = $_SERVER['SERVER_NAME'];
-		if (empty($site)){ #not web, e.g, from cron
-			$site = "amdflames.org";
-			$this->notices[] = "Site not determined; setting to $site";
+		if (strpos($site,'amdflames.org') === false){ #not web,
+			throw new Exception ('Invalid site');
 		}
 		
 		return $site;
@@ -307,10 +306,12 @@ class Login
 	*/
 
 	
-	public function checkLogin ($min = 0) 
+	public function checkLogin ($min = 0,$s='') 
 	{
+		// gets login code from ?s=xxx or passed as a parameter to check login function.
+		
 			$session = session_id();
-			$login_code = $_GET['s'] ?? '' ;
+			$login_code = $_GET['s'] ?? $s ;
 			$current_uid = -1; 
 			$current_user = 'Nobody';
 			$new_uid = 0;
