@@ -83,6 +83,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 <?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
    // check data
+   if ($_SERVER['SERVER_NAME'] != 'amdflames.org') {exit;}
+   #fail silently; stops access by ip.
 
       $err = '';
 		if (! $email =  filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
@@ -102,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 
    // duplicat email
 	$q = "SELECT username, joined from `members_f2` where user_email like '$email' ";
-echo $q;
+#echo $q;
 
 	 if ($result = $pdo->query($q)->fetchAll()) {
       $send_button = f\actionButton('Send Login','sendLogin',$email,'','resp');
@@ -123,7 +125,7 @@ is already in the member database for one or more users: <br>
 associated with this email sent to you. $send_button </p>
 ";
    }
-   else {echo "Unique Email";}
+#   else {echo "Unique Email";}
 
 
 //check for duplicate name
