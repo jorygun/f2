@@ -254,7 +254,8 @@ and change it in your profile.
 				$em['to'] = 'admin@amdflames.org';
 				$em['name'] = 'Flames Admin';
 				
-				$em['from'] = $row['user_email'];
+				$em['from'] = 'admin@amdflames.org';
+				$em['replyto'] = $row['user_email'];
 
 
 
@@ -364,11 +365,17 @@ Activity
 		} 
 			#mail ($data['to'],$data['subject'],$data['message'],$header);
 			$from = $data['from'] ?? 'admin@amdflames.org';
+			$replyto = $data['replyto'] ?? $from;
 			$this->mailer->setFrom($from);
 			
 			$this->mailer->addAddress($data['to'],$data['name']);
 			$this->mailer->Subject = $data['subject'];
 			$this->mailer->Body = $data['message'];
+			// for admin messages, change replyto to the users email
+				$this->mailer->addReplyto ($replyto);
+			
+	
+				
 			try{
 				$this->mailer->send();
 			} catch (Exception $e) {
