@@ -103,6 +103,13 @@ $section_names = array (
 
 );
 
+function get_sections() {
+	$pdo = MyPDO::instance();
+	$sql = 'SELECT section from news_sections';
+	$sections = $pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+	return $sections;
+}
+
 function get_section($me){
     global $sections;
     foreach (array_keys($sections) as $section){
@@ -168,7 +175,7 @@ function build_news_arrays($sql,$show_schedule,$these_sections='',$show_edit=fal
 	
 	if (empty($these_sections)){
 		global $sections;
-		$these_sections = array_keys($sections);
+		$these_sections = array_keys($section_names);
 		}#all of them
 	
         #show_edit and show_schedule are flags to show/hide edit button adn schedule
@@ -195,6 +202,28 @@ function build_news_arrays($sql,$show_schedule,$these_sections='',$show_edit=fal
        # echo "<pre>story_array:\n",print_r ($story_array,true), "</pre>\n";
     return ($story_array);
 }
+
+function build_next(){
+    
+     $directory = SITE_PATH . '/news/next';
+    $pdo = MyPDO::instance();
+    $show_schedule = 0;
+    $show_edit = 0;
+    
+    $these_sections = get_sections(); #all of them
+    $sql = "SELECT i.*,t.section from `news_items` i 
+    	INNER JOIN news_topics t ON i.type = t.topic
+    	WHERE i.use_me > 0 ORDER BY t.section, i.use_me DESC;";
+//echo $sql,"<br>\n";
+        
+        $stories = build_news_arrays($sql,$show_schedule,$these_sections,$show_edit);
+        $story_text = build_news_files($stories);
+        if (!empty($story_text)){
+            echo save_story_files($directory,$story_text);
+        }
+}
+
+
 
 function build_news_files($story_array){
     #stag indicates whether to show status on article

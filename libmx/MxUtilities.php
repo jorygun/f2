@@ -306,11 +306,12 @@ function pdoPrep($data,$include=[], $key=''){
             if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
             
-            
+            $null = null;
             if (empty($val)){ #catches 0, '', and false
             	if ($var == 'asset_id'){ 
-            		continue; 
-            	} #leave out of list
+            		$val = 0;
+            		echo "setting asset id to 0";
+            	} #leave out of list // no, leave in and set to null
    
             }
             

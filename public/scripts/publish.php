@@ -9,7 +9,7 @@ namespace digitalmx\flames;
 	use digitalmx\MyPDO;
 	use digitalmx as u;
 
-   
+   require_once $_SERVER['DOCUMENT_ROOT'] . '/scripts/news_functions.php';
 
 if ($login->checkLogin(4)){
    $page_title = 'Publish News';
@@ -178,7 +178,7 @@ file_put_contents($last_published_ts,time());
 				$result = $pdo->query($sql);
 
 			  #now rebuild the files
-			  include './news_files2.php';
+			  build_next();
 			} else {
 				echo "News items not updated on repo " . REPO . BRNL;
 			}

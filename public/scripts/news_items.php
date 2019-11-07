@@ -1,6 +1,6 @@
 <?php
 namespace digitalmx\flames;
-//ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 #ini_set('error_reporting',E_ALL);
 
 //BEGIN START
@@ -85,11 +85,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
    		}
 	}
         
-	include 'news_files2.php'; #builds the story array
+	build_next(); #builds the story array	
 	
-	#echo "<script>window.location.href = '/scripts/news_files2.php'</script>";
 	
-
 }
 
 ?>
@@ -115,7 +113,7 @@ function show_this_id(id){
 
 <body >
 
-
+<?php u\echor(get_sections() ); exit;?>
 <div style="width:150px;float:left;position: fixed">
 
 <p><b>Create New Item</b> <br><input type='button' value=' New '
@@ -141,8 +139,6 @@ value='Preview' style='color:green'>
 <p style='border:1px solid black;background:#ccc;'><b>Test Files</b><br>
 
 <input type='button' value='Show Test Stories' onclick="window.location.href ='/scripts/news_items.php?mode=t';return false;" /><br />
-<input type = 'button' onclick =
-    "window.open('news_files2.php?test');" value="Build Test Files" /> </p>
 
 
 
