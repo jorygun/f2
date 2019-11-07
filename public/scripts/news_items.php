@@ -113,7 +113,7 @@ function show_this_id(id){
 
 <body >
 
-<?php u\echor(get_sections() ); exit;?>
+
 <div style="width:150px;float:left;position: fixed">
 
 <p><b>Create New Item</b> <br><input type='button' value=' New '
