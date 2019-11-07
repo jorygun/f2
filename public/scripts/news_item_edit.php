@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     else {
         $itemdata['use_me']=0;
     }
-
+	if (empty($_POST['asset_id'])){$itemdata['asset_id'] = 0;}
 	if (isset($_POST['take_votes']) ){
         $itemdata['take_votes']=1;}
     else {
@@ -174,7 +174,8 @@ $itemdata['id'] = $id;
 	if ($id > 0) {
 		// update record
 
-		
+	u\echor($itemdata,'item data before prep');
+	
 		$prep = pdoPrep($itemdata,$ifields, $key='id');
 		/*
 		$prep = pdoPrep($data,$include=[], $key='');

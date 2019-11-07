@@ -372,7 +372,7 @@ Activity
 			$this->mailer->Subject = $data['subject'];
 			$this->mailer->Body = $data['message'];
 			// for admin messages, change replyto to the users email
-				$this->mailer->addReplyto ($replyto);
+			$this->mailer->addReplyto ($replyto);
 			
 	
 				
@@ -382,6 +382,8 @@ Activity
 				echo "Error in mailer: " . $e->getMessage(); 
 			}
 			$this->mailer->clearAddresses();
+			$this->mailer->clearReplyTos();
+			
 				
 			return "Mailed: " . $data['subject'] . "\n";
 		

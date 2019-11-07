@@ -35,6 +35,7 @@ $ptypes = array(
 	'badgov' => 'Foul!',
 	'goodgov' => 'Technology',
 	'hot' => 'Might Be Controversial',
+	'mod' => 'Modern Living',
 
 
 );
@@ -77,7 +78,8 @@ $sections = array(
     'sad' => array('sad'),
     'govt' => array('goodgov','badgov','hot'),
     'deprecated' => array('swamp','people','thread'),
-    'opps' => array ('inv')
+    'opps' => array ('inv'),
+    'modern' => array ('mod'),
 
 
 );
@@ -96,7 +98,8 @@ $section_names = array (
     'sad' => 'Sad News',
     'govt' => 'Government and Politics',
     'deprecated' => 'Deprecated Topic',
-    'opps' => 'Opportunities'
+    'opps' => 'Opportunities',
+    'modern' => 'Modern Living',
 
 );
 
