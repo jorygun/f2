@@ -9,7 +9,9 @@ namespace digitalmx\flames;
 	use digitalmx\MyPDO;
 	use digitalmx as u;
 
-   require_once $_SERVER['DOCUMENT_ROOT'] . '/scripts/news_functions.php';
+#   require_once $_SERVER['DOCUMENT_ROOT'] . '/scripts/news_functions.php';
+// don't think this is needed??
+
 
 if ($login->checkLogin(4)){
    $page_title = 'Publish News';
@@ -143,7 +145,7 @@ file_put_contents($last_published_ts,time());
        
 
         echo "Marking News Items as published<br>";
-        $sql_today = sql_today();
+        $sql_today = date('Y-m-d');
         $sql = "
             UPDATE news_items
             SET status = 'P',

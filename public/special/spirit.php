@@ -47,7 +47,8 @@ EOT;
 //END START
 
 require_once 'asset_functions.php';
-require_once 'news_functions.php';
+
+// don't think newsfunctions needed
 
 $bookthumb = "<img src='/assets/thumbs/4913.jpg'>";
 

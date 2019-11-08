@@ -76,10 +76,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	article with link for discussion.
 */
 
-$topics = array_keys($itypes);
+$topics = array_keys(get_topics() );
 $topics[]='news';
 
-$these_sections = array_keys($sections); #all
+$these_sections = array_keys(get_sections() ); #all
 #echo "<pre>1. sections \n" , var_dump ($these_sections) , "</pre>";
 $show_edit = $show_schedule = 0;
 $discussion_topics = array ('nostalgia'); #prevent discussion link from showing up.

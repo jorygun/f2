@@ -70,7 +70,7 @@ $sections = array(
     'news' =>  array ('biz','mfg'),
     'remember' => array ('nostalgia'),
     'technology' => array ('ieee','tech_news'),
-    'know' => array ('cars','wot','cellar','notable','notpc'),
+    'know' => array ('cars','wot','cellar','notable','notpc','modern'),
     'people' => array ('gatherings','flames'),
     'opener' => array('toon'),
     'site' => array('apology','flamesite','spec','feedback'),
@@ -79,7 +79,7 @@ $sections = array(
     'govt' => array('goodgov','badgov','hot'),
     'deprecated' => array('swamp','people','thread'),
     'opps' => array ('inv'),
-    'modern' => array ('mod'),
+   
 
 
 );
@@ -89,7 +89,7 @@ $section_names = array (
     'news' =>  'Industry',
     'remember' => 'From the Past',
     'people' => 'Friends',
-    'know' => 'Off Topic',
+    'know' => 'Very Interesting...',
     'opener' => 'Opener',
     'site' => 'Site News',
     'mail' => 'In The Mailbox',
@@ -99,15 +99,25 @@ $section_names = array (
     'govt' => 'Government and Politics',
     'deprecated' => 'Deprecated Topic',
     'opps' => 'Opportunities',
-    'modern' => 'Modern Living',
+  
 
 );
 
+// returns array of section code =>section _name
 function get_sections() {
 	$pdo = MyPDO::instance();
-	$sql = 'SELECT section from news_sections';
-	$sections = $pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+	$sql = 'SELECT section,section_name from news_sections';
+	$sections = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	return $sections;
+}
+
+// returns array of topic=>topic_name
+function get_topics($access=''){
+	$pdo = MyPDO::instance();
+	$sql = "SELECT `topic`,`topic_name` from `news_topics` ";
+	if (!empty($access)){ $sql .= " WHERE `access` = '' "; }
+	$topics = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+	return $topics;
 }
 
 function get_section($me){
@@ -210,7 +220,7 @@ function build_next(){
     $show_schedule = 0;
     $show_edit = 0;
     
-    $these_sections = get_sections(); #all of them
+    $these_sections = array_keys(get_sections()); #all of them
     $sql = "SELECT i.*,t.section from `news_items` i 
     	INNER JOIN news_topics t ON i.type = t.topic
     	WHERE i.use_me > 0 ORDER BY t.section, i.use_me DESC;";
@@ -228,8 +238,9 @@ function build_next(){
 function build_news_files($story_array){
     #stag indicates whether to show status on article
     global $itypes;
-    global $sections;
-    global $section_names;
+   
+   $section_names = get_sections();
+   $sections = array_keys($section_names);
     $story_text = array();
 
     #sections[topics][story|teaser][]=content
@@ -280,9 +291,10 @@ function build_news_files($story_array){
 }
 
 function save_story_files($directory,$story_text){
-    global $sections;
-    global $section_names;
-
+   
+    $section_names = get_sections();
+	$sections = array_keys($section_names);
+	
     #build array of sections file names
      foreach (array_keys($sections) as $section){
             $section_files[$section] = "/news_${section}.html";

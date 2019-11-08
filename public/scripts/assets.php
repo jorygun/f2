@@ -16,9 +16,6 @@ namespace digitalmx\flames;
 
 
 
-#require_once "news_functions.php";
-# has the get_asset routines
-
 require_once "asset_functions.php";
 
 

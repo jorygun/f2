@@ -15,7 +15,7 @@
 	if (f2_security_below(0)){exit;}
 //END START
 	use digitalmx\MyPDO;
-//require_once "scripts/news_functions.php";
+
 
 
 

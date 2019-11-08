@@ -53,8 +53,6 @@ EOT;
 //END START
 	
 
-require_once SITE_PATH ."/scripts/news_functions.php";
-
 
 $this_userid = $_SESSION['login']['user_id'] + 0; #force numeric.
 $ucom = new Comment($this_userid);

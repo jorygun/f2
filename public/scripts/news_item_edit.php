@@ -32,7 +32,7 @@ if ($login->checkLogin(6)){
 require_once "news_functions.php";
 require_once "asset_functions.php";
 
-$sql_now = sql_now('date');
+
 
 #set mode as individual user vs admin based on security level.
 $mode = ($_SESSION['level']>6)?'admin':'user';
@@ -313,7 +313,7 @@ Entered: <input type='text' name='date_entered' READONLY value ='${row['date_ent
 EOT;
 
     $delete_item = '';
-    $mytypes = $ptypes;
+    $mytypes = get_topics('U'); #user topics only
 }
 else { #admin user
      $asset_types = array(
@@ -328,7 +328,7 @@ else { #admin user
     );
 
 
-    $mytypes = $itypes;
+    $mytypes = get_topics();
     $form_prefix = <<<EOT
 
 <p>ID: <input type='text' name = 'id' value='$id' READONLY><br>
@@ -583,9 +583,9 @@ EOT;
 function initialize_row () {
 
     $form = array (
-        'date_entered'	=>	sql_now('date'),
+        'date_entered'	=>	date('Y-m-d'),
 
-        'date_edited' => sql_now('date'),
+        'date_edited' => date('Y-m-d'),
         'use_me' => '',
         'type' => '',
         'title'=>'',

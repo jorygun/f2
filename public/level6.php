@@ -51,7 +51,7 @@ actually published.</p>
 <table>
 
 <?php
-$these_sections = array_keys($sections);
+$these_sections = array_keys(get_sections() );
 $sql= "SELECT * from news_items where status NOt IN ('P','T')
     AND contributor_id = '$my_id'
      ORDER BY status

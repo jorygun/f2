@@ -52,8 +52,8 @@ if (!empty($_SERVER['QUERY_STRING'])) {
             $page_title = "AMD Flames Email Validation";
             break;
          case 'P':
-         	header ("Location: /profile_edit.php?s=$uid");
-         	exit;
+         	$page_title = 'Profile Editor';
+				$page_options=['tiny','ajax']; #ajax, votes, tiny 
 			case 'S':
 				$page_title = 'Signup Verification';
 				$page_options=['ajax'];
@@ -76,7 +76,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 			else {echo "Failed";}
  			break;
  		case 'P':
- 			
+ 			// not used
  			edit_profile($uid,$madmin,$templates);
          break;
       case 'S':

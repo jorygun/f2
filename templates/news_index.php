@@ -63,7 +63,7 @@ $read->echo_if('news_opener.html');
 #site news
 $read->echo_if('news_site.html',"Site News");
 
-$read->echo_if('news_amd.html',"On AMD");
+$read->echo_if('news_amd.html',"Our AMD");
 
 #normall news articles
 $read->echo_if('news_news.html',"Industry News");
@@ -73,9 +73,10 @@ $read->echo_if('news_technology.html',"Engineering Dept.");
 #nostalgia
 $read->echo_if('news_remember.html',"From the Past");
 #funny stuff
-$read->echo_if('news_know.html',"Somewhat Off Topic");
+$read->echo_if('news_know.html',"Very Interesting...");
+
 #in the mailbox
-$read->echo_if('news_govt.html',"Government"," (Optional reading for sensitive persons."  );
+$read->echo_if('news_govt.html',"Your Government at Work"," (Reader discretion advised)"  );
 
 
 

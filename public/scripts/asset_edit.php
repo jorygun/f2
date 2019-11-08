@@ -15,7 +15,7 @@ namespace digitalmx\flames;
         edit asset data
 
 */
-#require_once "news_functions.php";
+
 require_once "asset_functions.php";
 
 #ini_set('display_errors',true);
