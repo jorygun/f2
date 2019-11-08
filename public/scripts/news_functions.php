@@ -296,7 +296,7 @@ function save_story_files($directory,$story_text){
 	$sections = array_keys($section_names);
 	
     #build array of sections file names
-     foreach (array_keys($sections) as $section){
+     foreach ($sections as $section){
             $section_files[$section] = "/news_${section}.html";
             $thisfile = "$directory/$section_files[$section]";
             if (file_exists($thisfile)) {unlink ($thisfile);}
