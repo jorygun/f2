@@ -172,8 +172,8 @@ class Init
 	
 	private function setSite() {
 		$site = $_SERVER['SERVER_NAME'];
-		if (strpos($site,'amdflames') == false
-		&& strpos($site,'.local') == false ){ #not web,
+		if (strpos($site,'amdflames') === false
+		&& strpos($site,'.local') === false ){ #not web,
 			throw new Exception ('Invalid site ' . $site);
 		}
 		
