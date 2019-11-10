@@ -38,6 +38,7 @@ then marked as published.
 
 
 $now = sql_now();
+$topics = get_topics();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 // build the web page
@@ -226,7 +227,7 @@ while ($row = $result->fetch()){
 
      echo <<<EOT
 	<tr>
-	<td><i>$itypes[$tcode]</i></td>
+	<td><i>$topics[$tcode]</i></td>
 	 <td colspan=2><b>${row['title']}</b></td> </tr>
 
 

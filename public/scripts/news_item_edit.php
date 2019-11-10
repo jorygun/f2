@@ -328,7 +328,7 @@ else { #admin user
     );
 
 
-    $mytypes = get_topics();
+    $mytypes = get_topics('A');
     $form_prefix = <<<EOT
 
 <p>ID: <input type='text' name = 'id' value='$id' READONLY><br>

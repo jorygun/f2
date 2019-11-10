@@ -13,55 +13,6 @@ require_once 'asset_functions.php';
 
 
 #article types available for individual entries
-$ptypes = array(
-
-	'amd_news'	=>	'AMD News',
-	'tech_news'	=>	'Technology',
-	'mfg' => 'Manufacturing',
-	'cars'	=>	'Down at the Car Lot',
-	'notable' => 'Notable',
-	'biz'	=>	'Business News',
-
-	'nostalgia'	=>	'History',
-	'gatherings'	=>	'Gatherings',
-	'flames'	=>	'News About Flames',
-	'sad'	=>	'Sad News',
-	'wot'	=>	'WOT?',
-    'inv' => 'Investments',
-
-	'notpc' => 'Might Have To Apologize Later',
-
-	'ieee' => 'From the IEEE',
-	'badgov' => 'Foul!',
-	'goodgov' => 'Technology',
-	'hot' => 'Might Be Controversial',
-	'mod' => 'Modern Living',
-
-
-);
-
-#article types  for admin entry
-$atypes = array (
-	'mailbox'	=>	'In the Mailbox',
-	'apology' => 'Mia Culpa',
-    'flamesite' => 'Site News',
-	'gatherings'	=>	'Gatherings',
-	'cellar' => "Z's Wine Cellar",
-	'spec' => "Special Topic",
-    'toon' => 'Opening Cartoon',
-    'feedback' => 'Site Feedback',
-    'spirit' => 'The Spirit of AMD',
-
-);
-
-#deprecated types
-$dtypes = array (
-    'thread'	=>	'Conversations',
-    'people' => 'The people win',
-    'swamp' => 'From the Swamp'
-);
-
-$itypes = array_merge($ptypes, $atypes);
 
 
 
@@ -112,25 +63,27 @@ function get_sections() {
 }
 
 // returns array of topic=>topic_name
+
 function get_topics($access=''){
+// use access = '' for all topics including deprecated
+// access = 'A' for all current topics 
+// access = 'U' for user accessible topics
+
 	$pdo = MyPDO::instance();
 	$sql = "SELECT `topic`,`topic_name` from `news_topics` ";
-	if (!empty($access)){ $sql .= " WHERE `access` = '' "; }
+	if ($access == 'A'){ $sql .= " WHERE `access` in ('A','U') "; }
+	elseif ($access == 'U'){ $sql .= " WHERE `access` = 'U' "; }
 	$topics = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	return $topics;
 }
 
-function get_section($me){
-    global $sections;
-    foreach (array_keys($sections) as $section){
-        foreach ($sections[$section] as $type){
-            if ($type == $me){return $section;}
-        }
-
-    }
-    return 'No Section';
+function get_section($topic){
+	$pdo = MyPDO::instance();
+	$sql = "SELECT section from `news_topics` WHERE topic = '$topic'";
+	$section = $pdo->query($sql)->fetchColumn();
+	return $section;
 }
-
+	
 $istatus = array (
 	'N'	=> 'New',
 	'R'	=> 'Ready',
@@ -182,9 +135,11 @@ function show_edit($id,$val='Edit'){
 
 
 function build_news_arrays($sql,$show_schedule,$these_sections='',$show_edit=false,$show_discuss=true){
-	
+		$section_names = get_sections();
+		
+		
 	if (empty($these_sections)){
-		global $sections;
+	
 		$these_sections = array_keys($section_names);
 		}#all of them
 	
@@ -237,7 +192,7 @@ function build_next(){
 
 function build_news_files($story_array){
     #stag indicates whether to show status on article
-    global $itypes;
+   
    
    $section_names = get_sections();
    $sections = array_keys($section_names);
@@ -328,7 +283,9 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
     #dtag is whether or not to show the "discuss" and voting sections 
 
 
-    global $itypes;
+    $topics = get_topics();
+    $sections = get_sections();
+    
     require_once 'asset_functions.php';
    # if (function_exists('digitalmx\flames\get_asset_by_id')) {echo "have it";} else {echo 'nope';}
 
@@ -469,7 +426,7 @@ EOT;
 
     <div class='article'>
 
-    <p class='head'><span class='type'>$itypes[$topic]</span><br />
+    <p class='head'><span class='type'>$topics[$topic]</span><br />
     <span class='headline'>${webready['title']}</span></p>
 
 EOT;
