@@ -184,6 +184,6 @@ try {
 // 
 
 // use digitalmx\flames\SendLogin;
-// $sender = new SendLogin($pdo);
-// $sender->sendLink('john.scott.springer@gmail.com');
+// $sender = new SendLogin('john.scott.springer@gmail.com';
+
 

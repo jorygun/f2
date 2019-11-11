@@ -16,43 +16,7 @@ require_once 'asset_functions.php';
 
 
 
-$sections = array(
-    'amd' => array('amd_news','spirit'),
-    'news' =>  array ('biz','mfg'),
-    'remember' => array ('nostalgia'),
-    'technology' => array ('ieee','tech_news'),
-    'know' => array ('cars','wot','cellar','notable','notpc','mod'),
-    'people' => array ('gatherings','flames'),
-    'opener' => array('toon'),
-    'site' => array('apology','flamesite','spec','feedback'),
-    'mail' => array('mailbox'),
-    'sad' => array('sad'),
-    'govt' => array('goodgov','badgov','hot'),
-    'deprecated' => array('swamp','people','thread'),
-    'opps' => array ('inv'),
-   
 
-
-);
-
-$section_names = array (
-    'amd' => 'AMD',
-    'news' =>  'Industry',
-    'remember' => 'From the Past',
-    'people' => 'Friends',
-    'know' => 'Very Interesting...',
-    'opener' => 'Opener',
-    'site' => 'Site News',
-    'mail' => 'In The Mailbox',
-    'ieee' => 'From IEEE',
-    'technology' => 'Engineering Dept.',
-    'sad' => 'Sad News',
-    'govt' => 'Government and Politics',
-    'deprecated' => 'Deprecated Topic',
-    'opps' => 'Opportunities',
-  
-
-);
 
 // returns array of section code =>section _name
 function get_sections() {
@@ -124,7 +88,7 @@ $ifields = array(
 
 
 function show_edit($id,$val='Edit'){
-    $params = "width=800,scrollbars=yes,resizeable=yes,toolbar=yes";
+    $params = "width=1200,scrollbars=yes,resizeable=yes,toolbar=yes";
     $url = "/scripts/news_item_edit.php?id=$id";
     $name = "itemedit";
 

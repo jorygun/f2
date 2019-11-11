@@ -32,6 +32,7 @@ use digitalmx\MyPDO;
 
 
   $publish = new Publish();
+  $member = new Member();
  	
  	
   

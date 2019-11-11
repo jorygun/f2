@@ -4,6 +4,7 @@ namespace digitalmx\flames;
 use digitalmx\flames\members;
 use digitalmx\flames\Definitions as Defs;
 use digitalmx as u;
+use digitalmx\MyPDO;
 
 class SendLogin {
 
@@ -21,9 +22,11 @@ class SendLogin {
 
 EOT;
 
-   public function __construct($pdo) {
+   public function __construct() {
+   	$pdo = MyPDO::instance();
+   	
          $this->pdo = $pdo;
-         $this->member = new Member($pdo);
+         $this->member = new Member();
    
    }
    public function sendLink($email) {
@@ -31,15 +34,15 @@ EOT;
    		echo "Invalid Email Requested";
    		exit;
    	}
-      $members = $this->member->getMemberList($email);   
+      $members = $this->member->getMembersByEmail($email);   
       #u\echor ($memberslist, 'Member List');
-     if ($members['count'] == 0 ){
+     if (!$members){
      	echo "No members found at that email.";
      	exit;
      }
      
      $message = self::$message;
-     foreach ($members['data'] as $row){
+     foreach ($members as $row){
      	 $login = SITE_URL . "/?s=" . $row['upw'] . $row['user_id'];
      	$message .= sprintf ("   %-18s  %s\n", $row['username'], $login);
      	}

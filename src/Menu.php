@@ -255,7 +255,7 @@ EOT;
 		");
 	$t .= self::if_level(0,"
 		<li>-------------
-		<li><a href='/help.html'>Help</a>
+		<li><a href='/help.php'>Help</a>
 		<li><a href='/signup.php'>New User Signup</a>
 		 <li><a href='/about.php' target='about'>About AMD Flames</a>
 		 <li><a href='mailto:admin@amdflames.org'>When all else fails, email the admin</a>
