@@ -262,7 +262,7 @@ EOT;
 		 <li><a href='mailto:admin@amdflames.org'>When all else fails, email the admin</a>
 	");
 		
-	$t .= " <li>.
+	$t .= " <li>-----------
 		<li>$version";
 	
 	
