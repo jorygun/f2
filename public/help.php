@@ -38,7 +38,7 @@ problems.  It's only software; there's always something wrong.</p>
 <hr>
 <div  class="indent" >
 <h3><a id="logininfo">Login Help</a> </h3>
-To log into this site, you must use a link that looks like this: <code>https://amdflames.org/?s=xxxxxxxxxxx</code>.  The xxx part is your unique login code, supplied by the site when you signed up. Once logged in, you will remain logged in until you close your browser or log out.  If you have never received a login, please use the <a href="/scripts/signup.php">sign up</a> link. If you have lost your login link, enter your email address below, and your login link will be sent to you if your email is in the member list.  If all else fails, please <a href="mailto:admin@amdflames.org">contact the administrator</a>.  </p>
+To log into this site, you must use a link that looks like this: <code>https://amdflames.org/?s=xxxxxxxxxxx</code>.  The xxx part is your unique login code, supplied by the site when you signed up. Once logged in, you will remain logged in until you close your browser or log out.  If you have never received a login, please use the <a href="/signup.php">sign up</a> link. If you have lost your login link, enter your email address below, and your login link will be sent to you if your email is in the member list.  If all else fails, please <a href="mailto:admin@amdflames.org">contact the administrator</a>.  </p>
 
 
 <p>If you are member and need to retrieve your login, enter your email here: <br>Email: <input type="text" id='em' name="email" size="40"> <button type='button' onClick = "var em = getElementById('em').value; takeAction('sendLogin',em,'','resp');">Send Logins</button></p>
