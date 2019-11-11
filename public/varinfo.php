@@ -183,7 +183,6 @@ try {
 // echo $navbar;
 // 
 
-// use digitalmx\flames\SendLogin;
-// $sender = new SendLogin('john.scott.springer@gmail.com';
+
 
 
