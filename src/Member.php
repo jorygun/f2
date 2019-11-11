@@ -730,10 +730,12 @@ public function getLogins($tag) {
         
         $sql = "SELECT username,user_id,upw,user_email FROM `members_f2`
             where $where";
-        if (!$result = $this->pdo->query($sql) ){
-            throw new Exception ("get user row in sendlogin failed");
+         $result = $this->pdo->query($sql) ;
+         
+        if ($result->rowCount() == 0){ 
+            return false;
         }
-        if ($result->rowCount() == 0) {return "No Members Found";}
+       
         $format = "   %-25s %-50s\n";
         $msg = sprintf($format,"Member Name",  "login url");
         foreach ($result as $row){ #there may be more than one

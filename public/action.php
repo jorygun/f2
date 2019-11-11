@@ -104,7 +104,7 @@ if (! empty ($_POST)) {
 	  		echo verifyProfile($_POST['uid'],$member);
 	  		break;
 		case 'sendLogin':
-			return sendLogin($_POST['uid'], $member);
+			echo sendLogin($_POST['uid'], $member);
 		  break;
 		case 'verifyEmail':
 			echo  verifyEmail($_POST['uid'], $member) ;
@@ -310,13 +310,15 @@ function sendLogin($tag, $member)
 {
    //tag may be uid or email
 
-    $login_msg = $member->getLogins($tag);
-    $messenger = new Messenger(); 
-    if ($messenger->sendLogins($tag, $login_msg)) {
-        echo "Logins sent";
-    } else {
-        echo "Failed to send logins";
-    }
+   $login_msg = $member->getLogins($tag);
+   if (!empty($login_msg)){
+    	$messenger = new Messenger(); 
+		 if ($messenger->sendLogins($tag, $login_msg)) {
+			  return "Logins sent";
+		 }
+	}
+	return "Done."; #actually nothing was found
+		
 }
 
 function setNewsTitle($title)
