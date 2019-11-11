@@ -317,7 +317,7 @@ function sendLogin($tag, $member)
 			  return "Logins sent";
 		 }
 	}
-	return "Done."; #actually nothing was found
+	return "Nope."; #actually nothing was found
 		
 }
 
