@@ -903,7 +903,14 @@ public function getLogins($tag) {
         return $this->returnResult($short_list);
     }
     
-    
+    public function getMembersByEmail($email) {
+    	$sql = "SELECT username,user_id,upw from `members_f2` WHERE
+    		user_email = '$email' limit 100";
+    	$members = $this->pdo->query($sql)->fetchAll();
+    	return $members;
+    }
+    	
+    	
     public function getMemberList($tag, $limit = 100)
     {
     #echo "Starting memberlist with tag $tag" . BRNL;
