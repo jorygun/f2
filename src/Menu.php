@@ -96,7 +96,7 @@ EOT;
 		
 		list($vnum,$vdesc) = preg_split("/\s+/",$vlatest);
 		$sec = $_SESSION['login']['seclevel'];
-		$vname = "<div class='vbox'>[$vroot]#$vnum <br>L$sec ($vrel)x</div>";
+		$vname = "<div class='vbox'>[$vroot]#$vnum<br>($vrel) <br>L$sec </div>";
 		
 		return $vname;
 	}
