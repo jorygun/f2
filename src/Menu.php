@@ -78,7 +78,7 @@ EOT;
 		$vdate = REPO_PATH . "/config/mdate"; #touched after evry commit in master
 		if (! file_exists($vfile)){throw new Exception ("No version file");}
 		
-		$vrel =  date('d m Y H:i',file_get_contents($vdate)));
+		$vrel =  date('d m Y H:i',trim(file_get_contents($vdate))));
 		
 		#$vnum = $init->getVersion();
 		$vfh = fopen($vfile,'r');
@@ -96,7 +96,7 @@ EOT;
 		
 		list($vnum,$vdesc) = preg_split("/\s+/",$vlatest);
 		$sec = $_SESSION['login']['seclevel'];
-		$vname = "<div class='vbox'>[$vroot]#$vnum <br>L$sec ($vrel)</div>";
+		$vname = "<div class='vbox'>[$vroot]#$vnum <br>L$sec ($vrel)x</div>";
 		
 		return $vname;
 	}
