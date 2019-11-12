@@ -75,7 +75,7 @@ EOT;
 		
 		$vroot = basename(REPO_PATH); 
 		$vfile = REPO_PATH . "/config/version.txt";
-		$vdate = REPO_PATH . "/config/mdate"; #touched after evry commit in master
+		$vdate = REPO_PATH . "/config/commit_timestamp"; #touched after evry commit in master
 		if (! file_exists($vfile)){throw new Exception ("No version file");}
 		
 		$vrel =  date('d M Y H:i',trim(file_get_contents($vdate)));

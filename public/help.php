@@ -10,20 +10,20 @@ namespace digitalmx\flames;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\flames\DocPage;
 	use digitalmx\flames\FileDefs;
-	
+
 
 
 if ($login->checkLogin(0)){
    $page_title = 'AMD Flames Help';
-	$page_options=['ajax']; #ajax, votes, tiny 
-	
+	$page_options=['ajax']; #ajax, votes, tiny
+
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
-	
+
 	echo $page->startBody();
 }
-	
+
 //END START
 ?>
 
@@ -38,7 +38,11 @@ problems.  It's only software; there's always something wrong.</p>
 <hr>
 <div  class="indent" >
 <h3><a id="logininfo">Login Help</a> </h3>
-To log into this site, you must use a link that looks like this: <code>https://amdflames.org/?s=xxxxxxxxxxx</code>.  The xxx part is your unique login code, supplied by the site when you signed up. Once logged in, you will remain logged in until you close your browser or log out.  If you have never received a login, please use the <a href="/signup.php">sign up</a> link. If you have lost your login link, enter your email address below, and your login link will be sent to you if your email is in the member list.  If all else fails, please <a href="mailto:admin@amdflames.org">contact the administrator</a>.  </p>
+<p>To log into this site, you must use a link that looks like this: <code>https://amdflames.org/?s=xxxxxxxxxxx</code>.  The xxx part is your unique login code, supplied by the site when you signed up. Once logged in, you will remain logged in until you close your browser, log out, or time out after around 20 minutes of inactivity. </p>
+   <ul>
+   <li>If you have never signup up for the site, please use the <a href="/signup.php">sign up</a> link.
+   <li>If you have lost your login link, enter your email address below, and your login link will be sent to you if your email is in the member list.
+   <li>If all else fails, please <a href="mailto:admin@amdflames.org">contact the administrator</a>.  </ul>
 
 
 <p>If you are member and need to retrieve your login, enter your email here: <br>Email: <input type="text" id='em' name="email" size="40"> <button type='button' onClick = "var em = getElementById('em').value; takeAction('sendLogin',em,'','resp');">Send Logins</button></p>
@@ -47,7 +51,7 @@ To log into this site, you must use a link that looks like this: <code>https://a
 
 
 <h3 name='touchscreen'>Touchscreen Users</h3>
-Touchscreens behave a bit differently than mouse-driven screens.  As a result (and because your temporary editor isn't the brightest), menus that you open on a touch devices may not not close until you touch another menu.  So there is a "Close Menus" button at the right side of the menu bar.  Click on that and any open menu will go away on a touchscreen device like a phone or tablet.
+Touchscreens behave a bit differently than mouse-driven screens.  As a result, menus that you open on a touch devices may not not close until you touch another menu.  So there is a "Close Menus" button at the right side of the menu bar.  Click on that and any open menu will go away on a touchscreen device like a phone or tablet. Maybe.
 
 </div>
 
