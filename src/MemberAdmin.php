@@ -308,6 +308,7 @@ EOT;
 			case 'informant':
 			case 'Update':
 			case 'nobulk':
+			case 'nobulkchecked':
 	
 				#do nothing
 				break;
