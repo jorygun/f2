@@ -187,7 +187,7 @@ function process_uploads($dir) {
     }
     else {die ("No titles.txt file found in folder.");}
 
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $finfo = new \finfo(\FILEINFO_MIME_TYPE);
     $new_ids = [];
 
     foreach ($filelist as $this_file){
@@ -258,7 +258,7 @@ function process_uploads($dir) {
              #use _FILES array to look like an upload
             */
 
-         $finfo = new finfo(FILEINFO_MIME_TYPE);
+         $finfo = new \finfo(\FILEINFO_MIME_TYPE);
 
         $file_data = array(
             'tmp_name' => $loc,
