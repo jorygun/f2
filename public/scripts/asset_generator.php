@@ -202,7 +202,7 @@ function process_uploads($dir) {
         if (empty($captions[$this_file])){
          $captions[$this_file] = $default_caption;
         }
-      }
+
       echo "Processing file $this_file" . BRNL;
 
         #build the post array, starting with stuff from form
