@@ -197,7 +197,11 @@ function process_uploads($dir) {
         if (empty($this_file)){continue;}
         if ($this_file == "titles.txt"){continue;}
        if (empty($titles[$this_file])){
-         throw new Exception ("There is no title for $this_file");
+         $titles[$this_file] = $default_title;
+        }
+        if (empty($captions[$this_file])){
+         $captions[$this_file] = $default_caption;
+        }
       }
       echo "Processing file $this_file" . BRNL;
 
