@@ -936,7 +936,7 @@ function post_asset($post_array){
    # recho ($_FILES,'FILES array');
     
     $form_link = $post_array['link'] ?? '';
-      
+   // note: post_array['source'] comes from form
    
     
 /**
@@ -1021,7 +1021,7 @@ function post_asset($post_array){
 		$orig_link = $row['link'];
 		$orig_url = $row['url'];
 		
-      if( $orig_link != $post_array['link'] ){
+   if( $orig_link != $post_array['link'] ){
         if (! empty($orig_link)) {
             echo "Source has changed (was $orig_link); will regenerate thumb" . BRNL;
                 $changed_asset = true;

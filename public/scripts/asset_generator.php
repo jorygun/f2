@@ -123,6 +123,7 @@ global $asset_types;
 
 <tr><td>Contributor:</td><td><input type='text' name='contributor'  ><input type='hidden' name='contributor_id' id='contributor_id' value=0><br>$Aliastext</td></tr>
 
+<tr><td>Attribution</td><td><input type='text' name='source'></td></tr>
 
 <tr><td>From</td><td>vintage (year): <input type='text' name='vintage'  size="6"> Event/Pub<input type='text' name='source'  size="40"> </td></tr>
 
