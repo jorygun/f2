@@ -62,10 +62,10 @@ function isLogin($login) {
 
 function getWarning () {
 	//retrurns warning message if set and not seen
-	
+	if (!empty($_SESSION['warning_seen'])){return '';}
 	if (empty($_SESSION['login']['seclevel'])){return '';}
 	if ($_SESSION['login']['seclevel'] < 1 ){return '';}
-	if (!empty($_SESSION['warning_seen'])){return '';}
+	
 			$warning = [];
 		$msgs = [];
 		
@@ -80,7 +80,7 @@ function getWarning () {
 		}
 		
 		if ($_SESSION['login']['profile_valid_age']> Defs::$profile_warning){
-			$msgs [] = "Your profile is getting a bit long in the tooth. ";
+			$msgs [] = "Your profile is getting a bit long in the tooth.  How about an update? ";
 			
 		}
 		if (!empty($msgs)){
