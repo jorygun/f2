@@ -517,6 +517,7 @@ public function showUpdate($uid) {
  public function getProfileData($uid) {
  	$row = $this->member->getMemberRecord($uid,true);
  	$tdata = $row; // put all retrieved data into template row
+ 	u/echoAlert ("MA Site: " . SITE);
 # u\echor($row,'From Member');
  	
  
@@ -588,6 +589,8 @@ EOT;
  public function saveProfileData($post) {
  	
  		echo "Updating Profile Information<br>";
+ 		
+ 		u/echoAlert ("MA Site: " . SITE);
 exit;
 	if (empty($uid = $post['user_id'])){
 		throw new Exception ("No uid supplied for save profile data");
