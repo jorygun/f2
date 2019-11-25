@@ -653,8 +653,9 @@ EOT;
 				#new email
 				$update[$key] = $val;
 				#$this->messenger->setTestMode(true);
-				$new_email = true;				
-				// change email status only AFTER updating to the new email
+				$new_email = true;	
+				$update['email_status'] = 'E1';
+				
 				break;
 			case 'user_interests':
 			case 'user_current':
