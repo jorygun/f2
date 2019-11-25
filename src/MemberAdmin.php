@@ -588,7 +588,7 @@ EOT;
  public function saveProfileData($post) {
  	
  		echo "Updating Profile Information<br>";
-
+exit;
 	if (empty($uid = $post['user_id'])){
 		throw new Exception ("No uid supplied for save profile data");
 	}
