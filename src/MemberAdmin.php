@@ -655,7 +655,7 @@ EOT;
 				#$this->messenger->setTestMode(true);
 				$new_email = true;	
 				$update['email_status'] = 'E1';
-				$this->messenger->sendMessages($uid,'E1',['informant'=>'profile update']);
+				$this->messenger->sendMessages($uid,'E1B',['informant'=>'profile update']);
 				
 				
 				break;
