@@ -84,7 +84,7 @@ function getWarning () {
 			
 		}
 		if (!empty($msgs)){
-			$msgs[] = "Please choose go to your profile (under your name in the menu bar)  and choose 'Edit Profile'.";
+			#$msgs[] = "Please choose go to your profile (under your name in the menu bar)  and choose 'Edit Profile'.";
 			$warning = join (" ",$msgs);
 			
 		}

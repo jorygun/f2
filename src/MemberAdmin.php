@@ -715,11 +715,7 @@ EOT;
 
 
  //   #assume user also checked email
- 	 if (empty($update['email_status']) ){ #could already be set to E1
-    $update['email_status'] = 'Y'; #will autoset verified
-    $update['email_last_validated'] = sql_now();
-   }
-   
+ 	 
  	 $update['profile_validated'] = sql_now();
 	$update ['user_id'] = $uid;
 	
@@ -755,10 +751,12 @@ EOT;
 				u\echoAlert("You have changed your email.  Be sure to watch for an 
 				email asking you to confirm the change.");
 	}
+	else { #validate email
+		$this->member->verifyEmail($uid);
 
-
-  	
- 	}
+  	}
+ 	
+ }
  	
  	
  	private function save_profile_photo($asset_id,$username){
