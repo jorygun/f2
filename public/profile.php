@@ -79,13 +79,14 @@ EOT;
 	} elseif (!empty($uid = $_GET['uid'] ?? '' )){
 			$profile_data = $ma->getProfileData($uid);
 			echo  $templates->render('profile', $profile_data);
-			echo "Site: " . SITE . BRNL;
+			u/echoAlert ("Site: " . SITE);
 			exit;
 			
 	}  elseif ($uid = $_SESSION['login']['user_id']){
 		$profile_data = $ma->getProfileData($uid);
 	#	u\echor($profile_data,'profile data'); 
 			echo  $templates->render('profile', $profile_data);
+			u/echoAlert ("Site: " . SITE);
 			exit;
 	
  	}else {
