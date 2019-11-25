@@ -702,7 +702,7 @@ EOT;
 			
 	}
 			
-
+ // if change to profile or profile has never been updated
 	if ($profile_changed || $md['profile_updated'] == null){  
 	  	 $update['profile_updated'] = sql_now();
     
@@ -713,7 +713,7 @@ EOT;
 
 
  //   #assume user also checked email
- 	 if (!isset($update['email_status']) || $update['email_status'] != 'E1'){ #could already be set to E1
+ 	 if (empty($update['email_status']) ){ #could already be set to E1
     $update['email_status'] = 'Y'; #will autoset verified
     $update['email_last_validated'] = sql_now();
    }
