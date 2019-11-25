@@ -713,7 +713,7 @@ EOT;
 
 
  //   #assume user also checked email
- 	 if (isset($update['email_status']) && $update['email_status'] != 'E1'){ #could already be set to E1
+ 	 if (!isset($update['email_status']) || $update['email_status'] != 'E1'){ #could already be set to E1
     $update['email_status'] = 'Y'; #will autoset verified
     $update['email_last_validated'] = sql_now();
    }
