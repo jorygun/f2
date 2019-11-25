@@ -722,7 +722,7 @@ EOT;
 	
 	
 		
-#	 u\echor($update,'update array');
+	 u\echor($update,'update array');
 #	 exit;
 	 
 	$prep = u\pdoPrep($update,[],'user_id');
