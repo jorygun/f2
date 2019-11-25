@@ -52,10 +52,11 @@ EOT;
 	
 //END START
 	 $ma = new MemberAdmin();
+	 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 		$uid = $_POST['user_id'];
 		$ma->saveProfileData($_POST);
-		echo "<script>window.location.assign('/profile.php/?uid=$uid&s=relogin');</script>";
+		#echo "<script>window.location.assign('/profile.php/?uid=$uid&s=relogin');</script>";
 	
 		exit;
    } 

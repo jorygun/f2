@@ -717,6 +717,7 @@ EOT;
     $update['email_status'] = 'Y'; #will autoset verified
     $update['email_last_validated'] = sql_now();
    }
+   
  	 $update['profile_validated'] = sql_now();
 	$update ['user_id'] = $uid;
 	
