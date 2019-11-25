@@ -590,7 +590,7 @@ EOT;
  	
  		echo "Updating Profile Information<br>";
  		
- 		u\echoAlert ("MA Site: " . SITE);
+ 		#u\echoAlert ("MA Site: " . SITE);
 
 	if (empty($uid = $post['user_id'])){
 		throw new Exception ("No uid supplied for save profile data");
@@ -726,8 +726,8 @@ EOT;
 	
 	
 		
-	 u\echor($update,'update array');
-	 exit;
+	# u\echor($update,'update array');
+
 	 
 	$prep = u\pdoPrep($update,[],'user_id');
 
