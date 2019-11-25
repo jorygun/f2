@@ -80,6 +80,7 @@ EOT;
 			$profile_data = $ma->getProfileData($uid);
 			echo  $templates->render('profile', $profile_data);
 			u\echoAlert ("Site: " . SITE);
+			
 			exit;
 			
 	}  elseif ($uid = $_SESSION['login']['user_id']){
