@@ -9,7 +9,7 @@
 	
 */
 
-ini_set('display_errors', 1);
+#ini_set('display_errors', 1);
 #set_time_limit(300); // 30sec. is default 0 is none;
 
 $script = basename(__FILE__);
@@ -29,7 +29,18 @@ if (! defined ('INIT')) { echo "Running cron-ini \n";
 }
 if (! defined ('INIT')) { die ("$script halting. Init did not succeed ");}
 
-
+/* Sweep runs as a cron job every night
+	It checks status of member (and signup) tables and send out
+	messages to users and admin as appropriate
+	
+	It runs these tests:
+	check member database for x-ed out (status: delete) members  and delete
+	test members for each of the 'in process' email statuses and
+		use messenger to send an email to user (and maybe admin)
+	test signups for validated new signups
+	test members for long inactivty and start the aged-out test sequence
+	
+*/
 
 $sweep = new Sweep($dir,$test,$pdo);
 $sweep -> runSweep();
@@ -43,10 +54,9 @@ class Sweep{
 	private $members;
 	private $test;
 	private $mode;
-	private $age_limit;
-	private $member_status_set;
-	private $limit;
 	
+	private $member_status_set;
+
 	private $now_sql;
 
 
@@ -77,7 +87,7 @@ class Sweep{
 		$this->pdo = $pdo;
 	
 
-		$this->age_limit = Defs::$age_limit; #limit for aging out in days
+		
 		$this->member_status_set = Defs::getMemberInSet();
 
 		$dt = new DateTime();
@@ -85,7 +95,6 @@ class Sweep{
 		$now_datestamp = $dt->format('Ymd_His');
 		$now_human = $dt->format("M j, H:i a");
 		
-		$this->limit = Defs::$age_limit;
 		
 		$sweep_log_dir = REPO_PATH . "/var/logs";
 		$this->sweep_log = $sweep_log_dir . '/sweep-' . "${now_datestamp}-${mode}.txt";
@@ -113,7 +122,7 @@ class Sweep{
 		$incidents += $count;
 
 		// Finally test last contact a long long time ago
-		$count = $this->aged_out();
+		$count = $this->aged_out(2);
 		echo "$count aged out members found.\n\n";
 		$incidents += $count;
 
@@ -183,11 +192,14 @@ These users have not been processed.\n
 		return $rows_found;
 	}
 
-function aged_out() {
+function aged_out($max_records =0) {
 	// changed 9/2019 to simpler test: last login > 1year
-	$this->log .=  "\n#### Testing last activity more than $this->limit days\n";
-	$limit = $this->limit;
-	$lost_warning = Defs::$lost_warning;
+	// max_records if >0 is max records to return.
+	
+	$this->log .=  "\n#### Testing last activity more than $this->inactivity_limit days\n";
+	$limit = ($max_records > 0)? "LIMIT $max_records" : '' ;
+	
+	$inactivity_limit = Defs::$inactivity_limit;
 	$sweep_fields = '
 		id,
 		user_id,
@@ -209,13 +221,13 @@ function aged_out() {
 		AND
 			(last_login IS NULL
 			OR
-			last_login < NOW() - INTERVAL $lost_warning DAY
+			last_login < NOW() - INTERVAL $inactivity_limit DAY
 			)
 		AND
 			(
 			email_last_validated is NULL
 			OR
-			email_last_validated < NOW() - INTERVAL $lost_warning DAY
+			email_last_validated < NOW() - INTERVAL $inactivity_limit DAY
 			)
 	
 		";
@@ -223,7 +235,8 @@ function aged_out() {
 	
       $sql .= "
 			ORDER BY profile_validated
-			LIMIT 4
+			
+			$limit
 			;";
 			
 		#echo $sql,"<br>";
@@ -231,7 +244,7 @@ function aged_out() {
 	
 		$result = $this->pdo->query($sql) ;
 		$rows_found = $result->rowCount();
-		$this->log .= "No activity for $last_warning days: $rows_found\n";
+		$this->log .= "No activity for $inactivity_limit days: $rows_found\n";
 		#echo "$rows_found aged out users found.\n";
       
 		foreach ($result as $row){

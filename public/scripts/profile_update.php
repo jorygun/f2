@@ -93,9 +93,9 @@ EOT;
 	$user_web = $row['user_web'] ?? '';
 
 
-	list ($email_age,$email_date) = age($row['email_last_validated']);
-	list ($profile_age,$profile_date) = age ($row['profile_updated']);
-	list ($profile_validated_age,$profile_validated_date) = age ($row['profile_validated']);
+	list ($email_age,$email_date) = u\age_and_date($row['email_last_validated']);
+	list ($profile_age,$profile_date) = u\age_and_date ($row['profile_updated']);
+	list ($profile_validated_age,$profile_validated_date) = u\age_and_date ($row['profile_validated']);
 	$verify_email = verify_click_email($id,$row['user_email']);
 	$verify_profile = verify_click_profile($id);
 
@@ -113,7 +113,7 @@ EOT;
 	    $email_update_msg = "<tr><td colspan='2' style='color:red'>Your email has not been validated since $email_date.
 	If it's wrong, you can change it or submitting this form will validate it.</td></tr>";}
 
-	if ($profile_age> Defs::$old_profile_limit ){
+	if ($profile_age> Defs::$profile_warning ){
 
 	    $profile_update_msg =  "
 	<tr><td colspan='2' style='color:red'>

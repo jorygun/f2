@@ -123,9 +123,8 @@ global $asset_types;
 
 <tr><td>Contributor:</td><td><input type='text' name='contributor'  ><input type='hidden' name='contributor_id' id='contributor_id' value=0><br>$Aliastext</td></tr>
 
-<tr><td>Attribution</td><td><input type='text' name='source'></td></tr>
 
-<tr><td>From</td><td>vintage (year): <input type='text' name='vintage'  size="6"> Event/Pub<input type='text' name='source'  size="40"> </td></tr>
+<tr><td>From</td><td>vintage (year): <input type='text' name='vintage'  size="6"> Attribution <input type='text' name='source'  size="40"> </td></tr>
 
 
 
@@ -181,6 +180,7 @@ function process_uploads($dir) {
 
         }
       echo "<h3>Titles and Captions</h3>";
+      echo "Default: $default_title; $default_caption" . BRNL;
       foreach ($titles as $f=>$t){
          echo "$f: $t, " . $captions[$f] . BRNL;
       }
@@ -196,12 +196,7 @@ function process_uploads($dir) {
         if (substr($this_file,0,1) == '.') {continue;}
         if (empty($this_file)){continue;}
         if ($this_file == "titles.txt"){continue;}
-       if (empty($titles[$this_file])){
-         $titles[$this_file] = $default_title;
-        }
-        if (empty($captions[$this_file])){
-         $captions[$this_file] = $default_caption;
-        }
+
 
       echo "Processing file $this_file" . BRNL;
 
@@ -210,8 +205,8 @@ function process_uploads($dir) {
         $post_array = $_POST;
         $post_array['id'] = 0;
 
-         $post_array['caption'] = $captions[$this_file];
-        	$post_array['title'] = $titles[$this_file];
+         $post_array['caption'] = $captions[$this_file] ?? $default_caption;
+        	$post_array['title'] = $titles[$this_file] ?? $default_title;
          $post_array['notes'] = "Generated from $this_file.\n";
         $fake_upload = SITE_PATH . '/' . $dir . '/' . $this_file;
         $_FILES['linkfile'] = build_files($fake_upload);

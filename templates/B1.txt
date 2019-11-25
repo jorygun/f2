@@ -8,5 +8,7 @@ Your AMD FLAMEs Email Bounced - Action Needed
 	If this email <::current_email::> is correct, 
 	just use the link below to confirm:
 		::verify::
+		
+	or just reply to this email.
 ***************************************************
 

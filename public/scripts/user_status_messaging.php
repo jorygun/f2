@@ -286,7 +286,7 @@ return array(
 }
 function get_profile_message($row,$type='html'){
 
-        list($profile_days,$profile_date) = age ($row['profile_updated']);
+        list($profile_days,$profile_date) = u\age_and_date ($row['profile_updated']);
         $login = get_login_from_row($row,'code'); #just the code
         $profile_url = SITE_URL . "/scripts/profile_update.php?s=$login";
 

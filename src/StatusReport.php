@@ -13,13 +13,19 @@ ini_set('display_errors', 1);
     use digitalmx\flames\Member;
     
     
-  
+/**
+	Report to generate list of new members, updated emails, etc.
+	to tag onto end of newsletter.  Also produces text file for use 
+	in weekly emal.
+	
+**/
 
 ##########################
 
 class StatusReport {
 
 	private $namelist = array();
+	private $lostlist = array();
 	private $member;
 
 	private static 	$type_titles = array(
@@ -103,7 +109,7 @@ class StatusReport {
 		$num_rows_display = ($num_rows == 0)? 'No ' : $num_rows;
 
 		list ($titletext,$subtitle) = explode ('|',self::$type_titles[$type]);
-		$namelist = array();
+		
 		$title = "$num_rows_display " . $titletext ;
 		if ($type == 'deceased' && $num_rows_display == 0){$title .= "<small>(whew)</small>";}
 
@@ -129,7 +135,7 @@ class StatusReport {
 					$greeting = $row['user_greet'];
 				
 					$joined = $row['join_date'];
-					if ($type <> 'long lost') $this->namelist[] = $name;
+					
 					$contact = $row['email_public'];
 
 					$profile_year = date('Y',strtotime($row['profile_date'])) ?? 'none';
@@ -138,15 +144,26 @@ class StatusReport {
 						case 'deceased':
 							$note = $current;
 							$contact = '';
+							$this->namelist[] = $name;
 							break;
 						case 'new':
 							$note = $greeting;
-
+							$this->namelist[] = $name;
 							break;
 						case 'profile':
 							$note = $greeting;
+							$this->namelist[] = $name;
 							break;
-
+						case 'long lost':
+						case 'lost':
+							$this->lostlist[] = $name;
+							$note = '';
+							break;
+						case 'email':
+							$note='';
+							$this->namelist[] = $name;
+							break;
+						
 						default:
 							$note = '';
 					}
@@ -184,22 +201,43 @@ EOT;
 	
 	public function createNameReport(){
 		#sort and make uniuqe
+		$name_report = '';
 		$list = array_unique($this->namelist);
-		if (empty($list)) {return false;}
-		sort($list);
-		$name_count = 0;
-		$last_name = '';
-		$name_report = "New or updated information about these AMD Alumni:
+		if (!empty($list)) {
+			sort($list);
+			$name_count = 0;
+			$last_name = '';
+			$name_report .= "New or updated information about these AMD Alumni:
 ----------------------------
     ";
-		foreach ($list as $name){
-				$name_report .= $name;
-				++$name_count;
-				    #line break every 4 names
-				if ($name_count%4){$name_report .= ", ";}
-					else {$name_report .= "\n    ";}
+			foreach ($list as $name){
+					$name_report .= $name;
+					++$name_count;
+						 #line break every 4 names
+					if ($name_count%4){$name_report .= ", ";}
+						else {$name_report .= "\n    ";}
+			}
+			$name_report = rtrim(rtrim($name_report),',') . "\n\n";
 		}
-		$name_report = rtrim(rtrim($name_report),',') . "\n";
+		
+		$list = array_unique($this->lostlist);
+		if (!empty($list)) {
+			sort($list);
+			$name_count = 0;
+			$last_name = '';
+			$name_report .= "We've Lost Contact with These AMD Alumni:
+----------------------------
+    ";
+			foreach ($list as $name){
+					$name_report .= $name;
+					++$name_count;
+						 #line break every 4 names
+					if ($name_count%4){$name_report .= ", ";}
+						else {$name_report .= "\n    ";}
+			}
+			$name_report = rtrim(rtrim($name_report),',') . "\n\n";
+		}
+		
 		return $name_report;
 	}
 		

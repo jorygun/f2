@@ -311,7 +311,7 @@ and change it in your profile.
 		$this->replacements ['::closing::'] = self::$closing;
 		
 		$this->replacements ['::profile_warn::'] =  
-			($row['profile_age'] > Defs::$age_limit ) ?
+			($row['profile_age'] > Defs::$profile_warning ) ?
 			self::$profile_message : '' ;
 		
 		$this->replacements ['::bulk::'] = 
@@ -327,6 +327,8 @@ and change it in your profile.
 
 #u\echor($row,'For dataset');
 	$subscriber = ( $row['subscriber'])? 'yes':'no';
+	$uid = $row['user_id'];
+	$verify =  SITE_URL . "/action.php?V" . $uid;
 	$dataset = "
 User: ${row['username']}
 ---------------------
@@ -346,7 +348,10 @@ Activity
    Profile last validated: ${row['profile_valid_date']} 
       (updated on: ${row['profile_date']})
 
+Click to Confirm
 -----------------------
+	 $verify
+	 
 ";
 	return $dataset;
 }

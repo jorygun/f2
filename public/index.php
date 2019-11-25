@@ -189,9 +189,9 @@ function age_warnings (){
 	$email_status_time = $_SESSION['login']['email_status_time'];
 	$email_status_description = Defs::getEmsName($email_status);
 
-	list ($profile_age,$last_profile) = age( $_SESSION['login']['profile_updated']);
-    list ($email_age,$last_verify) = age ( $_SESSION['login']['email_last_validated']);
-    list ($profile_validated_age,$profile_last_validated) = age ($_SESSION['login']['profile_validated']);
+	list ($profile_age,$last_profile) = u\age_and_date( $_SESSION['login']['profile_updated']);
+    list ($email_age,$last_verify) = u\age_and_date ( $_SESSION['login']['email_last_validated']);
+    list ($profile_validated_age,$profile_last_validated) = u\age_and_date ($_SESSION['login']['profile_validated']);
 
 
 
@@ -228,9 +228,9 @@ EOT;
 	}
 	// check profile
 
-		if ( ($profile_validated_age>Defs::$old_profile_limit) ){ $update_scratch .= <<< EOT
+		if ( ($profile_validated_age>Defs::$profile_warning) ){ $update_scratch .= <<< EOT
 
-		<p>Your profile has not been validated since $profile_last_validated.  Please look it over at <a href="/scripts/profile_update.php">edit profile</a>.  You can update it or just verify that it's current.  </p>
+		<p>Your profile has not been validated since $profile_last_validated.  Please look it over at <a href="/profile.php">edit profile</a>.  You can update it or just verify that it's current.  </p>
 EOT;
 		}
 	// check email age

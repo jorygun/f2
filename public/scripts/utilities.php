@@ -1034,6 +1034,7 @@ EOT;
 
 function age($date_str) {
 	//takes a date and returns the age from today in days and a formatted version of date
+	// note if date is from a db timestamp field, db will return a date string.
 	
 	if (!$date_str){ #blank or NULL??
 		return array('99999','no_date');

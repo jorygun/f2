@@ -16,9 +16,11 @@ use \Exception as Exception;
 class Definitions {
 	
 	// days before warnings start on profile or email
-	public static $age_limit = 720;
-	public static $profile_warning = 365; #days since update
-	public static $lost_warning = 365; #days since login
+
+	public static $profile_warning = 365; 
+		#days since update; warning on login and bulk email
+	public static $inactivity_limit = 365; 
+		#days since last activity; triggers lost test
 	
 	
 	public static $asset_tags = array(
@@ -192,9 +194,7 @@ private static $member_codes = array (
 	'M', 'MA','MN','MC','MU','R','G'
 	);
 
-// time limits in days that produce warnings or emails
-public static $inactivity_limit = 365; 
-public static $old_profile_limit = 365;
+
 public static $test = 'you win';
 
 ######## Getters

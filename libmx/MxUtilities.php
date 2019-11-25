@@ -310,7 +310,7 @@ function pdoPrep($data,$include=[], $key=''){
             if (empty($val)){ #catches 0, '', and false
             	if ($var == 'asset_id'){ 
             		$val = 0;
-            		echo "setting asset id to 0";
+            		#echo "setting asset id to 0";
             	} #leave out of list // no, leave in and set to null
    
             }
@@ -512,6 +512,8 @@ function make_links($input){
 
 function days_ago ($date_str = '1') {
 	//takes a date and returns the age from today in days
+	// date_str can be normal string or timestamp.
+	// routine converts to timestamp and returns days from now.
 	
 	
 	$dt = new \DateTime();
@@ -526,13 +528,31 @@ function days_ago ($date_str = '1') {
 	#is unix time
 	$dt->setTimeStamp($t);
 	
-	$now = new \DateTime();
+	$dtnow = new \DateTime();
 	
-	$diff = $dt -> diff($now);
+	$diff = $dt -> diff($dtnow);
 	$diff_str = $diff->format('%a');
 	
 	
 	return $diff_str;
+}
+
+
+function age_and_date($date_str) {
+	//takes a date and returns the age from today in days and a formatted version of date
+	// note if date is from a db timestamp field, db will return a date string.
+	// was "age" in old utilities.
+	
+	if (!$date_str){ #blank or NULL??
+		return array('99999','no_date');
+	}
+	$DT_now = new DateTime();
+	$vd = new DateTime($date_str);
+	$diff = $vd -> diff($DT_now);
+	$diff_str = $diff->format('%a');
+	$last_val = $vd->format ('M j, Y');
+	#echo "$date_str, $diff_str, $last_val<br>\n";
+	return array ($diff_str,$last_val);
 }
 
 function extract_email ($text){

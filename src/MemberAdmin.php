@@ -540,6 +540,7 @@ public function showUpdate($uid) {
    	"<p><a href='${row['user_web']}' target='_blank' >Favorite Web Site</a></p>"
    	:
    	'';
+   // see if user is editing their own or its an admin that  can edit it
   $credential = ($uid == $_SESSION['login']['user_id']  || $_SESSION ['level'] > 7)
   			&& $row['status'] != 'D';
    
@@ -714,6 +715,7 @@ EOT;
  //   #assume user also checked email
  	 if (isset($update['email_status']) && $update['email_status'] != 'E1'){ #could already be set to E1
     $update['email_status'] = 'Y'; #will autoset verified
+    $update['email_status_time'] = sql_now();
    }
  	 $update['profile_validated'] = sql_now();
 	$update ['user_id'] = $uid;

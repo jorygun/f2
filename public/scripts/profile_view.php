@@ -61,8 +61,8 @@ extract($row,EXTR_PREFIX_ALL,'D');
 	$amd_boxes .= (!empty($department_choices)) ? "in " . $department_choices :'';
 	$amd_boxes .= (!empty($location_choices)) ? " in " . $location_choices : '';
 	$amd_boxes .= (!empty($decade_choices)) ? " during the " . $decade_choices: '' ;
-	$last_profile_date = age($D_profile_updated)[1];
-	$last_profile_validated = age($D_profile_validated)[1];
+	$last_profile_date = u\make_date($D_profile_updated);
+	$last_profile_validated = u\make_date($D_profile_validated);
 
 	$joindate = u\make_date($D_join_date);
 	$user_current = $D_user_current ;
