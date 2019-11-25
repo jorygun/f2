@@ -590,7 +590,7 @@ EOT;
  	
  		echo "Updating Profile Information<br>";
  		
- 		#u\echoAlert ("MA Site: " . SITE);
+ 		u\echoAlert ("MA Site: " . SITE);
 
 	if (empty($uid = $post['user_id'])){
 		throw new Exception ("No uid supplied for save profile data");
@@ -647,7 +647,7 @@ EOT;
    	
     		case 'user_email':
 				if (! u\is_valid_email($val)){
-					echo 'Email address not valid' . BRNL; exit;
+					echo 'New Email address not valid' . BRNL; exit;
 				}
 				#new email
 				$update[$key] = $val;
@@ -726,7 +726,7 @@ EOT;
 	
 	
 		
-	# u\echor($update,'update array');
+	 u\echor($update,'update array');
 
 	 
 	$prep = u\pdoPrep($update,[],'user_id');
@@ -748,29 +748,11 @@ EOT;
   	$sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id = ${prep['key']} ;";
   	//echo $sql . BRNL;
   	//u\echor ($prep['data'],' prep data');
- $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+ $stmt = $this->pdo->prepare($sql);
+ $stmt -> execute($prep['data']);
   
 
 
-	#check if email changed.
-
-	 // 	$existing_email = trim($row['user_email']);
-// 	 	$form_email = trim($post['user_email']);
-// 	 	$use_email = $existing_email;
-// 		 if ($existing_email <> $form_email){ #email changed
-// 			 $use_email = $form_email;
-// 			send_verify($post[uid],'E1');
-// 
-// 			echo "<P>Your email was changed from ",
-// 		 		h($existing_email) ,
-// 		 		" to ",
-// 		 		h($form_email) ,
-// 		 		".  <br>A verification email has been sent.",
-// 
-// 		 		"</p><p>Please respond to confirm the new email.</p>\n";
-// 
-// 		 }
- 	
   	
  	}
  	
