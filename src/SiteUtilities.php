@@ -70,10 +70,15 @@ function getWarning () {
 		$msgs = [];
 		
 		
-		if ($_SESSION['login']['email_status'] != 'Y'){
+		if ($_SESSION['login']['email_status'] == 'E1'){
+			$msgs[] = "Your email has been changed. Please be sure to respond to the verification email.";
+			
+		}
+		elseif ($_SESSION['login']['email_status'] != 'Y'){
 			$msgs[] = "There is a problem with your email.";
 			
 		}
+		
 		if ($_SESSION['login']['profile_valid_age']> Defs::$profile_warning){
 			$msgs [] = "Your profile is getting a bit long in the tooth. ";
 			

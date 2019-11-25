@@ -626,6 +626,7 @@ EOT;
  #   u\echor($post,'Incoming post');  
   #	u\echor($md,'MD'); exit;
 	$profile_changed = false;
+	$new_email = false;
 	$update=[];
 	// go through each key, see if it's changed, build update array
     foreach ($post as $key=>$val){
@@ -652,11 +653,8 @@ EOT;
 				#new email
 				$update[$key] = $val;
 				#$this->messenger->setTestMode(true);
-				$this->messenger->sendMessages($uid,'E1',['informant'=>'profile update']);
-				u\echoAlert("You have changed your email.  Be sure to watch for an 
-				email asking you to confirm the change.");
-				
-				$update['email_status'] = 'E1';
+				$new_email = true;				
+				// change email status only AFTER updating to the new email
 				break;
 			case 'user_interests':
 			case 'user_current':
@@ -715,6 +713,7 @@ EOT;
     }
 
 
+
  //   #assume user also checked email
  	 if (empty($update['email_status']) ){ #could already be set to E1
     $update['email_status'] = 'Y'; #will autoset verified
@@ -751,6 +750,11 @@ EOT;
  $stmt = $this->pdo->prepare($sql);
  $stmt -> execute($prep['data']);
   
+  if ($new_email){
+  	$this->messenger->sendMessages($uid,'E1',['informant'=>'profile update']);
+				u\echoAlert("You have changed your email.  Be sure to watch for an 
+				email asking you to confirm the change.");
+	}
 
 
   	
