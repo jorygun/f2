@@ -61,7 +61,7 @@ that will listed on the next newsletter as well.</p>
 		
 <?php if ($email_status != 'Y'): ?>
 <tr><td colspan=2><div class='warning'>There is a problem with your current email
-address. If you not making any other changes in your profile, and this email is correct, then click here. <?=$profile_verify_button?> </div></td></tr>
+address. You may change it below, or, if it is correct, just save/submit this page to confirm it. <?=$profile_verify_button?> </div></td></tr>
 <?php endif; ?>
 		<tr><td colspan='2'>Current email status: <?= $email_status_name ?><br>
 		    <span class='instr'>
