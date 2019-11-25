@@ -591,7 +591,7 @@ EOT;
  		echo "Updating Profile Information<br>";
  		
  		u\echoAlert ("MA Site: " . SITE);
-exit;
+
 	if (empty($uid = $post['user_id'])){
 		throw new Exception ("No uid supplied for save profile data");
 	}
