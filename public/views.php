@@ -21,7 +21,7 @@ $month = array(
 
 
 #$count_file = SITE_PATH . "/views_data/reads.txt";
-$out_file = REPO_PATH . "/var/data/graphic/views_2016.png";
+$out_file = REPO_PATH . "/var/data/views_2016.png";
 
 #update the access counts
 #get the last 52 entries, then reorder Ascending.
