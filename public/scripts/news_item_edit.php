@@ -344,11 +344,6 @@ EOT;
 
  
 }
-
-
-
-
-
 #print_r ($itemdata);
 
 #escape quotes etc as needed

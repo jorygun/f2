@@ -57,6 +57,8 @@ if ($date_code){$read->increment_reads($date_code);}
 
 #breaking news added after publication
 $read->echo_if('breaking.html');
+
+
 #cartoon
 $read->echo_if('news_opener.html');
 
@@ -74,6 +76,8 @@ $read->echo_if('news_technology.html',"Engineering Dept.");
 $read->echo_if('news_remember.html',"From the Past");
 #funny stuff
 $read->echo_if('news_know.html',"Very Interesting...");
+
+$read->echo_if('news_fun.html',"Just For Fun");
 
 #in the mailbox
 $read->echo_if('news_govt.html',"Your Government at Work"," (Reader discretion advised)"  );
