@@ -21,7 +21,7 @@ require_once 'asset_functions.php';
 // returns array of section code =>section _name
 function get_sections() {
 	$pdo = MyPDO::instance();
-	$sql = 'SELECT section,section_name from news_sections';
+	$sql = 'SELECT section,section_name from news_sections ORDER BY section';
 	$sections = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	return $sections;
 }
@@ -37,6 +37,8 @@ function get_topics($access=''){
 	$sql = "SELECT `topic`,`topic_name` from `news_topics` ";
 	if ($access == 'A'){ $sql .= " WHERE `access` in ('A','U') "; }
 	elseif ($access == 'U'){ $sql .= " WHERE `access` = 'U' "; }
+	$sql .= " ORDER BY `section`, `topic` ";
+	
 	$topics = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	return $topics;
 }
