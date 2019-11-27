@@ -33,8 +33,7 @@ if ($login->checkLogin(0)){
 #u\echor($_SESSION, 'Session'); 
 //END START
 
-
- //  $my_id = $_SESSION['login']['user_id'];
+   $uid = $_SESSION['login']['user_id'];
 	$news_latest = SITE_PATH . FileDefs::latest_pointer;
 
 	$username = $_SESSION['login']['username'];
@@ -67,7 +66,7 @@ if ($_SESSION['level'] > 0){
    	$join_date =  $_SESSION['login']['join_date'];
 		$user_current = $_SESSION['login']['user_current'];
 		$email_status = $_SESSION['login']['email_status'];
-		
+		$uid = $_SESSION['login']['user_id'];
  		$news_latest = SITE_PATH . "/news/news_latest";
 		$pub_date =  date('d M Y', f\getLastPub());
 		
@@ -180,11 +179,6 @@ function age_warnings (){
 	
 	
 
-	// set up all varioables
-	
-	//refresh the local datanbase
-	#$row = get_member_by_id($my_id);
-
 	$email_status = $_SESSION['login']['email_status'];
 	$email_status_time = $_SESSION['login']['email_status_time'];
 	$email_status_description = Defs::getEmsName($email_status);
@@ -202,9 +196,7 @@ function age_warnings (){
 	$enc_user_email = rawurlencode($user_email);
 
 
-	#echo print_r (array($email_val_age,$last_val,$profile_age,$last_profile));
-	$verify_click = verify_click_email($my_id,$user_email);
-	$verify_profile_click = verify_click_profile ($my_id);
+	
 
 	#build scratch file to put results in.  Build update message to display resutls if there's anything in the scratch
 		$update_scratch = $update_msg ="";
@@ -220,8 +212,7 @@ function age_warnings (){
 				Current status is: $email_status_description set on $email_status_time, and we've sent emails to you
 				that have not been responded to yet.
 
-				If your email has changed, please update it in <a href="/scripts/profile_update.php"> your profile</a>.  If it's right, just $verify_click to validate it or respond to one
-				of the emails we've sent you.</p>
+				If your email has changed, please update it in <a href="/profile.php/?edit=$uid"> your profile</a>.  </p>
 
 EOT;
 
@@ -230,7 +221,7 @@ EOT;
 
 		if ( ($profile_validated_age>Defs::$profile_warning) ){ $update_scratch .= <<< EOT
 
-		<p>Your profile has not been validated since $profile_last_validated.  Please look it over at <a href="/profile.php">edit profile</a>.  You can update it or just verify that it's current.  </p>
+		<p>Your profile has not been validated since $profile_last_validated.  Please look it over at <a href="/profile.php?edit=$uid">edit profile</a>.  You can update it or just verify that it's current.  </p>
 EOT;
 		}
 	// check email age

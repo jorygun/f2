@@ -75,7 +75,7 @@ function getWarning () {
 			
 		}
 		elseif ($_SESSION['login']['email_status'] != 'Y'){
-			$msgs[] = "There is a problem with your email.";
+			$msgs[] = "There is a problem with your email.  Please check your profile.";
 			
 		}
 		

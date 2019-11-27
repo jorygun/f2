@@ -234,7 +234,7 @@ function aged_out($max_records =0) {
 		if ($this->test){$sql .= " AND test_status != '' ";}
 	
       $sql .= "
-			ORDER BY profile_validated
+			ORDER BY email_last_validated
 			
 			$limit
 			;";

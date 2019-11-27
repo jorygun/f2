@@ -197,7 +197,7 @@ EOT;
 				
 				
 				$profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$scode";
-				$profile_age = u\days_ago($profile_updated);
+				list($profile_age,$profile_date) = u\age_and_date($profile_updated);
 				$profile_date = u\make_date($profile_updated);
 			
 				$verify = SITE_URL . "/action.php?V" . $user_id;
