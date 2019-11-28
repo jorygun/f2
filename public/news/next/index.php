@@ -59,7 +59,7 @@ if ($date_code){$read->increment_reads($date_code);}
 $read->echo_if('breaking.html');
 
 $sections = $read->get_sections();
-u\echoR($sections);
+#u\echoR($sections);
 
 
 foreach ($sections as $section => $section_data){

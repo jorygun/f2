@@ -123,8 +123,8 @@ function get_sections(){
 		if (substr($filename,0,5) == 'news_') {
 			$content = $this->filter_news($content);
 		}
-		if ($heading){echo $this->news_head($heading);}
-		if ($subhead){echo $this->news_subhead($subhead);}
+		if ($heading){echo $this->news_head($heading,$subhead);}
+		#if ($subhead){echo $this->news_subhead($subhead);}
 		echo $content;
 		
 	}
@@ -194,7 +194,7 @@ function get_sections(){
 			  $hcode = "<h3>$title</h3>\n";
 			  return $hcode;
 		 }
-
+		
 	public	function increment_reads($issue){
 			#echo "sstart increment reads";
 
