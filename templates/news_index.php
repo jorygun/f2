@@ -58,41 +58,50 @@ if ($date_code){$read->increment_reads($date_code);}
 #breaking news added after publication
 $read->echo_if('breaking.html');
 
-
-#cartoon
-$read->echo_if('news_opener.html');
-
-#site news
-$read->echo_if('news_site.html',"Site News");
-
-$read->echo_if('news_amd.html',"Our AMD");
-
-#normall news articles
-$read->echo_if('news_news.html',"Industry News");
-#ieee
-$read->echo_if('news_technology.html',"Engineering Dept.");
-
-#nostalgia
-$read->echo_if('news_remember.html',"From the Past");
-#funny stuff
-$read->echo_if('news_know.html',"Very Interesting...");
-
-$read->echo_if('news_fun.html',"Just For Fun");
-
-#in the mailbox
-$read->echo_if('news_govt.html',"Your Government at Work"," (Reader discretion advised)"  );
+$sections = $read->get_sections();
+#u\echoR($topics);
 
 
-
-$read->echo_if('news_people.html',"Friends");
-$read->echo_if('news_sad.html',"Sad News");
-
-$read->echo_if('news_mail.html',"In The Mailbox");
-
-
-
-echo $read->news_head("Opportunities");
-$read->echo_if('news_opps.html','',"Business Opportunities");
+foreach ($sections as $section => $section_name){
+	$section_file = 'news_' . $section . '.html';
+	echo "Getting $section_file. ";
+	$read->echo_if($section_file,$section_name);
+}
+// 
+// #cartoon
+// $read->echo_if('news_opener.html');
+// 
+// #site news
+// $read->echo_if('news_site.html',"Site News");
+// 
+// $read->echo_if('news_amd.html',"Our AMD");
+// 
+// #normall news articles
+// $read->echo_if('news_news.html',"Industry News");
+// #ieee
+// $read->echo_if('news_technology.html',"Engineering Dept.");
+// 
+// #nostalgia
+// $read->echo_if('news_remember.html',"From the Past");
+// #funny stuff
+// $read->echo_if('news_know.html',"Very Interesting...");
+// 
+// $read->echo_if('news_fun.html',"Just For Fun");
+// 
+// #in the mailbox
+// $read->echo_if('news_govt.html',"Your Government at Work"," (Reader discretion advised)"  );
+// 
+// 
+// 
+// $read->echo_if('news_people.html',"Friends");
+// $read->echo_if('news_sad.html',"Sad News");
+// 
+// $read->echo_if('news_mail.html',"In The Mailbox");
+// 
+// 
+// 
+// echo $read->news_head("Opportunities");
+// $read->echo_if('news_opps.html','',"Business Opportunities");
 
 $current_opps = $read->current_ops();
 

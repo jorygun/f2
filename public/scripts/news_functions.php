@@ -51,7 +51,14 @@ function get_section($topic){
 	$section = $pdo->query($sql)->fetchColumn();
 	return $section;
 }
-	
+
+function get_sections(){
+	$pdo = MyPDO::instance();
+	$sql = "SELECT section,section_name from `news_sections` ORDER BY section_sequence";
+	$section = $pdo->query($sql)->fetchColumn();
+	return $sections;
+}
+
 $istatus = array (
 	'N'	=> 'New',
 	'R'	=> 'Ready',

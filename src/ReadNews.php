@@ -78,8 +78,29 @@ class ReadNews {
 		 return $nRows;
 	}
 
+	public function get_topics($access=''){
+// use access = '' for all topics including deprecated
+// access = 'A' for all current topics 
+// access = 'U' for user accessible topics
 
+	$pdo = MyPDO::instance();
+	$sql = "SELECT `topic`,`topic_name` from `news_topics` T 
+		INNER JOIN news_sections  S
+		ON T.section = S.section ";
+	if ($access == 'A'){ $sql .= " WHERE `access` in ('A','U') "; }
+	elseif ($access == 'U'){ $sql .= " WHERE `access` = 'U' "; }
+	$sql .= " ORDER BY S.section_sequence, T.topic ";
+	
+	$topics = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+	return $topics;
+}
 
+function get_sections(){
+	$pdo = MyPDO::instance();
+	$sql = "SELECT section,section_name from `news_sections` ORDER BY section_sequence";
+	$sections = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+	return $sections;
+}
 
 	public function current_ops(){
 		 // lists currently open job opportunities
