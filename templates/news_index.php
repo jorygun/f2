@@ -64,7 +64,7 @@ $sections = $read->get_sections();
 
 foreach ($sections as $section => $section_name){
 	$section_file = 'news_' . $section . '.html';
-	echo "Getting $section_file. ";
+#	echo "Getting $section_file. ";
 	$read->echo_if($section_file,$section_name);
 }
 // 
