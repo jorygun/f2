@@ -166,7 +166,9 @@ if (array_key_exists('mode',$_GET)){$mode = $_GET['mode'];}
 if (!$mode) {$mode='u';}
 
 if ($mode=='u'){
-    $sql= "SELECT * from news_items n
+    $sql= "SELECT n.id,url,title,status,type,use_me,take_votes,take_comments, ed_comment,
+    contributor,contributor_id,source, asset_id ,image_data,content
+    	FROM news_items n
     	INNER JOIN news_topics t 
        	ON n.type = t.topic
        INNER JOIN news_sections s
@@ -194,7 +196,7 @@ $pdo = MyPDO::instance();
 $result=$pdo->query($sql);
 $last_scheduled = '';
 while ($row = $result->fetch()){
-   # recho($row);
+   # u\echoR($row);
     $image=$image_link=$image_thumb_link='';
     $id = $row['id'];
     $link = 'No Link';
