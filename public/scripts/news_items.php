@@ -167,7 +167,7 @@ if (!$mode) {$mode='u';}
 
 if ($mode=='u'){
     $sql= "SELECT n.id,url,title,status,type,use_me,take_votes,take_comments, ed_comment,
-    contributor,contributor_id,source, asset_id ,image_data,content
+    contributor,contributor_id,source, asset_id ,image_data,content,link_title
     	FROM news_items n
     	INNER JOIN news_topics t 
        	ON n.type = t.topic
