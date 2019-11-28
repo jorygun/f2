@@ -59,13 +59,16 @@ if ($date_code){$read->increment_reads($date_code);}
 $read->echo_if('breaking.html');
 
 $sections = $read->get_sections();
-#u\echoR($topics);
+#u\echoR($sections);
 
 
-foreach ($sections as $section => $section_name){
+foreach ($sections as $section => $section_data){
+	list ($section_name,$section_subhead) = explode ('|',$section_data);
 	$section_file = 'news_' . $section . '.html';
-#	echo "Getting $section_file. ";
-	$read->echo_if($section_file,$section_name);
+		#echo "Getting $section_file from $section_data; ";
+	
+	if ($section_name == 'Opener'){$section_name="";}
+	$read->echo_if($section_file,$section_name,$section_subhead);
 }
 // 
 // #cartoon
