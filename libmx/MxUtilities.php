@@ -546,8 +546,8 @@ function age_and_date($date_str) {
 	if (!$date_str){ #blank or NULL??
 		return array('99999','no_date');
 	}
-	$DT_now = new DateTime();
-	$vd = new DateTime($date_str);
+	$DT_now = new \DateTime();
+	$vd = new \DateTime($date_str);
 	$diff = $vd -> diff($DT_now);
 	$diff_str = $diff->format('%a');
 	$last_val = $vd->format ('M j, Y');

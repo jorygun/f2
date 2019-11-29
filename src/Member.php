@@ -1451,7 +1451,7 @@ public function getNewLost($since,$test=false) {
 				throw new Exception ("Unknown bulk mal selection.");
 			}
 		
-		$sql .= " ORDER BY test_status DESC ;";
+		$sql .= " ORDER BY status DESC ;";
 		$list = $this->pdo->query($sql)->fetchAll();
 		return $list;
 
