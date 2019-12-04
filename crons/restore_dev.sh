@@ -18,7 +18,9 @@ cd ${HOME}/backups
 latest=$(ls -t daily.sql.* | head -1 )
 gunzip -c "$latest" > temp.sql;
 
-mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < tmp.sql
+mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < temp.sql
 echo "Restored from $latest";
+rm temp.sql
+
 
 
