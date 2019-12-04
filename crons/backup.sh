@@ -24,7 +24,7 @@ fi
 
 
 #daily backups
-mysqldump -hdb151d.pair.com -udigitalm_r -p PW digitalm_db1 | gzip > daily.sql.$datecode.sql.gz
+mysqldump -hdb151d.pair.com -udigitalm_r -p${PW} digitalm_db1 | gzip > daily.sql.$datecode.sql.gz
 
 
 tar  -czf $HOME/backups/daily.site.$datecode.tar.gz --exclude=$SITE/vendor  $SITE
@@ -39,6 +39,8 @@ ls -tp1 weekly.sql.* | tail -n +3 |  xargs -r -d '\n' rm --
 ls -tp1 weekly.site.* | tail -n +3 |  xargs -r -d '\n' rm --
 
 
+
+
 #clean up old logs and mailings
 #for dir in public_html/amdflames.org/logs  bmail ; do
     #find /usr/home/digitalm/$dir/ -type f -mtime +30 -delete;
@@ -46,6 +48,9 @@ ls -tp1 weekly.site.* | tail -n +3 |  xargs -r -d '\n' rm --
     #ls  /usr/home/digitalm/public_html/amdflames.org/$dir ;
 
 #done
+
+
+
 
 
 #comment below heree
