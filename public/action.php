@@ -159,7 +159,7 @@ if (! empty ($_POST)) {
 	  		break;
 	  	case 'restore':
 	  		echo restore_dev();
-	  		bresak;
+	  		break;
 	  		
 		default:
 			echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true);
@@ -376,5 +376,5 @@ function bounceEmail($uid, $member)
 function restore_dev()
 {
 	#restore dev db from last production db
-	echo system(REPO_PATH . '/crons/restore_dev.sh');
+	return system(REPO_PATH . '/crons/restore_dev.sh');
 }
