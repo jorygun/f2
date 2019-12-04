@@ -13,6 +13,6 @@ Hi ::name::.  Please confirm you're still around.
        ::verify::
 ***************************************************
 
-(You can avoid these reminders by logging in occasionally.)
+(You can avoid these reminders by logging in at least once a year.)
    
    ::closing::

@@ -226,6 +226,8 @@ EOT;
 			$name_count = 0;
 			$last_name = '';
 			$name_report .= "We've Lost Contact with These AMD Alumni:
+(If you know how to contact them, please let me know by replying
+to this email)
 ----------------------------
     ";
 			foreach ($list as $name){

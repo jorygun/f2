@@ -329,6 +329,7 @@ and change it in your profile.
 	$subscriber = ( $row['subscriber'])? 'yes':'no';
 	$uid = $row['user_id'];
 	$verify =  SITE_URL . "/action.php?V" . $uid;
+	$last_login_date = u\makeDate($row['last_login']);
 	$dataset = "
 User: ${row['username']}
 ---------------------
@@ -342,7 +343,7 @@ User: ${row['username']}
 
 Activity
 ---------------------
-   Last login: ${row['last_login']}
+   Last login: $last_login_date
    Email last validated: ${row['email_valid_date']} 
       (changed on: ${row['email_chg_date']})
    Profile last validated: ${row['profile_valid_date']} 

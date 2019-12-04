@@ -13,9 +13,9 @@ class BulkMail {
 	
 	private $teaser_files = array(
 		FileDefs::latest_dir . "/tease_calendar.txt",
+			FileDefs::latest_dir . "/tease_news.txt",
 		FileDefs::latest_dir . "/tease_opps.txt",
 		FileDefs::latest_dir . "/tease_status.txt",
-		FileDefs::latest_dir . "/tease_news.txt",
 		
 	);
 	

@@ -72,7 +72,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
  	switch ($action) {
  		case 'V':
  			if ($r = verifyEmail($uid, $member)) {
-				echo "Email Validated $r";
+				echo "Thank you for verifying your email.";
 			}
 			else {echo "Failed";}
  			break;

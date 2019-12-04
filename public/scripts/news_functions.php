@@ -390,7 +390,7 @@ EOT;
 	default: #all other stories
        $teaser  =      $row['title'] ; 
        if (strcmp($row['contributor'],'FLAMES editor') !== 0) {
-       	$teaser .= '(' . $row['contributor'] . ')';
+       	$teaser .= ' (' . $row['contributor'] . ')';
        	}
        	$this_scheduled = $status_display;
         $story = <<<EOT
