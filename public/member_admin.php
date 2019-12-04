@@ -24,7 +24,7 @@ ini_set('display_errors', 1);
 	echo $page -> startHead($page_options);
 	echo $page -> startBody();
 
-	$dev_update_button = f\actionButton('Restore Dev','restore',0,'','Done');
+	$dev_update_button = f\actionButton('Restore Dev','restore',0,'','resp');
 	
 //END START
 
