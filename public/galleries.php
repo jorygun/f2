@@ -121,7 +121,7 @@ function get_gallery_asset($id){
     if (!empty($row['contributor']) 
         && strncasecmp($row['contributor'], 'Flames',6) != 0
         ){
-        $source_line .= ' via ' .   ${row['contributor']} ;
+        $source_line .= ' via ' .   $row['contributor'] ;
     }
 
     if (empty($source_line)){ $source_line = "unattributed (*) ";}
