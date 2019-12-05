@@ -162,7 +162,7 @@ function get_asset_by_id($id,$style='thumb'){
         $source_line .= " ${row['contributor']} ";
     }
 
-    if (empty($source_line)){ $source_line = "unattributed ";}
+    if (empty($source_line)){ $source_line = "unattributed (*) ";}
     if (! empty ($row['vintage'] )) {
        $source_line .=  " (${row['vintage']})";
     }
