@@ -155,7 +155,7 @@ function get_asset_by_id($id,$style='thumb'){
 
    $source_line = '';
     if (! empty($row['source'])) {$source_line = $row['source'];}
-    if ($row['source'] != $row['contributor']
+    if (!empty($row['contributor']) 
         && strncasecmp($row['contributor'], 'Flames',6) != 0
         ){
         $source_line .= ' via ';
