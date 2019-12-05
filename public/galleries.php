@@ -116,13 +116,21 @@ function get_gallery_asset($id){
     if (empty($caption)){$caption = $row['title'];}
 
 
-    $source_line = "<p class='source'>";
-    $source_line .=  (! empty($row['source']))? "${row['source']}" : 'Unattributed';
+	$source_line = '';
+    if (! empty($row['source'])) {$source_line = $row['source'];}
+    if (!empty($row['contributor']) 
+        && strncasecmp($row['contributor'], 'Flames',6) != 0
+        ){
+        $source_line .= ' via ';
+        $source_line .= " ${row['contributor']} ";
+    }
+
+    if (empty($source_line)){ $source_line = "unattributed (*) ";}
     if (! empty ($row['vintage'] )) {
        $source_line .=  " (${row['vintage']})";
     }
-    $source_line .= "</p>\n";
-
+    $source_line = "<p class='source'>$source_line</p>";
+   
     $title_line = hte($row['title']);
 
     $click_line = (!empty($target))? "<p class='small centered'> (Click image for link.)</p>":'';
