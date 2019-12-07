@@ -90,18 +90,21 @@ EOF;
 EOF;
 
 
- echo <<<EOT
- div class='head'>
-	<img class="left" alt="AMD Flames" src="/graphics/logo-FLAMEs.gif">
-	<p class='title'>Happy Birthday Jerry!<br>
-	<span style='font-size:0.5em;'>(He's 80)</span>
-	</p>
-</div>
-<hr style="width: 100%; height: 2px;clear:both;">
+//  echo <<<EOT
+//  div class='head'>
+// 	<img class="left" alt="AMD Flames" src="/graphics/logo-FLAMEs.gif">
+// 	<p class='title'>Happy Birthday Jerry!<br>
+// 	<span style='font-size:0.5em;'>(He's 80)</span>
+// 	</p>
+// </div>
+// EOT;
 
+
+ echo <<<EOT
+ <hr style="width: 100%; height: 2px;clear:both;">
  <div class='toon'>
-            <img src='/assets/toons/1548.jpg' width='600'>
-            <p> </p><p style='font-weight:bold;text-align:center;'>Happy 80th, Jerry.</p><div class='content' style='text-align:left;'>Jerry Sanders is 80 on Monday, September 12, 2016. A legend of Silicon Valley &mdash; a man whose impact on technology is vastly larger and infinitely more important than his founding of the company that has inspired the unprecedented loyalty of thousands of &ldquo;Former Loyal AMD Employees.&rdquo;<br> <br>From inception, AMD was unique among the semiconductor start-ups of the late 1960s and early 1970s. We were a company based on values. Based on quality. Based on performance. Based on the recognition that people were any company&rsquo;s most valuable asset. Jerry frequently observed that anyone with sufficient resources could acquire the technology and hardware necessary to enter the microchip industry. The differentiating factor would be attracting and retaining the best and brightest people and then in creating the right environment for success.<br> <br>&ldquo;People first, products and profits will follow&rdquo; was much more than a Jerry slogan&mdash; it was the essence of AMD. Under Jerry&rsquo;s leadership, AMD implemented employee policies that inspired dedication and loyalty: The company&rsquo;s profit-sharing and stock-purchase plans were available to nearly every employee. A lifelong marketing and sales guy, Jerry built a company committed to the notion that the &quot;customer is king.&quot; He often repeated Steve Zelencik&#039;s apt observation that &quot;Intel has captives; AMD has customers.&quot;<br> <br>Competition and meritocracy were the cornerstones of the culture and remained so throughout Jerry&rsquo;s tenure.<br> <br>Jerry was tough. He was demanding and not always easy to work for.  In truth, these are the very qualities that brought out the best in those who were privileged to work closely with him. He demanded the best of himself and never expected or accepted anything less than the best of everyone on the team.<br> <br>Working for and with Jerry Sanders was an enormous privilege &mdash; the defining professional experience of a lifetime.<br> <br>So, lift a glass to The Boss and wish him a very happy 80th birthday and best wishes for many, many more.<br> <br>Elliott Sopkin<br>Vice President, Communications, 1970-1988<br> <br>John Greenagel<br>Director of Public Relations, 1984-2002</div>
+            <img src='/graphics/misc/sanders.jpg' width='600'>
+            <p> </p><p style='font-weight:bold;text-align:center;'>Happy 80th, Jerry.</p><div class='content' style='text-align:left;'>Jerry Sanders is 80 on Monday, September 12, 2016. A legend of Silicon Valley &mdash; a man whose impact on technology is vastly larger and infinitely more important than his founding of the company that has inspired the unprecedented loyalty of thousands of &ldquo;Former Loyal AMD Employees.&rdquo;<br> <br>From inception, AMD was unique among the semiconductor start-ups of the late 1960s and early 1970s. We were a company based on values. Based on quality. Based on performance. Based on the recognition that people were any company&rsquo;s most valuable asset. Jerry frequently observed that anyone with sufficient resources could acquire the technology and hardware necessary to enter the microchip industry. The differentiating factor would be attracting and retaining the best and brightest people and then in creating the right environment for success.<br> <br>&ldquo;People first, products and profits will follow&rdquo; was much more than a Jerry slogan&mdash; it was the essence of AMD. Under Jerry&rsquo;s leadership, AMD implemented employee policies that inspired dedication and loyalty: The company&rsquo;s profit-sharing and stock-purchase plans were available to nearly every employee. A lifelong marketing and sales guy, Jerry built a company committed to the notion that the &quot;customer is king.&quot; He often repeated Steve Zelencik&#039;s apt observation that &quot;Intel has captives; AMD has customers.&quot;<br> <br>Competition and meritocracy were the cornerstones of the culture and remained so throughout Jerry&rsquo;s tenure.<br> <br>Jerry was tough. He was demanding and not always easy to work for.  In truth, these are the very qualities that brought out the best in those who were privileged to work closely with him. He demanded the best of himself and never expected or accepted anything less than the best of everyone on the team.<br> <br>Working for and with Jerry Sanders was an enormous privilege &mdash; the defining professional experience of a lifetime.<br> <br>So, lift a glass to The Boss and wish him a very happy 80th birthday and best wishes for many, many more.<br> <br>Elliott Sopkin<br>Vice President, Communications, 1970-1988<br> <br>John Greenagel<br>Director of Public Relations, 1984-2002</div>
 
 	</div>
 <p class='clear'></p>
