@@ -72,7 +72,8 @@ if (!empty($_SERVER['QUERY_STRING'])) {
  	switch ($action) {
  		case 'V':
  			if ($r = verifyEmail($uid, $member)) {
-				echo "Thank you for verifying your email.";
+ 				list($username,$uid,$uem) = $member->getMemberBasic($uid);
+				echo "Thank you $username for verifying your email.";
 			}
 			else {echo "Failed";}
  			break;
