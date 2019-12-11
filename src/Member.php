@@ -1011,6 +1011,9 @@ public function getLogins($tag) {
     
    
     public function verifyEmail ($id) {
+    	#check current email status and notify admin
+    	# if validating an aged out address
+    	
     	 $sql = "Update `members_f2` set email_status='Y',
     	 	email_last_validated = NOW()
             WHERE user_id = $id;";
@@ -1020,13 +1023,11 @@ public function getLogins($tag) {
 	}
 
 	public function verifyProfile ($id) {
-     $sql = "Update `$this->memberTable` set 
-     profile_validated = NOW(),email_status='Y',
-     email_last_validated = NOW()
+     $sql = "Update `members_f2` set 
+     profile_validated = NOW()
             WHERE user_id = $id;";
-            
         $stmt = $this->pdo->query($sql);
-       
+      $this->verifyEmail($id);
         return  date ('M d Y');
 
     

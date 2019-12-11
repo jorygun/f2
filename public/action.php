@@ -16,6 +16,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 use digitalmx as u;
 use digitalmx\flames as f;
 use digitalmx\flames\Member;
+use digitalmx\flames\MemberAdmin;
 use digitalmx\flames\Messenger;
 use digitalmx\flames\DocPage;
 #use digitalmx\flames\ActionCodes;
@@ -73,7 +74,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
  		case 'V':
  			if ($r = verifyEmail($uid, $member)) {
  				list($username,$uid,$uem) = $member->getMemberBasic($uid);
-				echo "Thank you $username for verifying your email.";
+				echo "$username, thanks for verifying your email.";
 			}
 			else {echo "Failed";}
  			break;
@@ -335,11 +336,14 @@ function setNewsTitle($title)
 
 function verifyEmail($uid, $member)
 {
-	$ems = $member->getEmailStatus($uid);
+
 	// if (substr($ems,0,1) == 'L'){
 // 		 $messenger = new Messenger(); #true = test
 // 		 $messenger->sendMessages($uid,'not-lost');
 // 		}
+	$ma = new MemberAdmin();
+	$r = $ma->validate_email_with_notice($uid);
+	
   return "Verified " . $member->verifyEmail($uid) ;
 }
 

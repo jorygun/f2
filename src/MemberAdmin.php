@@ -510,9 +510,28 @@ public function showUpdate($uid) {
  
 }
 
-	public function email_member($uid) {
-	
+	public function validate_email_with_notice($uid) {
+    	#check current email status and notify admin
+    	# if validating an aged out address
+    	$sql = "SELECT username,user_email, email_status from `members_f2`
+    		WHERE user_id = '$uid';";
+    	$row = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC);
+    	$ems = $row['email_status'];
+    	
+      if (in_array($ems ,[ 'A3','A4','LA'])){
+      	$msg = 'User ' . $row['username'] 
+      		.  ' has validated email '
+      		. $row['user_email'] . ' that was previously status '
+      		. $ems ;
+      	$subj = 'Email validated: ' . $row['username'];
+      	mail('admin@amdflames.org',$subj,$msg);
+      	
+      }
+      $this->member->verifyEmail($uid);
+      return  date ('M d Y');
 	}
+
+	
 
  public function getProfileData($uid) {
  	$row = $this->member->getMemberRecord($uid,true);
