@@ -13,7 +13,7 @@ namespace digitalmx\flames;
 	$page_options = ['ajax'];
 	
 	
-    $login->checkLogin(3); 
+    $login->checkLogin(1); 
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 
