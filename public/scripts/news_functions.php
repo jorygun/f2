@@ -290,7 +290,8 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
     <p class=quoted" paragraphs. 
     */
     
-	if (strpos($webready['content'],'<p>') === false ){
+	if (strpos($webready['content'],'<p>') === false 
+	 && strpos($webready['content'],'<table>') === false ){
 		$webready['content'] = nl2br($webready['content']);
 	}
 	$webready['ed_comment'] = nl2br($webready['ed_comment']);
