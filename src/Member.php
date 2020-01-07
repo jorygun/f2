@@ -1442,7 +1442,7 @@ public function getNewLost($since,$test=false) {
 			case 'aged_out':
 				$sql = "SELECT $fields FROM `members_f2` 
 			WHERE status in ($this->member_status_set)
-			AND email_status LIKE 'L%' ";
+			AND email_status = 'LA' ";
 				echo "Sending to aged out emails." . BRNL;
 				break;
 			case 'contributors':
