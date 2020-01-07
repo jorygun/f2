@@ -1440,7 +1440,9 @@ public function getNewLost($since,$test=false) {
 				echo "Sending to admin status with $tag." . BRNL;
 				break;
 			case 'aged_out':
-				$sql .= "AND email_status = 'LA' " ;
+				$sql = "SELECT $fields FROM `members_f2` 
+			WHERE status in ($this->member_status_set)
+			AND email_status LIKE 'L%' ";
 				echo "Sending to aged out emails." . BRNL;
 				break;
 			case 'contributors':
