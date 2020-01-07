@@ -160,6 +160,11 @@ EOT;
 -------------------------------------------------------------------
 EOT;
 
+	$verify_line = <<<EOT
+       https://amdflames.org/action.php?V::uid::
+
+EOT;
+
 
   // Reset sent counter
     $sent = 0;
@@ -216,6 +221,7 @@ EOT;
 				$mm = ($profile_age > 270) ? $verify_message : '';
 				$imessage = str_replace('::verify::',$mm,$imessage);
 		 
+		 		$imessage = str_replace('::vlink::',$verify_link,$imessage);
             $isubject = str_replace('::name::',$username,$isubject);
              $imessage = str_replace('::profile_date::',$profile_date,$imessage);
             $imessage = str_replace('::name::', $username, $imessage);
