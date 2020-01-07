@@ -1,24 +1,19 @@
 ::name::, did we lose you from AMD Flames?
-::name::
 
-I'm sending this email because you are listed on the AMD alumni site
-amdflames.org as Lost.
+You record on the AMD Flames site indicates that this email 
+::uemail:: may not be working any more. 
 
-It means we tried to contact you to see if your email address was
-still right, the email didn't bounce, but we did not receive a reply.
-Sometimes those emails don't get through or you may not have noticed.
-
-This email was sent to: ::uemail::
-
-If you get this email and are NOT LOST, please just click on the link
-below to verify your email.
+If you're reading this, please just click on the link
+below to reset your email status to valid.
    ::verify::
 
 If you would like to update your status or change to a different email,
-just log in using this link, and edit your profile.
+log in using this link, and edit your profile.
    ::link::
 
-I've listed below the headlines in the current newsletter.
-If you weren't lost you would have received this in an email.
--------------------------------------------------------
-::teaser::
+Any questions, contact the admin by replying to this email.
+
+Hope to hear from you!
+
+John Springer
+AMD Flames Admin.
