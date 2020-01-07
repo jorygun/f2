@@ -5,7 +5,7 @@ You record on the AMD Flames site indicates that this email
 
 If you're reading this, please just click on the link
 below to reset your email status to valid.
-   ::verify::
+   ::vlink::
 
 If you would like to update your status or change to a different email,
 log in using this link, and edit your profile.
