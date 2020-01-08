@@ -79,5 +79,6 @@ elseif ($uid = $_GET['uid'] ?? '' ){
 echo $admin->showSearch();
 echo '<hr>';
 echo $dev_update_button;
+echo "<p><a href='bulk_bounce.php' target='bouncer'>Bulk Bounce</a></p>";
 
 

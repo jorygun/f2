@@ -798,7 +798,8 @@ EOT;
 	public function bounce_by_email($em){
 		if (empty($em)){return false;}
 		$sql = "UPDATE `members_f2` SET email_status = 'LB' where user_email = '$em';";
-		if ($this->pdo->query($sql)){
+		$stmt = $this->pdo->query($sql);
+		if ($stmt->rowCount() > 0) {
 			return true;
 		}
 		return false;
