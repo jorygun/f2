@@ -6,6 +6,15 @@ use digitalmx\flames as f;
 use digitalmx as u;
 use digitalmx\flames\Definitions as Defs;
 
+/** 
+	Mane interface to assets
+	Can insert and update assets
+	Can retrieve asset data in several formats
+	
+	Does NOT include
+	create thumbnails
+	
+**/
 
 class Asset {
     

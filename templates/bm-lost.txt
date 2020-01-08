@@ -1,19 +1,23 @@
-::name::, did we lose you from AMD Flames?
+<p>::name::, did we lose you from AMD Flames?</p>
 
-Your record on the AMD Flames site shows that 
-::uemail:: may not be your email. 
+<p>Your record on the AMD Flames site shows that 
+::uemail:: may not be your email. </p>
 
-If you're reading this, please just click on the link
-below to reset your email status to valid.
-   ::vlink::
+<p>If you're reading this, please just click on the link
+below to reset your email status to valid.<br>
+&nbsp;&nbsp;&nbsp; ::vlink::
+</p>
 
-If you would like to update your status or change to a different email,
-log in using this link, and edit your profile.
+<p>If you would like to update your status or change to a different email,
+log in using this link, and edit your profile.<br />
    ::link::
+   </p>
 
-Any questions, contact the admin by replying to this email.
+<p>Any questions, contact the admin by replying to this email.<br>
 
-Hope to hear from you!
+Hope to hear from you!</p>
 
-John Springer
-AMD Flames Admin.
+<p>--<br>
+John Springer<br>
+AMD Flames Admin
+</p>
