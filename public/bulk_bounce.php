@@ -27,11 +27,18 @@ if ($login->checkLogin(4)){
 //END START
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+	$member_admin = new digitalmx\flames\MemberAdmin();
+
 	$email_pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-]+\.([a-z]{2,4})(?:\.[a-z]{2})?/i';
     preg_match_all($email_pattern, $_POST['bouncers'], $matches);
-    $bouncers = $matches[0];
+    $bouncers = array_unique($matches[0]);
+	for ($bouncers as $em){
+		if ($member_admin->bounce_by_email($em) ){
+			echo "$em bounced" . BRNL;
+		}
+		else {echo "Failed to bounce $em" . BRNL;}
+	}
 
-	u\echoR ($bouncers,'bouncers');
 
 
 
