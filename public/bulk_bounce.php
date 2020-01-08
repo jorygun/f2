@@ -40,6 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 <p>Enter text containing Emails to be bounced, one per line.</p>
 <form method='post'>
-<textarea name='bouncers'> rows=30 cols=80></textarea>
+<textarea name='bouncers' rows=30 cols=80></textarea>
 <input type='submit'>
 </form>
