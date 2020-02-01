@@ -297,6 +297,7 @@ private static $update_fields = array(
        	$this->info = "New Member"; 
        	return $this->returnResult(self::$no_member);
        	}
+       $tag = trim($tag); #remove extraneious white space.
        
        #get searchfield for to prepare sql, then searchfor to execute
         if (! list ($searchfield,$searchfor) = $this->setSearchCriteria($tag,$method)){
