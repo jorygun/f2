@@ -199,6 +199,8 @@ function search_news($term,$back) {
 
 
 <hr>
+<h3>Search For Members or Topics in Newsletters</h3>
+
 <p><b>Locate a Member in the Member Database</b></p>
 To find a member enter name or email address.  Partials work. Not case sensitive. Limited to 100 found.
 <form  method = 'POST'>
@@ -211,7 +213,7 @@ To find a member enter name or email address.  Partials work. Not case sensitive
  </table>
 <input type=submit name='search' value='Search DB'>
 </form>
-
+<hr>
 <p><b>Locate a Member in the Photo/Asset Library</b></p>
 <form  method = 'POST'>
 <table >
@@ -221,7 +223,7 @@ To find a member enter name or email address.  Partials work. Not case sensitive
  </table>
 <input type=submit name='search' value='Search Assets'>
 </form>
-
+<hr>
 <p><b>Locate references to a member (or any term) in past newsletters</b></p>
 
 <form  method = 'POST'>
