@@ -145,12 +145,12 @@ function search_news($term,$back) {
         }
 
         $found_some = 0;
-       $out .=  "<ul>\n";
+     	$out .= "<ul>";
         foreach ($filenames as $testfile ){
             $reloc = "/newsp/$testfile";
             if (! file_exists(SITE_PATH . "/newsp/$testfile")){continue;}
             else {
-             echo "getting $testfile<br>";
+             echo "getting $testfile<br>\n";
             }
 
              $get_file = "/newsp/$testfile";
@@ -181,6 +181,7 @@ function search_news($term,$back) {
 //                         foreach ($match0 as $matchphrase){
 //                             echo "...$matchphrase...<br>";
 //                         }
+		$out .= "<li><a href='/newsp/$filename'>newsletter $show_date</a><br><br></li>";
                         for($i=0;$i<$found_count;++$i){
                             $string = $m[1][$i] . "<span class='red'>$sterm</span>" . $m[2][$i];
                             $out .= "...$string...<br>";
@@ -194,15 +195,15 @@ function search_news($term,$back) {
 
 		if ($found_some){
 
-			$out .= "<li><a href='/newsp/$filename'>newsletter $show_date</a><br><br></li>";
+
 			++$found;
 	// Note if any of the matches are followed by a Picture Mark (<!--P-->)
 
 		 }
-			$out .= "</ul>";
+
 
     }
-
+	$out .= "</ul>";
 
 	if ($found){return "$found newsletters had '$term' in them.<br> " . $out;}
 	else {return "Nothing Found.<br>";}
