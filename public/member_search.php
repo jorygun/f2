@@ -111,7 +111,7 @@ function search_news($term,$back) {
 	$rx = '(.{0,60})\b'.$sterm.'\b(?=(.{0,60}))';
 
 	#echo "looking for /$rx/im <br>";
-   $out = '';
+   $out = '<ul>';
 	 foreach ($file_list as $dt => $filename) {
 		if (!$filename){continue;}
 
@@ -145,24 +145,15 @@ function search_news($term,$back) {
         }
 
         $found_some = 0;
-     	$out .= "<ul>";
+   		$this_issue = '';
         foreach ($filenames as $testfile ){
             $reloc = "/newsp/$testfile";
             if (! file_exists(SITE_PATH . "/newsp/$testfile")){continue;}
             else {
-             echo "getting $testfile<br>\n";
+             echo "getting $show_date $testfile<br>\n";
             }
 
              $get_file = "/newsp/$testfile";
-
-                #echo "curling for $this_url<br>";
-            // try curl instead of just reading file, so it has less junk and more content
-            // 	curl_setopt_array($curl, array(CURLOPT_RETURNTRANSFER => 1,CURLOPT_URL => $this_url));
-            //
-            // 	if(!$buffer = curl_exec($curl)){
-            //     	die('Error: "' . curl_error($curl) . '" - Code: ' . curl_errno($curl));
-            // 	}
-
 
                 $buffer = file_get_contents(SITE_PATH . "/newsp/$testfile");
                # echo "..$testfile buffered..";
@@ -176,25 +167,20 @@ function search_news($term,$back) {
             // Match all occurences of the target string, plus 20 characters before and after for context
                     if ($found_count = preg_match_all("/$rx/im", $buffer, $m)){
                         $found_some = 1;
-                       # print_r ($match); echo "<br>\n";
-                       // # $match0 = $match[0];
-//                         foreach ($match0 as $matchphrase){
-//                             echo "...$matchphrase...<br>";
-//                         }
-		$out .= "<li><a href='/newsp/$filename'>newsletter $show_date</a><br><br></li>";
+
                         for($i=0;$i<$found_count;++$i){
                             $string = $m[1][$i] . "<span class='red'>$sterm</span>" . $m[2][$i];
-                            $out .= "...$string...<br>";
+                            $this_issue .= "...$string...<br>";
                         }
                     }
 
-                # $found = preg_match_all("/$sterm/", $buffer, $match);
 
 
             }
 
 		if ($found_some){
-
+			$out .= "<li><a href='/newsp/$filename'>newsletter $show_date</a><br>
+			$this_issue<br></li>";
 
 			++$found;
 	// Note if any of the matches are followed by a Picture Mark (<!--P-->)
