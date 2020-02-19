@@ -150,7 +150,7 @@ function search_news($term,$back) {
             $reloc = "/newsp/$testfile";
             if (! file_exists(SITE_PATH . "/newsp/$testfile")){continue;}
             else {
-             #echo "getting $testfile<br>";
+             echo "getting $testfile<br>";
             }
 
              $get_file = "/newsp/$testfile";
