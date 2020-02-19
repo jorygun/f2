@@ -134,7 +134,7 @@ function search_news($term,$back) {
 				$filenames[] = str_replace('index.php','news_people.html',$filename);
 				$filenames[] = str_replace('index.php','news_technology.html',$filename);
 				$filenames[] = str_replace('index.php','news_remember.html',$filename);
-				$filenames[] = str_replace('index.php','news_technology.html',$filename);
+
 				$filenames[] = str_replace('index.php','news_modern.html',$filename);
             $filenames[] = str_replace('index.php','news_news.html',$filename);
             $filenames[] = str_replace('index.php','news_flames.html',$filename);;
@@ -150,7 +150,7 @@ function search_news($term,$back) {
             $reloc = "/newsp/$testfile";
             if (! file_exists(SITE_PATH . "/newsp/$testfile")){continue;}
             else {
-             echo "getting $show_date $testfile<br>\n";
+             #echo "getting $show_date $testfile<br>\n";
             }
 
              $get_file = "/newsp/$testfile";
