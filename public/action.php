@@ -271,7 +271,9 @@ function vote_action($post)
    //post interesting/not interesting votes
     require_once 'Voting.php';
     $voting = new Voting();
-    $user_id = $_SESSION['login']['user_id'];
+    $user_id = $_SESSION['login']['user_id'] ?? '';
+    if (empty($user_id)){return  "You are not logged in";}
+    
     if (empty($item_id = $post['item_id'])) {
         return "request to post vote without item id";
     }

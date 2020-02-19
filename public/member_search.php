@@ -129,13 +129,19 @@ function search_news($term,$back) {
             $testfile = $filename;
             $filenames[]=$filename;
             $filenames[] = str_replace('index.php','updates.html',$filename);
-
+				$filenames[] = str_replace('index.php','news_amd.html',$filename);
+				$filenames[] = str_replace('index.php','news_govt.html',$filename);
+				$filenames[] = str_replace('index.php','news_people.html',$filename);
+				$filenames[] = str_replace('index.php','news_technology.html',$filename);
+				$filenames[] = str_replace('index.php','news_remember.html',$filename);
+				$filenames[] = str_replace('index.php','news_technology.html',$filename);
+				$filenames[] = str_replace('index.php','news_modern.html',$filename);
             $filenames[] = str_replace('index.php','news_news.html',$filename);
             $filenames[] = str_replace('index.php','news_flames.html',$filename);;
             $filenames[] = str_replace('index.php','news_sad.html',$filename);;
         $filenames[] = str_replace('index.php','news_know.html',$filename);;
             $filenames[] = str_replace('index.php','news_mail.html',$filename);;
-            $filenames[] = str_replace('index.php','news_site.html',$filename);;
+            $filenames[] = str_replace('index.php','news_fun.html',$filename);;
         }
 
         $found_some = 0;
