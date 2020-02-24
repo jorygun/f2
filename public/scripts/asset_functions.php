@@ -749,7 +749,7 @@ function update_asset($post_array){
 	if (empty($post_array['sizekb'] )){$post_array['sizekb'] = (int)0;}
 	if (empty($post_array['width'] )){$post_array['width'] = (int)0;}
 	if (empty($post_array['height'] )){$post_array['height'] = (int)0;}
-
+	if (empty($post_array['first_use_date'] )){unset ($post_array['first_use_date']);}
     #if contributor id not set, look up from name.
     if (empty($post_array['contributor_id'])){
     echo "Getting contributor id for ${post_array['contributor']}" . BRNL;

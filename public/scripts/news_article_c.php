@@ -182,7 +182,7 @@ if ($login->checkLogin(3)){
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 
-  echo " <base href = '$new_base'>";
+#  echo " <base href = '$new_base'>";
   echo <<<EOT
   <script type='text/javascript'>
     function stoppedTyping(){
