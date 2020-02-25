@@ -11,7 +11,7 @@ use digitalmx\flames as f;
 use digitalmx\flames\ReadNews;
 use digitalmx\flames\FileDefs;
 
-$read = new ReadNews();
+
 // contains routines needed for the news page
 
 
@@ -40,16 +40,19 @@ $latest_file = u\list_recent_files (1,getcwd())[0];
 $updatetime = date ("m/d/y H:i T", filectime($latest_file));
 $footer_line = "Last update at $updatetime";
 
-$subtitle = $read ->getTitle();
+
 
 
 $page_options = ['ajax'];
 
 
 if ($login->checkLogin($min_security)){
+	$read = new ReadNews();
+	$subtitle = $read ->getTitle();
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	echo $page->startBody(1,$subtitle);
+	
 }
 
 
