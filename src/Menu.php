@@ -199,7 +199,7 @@ EOT;
 
 	$t .=  self::closeLine(6, $thisMenu) ;
 
-	$opp_rows = $this->opp->getOppCount() ?? 0;
+	$opp_rows = $this->opp->getOppCount(); 
 	$thisMenu = "Opportunities ($opp_rows)";
 	$menulist[] = $thisMenu;
 	$opp_list = $this->opp->linkOppList();
