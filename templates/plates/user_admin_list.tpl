@@ -1,5 +1,7 @@
-
-    <p><?= $info ?></p>	
+ <?php if ($info == 0): ?>
+   <p>No Matching Members</p>
+<?php else: ?>
+    <p>Matches: <?= $info ?></p>	
        
 
     <table style='border-collapse:collapse;'>
@@ -53,6 +55,7 @@
         <?php endforeach; ?>
       
           </table>
-
+<?php endif; ?>
+<hr>
 
     

@@ -43,9 +43,9 @@ if (isset($_POST['search'])){
 	
 	$data = [
 		'mdata' => $mdata,
-		'info' => 'Found ' . count ($mdata)
+		'info' => count ($mdata) ?? 0
 	];
-
+	
 	echo $templates->render('user_admin_list',$data);
 
 }

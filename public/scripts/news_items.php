@@ -38,7 +38,7 @@ require_once "asset_functions.php";
 
 
 if ($login->checkLogin(4)){
-   $page_title = 'New Items';
+   $page_title = 'News Articles';
 	$page_options=[]; #ajax, votes, tiny 
 	
 	$page = new DocPage($page_title);
