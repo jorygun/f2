@@ -26,6 +26,8 @@ class StatusReport {
 
 	private $namelist = array();
 	private $lostlist = array();
+	private $sadlist = array();
+	
 	private $member;
 
 	private static 	$type_titles = array(
@@ -144,7 +146,7 @@ class StatusReport {
 						case 'deceased':
 							$note = $current;
 							$contact = '';
-							$this->namelist[] = $name;
+							$this->sadlist[] = $name;
 							break;
 						case 'new':
 							$note = $greeting;
@@ -208,6 +210,24 @@ EOT;
 			$name_count = 0;
 			$last_name = '';
 			$name_report .= "New or updated information about these AMD Alumni:
+----------------------------
+    ";
+			foreach ($list as $name){
+					$name_report .= $name;
+					++$name_count;
+						 #line break every 4 names
+					if ($name_count%4){$name_report .= ", ";}
+						else {$name_report .= "\n    ";}
+			}
+			$name_report = rtrim(rtrim($name_report),',') . "\n\n";
+		}
+		
+		$list = array_unique($this->sadlist);
+		if (!empty($list)) {
+			sort($list);
+			$name_count = 0;
+			$last_name = '';
+			$name_report .= "Sad News
 ----------------------------
     ";
 			foreach ($list as $name){
