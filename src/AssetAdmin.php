@@ -85,30 +85,8 @@ class AssetAdmin {
 
 	);
 
-	 private static $thumb_width = array(
-						 'thumbs' => 200,
-						 'galleries' => 330,
-						 'toons' => 800
-						 );
+	 
 
-
-	private static $asset_status = array(
-		 'R' => 'Reviewed-R',
-		 'S' => 'S',
-		 'U' => 'Updated: re-review',
-		 'T' => 'temp holding',
-		 'E' => 'Has Error',
-		 'D' => 'Deleted',
-		 'X' => 'Deleted and Unlinked',
-		 'N' => 'New',
-		 'O' => 'OK'
-
-	);
-	private static $assetfields;
-	private $archive_tag_set;
-	private static $image_extensions = array('jpg','gif','png','jpeg');
-	private static $document_extensions = array('doc','docx','pdf','html');
-	private static $mmm_extensions = array('mov','mp4','mp3','m4a');
 
 	private $pdo;
 	
@@ -121,26 +99,10 @@ class AssetAdmin {
 	
 	
 	
-	private function getMimeGroup ($mime) {
-		if (strncmp($mime,'image/',6) == 0 ){return 'image';}
-		elseif (strncmp($mime,'video/',6) == 0) {return 'av';}
-		elseif (strncmp($mime,'audio/',6) == 0) {return 'av';}
-		elseif (strncmp($mime,'application/',12) == 0) {return 'doc';}
-		else {return '';}
-	}
-	
+
 	
 
-	private function get_archival_tag_list ()  {
-		
-		$archival_tags = [];
-		foreach ($this->asset_tags as $tag=>$label){
-			if (strpos($label,'*') !== false){
-				$archive_tags[] = "'$tag'";
-			}
-		}
-		return join(',',$archive_tags);
-	}
+
 	
 	
 	private function get_asset_by_id($id,$style='thumb'){
@@ -373,42 +335,6 @@ class AssetAdmin {
 					$sqld = "UPDATE `assets` set first_use_date = NOW(), first_use_in = '$ref' where id = '$id';";
 					if ($this->pdo->query($sqld)){return true;}
 			  }
-
-	private function list_numbers($text){
-		/* accepts a string of numbers separated by anything
-			AND ALSO expansion of pairs of numbers separated by a -
-			and returns a php array of numbers
-			AND ALSO accepts a search string
-		*/
-		$number_list = [];
-
-
-
-		#look for \d - \d
-		if (preg_match_all('/(\d+)\s*\-\s*(\d+)/',$text,$m)){#number range
-			#print_r($m);
-			#count instances of n - m
-			$jc = count($m[0]); #echo "ranges = $jc\n";
-				for ($j = 0; $j < $jc; ++$j){
-					for ($i=$m[1][$j];$i<=$m[2][$j];++$i){
-						 $number_list[] = $i;
-					}
-					#now remove the pair from the string
-				  $text = str_replace ($m[0][$j],' ',$text);
-			 }
-		}
-
-		#npw add in the rest of the numbers in the string
-		if (preg_match_all('/(\d+)/',$text,$m)){
-			$jc = count($m[0]); #echo "numbers = $jc\n";
-			for ($j = 0; $j < $jc; ++$j){
-				$number_list[] = $m[1][$j];
-			}
-
-		 }
-
-		return $number_list;
-	}
 
 
 	private function create_thumb($id,$fsource,$ttype='thumbs'){
