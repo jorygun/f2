@@ -93,16 +93,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 		if (strpos(trim($_POST['name']),' ') === false){
 		   $err .= "<li> You must enter first and last name";
 		}
-		if (strpos($_POST['name'],'http') !== false){
+		$test_string = $_POST['name'] . ' ' . $_POST['location'] . ' ' . $_POST['affiliation'] . ' ' . $_POST['comment'];
+		if (strpos($test_string,'http') !== false){
 			$err .= "<li>Invalid data";
 		}
-		if (strpos($_POST['name'],' money ') !== false){
+		if (strpos($test_string,' money ') !== false){
 			$err .= "<li>Invalid data";
 		}
-		if (strpos($_POST['name'],' sexy ') !== false){
+		if (strpos(test_string,' sexy ') !== false){
 			$err .= "<li>Invalid data";
 		}
-		if (strpos($_POST['name'],' girls ') !== false){
+		if (strpos(test_string,' girls ') !== false){
 			$err .= "<li>Invalid data";
 		}
 		if (!empty($err)){
