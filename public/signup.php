@@ -93,6 +93,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 		if (strpos(trim($_POST['name']),' ') === false){
 		   $err .= "<li> You must enter first and last name";
 		}
+		if (strpos($_POST['name'],'http') !== false){
+			$err .= "<li>Invalid data";
+		}
+		if (strpos($_POST['name'],' money ') !== false){
+			$err .= "<li>Invalid data";
+		}
+		if (strpos($_POST['name'],' sexy ') !== false){
+			$err .= "<li>Invalid data";
+		}
+		if (strpos($_POST['name'],' girls ') !== false){
+			$err .= "<li>Invalid data";
+		}
 		if (!empty($err)){
 		   echo "<p class='red'>There were errors on your input.</p>";
 		   echo "<ul>";
