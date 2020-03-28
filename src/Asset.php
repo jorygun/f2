@@ -7,6 +7,16 @@ use digitalmx as u;
 use digitalmx\flames\Definitions as Defs;
 
 
+   /**
+    * Functions here:                                                         *
+    * Create an asset (including thumbnail)                                   *
+    * Edit an asset                                                           *
+    * Get asset data by id                                                    *
+    * Get list of ids matching keyword                                        *
+    * Bulk create assets                                                      *
+   **/
+
+	
 class Asset {
     
     private static $pdo;
@@ -17,6 +27,7 @@ class Asset {
         self::$pdo = MyPDO::instance();
         
     }
+    /* returns list of asset ids matching 'name' */
     
     public function getAssetsByName($name) {
         $sql = "SELECT id from `assets` where 
