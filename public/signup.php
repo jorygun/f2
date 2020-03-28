@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 <?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
    // check data
-   if ($_SERVER['SERVER_NAME'] != 'amdflames.org') {exit;}
+   if (strpos($_SERVER['SERVER_NAME'], 'amdflames.org') === false) {exit;}
    #fail silently; stops access by ip.
 
       $err = '';
