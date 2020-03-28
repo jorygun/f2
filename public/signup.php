@@ -94,6 +94,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 		   $err .= "<li> You must enter first and last name";
 		}
 		$test_string = $_POST['name'] . ' ' . $_POST['location'] . ' ' . $_POST['affiliation'] . ' ' . $_POST['comment'];
+		echo "testing $test_string" . BRNL;
+
 		if (strpos($test_string,'http') !== false){
 			$err .= "<li>Invalid data";
 		}
