@@ -96,16 +96,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 		$test_string = $_POST['name'] . ' ' . $_POST['location'] . ' ' . $_POST['affiliation'] . ' ' . $_POST['comment'];
 		#echo "testing $test_string" . BRNL;
 
-		if (strpos($test_string,'http') !== false){
+		if (!$err && strpos($test_string,'http') !== false){
 			$err .= "<li>Invalid data";
 		}
-		if (strpos($test_string,' money ') !== false){
+		if (!$err && strpos($test_string,' money ') !== false){
 			$err .= "<li>Invalid data";
 		}
-		if (strpos($test_string,' sexy ') !== false){
+		if (!$err && strpos($test_string,' sexy ') !== false){
 			$err .= "<li>Invalid data";
 		}
-		if (strpos($test_string,' girls ') !== false){
+		if (!$err && strpos($test_string,' girls ') !== false){
 			$err .= "<li>Invalid data";
 		}
 		if (!empty($err)){
