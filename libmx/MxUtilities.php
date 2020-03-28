@@ -509,6 +509,40 @@ function make_links($input){
 
 
 
+function number_range ($text){
+		/* accepts a string of numbers separated by anything
+			AND ALSO expansion of pairs of numbers separated by a -
+			and returns a php array of numbers
+			AND ALSO accepts a search string
+		*/
+		$number_list = [];
+
+		#look for \d - \d
+		if (preg_match_all('/(\d+)\s*\-\s*(\d+)/',$text,$m)){#number range
+			#print_r($m);
+			#count instances of n - m
+			$jc = count($m[0]); #echo "ranges = $jc\n";
+				for ($j = 0; $j < $jc; ++$j){
+					for ($i=$m[1][$j];$i<=$m[2][$j];++$i){
+						 $number_list[] = $i;
+					}
+					#now remove the pair from the string
+				  $text = str_replace ($m[0][$j],' ',$text);
+			 }
+		}
+
+		#npw add in the rest of the numbers in the string
+		if (preg_match_all('/(\d+)/',$text,$m)){
+			$jc = count($m[0]); #echo "numbers = $jc\n";
+			for ($j = 0; $j < $jc; ++$j){
+				$number_list[] = $m[1][$j];
+			}
+
+		 }
+
+		return $number_list;
+}
+
 
 function days_ago ($date_str = '1') {
 	//takes a date and returns the age from today in days
@@ -546,8 +580,8 @@ function age_and_date($date_str) {
 	if (!$date_str){ #blank or NULL??
 		return array('99999','no_date');
 	}
-	$DT_now = new DateTime();
-	$vd = new DateTime($date_str);
+	$DT_now = new \DateTime();
+	$vd = new \DateTime($date_str);
 	$diff = $vd -> diff($DT_now);
 	$diff_str = $diff->format('%a');
 	$last_val = $vd->format ('M j, Y');
