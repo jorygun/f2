@@ -132,6 +132,9 @@ private static $update_fields = array(
 
 );
 
+ private static $profile_fields = "
+ 'username','user_current','user_about','user_from','user_interests'
+ ";
 
  private static $added_fields = array (
  	'decades',
@@ -1278,20 +1281,23 @@ public function getLogins($tag) {
 		return $list;
 	}
 	public function getUpdatedProfiles($since,$test=false) {
+		
 		$member_status_set = Defs::getMemberInSet();
 		$test_clause =  ($test)? 
 		"AND test_status != '' " : "AND test_status = '' ";
 		
 		$list = array();
-		$sql = "SELECT  * FROM `members_f2`
+		$sql = "SELECT * FROM `members_f2`
 			WHERE status in ($member_status_set)
 			$test_clause
 			AND profile_updated > '$since'
 			AND joined < '$since';";
 
+		
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
 		foreach ($result as $row){
-			$list[] = $this->enhanceData($row,self::$info_fields);
+			$list[] = $this->enhanceData($row);
+		
 		}
 		return $list;
 	}

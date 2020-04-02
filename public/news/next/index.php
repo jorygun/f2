@@ -109,9 +109,11 @@ foreach ($sections as $section => $section_data){
 // echo $read->news_head("Opportunities");
 // $read->echo_if('news_opps.html','',"Business Opportunities");
 
+$read->echo_if('profile_updates.html','Profile Updates');
+
 $current_opps = $read->current_ops();
 
-echo $read->news_subhead("Job Opportunities");
+echo $read->news_head("Job Opportunities");
 echo " <p>Any FLAMEs member can post job opportunities on the site
 by clicking on the 'Opportunities' menu</p>\n";
 

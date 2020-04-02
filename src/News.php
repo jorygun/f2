@@ -6,6 +6,13 @@ namespace digitalmx\flames;
 	
 class News {
 
+
+   /**
+    * Routines used to read the newsletter articles                           *
+   **/
+
+
+
 	private $pdo;
 
 

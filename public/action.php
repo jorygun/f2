@@ -262,7 +262,7 @@ function initNext()
         mkdir($nextnews_dir);
         copy("$news_dir/model-index.php", "$nextnews_dir/index.php");
     } catch (Exception $e) {
-        return "Error: "  . $e-getMessage();
+        return "Error: "  . $e->getMessage();
     }
     return "Done.";
 }

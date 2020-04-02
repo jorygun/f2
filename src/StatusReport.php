@@ -50,15 +50,25 @@ class StatusReport {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
-		$this->since = $since; #is UTC timestamp
+		$this->since = (string)$since; #is UTC timestamp
 		$this->test = $test;
 		
 		$this->member = new Member();
 		
-		$report = $this->createReport($since);
+		$report = $this->createReport($this->since);
 		file_put_contents(FileDefs::status_report,$report);
+		
+		$profile_report = $this->report_profiles($this->since);
+		$directory = SITE_PATH . '/news/next';
+		$section = "profile_updates.html";
+		file_put_contents("$directory/$section",$profile_report);
+		
 		$name_report  = $this->createNameReport();
 		file_put_contents(FileDefs::status_tease,$name_report);
+		
+		
+		
+		
 		
 		#echo "Saving run time to " . FileDefs::rtime_file . BRNL;
 		file_put_contents(FileDefs::rtime_file,time());
@@ -70,7 +80,8 @@ class StatusReport {
 	private function createReport ($since) {
 		$report = "<div class='inner'><p>Member Status Report " . date('d M Y') . "<br />";
 		$report .= "Changes since $since.</p>";
-    
+    	$since = (string)$since;
+    	
 		$report .= $this->report_members();
    $test = true;
 		$list= $this->member->getNewMembers($since,$this->test);
@@ -80,9 +91,10 @@ class StatusReport {
 #    u\echor ($list, 'email updates');
 		$report .= $this->report_changes($list,'email');
 
-		$list = $this->member->getUpdatedProfiles($since,$this->test);
+#		$list = $this->member->getUpdatedProfiles($since,$this->test);
 #    u\echor ($list, 'email updates');
-		$report .= $this->report_changes($list,'profile');
+#		$report .= $this->report_changes($list,'profile');
+
 		
 		$list = $this->member->getDeceased($since,$this->test);
 		$report .= $this->report_changes($list,'deceased');
@@ -101,6 +113,55 @@ class StatusReport {
  return "<h3>Membership</h3><p>Active Members: ${counts['active']}, plus ${counts['lost']} lost contact. 
     Total ${counts['total']}. </p>";
     }
+    
+    
+    private function report_profiles ($since) {
+    	/* builds a story file from updated profiles */
+    	$list = $this->member->getUpdatedProfiles($since,$this->test);
+    	$count = count($list);
+    	echo "$count profile updates" . BRNL;
+    	if (empty ($list)){return;}
+    	list ($titletext,$subtitle) = explode ('|',self::$type_titles['profile']);
+    	$story = "";
+    	
+    	foreach ($list as $row){
+    		$story.= <<<EOT
+    <div class='article'>
+		<p class='head'>
+		<span class='headline'>${row['username']}</span><br />
+		Writing from ${row['user_from']}<br />
+EOT;
+		if (! empty ($row['user_greet'])){
+			$story .= "<i>${row['user_greet']}</i>";
+		}
+		$story .= "</p>";
+		
+		$story .= "<div class='body' \n";
+		$story .= "<div class='content'><p>Currently: ${row['user_current']}</p>";
+		if (! empty ($row['user_about'])) {
+			$story .= "<p><u>about:</u></p>${row['user_about']}";
+		}
+		if (! empty ($row['user_interests']) ){
+			$story .= "<p><u>interests:</u></p>${row['user_interests']}";
+		}
+		if (! empty ($row['user_memories']) ){
+			$story .= "<p><u>memories:</u></p>${row['user_memories']}";
+		}
+		$story .= <<<EOT
+	</div></div>
+	<p class='clear' style='margin-top:0px;margin-bottom:0px;'>
+		&nbsp; 
+	</p>
+	</div>
+EOT;
+	$this->namelist[] = $row['username'];
+		}
+		
+		return $story;
+		
+		
+    }
+    
     
 	private function report_changes ($result,$type){
 	 // print info on updated users, given query result and type of report
