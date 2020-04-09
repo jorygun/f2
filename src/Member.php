@@ -305,6 +305,7 @@ private static $update_fields = array(
        #get searchfield for to prepare sql, then searchfor to execute
         if (! list ($searchfield,$searchfor) = $this->setSearchCriteria($tag,$method)){
         		$this->error = 'Search method not understood';
+        		echo $this->error . BRNL; exit;
             return $this->returnResult();
         }
         
@@ -314,7 +315,7 @@ private static $update_fields = array(
         $limitplusone = $limit + 1;
         $fields = implode(',',$this->std_fields);
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
-    echo $sql . BRNL . print_r($searchfor,true) . BRNL ; exit;
+   # echo $sql . BRNL . print_r($searchfor,true) . BRNL ; exit;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
         $idcnt = $stmt->rowCount();
