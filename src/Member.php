@@ -314,7 +314,7 @@ private static $update_fields = array(
         $limitplusone = $limit + 1;
         $fields = implode(',',$this->std_fields);
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
-       # echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
+    echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
         $idcnt = $stmt->rowCount();
