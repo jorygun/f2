@@ -608,7 +608,7 @@ private static $update_fields = array(
         }
         
         
-        if (empty ($searchfield) &&  preg_match('/^[\w \'\.\-]+$/u', $tag)) {
+        if (empty ($searchfield)) {
         #probably matches anything ??
             $searchfield = $search_fields['name_loose'];
             $searchfor = ["%$tag%"];
