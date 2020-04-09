@@ -305,7 +305,7 @@ private static $update_fields = array(
        #get searchfield for to prepare sql, then searchfor to execute
         if (! list ($searchfield,$searchfor) = $this->setSearchCriteria($tag,$method)){
         		$this->error = 'Search method not understood';
-            return returnResult();
+            return $this->returnResult();
         }
         
         # only want 1 result.  
