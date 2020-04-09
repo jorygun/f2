@@ -615,6 +615,7 @@ private static $update_fields = array(
         } 
         if (empty ($searchfield)) {
             $this->error .= "Cannot understand tag $tag for member lookup";
+            echo $this->error . BRNL; exit;
             return false;
         }
         
