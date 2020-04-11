@@ -373,7 +373,7 @@ EOT;
 			
 	}
 
-	$bulkflag = isset($post['nobulk']);
+	$bulkflag = (isset($post['nobulk'])) 1 : 0; #true or false
 	if ($bulkflag != $md['no_bulk']){
 		$this->member->setNoBulk($uid,$bulkflag);
 		if ($bulkflag == 1){
