@@ -533,7 +533,7 @@ private static $update_fields = array(
 	}
 	public function setNoBulk($uid,$nobulk){
 		// nobulk must be 0 or 1
-	$sql = "UPDATE `members_f2` SET no_bulk = $nobulk where user_id = '$uid' ";
+	$sql = "UPDATE `members_f2` SET no_bulk = $nobulk where user_id = $uid ";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
