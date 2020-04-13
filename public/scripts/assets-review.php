@@ -190,7 +190,7 @@ function show_asset($row) {
        $caption = $row['caption'];
         $status = $row['status'];
         $status_name = $asset_status[$status];
-        $run = $row['run'];
+        $run = $row['run'] ?? 0;
         $last_tags = $row['last_tags'];
 
         $tag_options = buildCheckBoxSet('tags',$asset_tags,$tags,1,true); #show codes
