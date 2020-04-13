@@ -193,7 +193,7 @@ EOT;
 
     $asset_display= <<<EOT
     <iframe src='$url_enc' id='iframe1' 
-    onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));' style="height:200px;width:100%;border:none;">
+    onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));' style="height:800px;width:100%;border:none;">
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
