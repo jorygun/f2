@@ -112,7 +112,7 @@ function post_review($rcode,$row) {
 
    # recho ($row,'Into post_review');
 
-    $tags =  trim(charListToString($row['tags']));
+    $tags =  trim(charListToString($row['tags'] ?? ''));
     if (
     	isset($row['submit'])
     	&& 
