@@ -261,7 +261,7 @@ EOT;
     <td><input type='checkbox' name='use_me[]' value='$id' $uchk> Use Me
      <input type='checkbox' name='priority[]' value='$id' $pchk > Use at Top
     <input type='checkbox' name='tc_list[]' value='$id' $cchk > Take comments 
-   <input type='checkbox' name='tv_list[]' value='$id' $vchk > Take votes 
+   <input type='checkbox' name='tv_list[]' value='$id' $vchk > Take votes <br>
    <input type='checkbox' name='d_list[]' value='$id' > Delete
     
     </td>
