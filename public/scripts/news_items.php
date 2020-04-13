@@ -257,7 +257,7 @@ EOT;
     <tr>
     <td>
     <input type='hidden' name='idlist[]' value='$id'>
-    <input type='button' value="Edit" onclick="ewin=window.open('/scripts/news_item_edit.php?id=$id','itemedit','height=1040,width=640,scrollbars');return false;"></td>
+    <input type='button' value="Edit #$id" onclick="ewin=window.open('/scripts/news_item_edit.php?id=$id','itemedit','height=1040,width=640,scrollbars');return false;"></td>
     <td><input type='checkbox' name='use_me[]' value='$id' $uchk> Use Me
      <input type='checkbox' name='priority[]' value='$id' $pchk > Use at Top
     <input type='checkbox' name='tc_list[]' value='$id' $cchk > Take comments 
@@ -265,7 +265,7 @@ EOT;
    <input type='checkbox' name='d_list[]' value='$id' > Delete
     
     </td>
-    <td>id: $id</td>
+    <td></td>
     </tr>
 EOT;
 
