@@ -289,7 +289,7 @@ public static $test = 'you win';
             return $lookup;
         }
     }
-    return alias;
+    return $alias;
  }
 
 	public static function getArchivalTagList()  {
