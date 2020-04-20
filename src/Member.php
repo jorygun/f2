@@ -1043,7 +1043,7 @@ public function getLogins($tag) {
     public function getMemberName($tag)
     {
         $md = $this->getMemberData($tag);
-        if ($md['records'] == 0 or !empty($mb['error'])) {
+        if ($md['count'] == 0 or !empty($mb['error'])) {
             return false;
         }
         return $md['data']['username'];
@@ -1070,7 +1070,7 @@ public function getLogins($tag) {
     // returns [username,id]
     public function getMemberId($tag)
     {
-        $md = $this->getMemberData($tag);
+        $md = $this->getMemberData($tag,'name_exact');
        # u\echor ($md);
         if (empty($md['count']) or !empty($mb['error'])) {
             return false;
