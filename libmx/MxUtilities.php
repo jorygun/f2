@@ -372,6 +372,7 @@ function buildCheckBoxSet(
     // $check is string with multiple characters to match against the val array
     //per_row is how many items to put in a row; 1 is verticle list
         $opt = '';
+   
     $rowcount = 0;
     $tablestyle=false;
     asort($val_array);
@@ -386,8 +387,8 @@ function buildCheckBoxSet(
 
         $label = $v;
         $label .= ($show_code)? " ($k)" : '';
-
-          $checkme = (strstr($check, $k))?"checked":'';
+			
+          $checkme = (strstr($check, (string)$k))?"checked":'';
           if ($tablestyle){ $opt .= "<td>";}
           $opt .= "<span class='nobreak'><input type='checkbox' name='${var_name}[]' value='$k' $checkme>$label</span> ";
             if ($tablestyle){ $opt .= "</td>";}
@@ -537,6 +538,10 @@ function days_ago ($date_str = '1') {
 	return $diff_str;
 }
 
+function url_exists($url){
+   $headers=get_headers($url);
+   return stripos($headers[0],"200 OK")?true:false;
+}
 
 function age_and_date($date_str) {
 	//takes a date and returns the age from today in days and a formatted version of date

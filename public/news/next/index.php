@@ -51,6 +51,7 @@ if ($login->checkLogin($min_security)){
 	$subtitle = $read ->getTitle();
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
+	echo "<link rel = 'stylesheet' href='/css/news4.css'>\n";
 	echo $page->startBody(1,$subtitle);
 	
 }

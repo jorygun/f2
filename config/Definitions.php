@@ -262,8 +262,12 @@ public static $test = 'you win';
 		return $opt;
 	}
 	public  static function getSecLevel($code='Y'){
-		return self::$member_codes[$code][1] ;
+		if ( $s = self::$member_codes[$code][1] ) {
+			return $s;
+		}
+		return 0;
 	}
+	
 	public static function getMemberInList(){
 		return self::$member_array;
 	}
@@ -272,7 +276,10 @@ public static $test = 'you win';
 		return "'" . implode("','",self::$member_array) . "'";
 	}
 	public  static function  getMemberDescription($code){
-		return self::$member_codes[$code][0];
+		if ($s = self::$member_codes[$code][0] ){
+			return $s;
+		}
+		return "?";
 	}
 	
 	public  static function getMemberAliasList () {

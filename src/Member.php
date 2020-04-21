@@ -599,13 +599,7 @@ private static $update_fields = array(
         		) {
         			$searchfield = $search_fields['name_exact'];
             	$searchfor = [$match[1]];
-         } elseif ( preg_match('/^(\w+)$/',$tag,$match) ){     	
-        		$alias_repl = Defs::replaceAlias($match[1]);
-        		if ($alias_repl != $match[1]) {
-            	$searchfield = $search_fields['name_exact'];
-            	$searchfor = [Defs::replaceAlias($match[1])];
-            }
-        }
+         }
         
         
         if (empty ($searchfield)) {
@@ -1070,6 +1064,12 @@ public function getLogins($tag) {
     // returns [username,id]
     public function getMemberId($tag)
     {
+    	#required username or alias\
+    	//check for alias first
+    	$tag = trim($tag);
+    	
+    $tag =  Defs::replaceAlias($tag) ?? $tag;
+   
         $md = $this->getMemberData($tag,'name_exact');
        # u\echor ($md);
         if (empty($md['count']) or !empty($mb['error'])) {
