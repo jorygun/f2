@@ -146,6 +146,7 @@ private static $update_fields = array(
 	'is_member',
 	'join_date',
 	'login_string',
+	'user_email_linked',
 	'profile_age',
 	'profile_date',
 	'profile_valid_date',
@@ -190,7 +191,7 @@ private static $update_fields = array(
  	'email_status_time',
  	'email_status_name',
  	'status_name',
- 	
+ 	'user_email_linked',
  	'user_email',
  	'email_public',
  	'seclevel',
@@ -402,6 +403,7 @@ private static $update_fields = array(
         
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
         'join_date' => u\make_date($row['joined']),
+        'user_email_linked' => u\linkEmail($row['user_email'], $row['username']),
         'linkedinlink' => $linkedinlink,
         'email_status_name' => Defs::getEmsName($row['email_status']),
         'member_photo' => $member_photo,
@@ -534,6 +536,16 @@ private static $update_fields = array(
 	public function setNoBulk($uid,$nobulk){
 		// nobulk must be 0 or 1
 	$sql = "UPDATE `members_f2` SET no_bulk = $nobulk where user_id = $uid ";
+		if (! $this->pdo->query($sql) ){
+			return false;
+		} else {
+		return true;
+		}
+	}
+	
+	public function setEmailHide($uid,$flag){
+		// nobulk must be 0 or 1
+	$sql = "UPDATE `members_f2` SET email_hide = $flag where user_id = $uid ";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -983,6 +995,8 @@ public function getLogins($tag) {
     	}
     	//add fields and filter result
     	$login_info = $this->enhanceData($result,self::$info_fields);
+    	#u\echor ($login_info,'LI info from getLoginInfo'); exit;
+    	
     	return $login_info;
     }
     	

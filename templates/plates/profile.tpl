@@ -26,7 +26,7 @@ endif ?>
 		<b>Joined FLAME site: </b> <?=$join_date ?> <br>
 		Current status: <?=$status_name?></p>
 
-	<p><b>Email:</b> <?=$email_public?> <em><?=$email_status_name?></em>
+	<p><b>Email:</b> <?=$email_public?> <em><?=$email_status_name?></em> <?=$hidden_emailer?>
 		</p>
 
 	<p><b>At AMD: </b><br><?=$this->e($user_amd )?><br><?= $at_amd ?></p>

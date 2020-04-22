@@ -567,6 +567,8 @@ function extract_email ($text){
 }
 
 
-
+function linkEmail($em,$name){
+	return "<a href='mailto:$em'>$name</a>";
+}
 
 

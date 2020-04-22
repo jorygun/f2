@@ -309,6 +309,7 @@ EOT;
 			case 'Update':
 			case 'nobulk':
 			case 'nobulkchecked':
+			case 'email_hide':
 	
 				#do nothing
 				break;
@@ -381,7 +382,12 @@ EOT;
 		}
 			
 	}
-	
+	$bulkflag = (isset($post['email_hide'])) ? 1 : 0; #true or false
+	if ($bulkflag != $md['email_hide']){
+		$this->member->setEmailHide($uid,$bulkflag);
+		
+			
+	}
 
 
 
@@ -497,6 +503,7 @@ public function showUpdate($uid) {
 	  	this person a user_id and send out a welcome message. </p>":'';
 
 	  	$td['nobulkchecked']= $mdd['no_bulk'] ? 'checked':'';
+	  	$td['email_hidechecked'] = $mdd['email_hide'] ? 'checked' : '' ;
 
 	  	$td['validateEmailButton']= f\actionButton('Verify Email','verifyEmail',$uid,'resp');
 	  	$td['bounceEmailButton']= f\actionButton('Bouncer','bounceEmail',$uid);
@@ -551,6 +558,7 @@ public function showUpdate($uid) {
 	$tdata['hide_checked'] =  ($row['email_hide'])? "checked check='checked' ":'';
 	$tdata['no_bulk_checked'] = ($row['no_bulk'])? "checked check='checked' ":'';
 	
+	$tdata['hidden_emailer'] = ($row['email_hide'] && $row['email_status'] == 'Y') ? "<a href='/hidden_send.php?id=$uid'>Send a message</a>" : '';
 	
 	$user_today = $row['user_current'] ;
 	if (!empty($row['user_from'])){$user_today .= " ... in ${row['user_from']}";}

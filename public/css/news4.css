@@ -358,14 +358,14 @@ article .contributor {
 
 	}
 
-.article .content {
+.article .content, .article .body {
 	font-style:normal;
 	margin-right:2em;
 	max-width:720px;
 	padding-left:3em;
 	width:100%;
 
-	}
+}
 
 .article  .attribution {
 
