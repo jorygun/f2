@@ -386,7 +386,7 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
 		  		$story .= "
 		 	 <div class = 'attribution'>
 		 	 ";
-			  	$story .=   add_source($webready);
+			  	$story .=   add_source($webready) . BRNL;
 			  	 $story .=  add_more($webready);
 			if ($topic != 'mailbox'){
 			  	  	$story .= add_contributor($webready);
