@@ -127,31 +127,35 @@ class StatusReport {
     	foreach ($list as $row){
     		$story.= <<<EOT
     <div class='article'>
-		<p class='head'>
-		<span class='headline'>${row['username']}</span><br />
-		Writing from ${row['user_from']}<br />
+		<div class='head'>
+		<p class='headline'>${row['username']}<br>
+		<span class='normal'> ${row['user_current']} ... in ${row['user_from']}
 EOT;
-		if (! empty ($row['user_greet'])){
-			$story .= "<i>${row['user_greet']}</i>";
+			if (! empty ($row['user_greet'])){
+			$story .= "<br /><i>${row['user_greet']}</i>";
 		}
-		$story .= "</p>";
+			$story .= "</span></p>\n";
 		
-		$story .= "<div class='body' \n";
-		$story .= "<div class='content'><p>Currently: ${row['user_current']}</p>";
+		$story .= "
+		</div>
+		<div class='content'>
+		";
+
 		if (! empty ($row['user_about'])) {
-			$story .= "<p><u>about:</u></p>${row['user_about']}";
+			$story .= "<p class='subhead'>About:</p>
+				<div class='subarticle'>${row['user_about']}</div>";
 		}
 		if (! empty ($row['user_interests']) ){
-			$story .= "<p><u>interests:</u></p>${row['user_interests']}";
+			$story .= "<p class='subhead'>Interests:</p> 
+			<div class='subarticle'>${row['user_interests']}</div>";
 		}
 		if (! empty ($row['user_memories']) ){
-			$story .= "<p><u>memories:</u></p>${row['user_memories']}";
+			$story .= "<p class='subhead'>Memories:</p> 
+			<div class='subarticle'>${row['user_memories']}</div>";
 		}
 		$story .= <<<EOT
 	</div></div>
-	<p class='clear' style='margin-top:0px;margin-bottom:0px;'>
-		&nbsp; 
-	</p>
+	
 	</div>
 EOT;
 	$this->namelist[] = $row['username'];
