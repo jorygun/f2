@@ -54,6 +54,7 @@ class StatusReport {
 		$this->test = $test;
 		
 		$this->member = new Member();
+		$this->member_admin = new MemberAdmin();
 		
 		$report = $this->createReport($this->since);
 		file_put_contents(FileDefs::status_report,$report);
@@ -117,18 +118,22 @@ class StatusReport {
     
     private function report_profiles ($since) {
     	/* builds a story file from updated profiles */
+    	// get list of user_ids of updated profiles
     	$list = $this->member->getUpdatedProfiles($since,$this->test);
     	$count = count($list);
     	echo "$count profile updates" . BRNL;
     	if (empty ($list)){return;}
     	list ($titletext,$subtitle) = explode ('|',self::$type_titles['profile']);
+    	
+    	// now create a story fle to drop into newx/next
     	$story = "";
     	
-    	foreach ($list as $row){
+    	foreach ($list as $profile){
+    		$row = $this->member_admin->getProfileData($profile['user_id']);
     		$story.= <<<EOT
     <div class='article'>
 		<div class='head'>
-		<p class='headline'>${row['username']}<br>
+		<p class='headline'>${row['username']} <span class='normal'>${row['email_public']} ${row['hidden_emailer']} </span><br>
 		<span class='normal'> ${row['user_current']} ... in ${row['user_from']}
 EOT;
 			if (! empty ($row['user_greet'])){

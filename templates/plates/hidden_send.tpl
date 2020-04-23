@@ -1,8 +1,8 @@
-<h4>Send an email to a Flames Member</h4>
-<p>This allows you to send an email to another Flames user,
-<?=$username?>, who has hidden their email.  
-
-The user will see your name and email.
+<h4>Send an email to a <?=$username?></h4>
+<p>This allows you to send an email to another Flames user 
+who, like <?=$username?>, has hidden their email.  
+</p>
+<p><?=$username?> will see your Flames user name and email.
 </p>
 
 <form method='post'>

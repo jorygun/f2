@@ -1213,7 +1213,7 @@ public function getLogins($tag) {
             #echo "Invalid email address ($addr) in display_email.";
             return "**Invalid email address**";
         }
-
+	
         if ($hide) {
             $v = '(Email hidden)';
         } elseif ($ems == 'LB') {
@@ -1304,7 +1304,7 @@ public function getLogins($tag) {
 		"AND test_status != '' " : "AND test_status = '' ";
 		
 		$list = array();
-		$sql = "SELECT * FROM `members_f2`
+		$sql = "SELECT user_id FROM `members_f2`
 			WHERE status in ($member_status_set)
 			$test_clause
 			AND profile_updated > '$since'
@@ -1312,11 +1312,11 @@ public function getLogins($tag) {
 
 		
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
-		foreach ($result as $row){
-			$list[] = $this->enhanceData($row);
-		
-		}
-		return $list;
+		// foreach ($result as $row){
+// 			$list[] = $this->enhanceData($row);
+// 		
+// 		}
+		return $result;
 	}
 	public function getDeceased ($since,$test=false) {
 		// if (! u\validateDate($since )){
