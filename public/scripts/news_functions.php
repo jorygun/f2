@@ -379,6 +379,8 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
 					foreach($ids as $n){
 						 $story .= f\get_asset_by_id($n,'thumb');
 					}
+					// clearthe floats if more than one thumb displayed
+					$story .= "<div class='clear'></div>\n";
 			  
 			  }
 			  $story .= $webready['content'];
