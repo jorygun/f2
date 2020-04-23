@@ -1288,7 +1288,8 @@ public function getLogins($tag) {
 		$sql = "SELECT  * FROM `members_f2`
 			WHERE status in ($member_status_set)
 			$test_clause
-			AND email_chg_date > '$since';";
+			AND email_chg_date > '$since'
+			AND email_hide = 0;";
 
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
 		foreach ($result as $row){
