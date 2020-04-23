@@ -164,7 +164,8 @@ public static $user_aliases = array (
             'es' => 'Elliott Sopkin',
             'jm' => 'John McKean',
             'glen' => 'Glen Balzer',
-            'jeff' => 'Jeff Drobman'
+            'jeff' => 'Jeff Drobman',
+            'amdc' => 'AMD Communications',
 
         );
         
