@@ -228,7 +228,7 @@ div.album {
 
 div.thumb {
 /* make thumbs consistent height to floaters line up. */
-    height:275px;
+    height:290px;
     display:block;
     margin:3px; margin-right:6px; margin-left:0;
     float:left;
