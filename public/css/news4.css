@@ -242,6 +242,7 @@ div.thumb {
     font-style:normal;
     font-family:Helvetica,Arial,sanserif;
     margin:3px;
+    max-width:190px;
     }
 .thumb a {text-decoration:none;}
 
