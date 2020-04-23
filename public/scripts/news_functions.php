@@ -337,7 +337,7 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
        	}
        $this_scheduled = $status_display;
        
-       $amdcss = ($row['contributor'] == 'AMD')? 'amd' : '';
+       $amdcss = ($row['contributor'] == 'AMD Communications')? 'amd' : '';
       $story = "
    <div class='article $amdcss'>
 	<div class='head'>
