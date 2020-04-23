@@ -1,3 +1,5 @@
+@import '/css/amd.css';
+
 body  {
 	
 	font-family: "New Times Roman",Times,serif;
@@ -453,3 +455,5 @@ div#in_bulk_queue ul li.error {color:red;}
 div#in_bulk_queue ul li.queued {color:green;}
 div#in_bulk_queue ul li.cancelled{color:blue;}
 div#in_bulk_queue ul li.running {color:orange;}
+
+
