@@ -445,14 +445,12 @@ function add_source($row){
 function add_more($row){
     if( empty($url = $row['url']) ){return '';}
 
-	$link_title = "Read more ";
-    if ( !empty($t = $row['link_title']) ){
-    	$link_title .= "at " . $t;   
-     }
+	$link_title =  $row['link_title'] ?? 'Here';
+     
      
     if (substr($url,0,4)=='http'){
-        $more =
-            "<a href= '/links.php?url="
+        $more = "Read more at: "
+           .  "<a href= '/links.php?url="
             . urlencode($url)
             . '&aid='
             . $row['id']
@@ -463,11 +461,12 @@ function add_more($row){
     }
      else {
         $more =
-            "<a href= '" .
-            $url        .
-            "' target = '_blank'>"  .
-            $link_title             .
-            '</a>'
+        		"Read more: "
+            . "<a href= '" 
+            . $url
+            . "' target = '_blank'>" 
+            . $link_title
+            . '</a>'
             ;
     }
     return $more . "\n";
