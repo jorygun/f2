@@ -139,9 +139,21 @@ function get_archival_tag_list ()  {
 function get_asset_by_id($id,$style='thumb'){
     if (empty($id)){return array ();}
     $pdo = MyPDO::instance();
-    $sql = "SELECT * from `assets` WHERE id = $id";
+    try {
+    	$sql = "SELECT * from `assets` WHERE id = $id";
+    	if (!$row = $pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){
+    		$sql = "SELECT * from `assets2` WHERE id = $id";
+    		if (!$row = $pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){
+    			throw new Exception("Cannot find asset $id");
+    		}
+    	}
+    } catch (Exception $e){
+    	echo $e->getMessage(); exit;
+    }
+    	
+    
     $row = $pdo->query($sql)->fetch(\PDO::FETCH_ASSOC);
-    #recho($row);
+    #u\echor($row);
 
 
     $id = $row['id'];

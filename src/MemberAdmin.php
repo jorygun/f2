@@ -597,7 +597,8 @@ EOT;
 	$tdata['info_text'] = <<<EOT
 	This is what you need to know.
 EOT;
-
+	// scan about box for links and images
+	
 
 	$tdata['credential'] = $credential;
 	$tdata['warning'] = f\getWarning(); 

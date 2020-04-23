@@ -493,22 +493,26 @@ function make_links($input){
         }
     }
     #also look for asset references
-     if ($n = preg_match_all ('/\[asset (\d+)\]/',$input,$m)) {
+    $input = link_assets($input);
+
+    return $input;
+}
+
+function link_assets($input) {
+// links [asset n] to thumbnail of asset id n
+  if ($n = preg_match_all ('/\[asset (\d+)\]/i',$input,$m)) {
+     		require_once SITE_PATH . "/scripts/asset_functions.php";
          for ($i=0;$i<$n;++$i){
             $assetlink = $m[0][$i];
             $thisid = $m[1][$i];
-            if (! $assetcode = get_asset_by_id ($thisid) ){
+            if (! $assetcode = \digitalmx\flames\get_asset_by_id ($thisid) ){
                 $asset_code = "[ Could not get asset  $thisid ]";
             }
             $input = str_replace($assetlink,"$assetcode",$input);
         }
     }
-
-
-    return $input;
+   return $input;
 }
-
-
 
 
 function days_ago ($date_str = '1') {
