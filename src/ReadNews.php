@@ -184,6 +184,8 @@ function get_sections(){
 
 
 		public function news_head($title,$tcomment=''){
+			// add class amd to AMD news setion to pick up amd style defs
+			
 			  $hcode = "<div class='divh2'>$title\n";
 			  if ($tcomment != ''){$hcode .= "<br><span class='comment'>$tcomment</span>";}
 			  $hcode .= "</div>\n";
