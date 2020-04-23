@@ -485,18 +485,21 @@ function add_ed ($row){
 function add_contributor($row,$pos='post'){
     // can have contributor as text, or, if it's a member, will
     // havbe the contributor id filled in.  Members can be linked.
-
+		$member = new Member();
     
     if ($cid = $row['contributor_id']){
         $contributor_linked = get_linked_contact($cid, true );
+        $name =  $member->getMemberName($cid);
+        
     }
     else {throw new Exception ("No contributor id on article {$row['id']}");}
-
+	$ctag = "<a href=/profile.php?uid=$cid>$name</a>";
+	
     if ($pos == 'pre'){
-         return "<p >From: $contributor_linked</p>";
+         return "<p >From: $ctag</p>";
     }
     #otherwise
-    return "<p class= 'contributor'>-- Contributed by $contributor_linked</p>\n";
+    return "<p class= 'contributor'>-- Contributed by $ctag</p>\n";
 }
 
 
