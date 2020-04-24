@@ -42,7 +42,8 @@ endif ?>
 
      <div style="width:350px;margin-left:30px;float:left;">
 		<p><b>About Me</b></p>
-         <?= $user_about ?>
+         <?=$user_about_linked?>
+         
 	</div>
 <?php endif ?>
   
