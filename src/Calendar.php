@@ -54,6 +54,7 @@ class Calendar {
 		  $sql = 'SELECT * FROM `events` WHERE `datetime` >= NOW() ORDER BY datetime;';
    	// fetch_uniuqe returns array indexed by id
     	$items = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_UNIQUE);
+    	#u\echor ($items); exit;#
     	return $items;
 		
 	}
@@ -114,6 +115,12 @@ EOT;
 
 public function save_event($post){
 	
+	u\echor($post) . BRNL;
+	echo $post['cdate'] . BRNL;
+	if (! $ctime = strtotime($post['cdate']) ){
+		die ("Date ${post['cdate']} not recognized");
+	}
+	
 
 	 $cdata = array(
 	 		'id' => $post['id'],
@@ -126,7 +133,7 @@ public function save_event($post){
     );
     
     $prep = u\pdoPrep($cdata,'','id');
-   # u\echor($prep);
+    #u\echor($prep); exit;
   
     if ($post['id'] == 0){ #new entry
     	$sql = "INSERT into `events` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";

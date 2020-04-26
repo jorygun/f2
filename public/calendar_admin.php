@@ -47,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 	
 }
-elseif (isset($_GET['id'])) { #edit item
-	$id = $_GET['id']  ;
+else { #edit item
+	$id = $_GET['id']  ?? 0;
 	if ($id == 'New Event'){$id = 0;}
 	echo $calendar->show_event($id);
 	exit;
