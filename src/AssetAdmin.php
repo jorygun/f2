@@ -1,6 +1,18 @@
 <?php
 /* contains a bunch of definitions and scripts used by multiple asset
     related scripts.
+    
+    Enter with an array of asset data, with id=0 for new.
+    asset source can be ext. url or local url or uploaded file.
+    If uploaded file, file is saved at /assets/files
+    
+    Every asset has a thumb file at /assets/thumbs/id.jpg
+    If no thumbsource specified, thumb is vreated from asset.
+    If local thumbsource thumb created from that
+    If ext thubmsource, source is downloaded to temp file and thumb
+     created for that.
+   If file upload thumbsource, that file is saved to /assets/thumb_urls
+     and thumb createdd from that. (and thumb source changed.)
 */
 namespace digitalmx\flames;
 
@@ -9,84 +21,320 @@ namespace digitalmx\flames;
 	use digitalmx as u;
 	use digitalmx\flames as f;
 	use digitalmx\flames\FileDefs;
-
-	use \Imagick;
-
-
-class AssetAdmin {
+	use Asset;
 
 
-
-	#tag starting with Z is reserved for special searches, e.g., all archives
-
-	
-
-	
-	private static $editable_fields = array(
-
-		 'title',
-		 'source',
-
-		 'url',
-		 'contributor',
-		 'contributor_id',
-		 'caption',
-		 'notes',
-		 'keywords',
-		 'thumb_file',
-		 'vintage',
-		 'gallery_items',
-		 'status',
-		 'user_info',
-		 'link',
-		 'tags'
-
-		);
-
-	private static $auto_fields = array(
-		 'date_entered',
-		 'height',
-		 'width',
-		 'sizekb',
-		 'first_use_date',
-		 'first_use_in',
-
-		 'mime',
-		 'type'
-
-	);
-
-	private $deprecated_fields = array(
-
-		 'thumb',
-		 'has_thumb',
-		 'has_toon',
-		 'has_gallery',
-
-		 'file',
-		 'source_date',
-
-	);
-
-	 
+class AssetAdmin 
+{
 
 
 	private $pdo;
+	private $archive_tag_list_sql;
+	private $asset;
+	private $member;
+	private $mimeinfo;
 	
 	
-	public function __construct() {
-		$this->pdo =  MyPDO::instance;
-		$this->archive_tag_set =  $this->get_archival_tag_list();
-		$this->assetfields  = array_merge(self::$editable_fields,self::$auto_fields);
+	
+	
+	private static $upload_types = array(
+		'uasset','uthumb','uuploads','uftp');
+		
+	public function __construct($asset) {
+		$this->pdo =  MyPDO::instance();
+		$this->archive_tag_list_sql =  Defs::getArchivalTagList();
+		$this->asset = $asset;
+		$this->member = new Member();
+		$this->mimeinfo = new \finfo(FILEINFO_MIME_TYPE);
+		
+		
+
+
+	}
+	// takes asset data array, prepares thumbs needed,
+	// and sends to Assets to store (and add computed fields).
+	// returns id of asset.
+	
+	public function postAssetFromForm($post) {
+	// prepare data and then send to asset to post
+	u\echor($post,'post data in');
+
+	
+	
+		if (! isset ($post['id'])){
+				throw new Exception ("attempt to post asset with no id set");
+		}
+		if (
+			empty($post['title'])
+			|| (empty($post['asset_url']) && empty($_FILES['uasset']['tmp_name']) )
+			) {
+			die ("Asset contains no definition.");
+		}
+		// must have id before all the data is saved to place files.
+		// this creates a skeleton asset record and gets the id.
+		if (empty ($id = $post['id'])) {
+				$id = $this->asset->getNewID();
+				echo "New id $id obtained." . BRNL;
+				$adata ['status'] = 'N';
+		}
+		// for existing items, status is not updated when item is saved
+		
+		// move the post data needed from thep ost to adata.
+		foreach ($this->asset::$editable_fields as $f) {
+			$adata[$f] = $post[$f]??'';
+		}
+		$adata['id'] = $id;
+		
+		if (!empty($adata['contributor_id']) ){
+			$adata['contributor_id'] = (int)$adata['contributor_id'];
+		} elseif (!empty ($adata['contributor'] )) {
+			if (! list ($adata['contributor'], $adata['contributor_id'] ) 
+				= $this->member->getMemberId($adata['contributor']) ){	
+				throw new Exception ("Contributor ${adata['contributor_id']} not found");
+		} else {
+			die ("No contributor info supplied");
+		}
+		
+		$adata['vintage'] = trim((int)$adata['vintage']);
+		if (empty($adata['vintage'])){
+			$adata['vintage'] = date('Y');}
+		}
+	
+		/* new thumbs is list of thumb types needed - from
+			checkboxes on the asset form or from replacing
+			existing thumbs because sources have changed.
+		*/
+		$new_thumbs = []; 
+		foreach (Defs::getThumbTypes()  as $ttype) {
+	
+			if (!empty($post[$ttype])){
+				$new_thumbs[] = $ttype;
+				echo "New thumb requested: $ttype. ";
+			}
+		}
+		
+	// first look for any relocates from file uploads
+	// move file into assets files or thubm-sources and
+	// change source def to match.
+	#u\echor($_FILES,'FILES');
+	
+		foreach (self::$upload_types as $type){
+			if (isset($_FILES[$type]) && !empty ($_FILES[$type]['name'] )){
+				echo "starting reload $type" . BRNL;
+				$url = $this->relocateUpload($id,$type);
+				echo "new url: $url" . BRNL;
+				
+				if ($type == 'uthumb'){
+					$adata['thumb_url'] = $url;
+				} else {
+					$adata['asset_url'] = $url;
+					$adata['notes'] .= "Uploaded from " . $_FILES[$type]['name'] . "\n";
+				}
+				$new_thumbs[] = 'all'; #flag to recreate thunbs
+				$adata['status'] = 'N';
+			}
+		}
+		
+		
+	
+		if (!empty($post['tags']) && is_array ($post['tags'])){
+			// convert to string
+			$adata['tags'] =  charListToString($post['tags']) ;
+		}
+		
+		 $adata['needs'] = $this->checkThumbNeeds($adata,$new_thumbs);
+	u\echor($adata,'Into Checking asset data:');
+	#exit;
+	
+		$this->asset->saveAsset($adata);
+		
+		echo "<a href='asset_editor.php?id=$id'>View in Editor</a>" . BRNL;
+		return $id;
+
 	}
 	
+	private function checkThumbNeeds($adata,$new_thumbs) {
+		// set which thumbs are needed, by checkbox or by changed url
+		$id = $adata['id'];
+		$needs = array ();
+		$result = $this->asset->getAssetDataById($id);
+		
+		$thumbs = $result['existing_thumbs']; #keys where value is ''
+		if (empty($thumbs)){$needs[] = 'thumbs';} #always need this
+		// if either url has been changed, all the thumbs need to be regneratied.
+		if ($result['asset_url'] != $adata['asset_url']
+			|| $result['thumb_url'] != $adata['thumb_url'] 
+			|| in_array('all',$new_thumbs) ){
+			$needs = $thumbs; #all existing thumbs
+			$new_thumbs = array_diff ($new_thumbs,['all']) ;
+		}
+		// add in any thumbs were checked on the form
+		$needs = array_unique(array_merge($needs,$new_thumbs));
+		#u\echor($needs,'needs after check needs'); exit;
+		
+		
+		return $needs;
+	}
+	
+	public_function searchAssets() {
 	
 	
 
+	}
+	
+	public function getAssetLinked($id) {
+	/* returns the asset thumbnail, linked to the asset source */
+		$adata = $this->asset->getAssetDataById($id);
+		$status = $adata['status'];
+		if ($status == 'X') {return "Asset Deleted";}
+		elseif ($status == 'T') {return "Asset Temporary";}
+		
+		$link = $adata['asset_url'];
+		if (empty($link)){return '';}
+		$thumb = "/assets/thumbs/${id}.jpg";
+		$result = <<<EOF
+		<a href='$link' target="_blank">
+		<img src='$thumb'>
+		</a>
+EOF;	
+#echo "RESULT <br>$result"; exit;
+
+		return $result;
+	
+	}
 	
 
+	private function relocateUpload ($id,$type){
+		/**
+			Moves file described in _FILES array into appropriate
+			place and rturns the url.  Used for uploads and also
+			for other places where asset exists in one place and needs
+			to bre moved.
+			
+			@utype is uasset,uthumb,uftp, or uupload
+			type refers to an entry in _FILES array which has file location,
+			original name.  type also gets location info from
+			the Files object.
+			
+			@id is id this asset will have; may be used as file name.
+			@returns url to relocated file
+		
+	 		  Need: $_FILES[type]['error'] UPLOAD_ERR_OK.
+		   Need: $_FILES[type]['tmp_name'] location of file
+		     Need: $_FILES[type]['name'] orig file name
+		     
+		     
+	**/
+		if (! is_integer($id) && ! $id > 0) {
+			throw new Exception ("Calling relocate Upload without an id");
+		}
+	
+		if (! $this->checkUploads($type)) {exit;}
+		$orig_path = $_FILES[$type]['tmp_name'];
+		$orig_mime = $this->mimeinfo->file($orig_path) ;
+		$orig_name = $_FILES[$type]['name'];
+		$orig_ext = strtolower(pathinfo($orig_name, PATHINFO_EXTENSION));
+		echo "Moving uploaded $type file $orig_name ... " ;
+		$new_loc = ($type == 'uthumb')? '/assets/thumb_sources/' : '/assets/files/' ;
+		$new_url = $new_loc . $id . '.' . $orig_ext;
+		$new_path = SITE_PATH . $new_url;
+		
+		#echo "Now moving $orig_path to $new_path" . BRNL;
+		rename ($orig_path,$new_path);
+		chmod ($new_path,0644);
+		if (! file_exists($new_path)){ die ("file did not move to $new_url");}
+		echo "New url: $new_url" . BRNL;
+
+		return $new_url;
+	}
 
 	
+	private function checkUploads ($utype){
+		// checks for upload errors, file exits,
+		// returns the original name of the file.
+	
+		 // Need: $_FILES[$utype]['error'] UPLOAD_ERR_OK.
+		  // Need: $_FILES[$utype]['tmp_name'] location of file
+		   // Need: $_FILES[$utype]['name'] orig file name
+		   
+		if (! in_array($utype,self::$upload_types)){
+			throw new \RuntimeException ('invalid upload type');
+		}
+		   
+		 if (empty($_FILES[$utype] )){
+		 	throw new \RuntimeException('No file of type $utype found in _FILES.');
+		 }
+		 
+		 switch ($_FILES[$utype]['error']) {
+			  case UPLOAD_ERR_OK:
+				  break;
+			  case UPLOAD_ERR_NO_FILE:
+					throw new \RuntimeException('No file uploaded.');
+			  case UPLOAD_ERR_INI_SIZE:
+			  case UPLOAD_ERR_FORM_SIZE:
+					throw new \RuntimeException('Exceeded filesize limit.');
+			  default:
+					throw new \RuntimeException('Unknown errors.');
+		 }
+		 if (!file_exists($_FILES[$utype]['tmp_name'] )){
+			throw new \RuntimeException ("uploaded file does not exist.");
+		 }
+		 $fmime = $_FILES[$utype]['type'];
+		 $original = $_FILES[$utype]['name'];
+		$ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
+
+		// check if mim on accepted list
+		$ok_mimes = Defs::getAcceptedMime() ;
+		 if (! in_array ($fmime, $ok_mimes)) {
+			  throw new \RuntimeException ("uploaded file $original type $fmime is not an accepted type.");
+		 }
+		 if (empty($tmime = Defs::getMimeFromExt($ext) ) ){
+		 	echo "Warning: file extension $ext not in accepted mime extensions" . BRNL;
+		 } elseif ($fmime != $tmime){
+		 	echo "Warning: file $original extension does not match mime type $fmime" . BRNL;
+		 }
+		 
+		 return true;
+	}
+
+
+	private function getYoutubeThumb($url) {
+			// returns url to thumbnail for a youtube video.
+			// returns false if not a youtube video
+			echo "looking for yt match to $url" . BRNL;
+					 $pattern = 
+					'%#match any youtube url
+						 (?:https?://)?  # Optional scheme. Either http or https
+						 (?:www\.)?      # Optional www subdomain
+						 (?:             # Group host alternatives
+							youtu\.be/    # Either youtu.be,
+						 | youtube\.com/
+						 )				# or youtube.com
+						 (?:          # Group path alternatives
+							  embed/     # Either /embed/
+							| v/         # or /v/
+							| watch\?v=  # or /watch\?v=			
+						 ) ?            # or nothing# End path alternatives.
+											 # End host alternatives.
+						 ([\w-]+)  # Allow 10-12 for 11 char youtube id.
+						 %x'
+						 ;	          
+					$result = preg_match($pattern, $url, $matches);
+					if (array_key_exists(1,$matches)){
+						$vid = $matches[1] ;
+						echo "Matched youtube $matches[0] to video id $vid " . BRNL;
+						if ($yturl = "http://img.youtube.com/vi/$vid/mqdefault.jpg" ){
+							return $yturl;
+						} else {
+							throw new Exception ("Cannot retrieve thumbnail for you tube video.");
+						}
+					}
+					else { // not a youtube video
+						return false;
+					}
+	 }
+}
+/***********************************************************
 	
 	private function get_asset_by_id($id,$style='thumb'){
 		 if (empty($id)){return array ();}
@@ -106,6 +354,7 @@ class AssetAdmin {
 
      
 			$source_line = $this->buildSourceLine($row);
+	
 	function buildSourceLine($row){
 		 $source_line = $row['source']  ?? '';
 		// if ($c = $row['contributor'] ?? '') {
@@ -243,42 +492,6 @@ class AssetAdmin {
 		 $this->pdo->query($sql);
 	}
 
-	private function get_asset_data($id){
-		 
-		global $assetfields;
-		  $itemdata = array(); #store data to display
-		 #echo "Starting get_asset_data";
-
-		 if ( $id == 0){
-			foreach ($assetfields as $f){
-				$itemdata[$f] = '';
-			}
-			$itemdata['status'] = 'N';
-			$itemdata['date_entered'] = 'NOW()';
-			$itemdata['contributor'] = $_SESSION['login']['username'];
-			$itemdata['vintage'] = date('Y');
-		}
-
-		 else{
-			  // retrieve existing record
-
-			  $sql = "SELECT * FROM assets WHERE id =?;";
-			  $stmt = $this->pdo->prepare($sql);
-			  $iterations = 0; #save stawring id
-			  $itemdata=array();
-
-				$stmt->execute([$id]);
-			 if (!$itemdata = $stmt ->fetch(\PDO::FETCH_ASSOC)  ){
-							  die ("No assets found at $id");
-			  }
-
-
-		 }
-		 #set hsa thumb, gallery, and toon
-		 #if (file_exists(get_gfile(SITE_PATH . "/assets/thumbs/${id}.jpg"))){$itemdata['has_thumb'] = true;}
-		 #recho ($itemdata , 'from get_asset_data');
-		 return $itemdata;
-	}
 
 
 
@@ -307,6 +520,7 @@ class AssetAdmin {
 	}
 
 
+<<<<<<< HEAD
 	private function autoRotateImage($image) { 
 		 $orientation = $image->getImageOrientation(); 
 
@@ -349,6 +563,13 @@ class AssetAdmin {
 		 }
 	}
 
+=======
+
+	
+
+
+	
+>>>>>>> master
 
 	private function delete_asset($id){
 		 #mark an item as deleted.
@@ -455,375 +676,14 @@ EOT;
 	}
 
 
-	private function check_jpeg($f, $fix=false ){
-	# [070203]
-	# check for jpeg file header and footer - also try to fix it
-		 if ( false !== (@$fd = fopen($f, 'r+b' )) ){
-			  if ( fread($fd,2)==chr(255).chr(216) ){
-					fseek ( $fd, -2, SEEK_END );
-					if ( fread($fd,2)==chr(255).chr(217) ){
-						 fclose($fd);
-						 return true;
-					}else{
-						 if ( $fix && fwrite($fd,chr(255).chr(217)) ){return true;}
-						 fclose($fd);
-						 return false;
-					}
-			  }else{fclose($fd); return false;}
-		 }else{
-			  return false;
-		 }
-	}
-
-	private function update_asset($post_array){
-		 #updates record with all the editable fields,
-		 #and returns the (new) id;.
-		 echo "starting update_asset. ";
-
-		 global $editable_fields;
-		 global $auto_fields;
-
-		 
-		$member = new Member();
 	
-		 $id = $post_array['id'];
-		 if ($id == 0) {throw new Exception ("attempt to update asset with id = 0");}
-		if (empty($post_array['sizekb'] )){$post_array['sizekb'] = (int)0;}
-		if (empty($post_array['width'] )){$post_array['width'] = (int)0;}
-		if (empty($post_array['height'] )){$post_array['height'] = (int)0;}
-
-		 #if contributor id not set, look up from name.
-		 if (empty($post_array['contributor_id'])){
-		 echo "Getting contributor id for ${post_array['contributor']}" . BRNL;
-			  list ($post_array['contributor_id'],$post_array['contributor_id']) =
-					$member->getMemberId($post_array['contributor']);
-				if (!$post_array['contributor_id']){
-					echo "Contributor " . $post_array['contributor'] . " not found";
-				}
-		}
-	// recho ($post_array,'after setuid');
-	// exit;
-
-
-		$valid_keys = array_merge($editable_fields,$auto_fields);
-	#echo "<p>Post:</p>\n"; print_r ($post_array);
-	#echo "<p>Valid:</p>\n"; print_r ($valid_keys);
-	try {
-		 $prep = pdoPrep($post_array,$valid_keys,'id');
-		 $id = $prep['key'];
-		 $sql = "UPDATE `assets` SET ${prep['update']} WHERE id=${prep['key']};";
-		 $stmt = $this->pdo->prepare($sql);
-
-		  $stmt->execute($prep['data']);
-		echo ".. done. " . BRNL;
-		 return true;
-	} catch (\Exception $e){
-		$edata = array(
-			'sql' => $sql,
-			'data' => $prep['data']
-		);
-		u\catchError($e,$edata);
-		exit;
-	}
-	
-	}
-
-	private function add_link_data($url){
-		 #adds mime type, asset type, size, and image dimensions if graphic to link
-		 #ensure required automatic data is present
-			  $mime = '';
-			  $size = $width = $height = 0;
-			  $sqls = array (
-					'mime' => '',
-				 'sizekb' => 0,
-				 'width' => 0,
-				 'height' => 0,
-				 'type' => ''
-					);
-			  if (substr($url,0,10) == '/galleries'){
-					$sqls['type'] = 'Album';
-					return $sqls;
-			  }
-			  elseif (substr($url,0,1) == '/'){# local
-					 $filepath = SITE_PATH .  "$url";
-					 $mime = mime_content_type($filepath);
-					 $size = filesize($filepath) ?? 0;
-					 if (substr($mime,0,5) == 'image'){
-						 if (!list($width, $height) =  getimagesize($filepath) ){
-							$width=0;$height=0;
-						 }
-					}
-			  }
-			  elseif ( strpos($url,'youtube') !== false
-					|| strpos($url,'youtu.be') !== false) {
-					$mime = "video/youtube";
-					$size = 0;
-			  }
-
-			  elseif (substr($url,0,4) == 'http') {
-					$ch = curl_init($url);
-					curl_setopt($ch, CURLOPT_NOBODY, 1);
-					curl_setopt($ch, CURLOPT_HEADER, 1);
-					curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-					curl_exec($ch);
-					$mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-					$size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-			  }
-
-			  else {
-					echo "cannot get mime data from url $url";
-					return $sqls;
-			  }
-
-			 $sqls['mime'] = $mime;
-			 $sqls['sizekb'] = round($size/1000,0);
-			  $sqls['width'] = $width;
-			  $sqls['height'] = $height;
-			  #set asset type based on mime type
-
-			  if (strpos($mime,'image') !== false){$sqls['type'] = 'Image';}
-			  elseif (strpos($mime,'audio') !== false){$sqls['type'] = 'Multimedia';}
-			  elseif (strpos($mime,'video') !== false){$sqls['type'] = 'Multimedia';}
-			  elseif (strpos($mime,'application') !== false){$sqls['type'] = 'Document';}
-			  elseif (strpos($mime,'html') !== false){$sqls['type'] = 'Web Page';}
-
-	#recho($sqls,"Link Data");
-		 return $sqls;
-	}
-
-
-	private function update_galleries($galleryid,$ids){
-		 #make sure each id in the list ha a gallery entry
-			  $ids = array_filter($ids, 'is_numeric');
-
-			  $id_list = "'" . implode("','",$ids) . "'";
-			  $sql = "Select id,url,has_gallery from assets where id in ($id_list)";
-			 # echo $sql; exit;
-			 
-			  $result = $this->pdo->query($sql);
-			  echo "Updating info on each gallery item. ";
-			 while( $row = $result->fetch()){
-					$sq = array();
-					 $id = $row['id'];
-					 $url = trim($row['url']);
-					if (! $row['has_gallery']){
-						 create_thumb($id,$url,'galleries');
-						 $sq[] = "has_gallery = true";
-					}
-
-					if (empty($row['first_use_in'])){
-						 $sq[] = "first_use_in = '/galleries.php/?$galleryid'";
-					}
-					if (isset($sq)){
-						 $sqs = implode(', ',$sq);
-						 $sql = "update assets set $sqs WHERE id = '$id';";
-	 #   echo $sql;
-						  $result = $this->pdo->query($sql);
-					}
-			  }
-	  echo "Gallery items updated" . BRNL;
-	}
-
-	 private function build_files_array($loc) {
-					/* 
-					$loc is complete file path
-					$loc =  SITE_PATH . '/' . $upload_dir . '/' . $this_file;
-					or $loc = PROJ_PATH / ftpf /this_file
-					 #use _FILES array to look like an upload
-					*/
-				
-				$finfo = new \finfo(FILEINFO_MIME_TYPE);
-		 
-			  $file_data = array(
-					'tmp_name' => $loc,
-					'name' => basename($loc),
-					'error' => 0,
-					'size' => filesize($loc),
-					'type' => $finfo->file($loc)
-			  );
-			  return $file_data;
-	}
-
-
-	private function post_asset($post_array){
-		/*
-			  note: doesn't use $_POST because array may come
-			  from the news_item_edit form instead.
-		
-		 */
-		 $changed_asset= false;
-		$datetag=date('m/d/y');
-	 if (! isset($post_array['id'])){throw new Exception ("Posting asset with no id.");}
-		 $id = $post_array['id'];
-
-
-		  global $image_extensions;
-		 
-		  if ($id == 0){
-
-			  $title = "temp holding place";
-			  $sql = "INSERT into `assets` (status,title,date_entered,type,thumb_file) values ('T','$title',NOW() ,'','');";
-			  echo $sql . BRNL;
-			  $this->pdo->query($sql);
-			  $last_id = $this->pdo->lastInsertId();
-			  $post_array['id'] = $id = $last_id;
-			  $post_array['status'] = 'T';
-			  $post_array['type'] = '';
-			  echo "New ID created (temp): $id<br>\n";
-		 }
-
-		 echo "<hr>Starting post_asset on id $id. " . BRNL;
-		# recho ($post_array,'Post_array');
-		# recho ($_FILES,'FILES array');
-	 
-		 $form_link = $post_array['link'] ?? '';
-		
-	
-	 
-	/**
-		 relocate uploads
-	 
-		 Files are either uploaded from form or uploaded some other way
-		 into specific directories ftp or uploads.
-		 These files need to be moved into correct location in assets, and
-		 then the asset created with the appropriate link.
-	 
-		 From asset form:
-		
-			'link_source' used for both source file and link to.
-			'thumb_source' used for additional file just to use for thumbnail
-			in either one, you can have
-			* a url
-			* a local directory/file
-			* ftp/filename
-			* uploads/filename 
-		
-			or you can use an uploaded file
-			'link_upload is the uploaded main fail
-			'thumb_upload' is the uploaded thumb source file
-		
-			uploaded file always takes priority for main link
-			else use the link directory name
-		
-			For link possibility
-				check to make sure file exists
-				move file to appropriate directory, renamed in most cases
-				set link in asset to new loacation/name
-			
-				file uploaded with form has priority
-			Then set thumb from uplink if supplied
-		
-			*/
-		
-			// get the main source
-		
-			if (!empty($_FILES['linkfile']['name'])){
-				$link = relocate ($id,'link_upload');
-			
-			} elseif (strncmp ($form_link, '/uploads',8) == 0) {
-				 $link = relocate($id, 'uploads',$form_link);
-			} elseif (strncmp ($form_link, '/ftp',4) == 0) {
-				$link = relocate($id, 'ftp',$form_link);
-			} else {
-				$link = $form_link;
-			}
-		 if (substr($link,0,1) == '/') { #local file
-			 $finfo = new \finfo(FILEINFO_MIME);
-			 $post_array['mime'] = $finfo->file(SITE_PATH . "/$link");
-			 $post_array['sizekb'] =  round(filesize(SITE_PATH . "/$link")/1000,0);
-			 $post_array['link'] = $link;
-			}
-			$linkdata = add_link_data($link);
-			$post_array = array_merge ($post_array,$linkdata);
-		
-		 echo "post_array[link] set to $link" . BRNL;
-  
-			#now check for separate thumb file source
-			#remove old duplicate of link
-			// if ($post_array['url'] == $post_array['link'] ){
-	// 	 		$post_array['url'] = '';
-	// 	 	}
-		
-			if (!empty($_FILES['upfile']['name'])) {
-				$thumb_source = relocate ($id,'thumb_upload' );
-				$post_array['url'] = $thumb_source;
-			}
-			if (!empty ($post_array['url'])){
-				$thumb_source = $post_array['url'];
-			} else {
-				$thumb_source = $link;
-			}
-		
-	
-  
-
-	 #test to see if url has changed; if so update thumb
-		  $row = $this->pdo->query("SELECT link,url from `assets` where id = $id;")->fetch(\PDO::FETCH_ASSOC);
-			$orig_link = $row['link'];
-			$orig_url = $row['url'];
-		
-			if( $orig_link != $post_array['link'] ){
-			  if (! empty($orig_link)) {
-					echo "Source has changed (was $orig_link); will regenerate thumb" . BRNL;
-						 $changed_asset = true;
-			  }
-			  $post_array['need_thumb'] = true;
-		 }
-		 if( $orig_url != $post_array['url'] ){
-			  if (! empty($orig_url)) {
-					echo "Thumb source has changed (was $orig_url); will regenerate thumb" . BRNL;
-						 $changed_asset = true;
-			  }
-			  $post_array['need_thumb'] = true;
-		 }
-
-	#now create thumbs
-		  
 
 	
 
-			  if (isset($post_array['need_thumb'])){
-					echo "Need new thumbnail from $thumb_source... " . BRNL;
-					if($thumb = create_thumb ($id,$thumb_source,'thumbs')){
-						 //$post_array['has_thumb'] = true;
-						 $post_array['thumb_file'] = $thumb;
-						 echo "Thumb $thumb created. ";
-					}
-					echo "<br>";
-			  }
-			  if (isset($post_array['need_gallery'])){
-					echo "Need new gallery ... ";
-					if($thumb = create_thumb ($id,$thumb_source,'galleries')){
-						 echo "Gallery $thumb created. ";
-						 //$post_array['has_gallery'] = true;
-					}
-					echo "<br>";
-			  }
-			  if (isset ($post_array['need_toon']) ){
-					echo "Need new toon ... ";
-					if($thumb = create_thumb ($id,$thumb_source,'toons')){
-						 echo "Toon $thumb created";
-						 //$post_array['has_toon'] = true;
-					}
-					echo "<br>";
-			  }
 
-		 // $post_array['has_thumb'] = png_or_jpg_exists('thumbs',$id);
-	// 	$post_array['has_gallery'] = png_or_jpg_exists('galleries',$id);
-	//     $post_array['has_toon'] =  png_or_jpg_exists('toons',$id);;
 
-	#recho ($post_array,"Ready to Update"); exit;
-		 // Decomptress the tag options
-		 if (!empty($post_array['tags'])){
-			$post_array['tags'] = charListToString($post_array['tags']) ;
-		 }
-
-		 #remove entities from title, caption, notes
-		 foreach (['caption','title','notes'] as $v){
-			  $post_array[$v] = spchard($post_array[$v]) ?? '';
-		 }
 	
+<<<<<<< HEAD
 		if ($post_array['status'] == 'T'){$post_array['status'] = 'N';}
 		# else { $post_array['status'] = $itemdata['status'];}
 
@@ -842,116 +702,9 @@ EOT;
 	private function check_file_uploads ($upload_name){
 		// checks for upload errors, file exits,
 		// returns the original name of the file.
+=======
+>>>>>>> master
 	
-		global $accepted_mime;
-		 // Check $_FILES[$upload_name]['error'] value.
-		 switch ($_FILES[$upload_name]['error']) {
-			  case UPLOAD_ERR_OK:
-				  break;
-			  case UPLOAD_ERR_NO_FILE:
-					throw new \RuntimeException('No file sent.');
-			  case UPLOAD_ERR_INI_SIZE:
-			  case UPLOAD_ERR_FORM_SIZE:
-					throw new \RuntimeException('Exceeded filesize limit.');
-			  default:
-					throw new \RuntimeException('Unknown errors.');
-		 }
-		 if (!file_exists($_FILES[$upload_name]['tmp_name'] )){
-			throw new \RuntimeException ("uploaded $upload_name does not exists.");
-		 }
-		 $fmime = $_FILES[$upload_name]['type'];
-		 $original = $_FILES[$upload_name]['name'];
-		$ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
 
-		 #check if ext matches mime
-		 if ($fmime != $accepted_mime[$ext]){
-			  echo "Warning: ext $ext does not match mime $fmime" . BRNL;
-		 }
-		 return $original;
-	}
+*/
 
-
-	private function relocate ($id,$type,$link=''){
-		/**
-			@type is upfile,linkfile,ftp, or upload
-			@link is supplied link if any
-			@id is id this asset will have; may be used as file name.
-			@returns url to new location/file
-		
-		
-	 
-	**/
-		 echo "Starting relocation $type ... " . BRNL;
-		 $finfo = new \finfo(FILEINFO_MIME);
-		switch ($type) {
-			case 'link_upload' :
-			
-				$orig = check_file_uploads('linkfile');
-				$orig_path = $_FILES['linkfile']['tmp_name'];
-				$new_mime = $finfo->file($orig_path) ;
-		
-				$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
-				$new_url = '/assets/files/' . $id . ".$orig_ext";
-				$new_path = PROJ_PATH . '/shared' . $new_url;
-			
-				break;
-			
-			case 'thumb_upload' :
-				$orig = check_file_uploads('upfile');
-				$orig_path = $_FILES['upfile']['tmp_name'];
-				$new_mime = $finfo->file($orig_path) ;
-				$orig_ext = strtolower(pathinfo($orig, PATHINFO_EXTENSION));
-				$new_url = '/assets/thumb_sources/' . $id . ".$orig_ext";
-				$new_path = PROJ_PATH . '/shared' . $new_url;
-			
-				break;
-			
-			case 'uploads':
-				$orig_path = PROJ_PATH . '/' . $link;
-				if (! file_exists($orig_path)) {
-					throw new \RuntimeException ("file $link does not exist");
-				}
-				$new_mime = $finfo->file($orig_path) ;
-				$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
-				$new_url = '/assets/files/' . $id . ".$orig_ext";
-				$new_path = PROJ_PATH . '/shared' . $new_url;
-				break;
-			
-			case 'ftp':
-				$orig_path = PROJ_PATH . "/$link";
-				if (! file_exists($orig_path)) {
-					echo "file $link does not exist";
-					exit;
-				}
-				$orig_ext = strtolower(pathinfo($link, PATHINFO_EXTENSION));
-				$orig_name = substr($link,5); # remove the /ftp/ from beginning.
-				$new_mime = $finfo->file($orig_path) ;
-			
-				if (getMimeGroup($new_mime) == 'av'){
-					$new_url = "/assets/av/" . $orig_name;
-				}
-				else {	
-					$new_url = '/assets/files/' . $id . ".$orig_ext";
-				}
-				$new_path = PROJ_PATH . '/shared' . $new_url;
-		
-				break;
-			default:
-				throw new \RuntimeException ("file relocate type $type not recognized");
-			
-		}
-		echo "WIll now move $orig_path to $new_path" . BRNL;
-		rename ($orig_path,$new_path);
-		 chmod ($new_path,0644);
-		 # if image, check rotational problems
-		 if (false && getMimeGroup($new_mime) == "Image"){
-			$im = new Imagick ($new_path);
-			autoRotateImage($im); 
-			 $im->writeImage($new_path);
-		}
-		echo "New url: $new_url" . BRNL;
-
-		return $new_url;
-	}
-
-}

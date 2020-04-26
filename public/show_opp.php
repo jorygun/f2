@@ -82,10 +82,10 @@ EOT;
 		$id = $row['id'];
 			echo <<<EOT
 	<h3>{$row['title']}</h3>
+		Location: ${row['location']};<br>
 		Contact: ${row['owner']}; Contact: <a href=mailto:${row['owner_email']}>${row['owner_email']}</a><br>
-		 Post ${row['created']}<br>
-		 Expires: ${row['expired']}<br>
-		 Description: <hr>$description<hr>
+		 Posted: ${row['created']} Expires: ${row['expired']}<br>
+		 <hr>$description<hr>
 		 More Info: <a href='${row['link']}' target='_blank'>Link</a><br>
 		 <i>Status: $status ($id)</i>
 EOT;
@@ -96,7 +96,8 @@ EOT;
 		$id = $opp_row['id'];
 		echo <<<EOT
 		<h3>Edit/Create Opportunity</h3>
-		(yellow fields are required)
+		(Yellow fields are required. <br>
+		You will not see a new opportunity on your menu until you log in again.) 
 		<form method='post'>
 		
 		<table style='width:100%'>

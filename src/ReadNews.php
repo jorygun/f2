@@ -78,8 +78,29 @@ class ReadNews {
 		 return $nRows;
 	}
 
+	public function get_topics($access=''){
+// use access = '' for all topics including deprecated
+// access = 'A' for all current topics 
+// access = 'U' for user accessible topics
 
+	$pdo = MyPDO::instance();
+	$sql = "SELECT `topic`,`topic_name` from `news_topics` T 
+		INNER JOIN news_sections  S
+		ON T.section = S.section ";
+	if ($access == 'A'){ $sql .= " WHERE `access` in ('A','U') "; }
+	elseif ($access == 'U'){ $sql .= " WHERE `access` = 'U' "; }
+	$sql .= " ORDER BY S.section_sequence, T.topic ";
+	
+	$topics = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+	return $topics;
+}
 
+function get_sections(){
+	$pdo = MyPDO::instance();
+	$sql = "SELECT section, concat(section_name,'|',section_subhead) AS section_data from `news_sections` ORDER BY section_sequence";
+	$sections = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+	return $sections;
+}
 
 	public function current_ops(){
 		 // lists currently open job opportunities
@@ -102,8 +123,8 @@ class ReadNews {
 		if (substr($filename,0,5) == 'news_') {
 			$content = $this->filter_news($content);
 		}
-		if ($heading){echo $this->news_head($heading);}
-		if ($subhead){echo $this->news_subhead($subhead);}
+		if ($heading){echo $this->news_head($heading,$subhead);}
+		#if ($subhead){echo $this->news_subhead($subhead);}
 		echo $content;
 		
 	}
@@ -163,6 +184,8 @@ class ReadNews {
 
 
 		public function news_head($title,$tcomment=''){
+			// add class amd to AMD news setion to pick up amd style defs
+			
 			  $hcode = "<div class='divh2'>$title\n";
 			  if ($tcomment != ''){$hcode .= "<br><span class='comment'>$tcomment</span>";}
 			  $hcode .= "</div>\n";
@@ -173,7 +196,7 @@ class ReadNews {
 			  $hcode = "<h3>$title</h3>\n";
 			  return $hcode;
 		 }
-
+		
 	public	function increment_reads($issue){
 			#echo "sstart increment reads";
 

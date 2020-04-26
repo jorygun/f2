@@ -170,7 +170,8 @@ EOT;
 
 		$t .= self::addMenu(7,$thisMenu);
 		if ($userlevel >= 7){$menulist[] = $thisMenu;}
-
+		$t .=    self::if_level (7, "<li><li><a href='/scripts/news_items.php' target='newsitems'>Add/View Pending Articles</a>");
+		
 		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='_blank'>User Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/news_admin.php'>News Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/calendar_admin.php'>Calendar Admin</a>");
@@ -180,7 +181,7 @@ EOT;
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");
 
-		  $t .=    self::if_level (7, "<li><li><a href='/scripts/news_items.php' target='newsitems'>Review Articles</a>");
+		  
 		  $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/assets.php' target='assets'>Asset Manager</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/gallery_edit.php' target='galleries'>Edit Gallery</a>");
@@ -199,7 +200,7 @@ EOT;
 
 	$t .=  self::closeLine(6, $thisMenu) ;
 
-	$opp_rows = $this->opp->getOppCount() ?? 0;
+	$opp_rows = $this->opp->getOppCount(); 
 	$thisMenu = "Opportunities ($opp_rows)";
 	$menulist[] = $thisMenu;
 	$opp_list = $this->opp->linkOppList();

@@ -21,7 +21,7 @@ require_once 'asset_functions.php';
 // returns array of section code =>section _name
 function get_sections() {
 	$pdo = MyPDO::instance();
-	$sql = 'SELECT section,section_name from news_sections';
+	$sql = 'SELECT section,section_name from news_sections ORDER BY section_sequence';
 	$sections = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	return $sections;
 }
@@ -34,9 +34,13 @@ function get_topics($access=''){
 // access = 'U' for user accessible topics
 
 	$pdo = MyPDO::instance();
-	$sql = "SELECT `topic`,`topic_name` from `news_topics` ";
+	$sql = "SELECT `topic`,`topic_name` from `news_topics` T 
+		INNER JOIN news_sections  S
+		ON T.section = S.section ";
 	if ($access == 'A'){ $sql .= " WHERE `access` in ('A','U') "; }
 	elseif ($access == 'U'){ $sql .= " WHERE `access` = 'U' "; }
+	$sql .= " ORDER BY S.section_sequence, T.topic ";
+	
 	$topics = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	return $topics;
 }
@@ -47,7 +51,10 @@ function get_section($topic){
 	$section = $pdo->query($sql)->fetchColumn();
 	return $section;
 }
-	
+
+
+
+
 $istatus = array (
 	'N'	=> 'New',
 	'R'	=> 'Ready',
@@ -283,7 +290,8 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
     <p class=quoted" paragraphs. 
     */
     
-	if (strpos($webready['content'],'<p>') === false ){
+	if (strpos($webready['content'],'<p>') === false 
+	 && strpos($webready['content'],'<table>') === false ){
 		$webready['content'] = nl2br($webready['content']);
 	}
 	$webready['ed_comment'] = nl2br($webready['ed_comment']);
@@ -307,9 +315,9 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
 
     $this_scheduled = '';
 	$story = $teaser = '';
-	switch ($topic) {
+	if ($topic == 'toon') {
 
-    case 'toon':
+    
         $story = "<div><div class='toon'>";
          if ($row['asset_id']){
             $story .= f\get_asset_by_id($row['asset_id'],'toon');
@@ -322,78 +330,30 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
         $story .= add_contributor($webready);
         $story .= add_ed($webready);
         $story .= "<hr>";
-    break;
-
-	case 'mailbox':
-        $teaser  =     $row['title'] . ' (' . $row['contributor'] . ')';
-        $this_scheduled = $status_display;
-		$story = <<<EOT
-		<div class='article'>
-
-	    <p class='headline'>${webready['title']}</p>
-
-EOT;
-        $story .= add_contributor($webready,'pre');
-        #adds linked "source name" instead of contributor
-
-        if ($row['asset_id']){
-            $story .= f\get_asset_by_id($row['asset_id'],'thumb');
-        }
-        if (!empty($row['asset_list'])){
-            $ids = preg_split('/\s+/ms',$row['asset_list']);
-            $ids = array_filter($ids, 'is_numeric');
-            foreach($ids as $n){
-                $story .= f\get_asset_by_id($n,'thumb');
-            }
-        }
-
-        $story .= "<div class='body'>
-        <div class='content'>${webready['content']}</div>\n";
-
-
-        $story .= add_more($webready);
-        $story .= add_ed($webready);
-
-	break;
-	case 'apology':
-	$this_scheduled = '';
-	    $story = <<<EOT
-
-		<div class='apology'>
-		<p class='comment'>Oops...</p>
-EOT;
-
-        
-         if ($row['asset_id']){
-            $story .= f\get_asset_by_id($row['asset_id']);
-        }
-
-        $story .= " <div class='left'>
-        <p class='content'>${webready['content']}</p>\n";
-
-       $story .= add_more($webready);
-
-        $story .= add_ed($webready);
-
-
-
-	break;
-
-
-	default: #all other stories
-       $teaser  =      $row['title'] ; 
+    } else {     
+      $teaser  =      $row['title'] ; 
        if (strcmp($row['contributor'],'FLAMES editor') !== 0) {
-       	$teaser .= '(' . $row['contributor'] . ')';
+       	$teaser .= ' (' . $row['contributor'] . ')';
        	}
-       	$this_scheduled = $status_display;
-        $story = <<<EOT
+       $this_scheduled = $status_display;
+       
+       $amdcss = ($row['contributor'] == 'AMD Communications')? 'amd' : '';
+      $story = "
+   <div class='article $amdcss'>
+	<div class='head'>
+	";
+	if ($topic == 'mailbox'){
+		$story .= add_contributor($webready,'pre');
+	} else {
+		$story .= "<p class='type'>$topics[$topic]</p> ";
+	}
+	$story .= "
+      <p class='headline'>${webready['title']}</p>
+   </div>
+   
+	<div class='content'>
+	";
 
-    <div class='article'>
-
-    <p class='head'><span class='type'>$topics[$topic]</span><br />
-    <span class='headline'>${webready['title']}</span></p>
-
-EOT;
 
 
          // if ($row['asset_id']){
@@ -408,28 +368,37 @@ EOT;
 //             $story .= "<div class='clear'></div>";
 //         }
 
-        $story .= "<div class='body' >\n";
-        if ($row['asset_id']){
-            $story .= f\get_asset_by_id($row['asset_id'],'thumb');
-        }
-         if (!empty($row['asset_list'])){
-            $ids = preg_split('/\s+/ms',$row['asset_list']);
-            $ids = array_filter($ids, 'is_numeric');
-            foreach($ids as $n){
-                $story .= f\get_asset_by_id($n,'thumb');
-            }
-            $story .= "<div class='clear'></div>";
-        }
-        $story .= "<p class='content'>${webready['content']}</p>\n";
-
-        $story .=  add_more($webready);
-        $story .=   add_source($webready);
-
-        $story .= add_contributor($webready);
-
-        $story .= add_ed($webready);
-
-
+        	
+      // add asset thumbs in floating divs
+			  if ($row['asset_id']){
+					$story .= f\get_asset_by_id($row['asset_id'],'thumb');
+			  }
+				if (!empty($row['asset_list'])){
+					$ids = preg_split('/\s+/ms',$row['asset_list']);
+					$ids = array_filter($ids, 'is_numeric');
+					foreach($ids as $n){
+						 $story .= f\get_asset_by_id($n,'thumb');
+					}
+					// clearthe floats if more than one thumb displayed
+					$story .= "<div class='clear'></div>\n";
+			  
+			  }
+			  $story .= $webready['content'];
+			 
+		  		$story .= "
+		 	 <div class = 'attribution'>
+		 	 ";
+			  	$story .=   add_source($webready) . BRNL;
+			  	 $story .=  add_more($webready);
+			if ($topic != 'mailbox'){
+			  	  	$story .= add_contributor($webready);
+			  	}
+			  	
+				$story .= 
+			"</div>\n";
+			
+				 $story .= add_ed($webready);
+		$story .= "</div>\n"; #end of content div
 
 
 	} #end of switch
@@ -459,9 +428,10 @@ EOT;
     if ($etag || $stag){
 	    $story .= "<p>$edit_button $this_scheduled</p>\n";
 	}
-	$story .= "</div>
-	<p class='clear' style='margin-top:0px;margin-bottom:0px;'>&nbsp;</p>\n";
-    $story .= "</div>\n";
+	$story .= "
+	<p class='clear' style='margin-top:0px;margin-bottom:0px;'>&nbsp;</p>
+	</div>
+	";
 
 
   return array ($section,$teaser,$story);
@@ -471,18 +441,18 @@ function add_source($row){
         if (empty($source = $row['source'])){return '';}
         if (empty($row['source_date'])){$sdate = "Undated";}
         else {$sdate = $row['source_date'];}
-        return "<br><span class='source'>Source: ${row['source']} ($sdate)</span>\n";
+        return "<span class='source'>Source: ${row['source']} ($sdate)</span>\n";
  }
 
 function add_more($row){
     if( empty($url = $row['url']) ){return '';}
 
-    if ( empty($link_title = $row['link_title']) ){
-        $link_title = "Read more ...";
-     }
+	$link_title =  $row['link_title'] ?? 'Here';
+     
+     
     if (substr($url,0,4)=='http'){
-        $more =
-            "<a href= '/links.php?url="
+        $more = "Read more at: "
+           .  "<a href= '/links.php?url="
             . urlencode($url)
             . '&aid='
             . $row['id']
@@ -493,11 +463,12 @@ function add_more($row){
     }
      else {
         $more =
-            "<a href= '" .
-            $url        .
-            "' target = '_blank'>"  .
-            $link_title             .
-            '</a>'
+        		"Read more: "
+            . "<a href= '" 
+            . $url
+            . "' target = '_blank'>" 
+            . $link_title
+            . '</a>'
             ;
     }
     return $more . "\n";
@@ -515,30 +486,27 @@ function add_ed ($row){
 function add_contributor($row,$pos='post'){
     // can have contributor as text, or, if it's a member, will
     // havbe the contributor id filled in.  Members can be linked.
-
+		$member = new Member();
     
     if ($cid = $row['contributor_id']){
-        $contributor_linked = get_linked_contact($cid );
+        $contributor_linked = get_linked_contact($cid, true );
+        $name =  $member->getMemberName($cid);
+        
     }
     else {throw new Exception ("No contributor id on article {$row['id']}");}
-
+	$ctag = "<a href=/profile.php?uid=$cid>$name</a>";
+	
     if ($pos == 'pre'){
-    #use source name instead of contributor name.
-       # $source = add_source($row);
-        #return " <p class='presource'>From: $contributor_linked $source </p>";
-        #$source_linked = link_contact($row['source']);
-        #return "<p class='presource'>From: $source_linked</p>";
-        // changed back to using contributor because aliases are already handled
-        return "<p class='presource'>From: $contributor_linked</p>";
+         return "<p >From: $ctag</p>";
     }
     #otherwise
-    return "<p class= 'contributor'>-- Contributed by $contributor_linked</p>\n";
+    return "<p class= 'contributor'>-- Contributed by $ctag</p>\n";
 }
 
 
-function get_linked_contact ($uid) {
+function get_linked_contact ($uid,$enhance=false) {
 	$pdo = MyPDO::instance();
-	$sql="SELECT username,user_email FROM members_f2
+	$sql="SELECT username,user_email, user_from FROM members_f2
 			WHERE user_id = $uid;";
 	
    
@@ -548,12 +516,16 @@ function get_linked_contact ($uid) {
    	
 	$email = $urow['user_email'];
 	$name = $urow['username'];
+	$from = $urow['user_from'];
 
+	
     if (! empty($email)){
         $linked = "<a href=\"mailto:$email\">$name</a>";
 	}
 	else {$linked = "$name (no email)"; }
-
+	if ($enhance == true){
+		$linked .= " in $from";
+	}
     return $linked;
 }
 

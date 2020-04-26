@@ -309,6 +309,7 @@ EOT;
 			case 'Update':
 			case 'nobulk':
 			case 'nobulkchecked':
+			case 'email_hide':
 	
 				#do nothing
 				break;
@@ -373,7 +374,7 @@ EOT;
 			
 	}
 
-	$bulkflag = isset($post['nobulk']);
+	$bulkflag = (isset($post['nobulk'])) ? 1 : 0; #true or false
 	if ($bulkflag != $md['no_bulk']){
 		$this->member->setNoBulk($uid,$bulkflag);
 		if ($bulkflag == 1){
@@ -381,7 +382,12 @@ EOT;
 		}
 			
 	}
-	
+	$bulkflag = (isset($post['email_hide'])) ? 1 : 0; #true or false
+	if ($bulkflag != $md['email_hide']){
+		$this->member->setEmailHide($uid,$bulkflag);
+		
+			
+	}
 
 
 
@@ -497,6 +503,7 @@ public function showUpdate($uid) {
 	  	this person a user_id and send out a welcome message. </p>":'';
 
 	  	$td['nobulkchecked']= $mdd['no_bulk'] ? 'checked':'';
+	  	$td['email_hidechecked'] = $mdd['email_hide'] ? 'checked' : '' ;
 
 	  	$td['validateEmailButton']= f\actionButton('Verify Email','verifyEmail',$uid,'resp');
 	  	$td['bounceEmailButton']= f\actionButton('Bouncer','bounceEmail',$uid);
@@ -510,10 +517,29 @@ public function showUpdate($uid) {
  
 }
 
-	public function email_member($uid) {
-	
+	public function validate_email_with_notice($uid) {
+    	#check current email status and notify admin
+    	# if validating an aged out address
+    	$sql = "SELECT username,user_email, email_status from `members_f2`
+    		WHERE user_id = '$uid';";
+    	$row = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC);
+    	$ems = $row['email_status'];
+    	
+      if (in_array($ems ,[ 'A3','A4','LA'])){
+      	$msg = 'User ' . $row['username'] 
+      		.  ' has validated email '
+      		. $row['user_email'] . ' that was previously status '
+      		. $ems ;
+      	$subj = 'Email validated: ' . $row['username'];
+      	mail('admin@amdflames.org',$subj,$msg);
+      	
+      }
+      $this->member->verifyEmail($uid);
+      return  date ('M d Y');
 	}
 
+	
+	
  public function getProfileData($uid) {
  	$row = $this->member->getMemberRecord($uid,true);
  	$tdata = $row; // put all retrieved data into template row
@@ -532,6 +558,7 @@ public function showUpdate($uid) {
 	$tdata['hide_checked'] =  ($row['email_hide'])? "checked check='checked' ":'';
 	$tdata['no_bulk_checked'] = ($row['no_bulk'])? "checked check='checked' ":'';
 	
+	$tdata['hidden_emailer'] = ($row['email_hide'] && $row['email_status'] == 'Y') ? "<a href='/hidden_send.php?id=$uid'>Send a message</a>" : '';
 	
 	$user_today = $row['user_current'] ;
 	if (!empty($row['user_from'])){$user_today .= " ... in ${row['user_from']}";}
@@ -570,7 +597,8 @@ EOT;
 	$tdata['info_text'] = <<<EOT
 	This is what you need to know.
 EOT;
-
+	// scan about box for links and images
+	
 
 	$tdata['credential'] = $credential;
 	$tdata['warning'] = f\getWarning(); 
@@ -775,6 +803,15 @@ EOT;
 			$id = post_asset($post_array);
 			return $id;
 			
+	}
+	public function bounce_by_email($em){
+		if (empty($em)){return false;}
+		$sql = "UPDATE `members_f2` SET email_status = 'LB' where user_email = '$em';";
+		$stmt = $this->pdo->query($sql);
+		if ($stmt->rowCount() > 0) {
+			return true;
+		}
+		return false;
 	}
 }	
 

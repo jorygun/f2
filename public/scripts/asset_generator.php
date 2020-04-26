@@ -168,7 +168,7 @@ function process_uploads($dir) {
             $default_caption = $params[1];
             echo "Set default title, caption: $default_title; $default_caption" . BRNL;
             if (empty($default_title)) {
-             throw new Exception ("Default title not set");
+             throw new Exception ("Title not set in first record of titles.txt");
             }
          }
          $gfile = $params[0];
@@ -180,7 +180,7 @@ function process_uploads($dir) {
 
         }
       echo "<h3>Titles and Captions</h3>";
-      echo "Default: $default_title; $default_caption" . BRNL;
+      echo "Default: title: $default_title; caption: $default_caption" . BRNL;
       foreach ($titles as $f=>$t){
          echo "$f: $t, " . $captions[$f] . BRNL;
       }

@@ -33,6 +33,8 @@ Fields left blank will not be changed.
 	  	<select name='email_status'><option value=''>Leave as <?=$email_status?></option>
 	  		<?=$email_status_options?></select><br>
 	  		(Note: changing to A1 will send a validation email.)
+	  		<br> Hide Email <input type="checkbox" name='email_hide' <?=$email_hidechecked?>>
+	  		<input type='hidden' name='email_hidechecked' value='<?=$email_hidechecked?>' >
 
 	  	</td></tr>
 	  		

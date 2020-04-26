@@ -111,7 +111,7 @@ function search_news($term,$back) {
 	$rx = '(.{0,60})\b'.$sterm.'\b(?=(.{0,60}))';
 
 	#echo "looking for /$rx/im <br>";
-   $out = '';
+   $out = '<ul>';
 	 foreach ($file_list as $dt => $filename) {
 		if (!$filename){continue;}
 
@@ -129,34 +129,31 @@ function search_news($term,$back) {
             $testfile = $filename;
             $filenames[]=$filename;
             $filenames[] = str_replace('index.php','updates.html',$filename);
+				$filenames[] = str_replace('index.php','news_amd.html',$filename);
+				$filenames[] = str_replace('index.php','news_govt.html',$filename);
+				$filenames[] = str_replace('index.php','news_people.html',$filename);
+				$filenames[] = str_replace('index.php','news_technology.html',$filename);
+				$filenames[] = str_replace('index.php','news_remember.html',$filename);
 
+				$filenames[] = str_replace('index.php','news_modern.html',$filename);
             $filenames[] = str_replace('index.php','news_news.html',$filename);
             $filenames[] = str_replace('index.php','news_flames.html',$filename);;
             $filenames[] = str_replace('index.php','news_sad.html',$filename);;
         $filenames[] = str_replace('index.php','news_know.html',$filename);;
             $filenames[] = str_replace('index.php','news_mail.html',$filename);;
-            $filenames[] = str_replace('index.php','news_site.html',$filename);;
+            $filenames[] = str_replace('index.php','news_fun.html',$filename);;
         }
 
         $found_some = 0;
-       $out .=  "<ul>\n";
+   		$this_issue = '';
         foreach ($filenames as $testfile ){
             $reloc = "/newsp/$testfile";
             if (! file_exists(SITE_PATH . "/newsp/$testfile")){continue;}
             else {
-             #echo "getting $testfile<br>";
+             #echo "getting $show_date $testfile<br>\n";
             }
 
              $get_file = "/newsp/$testfile";
-
-                #echo "curling for $this_url<br>";
-            // try curl instead of just reading file, so it has less junk and more content
-            // 	curl_setopt_array($curl, array(CURLOPT_RETURNTRANSFER => 1,CURLOPT_URL => $this_url));
-            //
-            // 	if(!$buffer = curl_exec($curl)){
-            //     	die('Error: "' . curl_error($curl) . '" - Code: ' . curl_errno($curl));
-            // 	}
-
 
                 $buffer = file_get_contents(SITE_PATH . "/newsp/$testfile");
                # echo "..$testfile buffered..";
@@ -170,33 +167,29 @@ function search_news($term,$back) {
             // Match all occurences of the target string, plus 20 characters before and after for context
                     if ($found_count = preg_match_all("/$rx/im", $buffer, $m)){
                         $found_some = 1;
-                       # print_r ($match); echo "<br>\n";
-                       // # $match0 = $match[0];
-//                         foreach ($match0 as $matchphrase){
-//                             echo "...$matchphrase...<br>";
-//                         }
+
                         for($i=0;$i<$found_count;++$i){
                             $string = $m[1][$i] . "<span class='red'>$sterm</span>" . $m[2][$i];
-                            $out .= "...$string...<br>";
+                            $this_issue .= "...$string...<br>";
                         }
                     }
 
-                # $found = preg_match_all("/$sterm/", $buffer, $match);
 
 
             }
 
 		if ($found_some){
+			$out .= "<li><a href='/newsp/$filename'>newsletter $show_date</a><br>
+			$this_issue<br></li>";
 
-			$out .= "<li><a href='/newsp/$filename'>newsletter $show_date</a><br><br></li>";
 			++$found;
 	// Note if any of the matches are followed by a Picture Mark (<!--P-->)
 
 		 }
-			$out .= "</ul>";
+
 
     }
-
+	$out .= "</ul>";
 
 	if ($found){return "$found newsletters had '$term' in them.<br> " . $out;}
 	else {return "Nothing Found.<br>";}
@@ -206,6 +199,8 @@ function search_news($term,$back) {
 
 
 <hr>
+<h3>Search For Members or Topics in Newsletters</h3>
+
 <p><b>Locate a Member in the Member Database</b></p>
 To find a member enter name or email address.  Partials work. Not case sensitive. Limited to 100 found.
 <form  method = 'POST'>
@@ -218,7 +213,7 @@ To find a member enter name or email address.  Partials work. Not case sensitive
  </table>
 <input type=submit name='search' value='Search DB'>
 </form>
-
+<hr>
 <p><b>Locate a Member in the Photo/Asset Library</b></p>
 <form  method = 'POST'>
 <table >
@@ -228,7 +223,7 @@ To find a member enter name or email address.  Partials work. Not case sensitive
  </table>
 <input type=submit name='search' value='Search Assets'>
 </form>
-
+<hr>
 <p><b>Locate references to a member (or any term) in past newsletters</b></p>
 
 <form  method = 'POST'>

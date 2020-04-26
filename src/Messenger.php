@@ -153,6 +153,39 @@ and change it in your profile.
 	public function setTestMode($test=false ) {
 		$this->test = $test;
 	}
+	
+	public function sendHiddenEmail ($id,$subject,$message) {
+		// send an email from a user to another user.
+		// used for hidden emails
+		// from: data comes for current user login
+		$fromemaillinked = $_SESSION['login']['user_email_linked'];
+		$from_email = $_SESSION['login']['user_email'];
+		$from = $_SESSION['login']['username'];
+		list ($toname,$toid,$toemail) = $this->member->getMemberBasic($id);
+		
+		$msg = <<<EOF
+The message below was sent to you through the AMD Flames site
+by another AMD Flames member.  (Your email on the site is hidden.)
+-----------------------
+From: $fromemaillinked
+Subject: $subject
+$message
+
+-----------------------
+If you have any concerns, please email the admin at admin@amdflames.org.
+
+EOF;
+	$em['subject'] = 'Email from AMD Flames member: ' . $from;
+	$em['message'] = $msg;
+	$em['to'] = $toemail;
+	$em['name'] = $toname;
+	$em['from'] = $from_email;
+	
+	
+	$response = $this->send_mail($em) ;
+		return $response;
+}
+		
 		
 	public function sendLogins($tag,$msg){
 		 $message = $this->getUserText ('logins');
@@ -329,6 +362,7 @@ and change it in your profile.
 	$subscriber = ( $row['subscriber'])? 'yes':'no';
 	$uid = $row['user_id'];
 	$verify =  SITE_URL . "/action.php?V" . $uid;
+	$last_login_date = u\makeDate($row['last_login']);
 	$dataset = "
 User: ${row['username']}
 ---------------------
@@ -342,7 +376,7 @@ User: ${row['username']}
 
 Activity
 ---------------------
-   Last login: ${row['last_login']}
+   Last login: $last_login_date
    Email last validated: ${row['email_valid_date']} 
       (changed on: ${row['email_chg_date']})
    Profile last validated: ${row['profile_valid_date']} 

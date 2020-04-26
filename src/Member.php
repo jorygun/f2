@@ -132,6 +132,9 @@ private static $update_fields = array(
 
 );
 
+ private static $profile_fields = "
+ 'username','user_current','user_about','user_from','user_interests'
+ ";
 
  private static $added_fields = array (
  	'decades',
@@ -143,6 +146,7 @@ private static $update_fields = array(
 	'is_member',
 	'join_date',
 	'login_string',
+	'user_email_linked',
 	'profile_age',
 	'profile_date',
 	'profile_valid_date',
@@ -187,7 +191,7 @@ private static $update_fields = array(
  	'email_status_time',
  	'email_status_name',
  	'status_name',
- 	
+ 	'user_email_linked',
  	'user_email',
  	'email_public',
  	'seclevel',
@@ -297,11 +301,13 @@ private static $update_fields = array(
        	$this->info = "New Member"; 
        	return $this->returnResult(self::$no_member);
        	}
+       $tag = trim($tag); #remove extraneious white space.
        
        #get searchfield for to prepare sql, then searchfor to execute
         if (! list ($searchfield,$searchfor) = $this->setSearchCriteria($tag,$method)){
         		$this->error = 'Search method not understood';
-            return returnResult();
+        		echo $this->error . BRNL; exit;
+            return $this->returnResult();
         }
         
         # only want 1 result.  
@@ -310,7 +316,7 @@ private static $update_fields = array(
         $limitplusone = $limit + 1;
         $fields = implode(',',$this->std_fields);
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield LIMIT $limitplusone";
-       # echo $sql . BRNL . print_r($searchfor,true) . BRNL ;
+   # echo $sql . BRNL . print_r($searchfor,true) . BRNL ; exit;
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
         $idcnt = $stmt->rowCount();
@@ -397,6 +403,7 @@ private static $update_fields = array(
         
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
         'join_date' => u\make_date($row['joined']),
+        'user_email_linked' => u\linkEmail($row['user_email'], $row['username']),
         'linkedinlink' => $linkedinlink,
         'email_status_name' => Defs::getEmsName($row['email_status']),
         'member_photo' => $member_photo,
@@ -528,7 +535,17 @@ private static $update_fields = array(
 	}
 	public function setNoBulk($uid,$nobulk){
 		// nobulk must be 0 or 1
-	$sql = "UPDATE `members_f2` SET no_bulk = $nobulk where user_id = '$uid' ";
+	$sql = "UPDATE `members_f2` SET no_bulk = $nobulk where user_id = $uid ";
+		if (! $this->pdo->query($sql) ){
+			return false;
+		} else {
+		return true;
+		}
+	}
+	
+	public function setEmailHide($uid,$flag){
+		// nobulk must be 0 or 1
+	$sql = "UPDATE `members_f2` SET email_hide = $flag where user_id = $uid ";
 		if (! $this->pdo->query($sql) ){
 			return false;
 		} else {
@@ -594,22 +611,17 @@ private static $update_fields = array(
         		) {
         			$searchfield = $search_fields['name_exact'];
             	$searchfor = [$match[1]];
-         } elseif ( preg_match('/^(\w+)$/',$tag,$match) ){     	
-        		$alias_repl = Defs::replaceAlias($match[1]);
-        		if ($alias_repl != $match[1]) {
-            	$searchfield = $search_fields['name_exact'];
-            	$searchfor = [Defs::replaceAlias($match[1])];
-            }
-        }
+         }
         
         
-        if (empty ($searchfield) &&  preg_match('/^[\w \'\.\-]+$/u', $tag)) {
+        if (empty ($searchfield)) {
         #probably matches anything ??
             $searchfield = $search_fields['name_loose'];
             $searchfor = ["%$tag%"];
         } 
         if (empty ($searchfield)) {
             $this->error .= "Cannot understand tag $tag for member lookup";
+            echo $this->error . BRNL; exit;
             return false;
         }
         
@@ -983,6 +995,8 @@ public function getLogins($tag) {
     	}
     	//add fields and filter result
     	$login_info = $this->enhanceData($result,self::$info_fields);
+    	#u\echor ($login_info,'LI info from getLoginInfo'); exit;
+    	
     	return $login_info;
     }
     	
@@ -1011,6 +1025,9 @@ public function getLogins($tag) {
     
    
     public function verifyEmail ($id) {
+    	#check current email status and notify admin
+    	# if validating an aged out address
+    	
     	 $sql = "Update `members_f2` set email_status='Y',
     	 	email_last_validated = NOW()
             WHERE user_id = $id;";
@@ -1020,13 +1037,11 @@ public function getLogins($tag) {
 	}
 
 	public function verifyProfile ($id) {
-     $sql = "Update `$this->memberTable` set 
-     profile_validated = NOW(),email_status='Y',
-     email_last_validated = NOW()
+     $sql = "Update `members_f2` set 
+     profile_validated = NOW()
             WHERE user_id = $id;";
-            
         $stmt = $this->pdo->query($sql);
-       
+      $this->verifyEmail($id);
         return  date ('M d Y');
 
     
@@ -1036,7 +1051,7 @@ public function getLogins($tag) {
     public function getMemberName($tag)
     {
         $md = $this->getMemberData($tag);
-        if ($md['records'] == 0 or !empty($mb['error'])) {
+        if ($md['count'] == 0 or !empty($mb['error'])) {
             return false;
         }
         return $md['data']['username'];
@@ -1063,7 +1078,13 @@ public function getLogins($tag) {
     // returns [username,id]
     public function getMemberId($tag)
     {
-        $md = $this->getMemberData($tag);
+    	#required username or alias\
+    	//check for alias first
+    	$tag = trim($tag);
+    	
+    $tag =  Defs::replaceAlias($tag) ?? $tag;
+   
+        $md = $this->getMemberData($tag,'name_exact');
        # u\echor ($md);
         if (empty($md['count']) or !empty($mb['error'])) {
             return false;
@@ -1192,7 +1213,7 @@ public function getLogins($tag) {
             #echo "Invalid email address ($addr) in display_email.";
             return "**Invalid email address**";
         }
-
+	
         if ($hide) {
             $v = '(Email hidden)';
         } elseif ($ems == 'LB') {
@@ -1267,7 +1288,8 @@ public function getLogins($tag) {
 		$sql = "SELECT  * FROM `members_f2`
 			WHERE status in ($member_status_set)
 			$test_clause
-			AND email_chg_date > '$since';";
+			AND email_chg_date > '$since'
+			AND email_hide = 0;";
 
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
 		foreach ($result as $row){
@@ -1276,22 +1298,25 @@ public function getLogins($tag) {
 		return $list;
 	}
 	public function getUpdatedProfiles($since,$test=false) {
+		
 		$member_status_set = Defs::getMemberInSet();
 		$test_clause =  ($test)? 
 		"AND test_status != '' " : "AND test_status = '' ";
 		
 		$list = array();
-		$sql = "SELECT  * FROM `members_f2`
+		$sql = "SELECT user_id FROM `members_f2`
 			WHERE status in ($member_status_set)
 			$test_clause
 			AND profile_updated > '$since'
 			AND joined < '$since';";
 
+		
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
-		foreach ($result as $row){
-			$list[] = $this->enhanceData($row,self::$info_fields);
-		}
-		return $list;
+		// foreach ($result as $row){
+// 			$list[] = $this->enhanceData($row);
+// 		
+// 		}
+		return $result;
 	}
 	public function getDeceased ($since,$test=false) {
 		// if (! u\validateDate($since )){
@@ -1439,7 +1464,9 @@ public function getNewLost($since,$test=false) {
 				echo "Sending to admin status with $tag." . BRNL;
 				break;
 			case 'aged_out':
-				$sql .= "AND email_status = 'LA' " ;
+				$sql = "SELECT $fields FROM `members_f2` 
+			WHERE status in ($this->member_status_set)
+			AND email_status = 'LA' ";
 				echo "Sending to aged out emails." . BRNL;
 				break;
 			case 'contributors':
@@ -1451,7 +1478,7 @@ public function getNewLost($since,$test=false) {
 				throw new Exception ("Unknown bulk mal selection.");
 			}
 		
-		$sql .= " ORDER BY test_status DESC ;";
+		$sql .= " ORDER BY status DESC ;";
 		$list = $this->pdo->query($sql)->fetchAll();
 		return $list;
 

@@ -1,19 +1,5 @@
 <?php
 namespace digitalmx\flames;
-ini_set('display_errors', 1);
-#ini_set('error_reporting',E_ALL);
-
-//BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
-	if (f2_security_below(7)){exit;}
-	use digitalmx\MyPDO;
-	use digitalmx\flames as f;
-	use digitalmx as u;
-//END START
-require_once "news_functions.php";
-require_once "asset_functions.php";
-
-
 // Compile news larticles from items database
 
 /*
@@ -33,6 +19,46 @@ then marked as published.
 */
 
 
+
+#ini_set('display_errors', 1);
+
+//BEGIN START
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\DocPage;
+	use digitalmx\flames\FileDefs;
+	use digitalmx\MyPDO;
+	
+require_once "news_functions.php";
+require_once "asset_functions.php";
+
+
+
+if ($login->checkLogin(4)){
+   $page_title = 'News Articles';
+	$page_options=[]; #ajax, votes, tiny 
+	
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	# other heading code here
+	echo <<< EOF
+	<script type='text/javascript'>
+function show_this_id(id){
+    if (!id){alert ("No id entered");}
+    else {
+    new_edit_win("/scripts/news_item_edit.php?id=" + id );
+    }
+}
+</script>
+EOF;
+
+	echo $page->startBody();
+}
+	
+//END START
 
 
 
@@ -93,26 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 ?>
 
-<html><head><title>Article List</title>
- <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link rel='stylesheet' href='/css/flames2.css'>
-<style type='text/css'>
-tr td {padding-right:4px;}
-</style>
-<script type='text/javascript' src = '/js/f2js.js'></script>
 
-<script type='text/javascript'>
-function show_this_id(id){
-    if (!id){alert ("No id entered");}
-    else {
-    new_edit_win("/scripts/news_item_edit.php?id=" + id );
-    }
-}
-</script>
 
-</head>
 
-<body >
 
 
 <div style="width:150px;float:left;position: fixed">
@@ -157,10 +166,15 @@ if (array_key_exists('mode',$_GET)){$mode = $_GET['mode'];}
 if (!$mode) {$mode='u';}
 
 if ($mode=='u'){
-    $sql= "SELECT * from news_items n
+    $sql= "SELECT n.id,url,title,status,type,use_me,take_votes,take_comments, ed_comment,
+    contributor,contributor_id,source, asset_id ,image_data,content,link_title
+    	FROM news_items n
     	INNER JOIN news_topics t 
        	ON n.type = t.topic
-       	WHERE status NOT in( 'P','T') ORDER BY n.use_me DESC, t.section;";
+       INNER JOIN news_sections s
+       ON s.section = t.section
+       
+       	WHERE n.status NOT in( 'P','T') ORDER BY n.use_me DESC, s.section_sequence;";
        	
    echo "<h3>Unpublished Articles</h3>\n";
 }
@@ -182,7 +196,7 @@ $pdo = MyPDO::instance();
 $result=$pdo->query($sql);
 $last_scheduled = '';
 while ($row = $result->fetch()){
-   # recho($row);
+   # u\echoR($row);
     $image=$image_link=$image_thumb_link='';
     $id = $row['id'];
     $link = 'No Link';
@@ -243,15 +257,15 @@ EOT;
     <tr>
     <td>
     <input type='hidden' name='idlist[]' value='$id'>
-    <input type='button' value="Edit" onclick="ewin=window.open('/scripts/news_item_edit.php?id=$id','itemedit','height=1040,width=640,scrollbars');return false;"></td>
+    <input type='button' value="Edit #$id" onclick="ewin=window.open('/scripts/news_item_edit.php?id=$id','itemedit','height=1040,width=640,scrollbars');return false;"></td>
     <td><input type='checkbox' name='use_me[]' value='$id' $uchk> Use Me
      <input type='checkbox' name='priority[]' value='$id' $pchk > Use at Top
     <input type='checkbox' name='tc_list[]' value='$id' $cchk > Take comments 
-   <input type='checkbox' name='tv_list[]' value='$id' $vchk > Take votes 
+   <input type='checkbox' name='tv_list[]' value='$id' $vchk > Take votes <br>
    <input type='checkbox' name='d_list[]' value='$id' > Delete
     
     </td>
-    <td>id: $id</td>
+    <td></td>
     </tr>
 EOT;
 

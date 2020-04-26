@@ -24,7 +24,7 @@ ini_set('display_errors', 1);
 	echo $page -> startHead($page_options);
 	echo $page -> startBody();
 
-	$dev_update_button = f\actionButton('Restore Dev','restore',0,'','Done');
+	$dev_update_button = f\actionButton('Restore Dev','restore',0,'','resp');
 	
 //END START
 
@@ -43,9 +43,9 @@ if (isset($_POST['search'])){
 	
 	$data = [
 		'mdata' => $mdata,
-		'info' => 'Found ' . count ($mdata)
+		'info' => count ($mdata) ?? 0
 	];
-
+	
 	echo $templates->render('user_admin_list',$data);
 
 }
@@ -79,5 +79,6 @@ elseif ($uid = $_GET['uid'] ?? '' ){
 echo $admin->showSearch();
 echo '<hr>';
 echo $dev_update_button;
+echo "<p><a href='bulk_bounce.php' target='bouncer'>Bulk Bounce</a></p>";
 
 

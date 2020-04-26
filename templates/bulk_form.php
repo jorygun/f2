@@ -14,7 +14,8 @@ echo <<<EOT
 <li>::teaser::  Combination of highlights from current newsletter
 </ul></td><td><ul>
 <li>::pointer:: URL specified below
-<li>::verify:: URL to verify email
+<li>::vlink:: URL to verify email
+<li>::verify:: Message and vlink if profile is old
 <li>::uemail:: User's email address
 <li>::no_bulk:: Notice to users not subscribing to weekly email
 <li> [image nnn] replaced by image link to thumb file nnn.jpg

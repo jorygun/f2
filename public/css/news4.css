@@ -1,4 +1,7 @@
-body, .normal {padding:6px;
+@import '/css/amd.css';
+
+body  {
+	
 	font-family: "New Times Roman",Times,serif;
 	font-size: 1em; color: black;
 	max-width:1200px;
@@ -10,7 +13,14 @@ body, .normal {padding:6px;
 	margin-left:1em;
 	margin-right:1em;
 	}
-
+ .normal {
+	font-family: "New Times Roman",Times,serif;
+	font-size: 1em; 
+	color: black;
+	color:black;
+	font-style: normal;
+	font-weight: normal;
+	}
 
 p {margin-top: 1em;
 	font-style: normal; font-size: 1em;
@@ -168,11 +178,6 @@ div.toon {
 	text-align:center;
 }
 
-.story_comment_box {
-    border:1px solid green;
-    margin-top:1em;
-    padding:4px;
-}
 
 .comment {font-family: arial; font-style: italic; font-size: 0.9em; color: #063; margin-left:1em; margin-right:1em;}
 .toon .comment {text-align:center;}
@@ -220,8 +225,10 @@ div.album {
 }
 .album p{margin-top:3px;margin-bottom:3px;}
 
+
 div.thumb {
-    width:220px;
+/* make thumbs consistent height to floaters line up. */
+    height:290px;
     display:block;
     margin:3px; margin-right:6px; margin-left:0;
     float:left;
@@ -235,6 +242,7 @@ div.thumb {
     font-style:normal;
     font-family:Helvetica,Arial,sanserif;
     margin:3px;
+    max-width:190px;
     }
 .thumb a {text-decoration:none;}
 
@@ -330,61 +338,75 @@ div.article {
 
 	margin-left:1em;
 	border-top:1px solid #360;
-    max-width:1000px;
+    max-width:760px;
 	}
 
 .article .head {
-	margin-left:0;margin-bottom:1em;
+	margin-left:0;
+	margin-bottom:1em;
 }
 
-.article .type {
-	
-	font-style:italic;
+.article .type{
+	font-style:normal;
 	text-decoration: underline;
+	margin-bottom:3px;
 	}
 
 .article .headline {
 	font: bold 1em arial,serif;
+	margin-top:3px;
+	margin-left:1em;
 }
 
-.contributor {
-    display:block;
+article .contributor {
 	text-align:right;
 	font-style:italic;
 	font-size:0.8em;
 	}
 
-.article   .date {
+.article .date {
 	font-weight:normal;
 	font-style:italic;
 	padding-left:1em;
 
 	}
 
-.content {
-	font-style:normal;
+.article .content, .article .body {
+	font-weight:normal;
 	margin-right:2em;
-
-
-	}
-
-.article .body {
-	margin-left:1em;
-	float:left;
 	max-width:720px;
+	padding-left:3em;
 	width:100%;
 
 }
+
+.article .content .subhead {
+	font-weight:bold;
+	text-decoration:underline;
+	margin-bottom:0;
+}
+.article .content .subarticle {
+	margin-left:1em;
+}
+.article  .attribution {
+
+}
+.article .story_comment_box {
+    border:1px solid green;
+    margin-top:1em;
+    padding:4px;
+}
+
 /* amd news styles */
 
-    .article.body.p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.3px Arial; -webkit-text-stroke: #000000}
-    .article.body.li.li1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.3px Arial; -webkit-text-stroke: #000000}
-    .article.body.span.s1 {font-kerning: none}
-    .article.body.span.s2 {text-decoration: underline ; font-kerning: none; color: #0b4cb4; -webkit-text-stroke: 0px #0b4cb4}
-    .article.body.span.s3 {color: #0b4cb4}
-    .article.body.span.s4 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #0b4cb4}
-    .article.body.span.s5 {font: 7.4px Arial; font-kerning: none}
-    .article.body.ul.ul1 {list-style-type: disc}
+    .article.content.p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.3px Arial; -webkit-text-stroke: #000000}
+    .article.content.li.li1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.3px Arial; -webkit-text-stroke: #000000}
+    .article.content.span.s1 {font-kerning: none}
+    .article.content.span.s2 {text-decoration: underline ; font-kerning: none; color: #0b4cb4; -webkit-text-stroke: 0px #0b4cb4}
+    .article.content.span.s3 {color: #0b4cb4}
+    .article.content.span.s4 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #0b4cb4}
+    .article.content.span.s5 {font: 7.4px Arial; font-kerning: none}
+    .article.content.ul.ul1 {list-style-type: disc}
 /* end amd styles */
 
 .more {
@@ -436,3 +458,5 @@ div#in_bulk_queue ul li.error {color:red;}
 div#in_bulk_queue ul li.queued {color:green;}
 div#in_bulk_queue ul li.cancelled{color:blue;}
 div#in_bulk_queue ul li.running {color:orange;}
+
+

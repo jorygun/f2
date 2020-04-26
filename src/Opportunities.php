@@ -23,7 +23,7 @@ class Opportunities
 		$this->level = ($level > 0) ? $level : $_SESSION['level'] ?? 0;
 		$this->opp_list = $this->getOppList();
 		 $this->opp_count = count($this->opp_list);
-		# echo $this->opp_count . " Opps retrieved" . BRNL;
+		# echo $this->opp_count . " Opps retrieved" . BRNL; exit;
 	}
 	
 			
@@ -34,6 +34,7 @@ class Opportunities
 					active = 1 and expired > NOW();";
 
 		 $opp_table = $this->pdo -> query($sql) -> fetchAll(\PDO::FETCH_ASSOC);
+		 #u\echor($opp_table); exit;
 		 return $opp_table;
 
 	}

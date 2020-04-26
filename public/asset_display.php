@@ -13,7 +13,7 @@ namespace digitalmx\flames;
 	$page_options = ['ajax'];
 	
 	
-    $login->checkLogin(3); 
+    $login->checkLogin(1); 
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 
@@ -192,14 +192,16 @@ EOT;
  elseif ($type == 'Web Page' || $type == 'Document' ){
 
     $asset_display= <<<EOT
-    <iframe src='$url_enc' id='iframe1'   onLoad='autoResize(this);'>
+    <iframe src='$url_enc' id='iframe1' 
+    onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));' style="height:800px;width:100%;border:none;">
+    
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
      </iframe>
 EOT;
      }
 
-     elseif (strpos($mimetype,'image') !== false){
+elseif (strpos($mimetype,'image') !== false){
         $asset_display =  "<img src = '$url' style='max-width:1024px;'>";
     }
     elseif ( $type == 'Image' || $type == 'Cartoon'){

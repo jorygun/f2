@@ -27,6 +27,7 @@ $accepted_mime =
             'gif' => 'image/gif',
             'pdf' => 'application/pdf',
             'mp4' => 'video/mp4',
+            'm4v' => 'video/mp4',
             'mov' => 'video/quicktime',
             'mp3' => 'audio/mpeg',
             'm4a' => 'audio/mp4',
@@ -138,9 +139,21 @@ function get_archival_tag_list ()  {
 function get_asset_by_id($id,$style='thumb'){
     if (empty($id)){return array ();}
     $pdo = MyPDO::instance();
-    $sql = "SELECT * from `assets` WHERE id = $id";
+    try {
+    	$sql = "SELECT * from `assets` WHERE id = $id";
+    	if (!$row = $pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){
+    		$sql = "SELECT * from `assets2` WHERE id = $id";
+    		if (!$row = $pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){
+    			throw new Exception("Cannot find asset $id");
+    		}
+    	}
+    } catch (Exception $e){
+    	echo $e->getMessage(); exit;
+    }
+    	
+    
     $row = $pdo->query($sql)->fetch(\PDO::FETCH_ASSOC);
-    #recho($row);
+    #u\echor($row);
 
 
     $id = $row['id'];
@@ -155,14 +168,14 @@ function get_asset_by_id($id,$style='thumb'){
 
    $source_line = '';
     if (! empty($row['source'])) {$source_line = $row['source'];}
-    if ($row['source'] != $row['contributor']
+    if (!empty($row['contributor']) 
         && strncasecmp($row['contributor'], 'Flames',6) != 0
         ){
         $source_line .= ' via ';
         $source_line .= " ${row['contributor']} ";
     }
 
-    if (empty($source_line)){ $source_line = "unattributed ";}
+    if (empty($source_line)){ $source_line = "unattributed (*) ";}
     if (! empty ($row['vintage'] )) {
        $source_line .=  " (${row['vintage']})";
     }
@@ -748,7 +761,7 @@ function update_asset($post_array){
 	if (empty($post_array['sizekb'] )){$post_array['sizekb'] = (int)0;}
 	if (empty($post_array['width'] )){$post_array['width'] = (int)0;}
 	if (empty($post_array['height'] )){$post_array['height'] = (int)0;}
-
+	if (empty($post_array['first_use_date'] )){unset ($post_array['first_use_date']);}
     #if contributor id not set, look up from name.
     if (empty($post_array['contributor_id'])){
     echo "Getting contributor id for ${post_array['contributor']}" . BRNL;

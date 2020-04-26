@@ -21,8 +21,44 @@ class Definitions {
 		#days since update; warning on login and bulk email
 	public static $inactivity_limit = 365; 
 		#days since last activity; triggers lost test
+
+	public static $asset_status = array(
+    'R' => 'Reviewed-R',
+    'S' => 'S',
+    'U' => 'Updated: re-review',
+    'T' => 'temp holding',
+    'E' => 'Has Error',
+    'X' => 'Deleted',
+    'N' => 'New',
+
+
+);
 	
+	 public static $thumb_width = array(
+						 'thumbs' => 200,
+						 'galleries' => 330,
+						 'toons' => 800
+						 );
 	
+	private static $accepted_mime_types = array(
+					'jpg' => 'image/jpeg',
+					'jpeg' => 'image/jpeg',
+					'png' => 'image/png',
+					'gif' => 'image/gif',
+					'pdf' => 'application/pdf',
+					'mp4' => 'video/mp4',
+					'mov' => 'video/quicktime',
+					'mp3' => 'audio/mpeg',
+					'm4a' => 'audio/mp4',
+					'tif' => 'image/tiff',
+					'tiff' => 'image/tiff',
+					'doc' => 'application/msword',
+					'docx' => 'application/msword',
+					'html' => 'text/html'
+
+			  );
+	
+	// tag codes.  * in description means archival
 	public static $asset_tags = array(
     'A' => 'Ad *',
 
@@ -128,7 +164,8 @@ public static $user_aliases = array (
             'es' => 'Elliott Sopkin',
             'jm' => 'John McKean',
             'glen' => 'Glen Balzer',
-            'jeff' => 'Jeff Drobman'
+            'jeff' => 'Jeff Drobman',
+            'amdc' => 'AMD Communications',
 
         );
         
@@ -226,8 +263,12 @@ public static $test = 'you win';
 		return $opt;
 	}
 	public  static function getSecLevel($code='Y'){
-		return self::$member_codes[$code][1] ;
+		if ( $s = self::$member_codes[$code][1] ) {
+			return $s;
+		}
+		return 0;
 	}
+	
 	public static function getMemberInList(){
 		return self::$member_array;
 	}
@@ -236,7 +277,10 @@ public static $test = 'you win';
 		return "'" . implode("','",self::$member_array) . "'";
 	}
 	public  static function  getMemberDescription($code){
-		return self::$member_codes[$code][0];
+		if ($s = self::$member_codes[$code][0] ){
+			return $s;
+		}
+		return "?";
 	}
 	
 	public  static function getMemberAliasList () {
@@ -253,10 +297,19 @@ public static $test = 'you win';
             return $lookup;
         }
     }
-    return alias;
+    return $alias;
  }
 
-
+	public static function getArchivalTagList()  {
+		// returns an sql formatted list of aarchival tags for "in ( ) statement: 'A','B' etc.
+		$archival_tags = [];
+		foreach (self::$asset_tags as $tag=>$label){
+			if (strpos($label,'*') !== false){
+				$archive_tags[] = "'$tag'";
+			}
+		}
+		return join(',',$archive_tags);
+	}
 		
 	public static function getAssetArchivalTags() {
 		return self::$archival_tags;
@@ -266,6 +319,17 @@ public static $test = 'you win';
 		return self::$asset_tags;
 	}
 	
+	public static function getThumbTypes() {
+		return array_keys(self::$thumb_width);
+	}
+	
+	public static function getAcceptedMime() {
+		return array_values(self::$accepted_mime_types);
+	}
+	public static function getMimeFromExt($ext) {
+		return self::$accepted_mime_types[$ext] ?? '';
+	}
+
 }
 
 

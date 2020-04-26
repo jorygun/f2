@@ -16,6 +16,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 use digitalmx as u;
 use digitalmx\flames as f;
 use digitalmx\flames\Member;
+use digitalmx\flames\MemberAdmin;
 use digitalmx\flames\Messenger;
 use digitalmx\flames\DocPage;
 #use digitalmx\flames\ActionCodes;
@@ -72,7 +73,8 @@ if (!empty($_SERVER['QUERY_STRING'])) {
  	switch ($action) {
  		case 'V':
  			if ($r = verifyEmail($uid, $member)) {
-				echo "Email Validated $r";
+ 				list($username,$uid,$uem) = $member->getMemberBasic($uid);
+				echo "$username, thanks for verifying your email.";
 			}
 			else {echo "Failed";}
  			break;
@@ -157,6 +159,10 @@ if (! empty ($_POST)) {
 	  	case 'publish':
 	  		echo  $publish->publishNews();
 	  		break;
+	  	case 'restore':
+	  		echo restore_dev();
+	  		break;
+	  		
 		default:
 			echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true);
 	}
@@ -256,7 +262,7 @@ function initNext()
         mkdir($nextnews_dir);
         copy("$news_dir/model-index.php", "$nextnews_dir/index.php");
     } catch (Exception $e) {
-        return "Error: "  . $e-getMessage();
+        return "Error: "  . $e->getMessage();
     }
     return "Done.";
 }
@@ -265,7 +271,9 @@ function vote_action($post)
    //post interesting/not interesting votes
     require_once 'Voting.php';
     $voting = new Voting();
-    $user_id = $_SESSION['login']['user_id'];
+    $user_id = $_SESSION['login']['user_id'] ?? '';
+    if (empty($user_id)){return  "You are not logged in";}
+    
     if (empty($item_id = $post['item_id'])) {
         return "request to post vote without item id";
     }
@@ -330,11 +338,14 @@ function setNewsTitle($title)
 
 function verifyEmail($uid, $member)
 {
-	$ems = $member->getEmailStatus($uid);
+
 	// if (substr($ems,0,1) == 'L'){
 // 		 $messenger = new Messenger(); #true = test
 // 		 $messenger->sendMessages($uid,'not-lost');
 // 		}
+	$ma = new MemberAdmin();
+	$r = $ma->validate_email_with_notice($uid);
+	
   return "Verified " . $member->verifyEmail($uid) ;
 }
 
@@ -367,4 +378,10 @@ function bounceEmail($uid, $member)
     } else {
         return false;
     }
+}
+
+function restore_dev()
+{
+	#restore dev db from last production db
+	return system(REPO_PATH . '/crons/restore_dev.sh');
 }

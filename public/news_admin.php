@@ -44,7 +44,7 @@ if ($login->checkLogin(4)){
 		echo "Could not get last status run date. Setting to one week ago." . BRNL;
 		$dt -> modify (" - 7 days");
 	}
-    $ptime = $dt->format('M j H:i T');
+    $ptime = $dt->format('M j Y H:i T');
 
 //get current title, if any
 

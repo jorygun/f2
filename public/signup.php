@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 <?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
    // check data
-   if ($_SERVER['SERVER_NAME'] != 'amdflames.org') {exit;}
+   if (strpos($_SERVER['SERVER_NAME'], 'amdflames.org') === false) {exit;}
    #fail silently; stops access by ip.
 
       $err = '';
@@ -92,6 +92,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 		}
 		if (strpos(trim($_POST['name']),' ') === false){
 		   $err .= "<li> You must enter first and last name";
+		}
+		$test_string = $_POST['name'] . ' ' . $_POST['location'] . ' ' . $_POST['affiliation'] . ' ' . $_POST['comment'];
+		#echo "testing $test_string" . BRNL;
+
+		if (!$err && strpos($test_string,'http') !== false){
+			$err .= "<li>Invalid data";
+		}
+		if (!$err && strpos($test_string,' money ') !== false){
+			$err .= "<li>Invalid data";
+		}
+		if (!$err && strpos($test_string,' sexy ') !== false){
+			$err .= "<li>Invalid data";
+		}
+		if (!$err && strpos($test_string,' girls ') !== false){
+			$err .= "<li>Invalid data";
 		}
 		if (!empty($err)){
 		   echo "<p class='red'>There were errors on your input.</p>";

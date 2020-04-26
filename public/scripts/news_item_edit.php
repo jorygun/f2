@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     $member = new Member();
         $c = $member->getMemberId($itemdata['contributor']);
         if (!$c){ #user not found
-			echo "Error: contributor ${itemdata['contributor']} is not a flames member";
+			echo "Error: contributor ${itemdata['contributor']} not found.";
 			echo "<button type=button onClick = 'window.history.back();'>Back</button>";
 			
            	exit;
@@ -344,11 +344,6 @@ EOT;
 
  
 }
-
-
-
-
-
 #print_r ($itemdata);
 
 #escape quotes etc as needed

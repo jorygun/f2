@@ -26,6 +26,8 @@ class StatusReport {
 
 	private $namelist = array();
 	private $lostlist = array();
+	private $sadlist = array();
+	
 	private $member;
 
 	private static 	$type_titles = array(
@@ -48,15 +50,26 @@ class StatusReport {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
-		$this->since = $since; #is UTC timestamp
+		$this->since = (string)$since; #is UTC timestamp
 		$this->test = $test;
 		
 		$this->member = new Member();
+		$this->member_admin = new MemberAdmin();
 		
-		$report = $this->createReport($since);
+		$report = $this->createReport($this->since);
 		file_put_contents(FileDefs::status_report,$report);
+		
+		$profile_report = $this->report_profiles($this->since);
+		$directory = SITE_PATH . '/news/next';
+		$section = "profile_updates.html";
+		file_put_contents("$directory/$section",$profile_report);
+		
 		$name_report  = $this->createNameReport();
 		file_put_contents(FileDefs::status_tease,$name_report);
+		
+		
+		
+		
 		
 		#echo "Saving run time to " . FileDefs::rtime_file . BRNL;
 		file_put_contents(FileDefs::rtime_file,time());
@@ -68,7 +81,8 @@ class StatusReport {
 	private function createReport ($since) {
 		$report = "<div class='inner'><p>Member Status Report " . date('d M Y') . "<br />";
 		$report .= "Changes since $since.</p>";
-    
+    	$since = (string)$since;
+    	
 		$report .= $this->report_members();
    $test = true;
 		$list= $this->member->getNewMembers($since,$this->test);
@@ -78,9 +92,10 @@ class StatusReport {
 #    u\echor ($list, 'email updates');
 		$report .= $this->report_changes($list,'email');
 
-		$list = $this->member->getUpdatedProfiles($since,$this->test);
+#		$list = $this->member->getUpdatedProfiles($since,$this->test);
 #    u\echor ($list, 'email updates');
-		$report .= $this->report_changes($list,'profile');
+#		$report .= $this->report_changes($list,'profile');
+
 		
 		$list = $this->member->getDeceased($since,$this->test);
 		$report .= $this->report_changes($list,'deceased');
@@ -99,6 +114,63 @@ class StatusReport {
  return "<h3>Membership</h3><p>Active Members: ${counts['active']}, plus ${counts['lost']} lost contact. 
     Total ${counts['total']}. </p>";
     }
+    
+    
+    private function report_profiles ($since) {
+    	/* builds a story file from updated profiles */
+    	// get list of user_ids of updated profiles
+    	$list = $this->member->getUpdatedProfiles($since,$this->test);
+    	$count = count($list);
+    	echo "$count profile updates" . BRNL;
+    	if (empty ($list)){return;}
+    	list ($titletext,$subtitle) = explode ('|',self::$type_titles['profile']);
+    	
+    	// now create a story fle to drop into newx/next
+    	$story = "";
+    	
+    	foreach ($list as $profile){
+    		$row = $this->member_admin->getProfileData($profile['user_id']);
+    		$story.= <<<EOT
+    <div class='article'>
+		<div class='head'>
+		<p class='headline'>${row['username']} <span class='normal'>${row['email_public']} ${row['hidden_emailer']} </span><br>
+		<span class='normal'> ${row['user_current']} ... in ${row['user_from']}
+EOT;
+			if (! empty ($row['user_greet'])){
+			$story .= "<br /><i>${row['user_greet']}</i>";
+		}
+			$story .= "</span></p>\n";
+		
+		$story .= "
+		</div>
+		<div class='content'>
+		";
+
+		if (! empty ($row['user_about'])) {
+			$story .= "<p class='subhead'>About:</p>
+				<div class='subarticle'>${row['user_about']}</div>";
+		}
+		if (! empty ($row['user_interests']) ){
+			$story .= "<p class='subhead'>Interests:</p> 
+			<div class='subarticle'>${row['user_interests']}</div>";
+		}
+		if (! empty ($row['user_memories']) ){
+			$story .= "<p class='subhead'>Memories:</p> 
+			<div class='subarticle'>${row['user_memories']}</div>";
+		}
+		$story .= <<<EOT
+	</div></div>
+	
+	</div>
+EOT;
+	$this->namelist[] = $row['username'];
+		}
+		
+		return $story;
+		
+		
+    }
+    
     
 	private function report_changes ($result,$type){
 	 // print info on updated users, given query result and type of report
@@ -144,7 +216,7 @@ class StatusReport {
 						case 'deceased':
 							$note = $current;
 							$contact = '';
-							$this->namelist[] = $name;
+							$this->sadlist[] = $name;
 							break;
 						case 'new':
 							$note = $greeting;
@@ -170,7 +242,7 @@ class StatusReport {
 						 $report .= <<<EOT
 						 <tr class='brow'>
 							  <td class='username'><a href= '/profile.php?uid=$id' target = '_blank'>$name</a></td>
-							  <td >$location,</td>
+							  <td >$location</td>
 							  <td>$contact</td></tr>
 EOT;
 
@@ -220,12 +292,32 @@ EOT;
 			$name_report = rtrim(rtrim($name_report),',') . "\n\n";
 		}
 		
+		$list = array_unique($this->sadlist);
+		if (!empty($list)) {
+			sort($list);
+			$name_count = 0;
+			$last_name = '';
+			$name_report .= "Sad News
+----------------------------
+    ";
+			foreach ($list as $name){
+					$name_report .= $name;
+					++$name_count;
+						 #line break every 4 names
+					if ($name_count%4){$name_report .= ", ";}
+						else {$name_report .= "\n    ";}
+			}
+			$name_report = rtrim(rtrim($name_report),',') . "\n\n";
+		}
+		
 		$list = array_unique($this->lostlist);
 		if (!empty($list)) {
 			sort($list);
 			$name_count = 0;
 			$last_name = '';
 			$name_report .= "We've Lost Contact with These AMD Alumni:
+(If you know how to contact them, please let me know by replying
+to this email)
 ----------------------------
     ";
 			foreach ($list as $name){
