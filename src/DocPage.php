@@ -44,6 +44,7 @@ class DocPage {
 EOT;
       if (!empty($options) && in_array('tiny',$options)){
          $t .= "
+          <script src='https://cdn.tiny.cloud/1/5rh2pclin81y4q8k7r0ddqfz2gcow6nvxqk1yxv4zci54rpx/tinymce/5/tinymce.min.js'</script>
          <script src='/jsmx/tinymce/tinymce.min.js'></script>
          <script src='/js/tiny_init.js'></script>
          ";
