@@ -176,11 +176,7 @@ class AssetAdmin
 		return $needs;
 	}
 	
-	public_function searchAssets() {
 	
-	
-
-	}
 	
 	public function getAssetLinked($id) {
 	/* returns the asset thumbnail, linked to the asset source */
@@ -333,378 +329,49 @@ EOF;
 						return false;
 					}
 	 }
-}
+
 /***********************************************************
 	
-	private function get_asset_by_id($id,$style='thumb'){
-		 if (empty($id)){return array ();}
+if(empty( $sqls = process_asset_search($post))){
+        die ("Error processing form data. No search criteria.");
+    }
+    if (!empty($_GET['get_next'])){$asset_limit = 5;}
+	
+    $sql = "SELECT id FROM assets WHERE $sqls ORDER BY id LIMIT $asset_limit;";
+    echo "<div style='border:1px solid gray;'> $sql</div><br>";
+    echo "<p>Selected Assets are shown below.</p>";
+    #$stmt = $pdo -> query($sql);
+    $id_list = $pdo -> query($sql) ->fetchAll(\PDO::FETCH_COLUMN);
+    $id_count = sizeof ($id_list);
+    if ($id_count >= $asset_limit){
+       $last_id = $id_list[$asset_limit - 1];
+        ++ $last_id ;
 
-		 $sql = "SELECT * from `assets` WHERE id = $id";
-		 $row = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC);
-
-
-		 $id = $row['id'];
-		 $type = $row['type'];
-		 $url = $row['url'];
-		 $status = $row['status'];
-		 $link = $row['link'];
-		 $target = (empty($row['link'])) ? $row['url'] : $row['link'];
-		 $caption =  make_links(nl2br($row['caption']));
-		 if (empty($caption)){$caption = $row['title'];}
-
+        echo "<p class='red'>Showing first $asset_limit of $id_count results.  To get more,
+        repeat search using id = '$last_id - '.</p>";
+        }
      
-			$source_line = $this->buildSourceLine($row);
-	
-	function buildSourceLine($row){
-		 $source_line = $row['source']  ?? '';
-		// if ($c = $row['contributor'] ?? '') {
-// 			if (substr($c,0,6) !== 'Flames'
-// 			&& 
-// 				
-// 		if
-		 if ($row['source'] != $row['contributor']
-			  && strncasecmp($row['contributor'], 'Flames',6) != 0
-			  ){
-			  $source_line .= ' via ';
-			  $source_line .= " ${row['contributor']} ";
-		 }
+       
+    
 
-		 if (empty($source_line)){ $source_line = "unattributed ";}
-		 if (! empty ($row['vintage'] )) {
-			 $source_line .=  " (${row['vintage']})";
-		 }
-		return $source_line;
-	}
-
-
-		 $title_line = spchar($row['title']);
-		$caption_line = spchar($row['caption']);
-		 $click_line = (!empty($target))? "<p class='small centered'> (Click image for link.)</p>":'';
-
-		  $thumb_url = "/assets/thumbs/${row['thumb_file']}";
-		if ( empty($row['thumb_file']) or !file_exists(SITE_PATH . "/$thumb_url") ){ 
-			#try to make thumb from source
-			
-				return "Attempt to link id $id to asset with no thumb: $thumb_url"; 
-			
-			}
-		
-
-		 switch ($style){
-
-		 case '':
-		 case 'thumb':
-			  $out = "<div class='thumb'>";
-			 
-			  elseif (substr($target,0,1) == '/' ) {#on site
-					if (strpos($target,'/galleries') !== false){
-						 $href = $target;
-					}
-					else { $href=  "/asset_display.php?$id' target='asset' decoration='none'";
-					}
-			  }
-			  else {$href = "$target";}
-
-			  $out .= "
-					<a href='$href' target='asset' decoration='none'>
-					 <p class='caption'>$title_line</p>
-					<img src='$thumb_url'></a>
-					<p class='caption'>$caption_line</p>
-			  
-					$click_line
-			  ";
-
-			  $out .= "</div>";
-			  break;
-		case 'photo':
-			$out = "<div>";
-			$out .= "<img src='$thumb_url>
-				<p class='caption'>$caption_line</p>
-				";
-		 case 'link':
-			  $out = "<a href='$target' target='_blank'>$title_line</a>";
-			  break;
-
-		case 'album':
-			  $out =  "<div class='album'>";
-
-			  $gfile = choose_graphic_url('/assets/galleries',$id);
-
-			  if (empty($gfile) && file_exists(SITE_PATH . "/$thumb_url")  ) {
-					$gfile = $thumb_url;
-			  }
-
-			  if (! empty ($gfile)){
-					$out .= "
-					<a href='/asset_display.php?$id' target='asset' decoration='none'>
-					<img src='$gfile' ></a>
-					<p class='caption'>$caption</p>
-				  <p class='source'>$source_line</p>
-					<p class='clear'>[$id]</p>
-			  ";
-			  }
-			  else  {$out .= "(No gallery image for id $id)";}
-			  $out .= "</div>";
-			  break;
-
-		 case 'toon':
-			  $gfile='';
-				$gfile = choose_graphic_url('/assets/toons',$id);
-			 if (empty ($gfile) ){
-					$gfile = $row['url'];
-			  }
-
-
-			 if ( ! empty($gfile)) {$out = "
-					<img src='$gfile' width='800'>
-					";
-
-			  }
-			  else {$out = "(No toon image for id $id)";}
-			  $out .= "<p class='center'><b>"
-			  .$row['title'] . "</b>";
-			  if ($row['title'] != $row['caption']){
-					$out .= "<br>" . $row['caption'];
-			  }
-			  $out .= "</p>\n";
-			  $out .= "<p style='text-align:right;font-size:small'>
-			  $source_line •
-			  <a href='$target' target='_blank'>View source file</a></p>";
-			  break;
-
-		 default:
-			  $out = "(prepare image failed;  style  $style not understood)";
-		 }
-
-		 #update the first used if it's blank and not an admin access
-		 $first_date = $row['first_use_date'];
-		 if ((empty($first_date) || $first_date == '0000-00-00') && $_SESSION['level']<5){
-
-			  $out  .= set_first_use($id);
-		 }
-
-		 return $out;
-	}
-
-	private function set_asset_skip_time ($id){
-		
-		 $sql = "Update `assets` set skip_ts = NOW() where id=$id;";
-		 $this->pdo->query($sql);
-	}
-
-
-
-
-	private function next_asset_id( $id,$id_list = [] ){
-		 #get next valid id in sequence from database or next from id_list
-		 if (!empty($id_list)){
-			$akey = array_search($id,$id_list);
-			$nkey = $akey+1;
-			#echo "getting next list item $nkey" . BRNL;
-			if (($next_id = $id_list[$nkey]) === false){
-				echo "No Additional Ids in List";
-				return false;
-			}
-		
-		 }
-	 
-		 else {
-		
-			$sql = "SELECT id FROM `assets` WHERE id > $id  AND status != 'D' ORDER by id LIMIT 1;";
-			if (! $next_id = $this->pdo->query($sql)->fetchColumn()){
-				echo "No ids above $id in database";
-				return false;
-			}
-		}
-		 return $next_id;
-	}
-
-
-<<<<<<< HEAD
-	private function autoRotateImage($image) { 
-		 $orientation = $image->getImageOrientation(); 
-
-		 switch($orientation) { 
-			  case imagick::ORIENTATION_BOTTOMRIGHT: 
-					$image->rotateimage("#000", 180); // rotate 180 degrees 
-			  break; 
-
-			  case imagick::ORIENTATION_RIGHTTOP: 
-					$image->rotateimage("#000", 90); // rotate 90 degrees CW 
-			  break; 
-
-			  case imagick::ORIENTATION_LEFTBOTTOM: 
-					$image->rotateimage("#000", -90); // rotate 90 degrees CCW 
-			  break; 
-		 } 
-
-		 // Now that it's auto-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image! 
-		 $image->setImageOrientation(imagick::ORIENTATION_TOPLEFT); 
-	} 
-
-	private function get_gfile($filepath) {
-		 #looks for designated file and returns its full path
-		 # if not found looks for either jpg or png or gif with same name
-
-		 $path = SITE_PATH . $filepath;
-		# ,);
-		 if (file_exists($path)){return $path;}
-		 else {
-			  $ext = pathinfo($path,PATHINFO_EXTENSION);
-			  $dir = pathinfo($path,PATHINFO_DIRNAME);
-			  #drop extension
-			  preg_match('/(^.*?)\.\w+$/',$path,$m);
-			  $path2 = $m[1];
-			  foreach (['jpg','png','gif'] as $ex){
-					if ($ex == $ext){continue;}
-					$tfile = $path2 . ".$ex";
-					if (file_exists($tfile)){return $tfile;}
-			  }
-		 }
-	}
-
-=======
-
-	
-
-
-	
->>>>>>> master
-
-	private function delete_asset($id){
-		 #mark an item as deleted.
-		 # if already marked as deleted, then delete assetse,
-		
-
-		$sql = "select * from assets where id = '$id';";
-		 if (! $row = $this->pdo->query($sql)->fetch()){
-			  echo "No asset found at id $id";
-			  return;
-		 }
-		 if ($row['status'] != 'D'){ #fresh delete
-			  $sql = "UPDATE `assets` set status = 'D' where id = $id";
-			  $this->pdo->query($sql);
-			  echo "Asset Marked Deleted (D)" . BRNL;
-		 }
-	}
-	private function delete_files($id){
-		
-		echo "Deleting files associated with id $id". BRNL;
-		$sql = "select * from assets where id = '$id';";
-		 if (! $row = $this->pdo->query($sql)->fetch()){
-			  echo "No asset found at id $id";
-			  exit;
-		 }
-
-	
-		 $unlink_list = []; #build list of affected files
-		 if ($row['type'] == 'Album'){echo "Cannot use this on Albums"; exit;}
-		 if (!empty($row['first_use_in'])){
-			  echo "Cannot delete asset that has been used.  In {$row['first_use_in']} on {$row['first_use_date ']}";
-			  exit;
-		 }
-
-		$thumb = $row['thumb_file'] ;
-
-		 if (!empty($thumb)){
-			if (! preg_match('/$id\.[jpg|png]/',$thumb))
-				 {echo "Cannot delete thumb $thumb" . BRNL;}
-			else {
-				$file = SITE_PATH . "/assets/thumbs/$thumb";
-				if (file_exists($file)){
-					$unlink_list['thumb'] = $file;
-				}
-			}
-		 }
-
-		 if (!empty($file = get_gfile("/assets/toons/$id.png"))){
-					$unlink_list['toon'] = $file;
-		 }
-
-		 if (!empty($file = get_gfile("/assets/galleries/$id.png"))){
-					$unlink_list['galleries'] = $file;
-		 }
-
-		 $url = $row['url'];
-		 if (substr($url,0,1) == '/'){
-			  $file = SITE_PATH . "$url";
-			  if (file_exists($file)){
-					$unlink_list['source'] = $file;
-			  }
-		 }
-		 $link = $row['link'];
-		 if (substr($link,0,1) == '/'){
-			  $file = SITE_PATH . "$link";
-			  if (file_exists($file)){
-					$unlink_list['link'] = $file;
-			  }
-		 }
-
-		 #show results and ask for confirmation
-		 echo "The following files will be deleted from the server:" . BRNL;
-		 foreach ($unlink_list as $t => $f){
-			  echo "$t: $f" . BRNL;
-		 }
-		 $unlinkjson = json_encode ($unlink_list);
-		 echo <<<EOT
-
-		 <form method='post'>
-		 To confirm, press Confirm:
-		 <input type='hidden' name='unlinkjson' value='$unlinkjson'>
-		 <input type='hidden' name='id' value='$id'>
-		 <input type='submit' name='delete' value='Confirm Delete'>
-		 </form>
+    if (count($id_list) == 0){echo "<p style='color:red;font-weight:bold;'>Nothing found.</p>";}
+    else {
+    	$_SESSION['asset_search_ids'] = $id_list;
+    	#save the list in the session file so it can be used repeatedly
+    	
+    	$id_list_string = implode(',',$id_list);
+    	echo <<<EOT
+    	<form action = '/scripts/asset_edit.php' method='post' target='asset_edit' onsubmit = "window.open('','asset_edit');" >
+    	 $id_count results. 
+    	<input type=hidden name='id_list_string' value='$id_list_string'>
+    	<input type='submit' name='submit'  value='Edit All Found' >
+    	<input type='submit' name='submit' value = 'Review All' >
+    	
+    	</form>
 EOT;
-		 exit;
-	}
-	
-	
-	private function delete_confirmed($id,$unlink_list,$doit='true') {
-		$doitmsg =  ($doit)?'':'NOT';
-	
-		 echo "Deleting files for id $id" .BRNL;
-
-		 foreach($unlink_list as $t=>$f){
-			  echo "Deleting $t file $f $doitmsg" . BRNL;
-			 if ($doit){ unlink ($f);}
-		 }
-
-		 echo "Updating asset record to status 'x' $doitmsg".BRNL;
-		 $sql = "Update `assets` set status = 'X' WHERE id = $id;";
-		 if ($doit){$this->pdo->query($sql);}
-		 exit;
-	}
-
-
-	
-
-	
-
-
-
-	
-<<<<<<< HEAD
-		if ($post_array['status'] == 'T'){$post_array['status'] = 'N';}
-		# else { $post_array['status'] = $itemdata['status'];}
-
-	#recho ($post_array,'Post array ');
-			update_asset($post_array);
-
-		 return $id;
-
-	}
-
-
-
-
-
-
-	private function check_file_uploads ($upload_name){
-		// checks for upload errors, file exits,
-		// returns the original name of the file.
-=======
->>>>>>> master
-	
+    	echo show_assets_from_list($id_list);
+       
+    }
 
 */
-
+}

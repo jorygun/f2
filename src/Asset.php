@@ -202,17 +202,14 @@ class Asset {
 		}
 		
 		
-		if (! is_integer ($adata['vintage'])){
+		if (! is_integer (0 + $adata['vintage'])){ #to cast as numeric
 				throw new Exception ("Vintage is not a valid year");
 		}
 		
 		
-		if (
-			! list ($contributor, $contributor_id ) 
-			= $this->member->getMemberId($adata['contributor']) 
-			|| ! $adata['contributor'] == $contributor 
-			){	
-				throw new Exception ("Mismatch contributor name and id");
+		if (! is_integer (0 + $adata['contributor_id']) 
+			&& $adata['contributor_id'] > 0 ){
+				throw new Exception ("No contributor id");
 		}
 		
 	
@@ -331,7 +328,11 @@ class Asset {
 	
 	}
 		
+	private function searchAssets($as) {
 	
+	
+	
+	}
 	private function getTempSource($id,$tsource) {
 			/* downloads a web url to make a thumb and rturns path.
 				If no download, returns requested source, and a 
@@ -390,6 +391,7 @@ class Asset {
    		$adata['id'] = 0;
    		$adata['date_created'] = date('M d, Y');
    		$adata['first_use'] = 'Never';
+   		$adata['vintage'] = date('Y');
    		return $adata;
    	}
    	$sql = "SELECT a.*, m.username as contributor, m.user_email from `assets2` a
@@ -402,14 +404,22 @@ class Asset {
    	
    	$adata['existing_thumbs'] = $this->getExistingThumbs($id);
    	
-   	if  (!empty($fud = $adata['first_use_date'])) {
+   	
+   	if  (empty($fud = $adata['first_use_date'])) {
+   		list($fud,$fin) = $this->setFirstUse($id);
+   	} else {
+   		$fud = $adata['first_use_date'];
+   		$fin = $adata['first_use_in'];
+   	}
+   	if ($fud){
    		$adata['first_use'] = 
    		"On " . date('d M Y',strtotime($fud) )
-   		. " In " . "<a href='" . $adata['first_use_in'] . "'>" 
-   		.	$adata['first_use_in'] . "</a>";
+   		. " In " . "<a href='" . $fin . "'>" . $fin . "</a>";
    	}
    	return $adata;
    }
+   
+   
    public function checkURL($url) {
    	// checks for existance of file or url
    	$msg = '';
@@ -447,15 +457,14 @@ class Asset {
 		}
    private function setFirstUse($id){
 		 #sets first use date on an asset
-					
-				$ref = $_SERVER['REQUEST_URI'];
-				// dont count if it's coming from the asset search script
-				if (strpos ($ref, '/scripts/assets.php' ) === false){return null;}
 				if ($_SESSION['level'] > 5){return null;} #anythning over member
-
+				
+				$ref = $_SERVER['REQUEST_URI'];
 				
 				$sqld = "UPDATE `assets2` set first_use_date = NOW(), first_use_in = '$ref' where id = '$id';";
-				if ($this->pdo->query($sqld)){return true;}
+				if ($this->pdo->query($sqld)){
+					return [date('Y-m-d'),$ref];
+				}
 				return false;
 	}
 
@@ -1048,6 +1057,20 @@ private function create_thumb($id,$fsource,$ttype='thumbs'){
 		 $im->writeImage(SITE_PATH . "/assets/$ttype/$thumb");
 		 return $thumb;
 	}
+	
+	public function retrieveIds($where) {
+		// used to retrieve list of ids selected by the
+		// WHERE clause in sdata
+		$sql = "SELECT id from `assets2` WHERE $where LIMIT 500";
+		$found = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+		
+		return $found;
+		
+	
+	}
+
+
+
 
 }
 

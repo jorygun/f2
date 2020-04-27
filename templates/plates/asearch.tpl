@@ -27,14 +27,12 @@ Items also have a first-use, generally when it was first published in a newslett
 </div>
 
     <form method='post' name='select_assets' id='select_assets'>
-    <p> Click to create a new asset <button type = "button" onclick = "window.open('/scripts/asset_edit.php?id=0','asset_edit');">New Asset</button>
-    OR 
-    choose any of the parameters below to find photos, videos, and audio files.</p>
+    Choose any of the parameters below to find photos, videos, and audio files.</p>
     <hr>
     <table>
     <tr><td width='25%'></td><td ><button type='button' onclick="clearForm(this.form);">Clear Form</button></td></tr>
     <tr><td>Search Terms</td><td><input type='text' name='searchon' value = '<?=$searchon_hte?>'></td></tr>
-    <tr><td>&nbsp;</td><td><small>Search is not case sensitive. Search terms can include spaces (like 'John East'). </small></td></tr>
+    <tr><td>&nbsp;</td><td><small>Search is not case sensitive. Search terms can include spaces (like 'John East'). Separate terms with commas. </small></td></tr>
     <tr><td>Vintage (year)</td><td><input type='text' name='vintage' size=8 value='<?=$vintage?>'> +/- years: <input type=text name='plusminus'  size=3 value='<?=$plusminus?>'></td></tr>
     <tr><td>Asset Type</td><td><select name='type'><?=$type_options?></select></td></tr>
 

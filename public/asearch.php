@@ -1,6 +1,6 @@
 <?php
 namespace digitalmx\flames;
-#ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 
 
 
@@ -15,7 +15,7 @@ namespace digitalmx\flames;
 	
 
 
-if ($login->checkLogin(4)){
+if ($login->checkLogin(1)){
    $page_title = 'Search Assets';
 	$page_options=[]; #ajax, votes, tiny 
 	
@@ -27,48 +27,35 @@ if ($login->checkLogin(4)){
 }
 	
 //END START
-show_asset_search (empty_as(),$templates );
-function empty_as(){
-	$a=array(
-		'searchon' => '',
-		'vintage' => '',
-		'plusminus' => '',
-		'type' => '',
-		'tags' => '',
-		'id_range' => '',
-		'all_active' => 0,
-		'status' => '',
-		'contributor' => '',
-		'use_options' => '',
-		'searchuse' => '',
-		'relative' => '',
-		
-		);
-		return $a;
-}
-		
-function show_asset_search($asdata,$templates){
+$as = new AssetSearch();
+$asset = new Asset();
 
-   $asdata['use_options'] = build_options(array('On','Before','After'),$asdata['relative']);
-     $asdata['type_options'] = build_options(Defs::$asset_types,$asdata['type']);
-    //$status_options = build_options($asset_status,$pdata['status']);
-    
-     $asdata['all_active_checked'] = (!empty($asdata['all_active'])) ?
-    	'checked':'';
-   
-    	$tag_data = charListToString($asdata['tags'])  ;
-    	$search_asset_tags =Defs::$asset_tags;
-    	$search_asset_tags['Z'] = 'z Any Archival';
-    	
-    	 $asdata['tag_options'] = buildCheckBoxSet('tags',$search_asset_tags,$tag_data,3);
-    
-     $asdata['status_options'] = build_options(Defs::$asset_status,$asdata['status']) ;
-     $asdata['searchon_hte'] =  spchar($asdata['searchon']);
-     $asdata['vintage'] =  $asdata['vintage'] ?? '';
-     $asdata['plusminus'] = $asdata['plusminus'] ?? '';
-    
-     $asdata['$hideme'] = ($_SESSION['level']<6)?"style='display:none'":'';
-    
-	echo $templates->render('asearch',$asdata);
-	
+if ($_SERVER['REQUEST_METHOD'] == 'GET'){
+	if (empty($adata = $_SESSION['last_asset_search_post'])){
+		$adata = $as->getEmpty();
+	}
+	$asprep = $as->prepare_asset_search($adata);
+	echo $templates->render('asearch',$asprep);
 }
+elseif ($_SERVER['REQUEST_METHOD'] == 'POST' ){
+	// save the post data so it can be reused  for the next search
+	$_SESSION['last_asset_search_post'] = $_POST;
+	// translate the search criteria into sql
+	$sql = $as->processAssetSearch($_POST);
+	echo $sql;
+	echo "<hr>";
+	$found = $asset->retrieveIds($sql);
+	$acount = count($found);
+	echo "$acount Assets Match". BRNL;
+	#u\echor($found);
+
+
+}
+
+$asprep = $as->prepare_asset_search(
+	$_SESSION['last_asset_search_post']
+			);
+	
+	echo $templates->render('asearch',$asprep);
+
+		
