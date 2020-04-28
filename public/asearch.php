@@ -27,48 +27,20 @@ if ($login->checkLogin(4)){
 }
 	
 //END START
-show_asset_search (empty_as(),$templates );
-function empty_as(){
-	$a=array(
-		'searchon' => '',
-		'vintage' => '',
-		'plusminus' => '',
-		'type' => '',
-		'tags' => '',
-		'id_range' => '',
-		'all_active' => 0,
-		'status' => '',
-		'contributor' => '',
-		'use_options' => '',
-		'searchuse' => '',
-		'relative' => '',
-		
-		);
-		return $a;
-}
-		
-function show_asset_search($asdata,$templates){
 
-   $asdata['use_options'] = build_options(array('On','Before','After'),$asdata['relative']);
-     $asdata['type_options'] = build_options(Defs::$asset_types,$asdata['type']);
-    //$status_options = build_options($asset_status,$pdata['status']);
-    
-     $asdata['all_active_checked'] = (!empty($asdata['all_active'])) ?
-    	'checked':'';
-   
-    	$tag_data = charListToString($asdata['tags'])  ;
-    	$search_asset_tags =Defs::$asset_tags;
-    	$search_asset_tags['Z'] = 'z Any Archival';
-    	
-    	 $asdata['tag_options'] = buildCheckBoxSet('tags',$search_asset_tags,$tag_data,3);
-    
-     $asdata['status_options'] = build_options(Defs::$asset_status,$asdata['status']) ;
-     $asdata['searchon_hte'] =  spchar($asdata['searchon']);
-     $asdata['vintage'] =  $asdata['vintage'] ?? '';
-     $asdata['plusminus'] = $asdata['plusminus'] ?? '';
-    
-     $asdata['$hideme'] = ($_SESSION['level']<6)?"style='display:none'":'';
-    
-	echo $templates->render('asearch',$asdata);
-	
+$as = new AssetSearch();
+
+
+if ($_SERVER['REQUEST_TYPE'] == 'POST'){
+	$ids = $as->getIdsFromSearch($_POST);
+	u\echor($ids);
+	exit;
 }
+
+$last_search = $_SESSION['last_asset_search'] ?? [] ;
+$search_data -> $as->prepareSearch ($last_search );
+echo $templates->render('asearch',$search_data);
+
+exit;
+
+		
