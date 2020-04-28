@@ -38,36 +38,46 @@ private static $empty_search = array (
 	public function getEmpty() {
 		return self::$empty_search;
 	}
-	public function  prepare_asset_search($asdata){
 
-   $asdata['use_options'] = build_options(array('On','Before','After'),$asdata['relative']);
-     $asdata['type_options'] = build_options(Defs::$asset_types,$asdata['type']);
-    //$status_options = build_options($asset_status,$pdata['status']);
-    
-     $asdata['all_active_checked'] = (!empty($asdata['all_active'])) ?
-    	'checked':'';
-   	$tag_data = '';
-    	if (! empty ($asdata['tags'])){
-    		$tag_data = u\charListToString($asdata['tags'])  ;
-    	}
-    	$search_asset_tags =Defs::$asset_tags;
-    	$search_asset_tags['Z'] = 'z Any Archival';
-    	
-    	 $asdata['tag_options'] = u\buildCheckBoxSet('tags',$search_asset_tags,$tag_data,3);
-    
-     $asdata['status_options'] = u\buildOptions(Defs::$asset_status,$asdata['status']) ;
-     $asdata['searchon_hte'] =  spchar($asdata['searchon']);
-     $asdata['vintage'] =  $asdata['vintage'] ?? '';
-     $asdata['plusminus'] = $asdata['plusminus'] ?? '';
-    
-     $asdata['$hideme'] = ($_SESSION['level']<6)?"style='display:none'":'';
-    
-    	return $asdata;
+	
+	private function  prepareSearch($sdata){
+		// fill in blank fields
+		$asdata = array_merge(self::$empty_search,$sdata);
+		// comopute options, selects
+		$asdata['use_options'] = build_options(array('On','Before','After'),$asdata['relative']);
+		  $asdata['type_options'] = build_options(Defs::$asset_types,$asdata['type']);
+		 //$status_options = build_options($asset_status,$pdata['status']);
+	 
+		  $asdata['all_active_checked'] = (!empty($asdata['all_active'])) ?
+			'checked':'';
+			$tag_data = '';
+			if (! empty ($asdata['tags'])){
+				$tag_data = u\charListToString($asdata['tags'])  ;
+			}
+			$search_asset_tags =Defs::$asset_tags;
+			$search_asset_tags['Z'] = 'z Any Archival';
+		
+			 $asdata['tag_options'] = u\buildCheckBoxSet('tags',$search_asset_tags,$tag_data,3);
+	 
+		  $asdata['status_options'] = u\buildOptions(Defs::$asset_status,$asdata['status']) ;
+		  $asdata['searchon_hte'] =  spchar($asdata['searchon']);
+		  $asdata['vintage'] =  $asdata['vintage'] ?? '';
+		  $asdata['plusminus'] = $asdata['plusminus'] ?? '';
+	 
+		  $asdata['$hideme'] = ($_SESSION['level']<6)?"style='display:none'":'';
+	 
+			return $asdata;
+	}
+
+	public function showAssetSearch($asdata) {
+		$search_data = $this->prepareSearch($asdata);
+		
+	
+	}
 	
 	
-}
+	public function getIdsFromSearch($data){
 
-	public function processAssetSearch($data){
 	/* data is array of search parameters
 		each on ha a function to create the sql forthat search
 		The sql is compiled in array qp[]
@@ -256,5 +266,102 @@ private function tag_search ($clist) {
     return $sql;
 }
 
+<<<<<<< HEAD
+=======
+ private function  show_assets_from_list($ids){
+       
+        if (! is_array($ids)){
+            if (is_numeric($ids)){$ids = array($ids);}
+            else {die ("No ids to show_assets_from_list");}
+        }
+
+         $id_list = implode(',',$ids);
+        $sql = "SELECT * FROM assets WHERE id in ($id_list);";
+        $stmt = $this->pdo->query($sql) ;
+        if (! $stmt) {return "No assets found";}
+
+
+        $output = '';
+        while ($row = $stmt->fetch() ){
+         #check entities
+            $id = $row['id'];
+            $title = $row['title']);
+            $notes = nl2br(spchar($row['notes']));
+            $caption = ($row['caption'])?spchar($row['caption']):'(no caption)';
+            if (!empty($row['first_use_in'])){
+                $first_use =$row['first_use_in'];
+                $first_use_url = $row['first_use_in'];
+                $first_link = "<a href='$first_use_url' target='newspage'>$first_use</a>";
+
+                $first_date = $row['first_use_date'];
+            }
+            else {$first_date = 'Not Used';$first_link='';}
+
+            $tag_display = tag_display($row['tags'],'string');
+            $reviewed = $row['review_ts'];
+
+            $status_label = $asset_status[$row['status']];
+            if ($row['status'] == 'R'){
+                $status_label .= " (On ${row['review_ts']} )";
+            }
+            $status_style = ($row['status'] == 'D')?"color:red;":'';
+
+            if ($row['status'] == 'D'){
+                $status_style = "color:red;";
+                $image = "(Image Deleted)";
+            }
+            else {
+             $image = f\get_asset_by_id($id);
+
+            }
+             $show_thumb= ($row['has_thumb'])? "&radic;" : "";
+             $show_gallery= ($row['has_gallery']) ? "&radic;" : "";
+            $show_toon = ($row['has_toon']) ? "&radic;" : "";
+
+            $editable = false; 	$edit_panel = '';
+             if (
+             $_SESSION['level'] > 6
+             or
+             strtolower($_SESSION['username']) == strtolower($row['contributor'])
+             or
+             strtolower($_SESSION['username']) == strtolower($row['source'])
+             
+             ){$editable=true;}
+
+  
+    if ($editable){ 
+	$edit_panel = <<<EOT
+	<button type='button'
+        onclick="ewin = window.open('/scripts/asset_edit.php?id=$id','asset_edit');">
+        Edit Asset</button>
+
+EOT;
+
+
+		if ( $row['status'] == 'D' ){
+			$edit_panel .= "Already Deleted.  To Delete linked files, click Edit Asset.";
+		}
+		else {
+			 $edit_panel .= "<button type='submit' name='delete' value='$id' style='background:#f33'>Mark Deleted</button>";
+		}
+        
+	}
+        
+  if ($dt = \DateTime::createFromFormat('Y-m-d H:i:s',$row['date_entered'])){
+  	$date_entered = $dt->format('d M Y');
+  }
+  else {$date_entered = $row['date_entered'];}
+  
+
+
+    #2 column table
+    
+
+    }
+
+
+    return $output;
+}
+>>>>>>> master
 
 }

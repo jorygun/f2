@@ -27,35 +27,22 @@ if ($login->checkLogin(1)){
 }
 	
 //END START
+
+
 $as = new AssetSearch();
-$asset = new Asset();
-
-if ($_SERVER['REQUEST_METHOD'] == 'GET'){
-	if (empty($adata = $_SESSION['last_asset_search_post'])){
-		$adata = $as->getEmpty();
-	}
-	$asprep = $as->prepare_asset_search($adata);
-	echo $templates->render('asearch',$asprep);
-}
-elseif ($_SERVER['REQUEST_METHOD'] == 'POST' ){
-	// save the post data so it can be reused  for the next search
-	$_SESSION['last_asset_search_post'] = $_POST;
-	// translate the search criteria into sql
-	$sql = $as->processAssetSearch($_POST);
-	echo $sql;
-	echo "<hr>";
-	$found = $asset->retrieveIds($sql);
-	$acount = count($found);
-	echo "$acount Assets Match". BRNL;
-	#u\echor($found);
 
 
+if ($_SERVER['REQUEST_TYPE'] == 'POST'){
+	$ids = $as->getIdsFromSearch($_POST);
+	u\echor($ids);
+	exit;
 }
 
-$asprep = $as->prepare_asset_search(
-	$_SESSION['last_asset_search_post']
-			);
-	
-	echo $templates->render('asearch',$asprep);
+$last_search = $_SESSION['last_asset_search'] ?? [] ;
+$search_data -> $as->prepareSearch ($last_search );
+echo $templates->render('asearch',$search_data);
+
+exit;
+
 
 		
