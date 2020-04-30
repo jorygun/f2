@@ -70,6 +70,12 @@ if ( in_array($adata['status'],['D','X']) != false){
 if (empty($url = $adata['asset_url'])){
 	die ("No source url for asset $item_id");
  }
+#$url_enc = urlencode ($url);
+$url_enc = $url;
+$adata['url_enc'] = $url_enc;  	
+$adata['linkline'] = $linkline = "<a href='$url_enc'>$url</a>";
+$adata['urllinked'] = $urllinked = "<a href='$url_enc' target='_blank'>$url</a>";
+   
 
      
 $adata['linked_caption'] = u\make_links(nl2br($adata['caption']));
@@ -88,11 +94,6 @@ $mimetype = $adata['mime'];
    $type = $adata['type'];
 
 
-$url_enc = urlencode ($url);
-$adata['url_enc'] = $url_enc;  	
-$adata['linkline'] = $linkline = "<a href='$url_enc'>$url</a>";
-$adata['urllinked'] = $urllinked = "<a href='$url_enc' target='_blank'>$url</a>";
-   
 
 // set asset display based on url or mime type
 // if you tube, put an embed in a iframe
@@ -118,10 +119,9 @@ $adata['urllinked'] = $urllinked = "<a href='$url_enc' target='_blank'>$url</a>"
      <a href='$url'>${row['url']}</a>.
      </iframe>
 EOT;
-} elseif ($type == 'Web Page' || $type == 'Document' ){
+} elseif ( $type == 'Document' ){
     $asset_display= <<<EOT
-    <iframe src='$url_enc' id='iframe1' 
-    onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));' style="height:800px;width:100%;border:none;">
+    <iframe src='$url_enc' id='iframe1' >
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
@@ -132,14 +132,11 @@ EOT;
 } elseif ( $type == 'Image' || $type == 'Cartoon'){
      $asset_display =  "<img src = '$url' style='max-width:960px;'>";
      
-} else {$asset_display= <<<EOT
-    <iframe src='$url_enc' id='iframe1'  >
-     Content is displayed in an iframe, which your browser is not showing.  Try this:
-     <a href="$url">$url</a>.
-     </iframe>
-EOT;
-# remove  onLoad='autoResize(this)';
-
+} elseif (substr($url,0,1) != '/') {$asset_display= "
+   <p class='red'>Asset is on an external site.  Please use the source link to access it.</p>
+";
+} else {
+	$asset_display = "Uncertain how to display $url.  Please let the admin know.";
 }
 $adata['asset_display'] = $asset_display;
   
