@@ -26,6 +26,7 @@ use digitalmx\MyPDO;
 use digitalmx as u;
 use digitalmx\flames\Definitions as Defs;
 use digitalmx\flames\DocPage;
+use digitalmx\flames\Assets;
 
 
 // test to avoid re-running.  cron-ini  also sets this var.
@@ -78,6 +79,8 @@ $login = new Login();
 $page = new DocPage();
 $pdo = MyPDO::instance();
 $member = new Member();
+$assets = new Assets();
+
 $templates = new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
 
 // #build db
