@@ -7,6 +7,7 @@ PATH=/bin:/usr/bin:/usr/local/bin
 HOME=/usr/home/digitalm
 PWpro=STjzyHFr
 PWdev=fXFjb9ED
+sqltemp=/tmp/sqltemp.sql
 
 
 cd ${HOME}/backups
@@ -16,11 +17,12 @@ cd ${HOME}/backups
 # get latest daily file
 
 latest=$(ls -t daily.sql.* | head -1 )
-gunzip -c "$latest" > temp.sql;
+gunzip -c "$latest" > $sqltemp;
 
-mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < temp.sql
-echo "Restored from $latest";
-rm temp.sql
+mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < $sqltemp 2>/dev/null
+
+echo "Dev db restored from $latest";
+rm $sqltemp
 
 
 

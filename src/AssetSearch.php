@@ -6,6 +6,9 @@ use digitalmx as u;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\flames\DocPage;
 	use digitalmx\flames\FileDefs;
+	use digitalmx\flames\Assets;
+	use digitalmx\flames\AssetAdmin;
+	
 
 
 
@@ -13,6 +16,8 @@ class AssetSearch
 {
 
 private $member;
+private $assets;
+private $templates;
 
 private static $empty_search = array (
 		'searchon' => '',
@@ -33,6 +38,9 @@ private static $empty_search = array (
 
 	public function __construct(){
 		$this->member = new Member();
+		$this->assets = new Assets();
+		$this->aa = new AssetAdmin();
+		
 	}
 	
 	public function getEmpty() {
@@ -40,7 +48,7 @@ private static $empty_search = array (
 	}
 
 	
-	private function  prepareSearch($sdata){
+	public function  prepareSearch($sdata){
 		// fill in blank fields
 		$asdata = array_merge(self::$empty_search,$sdata);
 		// comopute options, selects
@@ -69,14 +77,18 @@ private static $empty_search = array (
 			return $asdata;
 	}
 
-	public function showAssetSearch($asdata) {
-		$search_data = $this->prepareSearch($asdata);
-		
 	
+	
+	public function getIdsFromSearch($data) {
+	
+		$sql = $this->getSQLFromSearch($data);
+		#echo "sql: $sql" . BRNL;
+		$id_list = $this->assets->getIdsFromWhere($sql);
+		# u\echor ($id_list, 'id list');
+		return $id_list;
 	}
 	
-	
-	public function getIdsFromSearch($data){
+	private function getSQLFromSearch($data){
 
 	/* data is array of search parameters
 		each on ha a function to create the sql forthat search
@@ -266,102 +278,65 @@ private function tag_search ($clist) {
     return $sql;
 }
 
-<<<<<<< HEAD
-=======
- private function  show_assets_from_list($ids){
-       
-        if (! is_array($ids)){
-            if (is_numeric($ids)){$ids = array($ids);}
-            else {die ("No ids to show_assets_from_list");}
-        }
+ public function  getAssetSummary($id){
+     
+   
+  		 // returns all matching assets
+        $adata = $this->assets->getAssetDataById($id);
+      
+     # u\echor($asset_set); exit;
+			// enhance data
+			$adata['status_label'] = Defs::$asset_status[$adata['status']];
+			if ($adata['status'] == 'R'){
+				 //$adata['status_label'] .= " (On ${data['review_ts']} )";
+			}
+			$adata['status_style'] = ($adata['status'] == 'D')?"color:red;":'';
 
-         $id_list = implode(',',$ids);
-        $sql = "SELECT * FROM assets WHERE id in ($id_list);";
-        $stmt = $this->pdo->query($sql) ;
-        if (! $stmt) {return "No assets found";}
+			if ($adata['status'] == 'D'){
+				 $adata['status_style'] = "color:red;";
+				 $adata['image'] = "(Image Deleted)";
+			}
+			else
+				{
+			 $adata['image'] = $this->aa->returnAssetLinked($adata) ;
 
+			}
+	 
+	  $adata['show_thumbs'] = join(',',$adata['existing_thumbs']) ?:
+	  'None';
 
-        $output = '';
-        while ($row = $stmt->fetch() ){
-         #check entities
-            $id = $row['id'];
-            $title = $row['title']);
-            $notes = nl2br(spchar($row['notes']));
-            $caption = ($row['caption'])?spchar($row['caption']):'(no caption)';
-            if (!empty($row['first_use_in'])){
-                $first_use =$row['first_use_in'];
-                $first_use_url = $row['first_use_in'];
-                $first_link = "<a href='$first_use_url' target='newspage'>$first_use</a>";
+		$adata['tag_display'] = ''; 
 
-                $first_date = $row['first_use_date'];
-            }
-            else {$first_date = 'Not Used';$first_link='';}
+			$adata['editable'] = 
+			  (
+				 $_SESSION['level'] > 6
+				 || strtolower($_SESSION['user_id']) == strtolower($adata['contributor_id'])
+				 || strtolower($_SESSION['username']) == strtolower($adata['source'])
+			 
+			 ) ? true:false;
+			
+		
+		
+			$adata['source_warning'] = ($this->assets->checkURL($adata['asset_url']) ) ? '' : " <<<< Source cannot be found ";
+		
+//     
+//         
+//   if ($dt = \DateTime::createFromFormat('Y-m-d H:i:s',$row['date_entered'])){
+//   	$date_entered = $dt->format('d M Y');
+//   }
+//   else {$date_entered = $row['date_entered'];}
+//   
+// 
+// 
+//     #2 column table
+//     
+// 
+//     }
+// 
 
-            $tag_display = tag_display($row['tags'],'string');
-            $reviewed = $row['review_ts'];
-
-            $status_label = $asset_status[$row['status']];
-            if ($row['status'] == 'R'){
-                $status_label .= " (On ${row['review_ts']} )";
-            }
-            $status_style = ($row['status'] == 'D')?"color:red;":'';
-
-            if ($row['status'] == 'D'){
-                $status_style = "color:red;";
-                $image = "(Image Deleted)";
-            }
-            else {
-             $image = f\get_asset_by_id($id);
-
-            }
-             $show_thumb= ($row['has_thumb'])? "&radic;" : "";
-             $show_gallery= ($row['has_gallery']) ? "&radic;" : "";
-            $show_toon = ($row['has_toon']) ? "&radic;" : "";
-
-            $editable = false; 	$edit_panel = '';
-             if (
-             $_SESSION['level'] > 6
-             or
-             strtolower($_SESSION['username']) == strtolower($row['contributor'])
-             or
-             strtolower($_SESSION['username']) == strtolower($row['source'])
-             
-             ){$editable=true;}
-
-  
-    if ($editable){ 
-	$edit_panel = <<<EOT
-	<button type='button'
-        onclick="ewin = window.open('/scripts/asset_edit.php?id=$id','asset_edit');">
-        Edit Asset</button>
-
-EOT;
-
-
-		if ( $row['status'] == 'D' ){
-			$edit_panel .= "Already Deleted.  To Delete linked files, click Edit Asset.";
-		}
-		else {
-			 $edit_panel .= "<button type='submit' name='delete' value='$id' style='background:#f33'>Mark Deleted</button>";
-		}
-        
-	}
-        
-  if ($dt = \DateTime::createFromFormat('Y-m-d H:i:s',$row['date_entered'])){
-  	$date_entered = $dt->format('d M Y');
-  }
-  else {$date_entered = $row['date_entered'];}
-  
-
-
-    #2 column table
     
-
-    }
-
-
-    return $output;
-}
->>>>>>> master
+		
+		return $adata;
+	}
 
 }

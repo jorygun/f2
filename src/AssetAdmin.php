@@ -21,7 +21,7 @@ namespace digitalmx\flames;
 	use digitalmx as u;
 	use digitalmx\flames as f;
 	use digitalmx\flames\FileDefs;
-	use Asset;
+	use digitalmx\flames\Assets;
 
 
 class AssetAdmin 
@@ -30,7 +30,7 @@ class AssetAdmin
 
 	private $pdo;
 	private $archive_tag_list_sql;
-	private $asset;
+	private $assets;
 	private $member;
 	private $mimeinfo;
 	
@@ -40,10 +40,10 @@ class AssetAdmin
 	private static $upload_types = array(
 		'uasset','uthumb','uuploads','uftp');
 		
-	public function __construct($asset) {
+	public function __construct() {
 		$this->pdo =  MyPDO::instance();
 		$this->archive_tag_list_sql =  Defs::getArchivalTagList();
-		$this->asset = $asset;
+		$this->assets = new Assets();
 		$this->member = new Member();
 		$this->mimeinfo = new \finfo(FILEINFO_MIME_TYPE);
 		
@@ -57,7 +57,7 @@ class AssetAdmin
 	
 	public function postAssetFromForm($post) {
 	// prepare data and then send to asset to post
-	u\echor($post,'post data in');
+	#u\echor($post,'post data in');
 
 	
 	
@@ -73,14 +73,14 @@ class AssetAdmin
 		// must have id before all the data is saved to place files.
 		// this creates a skeleton asset record and gets the id.
 		if (empty ($id = $post['id'])) {
-				$id = $this->asset->getNewID();
+				$id = $this->assets->getNewID();
 				echo "New id $id obtained." . BRNL;
 				$adata ['status'] = 'N';
 		}
 		// for existing items, status is not updated when item is saved
 		
 		// move the post data needed from thep ost to adata.
-		foreach ($this->asset::$editable_fields as $f) {
+		foreach ($this->assets::$editable_fields as $f) {
 			$adata[$f] = $post[$f]??'';
 		}
 		$adata['id'] = $id;
@@ -143,10 +143,10 @@ class AssetAdmin
 		}
 		
 		 $adata['needs'] = $this->checkThumbNeeds($adata,$new_thumbs);
-	u\echor($adata,'Into Checking asset data:');
+	
 	#exit;
 	
-		$this->asset->saveAsset($adata);
+		$this->assets->saveAsset($adata);
 		
 		echo "<a href='asset_editor.php?id=$id'>View in Editor</a>" . BRNL;
 		return $id;
@@ -157,10 +157,10 @@ class AssetAdmin
 		// set which thumbs are needed, by checkbox or by changed url
 		$id = $adata['id'];
 		$needs = array ();
-		$result = $this->asset->getAssetDataById($id);
+		$result = $this->assets->getAssetDataById($id);
 		
 		$thumbs = $result['existing_thumbs']; #keys where value is ''
-		if (empty($thumbs)){$needs[] = 'thumbs';} #always need this
+		
 		// if either url has been changed, all the thumbs need to be regneratied.
 		if ($result['asset_url'] != $adata['asset_url']
 			|| $result['thumb_url'] != $adata['thumb_url'] 
@@ -168,6 +168,7 @@ class AssetAdmin
 			$needs = $thumbs; #all existing thumbs
 			$new_thumbs = array_diff ($new_thumbs,['all']) ;
 		}
+		if (! in_array('thumbs',$thumbs)){$new_thumbs[] = 'thumbs';} #always need this
 		// add in any thumbs were checked on the form
 		$needs = array_unique(array_merge($needs,$new_thumbs));
 		#u\echor($needs,'needs after check needs'); exit;
@@ -178,16 +179,32 @@ class AssetAdmin
 	
 	
 	
-	public function getAssetLinked($id) {
+	public function getAssetLinked($id,$nocache=false) {
 	/* returns the asset thumbnail, linked to the asset source */
-		$adata = $this->asset->getAssetDataById($id);
+		$adata = $this->assets->getAssetSummaryById($id);
+		return $this->returnAssetLinked($adata,$nocache);
+	}
+	
+	public function returnAssetLinked ($adata,$nocache=false) {
 		$status = $adata['status'];
-		if ($status == 'X') {return "Asset Deleted";}
-		elseif ($status == 'T') {return "Asset Temporary";}
+		$id = $adata['id'];
+		if ($adata['status'] == 'X') {return "Asset Deleted";}
+		elseif ($adata['status'] == 'T') {return "Asset Temporary";}
 		
 		$link = $adata['asset_url'];
-		if (empty($link)){return '';}
+		if (empty($link)){return 'No asset url';}
+		if (! $this->assets->checkURL($link)){
+			return "Linked asset doesn't exist";
+		}
+		
 		$thumb = "/assets/thumbs/${id}.jpg";
+		if (!file_exists(SITE_PATH . $thumb)){
+			return "No thumbnail for asset";
+		}
+		if ($nocache){
+			$time = time();
+			$thumb .= "?nocache=$time";
+		}
 		$result = <<<EOF
 		<a href='$link' target="_blank">
 		<img src='$thumb'>
@@ -260,7 +277,10 @@ EOF;
 		 if (empty($_FILES[$utype] )){
 		 	throw new \RuntimeException('No file of type $utype found in _FILES.');
 		 }
-		 
+		 if ($_FILES[$utype]['error'] != UPLOAD_ERR_OK ){
+		 	u\echor ($_FILES[$utype], "Files array for $utype");
+
+		 	}
 		 switch ($_FILES[$utype]['error']) {
 			  case UPLOAD_ERR_OK:
 				  break;
@@ -268,6 +288,7 @@ EOF;
 					throw new \RuntimeException('No file uploaded.');
 			  case UPLOAD_ERR_INI_SIZE:
 			  case UPLOAD_ERR_FORM_SIZE:
+			  	$size = $_FILES[$utype]['size'] / 1000000;
 					throw new \RuntimeException('Exceeded filesize limit.');
 			  default:
 					throw new \RuntimeException('Unknown errors.');

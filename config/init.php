@@ -78,6 +78,7 @@ $login = new Login();
 $page = new DocPage();
 $pdo = MyPDO::instance();
 $member = new Member();
+$templates = new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
 
 // #build db
 // $container = new Container();

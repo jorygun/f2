@@ -77,7 +77,15 @@ Upload file <input type="file" name="uasset" > <br>
 </table>
 
 <hr>
+<?php if (!empty($current_count) && $current_count > 1) : ?>
+<p>Current search list: <?=$current_count?> assets.</p>
+<input type='submit' name='submit' value='Save'>
+<input type='submit' name='submit' value='Save and edit next'>
+<input type='submit' name='submit' value='Skip and edit next'>
+<?php else : ?>
 <input type='submit' name='submit'>
+<?php endif; ?>
+</form>
 </form>
 <?=$link?>
 <hr>

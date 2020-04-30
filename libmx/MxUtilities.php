@@ -477,7 +477,13 @@ function linkHref($url,$label='',$target='' ){
 		return "<a href='$url' $target >$label</a>" ;
 	}
 }
-
+function make_inlist_from_list($list){
+	if (!$list){return '';}
+	$qlist = array_map(function ($c) {return "'$c'";},$list);
+	
+	$inlist = join(',',$qlist);
+	return $inlist;
+}
 
 function make_links($input){
     // replaces http:... with a link

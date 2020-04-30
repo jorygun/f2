@@ -32,14 +32,29 @@ if ($login->checkLogin(1)){
 $as = new AssetSearch();
 
 
-if ($_SERVER['REQUEST_TYPE'] == 'POST'){
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+	// save search so easy to repeat/modify
+	$_SESSION['last_asset_search'] = $_POST;
+
+	// save list of ids, for sequential editing.
 	$ids = $as->getIdsFromSearch($_POST);
-	u\echor($ids);
-	exit;
+	$_SESSION['last_assets_found'] = $ids;
+	
+	#echo 'ids found ' . join(', ',$ids) . BRNL;
+	foreach ($ids as $id){
+		$asset = $as->getAssetSummary($id);
+		 #u\echor($asset, "selected asset $id"); 
+		echo $templates->render('asset_mini',$asset);
+	}
+	# u\echor ($ids, 'ids');
+	
+ 	exit;
 }
 
 $last_search = $_SESSION['last_asset_search'] ?? [] ;
-$search_data -> $as->prepareSearch ($last_search );
+$search_data = $as->prepareSearch ($last_search );
 echo $templates->render('asearch',$search_data);
 
 exit;

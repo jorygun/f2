@@ -58,7 +58,7 @@ use digitalmx\flames\Definitions as Defs;
 
 
 
-class Asset {
+class Assets {
     
     private  $pdo;
     public $mimeinfo;
@@ -169,7 +169,7 @@ class Asset {
 // 	date entered
 // 	date modified
 	
-
+	#u\echor($adata,'Into Checking asset data:');
 	
 		$adata['id'] = (int)$adata['id'];
 		if (! is_integer($adata['id'])){
@@ -381,7 +381,24 @@ class Asset {
         return $alist;
       }
    
-
+	public function getAssetSummaryById($id) {
+		// returns minimal set of asset data
+		$sql = "SELECT id,title,caption,asset_url , status
+			FROM `assets2` WHERE id = $id";
+		$d = $this->pdo->query($sql)->fetch();
+		return $d;
+	}
+	
+	public function getAssetSummaryFromList($id_list){
+		// returns minimal set of asset data
+		$in_ids = join(',' , $id_list);
+		$sql = "SELECT id,title,caption,asset_url,contributor_id,type, , status
+			FROM `assets2` WHERE id in ($in_ids)";
+		#	echo $sql . BRNL;
+		$d = $this->pdo->query($sql)->fetchAll();
+		return $d;
+	}
+	
    public function getAssetDataById($id){
    	if ($id == 0){
    		// new asset
@@ -389,7 +406,7 @@ class Asset {
    		$adata['contributor_id']  = $_SESSION['login']['user_id'];
    		$adata['contributor'] = $_SESSION['login']['username'];
    		$adata['id'] = 0;
-   		$adata['date_created'] = date('M d, Y');
+   		$adata['date_entered'] = date('M d, Y');
    		$adata['first_use'] = 'Never';
    		$adata['vintage'] = date('Y');
    		return $adata;
@@ -397,7 +414,7 @@ class Asset {
    	$sql = "SELECT a.*, m.username as contributor, m.user_email from `assets2` a
    		INNER JOIN `members_f2` m on a.contributor_id = m.user_id where a.id = $id";
    	if (!$adata = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){ #array
-   		die ("No asset at $id");
+   		return [];
    	}
    	// set tic character for each thumb that currently exixts.
    	$adata['first_use'] = "Never.";
@@ -439,7 +456,10 @@ class Asset {
 		 else {
 		 	$msg = "Unknown url at $url";
 		 }
-		 if ($msg){ echo "$msg" ; return false;}
+		 if ($msg){ 
+		 #	echo "$msg" ; 
+		 	return false;
+		 }
 		 return true;
    }
    
@@ -1058,7 +1078,7 @@ private function create_thumb($id,$fsource,$ttype='thumbs'){
 		 return $thumb;
 	}
 	
-	public function retrieveIds($where) {
+	public function getIdsFromWhere($where) {
 		// used to retrieve list of ids selected by the
 		// WHERE clause in sdata
 		$sql = "SELECT id from `assets2` WHERE $where LIMIT 500";
