@@ -80,6 +80,7 @@ while ($row = $adb->fetch() ){
 	if (empty($src = trim($row['link']))) {
 		echo "<p class='red'>No source specified on id $id </p>";
 		$e['status'] = 'E';
+		
 	}
 	
 	if (substr($src,0,1) == '/'){
@@ -113,7 +114,7 @@ while ($row = $adb->fetch() ){
 			$e['url'] = '';
 		}
 	}
-	
+	if ($e['status'] != 'E' ){ 
 	if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
 		if (create_thumb($id,$src,$ttype='thumbs') ){
 			if (file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.png')){
@@ -124,10 +125,10 @@ while ($row = $adb->fetch() ){
 			$e['status'] = 'E';
 		}
 	}
-	
+	}
 	// moD DATE
 	$b['date_modified'] = $row['mod_date'];
-	
+	if ($e['status'] != 'E' ){ 
 	if (empty($mime = $row['mime'])){
 		if (substr($src,0,1) == '/'){
 			if (! $mime = $finfo->file(SITE_PATH . $src) ){
@@ -141,6 +142,7 @@ while ($row = $adb->fetch() ){
 			echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
 			$e['status'] = 'E';
 		}
+	}
 	}
 	$b['mime'] = $mime;
 	$e['mime'] = $mime;
