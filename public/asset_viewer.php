@@ -121,7 +121,7 @@ $mimetype = $adata['mime'];
 EOT;
 } elseif ( $type == 'Document' ){
     $asset_display= <<<EOT
-    <iframe src='$url_enc' id='iframe1' >
+    <iframe src='$url_enc' id='iframe1'  onLoad='autoResize(this);'>
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
