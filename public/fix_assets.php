@@ -57,7 +57,7 @@ $adb = $pdo->query($sql);
 
 
 $rc = 0;
-ob_end_flush();
+
 while ($row = $adb->fetch() ){
 	++$rc; if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
@@ -103,8 +103,9 @@ while ($row = $adb->fetch() ){
 	
 	// check thumb source
 	$thm = trim($row['url']);
+	echo "cmpr $thm : $src id $id" . BRNL;
 	if (!empty($thm)) {
-		echo "cmpr $thm : $src id $id" . BRNL;
+		
 		if ($thm != $src) {
 			$b['thumb_url'] = $thm;
 		} else {
