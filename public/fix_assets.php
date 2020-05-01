@@ -84,6 +84,7 @@ while ($row = $adb->fetch() ){
 	if (substr($src,0,1) == '/'){
 		if (substr($src,1,) == 'reunions'){
 			$src = '/assets' . $src;
+			
 		}
 		$s = SITE_PATH . $src;
 		if (! file_exists($s)){
@@ -102,12 +103,13 @@ while ($row = $adb->fetch() ){
 	
 	// check thumb
 	$thm = $row['url'];
-	if (!empty($thm) && $thm != $src) {
-		$b['thumb_url'] = $thm;
-		$e['url'] = $thm;
-	} else {
-		$b['thumb_url'] = '';
-		$e['url'] = '';
+	if (!empty($thm) {
+		if ($thm != $src) {
+			$b['thumb_url'] = $thm;
+		} else {
+			$b['thumb_url'] = '';
+			$e['url'] = '';
+		}
 	}
 	
 	if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
