@@ -57,7 +57,7 @@ $adb = $pdo->query($sql);
 
 
 $rc = 0;
-
+ob_end_flush();
 while ($row = $adb->fetch() ){
 	++$rc; if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
@@ -165,7 +165,7 @@ while ($row = $adb->fetch() ){
 #u\echor($eprep,'E Prep');
 
    
-  ob_end_flush();
+  
 
 }
 	
