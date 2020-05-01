@@ -51,7 +51,7 @@ $pdo->query($sql);
 echo "Clearing db" . BRNL;
 
 
-$sql = "SELECT * from `assets` ORDER BY id  LIMIT 10 ";
+$sql = "SELECT * from `assets` ORDER BY id  ";
 
 $adb = $pdo->query($sql);
 
@@ -103,7 +103,7 @@ while ($row = $adb->fetch() ){
 	
 	// check thumb source
 	$thm = trim($row['url']);
-	echo "cmpr:  $thm TO $src ID $id" . BRNL;
+	
 	if (!empty($thm)) {
 		
 		if ($thm != $src) {
@@ -166,7 +166,7 @@ while ($row = $adb->fetch() ){
    $eprep = pdoPrep($e,$allowed_list,'id');
    $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
        $stmt = $pdo->prepare($sql)->execute($eprep['data']);
-u\echor($eprep,'E Prep');
+#u\echor($eprep,'E Prep');
 
    
   
