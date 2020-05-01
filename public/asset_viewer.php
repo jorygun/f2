@@ -27,17 +27,9 @@ echo <<<EOT
 function autoResize(id){
     var newheight;
     var newwidth;
+   
 
-    if(document.getElementById && typeof document.getElementById(id).contentDocument === 'object' ){
-    
-        newheight = document.getElementById(id).contentDocument.body.scrollHeight;
-        newwidth = document.getElementById(id).contentDocument.body.scrollWidth;
-        document.getElementById(id).height = (newheight) + "px";
-    	document.getElementById(id).width = (newwidth) + "px";
-    }
-    else {
-    	document.write ("Content of this frame cannot be displayed");
-    }
+ 	id.style.height = id.contentWindow.document.body.scrollHeight + 'px';
     
 }
 
@@ -75,11 +67,11 @@ if ( in_array($adata['status'],['D','X']) != false){
 if (empty($url = $adata['asset_url'])){
 	die ("No source url for asset $item_id");
  }
-#$url_enc = urlencode ($url);
-$url_enc = $url;
+$url_enc = urlencode ($url);
+#$url_enc = $url;
 $adata['url_enc'] = $url_enc;  	
-$adata['linkline'] = $linkline = "<a href='$url_enc'>$url</a>";
-$adata['urllinked'] = $urllinked = "<a href='$url_enc' target='_blank'>$url</a>";
+$adata['linkline'] = $linkline = "<a href='$url'>$url</a>";
+$adata['urllinked'] = $urllinked = "<a href='$url' target='_blank'>$url</a>";
    
 
      
@@ -110,23 +102,23 @@ $mimetype = $adata['mime'];
 	 else {echo "video id not found on you tube link.  $url\n";exit;}
 
 	  $vidlink = "https://www.youtube.com/embed/$vid";
-	  $asset_display = "<iframe width=\"560\" height=\"315\" src=\"$vidlink\"  allowfullscreen></iframe>";
+	  $asset_display = "<iframe id='myframe' width=\"560\" height=\"315\" src=\"$vidlink\"  allowfullscreen></iframe>";
 
  } elseif (strpos($mimetype,'video') !== false ){
-		  $asset_display =  "<video src = '$url_enc' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
+		  $asset_display =  "<video src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
 } elseif (strpos($mimetype,'audio')!== false ){
      	$asset_display =  "<audio src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not playing this audio.</audio>";
 } elseif ($type == 'Multimedia' ){
      #$asset_display =  "<video src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
     $asset_display= <<<EOT
-    <iframe src='$url_enc' id='iframe1'  onLoad='autoResize(this);'>
-     Content is displayed in an iframe, which your browser is not showing.  Try this:
-     <a href='$url'>${row['url']}</a>.
+    <iframe src='$url' id='myframe'  onLoad='autoResize(this);'>
+     Content is displayed in an iframe, which your browser is not showing. 
+     
      </iframe>
 EOT;
 } elseif ( $type == 'Document' ){
     $asset_display= <<<EOT
-    <iframe src='$url_enc' id='iframe1'   onLoad='autoResize(this);'>
+    <iframe src='$url_enc' id='myframe'   onLoad='autoResize(this);'>
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
