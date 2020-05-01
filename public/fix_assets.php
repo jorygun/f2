@@ -64,8 +64,7 @@ while ($row = $adb->fetch() ){
 	$status = $row['status'];
 	if (in_array($status,['X','T','D'])){continue;}
 	// make new array 'b'
-	echo "id $id" . BRNL;
-	
+
 	$e = $b = array(); // e for error corrections
 	foreach ($same as $v){
 		$b[$v] = $row[$v];
@@ -94,7 +93,6 @@ while ($row = $adb->fetch() ){
 			$e['status'] = 'E';
 		}
 		
-		
 	} elseif (! u\url_exists($src) ){
 		echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
 		$e['status'] = 'E';
@@ -105,7 +103,7 @@ while ($row = $adb->fetch() ){
 	
 	// check thumb source
 	$thm = trim($row['url']);
-	echo "cmpr $thm : $src id $id" . BRNL;
+	echo "cmpr:  $thm TO $src ID $id" . BRNL;
 	if (!empty($thm)) {
 		
 		if ($thm != $src) {
