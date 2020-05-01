@@ -76,13 +76,16 @@ while ($row = $adb->fetch() ){
 	}
 	
 	if (substr($src,0,1) == '/'){
+		if (substr($src,1,) == 'reunions'){
+			$src = '/assets' . $src;
+		}
 		$s = SITE_PATH . $src;
 		if (! file_exists($s)){
-			echo "<p class='red'>Source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
+			echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
 			continue;
 		}
 	} elseif (! u\url_exists($src) ){
-		echo "<p class='red'>Source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
+		echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
 		continue;
 	}
 	$b['asset_url'] = $src;
