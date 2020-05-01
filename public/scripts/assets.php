@@ -226,13 +226,15 @@ function show_assets_from_list($ids){
             if ($row['status'] == 'R'){
                 $status_label .= " (On ${row['review_ts']} )";
             }
-            $status_style = ($row['status'] == 'D')?"color:red;":'';
+            $status_style = (in_array($row['status'] ,['E', 'D'] )?"color:red;":'';
 
             if ($row['status'] == 'D'){
                 $status_style = "color:red;";
                 $image = "(Image Deleted)";
-            }
-            else {
+            } elseif ($row['status'] == 'E') {
+            	$image = "Error in this asset";
+            
+            } else {
              $image = f\get_asset_by_id($id);
 
             }
@@ -489,7 +491,7 @@ function process_asset_search($data){
         $qp[] = "status = '$son'";
     }
    elseif ($data['all_active'] == 1){
-        $qp[] = "status not in ('X','D','E','T') ";
+        $qp[] = "status not in ('X','D','T') ";
     }
 
     if (!empty($son = $data['url'])){

@@ -69,9 +69,12 @@ while ($row = $adb->fetch() ){
 	foreach ($same as $v){
 		$b[$v] = $row[$v];
 	}
-	$e['id'] = $id;
+	
 	if (strpos($row['title'],'\\') != 0){
 		$b['title'] = $e['title'] = stripslashes($row['title']);
+	}
+	if (empty($row['title'])){
+		$b['title'] = $e['title'] = 'Untitled';
 	}
 	if (strpos($row['caption'],'\\') != 0){
 		$b['caption'] = $e['caption'] = stripslashes($row['title']);
@@ -82,7 +85,7 @@ while ($row = $adb->fetch() ){
 		$e['status'] = 'E';
 		
 	}
-	
+	$osrc = $src;
 	if (substr($src,0,1) == '/'){
 		if (substr($src,1,8) == 'reunions'){
 			$src = '/assets' . $src;
@@ -95,13 +98,15 @@ while ($row = $adb->fetch() ){
 		if (! file_exists($s)){
 			echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
 			$e['status'] = 'E';
-		} else {$e['link'] = $src;}
+		}
 	} elseif (! u\url_exists($src) ){
 		echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
 		$e['status'] = 'E';
 	}
 	$b['asset_url'] = $src;
-	$e['link'] = $src;
+	if ($osrc != $src){
+		$e['link'] = $src;
+	}
 	
 	// check thumb source
 	$thm = trim($row['url']);
@@ -115,6 +120,7 @@ while ($row = $adb->fetch() ){
 			$e['url'] = '';
 		}
 	}
+	
 	if (!isset($e['status'] ) ){ 
 	if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
 		if (create_thumb($id,$src,$ttype='thumbs') ){
@@ -145,11 +151,14 @@ while ($row = $adb->fetch() ){
 			$e['status'] = 'E';
 		}
 	}
-	}
 	$b['mime'] = $mime;
 	$e['mime'] = $mime;
+	}
 	
-		$prep = pdoPrep($b,$allowed_list,''); #no key field.  Must retain id
+	$b['id'] = $id;
+	
+		
+	#	$prep = pdoPrep($b,$allowed_list,''); #no key field.  Must retain id
  /**
  	$prep = pdoPrep($post_data,$allowed_list,'id');
 
@@ -166,11 +175,14 @@ while ($row = $adb->fetch() ){
 
 	$sql = "INSERT into `assets2` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
      #  $stmt = $pdo->prepare($sql)->execute($prep['data']);
-   
+if (!empty($e)){
+	$e['id'] = $id;
    $eprep = pdoPrep($e,$allowed_list,'id');
    $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
-       #$stmt = $pdo->prepare($sql)->execute($eprep['data']);
-#u\echor($eprep,'E Prep');
+ #u\echor($eprep,'E Prep');
+
+ 	$stmt = $pdo->prepare($sql)->execute($eprep['data']);
+
 
    
   
