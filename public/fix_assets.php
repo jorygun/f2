@@ -76,7 +76,7 @@ while ($row = $adb->fetch() ){
 		$b['caption'] = $e['caption'] = stripslashes($row['title']);
 	}
 	//check link
-	if (empty($src = $row['link'])) {
+	if (empty($src = trim($row['link']))) {
 		echo "<p class='red'>No source specified on id $id </p>";
 		$e['status'] = 'E';
 	}
@@ -101,8 +101,8 @@ while ($row = $adb->fetch() ){
 	$b['asset_url'] = $src;
 	$e['link'] = $src;
 	
-	// check thumb
-	$thm = $row['url'];
+	// check thumb source
+	$thm = trim($row['url']);
 	if (!empty($thm)) {
 		if ($thm != $src) {
 			$b['thumb_url'] = $thm;
