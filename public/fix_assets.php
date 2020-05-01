@@ -64,6 +64,8 @@ while ($row = $adb->fetch() ){
 	$status = $row['status'];
 	if (in_array($status,['X','T','D'])){continue;}
 	// make new array 'b'
+	echo "id $id" . BRNL;
+	
 	$e = $b = array(); // e for error corrections
 	foreach ($same as $v){
 		$b[$v] = $row[$v];
