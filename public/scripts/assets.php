@@ -226,7 +226,7 @@ function show_assets_from_list($ids){
             if ($row['status'] == 'R'){
                 $status_label .= " (On ${row['review_ts']} )";
             }
-            $status_style = (in_array($row['status'] ,['E', 'D'] )?"color:red;":'';
+            $status_style = (in_array($row['status'] ,['E', 'D'] ))?"color:red;":'';
 
             if ($row['status'] == 'D'){
                 $status_style = "color:red;";
