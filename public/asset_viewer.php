@@ -51,7 +51,7 @@ function setIframeHeight(id) {
 
 
 <style>
-	iframe { width:960px; height:100%; }
+	iframe { max-width:960px; max-height:1024px; }
 </style>
 
 EOT;
