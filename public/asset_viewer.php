@@ -30,6 +30,7 @@ function getDocHeight(doc) {
     var body = doc.body, html = doc.documentElement;
     var height = Math.max( body.scrollHeight, body.offsetHeight, 
         html.clientHeight, html.scrollHeight, html.offsetHeight );
+  
    alert ("doc height: "+height);
     return height;
 }
@@ -51,7 +52,7 @@ function setIframeHeight(id) {
 
 
 <style>
-	iframe { width: 100%; height:100%; max-width:960px; max-height:1024px; }
+	iframe { width: 100%; height:1024px; max-width:960px; max-height:1024px; }
 </style>
 
 EOT;
@@ -133,7 +134,7 @@ $mimetype = $adata['mime'];
 EOT;
 } elseif ( $type == 'Document' ){
     $asset_display= <<<EOT
-    <iframe src='$url' id='myframe' onload=" setIframeHeight(this.id)" >
+    <iframe src='$url' id='myframe'  >
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
