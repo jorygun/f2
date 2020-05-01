@@ -24,22 +24,13 @@ namespace digitalmx\flames;
 echo <<<EOT
    <script language="JavaScript">
 
-function resizeIFrameToFitContent( iFrame ) {
 
-    iFrame.width  = iFrame.contentWindow.document.body.scrollWidth;
-    iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
-}
-
-window.addEventListener('DOMContentLoaded', function(e) {
-
-    var iFrame = document.getElementById( 'myframe' );
-    resizeIFrameToFitContent( iFrame );
-
-    
-} );
-
-
+  function resizeIframe(obj) {
+    obj.style.height = obj.contentWindow.document.documentElement.scrollHeight + 'px';
+  }
 </script>
+
+
 
 <style>
 	iframe { width:960px; }
@@ -124,7 +115,7 @@ $mimetype = $adata['mime'];
 EOT;
 } elseif ( $type == 'Document' ){
     $asset_display= <<<EOT
-    <iframe src='$url' id='myframe'  >
+    <iframe src='$url' id='myframe' onload="resizeIframe(this) >
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
