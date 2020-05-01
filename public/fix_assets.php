@@ -51,9 +51,11 @@ $pdo->query($sql);
 echo "Clearing db" . BRNL;
 
 
-$sql = "SELECT * from `assets`  ";
+$sql = "SELECT * from `assets` LIMIT 10 ";
 
 $adb = $pdo->query($sql);
+
+
 $rc = 0;
 ob_end_flush();
 while ($row = $adb->fetch() ){
@@ -62,17 +64,18 @@ while ($row = $adb->fetch() ){
 	$status = $row['status'];
 	if (in_array($status,['X','T','D'])){continue;}
 	// make new array 'b'
-	$b = array();
+	$e = $b = array(); // e for error corrections
 	foreach ($same as $v){
 		$b[$v] = $row[$v];
 	}
-	$b['title'] = stripslashes($row['title']);
-	$b['caption'] = stripslashes($row['title']);
+	$e['id'] = $id;
+	$e['title'] = stripslashes($row['title']);
+	$e['caption'] = stripslashes($row['title']);
 	
 	//check link
 	if (empty($src = $row['link'])) {
 		echo "<p class='red'>No source specified on id $id </p>";
-		continue;
+		$e['status'] = 'E';
 	}
 	
 	if (substr($src,0,1) == '/'){
@@ -82,20 +85,26 @@ while ($row = $adb->fetch() ){
 		$s = SITE_PATH . $src;
 		if (! file_exists($s)){
 			echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
-			continue;
+			$e['status'] = 'E';
 		}
+		
+		
 	} elseif (! u\url_exists($src) ){
 		echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
-		continue;
+		$e['status'] = 'E';
+
 	}
 	$b['asset_url'] = $src;
+	$e['link'] = $src;
 	
 	// check thumb
 	$thm = $row['url'];
 	if (!empty($thm) && $thm != $src) {
 		$b['thumb_url'] = $thm;
+		$e['url'] = $thm;
 	} else {
 		$b['thumb_url'] = '';
+		$e['url'] = '';
 	}
 	
 	if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
@@ -105,6 +114,7 @@ while ($row = $adb->fetch() ){
 			}
 		} else {
 			echo "<p class='red'>No thumb file for asset $id</p>";
+			$e['status'] = 'E';
 		}
 	}
 	
@@ -115,14 +125,18 @@ while ($row = $adb->fetch() ){
 		if (substr($src,0,1) == '/'){
 			if (! $mime = $finfo->file(SITE_PATH . $src) ){
 				echo "<p class='red'>Unable to get mime type from source $src" .'</p>';
+				$e['status'] = 'E';
 			}
 		 } elseif (!$mime = get_url_mime_type($src) ) {
 			echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
+			$e['status'] = 'E';
 		} else {
 			echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
+			$e['status'] = 'E';
 		}
 	}
 	$b['mime'] = $mime;
+	$e['mime'] = $mime;
 	
 		$prep = pdoPrep($b,$allowed_list,''); #no key field.  Must retain id
  /**
@@ -140,8 +154,14 @@ while ($row = $adb->fetch() ){
 #u\echor ($prep,'prep');
 
 	$sql = "INSERT into `assets2` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-       $stmt = $pdo->prepare($sql)->execute($prep['data']);
-       
+     #  $stmt = $pdo->prepare($sql)->execute($prep['data']);
+   
+   $eprep = pdoPrep($e,$allowed_list,'id');
+   $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
+     #  $stmt = $pdo->prepare($sql)->execute($eprep['data']);
+u\echor($eprep,'E Prep');
+
+   
    flush();
 
 }
