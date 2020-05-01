@@ -111,14 +111,14 @@ $mimetype = $adata['mime'];
 } elseif ($type == 'Multimedia' ){
      #$asset_display =  "<video src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
     $asset_display= <<<EOT
-    <iframe src='$url' id='myframe'  onLoad='autoResize(this);'>
+    <iframe src='$url' id='myframe'  >
      Content is displayed in an iframe, which your browser is not showing. 
      
      </iframe>
 EOT;
 } elseif ( $type == 'Document' ){
     $asset_display= <<<EOT
-    <iframe src='$url' id='myframe'   onLoad='autoResize(this);'>
+    <iframe src='$url' id='myframe'  >
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
