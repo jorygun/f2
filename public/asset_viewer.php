@@ -51,7 +51,7 @@ function setIframeHeight(id) {
 
 
 <style>
-	iframe { max-width:960px; max-height:1024px; }
+	iframe { width: 100%; height:100%; max-width:960px; max-height:1024px; }
 </style>
 
 EOT;
@@ -133,7 +133,7 @@ $mimetype = $adata['mime'];
 EOT;
 } elseif ( $type == 'Document' ){
     $asset_display= <<<EOT
-    <iframe src='$url' id='myframe'  >
+    <iframe src='$url' id='myframe' onload=" setIframeHeight(this.id)" >
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
