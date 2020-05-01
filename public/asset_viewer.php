@@ -35,7 +35,7 @@ echo <<<EOT
 
 
 <style>
-	iframe { width:960px; }
+	iframe { width:960px; height:1024px; }
 </style>
 
 EOT;
