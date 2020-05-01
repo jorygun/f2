@@ -26,6 +26,7 @@ echo <<<EOT
 
 
   function resizeIframe(obj) {
+  	obj.style.height = 0;
     var newheight = obj.contentWindow.document.documentElement.scrollHeight + 'px';
     obj.style.height = newheight;
     alert ("resized height to "+newheight);
