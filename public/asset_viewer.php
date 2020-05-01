@@ -24,14 +24,20 @@ namespace digitalmx\flames;
 echo <<<EOT
    <script language="JavaScript">
 
-function autoResize(id){
-    var newheight;
-    var newwidth;
-   
+function resizeIFrameToFitContent( iFrame ) {
 
- 	id.style.height = id.contentWindow.document.body.scrollHeight + 'px';
-    
+    iFrame.width  = iFrame.contentWindow.document.body.scrollWidth;
+    iFrame.height = iFrame.contentWindow.document.body.scrollHeight;
 }
+
+window.addEventListener('DOMContentLoaded', function(e) {
+
+    var iFrame = document.getElementById( 'myframe' );
+    resizeIFrameToFitContent( iFrame );
+
+    
+} );
+
 
 </script>
 

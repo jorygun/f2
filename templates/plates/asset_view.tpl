@@ -18,12 +18,4 @@
 			Asset source url: <?=$asset_url?><br> 
 
        </div>
-	<script>
-    // Selecting the iframe element
-    var iframe = document.getElementById("myframe");
-    
-    // Adjusting the iframe height onload event
-    iframe.onload = function(){
-        iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
-    }
-    </script>
+	
