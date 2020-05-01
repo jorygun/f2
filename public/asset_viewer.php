@@ -42,6 +42,11 @@ function autoResize(id){
 }
 
 </script>
+
+<style>
+	iframe { width:960px; }
+</style>
+
 EOT;
 
  	echo $page ->startBody();
@@ -59,7 +64,7 @@ if (!$adata = $assets->getAssetDataById($item_id) ){
 	die ("No asset at id $item_id");
 }
 
-u\echor ($adata, "Retrieve adata");
+#u\echor ($adata, "Retrieve adata");
 
 
 
@@ -114,14 +119,14 @@ $mimetype = $adata['mime'];
 } elseif ($type == 'Multimedia' ){
      #$asset_display =  "<video src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
     $asset_display= <<<EOT
-    <iframe src='$url_enc' id='iframe1'   onLoad='autoResize(this);'>
+    <iframe src='$url_enc' id='iframe1'  onLoad='autoResize(this);'>
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href='$url'>${row['url']}</a>.
      </iframe>
 EOT;
 } elseif ( $type == 'Document' ){
     $asset_display= <<<EOT
-    <iframe src='$url_enc' id='iframe1'  onLoad='autoResize(this);'>
+    <iframe src='$url_enc' id='iframe1'   onLoad='autoResize(this);'>
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
@@ -140,8 +145,7 @@ EOT;
 }
 $adata['asset_display'] = $asset_display;
   
-u\echor($adata,"Before render");
-echo "<hr style='border:10px solid red'>";
+#echo "<hr style='border:10px solid red'>";
 echo $templates->render('asset_view',$adata);
 
 
