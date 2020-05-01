@@ -69,9 +69,12 @@ while ($row = $adb->fetch() ){
 		$b[$v] = $row[$v];
 	}
 	$e['id'] = $id;
-	$e['title'] = stripslashes($row['title']);
-	$e['caption'] = stripslashes($row['title']);
-	
+	if (strpos('\\',$row['title']) != 0){
+		$b['title'] = $e['title'] = stripslashes($row['title']);
+	}
+	if (strpos('\\',$row['caption']) != 0){
+		$b['caption'] = $e['caption'] = stripslashes($row['title']);
+	}
 	//check link
 	if (empty($src = $row['link'])) {
 		echo "<p class='red'>No source specified on id $id </p>";
