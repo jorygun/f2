@@ -25,8 +25,9 @@ if ($login->checkLogin(0)){
 }
 	
 //END START
-
-$id = $_GET['id']?? 0;
+$id = 0;
+#$id = (!empty($_GET['id']) ? $_GET['id'] :0;
+$id =  $_GET['id'] ?? 0;
 // if (empty($id)){
 // 	echo "No asset requested"; exit;
 // }
