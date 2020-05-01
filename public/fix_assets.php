@@ -84,20 +84,21 @@ while ($row = $adb->fetch() ){
 	}
 	
 	if (substr($src,0,1) == '/'){
-		if (substr($src,1,) == 'reunions'){
+		if (substr($src,1,8) == 'reunions'){
 			$src = '/assets' . $src;
 			
+		}
+		elseif (preg_match('|/newsp/SalesConf/(.*)|',$src,$m)){
+			$src = '/assets/sales_conferences/' . $m[1];
 		}
 		$s = SITE_PATH . $src;
 		if (! file_exists($s)){
 			echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
 			$e['status'] = 'E';
-		}
-		
+		} else {$e['link'] = $src;}
 	} elseif (! u\url_exists($src) ){
 		echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
 		$e['status'] = 'E';
-
 	}
 	$b['asset_url'] = $src;
 	$e['link'] = $src;
@@ -168,7 +169,7 @@ while ($row = $adb->fetch() ){
    
    $eprep = pdoPrep($e,$allowed_list,'id');
    $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
-       $stmt = $pdo->prepare($sql)->execute($eprep['data']);
+       #$stmt = $pdo->prepare($sql)->execute($eprep['data']);
 #u\echor($eprep,'E Prep');
 
    
