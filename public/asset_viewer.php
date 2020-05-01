@@ -30,6 +30,7 @@ function getDocHeight(doc) {
     var body = doc.body, html = doc.documentElement;
     var height = Math.max( body.scrollHeight, body.offsetHeight, 
         html.clientHeight, html.scrollHeight, html.offsetHeight );
+   alert ("doc height: "+height);
     return height;
 }
 
