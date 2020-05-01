@@ -114,7 +114,7 @@ while ($row = $adb->fetch() ){
 			$e['url'] = '';
 		}
 	}
-	if ($e['status'] != 'E' ){ 
+	if (!isset($e['status'] ) ){ 
 	if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
 		if (create_thumb($id,$src,$ttype='thumbs') ){
 			if (file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.png')){
@@ -128,7 +128,8 @@ while ($row = $adb->fetch() ){
 	}
 	// moD DATE
 	$b['date_modified'] = $row['mod_date'];
-	if ($e['status'] != 'E' ){ 
+	
+	if (!isset($e['status'] ) ){ 
 	if (empty($mime = $row['mime'])){
 		if (substr($src,0,1) == '/'){
 			if (! $mime = $finfo->file(SITE_PATH . $src) ){
