@@ -24,13 +24,27 @@ namespace digitalmx\flames;
 echo <<<EOT
    <script language="JavaScript">
 
+function getDocHeight(doc) {
+    doc = doc || document;
+    // stackoverflow.com/questions/1145850/
+    var body = doc.body, html = doc.documentElement;
+    var height = Math.max( body.scrollHeight, body.offsetHeight, 
+        html.clientHeight, html.scrollHeight, html.offsetHeight );
+    return height;
+}
 
-  function resizeIframe(obj) {
-  	obj.style.height = 0;
-    var newheight = obj.contentWindow.document.documentElement.scrollHeight + 'px';
-    obj.style.height = newheight;
-    alert ("resized height to "+newheight);
-  }
+function setIframeHeight(id) {
+    var ifrm = document.getElementById(id);
+    var doc = ifrm.contentDocument? ifrm.contentDocument: 
+        ifrm.contentWindow.document;
+    ifrm.style.visibility = 'hidden';
+    ifrm.style.height = "10px"; // reset to minimal height ...
+    // IE opt. for bing/msn needs a bit added or scrollbar appears
+    ifrm.style.height = getDocHeight( doc ) + 4 + "px";
+    ifrm.style.visibility = 'visible';
+}
+
+
 </script>
 
 
@@ -118,7 +132,7 @@ $mimetype = $adata['mime'];
 EOT;
 } elseif ( $type == 'Document' ){
     $asset_display= <<<EOT
-    <iframe src='$url' id='myframe' onload="resizeIframe(this);" >
+    <iframe src='$url' id='myframe' onload=" setIframeHeight(this.id)" >
     
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
