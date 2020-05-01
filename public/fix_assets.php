@@ -69,10 +69,10 @@ while ($row = $adb->fetch() ){
 		$b[$v] = $row[$v];
 	}
 	$e['id'] = $id;
-	if (strpos('\\',$row['title']) != 0){
+	if (strpos($row['title'],'\\') != 0){
 		$b['title'] = $e['title'] = stripslashes($row['title']);
 	}
-	if (strpos('\\',$row['caption']) != 0){
+	if (strpos($row['caption'],'\\') != 0){
 		$b['caption'] = $e['caption'] = stripslashes($row['title']);
 	}
 	//check link
