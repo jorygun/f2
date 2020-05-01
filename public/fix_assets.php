@@ -51,7 +51,7 @@ $pdo->query($sql);
 echo "Clearing db" . BRNL;
 
 
-$sql = "SELECT * from `assets` LIMIT 10 ORDER BY id ";
+$sql = "SELECT * from `assets` ORDER BY id  LIMIT 10 ";
 
 $adb = $pdo->query($sql);
 
