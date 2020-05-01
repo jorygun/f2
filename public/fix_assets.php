@@ -104,6 +104,7 @@ while ($row = $adb->fetch() ){
 	// check thumb source
 	$thm = trim($row['url']);
 	if (!empty($thm)) {
+		echo "cmpr $thm : $src id $id" . BRNL;
 		if ($thm != $src) {
 			$b['thumb_url'] = $thm;
 		} else {
