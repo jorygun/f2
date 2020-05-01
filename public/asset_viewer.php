@@ -106,7 +106,10 @@ $adata['credit'] = $credit;
 $mimetype = $adata['mime'];
    $type = $adata['type'];
 
-
+// if ($substr($url,0,1) != '/' && strpos($url,'youtube') == false){
+// 	header("location:$url");
+// 	
+// }
 
 // set asset display based on url or mime type
 // if you tube, put an embed in a iframe

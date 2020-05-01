@@ -627,8 +627,11 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 		 }
 		
 		if (empty ($mime)){
-			$mime = 'n/a/';
+			$mime = 'n/a';
 		} 
+		// remove extraneous stuff from mime
+		preg_match('/(\w*\/\w+).*/',$mime,$m);
+		$mime = $m[1];
 		echo "$mime, $size" . BRNL;
 		
 		return [$mime,$size];
