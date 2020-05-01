@@ -103,7 +103,7 @@ while ($row = $adb->fetch() ){
 	
 	// check thumb
 	$thm = $row['url'];
-	if (!empty($thm) {
+	if (!empty($thm)) {
 		if ($thm != $src) {
 			$b['thumb_url'] = $thm;
 		} else {
