@@ -120,6 +120,9 @@ $mimetype = $adata['mime'];
 	  $vidlink = "https://www.youtube.com/embed/$vid";
 	  $asset_display = "<iframe id='myframe' width=\"560\" height=\"315\" src=\"$vidlink\"  allowfullscreen></iframe>";
 
+} elseif (substr($url,0,1) != '/') {$asset_display= "
+   <p class='red'>Asset is on an external site.  Please use the source link to access it.</p>
+";
  } elseif (strpos($mimetype,'video') !== false ){
 		  $asset_display =  "<video src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
 } elseif (strpos($mimetype,'audio')!== false ){
@@ -132,7 +135,7 @@ $mimetype = $adata['mime'];
      
      </iframe>
 EOT;
-} elseif ( $type == 'Document' ){
+} elseif ( $type == 'Document' || 'Web Page' ){
     $asset_display= <<<EOT
     <iframe src='$url' id='myframe'  >
     
@@ -145,9 +148,7 @@ EOT;
 } elseif ( $type == 'Image' || $type == 'Cartoon'){
      $asset_display =  "<img src = '$url' style='max-width:960px;'>";
      
-} elseif (substr($url,0,1) != '/') {$asset_display= "
-   <p class='red'>Asset is on an external site.  Please use the source link to access it.</p>
-";
+
 } else {
 	$asset_display = "Uncertain how to display $url.  Please let the admin know.";
 }
