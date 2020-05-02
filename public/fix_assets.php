@@ -61,11 +61,11 @@ $adb = $pdo->query($sql);
 $rc = 0;
 $newOKs = $notOKs = 0;
 while ($row = $adb->fetch() ){
-	++$rc; if (is_integer($rc/25)) echo "$rc <br>";
+	++$rc;# if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
 
 	$status = $row['status'];
-	$edit_me = "<a href='/scripts/asset_id.php?id=$id' target='asset_editor'>Edit $id</a>";
+	$edit_me = "<a href='/scripts/asset_edit.php?id=$id' target='asset_editor'>Edit $id</a>";
 	// make new array 'b'
 
 	$e = $b = array(); // e for error corrections
