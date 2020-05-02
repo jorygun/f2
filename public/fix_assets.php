@@ -114,20 +114,25 @@ while ($row = $adb->fetch() ){
 				$e['temptest'] = 'cannot get mime';
 			}
 		} elseif (substr($src,0,4) == 'http') {
-			$h = get_headers($src);
-			if (strpos($h[0],' 40') > 0){
-				echo "<p class='red'>ID $id Remote source does not exist <br>&nbsp;&nbsp;" . $src .  '</p>' ;
-				$e['temptest'] = 'no remote source';
-			} elseif  (! $mime = $h[8]){
-				echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
-				$mime = '';
-				$e['temptest'] = 'cannot get mime';
+			if ($h = get_headers($src) ){
+				if (strpos($h[0],' 40') > 0){
+					echo "<p class='red'>ID $id Remote source does not exist <br>&nbsp;&nbsp;" . $src .  '</p>' ;
+					$e['temptest'] = 'no remote source';
+				} elseif  (! $mime = $h[8]){
+					echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
+					$mime = '';
+					$e['temptest'] = 'cannot get mime';
+				}
 			}
+			else {
+				echo "<p class='red'>ID $id cannot get headers from source.</p>";
+				$e['temptest'] = 'cannot get headers';
+				}
 				
 		}
 		else {
 			echo "<p class='red'>ID $id Uknown service on $src </p>";
-			$e['temptest'] = 'unknown service on source';
+			$e['temptest'] = 'unknown service';
 		}
 		$b['asset_url'] = $src;
 		if ($osrc != $src){
