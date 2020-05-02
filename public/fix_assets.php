@@ -51,7 +51,7 @@ $pdo->query($sql);
 echo "Clearing db" . BRNL;
 
 
-$sql = "SELECT * from `assets` ORDER BY id  ";
+$sql = "SELECT * from `assets` WHERE temptest != 'OK' ORDER BY id  ";
 
 $adb = $pdo->query($sql);
 
@@ -61,6 +61,7 @@ $rc = 0;
 while ($row = $adb->fetch() ){
 	++$rc; if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
+	$test = 'OK';
 	$status = $row['status'];
 	if (in_array($status,['X','T','D'])){continue;}
 	// make new array 'b'
@@ -82,7 +83,7 @@ while ($row = $adb->fetch() ){
 	//check link
 	if (empty($src = trim($row['link']))) {
 		echo "<p class='red'>No source specified on id $id </p>";
-		$e['status'] = 'E';
+		$e['temptest'] = 'no_source';
 		
 	}
 	$osrc = $src;
@@ -97,11 +98,11 @@ while ($row = $adb->fetch() ){
 		$s = SITE_PATH . $src;
 		if (! file_exists($s)){
 			echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
-			$e['status'] = 'E';
+			$e['temptest'] = 'nno local source';
 		}
 	} elseif (! u\url_exists($src) ){
 		echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
-		$e['status'] = 'E';
+		$e['temptest'] = 'no remote source';
 	}
 	$b['asset_url'] = $src;
 	if ($osrc != $src){
@@ -121,7 +122,7 @@ while ($row = $adb->fetch() ){
 		}
 	}
 	
-	if (!isset($e['status'] ) ){ 
+	if (!isset($e['temptest'] ) ){ 
 	if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
 		if (create_thumb($id,$src,$ttype='thumbs') ){
 			if (file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.png')){
@@ -129,26 +130,26 @@ while ($row = $adb->fetch() ){
 			}
 		} else {
 			echo "<p class='red'>No thumb file for asset $id</p>";
-			$e['status'] = 'E';
+			$e['temptest'] = 'no thumb';
 		}
 	}
 	}
 	// moD DATE
 	$b['date_modified'] = $row['mod_date'];
 	
-	if (!isset($e['status'] ) ){ 
+	if (!isset($e['temptest'] ) ){ 
 	if (empty($mime = $row['mime'])){
 		if (substr($src,0,1) == '/'){
 			if (! $mime = $finfo->file(SITE_PATH . $src) ){
 				echo "<p class='red'>Unable to get mime type from source $src" .'</p>';
-				$e['status'] = 'E';
+				$e['temptest'] = 'no mime';
 			}
 		 } elseif (!$mime = get_url_mime_type($src) ) {
 			echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
-			$e['status'] = 'E';
+			$e['temptest'] = 'no mime';
 		} else {
 			echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
-			$e['status'] = 'E';
+			$e['temptest'] = 'no mime';
 		}
 	}
 	$b['mime'] = $mime;
@@ -178,15 +179,16 @@ while ($row = $adb->fetch() ){
   }
   
   
-if (!empty($e)){
+
 	$e['id'] = $id;
+	if(!isset($e['temptest']){$e['temptest'] = 'OK';}
    $eprep = pdoPrep($e,$allowed_list,'id');
    $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
  #u\echor($eprep,'E Prep');
 
  	$stmt = $pdo->prepare($sql)->execute($eprep['data']);
 
-	}
+	
 	
 }
 echo "done.";
