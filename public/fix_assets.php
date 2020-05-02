@@ -221,6 +221,11 @@ echo "done. $rc records. $newOKs new OKs; $notOKs not OKs.";
 
 ##############
 function url_exists2($id,$url){
+	if(filter_var($url, FILTER_VALIDATE_URL) === FALSE)
+	{
+        echo "Invalid URL: ". $url;
+			return false;
+	}
    if ($headers=get_headers($url) ) {
    	if (stripos($headers[0]," 40") === false) {
    		return true;
