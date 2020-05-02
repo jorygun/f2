@@ -470,26 +470,28 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 	
 	
 	 #set source path to either absolute file path or url
+	 $finfo = new \finfo(FILEINFO_MIME_TYPE);
 	 
 	 if (substr($fsource,0,1) == '/') { #local file
 	 	$source_path = SITE_PATH . $fsource;
+	 	if (! file_exists($source_path)){
+	 		throw new Exception ("No file found at $source_path");
+	 	}
+	 	if (!$source_mime = $finfo->file($source_path)) {
+	 		throw new Exception( "Cannot get mime type of $fsource" );
+	 	}
 	 }	
 	 else {
 	 	$source_path = $fsource;
-	 	
+	 	if (! url_exists($source_path)){
+	 		throw new Exception ("No file found at $source_path");
+	 	}
+	 	if (! $source_mime = get_url_mime_type($source_path)) {
+	 		$source_mime = '';
+	 		throw new Exception("Cannot get mime type of $fsource");
+	 	} 
 	 }
-	 if (! file_exists($source_path)){
-	 	throw new Exception ("No file found at $source_path");
-	 }
-	 $finfo = new \finfo(FILEINFO_MIME_TYPE);
-	 
-	 if (substr($source_path,0,4) == 'http'){
-	 	$source_mime = get_url_mime_type($source_path);
-	 } elseif ( $source_mime = $finfo->file($source_path)) {
-      	
-   } else {
-      echo "Unable to get mime type from source $source_path" . BRNL;
-   }
+
    
    echo "Mime: $source_mime" . BRNL;
       
