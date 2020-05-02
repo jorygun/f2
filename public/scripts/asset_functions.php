@@ -579,7 +579,7 @@ function url_exists($url){
    		return true;
    	}
    }
-   #echo 'Bad Header ' . $headers[0];
+   echo 'Bad Header ' . $headers[0];
    return false;
 }
 

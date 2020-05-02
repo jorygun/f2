@@ -107,8 +107,8 @@ while ($row = $adb->fetch() ){
 				echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>'; 
 				$e['temptest'] = 'no local source';
 			}
-		} elseif (! url_exists($src) ){
-			echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
+		} elseif (! url_exists($id,$src) ){
+			echo "<p class='red'>ID $id Remote source does not exist <br>&nbsp;&nbsp;" . $src .  '</p>' ;
 			$e['temptest'] = 'no remote source';
 		}
 		$b['asset_url'] = $src;
@@ -213,12 +213,12 @@ while ($row = $adb->fetch() ){
 echo "done. $rc records. $newOKs new OKs; $notOKs not OKs.";
 
 ##############
-function url_exists($url){
+function url_exists($id,$url){
    if ($headers=get_headers($url) ) {
    	if (stripos($headers[0]," 40") === false) {
    		return true;
    	}
    }
-   echo 'Bad Header ' . $headers[0];
+   echo 'ID $id Bad Header ' . $headers[0];
    return false;
 }
