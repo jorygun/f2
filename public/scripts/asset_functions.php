@@ -485,9 +485,9 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 	 else {
 	 	$source_path = $fsource;
 	 	if (! url_exists($source_path)){
-	 		throw new Exception ("No file found at $source_path");
+	 		echo  "No file found at $source_path" . BRNL;
 	 	}
-	 	if (! $source_mime = get_url_mime_type($source_path)) {
+	 	elseif (! $source_mime = get_url_mime_type($source_path)) {
 	 		$source_mime = '';
 	 		echo "Cannot get mime type of $fsource" . BRNL;
 	 	} 
