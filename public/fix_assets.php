@@ -86,31 +86,33 @@ while ($row = $adb->fetch() ){
 		$e['temptest'] = 'no_source';
 		
 	}
-	$osrc = $src;
-	if (substr($src,0,1) == '/'){
-		if (substr($src,1,8) == 'reunions'){
-			$src = '/assets' . $src;
+	else {
+		$osrc = $src;
+		if (substr($src,0,1) == '/'){
+			if (substr($src,1,8) == 'reunions'){
+				$src = '/assets' . $src;
 			
+			}
+			elseif (preg_match('|^/newsp/SalesConf/(.*)|',$src,$m)){
+				$src = '/assets/sales_conferences/' . $m[1];
+			}
+			elseif (preg_match('|^/sales_conferences/(.*)|',$src,$m)){
+				$src = '/assets/sales_conferences/' . $m[1];
+			}
+			if (! file_exists(SITE_PATH . $src)){
+				echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
+				$e['temptest'] = 'no local source';
+			}
+		} elseif (! url_exists($src) ){
+			echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
+			$e['temptest'] = 'no remote source';
 		}
-		elseif (preg_match('|^/newsp/SalesConf/(.*)|',$src,$m)){
-			$src = '/assets/sales_conferences/' . $m[1];
+		$b['asset_url'] = $src;
+		if ($osrc != $src){
+			$e['link'] = $src;
 		}
-		elseif (preg_match('|^/sales_conferences/(.*)|',$src,$m)){
-			$src = '/assets/sales_conferences/' . $m[1];
-		}
-		$s = SITE_PATH . $src;
-		if (! file_exists($s)){
-			echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
-			$e['temptest'] = 'nno local source';
-		}
-	} elseif (! url_exists($src) ){
-		echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
-		$e['temptest'] = 'no remote source';
 	}
-	$b['asset_url'] = $src;
-	if ($osrc != $src){
-		$e['link'] = $src;
-	}
+	
 	
 	// check thumb source
 	$thm = trim($row['url']);
@@ -141,22 +143,22 @@ while ($row = $adb->fetch() ){
 	$b['date_modified'] = $row['mod_date'];
 	
 	if (!isset($e['temptest'] ) ){ 
-	if (empty($mime = $row['mime'])){
-		if (substr($src,0,1) == '/'){
-			if (! $mime = $finfo->file(SITE_PATH . $src) ){
-				echo "<p class='red'>Unable to get mime type from source $src" .'</p>';
+		if (empty($mime = $row['mime'])){
+			if (substr($src,0,1) == '/'){
+				if (! $mime = $finfo->file(SITE_PATH . $src) ){
+					echo "<p class='red'>Unable to get mime type from source $src" .'</p>';
+					$e['temptest'] = 'no mime';
+				}
+			 } elseif (!$mime = get_url_mime_type($src) ) {
+				echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
+				$e['temptest'] = 'no mime';
+			} else {
+				echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
 				$e['temptest'] = 'no mime';
 			}
-		 } elseif (!$mime = get_url_mime_type($src) ) {
-			echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
-			$e['temptest'] = 'no mime';
-		} else {
-			echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
-			$e['temptest'] = 'no mime';
 		}
-	}
-	$b['mime'] = $mime;
-	$e['mime'] = $mime;
+		$b['mime'] = $mime;
+		$e['mime'] = $mime;
 	}
 	
 	$b['id'] = $id;

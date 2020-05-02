@@ -558,8 +558,12 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_HEADER, 1);
 curl_setopt($ch, CURLOPT_NOBODY, 1);
-curl_exec($ch);
-return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+if (curl_exec($ch) ){
+	if (curl_getinfo($ch, CURLINFO_HTTP_CODE) < 400){
+		return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+	}
+}
+return false;
 }
 
 function build_im_thumbnail ($id,$source_mime,$source,$ttype,$max_dim){
