@@ -63,13 +63,15 @@ while ($row = $adb->fetch() ){
 	$id = $row['id'];
 
 	$status = $row['status'];
-	if (in_array($status,['X','T','D'])){continue;}
+	
 	// make new array 'b'
 
 	$e = $b = array(); // e for error corrections
 	foreach ($same as $v){
 		$b[$v] = $row[$v];
 	}
+	// moD DATE
+	$b['date_modified'] = $row['mod_date'];
 	
 	if (strpos($row['title'],'\\') != 0){
 		$b['title'] = $e['title'] = stripslashes($row['title']);
@@ -86,7 +88,7 @@ while ($row = $adb->fetch() ){
 		$e['temptest'] = 'no_source';
 		
 	}
-	else {
+	if (! isset ($e['temptest']) ) {
 		$osrc = $src;
 		if (substr($src,0,1) == '/'){
 			if (substr($src,1,8) == 'reunions'){
@@ -128,37 +130,41 @@ while ($row = $adb->fetch() ){
 	}
 	
 	if (!isset($e['temptest'] ) ){ 
-	if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
-		if (create_thumb($id,$src,$ttype='thumbs') ){
-			if (file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.png')){
-				unlink (SITE_PATH . '/assets/thumbs/' . $id . '.png');
+		if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
+			if (create_thumb($id,$src,$ttype='thumbs') ){
+				if (file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.png')){
+					unlink (SITE_PATH . '/assets/thumbs/' . $id . '.png');
+				}
+			} else {
+				echo "<p class='red'>No thumb file for asset $id</p>";
+				$e['temptest'] = 'no thumb';
 			}
-		} else {
-			echo "<p class='red'>No thumb file for asset $id</p>";
-			$e['temptest'] = 'no thumb';
 		}
 	}
-	}
-	// moD DATE
-	$b['date_modified'] = $row['mod_date'];
+	
 	
 	if (!isset($e['temptest'] ) ){ 
-		if (empty($mime = $row['mime'])){
+		$omime = $row['mime'];
 			if (substr($src,0,1) == '/'){
 				if (! $mime = $finfo->file(SITE_PATH . $src) ){
 					echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
-					$e['temptest'] = 'no mime';
+					$mime = '';
+					$e['temptest'] = 'cannot get mime';
 				}
 			 } elseif (!$mime = get_url_mime_type($src) ) {
 				echo "<p class='red'>ID $id Unable to get mime type from source $src" . '</p>';
 				$e['temptest'] = 'no mime';
+				$mime = '';
 			} else {
 				echo "<p class='red'>Id $id Unable to get mime type from source $src" . '</p>';
+				$mime = '';
 				$e['temptest'] = 'no mime';
 			}
 		}
 		$b['mime'] = $mime;
-		$e['mime'] = $mime;
+		if ($mime && $mime != $omine){
+			$e['mime'] = $mime;
+		}
 	}
 	
 	$b['id'] = $id;
