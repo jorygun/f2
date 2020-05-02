@@ -52,7 +52,7 @@ echo "Clearing db" . BRNL;
 
 
 $sql = "SELECT * from `assets` WHERE 
-/* temptest != 'OK' AND */
+ temptest != 'OK' AND 
 status not in ('X','T') ORDER BY id  ";
 
 $adb = $pdo->query($sql);
@@ -219,6 +219,6 @@ function url_exists2($id,$url){
    		return true;
    	}
    }
-   echo 'ID $id Bad Header ' . $headers[0];
+   echo "ID $id Bad Header " . $headers[0];
    return false;
 }
