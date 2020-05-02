@@ -488,7 +488,7 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 	 	}
 	 	if (! $source_mime = get_url_mime_type($source_path)) {
 	 		$source_mime = '';
-	 		throw new Exception("Cannot get mime type of $fsource");
+	 		echo "Cannot get mime type of $fsource" . BRNL;
 	 	} 
 	 }
 
@@ -561,9 +561,12 @@ curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 curl_setopt($ch, CURLOPT_HEADER, 1);
 curl_setopt($ch, CURLOPT_NOBODY, 1);
 if (curl_exec($ch) ){
-	if (curl_getinfo($ch, CURLINFO_HTTP_CODE) < 400){
+	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE) ;
+	if ($code < 400){
 		return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-	}
+	} else {
+		echo "curl returned code $code" . BRNL;
+		return false;
 }
 return false;
 }
