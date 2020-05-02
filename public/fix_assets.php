@@ -196,7 +196,7 @@ while ($row = $adb->fetch() ){
 		if ($status != 'R'){$e['status'] = 'O';}
 	}
 	else {
-		$e['status'] = 'E'
+		$e['status'] = 'E';
 		++$notOKs;
 		
 	}
