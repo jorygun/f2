@@ -157,11 +157,7 @@ while ($row = $adb->fetch() ){
 			echo "<p class='red'>ID $id Unable to get mime type from source $src" . '</p>';
 			$e['temptest'] = 'no mime';
 			$mime = '';
-		} else {
-			echo "<p class='red'>Id $id Unable to get mime type from source $src" . '</p>';
-			$mime = '';
-			$e['temptest'] = 'no mime';
-		}
+		} 
 		
 		$b['mime'] = $mime;
 		if ($mime && $mime != $omime){
