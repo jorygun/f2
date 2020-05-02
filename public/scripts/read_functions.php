@@ -159,6 +159,9 @@ function get_latest_file($dir) {
 	return "$dir/$file";
 }
 
+function get_popular() {
+}
+
 
 function replace_new_discussion ($content) {
         #replace discussion content - new style
