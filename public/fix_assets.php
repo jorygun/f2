@@ -164,7 +164,7 @@ while ($row = $adb->fetch() ){
 		}
 		
 		$b['mime'] = $mime;
-		if ($mime && $mime != $omine){
+		if ($mime && $mime != $omime){
 			$e['mime'] = $mime;
 		}
 	}
