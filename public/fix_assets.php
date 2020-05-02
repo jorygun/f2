@@ -1,6 +1,6 @@
 <?php
 namespace digitalmx\flames;
-ini_set('default_socket_timeout', 10);
+ini_set('default_socket_timeout', 15);
 //BEGIN START
 	require_once 'init.php';
 
