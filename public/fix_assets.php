@@ -158,7 +158,7 @@ while ($row = $adb->fetch() ){
 	$b['id'] = $id;
 	
 		
-	#	$prep = pdoPrep($b,$allowed_list,''); #no key field.  Must retain id
+	
  /**
  	$prep = pdoPrep($post_data,$allowed_list,'id');
 
@@ -170,11 +170,14 @@ while ($row = $adb->fetch() ){
        $stmt = $pdo->prepare($sql)->execute($prep['data']);
 
   **/
-
-#u\echor ($prep,'prep');
-
+  if (0) {
+	$prep = pdoPrep($b,$allowed_list,''); #no key field.  Must retain id
+	#u\echor ($prep,'prep');
 	$sql = "INSERT into `assets2` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-     #  $stmt = $pdo->prepare($sql)->execute($prep['data']);
+  $stmt = $pdo->prepare($sql)->execute($prep['data']);
+  }
+  
+  
 if (!empty($e)){
 	$e['id'] = $id;
    $eprep = pdoPrep($e,$allowed_list,'id');
