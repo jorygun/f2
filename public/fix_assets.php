@@ -145,22 +145,22 @@ while ($row = $adb->fetch() ){
 	
 	if (!isset($e['temptest'] ) ){ 
 		$omime = $row['mime'];
-			if (substr($src,0,1) == '/'){
-				if (! $mime = $finfo->file(SITE_PATH . $src) ){
-					echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
-					$mime = '';
-					$e['temptest'] = 'cannot get mime';
-				}
-			 } elseif (!$mime = get_url_mime_type($src) ) {
-				echo "<p class='red'>ID $id Unable to get mime type from source $src" . '</p>';
-				$e['temptest'] = 'no mime';
+		if (substr($src,0,1) == '/'){
+			if (! $mime = $finfo->file(SITE_PATH . $src) ){
+				echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
 				$mime = '';
-			} else {
-				echo "<p class='red'>Id $id Unable to get mime type from source $src" . '</p>';
-				$mime = '';
-				$e['temptest'] = 'no mime';
+				$e['temptest'] = 'cannot get mime';
 			}
+		 } elseif (!$mime = get_url_mime_type($src) ) {
+			echo "<p class='red'>ID $id Unable to get mime type from source $src" . '</p>';
+			$e['temptest'] = 'no mime';
+			$mime = '';
+		} else {
+			echo "<p class='red'>Id $id Unable to get mime type from source $src" . '</p>';
+			$mime = '';
+			$e['temptest'] = 'no mime';
 		}
+		
 		$b['mime'] = $mime;
 		if ($mime && $mime != $omine){
 			$e['mime'] = $mime;
