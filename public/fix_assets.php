@@ -181,7 +181,7 @@ while ($row = $adb->fetch() ){
   
 
 	$e['id'] = $id;
-	if(!isset($e['temptest']){$e['temptest'] = 'OK';}
+	if(!isset($e['temptest'])) {$e['temptest'] = 'OK';}
    $eprep = pdoPrep($e,$allowed_list,'id');
    $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
  #u\echor($eprep,'E Prep');
