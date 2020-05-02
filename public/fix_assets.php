@@ -100,7 +100,7 @@ while ($row = $adb->fetch() ){
 				$src = '/assets/sales_conferences/' . $m[1];
 			}
 			if (! file_exists(SITE_PATH . $src)){
-				echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
+				echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>'; 
 				$e['temptest'] = 'no local source';
 			}
 		} elseif (! url_exists($src) ){
@@ -146,14 +146,14 @@ while ($row = $adb->fetch() ){
 		if (empty($mime = $row['mime'])){
 			if (substr($src,0,1) == '/'){
 				if (! $mime = $finfo->file(SITE_PATH . $src) ){
-					echo "<p class='red'>Unable to get mime type from source $src" .'</p>';
+					echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
 					$e['temptest'] = 'no mime';
 				}
 			 } elseif (!$mime = get_url_mime_type($src) ) {
-				echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
+				echo "<p class='red'>ID $id Unable to get mime type from source $src" . '</p>';
 				$e['temptest'] = 'no mime';
 			} else {
-				echo "<p class='red'>Unable to get mime type from source $src" . '</p>';
+				echo "<p class='red'>Id $id Unable to get mime type from source $src" . '</p>';
 				$e['temptest'] = 'no mime';
 			}
 		}
