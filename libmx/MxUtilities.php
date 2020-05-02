@@ -587,8 +587,13 @@ function days_ago ($date_str = '1') {
 }
 
 function url_exists($url){
-   $headers=get_headers($url);
-   return stripos($headers[0],"200 OK")?true:false;
+   if ($headers=get_headers($url) ) {
+   	if (stripos($headers[0],"200 OK") !== false) {
+   		return true;
+   	}
+   }
+   echo $headers[0];
+   return false;
 }
 
 function age_and_date($date_str) {
