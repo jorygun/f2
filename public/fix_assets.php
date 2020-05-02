@@ -134,9 +134,9 @@ while ($row = $adb->fetch() ){
 	if (!isset($e['temptest'] ) ){ 
 		if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
 			if (create_thumb($id,$src,$ttype='thumbs') ){
-				if (file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.png')){
-					unlink (SITE_PATH . '/assets/thumbs/' . $id . '.png');
-				}
+				// if (file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.png')){
+// 					unlink (SITE_PATH . '/assets/thumbs/' . $id . '.png');
+// 				}
 			} else {
 				echo "<p class='red'>No thumb file for asset $id</p>";
 				$e['temptest'] = 'no thumb';

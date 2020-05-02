@@ -562,10 +562,11 @@ curl_setopt($ch, CURLOPT_HEADER, 1);
 curl_setopt($ch, CURLOPT_NOBODY, 1);
 if (curl_exec($ch) ){
 	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE) ;
-	if ($code < 400){
-		return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+	if ($code && $code < 400){
+		$mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+		return $mime;
 	} else {
-		echo "curl returned code $code" . BRNL;
+		echo "curl returned code $code mime $mime" . BRNL;
 		return false;
 	}
 }
