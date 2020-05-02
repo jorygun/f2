@@ -183,10 +183,7 @@ if (!empty($e)){
 
  	$stmt = $pdo->prepare($sql)->execute($eprep['data']);
 
-
-   
-  
-
-}
+	}
 	
+}
 echo "done.";
