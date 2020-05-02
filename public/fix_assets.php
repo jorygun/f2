@@ -113,7 +113,7 @@ while ($row = $adb->fetch() ){
 				$mime = '';
 				$e['temptest'] = 'cannot get mime';
 			}
-		} elseif ($substr($src,0,4) == 'http') {
+		} elseif (substr($src,0,4) == 'http') {
 			$h = get_headers($src);
 			if (strpos($h[0],' 40') > 0){
 				echo "<p class='red'>ID $id Remote source does not exist <br>&nbsp;&nbsp;" . $src .  '</p>' ;
