@@ -57,11 +57,11 @@ $adb = $pdo->query($sql);
 
 
 $rc = 0;
-
+$newOKs = $notOKs = 0;
 while ($row = $adb->fetch() ){
 	++$rc; if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
-	$test = 'OK';
+
 	$status = $row['status'];
 	if (in_array($status,['X','T','D'])){continue;}
 	// make new array 'b'
@@ -184,7 +184,11 @@ while ($row = $adb->fetch() ){
   
 
 	$e['id'] = $id;
-	if(!isset($e['temptest'])) {$e['temptest'] = 'OK';}
+	if(!isset($e['temptest'])) {
+		$e['temptest'] = 'OK';
+		++$newOKs;
+	}
+	else {++$notOKs;}
    $eprep = pdoPrep($e,$allowed_list,'id');
    $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
  #u\echor($eprep,'E Prep');
@@ -194,4 +198,5 @@ while ($row = $adb->fetch() ){
 	
 	
 }
-echo "done.";
+
+echo "done. $rc records. $newOKs new OKs; $notOKs not OKs.";
