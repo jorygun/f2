@@ -23,13 +23,13 @@ class Definitions {
 		#days since last activity; triggers lost test
 
 	public static $asset_status = array(
-    'R' => 'Reviewed-R',
-    'S' => 'S',
-    'U' => 'Updated: re-review',
+    'R' => 'Reviewed',
     'T' => 'temp holding',
-    'E' => 'Has Error',
+    'E' => 'Data Error',
     'X' => 'Deleted',
     'N' => 'New',
+    'O' => 'OK',
+    'F' => 'Error accepted'
 
 
 );

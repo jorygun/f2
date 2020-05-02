@@ -112,7 +112,8 @@ $asset_status = array(
     'D' => 'Deleted',
     'X' => 'Deleted and Unlinked',
     'N' => 'New',
-    'O' => 'OK'
+    'O' => 'OK',
+    'F' => 'Error accepted'
 
 );
 

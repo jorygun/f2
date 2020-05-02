@@ -53,7 +53,7 @@ echo "Clearing assets2" . BRNL;
 
 $sql = "SELECT * from `assets` WHERE 
  
-status not in ('O''X','T') ORDER BY id  ";
+status not in ('O''X','T','F') ORDER BY id  ";
 
 $adb = $pdo->query($sql);
 
