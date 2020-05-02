@@ -51,7 +51,7 @@ $pdo->query($sql);
 echo "Clearing db" . BRNL;
 
 
-$sql = "SELECT * from `assets` WHERE temptest != 'OK' ORDER BY id  ";
+$sql = "SELECT * from `assets` WHERE temptest != 'OK' and status not in ('D','X','T') ORDER BY id  ";
 
 $adb = $pdo->query($sql);
 
@@ -92,10 +92,10 @@ while ($row = $adb->fetch() ){
 			$src = '/assets' . $src;
 			
 		}
-		elseif (preg_match('|/newsp/SalesConf/(.*)|',$src,$m)){
+		elseif (preg_match('|^/newsp/SalesConf/(.*)|',$src,$m)){
 			$src = '/assets/sales_conferences/' . $m[1];
 		}
-		elseif (preg_match('|/sales_conferences/(.*)|',$src,$m)){
+		elseif (preg_match('|^/sales_conferences/(.*)|',$src,$m)){
 			$src = '/assets/sales_conferences/' . $m[1];
 		}
 		$s = SITE_PATH . $src;
@@ -103,7 +103,7 @@ while ($row = $adb->fetch() ){
 			echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
 			$e['temptest'] = 'nno local source';
 		}
-	} elseif (! u\url_exists($src) ){
+	} elseif (! url_exists($src) ){
 		echo "<p class='red'>Remote source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>' ;
 		$e['temptest'] = 'no remote source';
 	}
@@ -200,3 +200,14 @@ while ($row = $adb->fetch() ){
 }
 
 echo "done. $rc records. $newOKs new OKs; $notOKs not OKs.";
+
+##############
+function url_exists($url){
+   if ($headers=get_headers($url) ) {
+   	if (stripos($headers[0]," 40") === false) {
+   		return true;
+   	}
+   }
+   echo 'Bad Header ' . $headers[0];
+   return false;
+}
