@@ -491,7 +491,7 @@ function process_asset_search($data){
         $qp[] = "status = '$son'";
     }
    elseif ($data['all_active'] == 1){
-        $qp[] = "status not in ('X','D','T') ";
+        $qp[] = "status not in ('X','T') ";
     }
 
     if (!empty($son = $data['url'])){

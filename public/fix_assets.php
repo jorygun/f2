@@ -114,17 +114,19 @@ while ($row = $adb->fetch() ){
 				$e['temptest'] = 'cannot get mime';
 			}
 		} elseif (substr($src,0,4) == 'http') {
-			if ($h = get_headers($src) ){
+			if ($h = get_headers($src,1) ){
 				if (strpos($h[0],' 40') > 0){
 					echo "<p class='red'>ID $id Remote source does not exist <br>&nbsp;&nbsp;" . $src .  '</p>' ;
 					$e['temptest'] = 'no remote source';
-				} elseif  (! $mime = $h[8]){
-					echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
-					$mime = '';
-					$e['temptest'] = 'cannot get mime';
+				} elseif  (! $mime = $h['Content-Type']){
+					echo "<p class='red'>ID $id Cannot retreive content-type.</p>";
+					$e['temptest'] = 'no content-type';
+					$mime = 'text/html';
+					
+				} else {
+					$mime = substr($mime,0,strpos($mime,';'));
 				}
-			}
-			else {
+			} else {
 				echo "<p class='red'>ID $id cannot get headers from source.</p>";
 				$e['temptest'] = 'cannot get headers';
 				}

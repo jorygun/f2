@@ -363,6 +363,7 @@ First Use:
 
 Mime: ${itemdata['mime']} Type: $this_type<br>
 Size: ${itemdata['sizekb']} KB. Height: ${itemdata['height']} Width: ${itemdata['width']}<br>
+Testdata: ${itemdata['temptest']} <br>
 
 EOT;
 }
