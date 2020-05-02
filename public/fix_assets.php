@@ -107,7 +107,7 @@ while ($row = $adb->fetch() ){
 				echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>'; 
 				$e['temptest'] = 'no local source';
 			}
-		} elseif (! url_exists($id,$src) ){
+		} elseif (! url_exists2($id,$src) ){
 			echo "<p class='red'>ID $id Remote source does not exist <br>&nbsp;&nbsp;" . $src .  '</p>' ;
 			$e['temptest'] = 'no remote source';
 		}
@@ -213,7 +213,7 @@ while ($row = $adb->fetch() ){
 echo "done. $rc records. $newOKs new OKs; $notOKs not OKs.";
 
 ##############
-function url_exists($id,$url){
+function url_exists2($id,$url){
    if ($headers=get_headers($url) ) {
    	if (stripos($headers[0]," 40") === false) {
    		return true;
