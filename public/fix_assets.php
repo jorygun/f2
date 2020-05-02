@@ -52,8 +52,8 @@ echo "Clearing db" . BRNL;
 
 
 $sql = "SELECT * from `assets` WHERE 
- temptest != 'OK' AND 
-status not in ('D','X','T') ORDER BY id  ";
+/* temptest != 'OK' AND */
+status not in ('X','T') ORDER BY id  ";
 
 $adb = $pdo->query($sql);
 
@@ -193,8 +193,13 @@ while ($row = $adb->fetch() ){
 	if(!isset($e['temptest'])) {
 		$e['temptest'] = 'OK';
 		++$newOKs;
+		if ($status != 'R'){$e['status'] = 'O';}
 	}
-	else {++$notOKs;}
+	else {
+		$e['status'] = 'E'
+		++$notOKs;
+		
+	}
    $eprep = pdoPrep($e,$allowed_list,'id');
    $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
  #u\echor($eprep,'E Prep');

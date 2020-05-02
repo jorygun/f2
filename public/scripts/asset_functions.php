@@ -566,11 +566,21 @@ if (curl_exec($ch) ){
 		$mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
 		return $mime;
 	} else {
-		echo "curl returned code $code mime $mime" . BRNL;
+		echo "curl returned code $code " . BRNL;
 		return false;
 	}
 }
 return false;
+}
+
+function url_exists($url){
+   if ($headers=get_headers($url) ) {
+   	if (stripos($headers[0]," 40") === false) {
+   		return true;
+   	}
+   }
+   #echo 'Bad Header ' . $headers[0];
+   return false;
 }
 
 function build_im_thumbnail ($id,$source_mime,$source,$ttype,$max_dim){
