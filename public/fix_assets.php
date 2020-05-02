@@ -48,7 +48,7 @@ echo "starting" . BRNL;
 // empty the existing data
 $sql = 'DELETE from `assets2`;';
 $pdo->query($sql);
-echo "Clearing db" . BRNL;
+echo "Clearing assets2" . BRNL;
 
 
 $sql = "SELECT * from `assets` WHERE 
@@ -92,6 +92,8 @@ while ($row = $adb->fetch() ){
 	}
 	if (! isset ($e['temptest']) ) {
 		$osrc = $src;
+		$omime = $row['mime'];
+		
 		if (substr($src,0,1) == '/'){
 			if (substr($src,1,8) == 'reunions'){
 				$src = '/assets' . $src;
@@ -106,10 +108,26 @@ while ($row = $adb->fetch() ){
 			if (! file_exists(SITE_PATH . $src)){
 				echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $src .  '</p>'; 
 				$e['temptest'] = 'no local source';
+			} elseif  (! $mime = $finfo->file(SITE_PATH . $src) ){
+				echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
+				$mime = '';
+				$e['temptest'] = 'cannot get mime';
 			}
-		} elseif (! url_exists2($id,$src) ){
-			echo "<p class='red'>ID $id Remote source does not exist <br>&nbsp;&nbsp;" . $src .  '</p>' ;
-			$e['temptest'] = 'no remote source';
+		} elseif ($substr($src,0,4) == 'http') {
+			$h = get_headers($src);
+			if (strpos($h[0],' 40') > 0){
+				echo "<p class='red'>ID $id Remote source does not exist <br>&nbsp;&nbsp;" . $src .  '</p>' ;
+				$e['temptest'] = 'no remote source';
+			} elseif  (! $mime = $h[8]){
+				echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
+				$mime = '';
+				$e['temptest'] = 'cannot get mime';
+			}
+				
+		}
+		else {
+			echo "<p class='red'>ID $id Uknown service on $src </p>";
+			$e['temptest'] = 'unknown service on source';
 		}
 		$b['asset_url'] = $src;
 		if ($osrc != $src){
@@ -145,25 +163,13 @@ while ($row = $adb->fetch() ){
 	}
 	
 	
-	if (!isset($e['temptest'] ) ){ 
-		$omime = $row['mime'];
-		if (substr($src,0,1) == '/'){
-			if (! $mime = $finfo->file(SITE_PATH . $src) ){
-				echo "<p class='red'>ID $id Unable to get mime type from source $src" .'</p>';
-				$mime = '';
-				$e['temptest'] = 'cannot get mime';
-			}
-		 } elseif (!$mime = get_url_mime_type($src) ) {
-			echo "<p class='red'>ID $id Unable to get mime type from source $src" . '</p>';
-			$e['temptest'] = 'no mime';
-			$mime = '';
-		} 
+	
 		
 		$b['mime'] = $mime;
 		if ($mime && $mime != $omime){
 			$e['mime'] = $mime;
 		}
-	}
+	
 	
 	$b['id'] = $id;
 	
@@ -220,6 +226,6 @@ function url_exists2($id,$url){
    		return true;
    	}
    }
-   echo "ID $id Bad Header " . $headers[0];
+   echo "ID $id Bad Header " . $headers[0] . $headers[8];
    return false;
 }
