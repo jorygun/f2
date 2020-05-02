@@ -52,7 +52,7 @@ echo "Clearing db" . BRNL;
 
 
 $sql = "SELECT * from `assets` WHERE 
-// temptest != 'OK' AND
+/* temptest != 'OK' AND */
 status not in ('D','X','T') ORDER BY id  ";
 
 $adb = $pdo->query($sql);
