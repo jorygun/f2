@@ -95,6 +95,9 @@ while ($row = $adb->fetch() ){
 		elseif (preg_match('|/newsp/SalesConf/(.*)|',$src,$m)){
 			$src = '/assets/sales_conferences/' . $m[1];
 		}
+		elseif (preg_match('|/sales_conferences/(.*)|',$src,$m)){
+			$src = '/assets/sales_conferences/' . $m[1];
+		}
 		$s = SITE_PATH . $src;
 		if (! file_exists($s)){
 			echo "<p class='red'>Local source does not exist on id $id:<br>&nbsp;&nbsp;" . $s .  '</p>'; 
