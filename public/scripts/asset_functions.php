@@ -567,6 +567,7 @@ if (curl_exec($ch) ){
 	} else {
 		echo "curl returned code $code" . BRNL;
 		return false;
+	}
 }
 return false;
 }
