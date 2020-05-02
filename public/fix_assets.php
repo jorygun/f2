@@ -52,8 +52,8 @@ echo "Clearing db" . BRNL;
 
 
 $sql = "SELECT * from `assets` WHERE 
- temptest != 'OK' AND 
-status not in ('X','T') ORDER BY id  ";
+ 
+status not in ('O''X','T') ORDER BY id  ";
 
 $adb = $pdo->query($sql);
 
@@ -65,7 +65,7 @@ while ($row = $adb->fetch() ){
 	$id = $row['id'];
 
 	$status = $row['status'];
-	
+	$edit_me = "<a href='/scripts/asset_id.php?id=$id' target='asset_editor'>Edit $id</a>";
 	// make new array 'b'
 
 	$e = $b = array(); // e for error corrections
@@ -198,6 +198,7 @@ while ($row = $adb->fetch() ){
 	else {
 		$e['status'] = 'E';
 		++$notOKs;
+		echo $edit_me;
 		
 	}
    $eprep = pdoPrep($e,$allowed_list,'id');
