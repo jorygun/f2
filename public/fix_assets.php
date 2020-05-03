@@ -26,7 +26,10 @@ ini_set('default_socket_timeout', 15);
 require_once 'scripts/asset_functions.php';
 $finfo = new \finfo(FILEINFO_MIME_TYPE);
 
-$write_new_db = false;
+#####################################
+$write_new = false;
+$rewrite_old = true;
+####################################
 
 $old_to_new =  array(
 	'id'	=>	'id',
@@ -75,7 +78,7 @@ echo "starting" . BRNL;
 $pdo->query("delete from `assets`");
 $pdo->query("insert into `assets` select * from `assetsback`");
 
-if ($write_new_db){
+if ($write_new){
 // empty the existing data
 	$sql = 'DELETE from `assets2`;';
 	$pdo->query($sql);
@@ -94,7 +97,7 @@ if ($write_new_db){
 
 
 $sql = "SELECT * from `assets` WHERE 
-status not in ('O''X','T','F') 
+status not in ('X','T','F') 
  ";
 
 $adb = $pdo->query($sql);
@@ -223,10 +226,11 @@ while ($row = $adb->fetch() ){
 		echo $edit_me;
 		
 	}
+	
+	$new_row = array_merge($row,$e);
+	
 	// if any changes, merge with original data and rewrite record
-	if (!empty($e)){
-		$new_row = array_merge($row,$e);
-		#u\echor ($new_row, 'new row'); 
+	if (!empty($e) && $rewrite_old){
 		
 		if (! isset ( $estmt) ){
 			$eprep = u\pdoPrep($new_row,[],'id');
@@ -247,9 +251,9 @@ while ($row = $adb->fetch() ){
 		
 	}
 
-	if ($write_new_db) { #move to b array
+	if ($write_new) { 
 		$b = copy_to_new ($new_row,$old_to_new);
-	  	$bstmt ->execute($prep['$b']);
+	  	$bstmt ->execute($b);
   	}
   
 	
