@@ -28,7 +28,7 @@ $finfo = new \finfo(FILEINFO_MIME_TYPE);
 
 $write_new_db = false;
 
-$old_to_new = static array(
+$old_to_new =  array(
 	'id'	=>	'id',
 	'status'	=>	'status',
 	'title'	=>	'title',
@@ -224,8 +224,8 @@ while ($row = $adb->fetch() ){
 	if ($write_new_db) { #move to b array
 		$b = copy_to_new ($new_row,$old_to_new);
 	  	$bstmt ->execute($prep['$b']);
-  }
-  }
+  	}
+  
 	
 }
 
