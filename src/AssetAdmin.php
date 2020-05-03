@@ -95,6 +95,8 @@ class AssetAdmin
 			die ("No contributor info supplied");
 		}
 		
+	echo "after c ookup: " . $adata['contributor'] . ' ' . $adata['contributor_id'] . BRNL; exit;
+	
 		$adata['vintage'] = trim((int)$adata['vintage']);
 		if (empty($adata['vintage'])){
 			$adata['vintage'] = date('Y');}

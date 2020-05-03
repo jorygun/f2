@@ -208,7 +208,7 @@ class Assets {
 		
 		$adata['astatus'] = $adata['astatus']?? $adata['status'];
 		
-		if (! is_integer (0 + $adata['contributor_id']) 
+		if (! is_integer ( (int)$adata['contributor_id']) 
 			&& $adata['contributor_id'] > 0 ){
 				throw new Exception ("No contributor id");
 		}
