@@ -30,7 +30,7 @@ $write_new_db = false;
 
 $old_to_new =  array(
 	'id'	=>	'id',
-	'status'	=>	'status',
+	'astatus'	=>	'astatus',
 	'title'	=>	'title',
 	'caption'	=>	'caption',
 	'keywords'	=>	'keywords',
@@ -97,7 +97,7 @@ $bstmt = $pdo->prepare($sql);
 
 
 $sql = "SELECT * from `assets` WHERE 
-status not in ('O''X','T','F') 
+astatus not in ('O''X','T','F') 
  ";
 
 $adb = $pdo->query($sql);
@@ -108,7 +108,7 @@ $newOKs = $notOKs = 0;
 while ($row = $adb->fetch() ){
 	++$rc;# if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
-	$status = $row['status'];
+	$status = $row['astatus'];
 	$edit_me = "<p style='background:#CFC;border=1px solid green;'>
 	<a href='/scripts/asset_edit.php?id=$id' target='asset_editor'>
 	Edit $id</a></p>";
@@ -212,10 +212,10 @@ while ($row = $adb->fetch() ){
 	if(!isset($e['temptest'])) {
 		$e['temptest'] = 'OK';
 		++$newOKs;
-		if ($status != 'R'){$e['status'] = 'O';}
+		if ($status != 'R'){$e['astatus'] = 'O';}
 	}
 	else {
-		$e['status'] = 'E';
+		$e['astatus'] = 'E';
 		++$notOKs;
 		echo $edit_me;
 		
