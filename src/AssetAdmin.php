@@ -92,7 +92,7 @@ class AssetAdmin
 		} elseif (!empty ($post['contributor'] )) {
 			if (! list ($adata['contributor'], $adata['contributor_id'] ) 
 				= $this->member->getMemberId($post['contributor']) ){	
-				throw new Exception ("Contributor ${adata['contributor_id']} not found");
+				throw new Exception ("Contributor ${post['contributor']} not found");
 		} else {
 			die ("No contributor info supplied");
 		}
