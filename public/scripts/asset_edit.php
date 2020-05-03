@@ -210,7 +210,7 @@ function post_asset_update($post) {
         echo "updating asset $id for post_asset_update" . BRNL;
         $pdo = digitalmx\MyPDO::instance();
         $sql = "UPDATE `assets` 
-        	SET title=?, caption=?, vintage=? ,tags=? , astatus=?
+        	SET title=?, caption=?, vintage=? ,tags=? , status=?
         	WHERE id = $id";
         #echo $sql . BRNL;
        $stmt =  $pdo -> prepare($sql);
@@ -476,7 +476,7 @@ function show_asset_update ($row) { #used for update, not full edit
        $type=$row['type'];
        $user_level = $_SESSION['level'];
        $caption = $row['caption'];
-        $status = $row['astatus'];
+        $status = $row['status'];
         $status_name = $asset_status[$status];
         #$run = $row['run'];
         #$last_tags = $row['last_tags'];

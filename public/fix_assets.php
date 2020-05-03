@@ -30,7 +30,7 @@ $write_new_db = false;
 
 $old_to_new =  array(
 	'id'	=>	'id',
-	'astatus'	=>	'astatus',
+	'status'	=>	'astatus',
 	'title'	=>	'title',
 	'caption'	=>	'caption',
 	'keywords'	=>	'keywords',
@@ -223,6 +223,9 @@ while ($row = $adb->fetch() ){
 	// if any changes, merge with original data and rewrite record
 	if (!empty($e)){
 		$new_row = array_merge($row,$e);
+		foreach ($new_row as $var=>$val){
+			if (empty($val)) $new_row[$var] = '';
+		}
 		u\echor ($new_row, 'new row'); 
 		try {$estmt ->execute($new_row) ;
 		} catch (Exception $e) {
