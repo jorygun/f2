@@ -96,7 +96,7 @@ if ($write_new){
 // set up pdo tatement.  Use old to new to get fields; ignore data
 
 
-$sql = "SELECT * from `assets` "
+$sql = "SELECT * from `assets` ";
 if ($rewrite_old) $sql .= "WHERE status not in ('X','T','F','O') ";
 
 
