@@ -71,6 +71,9 @@ $old_to_new =  array(
 
 echo "starting" . BRNL;
 
+delete from assets;
+insert into assets select * from assetsback;
+
 if ($write_new_db){
 // empty the existing data
 	$sql = 'DELETE from `assets2`;';
