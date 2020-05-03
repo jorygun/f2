@@ -27,8 +27,8 @@ require_once 'scripts/asset_functions.php';
 $finfo = new \finfo(FILEINFO_MIME_TYPE);
 
 #####################################
-$write_new = false;
-$rewrite_old = true;
+$write_new = true;
+$rewrite_old = false;
 ####################################
 
 $old_to_new =  array(
@@ -96,9 +96,9 @@ if ($write_new){
 // set up pdo tatement.  Use old to new to get fields; ignore data
 
 
-$sql = "SELECT * from `assets` WHERE 
-status not in ('X','T','F') 
- ";
+$sql = "SELECT * from `assets` "
+if ($rewrite_old) $sql .= "WHERE status not in ('X','T','F','O') ";
+
 
 $adb = $pdo->query($sql);
 
@@ -117,6 +117,7 @@ while ($row = $adb->fetch() ){
 
 	$e = array(); // e for error corrections
 	
+if ($rewrite_old){
 	
 	if (strpos($row['title'],'\\') != 0){
 		 $e['title'] = stripslashes($row['title']);
@@ -226,7 +227,7 @@ while ($row = $adb->fetch() ){
 		echo $edit_me;
 		
 	}
-	
+}
 	$new_row = array_merge($row,$e);
 	
 	// if any changes, merge with original data and rewrite record
