@@ -82,7 +82,7 @@ private static $empty_search = array (
 	public function getIdsFromSearch($data) {
 	
 		$sql = $this->getSQLFromSearch($data);
-		#echo "sql: $sql" . BRNL;
+		echo "sql: $sql" . BRNL;
 		$id_list = $this->assets->getIdsFromWhere($sql);
 		# u\echor ($id_list, 'id list');
 		return $id_list;
