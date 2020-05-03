@@ -103,7 +103,7 @@ $rc = 0;
 $newOKs = $notOKs = 0;
 
 while ($row = $adb->fetch() ){
-	++$rc;# if (is_integer($rc/25)) echo "$rc <br>";
+	++$rc; if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
 	$status = $row['status'];
 	$edit_me = "<p style='background:#CFC;border=1px solid green;'>
@@ -232,7 +232,7 @@ while ($row = $adb->fetch() ){
 		
 		try {
 			#unset ($new_row['id']);
-			$estmt -> execute($new_row) ; exit;
+			$estmt -> execute($new_row) ;
 		} catch (\PDOException $e) {
 			echo "Error on id $id";
 			echo $e->getMessage();
