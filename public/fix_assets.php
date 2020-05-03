@@ -26,63 +26,100 @@ ini_set('default_socket_timeout', 15);
 require_once 'scripts/asset_functions.php';
 $finfo = new \finfo(FILEINFO_MIME_TYPE);
 
+$write_new_db = false;
 
-$adb = array(
-	'id',	'status',	'title',	'caption',	'keywords',	'mime',	'type',	'url',	'thumb_file',	'link',	'vintage',	'source',	'contributor',	'contributor_id',	'date_entered',	'mod_date',	'height',	'width',	'sizekb',	'notes',	'has_thumb',	'has_gallery',	'has_toon',	'review_ts',	'skip_ts',	'first_use_date',	'first_use_in',	'tags',	'reviews',	'up_votes',	'down_votes',	'votes',	'comment_count',	'gallery_items',	'user_info',	'temptest',
+$old_to_new = static array(
+	'id'	=>	'id',
+	'status'	=>	'status',
+	'title'	=>	'title',
+	'caption'	=>	'caption',
+	'keywords'	=>	'keywords',
+	'mime'	=>	'mime',
+	'type'	=>	'type',
+	'url'	=>	'thumb_url',
+	'thumb_file'	=>	'',
+	'link'	=>	'asset_url',
+	'vintage'	=>	'vintage',
+	'source'	=>	'source',
+	'contributor'	=>	'',
+	'contributor_id'	=>	'contributor_id',
+	'date_entered'	=>	'date_entered',
+	'mod_date'	=>	'date_modified',
+	'height'	=>	'',
+	'width'	=>	'',
+	'sizekb'	=>	'sizekb',
+	'notes'	=>	'notes',
+	'has_thumb'	=>	'',
+	'has_gallery'	=>	'',
+	'has_toon'	=>	'',
+	'review_ts'	=>	'review_ts',
+	'skip_ts'	=>	'skip_ts',
+	'first_use_date'	=>	'first_use_date',
+	'first_use_in'	=>	'first_use_in',
+	'tags'	=>	'tags',
+	'reviews'	=>	'',
+	'up_votes'	=>	'',
+	'down_votes'	=>	'',
+	'votes'	=>	'',
+	'comment_count'	=>	'',
+	'gallery_items'	=>	'',
+	'user_info'	=>	'',
+	'temptest'	=>	'temptest',
+
 	);
-$same = array(
-	'id',	'status',		'keywords',		'type',		'vintage',	'source',		'contributor_id',	'date_entered',			'sizekb',	'notes',		'review_ts',	'skip_ts',	'first_use_date',	'first_use_in',	'tags',	
-	);
 
-$altered = array (
-'title',	'caption','url',	'thumb_file',	'link','mod_date','mime',
-);
-$removed = array (
-'contributor','height',	'width','has_thumb',	'has_gallery',	'has_toon',
-'reviews',	'up_votes',	'down_votes',	'votes',	'comment_count',	'gallery_items',	'user_info',	'temptest',
-);
 
-		$allowed_list = [];
 echo "starting" . BRNL;
 
+if ($write_to_new){
 // empty the existing data
-$sql = 'DELETE from `assets2`;';
-$pdo->query($sql);
-echo "Clearing assets2" . BRNL;
+	$sql = 'DELETE from `assets2`;';
+	$pdo->query($sql);
+	echo "Clearing assets2" . BRNL;
+}
+
+// set up pdo tatement.  Use old to new to get fields; ignore data
+$eprep = pdoPrep($old_to_new,[],'id');
+$sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
+$estmt = $pdo->prepare($sql);
+
+// set up new db statement. 
+$b = set_new_b($old_to_new); // new array with old-to-new values as keys, empty data
+$bprep = pdoPrep($b,[],''); #no key field.  Must retain id
+$sql = "INSERT into `assets2` ( ${bprep['ifields']} ) VALUES ( ${prep['ivals']} );";
+$bstmt = $pdo->prepare($sql);
+
 
 
 $sql = "SELECT * from `assets` WHERE 
- 
-status not in ('O''X','T','F') ORDER BY id  ";
+status not in ('O''X','T','F') 
+ ";
 
 $adb = $pdo->query($sql);
 
-
 $rc = 0;
 $newOKs = $notOKs = 0;
+
 while ($row = $adb->fetch() ){
 	++$rc;# if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
-
 	$status = $row['status'];
-	$edit_me = "<a href='/scripts/asset_edit.php?id=$id' target='asset_editor'>Edit $id</a>";
+	$edit_me = "<p style='background:#CFC;border=1px solid green;'>
+	<a href='/scripts/asset_edit.php?id=$id' target='asset_editor'>
+	Edit $id</a></p>";
 	// make new array 'b'
 
-	$e = $b = array(); // e for error corrections
-	foreach ($same as $v){
-		$b[$v] = $row[$v];
-	}
-	// moD DATE
-	$b['date_modified'] = $row['mod_date'];
+	$e = array(); // e for error corrections
+	
 	
 	if (strpos($row['title'],'\\') != 0){
-		$b['title'] = $e['title'] = stripslashes($row['title']);
+		 $e['title'] = stripslashes($row['title']);
 	}
 	if (empty($row['title'])){
-		$b['title'] = $e['title'] = 'Untitled';
+		 $e['title'] = 'Untitled';
 	}
 	if (strpos($row['caption'],'\\') != 0){
-		$b['caption'] = $e['caption'] = stripslashes($row['title']);
+		$e['caption'] = stripslashes($row['title']);
 	}
 	//check link
 	if (empty($src = trim($row['link']))) {
@@ -136,7 +173,7 @@ while ($row = $adb->fetch() ){
 			echo "<p class='red'>ID $id Uknown service on $src </p>";
 			$e['temptest'] = 'unknown service';
 		}
-		$b['asset_url'] = $src;
+	
 		if ($osrc != $src){
 			$e['link'] = $src;
 		}
@@ -148,59 +185,23 @@ while ($row = $adb->fetch() ){
 	
 	if (!empty($thm)) {
 		
-		if ($thm != $src) {
-			$b['thumb_url'] = $thm;
-		} else {
-			$b['thumb_url'] = '';
+		if ($thm == $src) {
 			$e['url'] = '';
 		}
 	}
 	
 	if (!isset($e['temptest'] ) ){ 
 		if (! file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.jpg')){
-			if (create_thumb($id,$src,$ttype='thumbs') ){
-				// if (file_exists(SITE_PATH . '/assets/thumbs/' . $id . '.png')){
-// 					unlink (SITE_PATH . '/assets/thumbs/' . $id . '.png');
-// 				}
-			} else {
 				echo "<p class='red'>No thumb file for asset $id</p>";
 				$e['temptest'] = 'no thumb';
-			}
 		}
 	}
 	
-	
-	
 		
-		$b['mime'] = $mime;
 		if ($mime && $mime != $omime){
 			$e['mime'] = $mime;
 		}
 	
-	
-	$b['id'] = $id;
-	
-		
-	
- /**
- 	$prep = pdoPrep($post_data,$allowed_list,'id');
-
-    $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
-       $new_id = $pdo->lastInsertId();
-
-    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
-       $stmt = $pdo->prepare($sql)->execute($prep['data']);
-
-  **/
-  if (0) {
-	$prep = pdoPrep($b,$allowed_list,''); #no key field.  Must retain id
-	#u\echor ($prep,'prep');
-	$sql = "INSERT into `assets2` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-  $stmt = $pdo->prepare($sql)->execute($prep['data']);
-  }
-  
-  
 
 	$e['id'] = $id;
 	if(!isset($e['temptest'])) {
@@ -214,19 +215,31 @@ while ($row = $adb->fetch() ){
 		echo $edit_me;
 		
 	}
-   $eprep = pdoPrep($e,$allowed_list,'id');
-   $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
- #u\echor($eprep,'E Prep');
+	// if any changes, merge with original data and rewrite record
+	if (!empty($e)){
+		$new_row = array_merge($row,$e);
+		$estmt ->execute($new_row);
+	}
 
- 	$stmt = $pdo->prepare($sql)->execute($eprep['data']);
-
-	
+	if ($write_new_db) { #move to b array
+		$b = copy_to_new ($new_row,$old_to_new);
+	  	$bstmt ->execute($prep['$b']);
+  }
+  }
 	
 }
 
 echo "done. $rc records. $newOKs new OKs; $notOKs not OKs.";
 
 ##############
+function copy_to_new ($row,$old_to_new){
+	$new = array ();
+	foreach ($old_to_new as $a => $b){
+			if ($b) $new[$b] = $row[$a];
+	}
+	return $new;
+}
+  
 function url_exists2($id,$url){
 	if(filter_var($url, FILTER_VALIDATE_URL) === FALSE)
 	{
@@ -240,4 +253,11 @@ function url_exists2($id,$url){
    }
    echo "ID $id Bad Header " . $headers[0] . $headers[8];
    return false;
+}
+
+function set_new_b($old_to_new){
+	foreach (array_values($old_to_new) as $val){
+		if ($val) { $b[$val] = ''; }
+	}
+	return $b;
 }
