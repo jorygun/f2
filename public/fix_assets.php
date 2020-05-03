@@ -97,7 +97,7 @@ $bstmt = $pdo->prepare($sql);
 
 
 $sql = "SELECT * from `assets` WHERE 
-astatus not in ('O''X','T','F') 
+status not in ('O''X','T','F') 
  ";
 
 $adb = $pdo->query($sql);
