@@ -223,8 +223,14 @@ while ($row = $adb->fetch() ){
 	// if any changes, merge with original data and rewrite record
 	if (!empty($e)){
 		$new_row = array_merge($row,$e);
-		u\echor ($new_row, 'new row'); exit;
-		$estmt ->execute($new_row);
+		u\echor ($new_row, 'new row'); 
+		try {$estmt ->execute($new_row) ;
+		} catch (Exception $e) {
+			echo "Error on id $id";
+			echo $e->getMessage();
+			exit;
+		}
+		
 	}
 
 	if ($write_new_db) { #move to b array
