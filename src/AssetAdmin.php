@@ -102,7 +102,7 @@ class AssetAdmin
 	
 		$adata['vintage'] = trim((int)$adata['vintage']);
 		if (empty($adata['vintage'])){
-			$adata['vintage'] = date('Y');}
+			$adata['vintage'] = date('Y');
 		}
 	
 		/* new thumbs is list of thumb types needed - from
