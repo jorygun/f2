@@ -88,6 +88,7 @@ if ($write_new){
 	$b = set_new_b($old_to_new); // new array with old-to-new values as keys, empty data
 	$bprep = u\pdoPrep($b,[],''); #no key field.  Must retain id
 	$sql = "INSERT into `assets2` ( ${bprep['ifields']} ) VALUES ( ${bprep['ivals']} );";
+	echo $sql . BRNL;
 	$bstmt = $pdo->prepare($sql);
 
 
@@ -254,7 +255,7 @@ if ($rewrite_old){
 
 	if ($write_new) { 
 		$b = copy_to_new ($new_row,$old_to_new);
-		u\echor($b ,'new b'); exit;
+		#u\echor($b ,'new b'); exit;
 		
 	  	$bstmt ->execute($b);
   	}
