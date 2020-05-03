@@ -223,6 +223,7 @@ while ($row = $adb->fetch() ){
 	// if any changes, merge with original data and rewrite record
 	if (!empty($e)){
 		$new_row = array_merge($row,$e);
+		u\echor ($new_row, 'new row'); exit;
 		$estmt ->execute($new_row);
 	}
 
