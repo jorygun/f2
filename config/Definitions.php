@@ -166,6 +166,7 @@ public static $user_aliases = array (
             'glen' => 'Glen Balzer',
             'jeff' => 'Jeff Drobman',
             'amdc' => 'AMD Communications',
+            'kc' => 'K.C. Murphy',
 
         );
         
