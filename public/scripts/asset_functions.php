@@ -486,10 +486,12 @@ function create_thumb($id,$fsource,$ttype='thumbs'){
 	 	$source_path = $fsource;
 	 	if (! url_exists($source_path)){
 	 		echo  "No file found at $source_path" . BRNL;
+	 		return '';
 	 	}
 	 	elseif (! $source_mime = get_url_mime_type($source_path)) {
 	 		$source_mime = '';
 	 		echo "Cannot get mime type of $fsource" . BRNL;
+	 		return '';
 	 	} 
 	 }
 
