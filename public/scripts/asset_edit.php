@@ -210,7 +210,7 @@ function post_asset_update($post) {
         echo "updating asset $id for post_asset_update" . BRNL;
         $pdo = digitalmx\MyPDO::instance();
         $sql = "UPDATE `assets` 
-        	SET title=?, caption=?, vintage=? ,tags=? , status=?
+        	SET title=?, caption=?, vintage=? ,tags=? , status= 'N'
         	WHERE id = $id";
         #echo $sql . BRNL;
        $stmt =  $pdo -> prepare($sql);
