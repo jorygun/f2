@@ -186,7 +186,7 @@ class AssetAdmin
 	}
 	
 	public function returnAssetLinked ($adata,$nocache=false) {
-		$status = $adata['status'];
+		$status = $adata['astatus'];
 		$id = $adata['id'];
 		if ($adata['status'] == 'X') {return "Asset Deleted";}
 		elseif ($adata['status'] == 'T') {return "Asset Temporary";}
