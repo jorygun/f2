@@ -103,7 +103,8 @@ $rc = 0;
 $newOKs = $notOKs = 0;
 
 while ($row = $adb->fetch() ){
-	++$rc; if (is_integer($rc/25)) echo "$rc <br>";
+	++$rc; 
+	#if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
 	$status = $row['status'];
 	$edit_me = "<p style='background:#CFC;border=1px solid green;'>
@@ -157,13 +158,20 @@ while ($row = $adb->fetch() ){
 				if (strpos($h[0],' 40') > 0){
 					echo "<p class='red'>ID $id Remote source does not exist <br>&nbsp;&nbsp;" . $src .  '</p>' ;
 					$e['temptest'] = 'no remote source';
-				} elseif  (! $mime = $h['Content-Type']){
+				} elseif  (! $h['Content-Type']){
 					echo "<p class='red'>ID $id Cannot retreive content-type.</p>";
 					$e['temptest'] = 'no content-type';
 					$mime = 'text/html';
 					
 				} else {
-					$mime = substr($mime,0,strpos($mime,';'));
+					$mime = $h['Content-Type'];
+					if (is_array($mime)){
+						echo "<p class=blue>Got mime as array:</p>" ;
+						print_r ($mime);
+					}
+					else {
+						$mime = substr($mime,0,strpos($mime,';'));
+					}
 				}
 			} else {
 				echo "<p class='red'>ID $id cannot get headers from source.</p>";
