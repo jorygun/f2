@@ -83,14 +83,14 @@ if ($write_new_db){
 }
 
 // set up pdo tatement.  Use old to new to get fields; ignore data
-$eprep = pdoPrep($old_to_new,[],'id');
+$eprep = u\pdoPrep($old_to_new,[],'id');
 $sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
 echo "eprep $sql" . BRNL;
 $estmt = $pdo->prepare($sql);
 
 // set up new db statement. 
 $b = set_new_b($old_to_new); // new array with old-to-new values as keys, empty data
-$bprep = pdoPrep($b,[],''); #no key field.  Must retain id
+$bprep = u\pdoPrep($b,[],''); #no key field.  Must retain id
 $sql = "INSERT into `assets2` ( ${bprep['ifields']} ) VALUES ( ${bprep['ivals']} );";
 $bstmt = $pdo->prepare($sql);
 
