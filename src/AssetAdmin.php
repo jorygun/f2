@@ -85,13 +85,13 @@ class AssetAdmin
 		}
 		$adata['id'] = $id;
 		
-		echo "pre c ookup: " . $adata['contributor'] . ' ' . $adata['contributor_id'] . BRNL; 
+		echo "pre c ookup: " . $post['contributor'] . ' ' . $post['contributor_id'] . BRNL; 
 		
-		if (!empty($adata['contributor_id']) ){
-			$adata['contributor_id'] = (int)$adata['contributor_id'];
-		} elseif (!empty ($adata['contributor'] )) {
+		if (!empty($post['contributor_id']) ){
+			$adata['contributor_id'] = (int)$post['contributor_id'];
+		} elseif (!empty ($post['contributor'] )) {
 			if (! list ($adata['contributor'], $adata['contributor_id'] ) 
-				= $this->member->getMemberId($adata['contributor']) ){	
+				= $this->member->getMemberId($post['contributor']) ){	
 				throw new Exception ("Contributor ${adata['contributor_id']} not found");
 		} else {
 			die ("No contributor info supplied");
