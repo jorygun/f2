@@ -596,6 +596,23 @@ function url_exists($url){
    return false;
 }
 
+function get_mime_from_url ($url) {
+	if ($headers=get_headers($url,1) ) {
+   	if (stripos($headers[0]," 40") === false) {
+   		if ($mime = $headers['Content-Type'] ){
+   			if (is_array($mime)) $mime = $mime[0];
+   			if (strpos($mime,'text/html') > 0) $mime = 'text/html';
+   			return $mime;
+   		} else {
+   			return "n/a";
+   		}
+   	}
+   	return "No Site";	
+   }
+  return "No Site";
+  
+}
+
 function age_and_date($date_str) {
 	//takes a date and returns the age from today in days and a formatted version of date
 	// note if date is from a db timestamp field, db will return a date string.

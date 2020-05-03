@@ -142,10 +142,10 @@ private static $empty_search = array (
     }
 
      if (!empty($son = $data['status'])){
-        $qp[] = "status = '$son'";
+        $qp[] = "astatus = '$son'";
     }
    elseif ($data['all_active'] == 1){
-        $qp[] = "status not in ('X','D','E','T') ";
+        $qp[] = "astatus not in ('X','E','T') ";
     }
 
     if (!empty($son = $data['url'] ?? '')){

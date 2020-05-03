@@ -11,6 +11,7 @@
         <h4>Asset Information</h4>
         Asset id: <?=$id?><br>
         Type: <?=$mime?> -> <?=$type?> <br>
+       
         Entered on <?=$date_entered?>  <br>
         Source: <?=$credit?>  <br>
         First use: <?=$first_use ?><br>

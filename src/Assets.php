@@ -24,7 +24,7 @@ use digitalmx\flames\Definitions as Defs;
 	source
 	vintage
 	contributor id
-	status
+	astatus
 	
 	first_use_date
 	first_use_in
@@ -34,7 +34,7 @@ use digitalmx\flames\Definitions as Defs;
 	set automatically:
 		sizekb
 		mime
-		status
+		astatus
 		date_created
 		date_modified
 	
@@ -98,7 +98,7 @@ class Assets {
 	public static $external_fields = array (
 		'first_use_date', 
 		'first_use_in', 
-		'status',
+		'astatus',
 	);
 	
 	private  $new_asset = array(
@@ -135,7 +135,7 @@ class Assets {
    
 	public function getNewID () {
 		// remove any extraneous temp records - avoid race for recent entry
-		$sql = "DELETE FROM `assets2` WHERE status = 'T' and date_entered < now() - interval 1 hour";
+		$sql = "DELETE FROM `assets2` WHERE astatus = 'T' and date_entered < now() - interval 1 hour";
 		$this->pdo->query($sql);
 		//enter new temp record to get an id
 		$sql = "INSERT into `assets2` (title) VALUES ('temp')";
@@ -206,6 +206,7 @@ class Assets {
 				throw new Exception ("Vintage is not a valid year");
 		}
 		
+		$adata['astatus'] ?: $adata['status'];
 		
 		if (! is_integer (0 + $adata['contributor_id']) 
 			&& $adata['contributor_id'] > 0 ){
@@ -248,6 +249,8 @@ class Assets {
 			ujless source is updated.
 		*/
 			// data already checked in AssetAdmin
+			
+			//db field 'astatus' may be in post astatus or just status
 	
 			$id = $adata['id'];
 			
@@ -306,6 +309,7 @@ class Assets {
 			
 			$allowed_fields = array_merge (self::$editable_fields, self::$calculated_fields);
 			if (!empty($adata['status'])) {$allowed_fields[] = 'status';}
+			
 			$prep = u\pdoPrep($adata,$allowed_fields,'id');
 			#u\echor ($prep, 'Prep'); exit;
  /**
@@ -409,6 +413,7 @@ class Assets {
    		$adata['date_entered'] = date('M d, Y');
    		$adata['first_use'] = 'Never';
    		$adata['vintage'] = date('Y');
+   		
    		return $adata;
    	}
    	$sql = "SELECT a.*, m.username as contributor, m.user_email from `assets2` a
@@ -420,6 +425,7 @@ class Assets {
    	$adata['first_use'] = "Never.";
    	
    	$adata['existing_thumbs'] = $this->getExistingThumbs($id);
+   	$adata['status'] = $adata['astatus'];
    	
    	
    	if  (empty($fud = $adata['first_use_date'])) {
@@ -616,14 +622,18 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 		
 		 if (substr($url,0,1) == '/') { #local file
 			$source_path = SITE_PATH . $url;
+			if (! file_exists($source_path)){
+				return [ "File $url does not exist", 0];
+			}
 			$mime = $this->mimeinfo->file($source_path);
-			
 			$size = filesize($source_path) ?? 0;
 		 	
 		 }	
 		 else {
 			$source_path = $url;
-			list($mime,$size) = $this->getMimesizeFromCurl($source_path);
+			$mime = u\get_mime_from_url($url);
+			$size = 0;
+			
 		 }
 		
 		if (empty ($mime)){
@@ -637,68 +647,7 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 		return [$mime,$size];
 	}
 	
-	private function getMimesizeFromCurl($url)
-	{
-		$ch = curl_init($url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($ch, CURLOPT_HEADER, 1);
-		curl_setopt($ch, CURLOPT_NOBODY, 1);
-		curl_exec($ch);
-		$mime =  curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-		$size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
-		return [$mime,$size];
-	}
 	
-	private function getMimeGroup ($mime) {
-		if (strncmp($mime,'image/',6) == 0 ){return 'image';}
-		elseif (strncmp($mime,'video/',6) == 0) {return 'av';}
-		elseif (strncmp($mime,'audio/',6) == 0) {return 'av';}
-		elseif (strncmp($mime,'application/',12) == 0) {return 'doc';}
-		else {return '';}
-	}
-
-	private function autoRotateImage($image) { 
-		 $orientation = $image->getImageOrientation(); 
-
-		 switch($orientation) { 
-			  case imagick::ORIENTATION_BOTTOMRIGHT: 
-					$image->rotateimage("#000", 180); // rotate 180 degrees 
-			  break; 
-
-			  case imagick::ORIENTATION_RIGHTTOP: 
-					$image->rotateimage("#000", 90); // rotate 90 degrees CW 
-			  break; 
-
-			  case imagick::ORIENTATION_LEFTBOTTOM: 
-					$image->rotateimage("#000", -90); // rotate 90 degrees CCW 
-			  break; 
-		 } 
-
-		 // Now that it's auto-rotated, make sure the EXIF data is correct in case the EXIF gets saved with the image! 
-		 $image->setImageOrientation(imagick::ORIENTATION_TOPLEFT); 
-	} 
-
-	private function get_gfile($filepath) {
-		 #looks for designated file and returns its full path
-		 # if not found looks for either jpg or png or gif with same name
-
-		 $path = SITE_PATH . $filepath;
-		# ,);
-		 if (file_exists($path)){return $path;}
-		 else {
-			  $ext = pathinfo($path,PATHINFO_EXTENSION);
-			  $dir = pathinfo($path,PATHINFO_DIRNAME);
-			  #drop extension
-			  preg_match('/(^.*?)\.\w+$/',$path,$m);
-			  $path2 = $m[1];
-			  foreach (['jpg','png','gif'] as $ex){
-					if ($ex == $ext){continue;}
-					$tfile = $path2 . ".$ex";
-					if (file_exists($tfile)){return $tfile;}
-			  }
-		 }
-	}
 
 	private function post_asset($post_array){
 		/*
@@ -725,7 +674,7 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 		  if ($id == 0){
 
 			  $title = "temp holding place";
-			  $sql = "INSERT into `assets` (status,title,date_entered,type,thumb_file) values ('T','$title',NOW() ,'','');";
+			  $sql = "INSERT into `assets` (astatus,title,date_entered,type,thumb_file) values ('T','$title',NOW() ,'','');";
 			  echo $sql . BRNL;
 			  $this->pdo->query($sql);
 			  $last_id = $this->pdo->lastInsertId();
