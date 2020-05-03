@@ -80,20 +80,17 @@ if ($write_new_db){
 	$sql = 'DELETE from `assets2`;';
 	$pdo->query($sql);
 	echo "Clearing assets2" . BRNL;
+	
+	// set up new db statement. 
+	$b = set_new_b($old_to_new); // new array with old-to-new values as keys, empty data
+	$bprep = u\pdoPrep($b,[],''); #no key field.  Must retain id
+	$sql = "INSERT into `assets2` ( ${bprep['ifields']} ) VALUES ( ${bprep['ivals']} );";
+	$bstmt = $pdo->prepare($sql);
+
+
 }
 
 // set up pdo tatement.  Use old to new to get fields; ignore data
-$eprep = u\pdoPrep($old_to_new,[],'id');
-$sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
-echo "eprep $sql" . BRNL;
-$estmt = $pdo->prepare($sql);
-
-// set up new db statement. 
-$b = set_new_b($old_to_new); // new array with old-to-new values as keys, empty data
-$bprep = u\pdoPrep($b,[],''); #no key field.  Must retain id
-$sql = "INSERT into `assets2` ( ${bprep['ifields']} ) VALUES ( ${bprep['ivals']} );";
-$bstmt = $pdo->prepare($sql);
-
 
 
 $sql = "SELECT * from `assets` WHERE 
@@ -223,6 +220,14 @@ while ($row = $adb->fetch() ){
 	// if any changes, merge with original data and rewrite record
 	if (!empty($e)){
 		$new_row = array_merge($row,$e);
+		if (! isset ( $estmt) ){
+			$eprep = u\pdoPrep($new_row,[],'id');
+			$sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
+			echo "Eprep sql <br> $sql" . BRNL;
+			$estmt = $pdo->prepare($sql);
+		}
+
+
 		foreach ($new_row as $var=>$val){
 			if (empty($val)) $new_row[$var] = '';
 		}
