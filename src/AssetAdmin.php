@@ -57,7 +57,7 @@ class AssetAdmin
 	
 	public function postAssetFromForm($post) {
 	// prepare data and then send to asset to post
-	#u\echor($post,'post data in');
+	u\echor($post,'post data in');
 
 	
 	
