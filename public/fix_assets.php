@@ -220,6 +220,8 @@ while ($row = $adb->fetch() ){
 	// if any changes, merge with original data and rewrite record
 	if (!empty($e)){
 		$new_row = array_merge($row,$e);
+		u\echor ($new_row, 'new row'); 
+		
 		if (! isset ( $estmt) ){
 			$eprep = u\pdoPrep($new_row,[],'id');
 			$sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
@@ -228,12 +230,12 @@ while ($row = $adb->fetch() ){
 		}
 
 
-		foreach ($new_row as $var=>$val){
-			if (empty($val)) $new_row[$var] = '';
-		}
-		u\echor ($new_row, 'new row'); 
+		// foreach ($new_row as $var=>$val){
+// 			if (empty($val)) $new_row[$var] = '';
+// 		}
+		
 		try {
-			$estmt ->execute($new_row) ;
+			$estmt -> execute($new_row) ;
 		} catch (PDOException $e) {
 			echo "Error on id $id";
 			echo $e->getMessage();
