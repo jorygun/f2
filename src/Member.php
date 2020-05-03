@@ -1083,7 +1083,7 @@ public function getLogins($tag) {
     	$tag = trim($tag);
     	
     $tag =  Defs::replaceAlias($tag) ?? $tag;
-   echo $tag;exit;
+  # echo $tag;exit;
         $md = $this->getMemberData($tag,'name_exact');
        # u\echor ($md);
         if (empty($md['count']) or !empty($mb['error'])) {
