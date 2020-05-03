@@ -118,6 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
        		break;
        		
          case 'Post and Go Next':
+         	if ($_POST['status'] == 'E') $_POST['status'] = 'N';
             $id = post_asset($_POST);
             if (!$next_id = next_asset_id($id,$id_list)){$next_id = 0;} #new doc
              else{$itemdata = get_asset_data($next_id);}
@@ -126,6 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
     		break;
     		
         case 'Post':
+        		if ($_POST['status'] == 'E') $_POST['status'] = 'N';
             $id = post_asset($_POST);
              $itemdata = get_asset_data($id);
              $itemdata['id_list_string'] = $id_list_string;
@@ -210,7 +212,7 @@ function post_asset_update($post) {
         echo "updating asset $id for post_asset_update" . BRNL;
         $pdo = digitalmx\MyPDO::instance();
         $sql = "UPDATE `assets` 
-        	SET title=?, caption=?, vintage=? ,tags=? , status= 'N'
+        	SET title=?, caption=?, vintage=? ,tags=? , status= ?
         	WHERE id = $id";
         #echo $sql . BRNL;
        $stmt =  $pdo -> prepare($sql);
