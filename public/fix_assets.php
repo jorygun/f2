@@ -254,7 +254,7 @@ if ($rewrite_old){
 
 	if ($write_new) { 
 		$b = copy_to_new ($new_row,$old_to_new);
-		u/echor($b ,'new b'); exit;
+		u\echor($b ,'new b'); exit;
 		
 	  	$bstmt ->execute($b);
   	}
