@@ -835,7 +835,7 @@ function add_link_data($url){
 		    'type' => ''
             );
         if (substr($url,0,10) == '/galleries'){
-            $sqls['type'] = 'Album';
+            $sqls['type'] = 'Web Page';
             return $sqls;
         }
         elseif (substr($url,0,1) == '/'){# local
