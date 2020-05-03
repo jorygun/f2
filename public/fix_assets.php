@@ -84,7 +84,7 @@ if ($write_new_db){
 
 // set up pdo tatement.  Use old to new to get fields; ignore data
 $eprep = pdoPrep($old_to_new,[],'id');
-$sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;"
+$sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
 echo "eprep $sql" . BRNL;
 $estmt = $pdo->prepare($sql);
 
