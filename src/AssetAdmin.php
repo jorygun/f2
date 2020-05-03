@@ -85,7 +85,7 @@ class AssetAdmin
 		}
 		$adata['id'] = $id;
 		
-		echo "pre c ookup: " . $post['contributor'] . ' ' . $post['contributor_id'] . BRNL; 
+		#echo "pre c ookup: " . $post['contributor'] . ' ' . $post['contributor_id'] . BRNL; 
 		
 		if (!empty($id =$post['contributor_id']) && $id > 0 ){
 			$adata['contributor_id'] = (int)$post['contributor_id'];
@@ -98,7 +98,7 @@ class AssetAdmin
 			die ("No contributor info supplied");
 		}
 		
-	echo "after c ookup: " . $adata['contributor'] . ' ' . $adata['contributor_id'] . BRNL; exit;
+	#echo "after c ookup: " . $adata['contributor'] . ' ' . $adata['contributor_id'] . BRNL; exit;
 	
 		$adata['vintage'] = trim((int)$adata['vintage']);
 		if (empty($adata['vintage'])){
