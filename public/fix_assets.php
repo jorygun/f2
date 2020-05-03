@@ -166,12 +166,9 @@ while ($row = $adb->fetch() ){
 				} else {
 					$mime = $h['Content-Type'];
 					if (is_array($mime)){
-						echo "<p class=blue>Got mime as array:</p>" ;
-						print_r ($mime);
+						$mime = $mime[0];
 					}
-					else {
-						$mime = substr($mime,0,strpos($mime,';'));
-					}
+					$mime = substr($mime,0,strpos($mime,';'));				
 				}
 			} else {
 				echo "<p class='red'>ID $id cannot get headers from source.</p>";
@@ -183,6 +180,7 @@ while ($row = $adb->fetch() ){
 			echo "<p class='red'>ID $id Uknown service on $src </p>";
 			$e['temptest'] = 'unknown service';
 		}
+		
 	
 		if ($osrc != $src){
 			$e['link'] = $src;
