@@ -108,7 +108,7 @@ $newOKs = $notOKs = 0;
 while ($row = $adb->fetch() ){
 	++$rc;# if (is_integer($rc/25)) echo "$rc <br>";
 	$id = $row['id'];
-	$status = $row['astatus'];
+	$status = $row['status'];
 	$edit_me = "<p style='background:#CFC;border=1px solid green;'>
 	<a href='/scripts/asset_edit.php?id=$id' target='asset_editor'>
 	Edit $id</a></p>";
@@ -212,10 +212,10 @@ while ($row = $adb->fetch() ){
 	if(!isset($e['temptest'])) {
 		$e['temptest'] = 'OK';
 		++$newOKs;
-		if ($status != 'R'){$e['astatus'] = 'O';}
+		if ($status != 'R'){$e['status'] = 'O';}
 	}
 	else {
-		$e['astatus'] = 'E';
+		$e['status'] = 'E';
 		++$notOKs;
 		echo $edit_me;
 		
