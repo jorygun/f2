@@ -227,6 +227,7 @@ while ($row = $adb->fetch() ){
 			$sql = "UPDATE `assets` SET ${eprep['update']} WHERE id = ${eprep['key']} ;";
 			echo "Eprep sql <br> $sql" . BRNL;
 			$estmt = $pdo->prepare($sql);
+			u\echor ($eprep, 'Eprep');
 		}
 
 
