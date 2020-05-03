@@ -71,9 +71,10 @@ $old_to_new =  array(
 
 echo "starting" . BRNL;
 
-$sql = "delete from assets;
-insert into assets select * from assetsback;
+$sql = "delete from `assets`;
+insert into `assets` select * from `assetsback`;
 ";
+
 $pdo->query($sql);
 
 if ($write_new_db){
