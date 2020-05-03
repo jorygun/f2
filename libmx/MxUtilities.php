@@ -317,8 +317,8 @@ function pdoPrep($data,$include=[], $key=''){
             
 				$db[$var] = htmlspecialchars_decode($val);
 				
-            $ufields[] = "$var = :$var";
-            $ifields[] = $var;
+            $ufields[] = "`$var` = :$var";
+            $ifields[] = "`$var`";
             $ivalues[] = ":$var";
 
         }
