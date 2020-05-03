@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	$ids = $as->getIdsFromSearch($_POST);
 	$_SESSION['last_assets_found'] = $ids;
 	
-	#echo 'ids found ' . join(', ',$ids) . BRNL;
+	echo 'ids found ' . join(', ',$ids) . BRNL;
 	foreach ($ids as $id){
 		$asset = $as->getAssetSummary($id);
 		 #u\echor($asset, "selected asset $id"); 
