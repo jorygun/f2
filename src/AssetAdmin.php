@@ -85,6 +85,8 @@ class AssetAdmin
 		}
 		$adata['id'] = $id;
 		
+		echo "pre c ookup: " . $adata['contributor'] . ' ' . $adata['contributor_id'] . BRNL; 
+		
 		if (!empty($adata['contributor_id']) ){
 			$adata['contributor_id'] = (int)$adata['contributor_id'];
 		} elseif (!empty ($adata['contributor'] )) {
