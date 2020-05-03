@@ -71,7 +71,7 @@ $old_to_new =  array(
 
 echo "starting" . BRNL;
 
-if ($write_to_new){
+if ($write_new_db){
 // empty the existing data
 	$sql = 'DELETE from `assets2`;';
 	$pdo->query($sql);
@@ -86,7 +86,7 @@ $estmt = $pdo->prepare($sql);
 // set up new db statement. 
 $b = set_new_b($old_to_new); // new array with old-to-new values as keys, empty data
 $bprep = pdoPrep($b,[],''); #no key field.  Must retain id
-$sql = "INSERT into `assets2` ( ${bprep['ifields']} ) VALUES ( ${prep['ivals']} );";
+$sql = "INSERT into `assets2` ( ${bprep['ifields']} ) VALUES ( ${bprep['ivals']} );";
 $bstmt = $pdo->prepare($sql);
 
 
