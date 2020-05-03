@@ -387,7 +387,7 @@ class Assets {
    
 	public function getAssetSummaryById($id) {
 		// returns minimal set of asset data
-		$sql = "SELECT id,title,caption,asset_url , status
+		$sql = "SELECT id,title,caption,asset_url , astatus
 			FROM `assets2` WHERE id = $id";
 		$d = $this->pdo->query($sql)->fetch();
 		return $d;
@@ -396,7 +396,7 @@ class Assets {
 	public function getAssetSummaryFromList($id_list){
 		// returns minimal set of asset data
 		$in_ids = join(',' , $id_list);
-		$sql = "SELECT id,title,caption,asset_url,contributor_id,type, , status
+		$sql = "SELECT id,title,caption,asset_url,contributor_id,type, , astatus
 			FROM `assets2` WHERE id in ($in_ids)";
 		#	echo $sql . BRNL;
 		$d = $this->pdo->query($sql)->fetchAll();
