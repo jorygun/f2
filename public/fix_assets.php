@@ -236,7 +236,7 @@ while ($row = $adb->fetch() ){
 		
 		try {
 			$estmt -> execute($new_row) ;
-		} catch (PDOException $e) {
+		} catch (\PDOException $e) {
 			echo "Error on id $id";
 			echo $e->getMessage();
 			exit;
