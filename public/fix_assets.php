@@ -227,8 +227,9 @@ while ($row = $adb->fetch() ){
 			if (empty($val)) $new_row[$var] = '';
 		}
 		u\echor ($new_row, 'new row'); 
-		try {$estmt ->execute($new_row) ;
-		} catch (Exception $e) {
+		try {
+			$estmt ->execute($new_row) ;
+		} catch (PDOException $e) {
 			echo "Error on id $id";
 			echo $e->getMessage();
 			exit;
