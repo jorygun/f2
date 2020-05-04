@@ -225,7 +225,7 @@ class Assets {
 				break;
 	
 			case 'needs':
-				if ($empty($val)) $val = [];
+				if (empty($val)) $val = [];
 				if (! is_array($val) ){
 					throw new Exception ("Thumb requested not in a list.");
 				}
