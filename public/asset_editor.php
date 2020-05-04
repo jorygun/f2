@@ -55,12 +55,12 @@ if (!empty($_POST['submit'] )) {
 ######## GET ######################
 // set id to geet to last id or get or 0 for new
 //END START
-$asset_data['list_note'] = '';
+$list_note = '';
 
 if (isset ($_GET['id'])) $id = $_GET['id'] ?? 0 ;
 elseif (!empty($_SESSION['last_assets_found'])){
 	$id = array_shift ($_SESSION['last_assets_found']);
-	$asset_data['list_note'] = '(Retrieved next id from current search list)';
+	$list_note = '(Retrieved next id from current search list)';
 }
 else $id = 0;
 
@@ -72,7 +72,7 @@ if (! $asset_data = $assets->getAssetDataById ($id) ){
 }
 
 
-
+$asset_data['list_note'] = $list_note;
 
 
 $asset_data['current_count'] = $current_count;
