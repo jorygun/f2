@@ -58,9 +58,10 @@ if (!empty($_POST['submit'] )) {
 
 
 if (isset ($_GET['id'])) $id = $_GET['id'] ?? 0 ;
-elseif (!empty($SESSION['last_assets_found'])){
-	$id = shift($SESSION['last_assets_found']);
+elseif (!empty($_SESSION['last_assets_found'])){
+	$id = shift($_SESSION['last_assets_found']);
 }
+else $id = 0;
 
 $current_count = count($_SESSION['last_assets_found']);
 
