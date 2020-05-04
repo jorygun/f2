@@ -417,13 +417,19 @@ class Assets {
    		
    		return $adata;
    	}
-   	$sql = "SELECT a.*, m.username as contributor, m.user_email from `assets2` a
-   		INNER JOIN `members_f2` m on a.contributor_id = m.user_id where a.id = $id";
+   	$sql = "SELECT * from `assets2` a
+   		where a.id = $id";
    	if (!$adata = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){ #arra
-   		echo "Failed to retrieve data record: $sql <br>";
-   		
+   		echo "Failed to retrieve data record from id $id.<br>";
    		return [];
    	}
+   	if (empty($adata['contributor_id'] )){
+   		$adata['contributor_id'] = 0;
+   	}
+   	$adata['contributor'] = $this->member->getMemberid($data['contributor_id'])[0];
+   	
+   		
+   
    	// set tic character for each thumb that currently exixts.
    	$adata['first_use'] = "Never.";
    	
