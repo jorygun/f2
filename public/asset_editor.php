@@ -38,7 +38,7 @@ if (!empty($_POST['submit'] )) {
 			= array_diff($_SESSION['last_assets_found'],[$this_id]);
 	}
 		
-	if ($id == 0 ){
+	if ($this_id == 0 ){
 		$next_id = $asseta->postAssetFromForm($_POST);
 	} elseif ($_POST['submit'] == 'Save'){
 		$next_id = $asseta->postAssetFromForm($_POST);
@@ -55,11 +55,12 @@ if (!empty($_POST['submit'] )) {
 ######## GET ######################
 // set id to geet to last id or get or 0 for new
 //END START
-
+$asset_data['list_note'] = '';
 
 if (isset ($_GET['id'])) $id = $_GET['id'] ?? 0 ;
 elseif (!empty($_SESSION['last_assets_found'])){
 	$id = array_shift ($_SESSION['last_assets_found']);
+	$asset_data['list_note'] = '(Retrieved next id from current search list)';
 }
 else $id = 0;
 

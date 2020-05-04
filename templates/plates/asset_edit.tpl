@@ -8,8 +8,8 @@ table {border:1px solid black; }
 
 <?php if ($id>0): ?>
 	<h4>Existing ID</h4>
-	(automatic data below)
 	<ul>
+	<li><?=$list_note?>
 	<li><b>ID:</b> <?=$id?>  <b>Status:</b> <span style='<?=$status_style?>'><?=$astatus?> <?=$status_name?> </span><b>Entered:</b> <?=$date_entered?> 
 <li><b>Mime type:</b> <?=$mime?> <b>Size: </b><?=$sizekb?> KB. 
 <li><b>First Use:</b> <?=$first_use?>
