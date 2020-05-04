@@ -239,7 +239,7 @@ class Assets {
 			case 'tags':
 				foreach (str_split($val) as $tag){
 					if (! in_array($tag,array_keys(Defs::$asset_tags)))
-					throw new Exception ("Unknown asset tag $tag");
+					throw new Exception (__LINE__ . "Unknown asset tag $tag");
 				}
 				break;
 			case 'mime':
