@@ -99,6 +99,7 @@ class Assets {
 		'first_use_date', 
 		'first_use_in', 
 		'astatus',
+		'temptest',
 	);
 	
 	private  $new_asset = array(
