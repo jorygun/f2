@@ -24,6 +24,7 @@ table {border:1px solid black; }
 <form  method="POST" enctype="multipart/form-data"  name="asset_form" id="asset_form">
 	
 <input type='hidden' name ='id' value ='<?=$id?>'>
+<input type='hidden' name ='astatus' value = '<?=$astatus?>'
 
 <hr>
 

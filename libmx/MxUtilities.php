@@ -402,7 +402,20 @@ function buildCheckBoxSet(
       return $opt;
 }
 
-
+function is_local ($url) {
+	if (substr($url,0,1) == '/') return SITE_PATH . $url;
+	return false;
+}
+function is_http ($url) {
+	if (substr($url,0,4) == 'http') {
+		return is_valid_url($url);
+	}
+	return false;
+}
+function is_valid_url($url) {
+	if(filter_var($url, FILTER_VALIDATE_URL) !== FALSE) return true;
+	return false;
+}
 
  function full_copy( $source, $target ) {
  	// copies entire directories.. like cp -r
@@ -586,32 +599,45 @@ function days_ago ($date_str = '1') {
 	return $diff_str;
 }
 
-function url_exists($url){
-   if ($headers=get_headers($url) ) {
-   	if (stripos($headers[0]," 40") === false) {
-   		return true;
-   	}
-   }
-   #echo 'Bad Header ' . $headers[0];
+function url_exists($url)
+	{
+	if ($path = u\is_local($url)) return file_exists($path);
+	elseif (u\is_valid_url($url) && u\get_mime_from_curl($url) ) return true;
+		// use curl instead of get headers to avoid timeout problems
+		
    return false;
-}
+	}
 
-function get_mime_from_url ($url) {
-	if ($headers=get_headers($url,1) ) {
-   	if (stripos($headers[0]," 40") === false) {
-   		if ($mime = $headers['Content-Type'] ){
-   			if (is_array($mime)) $mime = $mime[0];
-   			if (strpos($mime,'text/html') > 0) $mime = 'text/html';
-   			return $mime;
-   		} else {
-   			return "n/a";
-   		}
-   	}
-   	return "No Site";	
-   }
-  return "No Site";
-  
-}
+function get_mime_from_url($url)
+	{
+	if ($path=u\is_local($url) ){
+		 $finfo = new \finfo(FILEINFO_MIME_TYPE);
+		 $mime = $finfo->file($path);
+	} elseif (is_http($url) ){
+		$mime = u\get_mime_from_curl($url);
+	} else { $mime = '';}
+	
+	return $mime;
+	}
+	
+		
+function get_mime_from_curl($url)
+	{
+	// also checks if url exists
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+	curl_setopt($ch, CURLOPT_HEADER, 1);
+	curl_setopt($ch, CURLOPT_NOBODY, 1);
+	if (!curl_exec($ch) ) return false;
+	$code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	if ($code >= 400) return false;
+	$mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+	
+	return $mime;
+	}
+
+
 
 function age_and_date($date_str) {
 	//takes a date and returns the age from today in days and a formatted version of date

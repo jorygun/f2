@@ -41,8 +41,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	// save list of ids, for sequential editing.
 	$ids = $as->getIdsFromSearch($_POST);
 	$_SESSION['last_assets_found'] = $ids;
+	$count = count($ids);
+	echo "$count assets found. ";
+	if ($count == 0) return;
 	
-	echo 'ids found ' . join(', ',$ids) . BRNL;
+	if ($count < 11 ) echo join(', ',$ids) . BRNL;
+	
 	foreach ($ids as $id){
 		$asset = $as->getAssetSummary($id);
 		 #u\echor($asset, "selected asset $id"); 

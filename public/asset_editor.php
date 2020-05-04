@@ -87,7 +87,7 @@ $asset_data['status_options'] = u\buildOptions(Defs::$asset_status,$asset_data['
 $asset_data['Aliastext'] = Defs::getMemberAliasList();
 
 $asset_data['thumb_tics'] = $assets->getThumbTics($id);
-$asset_data['status_name'] = Defs::$asset_status[$asset_data['status']];
+$asset_data['status_name'] = Defs::$asset_status[$asset_data['astatus']];
 
 if ($id > 0 && !$assets->checkURL($asset_data['asset_url']) ){
 	$asset_data['source_warning'] = "Source cannot be found <br />";

@@ -91,6 +91,7 @@ class Assets {
 		'mime', 
 		'type', 
 		'sizekb',
+		'astatus',
 		
 	);
 
@@ -98,7 +99,7 @@ class Assets {
 	public static $external_fields = array (
 		'first_use_date', 
 		'first_use_in', 
-		'astatus',
+	
 		'temptest',
 	);
 	
@@ -106,7 +107,7 @@ class Assets {
 		'title' => '',
 		'source' => '',
 		'contributor_id' => '',
-		'status' => 'N',
+		'astatus' => 'N',
 		'asset_url' => '', 
 		'thumb_url' => '', 
 		'caption' => '', 
@@ -117,18 +118,11 @@ class Assets {
 		'existing_thumbs' => [],
 	);
 	
-	private $assetfields;
-	private $archive_tag_list_sql;
-	private static $image_extensions = array('jpg','gif','png','jpeg');
-	private static $document_extensions = array('doc','docx','pdf','html');
-	private static $mmm_extensions = array('mov','mp4','mp3','m4a');
-	
 	
     
     public function __construct(){
         $this->pdo = MyPDO::instance();
         $this->mimeinfo  = new \finfo(FILEINFO_MIME_TYPE);
-			
 			$this->member = new Member();
 	
     }
@@ -142,7 +136,6 @@ class Assets {
 		$sql = "INSERT into `assets2` (title) VALUES ('temp')";
 		// status = T by default value
 		$this->pdo->query($sql);
-		
 		$id = $this->pdo->lastInsertId();
 		return $id;
 	}
@@ -158,7 +151,7 @@ class Assets {
 // 	source
 // 	vintage
 // 	contributor id
-// 	status
+// 	astatus
 // 	
 // 	first_use_date
 // 	first_use_in
@@ -171,72 +164,94 @@ class Assets {
 // 	date modified
 	
 	#u\echor($adata,'Into Checking asset data:');
-	
-		$adata['id'] = (int)$adata['id'];
-		if (! is_integer($adata['id'])){
-			throw new Exception ("bad id: ". $adata['id']);
-		}
-		$adata['asset_url'] = trim ($adata['asset_url']); 
-		if (empty($adata['asset_url'])){
-			throw new Exception ("No source for asset specified");
-		}
-		$srcok = false;
-		if (substr($adata['asset_url'],0,1) == '/' ) {
-			if (!file_exists(SITE_PATH . $adata['asset_url'])){
-				throw new Exception ("No file at source " . $adata['asset_url']);
-			}
-			$srcok = true;
-		}
-		if (substr($adata['asset_url'],0,4) == 'http') {
-			if (! u\url_exists ($adata['asset_url'])) {
-				throw new Exception ("Nothinig at url " . $adata['asset_url']);
-			}
-			$srcok = true;
-		}
-		if (! $srcok){
-			throw new Exception ("asset source not understod " . $adata['asset_url']);
-		}
-		
-		$adata['title'] = trim($adata['title']); #add title case?
-		if (empty($adata['title'])){
-			throw new Exception ("No title for asset specified");
-		}
-		
-		
-		if (! is_integer (0 + $adata['vintage'])){ #to cast as numeric
-				throw new Exception ("Vintage is not a valid year");
-		}
-		
-		$adata['astatus'] = $adata['astatus']?? $adata['status'] ?? 'E';
-		
-		if (! is_integer ( (int)$adata['contributor_id']) 
-			&& $adata['contributor_id'] > 0 ){
-				throw new Exception ("No contributor id");
-		}
-		
-	
-		if (! empty($adata['needs'])){
-			if (! is_array($adata['needs'])) {
-				throw new Exception ("Thumb requested not in a list.");
-			}
-			foreach ($adata['needs'] as $ttype) {
-				if (! in_array($ttype, Defs::getThumbTypes() ) ) {
-					throw new Exception ("Unrecognized thumb requested $ttype");
+	foreach ($adata as $var => $val){
+		switch ($var) {
+			case 'id':
+				if (! is_integer($val) ) throw new Exception ("bad id: ". $val);
+				break;
+				
+			case 'asset_url': 
+				$srcok = false;
+				if (empty($adata['asset_url'])){
+					throw new Exception ("No source for asset specified");
 				}
-			}
-		}
-		else {$adata['needs'] = [];}
+			
+				if (u\is_local($val) ){
+					if (file_exists(SITE_PATH . $val) ) $srcok = true;
+				}
+				elseif (u\is_http ($val) ) {
+					if ( u\url_exists ($val) ) $srcok = true;
+				}
+				if (! $srcok){
+					throw new Exception ("Asset source not understood " . $val) ;
+				}
+				break;
+			case 'thumb_url':
+				if(empty($val)) break;
+				$srcok = false;
+				if (u\is_local($val) ){
+					if (file_exists(SITE_PATH . $val) ) $srcok = true;
+				}
+				elseif (u\is_http ($val) ) {
+					if ( u\url_exists ($val) ) $srcok = true;
+				}
+				if (! $srcok){
+					throw new Exception ("Thumb source not understood " . $val) ;
+				}
+				break;
+				
+			case 'title':
+				if (empty($val)){
+					throw new Exception ("No title provided");
+				}
+				break;
+			case 'vintage':
+				 if (! is_integer (0 + $val) 
+				 	|| $val < 1800
+				 	|| $val > 2050 ){ #to cast as numeric
+						throw new Exception ("Vintage is not a valid year");
+					}
+				break;
+			case 'astatus':
+				if (! in_array($val,array_keys(Defs::$asset_status))){
+					throw new Exception ("Unknown asset status $val");
+				}
+				break;
+		
+			case 'contributor_id' :
+				if (! is_integer ( (int)$val) && $val > 0 ){
+					throw new Exception ("No contributor id");
+				}
+				break;
 	
-		if (! empty($adata['tags'])){
-			foreach (str_split($adata['tags']) as $tag){
-				if (! in_array($tag,array_keys(Defs::$asset_tags))){
+			case 'needs':
+				if ($empty($val)) $val = [];
+				if (! is_array($val) ){
+					throw new Exception ("Thumb requested not in a list.");
+				}
+				foreach ($val as $ttype) {
+					if (! in_array($ttype, Defs::getThumbTypes() ) ) {
+						throw new Exception ("Unrecognized thumb requested $ttype");
+					}
+				}
+				break;
+	
+			case 'tags':
+				foreach (str_split($val) as $tag){
+					if (! in_array($tag,array_keys(Defs::$asset_tags)))
 					throw new Exception ("Unknown asset tag $tag");
 				}
-			}
-		}
-		
-		
-		return $adata;
+				break;
+			case 'mime':
+				if (!in_array($val,Defs::getAcceptedMime() ) )
+			 		throw new Exception ("Source type $mime is not accdptable");
+			 	break;
+			 	
+			default: #do nothing
+				
+		} #end switch
+	}
+	return true;
 
 	}
 	
@@ -256,7 +271,7 @@ class Assets {
 			$id = $adata['id'];
 			
 		try {
-				$adata = $this->checkAssetData($adata);
+				 $this->checkAssetData($adata);
 		
 		} catch (Exception $e) {
 				echo "Error saving asset data." . BRNL;
@@ -264,50 +279,51 @@ class Assets {
 				exit;
 		}
 		
-			$source = $adata['asset_url'];
-
-			list ($mime,$size) = $this->getMimesize($source);
-			 
-			 if (!in_array($mime,Defs::getAcceptedMime() ) ){
-			 	throw new Exception ("Source type $mime is not accdptable");
-			 }
+		$adata['sizekb'] = 0;
+		$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
+		if ($path = u\is_local($adata['asset_url']) ) {
+			$size = filesize($path);
 			$adata['sizekb'] = (int)($size/1000);
-			$adata['mime'] = $mime;
-			if (!$adata['type'] =  $this->getTypeFromMime ($adata['mime']) ){
-				throw new Exception ("Cannot get asset type for mime ${adata['mime']}");
+		}
+			
+		echo "<b>Saving Asset $id mime $mime, sizekb $size</b>" . BRNL;
+	
+		// save all tbunbs, including thumb if not there.
+		
+		if (!empty( $adata['needs'])) {
+			echo "Creating required thumbs now... " ;
+			
+			if (empty( $tsource = $adata['thumb_url'] ) ){
+					$tsource = $adata['asset_url'];
+					$mime = $adata['mime'];
+			} else {
+				$mime = u\get_mime_from_url ($tsource);
 			}
 			
-			echo "<b>Saving Asset $id mime $mime, sizekb $size</b>" . BRNL;
-	
+			/* 
+			if source is a remote url, download the contents
+			to a local file for creating thumb
+			*/
 			
-			
-			// save all tbunbs, including thumb if not there.
-		
-			if (!empty( $adata['needs'])) {
-				echo "Creating thumbs now... " ;
-				
-				if (empty( $tsource = $adata['thumb_url'] ) ){
-						$tsource = $adata['asset_url'];
-						$mime = $adata['mime'];
-				} else {
-					list($mime,$size) = $this->getMimesize($tsource);
-				}
-				#get temp file if source is a url 
-				if (strcasecmp($mime, "text/html") == 0
-					|| substr($tsource,0,4) == 'http' ) {
-					$temp_source = $this->getTempSource($id,$tsource);
+			if (u\is_http($tsource) && u\url_exists($tsource) ){
+				if ($temp_source = $this->getTempSource($id,$tsource) ){
 					$tsource = $temp_source;
 				}
-				echo " from $tsource. " . BRNL;
-				
-				foreach ($adata['needs'] as $need){
-					$this->saveThumb($need,$id,$mime,$tsource);
-				}
-				if (isset($temp_source) && file_exists($temp_source)){unlink($temp_source);}
-				
+				else {throw new Exception ("Cannot download thumb source $tsource");}
 			}
-
+			echo " from $tsource. " . BRNL;
 			
+			foreach ($adata['needs'] as $need){
+				$this->saveThumb($need,$id,$mime,$tsource);
+			}
+			if (isset($temp_source) && file_exists($temp_source)){unlink($temp_source);}
+			
+		}
+
+			/* 
+			external fields are not included here.  This is an
+			update, so existing values do not get changed.
+			*/
 			$allowed_fields = array_merge (self::$editable_fields, self::$calculated_fields);
 			if (!empty($adata['status'])) {$allowed_fields[] = 'status';}
 			
@@ -350,7 +366,7 @@ class Assets {
 					return $temp_source;
 				} else {
 					echo "Unable to download $tsource";
-					return $tsource;
+					return false;
 				}
 	}
 	
@@ -452,31 +468,7 @@ class Assets {
    }
    
    
-   public function checkURL($url) {
-   	// checks for existance of file or url
-   	$msg = '';
-   	if (substr($url,0,1) == '/') { #local file
-			$source_path = SITE_PATH . $url;
-			if (! file_exists($source_path)){
-				$msg = "No file at $url";
-			}
-		 }	
-		 elseif (substr($url,0,4) == 'http') {
-			$source_path = $url;
-			if (! u\url_exists($source_path)){
-				$msg = "Nothing found at source url $url";
-			}
-
-		 }
-		 else {
-		 	$msg = "Unknown url at $url";
-		 }
-		 if ($msg){ 
-		 #	echo "$msg" ; 
-		 	return false;
-		 }
-		 return true;
-   }
+  
    
    public function getThumbTics($id) {
    /* returns array of all thumb types and check mark if thumb exists */
@@ -625,22 +617,16 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 		
 	private function getMimeSize ($url) {
 	 	echo "Getting Mimesize for $url ... ";
-		if (!$this->checkURL($url)){
-			die ("url cannot be located");
-		}
+		if (! u\url_exists ($url)) die ("url cannot be located");
 		
-		 if (substr($url,0,1) == '/') { #local file
-			$source_path = SITE_PATH . $url;
-			if (! file_exists($source_path)){
-				return [ "File $url does not exist", 0];
-			}
-			$mime = $this->mimeinfo->file($source_path);
-			$size = filesize($source_path) ?? 0;
+		if ($path = u\is_local($url)){
+			$mime = $this->mimeinfo->file($path);
+			$size = filesize($path) ?? 0;
 		 	
 		 }	
 		 else {
-			$source_path = $url;
-			$mime = u\get_mime_from_url($url);
+			
+			$mime = u\get_mime_from_curl($url);
 			$size = 0;
 			
 		 }
@@ -1011,17 +997,6 @@ private function create_thumb($id,$fsource,$ttype='thumbs'){
 
 	 
 	 
-	
-	private function get_mime_type_from_url($url)
-	{
-	$ch = curl_init($url);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-	curl_setopt($ch, CURLOPT_HEADER, 1);
-	curl_setopt($ch, CURLOPT_NOBODY, 1);
-	curl_exec($ch);
-	return curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-	}
 
 	private function build_im_thumbnail ($id,$source_mime,$source,$ttype,$max_dim){
 		 $thumb = $id . '.jpg';
