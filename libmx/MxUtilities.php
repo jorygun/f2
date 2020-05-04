@@ -601,8 +601,8 @@ function days_ago ($date_str = '1') {
 
 function url_exists($url)
 	{
-	if ($path = u\is_local($url)) return file_exists($path);
-	elseif (u\is_valid_url($url) && u\get_mime_from_curl($url) ) return true;
+	if ($path = is_local($url)) return file_exists($path);
+	elseif (is_valid_url($url) && get_mime_from_curl($url) ) return true;
 		// use curl instead of get headers to avoid timeout problems
 		
    return false;
