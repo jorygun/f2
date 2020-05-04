@@ -317,7 +317,7 @@ private function tag_search ($clist) {
 			
 		
 		
-			$adata['source_warning'] = ($this->assets->checkURL($adata['asset_url']) ) ? '' : " <<<< Source cannot be found ";
+			$adata['source_warning'] = (u\url_exists($adata['asset_url']) ) ? '' : " <<<< Source cannot be found ";
 		
 //     
 //         
