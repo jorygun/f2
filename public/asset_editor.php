@@ -84,7 +84,7 @@ $asset_data['source_warning']='';
 $asset_data['thumb_tics'] = $assets->getThumbTics($id);
 // check new thumb if new id or no existing thumb
 #$asset_data['thumb_checked'] = ($id == 0)? 'checked':'';
-if (!$asset_data['thumb_tics'] ){$asset_data['thumb_checked']  = 'checked';}
+$asset_data['thumb_checked'] = ($asset_data['thumb_tics'] ) ? '' : 'checked';
 	
 // build some input boxes
 $asset_data['tag_options'] = u\buildCheckBoxSet ('tags',Defs::$asset_tags,$asset_data['tags'],3);
