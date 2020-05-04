@@ -87,8 +87,8 @@ class AssetAdmin
 		
 		#echo "pre c ookup: " . $post['contributor'] . ' ' . $post['contributor_id'] . BRNL; 
 		
-		if (!empty($id =$post['contributor_id']) && $id > 0 ){
-			$adata['contributor_id'] = (int)$post['contributor_id'];
+		if (!empty($post['contributor_id']) && $id > 0 ){
+			$adata['contributor_id'] = $post['contributor_id'];
 		} elseif (!empty ($post['contributor'] )) {
 			list ($adata['contributor'], $adata['contributor_id'] ) 
 				= $this->member->getMemberId($post['contributor']) ;

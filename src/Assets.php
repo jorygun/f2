@@ -288,7 +288,7 @@ class Assets {
 			$adata['sizekb'] = (int)($size/1000);
 		}
 			
-		echo "<b>Saving Asset $id mime $mime, sizekb $size</b>" . BRNL;
+		echo "<b>Saving Asset $id</b>" . BRNL;
 	
 		// save all tbunbs, including thumb if not there.
 		
