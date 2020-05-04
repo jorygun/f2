@@ -167,7 +167,7 @@ class Assets {
 	foreach ($adata as $var => $val){
 		switch ($var) {
 			case 'id':
-				if (! is_integer($val) ) throw new Exception ("bad id: ". $val);
+				if (! is_integer( (int)$val) ) throw new Exception ("bad id: ". $val);
 				break;
 				
 			case 'asset_url': 
