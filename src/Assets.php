@@ -420,7 +420,7 @@ class Assets {
    	$sql = "SELECT a.*, m.username as contributor, m.user_email from `assets2` a
    		INNER JOIN `members_f2` m on a.contributor_id = m.user_id where a.id = $id";
    	if (!$adata = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){ #arra
-   		echo "Failed to retrieve data record";
+   		echo "Failed to retrieve data record: $sql <br>";
    		
    		return [];
    	}
