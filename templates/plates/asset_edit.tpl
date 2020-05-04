@@ -13,7 +13,7 @@ table {border:1px solid black; }
 	<li><b>ID:</b> <?=$id?>  <b>Status:</b> <span style='<?=$status_style?>'><?=$status?> <?=$status_name?> </span><b>Entered:</b> <?=$date_entered?> 
 <li><b>Mime type:</b> <?=$mime?> <b>Size: </b><?=$sizekb?> KB. 
 <li><b>First Use:</b> <?=$first_use?>
-<li><b>test:</b> <?=$temtest?>
+<li><b>test:</b> <?=$temptest?>
 </ul>
 <?php else:?>
 
