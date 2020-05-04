@@ -24,16 +24,11 @@ if ($login->checkLogin(0)){
 	echo $page->startBody();
 }
 	
-//END START
-$id = 0;
-#$id = (!empty($_GET['id']) ? $_GET['id'] :0;
-$id =  $_GET['id'] ?? 0;
-// if (empty($id)){
-// 	echo "No asset requested"; exit;
-// }
+
 $assets = new Assets();
 $asseta = new AssetAdmin();
 
+$next_id = 0;
 
 if (!empty($_POST['submit'] )) {
 	$this_id = $_POST['id'];
@@ -49,19 +44,25 @@ if (!empty($_POST['submit'] )) {
 		$next_id = $asseta->postAssetFromForm($_POST);
 	} elseif ($_POST['submit'] == 'Skip and edit next' ){
 		#remove current id from the list, if it's there
-		
 		$next_id = array_shift($_SESSION['last_assets_found']);
 	} else { #save and go next
-	
 		$last_id = $asseta->postAssetFromForm($_POST);
 		$next_id = array_shift($_SESSION['last_assets_found']);
 	}
+	$_GET['id'] = $next_id;
 }
 
 ######## GET ######################
 // set id to geet to last id or get or 0 for new
-$id = $next_id ?? 0;
-if (!$id) {$id = $_GET['id'] ?? 0;} 
+//END START
+
+
+if (isset ($_GET['id'])) $id = $_GET['id'] ?? 0 ;
+elseif (!empty($SESSION['last_assets_found'])){
+	$id = shift($SESSION['last_assets_found']);
+}
+
+$current_count = count($_SESSION['last_assets_found']);
 
 
 if (! $asset_data = $assets->getAssetDataById ($id) ){
@@ -69,16 +70,13 @@ if (! $asset_data = $assets->getAssetDataById ($id) ){
 }
 
 
-$current_count =  0;
 
-if (!empty($_SESSION['last_assets_found'])) {
-	$current_count = count($_SESSION['last_assets_found']);
-	
-}
+
+
 $asset_data['current_count'] = $current_count;
 
 
-$asset_data['status_style'] = ($asset_data['status'] == 'X')? 'color:red':'';
+$asset_data['status_style'] = ($asset_data['astatus'] == 'X')? 'color:red':'';
 $asset_data['source_warning']='';
 
 $asset_data['thumb_tics'] = $assets->getThumbTics($id);
@@ -88,7 +86,7 @@ $asset_data['thumb_checked'] = ($asset_data['thumb_tics'] ) ? '' : 'checked';
 	
 // build some input boxes
 $asset_data['tag_options'] = u\buildCheckBoxSet ('tags',Defs::$asset_tags,$asset_data['tags'],3);
-$asset_data['status_options'] = u\buildOptions(Defs::$asset_status,$asset_data['status']);
+$asset_data['status_options'] = u\buildOptions(Defs::$asset_status,$asset_data['astatus']);
 $asset_data['Aliastext'] = Defs::getMemberAliasList();
 
 $asset_data['thumb_tics'] = $assets->getThumbTics($id);
