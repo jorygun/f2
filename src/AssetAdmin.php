@@ -198,7 +198,7 @@ class AssetAdmin
 		
 		$link = $adata['asset_url'];
 		if (empty($link)){return 'No asset url';}
-		if (! u\url_exits($link)){
+		if (! u\url_exists($link)){
 			return "Linked asset doesn't exist";
 		}
 		
