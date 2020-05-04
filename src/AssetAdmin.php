@@ -100,7 +100,7 @@ class AssetAdmin
 		
 	#echo "after c ookup: " . $adata['contributor'] . ' ' . $adata['contributor_id'] . BRNL; exit;
 	
-		$adata['vintage'] = trim((int)$adata['vintage']);
+		$adata['vintage'] = trim($adata['vintage']);
 		if (empty($adata['vintage'])){
 			$adata['vintage'] = date('Y');
 		}
@@ -125,7 +125,7 @@ class AssetAdmin
 	
 		foreach (self::$upload_types as $type){
 			if (isset($_FILES[$type]) && !empty ($_FILES[$type]['name'] )){
-				echo "starting reload $type" . BRNL;
+				echo "relocating $type... " ;
 				$url = $this->relocateUpload($id,$type);
 				echo "new url: $url" . BRNL;
 				
@@ -198,7 +198,7 @@ class AssetAdmin
 		
 		$link = $adata['asset_url'];
 		if (empty($link)){return 'No asset url';}
-		if (! $this->assets->checkURL($link)){
+		if (! u\url_exits($link)){
 			return "Linked asset doesn't exist";
 		}
 		
@@ -283,8 +283,8 @@ EOF;
 		 	throw new \RuntimeException('No file of type $utype found in _FILES.');
 		 }
 		 if ($_FILES[$utype]['error'] != UPLOAD_ERR_OK ){
-		 	u\echor ($_FILES[$utype], "Files array for $utype");
-
+		 	u\echor ($_FILES[$utype], "Error: Files array for $utype");
+			exit;
 		 	}
 		 switch ($_FILES[$utype]['error']) {
 			  case UPLOAD_ERR_OK:

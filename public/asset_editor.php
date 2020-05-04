@@ -58,6 +58,7 @@ if (!empty($_POST['submit'] )) {
 	}
 }
 
+######## GET ######################
 // set id to geet to last id or get or 0 for new
 $id = $next_id ?? 0;
 if (!$id) {$id = $_GET['id'] ?? 0;} 
@@ -80,7 +81,11 @@ $asset_data['current_count'] = $current_count;
 $asset_data['status_style'] = ($asset_data['status'] == 'X')? 'color:red':'';
 $asset_data['source_warning']='';
 
-$asset_data['thumb_checked'] = ($id == 0)? 'checked':'';
+$asset_data['thumb_tics'] = $assets->getThumbTics($id);
+// check new thumb if new id or no existing thumb
+#$asset_data['thumb_checked'] = ($id == 0)? 'checked':'';
+if (!$thumb_tics['thumbs']){$asset_data['thumb_checked']  = 'checked';}
+	
 // build some input boxes
 $asset_data['tag_options'] = u\buildCheckBoxSet ('tags',Defs::$asset_tags,$asset_data['tags'],3);
 $asset_data['status_options'] = u\buildOptions(Defs::$asset_status,$asset_data['status']);
