@@ -426,7 +426,7 @@ class Assets {
    	if (empty($adata['contributor_id'] )){
    		$adata['contributor_id'] = 0;
    	}
-   	$adata['contributor'] = $this->member->getMemberid($data['contributor_id'])[0];
+   	$adata['contributor'] = $this->member->getMemberid($adata['contributor_id'])[0];
    	
    		
    
