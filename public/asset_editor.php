@@ -59,7 +59,7 @@ if (!empty($_POST['submit'] )) {
 
 if (isset ($_GET['id'])) $id = $_GET['id'] ?? 0 ;
 elseif (!empty($_SESSION['last_assets_found'])){
-	$id = shift($_SESSION['last_assets_found']);
+	$id = array_shift ($_SESSION['last_assets_found']);
 }
 else $id = 0;
 
