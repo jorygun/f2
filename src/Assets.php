@@ -206,7 +206,7 @@ class Assets {
 				throw new Exception ("Vintage is not a valid year");
 		}
 		
-		$adata['astatus'] = $adata['astatus']?? $adata['status'];
+		$adata['astatus'] = $adata['astatus']?? $adata['status'] ?? 'E';
 		
 		if (! is_integer ( (int)$adata['contributor_id']) 
 			&& $adata['contributor_id'] > 0 ){

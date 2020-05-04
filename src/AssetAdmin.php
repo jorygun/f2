@@ -68,7 +68,7 @@ class AssetAdmin
 			empty($post['title'])
 			|| (empty($post['asset_url']) && empty($_FILES['uasset']['tmp_name']) )
 			) {
-			die ("Asset contains no definition.");
+			die ("Asset needs title and source.");
 		}
 		// must have id before all the data is saved to place files.
 		// this creates a skeleton asset record and gets the id.
