@@ -610,11 +610,11 @@ function url_exists($url)
 
 function get_mime_from_url($url)
 	{
-	if ($path=u\is_local($url) ){
+	if ($path=is_local($url) ){
 		 $finfo = new \finfo(FILEINFO_MIME_TYPE);
 		 $mime = $finfo->file($path);
 	} elseif (is_http($url) ){
-		$mime = u\get_mime_from_curl($url);
+		$mime = get_mime_from_curl($url);
 	} else { $mime = '';}
 	
 	return $mime;
