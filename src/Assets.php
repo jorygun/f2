@@ -288,12 +288,12 @@ class Assets {
 			$adata['sizekb'] = (int)($size/1000);
 		}
 			
-		echo "<b>Saving Asset $id</b>" . BRNL;
+		#echo "Saving Asset $id" . BRNL;
 	
 		// save all tbunbs, including thumb if not there.
 		
 		if (!empty( $adata['needs'])) {
-			echo "Creating required thumbs now... " ;
+			#echo "Creating required thumbs now... " ;
 			
 			if (empty( $tsource = $adata['thumb_url'] ) ){
 					$tsource = $adata['asset_url'];
@@ -313,7 +313,7 @@ class Assets {
 				}
 				else {throw new Exception ("Cannot download thumb source $tsource");}
 			}
-			echo " from $tsource. " . BRNL;
+			#echo " from $tsource. " . BRNL;
 			
 			foreach ($adata['needs'] as $need){
 				$this->saveThumb($need,$id,$mime,$tsource);
@@ -327,7 +327,7 @@ class Assets {
 			update, so existing values do not get changed.
 			*/
 			$allowed_fields = array_merge (self::$editable_fields, self::$calculated_fields);
-			if (!empty($adata['status'])) {$allowed_fields[] = 'status';}
+			
 			
 			$prep = u\pdoPrep($adata,$allowed_fields,'id');
 			#u\echor ($prep, 'Prep'); exit;
@@ -519,14 +519,14 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 	returns true if everything works.
 	 */
 	
-	 echo "Starting thumb $ttype ... " ;
+	# echo "Starting thumb $ttype ... " ;
 	 $thumb = "${id}.jpg";
 	if (substr($turl,0,4) == '/tmp') { 
 		$tpath = $turl;
 	} else {
 		$tpath = SITE_PATH . $turl;
 	}
-	echo " from path $tpath." . BRNL;
+	#echo " from path $tpath." . BRNL;
 		
 	if (! $max_dim = Defs::$thumb_width[$ttype]){
 		throw new Exception ("Invalid thumb type requested for thumbnail: $ttype");

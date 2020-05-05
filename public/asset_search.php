@@ -40,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 	// save list of ids, for sequential editing.
 	$ids = $as->getIdsFromSearch($_POST);
+	
 	$_SESSION['last_assets_found'] = $ids;
 	$count = count($ids);
 	echo "$count assets found. ";

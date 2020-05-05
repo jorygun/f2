@@ -67,16 +67,16 @@ class AssetAdmin
 		}
 		if (
 			empty($post['title'])
-			|| (empty($post['asset_url']) && empty($_FILES['uasset']['tmp_name']) )
+			// || (empty($post['asset_url']) && empty($_FILES['uasset']['tmp_name']) )
 			) {
-			die ("Asset needs title and source.");
+			die ("Asset needs title.");
 		}
 		// must have id before all the data is saved to place files.
 		// this creates a skeleton asset record and gets the id.
 		if (empty ($id = $post['id'])) {
 				$id = $this->assets->getNewID();
 				echo "New id $id obtained." . BRNL;
-				$adata ['status'] = 'N';
+				$adata ['astatus'] = 'N';
 		}
 		// for existing items, status is not updated when item is saved
 		
@@ -115,7 +115,7 @@ class AssetAdmin
 	
 			if (!empty($post[$ttype])){
 				$new_thumbs[] = $ttype;
-				echo "New thumb requested: $ttype. ";
+				#echo "New thumb requested: $ttype. ";
 			}
 		}
 		
@@ -126,9 +126,9 @@ class AssetAdmin
 	
 		foreach (self::$upload_types as $type){
 			if (isset($_FILES[$type]) && !empty ($_FILES[$type]['name'] )){
-				echo "relocating $type... " ;
+				echo "Relocating $type... " ;
 				$url = $this->relocateUpload($id,$type);
-				echo "new url: $url" . BRNL;
+				echo "to: $url" . BRNL;
 				
 				if ($type == 'uthumb'){
 					$adata['thumb_url'] = $url;
@@ -141,6 +141,9 @@ class AssetAdmin
 			}
 		}
 		
+		if (empty($adata['asset_url'])) {
+			die ("Asset requires a source");
+		}
 		
 	
 		if (!empty($post['tags']) && is_array ($post['tags'])){
@@ -262,7 +265,7 @@ EOF;
 		rename ($orig_path,$new_path);
 		chmod ($new_path,0644);
 		if (! file_exists($new_path)){ die ("file did not move to $new_url");}
-		echo "New url: $new_url" . BRNL;
+		#echo "New url: $new_url" . BRNL;
 
 		return $new_url;
 	}
@@ -357,48 +360,5 @@ EOF;
 					}
 	 }
 
-/***********************************************************
-	
-if(empty( $sqls = process_asset_search($post))){
-        die ("Error processing form data. No search criteria.");
-    }
-    if (!empty($_GET['get_next'])){$asset_limit = 5;}
-	
-    $sql = "SELECT id FROM assets WHERE $sqls ORDER BY id LIMIT $asset_limit;";
-    echo "<div style='border:1px solid gray;'> $sql</div><br>";
-    echo "<p>Selected Assets are shown below.</p>";
-    #$stmt = $pdo -> query($sql);
-    $id_list = $pdo -> query($sql) ->fetchAll(\PDO::FETCH_COLUMN);
-    $id_count = sizeof ($id_list);
-    if ($id_count >= $asset_limit){
-       $last_id = $id_list[$asset_limit - 1];
-        ++ $last_id ;
 
-        echo "<p class='red'>Showing first $asset_limit of $id_count results.  To get more,
-        repeat search using id = '$last_id - '.</p>";
-        }
-     
-       
-    
-
-    if (count($id_list) == 0){echo "<p style='color:red;font-weight:bold;'>Nothing found.</p>";}
-    else {
-    	$_SESSION['asset_search_ids'] = $id_list;
-    	#save the list in the session file so it can be used repeatedly
-    	
-    	$id_list_string = implode(',',$id_list);
-    	echo <<<EOT
-    	<form action = '/scripts/asset_edit.php' method='post' target='asset_edit' onsubmit = "window.open('','asset_edit');" >
-    	 $id_count results. 
-    	<input type=hidden name='id_list_string' value='$id_list_string'>
-    	<input type='submit' name='submit'  value='Edit All Found' >
-    	<input type='submit' name='submit' value = 'Review All' >
-    	
-    	</form>
-EOT;
-    	echo show_assets_from_list($id_list);
-       
-    }
-
-*/
 }

@@ -80,8 +80,8 @@ $page = new DocPage();
 $pdo = MyPDO::instance();
 $member = new Member();
 $assets = new Assets();
-
 $templates = new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
+
 
 // #build db
 // $container = new Container();
