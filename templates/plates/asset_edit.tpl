@@ -11,9 +11,10 @@ table {border:1px solid black; }
 	<ul>
 	<li><b>ID: <?=$id?></b> <?=$list_note?>
 	<li> <b>Status:</b> <span style='<?=$status_style?>'><?=$astatus?> <?=$status_name?> </span><b>Entered:</b> <?=$date_entered?> 
-<li><b>Mime type:</b> <?=$mime?> <b>Size: </b><?=$sizekb?> KB. 
+<li><b>Mime:</b> <?=$mime?> Type: <?=$type?> 
+<li><b>Size: </b><?=$sizekb?> KB. <?=$height?>h x <?=$width?>w
 <li><b>First Use:</b> <?=$first_use?>
-<li><b>test:</b> <?=$temptest?>
+<li><b>Test tag:</b> <?=$temptest?>
 </ul>
 <?php else:?>
 
@@ -30,7 +31,7 @@ table {border:1px solid black; }
 
 <table class='assettable' style='width:750px;'>
 
-<tr><td>Item Title</td><td><input type='text' size='60' name='title' id='title' value="<?=$title?>"></td></tr>
+<tr><td>Item Title (<=64 chars)</td><td><input type='text' size='60' maxlength ='64' name='title' id='title' value="<?=$title?>"></td></tr>
 <tr><td>Caption (not reqd)</td><td><textarea  name='caption' rows=5 cols=60><?=$caption?></textarea></td></tr>
 <tr><td>Other Keywords (comma sep)</td><td><input type='text' name='keywords' value='<?=$keywords?>' size='60'/></td></tr>
 
@@ -85,7 +86,7 @@ Upload file <input type="file" name="uasset" > <br>
 <input type='submit' name='submit' value='Save and edit next'>
 <input type='submit' name='submit' value='Skip and edit next'>
 <?php else : ?>
-<input type='submit' name='submit'>
+<input type='submit' name='submit' value='Save'>
 <?php endif; ?>
 </form>
 </form>

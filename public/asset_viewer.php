@@ -103,7 +103,7 @@ $credit = '';
 $adata['credit'] = $credit;
 
 
-$mimetype = $adata['mime'];
+	$mime = $adata['mime'];
    $type = $adata['type'];
 
 // if ($substr($url,0,1) != '/' && strpos($url,'youtube') == false){
@@ -126,9 +126,9 @@ $mimetype = $adata['mime'];
 } elseif (substr($url,0,1) != '/') {$asset_display= "
    <p class='red'>Asset is on an external site.  Please use the source link to access it.</p>
 ";
- } elseif (strpos($mimetype,'video') !== false ){
+ } elseif (strpos($mime,'video') !== false ){
 		  $asset_display =  "<video src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
-} elseif (strpos($mimetype,'audio')!== false ){
+} elseif (strpos($mime,'audio')!== false ){
      	$asset_display =  "<audio src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not playing this audio.</audio>";
 } elseif ($type == 'Multimedia' ){
      #$asset_display =  "<video src = '$url' controls autoplay style='max-width:1024px;'>Your browser is not displaying this video.</video>";
@@ -138,7 +138,7 @@ $mimetype = $adata['mime'];
      
      </iframe>
 EOT;
-} elseif ( $type == 'Document' || 'Web Page' ){
+} elseif ( $type == 'Document' || $type == 'Web Page' ){
     $asset_display= <<<EOT
     <iframe src='$url' id='myframe'  >
     
@@ -146,10 +146,10 @@ EOT;
      <a href="$url">$url</a>.
      </iframe>
 EOT;
-} elseif (strpos($mimetype,'image') !== false){
-        $asset_display =  "<img src = '$url' style='max-width:1024px;'>";
+} elseif (strpos($mime,'image') !== false){
+        $asset_display =  "<img src = '$url' style='width:100%;max-width:1024px;'>";
 } elseif ( $type == 'Image' || $type == 'Cartoon'){
-     $asset_display =  "<img src = '$url' style='max-width:960px;'>";
+     $asset_display =  "<img src = '$url' style='width:100%;max-width:960px;'>";
      
 
 } else {

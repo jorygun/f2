@@ -48,6 +48,7 @@ class AssetAdmin
 		$this->mimeinfo = new \finfo(FILEINFO_MIME_TYPE);
 		
 		
+		
 
 
 	}
@@ -145,7 +146,8 @@ class AssetAdmin
 			die ("Asset requires a source");
 		}
 		
-	
+		
+		
 		if (!empty($post['tags']) && is_array ($post['tags'])){
 			// convert to string
 			$adata['tags'] =  charListToString($post['tags']) ;
@@ -157,7 +159,7 @@ class AssetAdmin
 	
 		$this->assets->saveAsset($adata);
 		
-		echo "<a href='asset_editor.php?id=$id'>View in Editor</a>" . BRNL;
+		echo "<a href='asset_editor.php?id=$id' target='asset_editor'>View in Editor</a>" . BRNL;
 		return $id;
 
 	}
@@ -186,6 +188,75 @@ class AssetAdmin
 		return $needs;
 	}
 	
+	public function getAssetBlock($aid,$style,$show_caption=false) {
+		/* returns a div with the asset and title in it.
+		uses asset thumb or gallery size
+		shows thumb linked to asset
+		below thumb is title in bold and optional in italic
+		
+		style left = float left, fixed width blocks to line up
+			in a column.
+		style top = float left, fixed height blocks to line up in rows
+		style center = use gallery size thumb, no float.
+		
+		*/
+		if (! $adata = $this->assets->getAssetDataById($aid) ) {
+			return "Asset $id not found";
+		}
+		$aurl = $adata['asset_url'];
+		$atitle = $adata['title'];
+		$acapt = ($show_caption)? 
+			"<div class='acaption'>${adata['caption']}</div>" : '';
+
+		$attr = $adata['source'];
+		$attr_block = (!empty($attr))? "<div class='asource'>-- $attr</div>" : '';
+			
+		
+		
+		switch($style) {
+			case 'thumb':
+				$block = <<<EOT
+				<div class= 'asset'>
+					<a href='/asset_viewer.php?$aid' target='viewer'>
+					<img src='/assets/thumbs/$aid.jpg' /> </a>
+					$attr_block
+					<div class='atitle'>$atitle</div>
+					$acapt
+				</div>
+EOT;
+				break;
+			case 'gallery':
+				$block = <<<EOT
+				<div class='asset'>
+					<a href='/asset_viewer.php?$aid' target='viewer'>
+					<img src='/assets/galleries/$aid.jpg' /> </a>
+					$attr_block
+					<div class='atitle'>$atitle </div>
+					$acapt
+				</div>
+EOT;
+				break;
+			case 'toon' :
+				$block = <<<EOT
+				<div class='asset'>
+					<a href='/asset_viewer.php?$aid' target='viewer'>
+					<img src='/assets/toons/$aid.jpg' /> </a>
+					$attr_block
+					<div class='atitle'>$atitle</div>
+					$acapt
+				</div>
+EOT;
+				break;
+			
+			default: 
+				$block = 'Unknown asset display style';
+		}
+					
+		return $block;
+		
+	
+	
+	}
 	
 	
 	public function getAssetLinked($id,$nocache=false) {
@@ -324,41 +395,41 @@ EOF;
 	}
 
 
-	private function getYoutubeThumb($url) {
-			// returns url to thumbnail for a youtube video.
-			// returns false if not a youtube video
-			echo "looking for yt match to $url" . BRNL;
-					 $pattern = 
-					'%#match any youtube url
-						 (?:https?://)?  # Optional scheme. Either http or https
-						 (?:www\.)?      # Optional www subdomain
-						 (?:             # Group host alternatives
-							youtu\.be/    # Either youtu.be,
-						 | youtube\.com/
-						 )				# or youtube.com
-						 (?:          # Group path alternatives
-							  embed/     # Either /embed/
-							| v/         # or /v/
-							| watch\?v=  # or /watch\?v=			
-						 ) ?            # or nothing# End path alternatives.
-											 # End host alternatives.
-						 ([\w-]+)  # Allow 10-12 for 11 char youtube id.
-						 %x'
-						 ;	          
-					$result = preg_match($pattern, $url, $matches);
-					if (array_key_exists(1,$matches)){
-						$vid = $matches[1] ;
-						echo "Matched youtube $matches[0] to video id $vid " . BRNL;
-						if ($yturl = "http://img.youtube.com/vi/$vid/mqdefault.jpg" ){
-							return $yturl;
-						} else {
-							throw new Exception ("Cannot retrieve thumbnail for you tube video.");
-						}
-					}
-					else { // not a youtube video
-						return false;
-					}
-	 }
+	// private function getYoutubeThumb($url) {
+// 			// returns url to thumbnail for a youtube video.
+// 			// returns false if not a youtube video
+// 			echo "looking for yt match to $url" . BRNL;
+// 					 $pattern = 
+// 					'%#match any youtube url
+// 						 (?:https?://)?  # Optional scheme. Either http or https
+// 						 (?:www\.)?      # Optional www subdomain
+// 						 (?:             # Group host alternatives
+// 							youtu\.be/    # Either youtu.be,
+// 						 | youtube\.com/
+// 						 )				# or youtube.com
+// 						 (?:          # Group path alternatives
+// 							  embed/     # Either /embed/
+// 							| v/         # or /v/
+// 							| watch\?v=  # or /watch\?v=			
+// 						 ) ?            # or nothing# End path alternatives.
+// 											 # End host alternatives.
+// 						 ([\w-]+)  # Allow 10-12 for 11 char youtube id.
+// 						 %x'
+// 						 ;	          
+// 					$result = preg_match($pattern, $url, $matches);
+// 					if (array_key_exists(1,$matches)){
+// 						$vid = $matches[1] ;
+// 						echo "Matched youtube $matches[0] to video id $vid " . BRNL;
+// 						if ($yturl = "http://img.youtube.com/vi/$vid/mqdefault.jpg" ){
+// 							return $yturl;
+// 						} else {
+// 							throw new Exception ("Cannot retrieve thumbnail for you tube video.");
+// 						}
+// 					}
+// 					else { // not a youtube video
+// 						return false;
+// 					}
+// 	 }
 
 
 }

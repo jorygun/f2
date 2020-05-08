@@ -3,8 +3,7 @@ namespace digitalmx\flames;
 #ini_set('display_errors', 1);
 
 //BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
-
+	require $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	use digitalmx as u;
 	use digitalmx\flames as f;
 	use digitalmx\flames\Definitions as Defs;
@@ -63,8 +62,9 @@ elseif (!empty($_SESSION['last_assets_found'])){
 	$list_note = '(Retrieved next id from current search list)';
 }
 else $id = 0;
-
-$current_count = count($_SESSION['last_assets_found']);
+$current_count = 0;
+if (isset($_SESSION['last_assets_found']))
+	$current_count = count($_SESSION['last_assets_found']);
 
 
 if (! $asset_data = $assets->getAssetDataById ($id) ){

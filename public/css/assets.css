@@ -1,0 +1,99 @@
+/* Styles for asset displays 
+	old was thumbs, now asset class
+	stick these asset objects inside a div class = asset
+	*/
+
+.asset {
+	text-align:center;
+	margin:auto;
+	 border: 1px solid gray;
+	
+}
+
+
+.asset img {
+		display:block;
+        margin-left: auto;
+        margin-right: auto;
+       
+}
+div.asset-left {
+	float:left;
+}
+
+div.asset-left .asset {
+/* make thumbs consistent width 
+use inside a div that floats left*/
+    width:230px;
+    display:block;
+    margin:3px; 
+    margin-bottom:8px;
+    border:1px solid black;
+    padding-left:5px;padding-right:5px;
+    background:#FFF;
+}
+.asset-left .asset img {
+        width:200px;
+}
+
+div.asset-center .asset {
+    width:100%;
+    max-width:440px;
+    display:block;
+    overflow:auto;
+    margin:auto;
+    border:1px solid black;
+    padding-left:5px;padding-right:5px;
+    background:#FFF;
+}
+.asset-center .asset img {
+        width:100%;
+}
+
+div.asset-top .asset {
+/* make thumbs consistent height to floaters line up. */
+   height:250px;
+    
+   max-width:300px;
+    display:block;
+    overflow:auto;
+    margin:3px; margin-right:6px; margin-left:0;
+    float:left;
+    border:1px solid black;
+    padding-left:5px;padding-right:5px;
+    background:#FFF;
+}
+.asset-top .asset img {
+        max-height:200px;
+        width:200px;
+}
+
+.atitle {
+	font-size:0.9em;
+	text-align:center;
+	font-weight:bold;
+	margin:3px;
+	color:black;
+	
+	font-family:Helvetica,Arial,sanserif;
+	
+}
+.acaption {
+    font-size:0.9em;text-align:center;
+    font-style:italic;
+    font-weight:normal;
+   
+    }
+
+.asset a {text-decoration:none;}
+
+
+.asource{
+    font-style:normal;
+    font-size:0.8em;
+	margin-top: 3px;
+	margin-right:6px;
+	text-align:right;
+	}
+
+

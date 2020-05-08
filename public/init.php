@@ -20,19 +20,13 @@ namespace digitalmx\flames;
 ini_set('error_reporting', E_ALL);
 #ini_set('display_errors', 1);
 
-// set up for longer session lifes
-	#ini_set('session.cookie_lifetime', 3600);
-	#ini_set('session.gc_maxlifetime', 3600);
-
-mb_internal_encoding();
-
 session_start();
-
 
 use digitalmx\MyPDO;
 use digitalmx as u;
 use digitalmx\flames\Definitions as Defs;
 use digitalmx\flames\DocPage;
+use digitalmx\flames\Assets;
 
 
 // test to avoid re-running.  cron-ini  also sets this var.
@@ -42,11 +36,22 @@ class Exception extends \Exception {}
 class RuntimeException extends \RuntimeException {}
 
 
+   /**
+   	SESSION SETUP
+    * test if session already started                                         *
+    * every protected script needs session to get                             *
+    * logiin user info                                                        *
+   **/
+
+
+	// set up for longer session lifes
+		#ini_set('session.cookie_lifetime', 86400);
+		#ini_set('session.gc_maxlifetime', 86400);
 
 
 
 #use Pimple\Container;
-
+#use digitalmx\
 
 // sets up everything.  var is name of config file with db stuff et al,
 // and is located in config dir
@@ -71,11 +76,12 @@ if (REPO == 'live'){
 require REPO_PATH . "/config/f2_transition.php";
 
 $login = new Login();
-
+$page = new DocPage();
 $pdo = MyPDO::instance();
 $member = new Member();
+$assets = new Assets();
 $templates = new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
-$madmin = new MemberAdmin();
+
 
 // #build db
 // $container = new Container();
@@ -115,7 +121,7 @@ class Init
 		
 		$this->config_ini = '/config/config.ini'; 
 		// relative to repo
-		
+		$this->setPath();
 		$this->platform = $this->setPlatform();
 		$this->paths = $this->setPaths($this->platform);
 	
@@ -129,9 +135,17 @@ class Init
 		$this->setRequires() ;
 		$this->setAutoload() ;
 		$this->pdo = MyPDO::instance();
+		
 
 		define ('INIT',1);
 	
+	}
+	
+	private function setPath() {
+		// sets env path, not includes
+		$path = getenv('PATH') . ':/usr/local/bin';
+		$_SERVER['PATH'] = $path;
+		
 	}
 	
 	private function setAutoload() {
@@ -172,9 +186,9 @@ class Init
 	
 	private function setSite() {
 		$site = $_SERVER['SERVER_NAME'];
-		if (strpos($site,'amdflames') === false
-		&& strpos($site,'.local') === false ){ #not web,
-			throw new Exception ('Invalid site ' . $site);
+		if (empty($site)){ #not web, e.g, from cron
+			$site = "amdflames.org";
+			$this->notices[] = "Site not determined; setting to $site";
 		}
 		
 		return $site;
@@ -233,11 +247,12 @@ class Init
 	private function setIncludes($repo_dir){
 	#initial include path set in .user.ini to include this folder.
 	#add other paths here so can just call <repo>/config/init.php for shell scripts.
-	
-	
+	$proj_dir = dirname($repo_dir);
+	$mypath = getenv('PATH');
 	ini_set('include_path',
 		  '.'
 		. ':' . '/usr/local/lib/php'
+		. ':' . '/usr/local/bin'
 
 		. ':' . $repo_dir . '/libmx'
 		. ':' . $repo_dir . '/lib'
@@ -245,6 +260,7 @@ class Init
 		. ':' . $repo_dir. '/src'
 		. ':' . $repo_dir . '/public'
 		. ':' . $repo_dir . '/public/scripts'
+		. ':' . $mypath
 
 		);
 
@@ -307,85 +323,87 @@ class Login
 	*/
 
 	
-	public function checkLogin ($min = 0,$s='') 
+	public function checkLogin ($min = 0) 
 	{
-		// gets login code from ?s=xxx or passed as a parameter to check login function.
-		
-			$session = session_id();
-			$login_code = $_GET['s'] ?? $s ;
-			$current_uid = -1; 
-			$current_user = 'Nobody';
-			$new_uid = 0;
-			
-			
-			if (isset($_SESSION['login']['user_id']) ){
-				#u\echor($_SESSION['login'],'session login before ' . session_id() );
-				$current_uid = $_SESSION['login']['user_id'];
-			// 0 for logged in as nonmember, but -1 for not logged in at all
-				$current_user = $_SESSION['login']['username'];
+			if (isset ($_GET['s']) ){ 
+				$login_code = $_GET['s'] ;
+				#uid 0 for non-member
+				$uid = $this->member->checkPass($login_code) ;
+				#u\echoAlert ("new login user $uid");
+	
 			} else {
-				#echo "No session login" . BRNL;
-			}
-			if ($login_code){
-				$new_uid = $this->member->checkPass($login_code);
+				$login_code = '';
+				$uid = 0;
 			}
 			
 			
-			#u\echor($_SESSION,'session');
-			#echo "start checklogin session $session. <br>code $login_code; current $current_uid; new $new_uid" . BRNL; flush();
-
-			if (! $login_code) {
-				if ($current_uid < 0){
-					$this->loginNonmember();
-					#echo "Logging in nonmember";
-				} else { 
-					#echo "no login code; do nothing. "; 
-					# do nothing
-				}
-			}
-			elseif ($login_code == 'logout' ){
-				if ($current_uid > 0) {
-					$this->logOut();
-				}
-				else {
-					u\echoAlert ( "Not logged in; cannot log out." );
-					
-				}
-			}
-		
-			elseif ($login_code == 'relogin'  ) {
-				#relogin current user
-				if ($current_uid > 0) {
-					echo "relogging $current_user"; 
-					#u\echoAlert ( " Re-login as $login_user." );
-					$log_info = $this->member->getLoginInfo($current_uid);
-					$this->setSession($log_info);
-				}
-				else {
-					u\echoAlert ("Not logged in; cannot re-login.");
-					
-				}
-			
-			}
-				
-			elseif ($new_uid == $current_uid) { 
-				#do nothing; same user
-				#echo "Same user. ";
+			if (isset ($_SESSION['login'])){ #already logged in, as member or non-member
+				$login_user = $_SESSION['login']['user_id'];
+				#u\echoAlert ("Reading session " . session_id() . " logged in uid: " . $login_user);
 			}
 			else {
-						$log_info = $this->member->getLoginInfo($new_uid);
-						$this->setSession($log_info);
+				$login_user = -1; #flag for no login at all
 			}
 			
-			#u\echor($_SESSION['login'],'session post login ' . session_id() );
+	
+			if ($login_code){
+				#echo " s-code: $login_code" . BRNL;
+				if ($login_code == 'logout' ){
+					if ($login_user > 0) {
+						$this->logout();
+					}
+					else {
+						u\echoAlert ( "Not logged in; cannot log out." );
+						exit;
+					}
+				}
+	
+				elseif ($login_code == 'relogin'  ) {
+					#relogin current user
+					if ($login_user > 0) {
+						#u\echoAlert ( " Re-login as $login_user." );
+						$log_info = $this->member->getLoginInfo($login_user);
+						$this->setSession($log_info);
+					}
+					else {
+						u\echoAlert ("Not logged in; cannot re-login.");
+						exit;
+					}
+				
+				}
+				
+				else { #any other login code
+					
+					if ($uid == $login_user) { 
+						#if no login, uid = 0 but login = -1; it won't match
+						#same user; do nothing
+					}
+					else  {
+						#u\echoAlert ("new login " );
+						#$this->logOut($_SERVER['REQUEST_URI']); #relog in with same uri
+						session_unset();
+						$log_info = $this->member->getLoginInfo($uid);
+						$this->setSession($log_info);
+					}
+					
 
+				}
+		#no login code
+		} elseif ($login_user >= 0) {
+				#u\echoAlert ( "No s-code; already logged in. Done.");
+				
+		} else { 
+			#login as non mmeber
+				#u\echoAlert ( "no login; no current.  Non-member login");
+				$log_info = $this->member->getLoginInfo(0);
+				$this->setSession($log_info);
+		} 
+		
+		return true;
 		return $this->checkLevel($min);
 	}
 		
-	private function loginNonmember() {
-		$log_info = $this->member->getLoginInfo(0);
-		$this->setSession($log_info);
-	}
+			
 	
 	//checks security level and issues 403
 	public function checkLevel($min)  {
@@ -398,37 +416,29 @@ class Login
 		}
 		return true;
 }
-	
-	
-	
-
+		
 	private function setSession ($log_info) {
 		// sets vars in session
-		#u\echor($log_info, 'Saving log_info '  ) ;
-	
+		#u\echor($log_info, 'Saving session ' . session_id() ) ;
+		
 		$menu = new Menu($log_info);
 		$_SESSION['login'] = $log_info;
+		$_SESSION['menu'] = $menu -> getMenuBar();
 		$_SESSION['level'] = $log_info['seclevel'];
-		$_SESSION['menu'] = $menu -> getMenuBar(); #needs login and level already set
-		#u\echor($_SESSION['login'],'session saved login ' . session_id() );
-		$this->member->setLastLogin($log_info['user_id']);
-		
 		
 		return true;
 	}
-	
+
 	private function logOut($next ='/'){
 // If it's desired to kill the session, also delete the session cookie.
 // Note: This will destroy the session, and not just the session data!
 		#echo "Logging out now."; 
-		
+		$_SESSION = array();
 		if (ini_get('session.use_cookies'))
 		{
 			 $p = session_get_cookie_params();
 			 setcookie(session_name(), '', time() - 31536000, $p['path'], $p['domain'], $p['secure'], $p['httponly']);
 		 }
-		 unset ($_SESSION['login']);
-		 
 		session_unset();
 		session_destroy();
 		$location = $next;

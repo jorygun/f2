@@ -37,7 +37,10 @@ class Definitions {
 	 public static $thumb_width = array(
 						 'thumbs' => 200,
 						 'galleries' => 330,
-						 'toons' => 800
+						 'toons' => 800,
+						 '200w' => 200,
+						 '330w' => 330,
+						 '800w' => 800
 						 );
 	
 	private static $accepted_mime_types = array(

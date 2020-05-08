@@ -1,4 +1,6 @@
 @import '/css/amd.css';
+@import '/css/assets.css';
+
 
 body  {
 	
@@ -225,11 +227,16 @@ div.album {
 }
 .album p{margin-top:3px;margin-bottom:3px;}
 
+/* Styles for asset displays 
+	old was thumbs, now asset class
+	stick these asset objects inside a div class = asset
+	*/
 
 div.thumb {
 /* make thumbs consistent height to floaters line up. */
     height:290px;
     display:block;
+    overflow:auto;
     margin:3px; margin-right:6px; margin-left:0;
     float:left;
     border:1px solid gray;
@@ -244,7 +251,7 @@ div.thumb {
     margin:3px;
     max-width:190px;
     }
-.thumb a {text-decoration:none;}
+.thumb a  {text-decoration:none;}
 
 .thumb img {
         max-width:200px;
@@ -295,8 +302,6 @@ div.warning {
 .update_data .atamd {font-style:italic;}
 
 
-.assets .source {}
-.assets .title {}
 
 table#calendar  {
 	border:1px solid #030; border-collapse:collapse;
