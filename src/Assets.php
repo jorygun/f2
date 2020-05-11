@@ -445,7 +445,7 @@ class Assets {
    		return [];
    	}
    	
-   	$adata['contributor_id'] ??= 0;
+   	if (empty($adata['contributor_id'] )) $adata['contributor_id'] = 0;
    	$adata['status'] = $adata['astatus'];
    	
 
