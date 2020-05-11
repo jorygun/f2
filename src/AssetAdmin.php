@@ -76,7 +76,7 @@ class AssetAdmin
 		// this creates a skeleton asset record and gets the id.
 		if (empty ($id = $post['id'])) {
 				$id = $this->assets->getNewID();
-				echo "New id $id obtained." . BRNL;
+				#echo "New id $id obtained." . BRNL;
 				$adata ['astatus'] = 'N';
 		}
 		// for existing items, status is not updated when item is saved
@@ -127,9 +127,9 @@ class AssetAdmin
 	
 		foreach (self::$upload_types as $type){
 			if (isset($_FILES[$type]) && !empty ($_FILES[$type]['name'] )){
-				echo "Relocating $type... " ;
+				#echo "Relocating $type... " ;
 				$url = $this->relocateUpload($id,$type);
-				echo "to: $url" . BRNL;
+				#echo "to: $url" . BRNL;
 				
 				if ($type == 'uthumb'){
 					$adata['thumb_url'] = $url;
@@ -159,16 +159,87 @@ class AssetAdmin
 	
 		$this->assets->saveAsset($adata);
 		
-		echo "<a href='asset_editor.php?id=$id' target='asset_editor'>View in Editor</a>" . BRNL;
+		
 		return $id;
 
+	}
+	public function removeIdFromSavedList($id) {
+		if (!empty($_SESSION['last_assets_found']) ){
+			$_SESSION['last_assets_found']
+			= array_diff($_SESSION['last_assets_found'],[$id]);
+			return true;
+		}
+		return false;
+	}
+	
+	public function getAssetData($id) {
+		if ($id == 0){
+   		// new asset
+   		$adata = $this->new_asset;
+   		$adata['contributor_id']  = $_SESSION['login']['user_id'];
+   		$adata['contributor'] = $_SESSION['login']['username'];
+   		$adata['id'] = 0;
+   		$adata['date_entered'] = date('M d, Y');
+   		$adata['first_use'] = 'Never';
+   		$adata['vintage'] = date('Y');
+   		
+   		return $adata;
+   	}
+   	
+		$adata = $this->assets->getAssetDataById($id);
+		
+		// set tic character for each thumb that currently exixts.
+		$adata['existing_thumbs'] = $this->getExistingThumbs($id);
+		$adata['status'] = $adata['astatus'];
+		
+		$adata['contributor'] = $this->member->getMemberid($adata['contributor_id'])[0];
+   	
+   	$adata['first_use'] = "Never.";
+   	if  (empty($fud = $adata['first_use_date'])) {
+   		list($fud,$fin) = $this->assets->setFirstUse($id);
+   	} else {
+   		$fud = $adata['first_use_date'];
+   		$fin = $adata['first_use_in'];
+   	}
+   	if ($fud){
+   		$adata['first_use'] = 
+   		"On " . date('d M Y',strtotime($fud) )
+   		. " In " . "<a href='" . $fin . "'>" . $fin . "</a>";
+   	}
+   	
+		return $adata;
+	}
+	
+	 public function getThumbTics($id) {
+   /* returns array of all thumb types and check mark if thumb exists */
+		 $thumb_tics = [];
+		 $thumb_list = [];
+		 if ($id > 0) $thumb_list = $this->getExistingThumbs($id);
+		 
+		foreach(array_keys(Defs::$thumb_width) as $ttype) {
+				  $thumb_tics[$ttype] = (in_array($ttype,$thumb_list))?'&radic;':'';
+		}
+		return $thumb_tics;
+   }
+                
+	public function getExistingThumbs ($id) {
+		// returns list of thumb types that exist
+		$thumb = "${id}.jpg";
+		$tloc = SITE_PATH . "/assets";
+		$ttypes = [];
+		foreach (Defs::getThumbTypes() as $ttype){	
+			if (file_exists($tloc . '/' . $ttype . '/' . $thumb)){
+				$ttypes[] = $ttype; 
+			}
+		}
+		return $ttypes;
 	}
 	
 	private function checkThumbNeeds($adata,$new_thumbs) {
 		// set which thumbs are needed, by checkbox or by changed url
 		$id = $adata['id'];
 		$needs = array ();
-		$result = $this->assets->getAssetDataById($id);
+		$result = $this->getAssetData($id);
 		
 		$thumbs = $result['existing_thumbs']; #keys where value is ''
 		
@@ -200,7 +271,7 @@ class AssetAdmin
 		style center = use gallery size thumb, no float.
 		
 		*/
-		if (! $adata = $this->assets->getAssetDataById($aid) ) {
+		if (! $adata = $this->getAssetData($aid) ) {
 			return "Asset $id not found";
 		}
 		$aurl = $adata['asset_url'];

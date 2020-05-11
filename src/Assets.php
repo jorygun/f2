@@ -185,7 +185,7 @@ class Assets {
 					if ( u\url_exists ($val) ) $srcok = true;
 				}
 				if (! $srcok){
-					throw new Exception ("Asset source not understood " . $val) ;
+					throw new Exception ("Asset source does not exist." . $val) ;
 				}
 				break;
 			case 'thumb_url':
@@ -278,7 +278,7 @@ class Assets {
 				 $this->checkAssetData($adata);
 		
 		} catch (Exception $e) {
-				echo "Error saving asset data." . BRNL;
+				echo "Error in asset data. Asset not saved." . BRNL;
 				echo $e->getMessage();
 				exit;
 		}
@@ -399,18 +399,6 @@ class Assets {
 	}
 	
 	
-	public function getExistingThumbs ($id) {
-		// returns list of thumb types that exist
-		$thumb = "${id}.jpg";
-		$tloc = SITE_PATH . "/assets";
-		$ttypes = [];
-		foreach (Defs::getThumbTypes() as $ttype){	
-			if (file_exists($tloc . '/' . $ttype . '/' . $thumb)){
-				$ttypes[] = $ttype; 
-			}
-		}
-		return $ttypes;
-	}
 	
 
 	public function updateStatus($id,$status){
@@ -449,68 +437,26 @@ class Assets {
 	}
 	
    public function getAssetDataById($id){
-   	if ($id == 0){
-   		// new asset
-   		$adata = $this->new_asset;
-   		$adata['contributor_id']  = $_SESSION['login']['user_id'];
-   		$adata['contributor'] = $_SESSION['login']['username'];
-   		$adata['id'] = 0;
-   		$adata['date_entered'] = date('M d, Y');
-   		$adata['first_use'] = 'Never';
-   		$adata['vintage'] = date('Y');
-   		
-   		return $adata;
-   	}
+   	
    	$sql = "SELECT * from `assets2` a
    		where a.id = $id";
    	if (!$adata = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){ #arra
    		echo "Failed to retrieve data record from id $id.<br>";
    		return [];
    	}
-   	if (empty($adata['contributor_id'] )){
-   		$adata['contributor_id'] = 0;
-   	}
-   	$adata['contributor'] = $this->member->getMemberid($adata['contributor_id'])[0];
    	
-   		
-   
-   	// set tic character for each thumb that currently exixts.
-   	$adata['first_use'] = "Never.";
-   	
-   	$adata['existing_thumbs'] = $this->getExistingThumbs($id);
+   	$adata['contributor_id'] ??= 0;
    	$adata['status'] = $adata['astatus'];
    	
-   	
-   	if  (empty($fud = $adata['first_use_date'])) {
-   		list($fud,$fin) = $this->setFirstUse($id);
-   	} else {
-   		$fud = $adata['first_use_date'];
-   		$fin = $adata['first_use_in'];
-   	}
-   	if ($fud){
-   		$adata['first_use'] = 
-   		"On " . date('d M Y',strtotime($fud) )
-   		. " In " . "<a href='" . $fin . "'>" . $fin . "</a>";
-   	}
+
    	return $adata;
    }
    
    
   
    
-   public function getThumbTics($id) {
-   /* returns array of all thumb types and check mark if thumb exists */
-   		$thumb_tics = [];
-   		$thumb_list = [];
-   		if ($id > 0) {
-   			$thumb_list = $this->getExistingThumbs($id);
-   		}
-			foreach(array_keys(Defs::$thumb_width) as $ttype) {
-				$thumb_tics[$ttype] = (in_array($ttype,$thumb_list))?'&radic;':'';
-			}
-			return $thumb_tics;
-		}
-   private function setFirstUse($id){
+  
+   public function setFirstUse($id){
 		 #sets first use date on an asset
 				if ($_SESSION['level'] > 5){return null;} #anythning over member
 				

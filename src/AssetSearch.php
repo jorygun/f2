@@ -18,6 +18,7 @@ class AssetSearch
 private $member;
 private $assets;
 private $templates;
+private $asseta;
 
 private static $empty_search = array (
 		'searchon' => '',
@@ -39,7 +40,7 @@ private static $empty_search = array (
 	public function __construct(){
 		$this->member = new Member();
 		$this->assets = new Assets();
-		$this->aa = new AssetAdmin();
+		$this->asseta = new AssetAdmin();
 		
 	}
 	
@@ -282,7 +283,7 @@ private function tag_search ($clist) {
      
    
   		 // returns all matching assets
-        $adata = $this->assets->getAssetDataById($id);
+        $adata = $this->asseta->getAssetData($id);
       
      # u\echor($asset_set); exit;
 			// enhance data
@@ -298,7 +299,7 @@ private function tag_search ($clist) {
 			}
 			else
 				{
-			 $adata['image'] = $this->aa->returnAssetLinked($adata) ;
+			 $adata['image'] = $this->asseta->returnAssetLinked($adata) ;
 
 			}
 	 

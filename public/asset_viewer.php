@@ -8,6 +8,7 @@ namespace digitalmx\flames;
 	use digitalmx\flames as f;
 	use digitalmx\flames\Definitions as Defs;
 	use digitalmx\flames\Assets;
+	use digitalmx\flames\AssetAdmin;
 	#use digitalmx\flames\DocPage;
 	
 
@@ -17,6 +18,8 @@ namespace digitalmx\flames;
 	
     $login->checkLogin(1); 
 	$page = new DocPage($page_title);
+	$asseta = new AssetAdmin();
+	
 	echo $page -> startHead($page_options);
 
 
@@ -61,14 +64,14 @@ EOT;
 
 	
 //END START
-$assets = new Assets();
+
 
 $item_id = $_GET['id'] ??  $_SERVER['QUERY_STRING'] ?? '0';
 if (!$item_id || ! is_numeric($item_id) || !$item_id > 0){
 	die ("Invalid asset item id: $item_id");
 }
 
-if (!$adata = $assets->getAssetDataById($item_id) ){
+if (!$adata = $asseta->getAssetData($item_id) ){
 	die ("No asset at id $item_id");
 }
 

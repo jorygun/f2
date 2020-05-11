@@ -351,7 +351,7 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
       <p class='headline'>${webready['title']}</p>
    </div>
    
-	<div class='content'>
+	<div class='content clearafter'>
 	";
 
 

@@ -3,7 +3,7 @@ namespace digitalmx\flames;
 #ini_set('display_errors', 1);
 
 //BEGIN START
-	require $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
 	use digitalmx as u;
 	use digitalmx\flames as f;
@@ -15,47 +15,92 @@ namespace digitalmx\flames;
 
 if ($login->checkLogin(4)){
    $page_title = 'test quick asset';
-	$page_options=[]; #ajax, votes, tiny 
+	$page_options=['ajax']; #ajax, votes, tiny 
 	
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
 	
+	echo  "<script src='/js/aq.js'></script>";
+
 	echo $page->startBody();
 }
 	
-$asseta = new AssetAdmin();
-
-	
-	echo <<<EOT
-	<button onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >New asset</button>
-	
+	$abutton = <<<EOT
+<button onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >New asset</button>
 EOT;
 
-echo "<div class='asset-top' >";
-echo $asseta->getAssetBlock(5230,'thumb',false);
+$asseta = new AssetAdmin();
+// set default arrangement
+$left_checked = 'checked'; $top_checked = '';
+$ta = $aids = '';
 
-echo $asseta->getAssetBlock(3169,'gallery',false);
-echo "</div>" 
-;
-echo "<div class='clear'></div>";
-
-echo "<div class='asset-left' >";
-echo $asseta->getAssetBlock(5230,'thumb',true);
-
-echo $asseta->getAssetBlock(3169,'gallery',true);
-echo "</div>
+if (isset($_POST['submit']) ){
+	$aids = $_POST['aids'];
+	$nlist = u\number_range($aids);
+	$ta = $_POST['ta'];
+	$left_checked = $top_checked = '';
+	if ($_POST['aarrange'] == 'left'){
+		$adiv = 'asset-left';
+		$left_checked = 'checked';
+	} elseif ($_POST['aarrange'] == 'top'){
+		$adiv = 'asset-top';
+		$top_checked = 'checked';
+	} else {die ("No asset arrangement");}
+	
+	
+	echo "
+<div class='article'>
 ";
+echo "<div class='head'>
+	<p class='headline'>This a test article</p>
+	</div>" . NL;
+
+echo "<div class='content'>";
+
+echo "<div class='$adiv' >";
+	foreach ($nlist as $aid) {
+		echo $asseta->getAssetBlock($aid,'thumb',false);
+	}
+echo "</div>" . NL;
+if ($adiv == 'top') {
+	echo "<div class='clear'></div> " . NL;
+}
+echo "<div class='article'>" . NL;
+echo "<p>$ta</p>" . NL;
 
 echo "
-<div class='article'>
-<p>copy copy copy</p>
-<div class='asset-center'>";
-	echo $asseta->getAssetBlock(3726,'gallery',false);
-echo "</div>
 </div>
-<div class='clear'></div>
+</div>
+</div>
+
 ";
+
+	
+}
+echo <<<EOT
+<hr>
+<form method='post'>
+Content: <textarea name='ta' class='useredit'>$ta</textarea>
+Assets: <input type='text' id='assetids' name='aids' value = '$aids' >
+Arrange: 
+<input type='radio' name='aarrange' value='top' $top_checked>Top
+<input type='radio' name='aarrange' value='left' $left_checked>Left
+<br>
+<input type='submit' name='submit' value='submit'>
+</form>
+
+$abutton
+
+EOT;
+
+
+
+
+
+
+
+
 
 
 	

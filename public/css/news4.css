@@ -75,6 +75,12 @@ td {vertical-align: top;}
 
 .left {display:block;float:left;margin:3px;margin-left:0px; overflow:auto;}
 .clear {clear:both;}
+.clearafter::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
 
 
 
@@ -379,7 +385,7 @@ article .contributor {
 .article .content, .article .body {
 	font-weight:normal;
 	margin-right:2em;
-	max-width:720px;
+	max-width:730px;
 	padding-left:3em;
 	width:100%;
 
@@ -402,17 +408,6 @@ article .contributor {
     padding:4px;
 }
 
-/* amd news styles */
-
-    .article.content.p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.3px Arial; -webkit-text-stroke: #000000}
-    .article.content.li.li1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.3px Arial; -webkit-text-stroke: #000000}
-    .article.content.span.s1 {font-kerning: none}
-    .article.content.span.s2 {text-decoration: underline ; font-kerning: none; color: #0b4cb4; -webkit-text-stroke: 0px #0b4cb4}
-    .article.content.span.s3 {color: #0b4cb4}
-    .article.content.span.s4 {text-decoration: underline ; font-kerning: none; -webkit-text-stroke: 0px #0b4cb4}
-    .article.content.span.s5 {font: 7.4px Arial; font-kerning: none}
-    .article.content.ul.ul1 {list-style-type: disc}
-/* end amd styles */
 
 .more {
 	margin-left:3em;

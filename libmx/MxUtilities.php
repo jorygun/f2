@@ -540,7 +540,7 @@ function number_range ($text){
 		/* accepts a string of numbers separated by anything
 			AND ALSO expansion of pairs of numbers separated by a -
 			and returns a php array of numbers
-			AND ALSO accepts a search string
+			
 		*/
 		$number_list = [];
 
