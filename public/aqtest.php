@@ -41,47 +41,57 @@ if (isset($_POST['submit']) ){
 	$ta = $_POST['ta'];
 	$left_checked = $top_checked = '';
 	if ($_POST['aarrange'] == 'left'){
-		$adiv = 'asset-left';
+		$adiv = 'asset-column';
 		$left_checked = 'checked';
 	} elseif ($_POST['aarrange'] == 'top'){
-		$adiv = 'asset-top';
+		$adiv = 'asset-row';
 		$top_checked = 'checked';
 	} else {die ("No asset arrangement");}
 	
 	
 	echo "
-<div class='article'>
+<div class='article clearafter'>
 ";
-echo "<div class='head'>
-	<p class='headline'>This a test article</p>
-	</div>" . NL;
+echo "<p class='topic'>This is the topic</p>" . NL;
+echo "<p class='headline'>This a test article</p> " .NL;
 
-echo "<div class='content'>";
-
-echo "<div class='$adiv' >";
+$aid = 'asset-row';
+echo "<div class='$aid'>";
 	foreach ($nlist as $aid) {
 		echo $asseta->getAssetBlock($aid,'thumb',false);
 	}
+	echo "<div class='clear'></div>" . NL;
 echo "</div>" . NL;
-if ($adiv == 'top') {
-	echo "<div class='clear'></div> " . NL;
-}
-echo "<div class='article'>" . NL;
-echo "<p>$ta</p>" . NL;
 
-echo "
-</div>
-</div>
-</div>
+// $aid = 'asset-column';
+// echo "<div class='$aid' >";
+// 	foreach ($nlist as $aid) {
+// 		echo $asseta->getAssetBlock($aid,'thumb',false);
+// 	}
+// echo "</div>" . NL;
 
-";
+echo "<div class='content'>";
+echo $ta;
+echo "<p class='source'> From: Source <span class='contributor'> --Contibributed by username</span></p>" ;
+echo "<div class='ed_comment'>Ed comment here</div>";
+echo "</div>" . NL;
+
+
+
+
+
+
+echo "</div>" . NL; #end article
+
+
+
 
 	
 }
 echo <<<EOT
 <hr>
 <form method='post'>
-Content: <textarea name='ta' class='useredit'>$ta</textarea>
+Content: <textarea name='ta' cols = '60' rows='4'  class='useredit'>$ta</textarea>
 Assets: <input type='text' id='assetids' name='aids' value = '$aids' >
 Arrange: 
 <input type='radio' name='aarrange' value='top' $top_checked>Top

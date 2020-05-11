@@ -150,7 +150,7 @@ div.hidden {display:none; border:2px solid green;}
 	font-style:italic; margin-left:80px;
 }
 
-.source {
+p.source {
     text-align:right;
 	font-style:italic;
 	margin-bottom: 0px;
@@ -191,13 +191,7 @@ div.toon {
 .toon .comment {text-align:center;}
 .divh2 .comment {font-style:italic;font-size:0.4em;color:#000;margin-left:1em; margin-right:1em;}
 
-.ed_comment {font-family: arial; font-style: plain; font-size: 0.9em; color: #030; margin-left:1em; margin-right:1em;}
 
-div.ed_comment { font-family: arial; font-style: plain;
-    font-size: 0.9em; color: #066;
-    margin-left:1em; margin-right:1em;margin-top:1em;
-    border-top:2px solid #066;
-    }
 
 
 div.album {
@@ -349,31 +343,38 @@ div.article {
 
 	margin-left:1em;
 	border-top:1px solid #360;
-    max-width:760px;
+    max-width:800px;
 	}
 
-.article .head {
-	margin-left:0;
-	margin-bottom:1em;
-}
 
-.article .type{
+.article .type, .article p.topic {
 	font-style:normal;
 	text-decoration: underline;
 	margin-bottom:3px;
 	}
 
-.article .headline {
+.article .headline , .article p.headline {
 	font: bold 1em arial,serif;
 	margin-top:3px;
 	margin-left:1em;
 }
 
-article .contributor {
+
+.article p.source {
+    text-align:right;
+	font-style:normal;
+	margin-bottom: 0px;
+	margin-right:2em;
+	font-size:0.9em;
+	border-top:1px solid grey;
+	}
+	
+.article .contributor {
 	text-align:right;
 	font-style:italic;
-	font-size:0.8em;
+	display:inline;
 	}
+
 
 .article .date {
 	font-weight:normal;
@@ -384,10 +385,12 @@ article .contributor {
 
 .article .content, .article .body {
 	font-weight:normal;
-	margin-right:2em;
-	max-width:730px;
-	padding-left:3em;
-	width:100%;
+	display:inline-block;
+	width:540px;
+	margin-left:1em;
+	/* width:100%; */
+	float:left;
+	
 
 }
 
@@ -395,10 +398,19 @@ article .contributor {
 	font-weight:bold;
 	text-decoration:underline;
 	margin-bottom:0;
+	
 }
 .article .content .subarticle {
 	margin-left:1em;
 }
+
+.article .ed_comment { font-family: arial; font-style: plain;
+    font-size: 0.9em; color: #066;
+    margin-left:0em; margin-right:1em;margin-top:1em;
+    border-top:2px solid #066;
+    }
+
+
 .article  .attribution {
 
 }

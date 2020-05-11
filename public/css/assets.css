@@ -3,70 +3,83 @@
 	stick these asset objects inside a div class = asset
 	*/
 
+/* asset is the block containing graphic, title, aattribution, etc */
 .asset {
 	text-align:center;
-	margin:auto;
+	margin: 0 0 6px 0;
 	 border: 1px solid gray;
-	
+	  background:#FFF;
+	  display:block;
+	  padding:5px;
+	  
 }
+	
+
 
 
 .asset img {
 		display:block;
         margin-left: auto;
         margin-right: auto;
-       
-}
-div.asset-left {
-	float:left;
+        padding:0;
+              
 }
 
-div.asset-left .asset {
-/* make thumbs consistent width 
-use inside a div that floats left*/
-    width:230px;
-    display:block;
-    margin:3px; 
-    margin-bottom:8px;
-    border:1px solid black;
-    padding-left:5px;padding-right:5px;
-    background:#FFF;
+/* float it left, and then float next divison */
+div.asset-column {
+	float:left;
+	display:inline-block;
 }
-.asset-left .asset img {
+
+div.asset-column .asset {
+/* make assets consistent width 
+use inside a div that floats left. 
+Assets do not float (but the whole block does)
+assets  grow in lenght as needed. - no restriction
+*/
+    width:230px;
+
+   }
+    
+.asset-column .asset img {
         width:200px;
 }
+
+div.asset_row {
+
+}
+
+div.asset-row::after {
+	clear:both;
+	content:"";
+}
+
+div.asset-row .asset {
+/* make thumbs consistent height to floaters line up. */
+   height:220px;
+   width:210px;
+    overflow:auto;
+  margin-right:6px;
+    float:left;
+
+}
+
+div.asset-row .asset img {
+        max-height:200px;
+        width:200px;
+}
+
 
 div.asset-center .asset {
     width:100%;
     max-width:440px;
-    display:block;
-    overflow:auto;
     margin:auto;
-    border:1px solid black;
-    padding-left:5px;padding-right:5px;
-    background:#FFF;
+    
 }
 .asset-center .asset img {
         width:100%;
 }
 
-div.asset-top .asset {
-/* make thumbs consistent height to floaters line up. */
-   height:250px;
-    
-   max-width:300px;
-    display:block;
-    overflow:auto;
-    margin:3px; margin-right:6px; margin-left:0;
-    float:left;
-    border:1px solid black;
-    padding-left:5px;padding-right:5px;
-    background:#FFF;
-}
-.asset-top .asset img {
-        max-height:200px;
-        width:200px;
-}
 
 .atitle {
 	font-size:0.9em;

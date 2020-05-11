@@ -340,16 +340,16 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
        $amdcss = ($row['contributor'] == 'AMD Communications')? 'amd' : '';
       $story = "
    <div class='article $amdcss'>
-	<div class='head'>
+	
 	";
 	if ($topic == 'mailbox'){
 		$story .= add_contributor($webready,'pre');
 	} else {
-		$story .= "<p class='type'>$topics[$topic]</p> ";
+		$story .= "<p class='topic'>$topics[$topic]</p> ";
 	}
 	$story .= "
       <p class='headline'>${webready['title']}</p>
-   </div>
+
    
 	<div class='content clearafter'>
 	";
@@ -439,9 +439,8 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
 
 function add_source($row){
         if (empty($source = $row['source'])){return '';}
-        if (empty($row['source_date'])){$sdate = "Undated";}
-        else {$sdate = $row['source_date'];}
-        return "<span class='source'>Source: ${row['source']} ($sdate)</span>\n";
+        $sdate = $row['source_date'] ?? "Undated";
+        return "<p class='source'>Source: ${row['source']} ($sdate)</p>\n";
  }
 
 function add_more($row){

@@ -15,7 +15,7 @@ if (isset($_POST['submit'])){
 
   	}
   	else {
-  		$idmsg = "<script>alert('Failed to post asset');</script> ";
+  		echo  'Failed to post asset' . BRNL; exit ;
   	}
 
 }
