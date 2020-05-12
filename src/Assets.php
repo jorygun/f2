@@ -142,6 +142,12 @@ class Assets {
 		return $id;
 	}
 	
+	public function deleteAsset($id) {
+		$sql = "UPDATE `assets2` SET astatus = 'X' WHERE id = $id";
+		$this->pdo->query($sql);
+		return true;
+	}
+	
 	private function checkAssetData($adata) {
 	// id
 // 	asset_url  (nee link) (asset source url) 
@@ -221,7 +227,7 @@ class Assets {
 				break;
 		
 			case 'contributor_id' :
-				if (! is_integer ( (int)$val) && $val > 0 ){
+				if (! is_integer ( (int)$val)){ #0 is allowed
 					throw new Exception ("No contributor id");
 				}
 				break;
@@ -405,9 +411,9 @@ class Assets {
 		if (empty (Defs::$asset_status[$status] )) {
 			throw new Exception ("Invalid Asset status code $status");
 		}
-		$sql = "UPDATE `assets2` SET status = '$status' WHERE id = $id";
-		$this->pdo->query($sql);
-		return true;
+		$sql = "UPDATE `assets2` SET astatus = '$status' WHERE id = $id";
+		if($this->pdo->query($sql) ) return true;
+		return false;
 	}
     public function getAssetListByName($name) {
     	// returns list of ids of assets matching name in several fields
@@ -452,21 +458,25 @@ class Assets {
    	return $adata;
    }
    
-   
-  
-   
-  
-   public function setFirstUse($id){
-		 #sets first use date on an asset
-				if ($_SESSION['level'] > 5){return null;} #anythning over member
-				
-				$ref = $_SERVER['REQUEST_URI'];
-				
-				$sqld = "UPDATE `assets2` set first_use_date = NOW(), first_use_in = '$ref' where id = '$id';";
-				if ($this->pdo->query($sqld)){
-					return [date('Y-m-d'),$ref];
-				}
-				return false;
+
+   public function setFirstUse($ids,$ref){
+   	/* pass a list of ids and a ref to a newsletter in newsp or 
+   		a gallery.  Run this when publishing an article or when
+   		publishinig a gallery
+   	*/
+   	if (! $idlist = u\make_inlist_from_list ($ids) ){
+   		throw new Exception ("First use not a list of ids");
+   	}
+   	if (! in_array(substr($ref,0,6) ,['/newsp','/galle'])) {
+   		throw new Exception ("First use not in newsletter or gallery");
+   	}
+		
+		
+		$sql = "UPDATE `assets2` set first_use_date = NOW(), first_use_in = '$ref' 
+		WHERE id in ($idlist) AND first_use_date IS NULL ;";
+		if ($this->pdo->query($sql)) return true;
+	
+		return false;
 	}
 
 
@@ -997,7 +1007,7 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 	public function getIdsFromWhere($where) {
 		// used to retrieve list of ids selected by the
 		// WHERE clause in sdata
-		$sql = "SELECT id from `assets2` WHERE $where LIMIT 500";
+		$sql = "SELECT id from `assets2` WHERE $where LIMIT 100";
 		$found = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
 		
 		return $found;

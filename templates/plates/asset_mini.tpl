@@ -1,6 +1,6 @@
 <hr>
       <?= $id ?>  <b> <?= $title ?></b>
-       <table class='indent' width="100%">
+       <table class='indent' width="100%" id='tbl<?=$id?>' >
        <tr><td width='50%'>
        <i>Caption:</i> <?= $caption ?><br>
         <i>Source url:</i> <?= $asset_url ?> <span class='red'><?=$source_warning?></span> <br>
@@ -14,6 +14,13 @@
 	<button type='button'
         onclick="ewin = window.open('/asset_editor.php?id=<?=$id?>','asset_edit');">
         Edit Asset</button>
+   <button type='button' style='background:#FCC'
+        onclick="takeAction('deleteAsset',<?=$id?>,'tbl<?=$id?>','resp')">
+        Delete</button>
+   <?php if ($astatus != 'R') : ?>
+   	<button type='button' id='rb<?=$id?>' onclick="takeAction('markReviewed',<?=$id?>,'rb<?=$id?>','')">
+   	OK?</button>
+   <?php endif; ?>
 	<?php endif; ?>
 
 	</td><td>

@@ -40,7 +40,10 @@ Items also have a first-use, generally when it was first published in a newslett
 
      <tr><td>Asset id or range</td><td><input type=text name='id_range' value='<?=$id_range?>'></td></tr>
 
-    <tr><td>Status</td><td><input type='checkbox' name='all_active' id='all_active' value=1 <?=$all_active_checked?> >All Active .. or .. <select name='status' onChange = 'check_select_all(this)' ><?=$status_options?></select></td></tr>
+    <tr><td>Status</td><td>
+    	<input type='checkbox' name='all_active' id='all_active' value=1 <?=$all_active_checked?> onchange = 'asset_status_search(this)' >All Active  or ... 
+    	<input type='checkbox' name='unreviewed' id='unreviewed' value=1 <?=$unreviewed_checked?>  onchange = 'asset_status_search(this)' > Unreviewed  or ... 
+     <select name='status' id = 'status_options'  onchange = 'asset_status_search(this)' ><?=$status_options?></select></td></tr>
 
  <tr $hideme><td>Contributor<br>
     </td><td><input type='text' name='contributor' id='contributor' value='<?=$contributor?>'

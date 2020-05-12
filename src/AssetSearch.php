@@ -59,6 +59,9 @@ private static $empty_search = array (
 	 
 		  $asdata['all_active_checked'] = (!empty($asdata['all_active'])) ?
 			'checked':'';
+			 $asdata['unreviewed_checked'] = (!empty($asdata['unreviewed'])) ?
+			'checked':'';
+			
 			$tag_data = '';
 			if (! empty ($asdata['tags'])){
 				$tag_data = u\charListToString($asdata['tags'])  ;
@@ -81,9 +84,10 @@ private static $empty_search = array (
 	
 	
 	public function getIdsFromSearch($data) {
-	
+		// first turn the search form data into sql
 		$sql = $this->getSQLFromSearch($data);
 		echo "sql: $sql" . BRNL;
+		// now get list of ids that match
 		$id_list = $this->assets->getIdsFromWhere($sql);
 		# u\echor ($id_list, 'id list');
 		return $id_list;
@@ -96,7 +100,7 @@ private static $empty_search = array (
 		The sql is compiled in array qp[]
 		
 	*/
-	#u\echor($data,'Input to process search');
+	//u\echor($data,'Input to process search');
 	
     if (!empty ($son = $data['sqlspec'] ?? '')){
         $qp[] = $son;
@@ -142,13 +146,15 @@ private static $empty_search = array (
         $qp[] = "type = '$son'";
     }
 
-     if (!empty($son = $data['status'])){
+   if (!empty($son = $data['status'])){
         $qp[] = "astatus = '$son'";
     }
-   elseif ($data['all_active'] == 1){
-        $qp[] = "astatus not in ('X','E','T') ";
+   elseif (!empty($data['all_active'])){
+        $qp[] = "astatus  in ('R','N','O','F') ";
     }
-
+	 elseif (!empty ($data['unreviewed'] )){
+        $qp[] = "astatus in ('N','O','F') ";
+    }
     if (!empty($son = $data['url'] ?? '')){
         $qp[] = "(url like '%" . $son . "' OR link like '%" . $son . "')";
     }
@@ -311,8 +317,8 @@ private function tag_search ($clist) {
 			$adata['editable'] = 
 			  (
 				 $_SESSION['level'] > 6
-				 || strtolower($_SESSION['user_id']) == strtolower($adata['contributor_id'])
-				 || strtolower($_SESSION['username']) == strtolower($adata['source'])
+				 || strtolower($_SESSION['login']['user_id']) == strtolower($adata['contributor_id'])
+				 || strtolower($_SESSION['login']['username']) == strtolower($adata['source'])
 			 
 			 ) ? true:false;
 			

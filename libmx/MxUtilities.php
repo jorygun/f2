@@ -491,7 +491,7 @@ function linkHref($url,$label='',$target='' ){
 	}
 }
 function make_inlist_from_list($list){
-	if (!$list){return '';}
+	if (empty($list) )return false;
 	$qlist = array_map(function ($c) {return "'$c'";},$list);
 	
 	$inlist = join(',',$qlist);

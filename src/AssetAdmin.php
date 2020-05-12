@@ -89,15 +89,20 @@ class AssetAdmin
 		
 		#echo "pre c ookup: " . $post['contributor'] . ' ' . $post['contributor_id'] . BRNL; 
 		
+		// set contributor id if one not set yet and
+		// valid member name is in the contributo name field
 		if (!empty($post['contributor_id']) && $id > 0 ){
 			$adata['contributor_id'] = $post['contributor_id'];
 		} elseif (!empty ($post['contributor'] )) {
 			list ($adata['contributor'], $adata['contributor_id'] ) 
 				= $this->member->getMemberId($post['contributor']) ;
-				if (empty($adata['contributor'])){	
-				throw new Exception ("Contributor ${post['contributor']} not found"); }
+				if (empty($adata['contributor'])){
+					u\echoalert("No contributor found");
+					$adata['contributor_id'] = 0;  #no contributor defined
+				}
 		} else {
-			die ("No contributor info supplied");
+		u\echoalert("No contributor found");
+			$adata['contributor_id'] = 0;
 		}
 		
 	#echo "after c ookup: " . $adata['contributor'] . ' ' . $adata['contributor_id'] . BRNL; exit;
@@ -192,12 +197,14 @@ class AssetAdmin
 		$adata['existing_thumbs'] = $this->getExistingThumbs($id);
 		$adata['status'] = $adata['astatus'];
 		
-		$adata['contributor'] = $this->member->getMemberid($adata['contributor_id'])[0];
-   	
+		if (!empty($adata['contributor_id'] ) ){
+			$adata['contributor'] = $this->member->getMemberid($adata['contributor_id'])[0];
+   	}
+   	else {
+   		$adata['contributor'] = "(no contributor)";
+   	}
    	$adata['first_use'] = "Never.";
-   	if  (empty($fud = $adata['first_use_date'])) {
-   		list($fud,$fin) = $this->assets->setFirstUse($id);
-   	} else {
+   	if  (! empty($fud = $adata['first_use_date'])) {
    		$fud = $adata['first_use_date'];
    		$fin = $adata['first_use_in'];
    	}

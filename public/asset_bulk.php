@@ -167,7 +167,7 @@ function save_assets($dirpath,$filelist,$titles) {
             'size' => filesize($fake_upload),
             'type' => $mimetype,
         );
-		if (empty($post['contributor'])) die ("No contributor");
+		if (empty($post['contributor'])) die ("Contributor is required.");
 		if (empty($post['title'])) die ("No title");
         // u\echor ($_FILES,'from asset_generator');
 //         u\echor ($post_array,'post array from asset gen');

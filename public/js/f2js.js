@@ -131,8 +131,13 @@ function setCaretPosition(elemId, caretPos) {
 // selects all  used in asset screen??
 function check_select_all(obj) {
 	var sbox = document.getElementById('all_active');
+	var rbox = document.getElementById('unreviewed');
 	if (obj.value == ''){
 		sbox.checked = true;
+		rbox.checked = false;
 	}
-	else {sbox.checked = false;}
+	else {
+		sbox.checked = false;
+		rbox.checked = false;
+		}
 }

@@ -98,7 +98,12 @@ if (! empty ($_POST)) {
 		case 'vote':
 			return vote_action($_POST);
 		  break;
-   
+   	case 'deleteAsset':
+   		echo deleteAsset($_POST['uid']);
+   		break;
+   	case 'markReviewed':
+   		echo markReviewed($_POST['uid']);
+   		break;
 		case 'bulkmail':
 			return cancel_bulk($_POST['job']);
 		  break;
@@ -358,7 +363,18 @@ function markContribute($uid, $member)
         echo "Failed";
     }
 }
-   
+function deleteAsset ($aid){
+	$asset=new Assets();
+	$asset->deleteAsset($aid);
+	return "$aid Deleted";
+}
+
+function markReviewed($aid) {
+	$asset=new Assets();
+	if($asset->updateStatus($aid,'R') ) return "Reviewed";
+	return "Failed";
+}
+
 function xoutUser($uid, $member)
 {
    

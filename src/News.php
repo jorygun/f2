@@ -6,13 +6,6 @@ namespace digitalmx\flames;
 	
 class News {
 
-
-   /**
-    * Routines used to read the newsletter articles                           *
-   **/
-
-
-
 	private $pdo;
 
 
@@ -20,6 +13,9 @@ class News {
 
 		$this->pdo = MyPDO::instance();
 	}
+
+	
+	
 
 	public function showVotePanel($item_id,$user_id){
    		

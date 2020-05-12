@@ -17,12 +17,59 @@ ini_set('display_errors', 1);
 
 if ($login->checkLogin(1)){
    $page_title = 'Search Assets';
-	$page_options=[]; #ajax, votes, tiny 
+	$page_options=['ajax']; #ajax, votes, tiny 
 	
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
+	echo <<<EOT
+<script>
+function asset_status_search(setter) {
+	var setterid = setter.id;
+	//alert('setterid '+setterid);
 	
+	var all = document.getElementById('all_active');
+	var unr = document.getElementById('unreviewed');
+	var sel = document.getElementById('status_options');
+	
+	
+	switch (setterid) {
+		case 'all_active' :
+			//alert('all active changed');
+			if(setter.checked) {
+				unr.checked = false;
+				sel.value= '';
+			}
+			break;
+				
+		case 'unreviewed' :
+		//alert('unreviewed changed');
+			if(setter.checked) {
+				all.checked = false;
+				sel.value = '';
+			}
+			break;
+		
+		case 'status_options' :
+		//alert('options changed val ' + setter.value);
+			if(setter.value == '') {
+				all.checked = true;
+				unr.checked = false;
+			}
+			else {
+				unr.checked = false;
+				all.checked = false;
+			}
+			break;
+		default:
+		
+	}
+
+}
+</script>
+
+EOT;
+
 	echo $page->startBody();
 }
 	
@@ -34,6 +81,7 @@ $as = new AssetSearch();
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+ //u\echor ($_POST);
 
 	// save search so easy to repeat/modify
 	$_SESSION['last_asset_search'] = $_POST;
