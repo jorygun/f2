@@ -26,27 +26,24 @@ if ($login->checkLogin(4)){
 	echo $page->startBody();
 }
 	
-	$abutton = <<<EOT
-<button onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >New asset</button>
-EOT;
+	
 
 $asseta = new AssetAdmin();
 // set default arrangement
-$left_checked = 'checked'; $top_checked = '';
+
 $ta = $aids = '';
 
 if (isset($_POST['submit']) ){
 	$aids = $_POST['aids'];
 	$nlist = u\number_range($aids);
+	$nlistcnt = count($nlist);
+	
 	$ta = $_POST['ta'];
-	$left_checked = $top_checked = '';
-	if ($_POST['aarrange'] == 'left'){
-		$adiv = 'asset-column';
-		$left_checked = 'checked';
-	} elseif ($_POST['aarrange'] == 'top'){
+	if ($nlistcnt >2){
 		$adiv = 'asset-row';
-		$top_checked = 'checked';
-	} else {die ("No asset arrangement");}
+	} elseif ($nlistcnt > 0){
+		$adiv = 'asset-column';
+	} else {$adiv = '';}
 	
 	
 	echo "
@@ -55,20 +52,15 @@ if (isset($_POST['submit']) ){
 echo "<p class='topic'>This is the topic</p>" . NL;
 echo "<p class='headline'>This a test article</p> " .NL;
 
-$aid = 'asset-row';
-echo "<div class='$aid'>";
+if ($adiv) {
+	echo "<div class='$adiv'>";
 	foreach ($nlist as $aid) {
 		echo $asseta->getAssetBlock($aid,'thumb',false);
 	}
 	echo "<div class='clear'></div>" . NL;
-echo "</div>" . NL;
+	echo "</div>" . NL;
+}
 
-// $aid = 'asset-column';
-// echo "<div class='$aid' >";
-// 	foreach ($nlist as $aid) {
-// 		echo $asseta->getAssetBlock($aid,'thumb',false);
-// 	}
-// echo "</div>" . NL;
 
 echo "<div class='content'>";
 echo $ta;
@@ -88,19 +80,23 @@ echo "</div>" . NL; #end article
 
 	
 }
+
+$abutton = <<<EOT
+<button type = 'button' onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >Add an asset</button>
+EOT;
+
 echo <<<EOT
 <hr>
 <form method='post'>
-Content: <textarea name='ta' cols = '60' rows='4'  class='useredit'>$ta</textarea>
+Content: <textarea name='ta' cols = '60' rows='4'  class='useredit'>$ta</textarea><br>
 Assets: <input type='text' id='assetids' name='aids' value = '$aids' >
-Arrange: 
-<input type='radio' name='aarrange' value='top' $top_checked>Top
-<input type='radio' name='aarrange' value='left' $left_checked>Left
+
+$abutton
 <br>
 <input type='submit' name='submit' value='submit'>
 </form>
 
-$abutton
+
 
 EOT;
 

@@ -7,7 +7,6 @@ namespace digitalmx\flames;
 
 	use digitalmx\flames\Voting;
  	use digitalmx\MyPDO;
- 	use digitalmx\flames\ReadNews;
  	use digitalmx\flames\Opportunities;
 
 	
