@@ -9,6 +9,7 @@
 		<string>6462125D-4C9C-4746-8FEF-FA1C7AE7CED3</string>
 		<string>704BAC64-F01F-4C38-A058-CE17F56E5F90</string>
 		<string>8F457416-D0E3-4E06-88EB-67CBEB1070DF</string>
+		<string>464101EF-927F-4EDF-999F-12018EC32805</string>
 	</array>
 	<key>ProjectItems</key>
 	<dict>
@@ -58,6 +59,57 @@
 			</dict>
 			<key>ItemName</key>
 			<string>asset styles.txt</string>
+			<key>ItemType</key>
+			<string>FileReference</string>
+			<key>UserOverrideItemName</key>
+			<true/>
+		</dict>
+		<key>464101EF-927F-4EDF-999F-12018EC32805</key>
+		<dict>
+			<key>ItemData</key>
+			<dict>
+				<key>BookmarkData</key>
+				<data>
+				Ym9va0QDAAAAAAQQMAAAAMWDbtM0CQGOn+GjEzyE1vXi
+				BV9950DraC7Ut3RQyeowNAIAAAQAAAADAwAAAAgAKAUA
+				AAABAQAAVXNlcnMAAAAEAAAAAQEAAGpvaG4FAAAAAQEA
+				AFNpdGVzAAAABgAAAAEBAABmbGFtZXMAAAQAAAABAQAA
+				ZG9jcxQAAAABAQAAZGF0YWJhc2UgdXBkYXRlcy50eHQY
+				AAAAAQYAABAAAAAgAAAALAAAADwAAABMAAAAWAAAAAgA
+				AAAEAwAA1ZMCAAAAAAAIAAAABAMAAK9ECQAAAAAACAAA
+				AAQDAACIwgwAAAAAAAgAAAAEAwAAu1uRAQIAAAAIAAAA
+				BAMAAA43LAAAAAAACAAAAAQDAACHG+ABAgAAABgAAAAB
+				BgAAlAAAAKQAAAC0AAAAxAAAANQAAADkAAAACAAAAAAE
+				AABBwZX0vyEAyxgAAAABAgAAAQAAAAAAAAAPAAAAAAAA
+				AAAAAAAAAAAACAAAAAQDAAAEAAAAAAAAAAQAAAADAwAA
+				+AEAAAgAAAABCQAAZmlsZTovLy8MAAAAAQEAAE1hY2lu
+				dG9zaCBIRAgAAAAEAwAAAGBGZDoAAAAIAAAAAAQAAEHB
+				yvm69kerJAAAAAEBAABFNURDRDkyQi03NDc1LTNGMDkt
+				QjlENy04OUEzNDgzMUE4QkEYAAAAAQIAAIEAAAABAAAA
+				7xMAAAEAAAAAAAAAAAAAAAEAAAABAQAALwAAAAAAAAAB
+				BQAAGgAAAAEBAABOU1VSTERvY3VtZW50SWRlbnRpZmll
+				cktleQAABAAAAAMDAADeEQAA2AAAAP7///8BAAAAAAAA
+				ABEAAAAEEAAAdAAAAAAAAAAFEAAA9AAAAAAAAAAQEAAA
+				JAEAAAAAAABAEAAAFAEAAAAAAAACIAAA8AEAAAAAAAAF
+				IAAAYAEAAAAAAAAQIAAAcAEAAAAAAAARIAAApAEAAAAA
+				AAASIAAAhAEAAAAAAAATIAAAlAEAAAAAAAAgIAAA0AEA
+				AAAAAAAwIAAA/AEAAAAAAAABwAAARAEAAAAAAAARwAAA
+				IAAAAAAAAAASwAAAVAEAAAAAAAAQ0AAABAAAAAAAAAAE
+				AgCAKAIAAAAAAAA=
+				</data>
+				<key>FileURL</key>
+				<string>file:///Users/john/Sites/flames/docs/database%20updates.txt</string>
+				<key>HasSecurityScope</key>
+				<true/>
+				<key>RelativePath</key>
+				<string>../../docs/database updates.txt</string>
+				<key>TypeID</key>
+				<string>_CFileLocator</string>
+				<key>Version</key>
+				<integer>1</integer>
+			</dict>
+			<key>ItemName</key>
+			<string>database updates.txt</string>
 			<key>ItemType</key>
 			<string>FileReference</string>
 			<key>UserOverrideItemName</key>

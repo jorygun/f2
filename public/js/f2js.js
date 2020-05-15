@@ -81,6 +81,11 @@ function clearForm(oForm) {
 			break;
 	  }
     }
+    // for asset search form, set status to all active
+    if (oForm.id == 'select_assets'){
+    	var abox = document.getElementById('all_active');
+    	abox.checked = true;
+    }
 }
 function new_edit_win(url,winname){
     var wwidth=650

@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	
 	$_SESSION['last_assets_found'] = $ids;
 	$count = count($ids);
-	echo "$count assets found. ";
+	echo "$count assets found. (max: 100)";
 	if ($count == 0) return;
 	
 	if ($count < 11 ) echo join(', ',$ids) . BRNL;

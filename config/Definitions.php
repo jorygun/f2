@@ -33,6 +33,13 @@ class Definitions {
 
 
 );
+	public static $news_status = array(
+		'N'	=> 'New',
+		'Q'	=> 'Queued Next',
+		'P'	=> 'Published',
+		'X'	=>	'To Delete',
+	
+	);
 	
 	 public static $thumb_width = array(
 						 'thumbs' => 200,
@@ -185,13 +192,6 @@ public static $asset_types = array(
    'Member Photo'
     );
 
-public static $asset_status_names = array(
-    'T' =>'Temporary Holding' ,
-     'X' =>'Deleted' ,
-     'U' =>'User Photo' ,
-     'A' =>'Ordinary Asset' ,
-     
-    );
 
 // code => [name, seclevel]
 

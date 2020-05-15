@@ -174,7 +174,7 @@ $itemdata['id'] = $id;
 	if ($id > 0) {
 		// update record
 
-	u\echor($itemdata,'item data before prep');
+	//u\echor($itemdata,'item data before prep');
 	
 		$prep = u\pdoPrep($itemdata,$ifields, $key='id');
 		/*

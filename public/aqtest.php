@@ -82,7 +82,8 @@ echo "</div>" . NL; #end article
 }
 
 $abutton = <<<EOT
-<button type = 'button' onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >Add an asset</button>
+
+
 EOT;
 
 echo <<<EOT

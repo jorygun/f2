@@ -307,15 +307,17 @@ function pdoPrep($data,$include=[], $key=''){
 
             
             $null = null;
-            if (empty($val)){ #catches 0, '', and false
-            	if ($var == 'asset_id'){ 
-            		$val = 0;
-            		#echo "setting asset id to 0";
-            	} #leave out of list // no, leave in and set to null
-   
-            }
+            // if (empty($val)){ #catches 0, '', and false
+//             	if ($var == 'asset_id'){ 
+//             		$val = 0;
+//             		#echo "setting asset id to 0";
+//             	} #leave out of list // no, leave in and set to null
+//    
+//             }
             
 				$db[$var] = htmlspecialchars_decode($val);
+				//$db[$var] = $val;
+				
 				
             $ufields[] = "`$var` = :$var";
             $ifields[] = "`$var`";
@@ -338,8 +340,13 @@ function stripslashes_deep ($value){
     return $value;
 }
 
-function buildOptions($val_array,$check=''){
-	$opt = "<option value=''>Choose One...</option>";
+function buildOptions($val_array,$check='',$choose = true){
+	// val array is keys and values, check is current selection, 
+	// choose is true to include the Choose One... line
+	$opt = '';
+	if ($choose) {
+		$opt = "<option value=''>Choose One...</option>";
+	}
 	#if 2 dimmensional array
 	if( count(array_filter(array_keys($val_array), 'is_string')) > 0){
         foreach ($val_array as $k => $v){
@@ -498,6 +505,9 @@ function make_inlist_from_list($list){
 	return $inlist;
 }
 
+function makeLinks($input) {
+	return make_links($input);
+}
 function make_links($input){
     // replaces http:... with a link
     // replaces [asset nn] with a thumbnail to the asset item.

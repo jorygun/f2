@@ -302,7 +302,7 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
             else {$status_display="<span style='background-color:#F99;width:15em;'>Not Queued</span";}
     }
 
-    $topic = $row['type'];
+    $topic = $row['type']??$row['topic'];
      $section = get_section($topic);
 
    //  if ($gurl = $row['graphic_url']){

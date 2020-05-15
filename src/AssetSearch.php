@@ -100,7 +100,7 @@ private static $empty_search = array (
 		The sql is compiled in array qp[]
 		
 	*/
-	//u\echor($data,'Input to process search');
+	// u\echor($data,'Input to process search');
 	
     if (!empty ($son = $data['sqlspec'] ?? '')){
         $qp[] = $son;
