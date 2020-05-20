@@ -1,15 +1,15 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-if (!$login->checkLogin(4)) {exit;}
+if (!$login->checkLevel(4)) {exit;}
 $idmsg = '';
 $contributor = $_SESSION['login']['username'];
 $vintage = date('Y');
 
 if (isset($_POST['submit'])){
-  $asseta = new AssetAdmin();
+  $asseta = $container('asseta');
   if ($id = $asseta->postAssetFromForm($_POST) ) {
   	echo "<a href='asset_editor.php?id=$id' target='asset_editor'>View in Editor</a>" . BRNL;
 

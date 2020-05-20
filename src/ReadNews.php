@@ -1,39 +1,38 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 
 // functions used in reading a newsletter
 
 
-	use digitalmx\flames\Voting;
- 	use digitalmx\MyPDO;
- 	use digitalmx\flames\Opportunities;
 
-	
+
+
 class ReadNews {
 
 	private $voting;
 	private $pdo;
 	private $member;
 	private $opps;
-	
+
 	#path to search for files in
 	private $search_dirs =  array(
 			'.',
 			SITE_PATH . '/news/current',
 			SITE_PATH . '/news'
 		);
-	
+
 	public function __construct ( ) {
-		$this->voting = new Voting();
-		$this->pdo = MyPDO::instance();
-		$this->member = new Member();
-		$this->opps = new Opportunities($_SESSION['level']);
-	
+	global $container;
+		$this->voting = $container['voting'];
+		$this->pdo = $container['pdo'];
+		$this->member = $container['member'];
+		$this->opps = $container['opps'];
+
 	}
-	
+
 	public function get_news_comments($id){
-			 
+
 		 $sql = "SELECT count(*) from `comments` where on_db = 'news_items' and item_id = $id;";
 		 $nRows = $this->pdo->query($sql)->fetchColumn();
 		 return $nRows;
@@ -46,9 +45,9 @@ class ReadNews {
 	}
 
 	private function update_comment_counts(){
-		 
+
 		 $sql = "SELECT count(*) as cnt, on_db,item_id from `comments` group by on_db,item_id";
-	
+
 		  $sqln = "Update `news_items` set comment_count = ? where id = ?";
 		 $qn = $this->pdo -> prepare($sqln);
 
@@ -71,7 +70,7 @@ class ReadNews {
 
 	}
 	private function get_comment_count($table,$id){
-		
+
 		 $sql = "SELECT count(*) from `comments` where on_db = '$table' and item_id = $id;";
 		 $nRows = $this->pdo->query($sql)->fetchColumn();
 		 return $nRows;
@@ -79,31 +78,31 @@ class ReadNews {
 
 	public function get_topics($access=''){
 // use access = '' for all topics including deprecated
-// access = 'A' for all current topics 
+// access = 'A' for all current topics
 // access = 'U' for user accessible topics
 
-	$pdo = MyPDO::instance();
-	$sql = "SELECT `topic`,`topic_name` from `news_topics` T 
+
+	$sql = "SELECT `topic`,`topic_name` from `news_topics` T
 		INNER JOIN news_sections  S
 		ON T.section = S.section ";
 	if ($access == 'A'){ $sql .= " WHERE `access` in ('A','U') "; }
 	elseif ($access == 'U'){ $sql .= " WHERE `access` = 'U' "; }
 	$sql .= " ORDER BY S.section_sequence, T.topic ";
-	
-	$topics = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+
+	$topics = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	return $topics;
 }
 
 function get_sections(){
-	$pdo = MyPDO::instance();
+
 	$sql = "SELECT section, concat(section_name,'|',section_subhead) AS section_data from `news_sections` ORDER BY section_sequence";
-	$sections = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+	$sections = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	return $sections;
 }
 
 	public function current_ops(){
 		 // lists currently open job opportunities
-		 
+
 		 $opp_rows = $this->opps->getOppCount();
 		 return $opp_rows;
 	}
@@ -115,7 +114,7 @@ function get_sections(){
 			if (file_exists("$dir/$filename") ) {
 				$hit = "$dir/$filename";
 				break;
-			}	
+			}
 		}
 		if (!$hit){return '';}
 		$content = file_get_contents($hit);
@@ -125,16 +124,16 @@ function get_sections(){
 		if ($heading){echo $this->news_head($heading,$subhead);}
 		#if ($subhead){echo $this->news_subhead($subhead);}
 		echo $content;
-		
+
 	}
 	private function filter_news($content,$extra = ''){
-		
+
 			$content = $this->replace_old_discussion($content);
 			$content = $this->replace_voting_content($content);
 			$content = "$extra\n" . $this->replace_new_discussion($content);
 			return $content;
 	}
-	
+
 		private function replace_old_discussion ($content) {
 			return preg_replace_callback (
 					'|<\? echo get_commenters\((\d+)\) .*?</div>|s',
@@ -147,24 +146,24 @@ function get_sections(){
 					},
 						 $content
 						  );
-					 
-		
+
+
 		}
 		private function replace_voting_content ($content) {
 			return preg_replace_callback(
 				'|<!-- vote (\d+) -->|',
 				function ($matches){
 					$user = $_SESSION['login']['user_id'];
-				
+
 					$vp = $this->voting->show_panel($matches[1],$user);
-				
+
 					return $vp;
 				}
 			,
 				 $content
 				 );
-	  
-	}  
+
+	}
 
 	private function replace_new_discussion ($content) {
 			  #replace discussion content - new style
@@ -184,7 +183,7 @@ function get_sections(){
 
 		public function news_head($title,$tcomment=''){
 			// add class amd to AMD news setion to pick up amd style defs
-			
+
 			  $hcode = "<div class='divh2'>$title\n";
 			  if ($tcomment != ''){$hcode .= "<br><span class='comment'>$tcomment</span>";}
 			  $hcode .= "</div>\n";
@@ -195,12 +194,12 @@ function get_sections(){
 			  $hcode = "<h3>$title</h3>\n";
 			  return $hcode;
 		 }
-		
+
 	public	function increment_reads($issue){
 			#echo "sstart increment reads";
 
 			if ($_SESSION['level']>7){ return;} #don't count admin access
-			
+
 			$sql3 = "INSERT INTO read_table (issue,read_cnt) VALUES ($issue,1)
 				 ON DUPLICATE KEY UPDATE read_cnt = read_cnt + 1";
 			$this->pdo->query($sql3);
@@ -272,13 +271,13 @@ function get_sections(){
 		if (file_exists("$dir/title.txt")) {
 			$title = trim(file_get_contents("$dir/title.txt"));
 		}
-		
+
 		$pubdate = '';
 		if (file_exists("$dir/publish.txt")){
 			$pubdate = explode('|',trim(file_get_contents("$dir/publish.txt")))[0];
 		}
 		else {$pubdate = 'Preview';}
-		
+
 		if ($title){
 			$title .= " &bull; $pubdate";
 		}

@@ -1,8 +1,8 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
-	use digitalmx\MyPDO;
-	use digitalmx as u;
+	use DigitalMx\MyPDO;
+	use DigitalMx as u;
 	
 class News {
 

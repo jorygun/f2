@@ -1,10 +1,10 @@
 <?php
-	namespace digitalmx\flames;
+	namespace DigitalMx\Flames;
 	
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(6)){exit;}
-	use digitalmx as u;
+	use DigitalMx as u;
 //END START
 
 //Script displays and updates member record without anyt ancillary actions, other than triggers

@@ -3,7 +3,7 @@
     "description": "AMD Flames",
     "type": "project",
     "license": "proprietary",
-    "config": {  
+    "config": {
             "vendor-dir": "vendor"
     },
     "require": {
@@ -22,15 +22,15 @@
     "authors": [
         {
             "name": "John Springer",
-            "email": "john@digitalmx.com"
+            "email": "john@DigitalMx.com"
         }
     ],
-    "autoload": { 
+    "autoload": {
          "psr-4": {
-            "digitalmx\\": "libmx/" ,
-            "digitalmx\\flames\\" : ["src/","config"]
-            
+            "DigitalMx\\": "libmx/" ,
+            "DigitalMx\\Flames\\" : ["src/","config/"]
+
             }
-            
-      } 
+
+      }
 }

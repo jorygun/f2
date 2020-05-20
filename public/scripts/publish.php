@@ -1,13 +1,13 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 //BEGIN START
 #ini_set('display_errors', 1);
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	
 //END START
-	use digitalmx\MyPDO;
-	use digitalmx as u;
+	use DigitalMx\MyPDO;
+	use DigitalMx as u;
 
 #   require_once $_SERVER['DOCUMENT_ROOT'] . '/scripts/news_functions.php';
 // don't think this is needed??

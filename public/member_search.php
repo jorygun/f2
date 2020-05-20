@@ -1,20 +1,20 @@
 <?php
 
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 #ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	use digitalmx\flames\FileDefs;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+	use DigitalMx\Flames\FileDefs;
 
 
 
-if ($login->checkLogin(4)){
+if ($login->checkLevel(4)){
    $page_title = 'Flames Search';
 	$page_options=[]; #ajax, votes, tiny
 
@@ -27,7 +27,7 @@ if ($login->checkLogin(4)){
 
 //END START
 
-	$admin = new MemberAdmin();
+	$admin = $container['membera'];
 
 if (isset($_POST['search'])){
    if ($_POST['search'] == 'Search DB'){

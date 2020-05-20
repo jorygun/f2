@@ -3,7 +3,7 @@
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(2)){exit;}
-	use digitalmx\flames\Definitions as Defs;
+	use DigitalMx\Flames\Definitions as Defs;
 //END START
 
 global $G_member_status_set;
@@ -100,7 +100,7 @@ function radio_choices($field,$array){
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-		$pdo = digitalmx\MyPDO::instance();
+		$pdo = DigitalMx\MyPDO::instance();
 		echo "<h3>Search Results</h3>
 		<p>Click on a Member's Name to view Profile.</p>";
 

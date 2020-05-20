@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx;
+namespace DigitalMx;
 /*
 
 class.Diff.php

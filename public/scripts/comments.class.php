@@ -12,7 +12,7 @@ error_reporting ( E_ALL & ~E_NOTICE);
     *
     * @category
    * @package  FLames
-   * @author   john springer <john@digitalmx.com>
+   * @author   john springer <john@DigitalMx.com>
    * @license  <>
    * @link
 */
@@ -27,7 +27,7 @@ error_reporting ( E_ALL & ~E_NOTICE);
 
 
     * @package  FLames
-   * @author   john springer <john@digitalmx.com>
+   * @author   john springer <john@DigitalMx.com>
     */
 
 class Comment
@@ -73,7 +73,7 @@ class Comment
     {
         $ucom = null;
         $this->user_id = $user_id;
-        self::$_dbcon  = digitalmx\MyPDO::instance();
+        self::$_dbcon  = DigitalMx\MyPDO::instance();
         /* moved the setting of username and email
             into an option so the class can be
             instantiated with being logged in.

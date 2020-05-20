@@ -1,10 +1,9 @@
 <div class='article clearafter'>
-	<p class='section'><?=$section_name?></p>
-	<p class='topic'><?= $topic_name ?></p>
+	<p class='topic'><u><?= $topic_name ?></u> in <?=$section_name?></p>
 	<p class='headline'> <?= $title ?></p>
 
 	<?php if (!empty($asset_blocks) ) : ?>
-		<div class='<?=$adiv?>'> 
+		<div class='<?=$adiv?>'>
 		<?php foreach ($asset_blocks as $ablock): ?>
 			<?=$ablock ?>
 		<?php endforeach; ?>
@@ -14,16 +13,24 @@
 
 	<div class='content'>
 		<?=$content?>
+		<?=$more?>
 
-		<p class='source'> From <?=$source?> 
+		<p class='source'> From <?=$source?>
 		<span class='contributor'> -- Contributed by <?=$contributor?></span></p>
-		
-	<?php if (!empty($ed_comment)) : ?>
-		<div class='ed_comment'> <?=$ed_comment?></div>
-	<?php endif; ?>
-	
+		<?php if (!empty($ed_comment)) : ?>
+			<div class='ed_comment'> <?=$ed_comment?></div>
+		<?php endif; ?>
+		<?php if (!empty($vblock) && $mode == 's') : ?>
+			<?=$vblock?>
+		<?php endif; ?>
+
+
+
+
 	</div>
-	
-	<div class=clear>[voting block]</div>
+
+ <?php if ($credential): ?>
+ 	<div class='clear status-display'>'<?=$smsg?></div>
+ <?php endif; ?>
 </div>
-<?=$status_display?>
+

@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 #ini_set('display_errors', 1);
 #ini_set('error_reporting', E_ALL);
 
@@ -16,10 +16,10 @@ if (empty($root)){
 }
  require_once $root . '/init.php';;
  
-use \digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
+use \DigitalMx\Flames\Definitions as Defs;
+use DigitalMx as u;
 
- use digitalmx\MyPDO;
+ use DigitalMx\MyPDO;
  $pdo = MyPDO::instance();
  
 $repo_path = REPO_PATH;

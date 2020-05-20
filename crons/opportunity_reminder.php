@@ -2,9 +2,12 @@
 <?php
 #$test = 'jorygun@gmail.com'; #uncomment to send all email to this address.
 $script = basename(__FILE__);
-include './cron-ini.php';
-if (! @defined ('INIT')) { die ("$script halting. Init did not succeed \n");}
 
+$repoloc = dirname(__FILE__,2);
+require_once "$repoloc/public/init.php";
+// $init set $pdo as well as container
+
+if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
 
 
 //END START
@@ -77,7 +80,7 @@ function sendit ($to,$email,$intro,$listings,$test=''){
 function get_opps($pdo){
 # type = public or user or admin
 
-  
+
      $sql = "
             SELECT title,owner,owner_email,created,expired
             FROM opportunities

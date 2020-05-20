@@ -1,12 +1,12 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 // ini_set('display_errors', 1);
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\MyPDO;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\MyPDO;
 	use PHPMailer\PHPMailer\PHPMailer;
 	use PHPMailer\PHPMailer\Exception ;
 
@@ -20,24 +20,17 @@ namespace digitalmx\flames;
     * Comment object is created for the logged in user and for a specific
     * database (news_items or assets or some non-db tag).
     *
-    * @category
-   * @package  FLames
-   * @author   john springer <john@digitalmx.com>
-   * @license  <>
-   * @link
+
 */
 
 
  /**
     * Comment class needs to be able to add a comment,
     * retrieve all the comments for a particular asset or article,
-    * or all the comments from an individual.
 
     * Comment object is created for the logged in user
-
-
     * @package  FLames
-   * @author   john springer <john@digitalmx.com>
+   * @author   john springer <john@DigitalMx.com>
     */
 
 class Comment
@@ -47,140 +40,93 @@ class Comment
     private  $username;
     private $user_level;
 
-    private $_on_db;
-    private $dbn;
-    private $item_id;
-    private $ucomment;
-  
-	private static $pdo;
+    private $on_db;
+    private $on_id;
+
+    private $commenter_list=[]; #list of info on each commenter
+	private $no_email_list = []; #array of uids excluded from email
+
+	private  $pdo;
+	private $member;
     private $clist;
-    private $stmt, $sql,$item_title;
+
 
 
 /* this definition is here so that the calls to
 	this function aren't dependent on the table names
-	in the db.  Also to prevent letting public POST command
-	contain the db table name.
+	in the db.
 */
 
    private static $db_names = array(
-        'asset' => 'assets',
         'article' => 'news_items',
         'spec'=>'spec_items',
-        'assets' => 'assets',
-        'news_items' => 'news_items',
-        'spec_items' => 'spec_items'
+
     );
 
 	private $mailer;
 /**
- * Sets up object for a specific user
- *
- * @param $user the user_id from the member database.  $_SESSION['user_id'];
- * @param PDO $dbcon  A valid PDO object
- * @return none
- */
-    public function __construct($user_id=0)
-    {
-        $ucom = null;
-        $this->user_id = $user_id;
-        self::$pdo  = MyPDO::instance();
-        /* moved the setting of username and email
-            into an option so the class can be
-            instantiated with being logged in.
-            To retrieve comments, not to post
-        */
-        if ($user_id > 0){
-			  $sql = "SELECT username,user_email
-			  from members_f2
-			  where user_id = '$this->user_id';";
-			  $row = self::$pdo->query($sql)->fetch();
-			  $this->username = $row['username'];
-			  $this->user_email = $row['user_email'];
-			  $this->user_level = $_SESSION['level'];
-        }
-
-		$this->mailer = new PHPMailer();
-		
-		$this->mailer->addCustomHeader('Errors-to','postmaster@amdflames.org');
-		$this->mailer->CharSet = 'UTF-8'; 
-		$this->mailer->isSendmail();
-		$this->mailer->isHTML(TRUE);
-		
-    }
-
-/**
-    * addComment
-        dbn is name of database (defined in db_names array)
-        item_id is the id of the entry in the database
+ * Sets up object for a specific user and article
+  on_db is name of database (defined in db_names array)
+        on_id is the item id of the entry in the database
         ucomment is the comment text
 
 		single is true/false to control if user can add multiple
 		comments or if a new comment replaces an old one.
 
-        dbn is only used to make an entry in comments database;
+        on_db is only used to make an entry in comments database;
         it does not actually access the database. Therefore,
         it can be a special name like 'spec' instead of a db table.
 
-        (dbn is needed in comments db though so the source db
-        like news_items can also
-        retrieve comments attached to an entry)
+        item_id must be numeric so if on_db is spec, item id needs to be
+        a number and unique to spec.  This is done with the spec_items
+        db table, that translates the id into a url for the page.
 
-        item_id must be numeric so if dbn is spec, item id needs to be
-        a number and unique to spec.
+        mailto is array listing who gets copied on an email when someone
+        posts a comment:
+        'commenters' all previous commenters
+        'contributor' the person identified as contributor on the article
+        'admin' admin@amdflames.org
+        'editor' editor@amdflames.org
+        any number of user_ids for specific members
+        It can be empty, which means no-one gets and email.
 
-        mailto is either an empty array, or an array containing "all" or
-        an array containg a list of  email addresses.  The comment will be
-        sent to either none, all previous commentors, or specific emails.
 
-        adds comment entry to comments database for this user
-*/
-    public function getUserEmail(){
-        return $this->user_email;
-    }
-
-    public function getUsername(){
-        return $this->username;
-    }
-    public function addComment($dbn,$item_id,$ucomment,$single,$mailto=array(),$no_email=0)
+ */
+    public function __construct($container)
     {
-        if ($this->user_id == 0){echo "error: cannot post if not logged in";} #not logged in; can't post
-         $on_db = self::nameToTable($dbn);
+        $ucom = null;
+
+        $this->pdo  = $container['pdo'];
+        $this->member = $container['member'];
+			$this->mailer = new PHPMailer();
 
 
-           //  $sql = "INSERT INTO comments SET
-        //      _on_db = ?,
-        //         item_id = ?,
-        //         user_id = ?,
-        //         comment = ?,
-        //         date = NOW()
-        //         ;
-        //         ";
 
-    // use this sql to gwt thw story title
-        $articleRow = $this->_getArticle($on_db,$item_id);
-        $item_title = $articleRow['title'];
+    }
 
 
-      # echo "Item title: $sql_title";
+    public function addComment($post, $params)
+    {
+    /* the post array must contain on_id and on_db and user_id */
+    //u\echor($post); exit;
+
+        if ($params['user_id'] == 0){echo "error: cannot post if not logged in";} #not logged in; can't post
+        $on_db = self::$db_names[$params['on_db']];
+        $on_id = $params['on_id'];
+			$user_id = $params['user_id'];
+        $ucomment = $post['comment'];
+
+        $no_email = (isset($post['no_email'])) ? 1:0;
 
     // use this sql to insert a new comment into the db
          $sql_insert = "INSERT INTO comments SET
             on_db = '$on_db',
-            item_id = '$item_id',
-            user_id = '$this->user_id',
+            item_id = '$on_id',
+            user_id = '$user_id',
             comment = ?,
             no_email= $no_email,
             cdate = NOW()
             ;
-            ";
-    // use this sql to determine if there is already a comment in the db
-
-        $sql_count = "SELECT count(*) from comments
-            where user_id = '$this->user_id'
-            AND on_db = '$on_db'
-            AND item_id = '$item_id'
-
             ";
 
         // use this sql to update a user's existing comment (where they
@@ -190,364 +136,217 @@ class Comment
             comment=?,
             cdate = NOW()
             WHERE on_db = '$on_db' and
-            item_id = '$item_id' and
-            user_id = '$this->user_id' and
-            no_email = $no_email
+            item_id = '$on_id' and
+            user_id = '$this->user_id'
             ;";
 
     // if called as single, first see if there is already a comment by this user
-        if ($single){
-            $stmt_count = self::$pdo->query($sql_count);
-            $daycount = $stmt_count->fetchColumn();
-        }
-
-        if ($single && $daycount > 0){ #already commented
-
-            echo "<script>alert('Your previous comment has been replaced.');</script>";
-
-            $stmt_update = self::$pdo->prepare($sql_update);
-            $stmt_update->execute([$ucomment]);
-            $comment_action = 'Update';
-        }
-        else {
-            // insert new comment
-
-           $stmt_insert = self::$pdo->prepare($sql_insert);
-            $stmt_insert -> execute([$ucomment]);
-            $comment_action = 'Insert';
-            $inserted_rows = $stmt_insert->rowCount();
-
-    // increemnt the comment count for this item
-        $sql = "UPDATE `$on_db` set comment_count = comment_count +1 where id = $item_id";
-        $cntq = self::$pdo->prepare($sql) -> execute();
-
-        }
-
-       if (!empty($mailto)){
-        self::_send_emails($dbn, $item_id,$ucomment,$mailto);
-        // Sending emails to whoever, including all commentors is most of the code.
-        }
-
+    	$stmt_count = 0;
+		if ($params['single']){
+			$sql_count = "SELECT count(*) from comments
+				WHERE user_id = '$this->user_id'
+				AND on_db = '$on_db' AND item_id = '$on_id' ";
+			$stmt_count = $this->pdo->query($sql_count)->fetchColumn();
+		}
+		if ($stmt_count > 0){ #single and already commented
+			echo "<script>alert('Your previous comment has been replaced.');</script>";
+			$stmt_update = $this->pdo->prepare($sql_update);
+			$stmt_update->execute([$ucomment]);
+			$comment_action = 'Update';
+		} else {
+			// insert new comment
+		  $stmt_insert = $this->pdo->prepare($sql_insert);
+			$stmt_insert -> execute([$ucomment]);
+			$comment_action = 'Insert';
+			$inserted_rows = $stmt_insert->rowCount();
+		}
+	// prepare to mail all the involved parties
+		$this->getComments($params); #to buildd the list of commenters
+      if (!empty($this->mailto)) {$this->sendEmails($ucomment); }
+		else {echo "No recipeints" . BRNL;}
         // rerun the recent.php to generate new comment count display
         //include_once(SITE_PATH . "/scripts/recent.php");
     }
 
-private function _send_emails ($dbn, $item_id,$ucomment,$mailto)
+private function sendEmails ($ucomment)
     {
-        // Sending emails to whoever, including all commentors is most of the code.
-        $sendlist = array(); #email => [full address,name,login]
-        $sendnames = array(); #list of names of recipients
-        $uid_list = array(); #list of uids to look up for sendlist
-        $no_email_list=array(); #list of uids to exclude from emails
 
-         $on_db = self::nameToTable($dbn);
-         /* on_db = spec if special page in /spec_items
-         These pages do not send out email notices to other commenters.
-         */
-
-        if(true ) { #$on_db != 'spec'){
-           $articleRow =  $this->_getArticle($on_db,$item_id);
-            $item_title = $articleRow['title'];
-            $contributor_id = $articleRow['contributor_id'];
-            $contributor_name = $articleRow['contributor_name'] ?? '';
-            #echo "Got articleRow $item_title, $contributor_id<br>";
-        }
-
-               /* the mailto is an array of email addreess in any legal
-               email format.  The keyword 'all' means to add all the
-               people who've commented to date.
-
-               The technique is to build a deduped list of commentors
-               by userid with name, email, and login code.
-               Then add in the other
-               entries in the mailto using the requested email itself
-               as the key.
-               So you can step through the array, generate a login code if its a
-               user_id key, and just use the email otherwise.
-
-               The message contains the article title, the link to the
-               discussion page (including login if its a commentor),
-               the comment itself, and a list of the names of the commentors
-               notified.
-
-               */
-
-        if (empty($mailto)){return;}
-        foreach ($mailto as $em){
-            if (empty($em)){continue;}
-            #find raw emails first; they may be replaced with more info
-            #later if they are a contributor or commentor.
-
-            if (substr($em,0,1) == '-' ){#put on exclusion list
-             if ($emonly = self::_extract_email (substr($em,1))) {
-                $excludelist[$emonly] = 1;
-            }
-            }
-
-            elseif ($emonly = self::_extract_email ($em))
-            {
-                #echo "extracted $emonly<br>";
-                $sendlist[$emonly] = [$em,'',''];
-            }
-        }
-
-        if (in_array('all',$mailto) or in_array('commentors',$mailto))
-        { #flag to include all commentors.
-            //  buld array of previous comment emails, removing dups
-            //  and removing current user
-
-          // returns array of all the comment data.
-            $clist = $this->getCommentsForItem($dbn,$item_id);
-  #  mail ('admin@amdflames.org','Script debug 276', print_r($clist,true) );
-        #remove user from the email copy list.  (Or add back in)
-            foreach($clist as $row){
-                $uid = $row['user_id'];
-                $uid_list[] = $uid;
-               if ($row['no_email'] == 1){ $no_email_list[]=$uid;}
-               elseif (in_array($uid,$no_email_list)) {$no_email_list = array_diff($no_email_list, array($uid) );}
-
-            }
-                #echo "Commentor ${row['user_id']}<br>";
-
-        }
-#mail ('admin@amdflames.org','Script debug 283', print_r($uid_list,true) );
-         if (in_array('all',$mailto) or in_array('contributor',$mailto))
-        {
-            if (!empty($contributor_id)){
-            $uid_list[] = $contributor_id;
-           # echo "Contriutor $contributor_id<br>";
-            }
-        }
-
-        // dedup the list
-
-        $uid_list = array_unique($uid_list);
-
-
-
-         // get the current user's user_id (the one making the comment)
-        // and add it to the  no-email list
-        $current_user_id = $_SESSION['login']['user_id'];
-        $no_email_list[] = $current_user_id;
-
-        $uid_list = array_diff($uid_list,$no_email_list);
-
-
-        if (!empty($uid_list)){
- #       mail ('admin@amdflames.org','Script debug', print_r($uid_list,true) );
-
-                // now go through the list, getting the user
-                // info from the members table
-                 $liq = self::$pdo->prepare("SELECT username,upw,user_email FROM `members_f2` WHERE user_id = ? AND email_status not like 'L%' ");
-
-
-                foreach ($uid_list as $uid) {
-                #echo "getting loginfo for uid $uid ";
-					$liq -> execute ([$uid]);
-					$cominfo = $liq-> fetch (\PDO::FETCH_ASSOC);
-					#echo "Rows: " . $liq->rowCount() . '<br>';
-					#echo "<pre>", print_r($loginfo), "</pre>";
-					  if ($cominfo){
-					   #add the current name from the member file
-
-					   $comuser = $cominfo['username'];
-					   $comemail = $cominfo['user_email'];
-					   $comlogin = $cominfo['upw'] . $uid;
-					   $comaddr =  $cominfo['username']
-                                . ' <'
-                                . $cominfo['user_email']
-                                .'>';
-
-					   $sendlist[$comemail] = array (
-					        $comaddr,
-					        $comuser,
-					        $comlogin
-					    );
-
-
-
-						}
-						if ($uid == $contributor_id){
-							 $contributor_name = $comuser;
-						}
-						else {$sendnames[] = $comuser;} #don't include contributor in list of commentor names.
-                }
-                 #echo "Sendlist:\n<pre>" . print_r ($sendlist) . '</pre>';
-            }
-
-
-
-#Now build the main message...
-
-    $commenter_email = $_SESSION['login']['user_email'];
-    $commenter_name = $_SESSION['login']['username'];
-
-    $mailfrom = "AMD Flames Editor <editor@amdflames.org>";
-    switch ($on_db){
-        case 'news_items':
-        $item_link = "https://amdflames.org/scripts/news_article_c.php?id=$item_id";
-            break;
-        case 'assets':
-        $item_link = "https://amdflames.org/scripts/asset_c.php?id=$item_id";
-            break;
-        case 'spec_items':
-        $spec_url = $articleRow['url'];
-        $item_link = "https://amdflames.org/special/$spec_url";
-            break;
-
-        default:
-        $item_link = '';
+    list($title,$cid) = $this->getArticleInfo($this->on_db,$this->on_id);
+    $mailto = $this->mailto;
+    if (in_array('commenters',$mailto)){
+		 $recipients = $this->commenter_list;
+		 $recipient_names = $this->commenter_names;
+		 // name, userid, email, login,
+		 $mailto = u\array_filter_remove($mailto,'commenters');
+	 }
+	 if (in_array('contributor',$mailto)){
+		 // add in the article contributor
+		 if (!empty($ma = $this->member->getActiveBasic($cid) )){
+		 	$recipients[$cid] = $ma;
+		 	$recipient_names[] = $recipients[$cid][0];
+		 }
+    	 $mailto = u\array_filter_remove($mailto,'contributor');
+    }
+    if (in_array('admin',$mailto)){
+		 // add in the article contributor
+		 $recipients[Defs::$admin_id] = $this->member->getMemberBasic(Defs::$admin_id);
+		 $recipient_names[] = 'Flames admin';
+    	 $mailto = u\array_filter_remove($mailto,'admin');
+    }
+    if (in_array('editor',$mailto)){
+		 // add in the article contributor
+		 $recipients[Defs::$editor_id] = $this->member->getActiveBasic(Defs::$editor_id);
+		 $recipient_names[] = 'Flames Editor';
+    	 $mailto = u\array_filter_remove($mailto,'editor');
+    }
+    // add in specials
+    if (!empty($mailto)){
+    	foreach ($mailto as $id){
+    		if (!is_numeric($id)){
+    			throw new Exception ("Unknown entry in mailto list: $id");
+    		}
+    		$recipients[$id] = $this->member->getActiveBasic($id);
+    		 $recipient_names[] = $recipients[$id][0];
+    	}
     }
 
+   $recipient_names = array_unique($recipient_names);
 
-    $cclist = "Article Contributor ($contributor_name) ";
-    if (! empty($sendnames)){
-        $cclist .= "and these commentors: ". implode(', ',$sendnames);
+
+    // remove anone on no_email list
+    if (!empty($this->no_email_list)){
+    	foreach ($this->no_email_list as $uid){
+    		$cname = $recipients[$uid][0];
+    		unset ($recipients[$uid]);
+			$recipient_names = u\array_filter_remove($recipient_names,$cname);
+
+    	 }
     }
+    	//u\echor($this->commenter_names,'names');
+    //	u\echor($recipients,'recips');
 
-// set the reply to address to etierh the commenter or to the
-// responder email where it can be processed by a script.
+    	 $cclist = implode(', ',$recipient_names);
+    	  $commenter_email = $_SESSION['login']['user_email'];
+    		$commenter_name = $_SESSION['login']['username'];
 
-    //$replyto = 'AMD Flames Responder <respond@amdflames.org>';
-    $replyto = "$commenter_name <$commenter_email>";
+		$this->mailer->Subject = "$commenter_name has commented on a FLAMES story";
+		$this->mailer->setFrom ($commenter_email,$commenter_name);
+		$this->mailer->addCustomHeader('Errors-to','postmaster@amdflames.org');
+		$this->mailer->CharSet = 'UTF-8';
+		$this->mailer->isSendmail();
+		$this->mailer->isHTML(TRUE);
 
-#Now go though the sendlist
-#mail ('admin@amdflames.org','Script debug', print_r($sendlist,true) );
-	# $this->mailer->setFrom('editor@amdflames.org','AMD Flames Editor');
-	$this->mailer->Subject = "$commenter_name has commented on a FLAMES story";
-	$this->mailer->setFrom ($commenter_email,$commenter_name);  
-	
-	 
-    foreach (array_keys($sendlist) as $em){
-        if (!empty($excludelist[$em])){continue;} #skip this email
-        list($sendto,$xname,$xlogin) = $sendlist[$em];
+    	foreach (array_values($recipients) as  $r){
+    		list ($name,$uid,$email,$login,$level) = $r;
+    		if (empty($email)) continue;
+    		#echo "mailer: $name at $email" . BRNL;
 
-        if(!empty($xlogin)){
+    		// set up the message
 
-            $link_add =  "&s=$xlogin
-   (This link includes your personal login).
-";
-        }
-        else {$link_add = "
-   (You will need to log in before using this link.)
-";      }
+   		$elink =  SITE_URL
+   			. "/get-article.php?id=$this->on_id&m=d&s=$login";
+    		// different for spec items!
 
-    $elink = $item_link . $link_add;
- $emsg = "<p>A comment has been added by $commenter_name to this item
-    you suggested or previously commented on:</p>
+    		$emsg = $this->formMessage($this->username,$title,$elink,$cclist,$ucomment);
 
-<h4>$item_title</h4>
+    	 	$this->mailer->addAddress($email);
+		 	$this->mailer->Body = $emsg;
+		 	$this->mailer->send();
+		 	$this->mailer->clearAddresses();
+
+   }
+
+ }
+
+ private function formMessage($commenter,$title, $elink,$cclist,$ucomment) {
+	$msg = <<<EOT
+<p>A comment has been added by $commenter to this
+    Flames item you suggested or previously commented on:</p>
+
+<h4>$title</h4>
 $ucomment
 <hr>
 <ul>
-<li> To POST a reply on the website and email other commenters, click this link:
+<li> To POST a reply on the website that emails other commenters, click this link:
     $elink<br>
 
-<li> To email a PRIVATE reply only to $commenter_name, just reply to this email.
+<li> To email a PRIVATE reply only to $commenter, just reply to this email.
   (You should remove the personal login above from the reply.)
 </ul>
 <p>This email was sent to $cclist.</p>
 
-" ;
-
-   # mail($sendto,"$commenter_name has commented on a FLAMES story",$emsg,"From: $mailfrom\r\nReply-To: $replyto");
-   
-    $this->mailer->addAddress($sendto);
-    $this->mailer->Body = $emsg;
-    $this->mailer->send();
-    $this->mailer->clearAddresses();
-    
-        
-   }
- }
-
-  public function getCommentsForItem($dbn,$item_id)
-    {
-        $this->_on_db = self::nameToTable($dbn);
-        $sql="SELECT * FROM comments where on_db = '$this->_on_db'
-            AND item_id = '$item_id' AND status is null
-
-            ORDER BY cdate;";
-	#echo "sql: $sql" . BRNL;
-
-        return self::_build_comment_array($sql);
-    }
-
-public function getCommentcount($dbn,$item_id)
-    {
-    $this->_on_db = self::nameToTable($dbn);
-        $sql="SELECT count(*) FROM comments where on_db = '$this->_on_db'
-            AND item_id = '$item_id' AND status is null
-            ;";
-        $count = self::$pdo->$query($sql)->fetchColumn();
-        return $count;
-
+EOT;
+	return $msg;
 }
- public function getCommentsByItem($dbn,$item_id)
-    {
-
-        return self::_get_comment_array('',$dbn,$item_id);
-    }
-
- public function getCommentsByUser($user_id,$dbn='')
-    {
-        /*make array of db names - either the one requested or all of them
-        */
 
 
-             $carray = self::_get_comment_array($user_id,$dbn);
-            #$carray = array_merge($carray , self::_build_comment_array($sql));
+ private function buildCommenters($carray){
+ 	// creates list of contact info for commenters and also
+ 	// list of people who have excluded from email.
 
+ 	$clist = []; $cnames = []; $no_mail=array();;
+ 	foreach ($carray as $row){
+ 		$uid = $row['user_id'];
+ 		if (empty($clist[$uid])){
+ 			$ma = $this->member->getActiveBasic($uid);
+ 			if (!empty($ma)){
+ 				$clist[$uid] = $ma;
+ 				$cnames[] = $clist[$uid][0];
+ 			}
+ 			// username,uid,useremail,login,seclevel
+
+ 		}
+ 		if ($row['no_email'] == 1){$no_mail[$uid]  = 1;}
+ 	}
+ 	$this->no_email_list = array_keys($no_mail) ;
+ 	$this->commenter_list = $clist;
+ 	$this->commenter_names = $cnames;
+
+ 	// u\echor($this->commenter_list,'com list');
+ 	// u\echor($this->no_email_list,'nomail list');
+ 	//	u\echor($this->commenter_names,'name list');
+ }
+	public function getComments($params){
+	// retrieves all comments into a list.
+
+		$on_db =  self::$db_names[$params['on_db']] ?? $params['on_db'];
+		$on_id = $params['on_id'];
+
+		 $sql = "
+            SELECT c.id, c.user_id,c.comment,c.on_db,c.item_id,c.no_email,
+            DATE_FORMAT(c.cdate,'%d %b %Y %H:%i' ) as pdate,
+            u.username,u.user_email,u.user_from
+            FROM `comments` c
+            JOIN `members_f2` u  on c.user_id = u.user_id
+            WHERE c.on_db = '$on_db' AND c.item_id = '$on_id'
+            ORDER BY c.cdate;
+            ";
+
+         $carray = $this->pdo->query($sql)->fetchAll();
+        # u\echor ($carray, $sql); exit;
+         $this->buildCommenters($carray);
 
         return $carray;
 
-    }
+	}
 
-private function _getArticle($dbtable,$item_id)
+private function getArticleInfo($on_db,$on_id)
     {
         #echo "Getting article data $dbtable, $item_id<br>";
 
         #if ($dbtable == 'spec_items'){return "Special web page $item_id";}
         #$_on_db = self::nameToTable($dbn);
-        $sql = "Select title,contributor,contributor_id,url from `$dbtable` where id = '$item_id'";
+        $sql = "Select title,contributor_id from `$on_db` where id = '$on_id'";
         // url is used for spec items, where it is the page name in /spec_items
-        $stmt = self::$pdo->query($sql);
-        if (!$stmt){die ("Failed to ftch on $sql");}
-        $row = $stmt -> fetch();
-        $row['title'] = stripslashes($row['title']);
-        return $row;
-
-    }
-
-
-
-
-    public function getCommentsByAge($age)
-    {
-        return self::_get_comment_array('','','',$age);
-    }
-    public function getContactFromUserid($user_id)
-    {
-        $st2 = self::$pdo->query(
-            "Select username,user_email from members_f2 where user_id = '$user_id';"
-        );
-            $row = $st2->fetch();
-            $cusername = $row['username'];
-            $cuser_email = $row['user_email'];
-            $user_contact
-                = "<a href='mailto:$cuser_email'>$cusername</a>";
-            return array($cusername,$cuser_email);
-
-            #return $user_contact;
-    }
-
-    public static function nameToTable($dbn)
-    {
-        if ($on_db = self::$db_names[$dbn]) {
-              return $on_db;
+        if (! $ainfo  = $this->pdo->query($sql)->fetch() ) {
+        	die ("Failed to ftch on $sql");
         }
-        return '';
+        return [$ainfo['title'],$ainfo['contributor_id']]; # [title,cid]
+
     }
+
+
+
 
     private function _extract_email ($text)
     {
@@ -558,89 +357,8 @@ private function _getArticle($dbtable,$item_id)
         }
     }
 
-
-     private function _get_comment_array($uid='',$dbn='',$item='',$age='')
-    {
-        $cset = array();
-        $whereconditions = array();
-        if (!empty($uid)) {$whereconditions[] ="c.user_id = '$uid'";}
-        if (!empty($item)) {$whereconditions[] =  "c.item_id = '$item'";}
-        if (!empty($age)) {$whereconditions[] = "c.cdate > now() - interval $age";}
-        if ($dbn != '') {$whereconditions[] = "c.on_db = '" .
-            self::nameToTable($dbn) . "'" ;}
-        $whereconditions[] = "c.status is null";
-        $whereclause = implode(' AND ',$whereconditions);
-
-        $jsql = "
-            SELECT c.id as cid, c.user_id,c.comment,c.cdate,c.on_db,c.item_id,
-            u.username,u.user_email,u.user_from,u.user_amd
-            FROM `comments` c
-            LEFT JOIN `members_f2` u  on c.user_id = u.user_id
-            WHERE $whereclause
-            ORDER BY c.cdate;
-            ";
-    //    echo "sql: $jsql<br>";
-        $stmt = self::$pdo->query($jsql);
-        foreach ($stmt as $row) {
-            $articleRow = self::_getArticle($row['on_db'],$row['item_id']);
-            $cdata = array(
-                'dbn' => $dbn,
-                'comment' => $row['comment'],
-                'pdate' => gmdate('M d, Y H:i T', strtotime($row['cdate'])),
-                'user_id' => $row['user_id'],
-                'username' => $row['username'],
-                'user_email' => $row['user_email'],
-                'user_contact' => "<a href='mailto:${row['user_email']}'>${row['username']}</a>",
-                'user_about' => 'In ' . $row['user_from'] . '. ' . $row['user_amd'],
-                'dbtable' => $row['on_db'],
-                'item' => $row['item_id'],
-                'title' => stripslashes($articleRow['title']),
-                'contributor_id' => $articleRow['contributor_id'],
-                'contributor_name' => $articleRow['contributor'],
-                'cid' => $row['cid'],
-                 'user_profile' => "<a href='/scripts/profile_view.php?uid=${row['user_id']}' target='profile'>${row['username']}</a>",
-                 'user_amd' => $row['user_amd'],
-                 'user_from' => $row['user_from']
-            );
-     //       echo "{$cdata['username']} ${cdata['user_id']} ${cdata['cid']} ";
-           //  recho($cdata);
-//             echo "getting cdata for ${row['username']} ";
-            $cset[] = $cdata;
-        }
-
-        return $cset;
-    }
-
-    private function _build_comment_array($sql)
-    {
-        $cset = array();
-        $stmt = self::$pdo->query($sql);
-        if ($stmt->rowCount() == 0 ){echo "Nada"; exit;}
-        
-        foreach ($stmt as $row) {
-        		
-            list($username,$user_email) = $this->getContactFromUserid($row['user_id']);
-
-            $cdata = array(
-                'cid' => $row['id'],
-                'db' => '',
-                'comment' => $row['comment'],
-                'pdate' => gmdate('M d, Y H:i T', strtotime($row['cdate'])),
-                'user_id' => $row['user_id'],
-                'username' => $username,
-                'user_email' => $user_email,
-                'user_contact' => "$username <a href='mailto:$user_email'>email</a>",
-                'user_profile' => "<a href='/scripts/profile_view.php?uid=${row['user_id']} target='profile'>$username profile}</a>",
-                'no_email' => $row['no_email']
-
-            );
-           # u\echor ($cdata,'comment');
-           
-            $cset[] = $cdata;
-        }
-
-        return $cset;
-    }
+// display omments with
+//  foreach (
 
     public function display_comments ($carray,$show_title,$limit=99) {
         if (empty($carray)){return '(no comments)';}
@@ -690,10 +408,10 @@ private function _getArticle($dbtable,$item_id)
             $itemlink
              <p style='float:left;margin-top:4px;'> $user_contact  - $pdate<br>
              <span style='<font-size:0.8em;font-style:italic;margin-left:1em;'> $user_about </span> </p>
-        </div> 
+        </div>
         <p class='comment' style='clear:both'>$ucomment</p>
 		<p style='text-align:right;font-size:small;margin-top:4px; clear:both'>(cid # $cid)</p>
-            
+
     </div>
     ";
         }

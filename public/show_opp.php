@@ -4,15 +4,15 @@
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\MyPDO; #if need to get more $pdo
-	use digitalmx\flames\DocPage;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\MyPDO; #if need to get more $pdo
+	use DigitalMx\Flames\DocPage;
 
-	
-  
-	
+
+
+
 
 if ($login->checkLogin(0)){
 	$page_title = "Current Opportunities";
@@ -23,25 +23,25 @@ if ($login->checkLogin(0)){
 <script>
 function setToNow(id) {
 	document.getElementById(id).value = new Date().toISOString().slice(0, 10);
-	
+
 }
 </script>
 EOT;
 	echo $page->startBody();
 }
-   
- 
-	
+
+
+
 //END START
-	use digitalmx\flames\Opportunities;
-	$opps = new Opportunities();
+	use DigitalMx\Flames\Opportunities;
+	$opps = $container['opps'];
 	$opp_id = $_GET['id'] ?? 0;
 	/* set type as user, admin or public
 		user can edittheir own
 		admin can edit any
 		public cannot edit any
 	*/
-			
+
 	if (isset($_POST['id'])){
 		#save data
 		$id = $opps->postOpp($_POST);
@@ -49,7 +49,7 @@ EOT;
 		show_data($opp_row);
 		exit;
 	}
-	
+
 	if (isset($_GET['edit'])){
 
 			$opp_row = $opps->getOpp($opp_id); #may be 0
@@ -62,13 +62,13 @@ EOT;
 		}
 		show_data($opp_row);
 	}
-	
+
 	else {#display opp list for edits
 		if (!$opp_list = $opps->linkOppList() ){
 			throw new Exception ("No opp list");
 		}
 		#u\echor ($opp_list,'opps');
-		
+
 		echo "<ul>\n";
 		foreach ($opp_list as $line){
 			echo "<li>$line\n";
@@ -92,19 +92,19 @@ EOT;
 }
 
 	function show_edit ($opp_row){
-		
+
 		$id = $opp_row['id'];
 		echo <<<EOT
 		<h3>Edit/Create Opportunity</h3>
 		(Yellow fields are required. <br>
-		You will not see a new opportunity on your menu until you log in again.) 
+		You will not see a new opportunity on your menu until you log in again.)
 		<form method='post'>
-		
+
 		<table style='width:100%'>
 		<tr><td colspan = 2>
 		<input type=text name='id' value='$id' READONLY>
 		</td></tr>
-		
+
 		<tr><td>
 			Title
 			</td><td>
@@ -118,7 +118,7 @@ EOT;
 		<tr><td>
 			Contact
 			</td><td>
-			<input type=text name='owner' value='${opp_row['owner']}'  class='required'> 
+			<input type=text name='owner' value='${opp_row['owner']}'  class='required'>
 			Email:  <input type=email name='owner_email' value='${opp_row['owner_email']}'  class='required'>
 			</td></tr>
 	<tr><td>
@@ -126,7 +126,7 @@ EOT;
 			</td><td>
 			<input type=text name='link' value='${opp_row['link']}'size=60>
 			</td></tr>
-			
+
 			<tr><td>
 			Expiration
 			</td><td>
@@ -138,9 +138,9 @@ EOT;
 	</td></tr>
 	<tr><td><input type='submit'></td></tr>
 	</table>
-	
+
 	</form>
-	
+
 EOT;
 }
 

@@ -3,7 +3,7 @@
 
 
 body  {
-	
+
 	font-family: "New Times Roman",Times,serif;
 	font-size: 1em; color: black;
 	max-width:1000px;
@@ -17,7 +17,7 @@ body  {
 	}
  .normal {
 	font-family: "New Times Roman",Times,serif;
-	font-size: 1em; 
+	font-size: 1em;
 	color: black;
 	color:black;
 	font-style: normal;
@@ -54,15 +54,16 @@ li {margin-bottom:0.5em;}
 	border-top:5px solid green;
 	margin-top:1em;
 	}
-	
+
 .indent {margin: 0.5em 3em 0.5em 3em;}
-	
+
 .italic { font-style: italic; }
 
 .centered {text-align:center;margin-left:auto;margin-right:auto;}
 .right {text-align:right;}
 
 img {padding:5px;}
+.no-margin {margin:0;padding:0}
 
 img.centered {
     display: block;
@@ -227,7 +228,7 @@ div.album {
 }
 .album p{margin-top:3px;margin-bottom:3px;}
 
-/* Styles for asset displays 
+/* Styles for asset displays
 	old was thumbs, now asset class
 	stick these asset objects inside a div class = asset
 	*/
@@ -306,7 +307,7 @@ div.warning {
 table#calendar  {
 	border:1px solid #030; border-collapse:collapse;
 	margin-left:2em; margin-right:2em;
-	
+
 }
 
 table#calendar  td {padding:3px;font-size:0.9em;}
@@ -330,13 +331,18 @@ table.alternate tr:nth-child(even) {background: #EEE}
 table.alternate tr:nth-child(odd) {background: #FFF}
 
 div.comment_box {
-     margin-left:2em;
-     margin-bottom:6px;
-    width:600px;
+    margin:1em;
     border:1px solid #ccc;
     padding:3px;
+    background-color:#FFF;
 
+}
 
+div.comment_background {
+	width:100%;
+	background-color:#eee;
+	padding:1em;
+	border:1px solid #393;
 }
 
 div.article {
@@ -348,8 +354,8 @@ div.article {
 
 
 .article .type, .article p.topic {
-	font-style:normal;
-	text-decoration: underline;
+	font-style:italic;
+
 	margin-bottom:3px;
 	}
 
@@ -364,11 +370,11 @@ div.article {
     text-align:right;
 	font-style:normal;
 	margin-bottom: 0px;
-	margin-right:2em;
+	margin-right:0em;
 	font-size:0.9em;
 	border-top:1px solid grey;
 	}
-	
+
 .article .contributor {
 	text-align:right;
 	font-style:italic;
@@ -390,15 +396,28 @@ div.article {
 	margin-left:1em;
 	/* width:100%; */
 	float:left;
-	
+
 
 }
+.status-display {
+	background-color:#9F9;width:15em;
+	border:1px solid #0C0;
+	margin:6px;
+}
 
+.article .pop {
+	text-align:center;
+	font-size:0.9em;
+	margin-bottom:1em;
+	margin-top:0;
+	border:1px solid gray;
+	padding: 4px;
+}
 .article .content .subhead {
 	font-weight:bold;
 	text-decoration:underline;
 	margin-bottom:0;
-	
+
 }
 .article .content .subarticle {
 	margin-left:1.5em;
@@ -406,16 +425,20 @@ div.article {
 }
 
 .article .more , .more  {
-	margin-left:3em;
+
 	margin-top: 0.2em;
-	color:green;
+	color:#009;
 	}
 
 
-.article .ed_comment { font-family: arial; font-style: plain;
-    font-size: 0.9em; color: #066;
-    margin-left:0em; margin-right:1em;margin-top:1em;
-    border-top:2px solid #066;
+.article .ed_comment {
+
+    font-size: 0.9em;
+    text-align:right;
+    margin-left:1em;
+    margin-right:1em;
+    margin-top:2px;
+
     }
 
 
@@ -432,7 +455,7 @@ div.apology {
 	border:2px solid gray;margin-left:1em;padding:1em;
 }
 
-.btn-votes { float:left;}
+.btn-votes {display:inline;}
 .net-votes {float:left;}
 
 button.up {border: 0; background: transparent;cursor:pointer;}
@@ -441,7 +464,7 @@ button.down {border: 0; background: transparent;cursor:pointer;}
 button.down:hover {background: #FCC; }
 
 .label-votes {font-weight:bold;margin-bottom:0;}
-.vpanel p {margin:4px;}
+div.vpanel  {display:inline;}
 
 /* used in news page to display both discussion and voting choices */
 table.voting {width:100%; border:0;}

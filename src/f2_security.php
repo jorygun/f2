@@ -5,8 +5,8 @@
 
 
 
-use digitalmx\flames\Definitions as Defs;
-	use digitalmx\MyPDO;
+use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\MyPDO;
 
 function security_below($min) {
 	return f2_security_below($min);

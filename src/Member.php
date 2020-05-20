@@ -1,12 +1,14 @@
 <?php
-namespace digitalmx\flames;
+
+namespace DigitalMx\Flames;
+
 $proj_path = dirname(__DIR__);
 
 use \Exception as Exception;
-use \digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
-use digitalmx\flames as f;
-use digitalmx\MyPDO;
+use \DigitalMx\Flames\Definitions as Defs;
+use DigitalMx as u;
+use DigitalMx\Flames as f;
+use DigitalMx\MyPDO;
 
 
 #require_once '../config/init.php';
@@ -20,39 +22,39 @@ use digitalmx\MyPDO;
   *  to retrieve data items or derivatives.                                  *
   *
   **/
-                                                                 
+
 
 /* Methods and Properties
- 	$member = new Member($pdo);
- 	
+
+
     getMemberList($tag, $limit = 100, $method = '') //list
     getMemberData($tag,method) // all data for one member, limit 1
-    	tag is either email, uid, or username 
+    	tag is either email, uid, or username
     	email may return error if more than one person found
-    	
+
     getMembers($_POST) // returns list based on post vars
     getMemberLogin(loginstring) returns login data for one user
-  
+
    return array: returnResult($data)
     'data' => member data array (one or more)
-    
-    
+
+
     'info' => messages from this->infoh
 
     'error' => $this->error message
      'count' => no of records returned.
-     
+
 
     public function getMemberDisplayEmail($tag) // email or message
     public function getMemberName($tag) /
-    
+
 */
 
 class Member
 {
-    
+
 #all database fiels
-   private static $member_fields = array (    
+   private static $member_fields = array (
 'admin_note',
 'admin_status',
 'alt_contact',
@@ -152,7 +154,7 @@ private static $update_fields = array(
 	'profile_valid_date',
 	'profile_valid_age',
 	'seclevel',
-	'status_name',         
+	'status_name',
 	'subscriber',
 	'linkedinlink',
 	'at_amd',
@@ -161,7 +163,7 @@ private static $update_fields = array(
 	'login_age',
 
  );
- // fields filled in for any get, but not 
+ // fields filled in for any get, but not
  // actually in the db
   private static $virtual_fields = array (
 
@@ -174,14 +176,14 @@ private static $update_fields = array(
 	'profile_age',
 	'profile_date',
 	'seclevel',
-	'status_name',         
+	'status_name',
 	'subscriber',
 	'linkedinlink',
 	'at_amd',
 	'needs_update',
-	
+
  );
- 
+
  //fields returned for log-in
  private static $info_fields = array (
  	'username',
@@ -211,22 +213,22 @@ private static $update_fields = array(
  	'linkedin',
  	'contributed',
  	'login_age',
- 
+
  );
- 
+
 
  #limited fields returned from member listss
  private static $min_fields = array (
- 'username', 
- 'user_id', 
- 'user_email', 
+ 'username',
+ 'user_id',
+ 'user_email',
  'seclevel',
  'status_name',
  'email_status',
- 'status', 
+ 'status',
  'upw'
  );
- 
+
  	private static $no_member = array(
  	'username' => 'Not a Member',
  	'user_id' => 0,
@@ -235,9 +237,9 @@ private static $update_fields = array(
  	'status_name' => "Not a Member",
  	'linkedin' => '',
  	'status' => 'Y'
- 	
+
  	);
- 	
+
  private static $bad_member = array(
  	'username' => 'Not a Member',
  	'user_id' => 0,
@@ -247,38 +249,36 @@ private static $update_fields = array(
  	'linkedin' => '',
  	'status' => 'Y'
  	);
- 
- 
+
+
  	private static $login_regex =  '/^(\w{5})(\d{5})$/';
     private  $memberTable = 'members_f2';
     private $pdo;
  #   private $messenger;
 
- 
+
  /* fields normally delivered.
- 	db fields plus added fields 
+ 	db fields plus added fields
  	*/
-    private  $std_fields = array();   
+    private  $std_fields = array();
 
     // data for return
     private $info='';
     private $error='';
-   
-    private $test;
+
+    private $test=false;
   	private $member_status_set;
     # plus record count and data
-    
- public function __construct($test=false)
-    {
-    $this->test = $test;
-       
-	$this->pdo = MyPDO::instance();
+
+ public function __construct($container)
+ {
+	$this->pdo = $container['pdo'];
 	$this->member_status_set = Defs::getMemberInSet();
 	$this->std_fields = array_merge(self::$member_fields,self::$added_fields);
-    }
+}
 
    /* searches are returned an array containing these fields */
- private function returnResult ($data=[] ) { 
+ private function returnResult ($data=[] ) {
     $r['data'] = $data;
     $r['info'] = $this->info;
     $r['error'] = $this->error;
@@ -292,25 +292,25 @@ private static $update_fields = array(
          /*returns all the member data for one member,
          // enhanced with computed fields
 
-        // Methods: email, login, name_exact, uid, 
+        // Methods: email, login, name_exact, uid,
         // method generally selected automtically from the tag format
          //
-        
+
         */
        if (empty($tag)){
-       	$this->info = "New Member"; 
+       	$this->info = "New Member";
        	return $this->returnResult(self::$no_member);
        	}
        $tag = trim($tag); #remove extraneious white space.
-       
+
        #get searchfield for to prepare sql, then searchfor to execute
         if (! list ($searchfield,$searchfor) = $this->setSearchCriteria($tag,$method)){
         		$this->error = 'Search method not understood';
         		echo $this->error . BRNL; exit;
             return $this->returnResult();
         }
-        
-        # only want 1 result.  
+
+        # only want 1 result.
         #Set limit for 2 so can detect where more than one returned.
         $limit = 1;
         $limitplusone = $limit + 1;
@@ -320,7 +320,7 @@ private static $update_fields = array(
         $stmt = $this->pdo-> prepare($sql);
         $ids = $stmt ->execute($searchfor);
         $idcnt = $stmt->rowCount();
-       # echo $idcnt . BRLF; 
+       # echo $idcnt . BRLF;
         $messages = [];
         if ($idcnt > $limit) {
         	$this->error = "Got $idcnt results; only $limit allowed (searching on '$tag')";
@@ -330,24 +330,24 @@ private static $update_fields = array(
         		$this->info = "No Members Found" ;
             return $this->returnResult();
         }
-        
+
         $mdata = $stmt->fetch();
-        
+
         #u\echor($mdata,'Mdata');
         $user_array = $this->enhanceData($mdata,$this->std_fields);
-			
-     	
+
+
         return $this->returnResult($user_array);
-            
+
     }
 
 	private function isLogin($login) {
     #returns true or false
     // regex for user login string 5 char pw, 5 digit user_id
-      
-      return preg_match(self::$login_regex,$login) ; 
+
+      return preg_match(self::$login_regex,$login) ;
 	}
-	
+
 	private function parseLogin ($login) {
 		// paarse old style login string into user and pw
 		if (preg_match(self::$login_regex,$login,$match) ){
@@ -355,25 +355,25 @@ private static $update_fields = array(
 		}
 		return false;
 	}
-	
-	
+
+
      private function enhanceData($row,$fieldlist=[])
     {
     	// takes row from select *, adds computed fields, and
     	// returns the fields requested in fieldlist
     	#u\echor($row,'input to enhancer');
-    	
+
         $id = $row['user_id'];
         // creates array of other fields to be added to the db fields
         $login_string = $row['upw'] . $id ;
-        
+
         $is_member = in_array($row['status'], Defs::getMemberInList());
-        
+
       $profile_date =  u\make_date($row['profile_updated']);
-      
+
       $profile_age = u\days_ago($row['profile_validated']);
-      
-         
+
+
       $decade_choices = u\decompress($row['amd_when'],Defs::$decades);
 		$location_choices = u\decompress($row['amd_where'],Defs::$locations);
 			$department_choices = u\decompress($row['amd_dept'],Defs::$departments);
@@ -386,21 +386,21 @@ private static $update_fields = array(
 		$amd_box_data .= (!empty($location_choices)) ? " in " . $location_choices : '';
 		$amd_box_data .= (!empty($decade_choices)) ? " during the " . $decade_choices: '' ;
 		$member_photo = '';
-		// $member_photo = (isset($row['photo_asset'])) ? 
+		// $member_photo = (isset($row['photo_asset'])) ?
 //    		 get_asset_by_id($row['photo_asset'],'photo') : '' ;
    	$linkedinlink = ($row['linkedin'])? "<a href='${row['linkedin']}'>
    		<img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /> </a>" : '' ;
         $addons= array(
-        
+
         'seclevel' => Defs::getSecLevel($row['status']) ,
         'status_name' => Defs::getMemberDescription($row['status']) ,
-            
+
         'login_string' =>  $login_string ,
         'subscriber' => $row['no_bulk']?false:true ,
-        'is_member' => $is_member ,     
+        'is_member' => $is_member ,
         'email_age' => u\days_ago($row['email_last_validated']),
         'email_valid_date' => u\make_date($row['email_last_validated']),
-        
+
         'email_public' => $this->buildDisplayEmail($row['user_email'], $row['email_status'], $row['email_hide']),
         'join_date' => u\make_date($row['joined']),
         'user_email_linked' => u\linkEmail($row['user_email'], $row['username']),
@@ -412,63 +412,63 @@ private static $update_fields = array(
         'profile_valid_date' => u\make_date($row['profile_validated']),
         'profile_valid_age' => u\days_ago($row['profile_validated']),
          'at_amd' => $amd_box_data,
-         
+
          'login_age' => u\days_ago($row['last_login']),
      );
-       
 
-            
+
+
       # u\echoR($addons,'addons');
-       
+
         $enhanced = array_merge($row, $addons);
-        
+
         if (! empty($fieldlist) ){
         		if (is_array($fieldlist)){
        	 		$enhanced = array_intersect_key($enhanced,array_flip($fieldlist) );
        	 	} else {
-       	 		throw new Exception ("Field list to enhance data is not a list"); 
+       	 		throw new Exception ("Field list to enhance data is not a list");
        	 	}
         }
-        
+
         return $enhanced;
     }
-  
+
   public function setLastLogin($uid) {
-  	$sql = "UPDATE members_f2 SET last_login = now() 
+  	$sql = "UPDATE members_f2 SET last_login = now()
   			WHERE user_id = $uid";
   	$this->pdo->query($sql);
   	return true;
   }
-  	
+
   public function addMember ($post){
     // adds new member to the db
     // gets new id,upw
      $post['upw'] = u\random_strings(5);
-   
-    
+
+
     $valid_vars = array('upw','username','user_email','status',
     'user_from','user_amd','admin_note','email_status');
 // switch to pdo_prep
     $prepared =  u\pdoPrep($post,$valid_vars);
     $fieldlist = $prepared['field_list'];
     $data = $prepared['data'];
- //      echo "Fields: $fields <br>Prepared data: "; u\echoR($data); 
+ //      echo "Fields: $fields <br>Prepared data: "; u\echoR($data);
 
-    
+
     $a=[];
   foreach ($fieldlist as $f){
     $a[] = ":$f";
   }
   $fields = implode(', ',$fieldlist);
   $values = implode (', ',$a);
-      
+
     $table = $this->memberTable;
-    
+
    $sql = "INSERT into `$table` ($fields) VALUES ($values);";
   # echo "sql: $sql" . BRNL;
    #u\echoR($data,'data array');
-  
-   
+
+
    if (! $stmt = $this->pdo->prepare($sql) ){
      throw new Exception ("pdo prepare failed. ");
     }
@@ -477,18 +477,18 @@ private static $update_fields = array(
     }
     $id = $this->pdo->lastInsertId();
     $login_string = SITE_URL . '/?s=' . $post['upw'] . $id;
-    
+
    # echo "New id $id" . BRNL;
     $data=array(
         'email'=>$post['user_email'],
         'loginstring' => $login_string,
     );
-    
+
     #$this->messenger->sendit('welcome', $data);
-  
+
   }
 	public function setEmail ($uid,$email){
-		
+
 		$sql = "UPDATE `members_f2` SET user_email = '$email' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
 			return false;
@@ -496,7 +496,7 @@ private static $update_fields = array(
 		return true;
 		}
 	}
-	
+
 	public function setAdminStatus ($uid,$status) {
 	$sql = "UPDATE `members_f2` SET admin_status = '$status' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
@@ -505,8 +505,8 @@ private static $update_fields = array(
 		return true;
 		}
 	}
-	
-	
+
+
 	public function setStatus ($uid,$status){
 		$sql = "UPDATE `members_f2` SET status = '$status' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
@@ -515,7 +515,7 @@ private static $update_fields = array(
 		return true;
 		}
 	}
-	
+
 	public function setTestStatus ($uid,$status){
 		$sql = "UPDATE `members_f2` SET test_status = '$status' where user_id = '$uid'";
 		if (! $this->pdo->query($sql) ){
@@ -524,7 +524,11 @@ private static $update_fields = array(
 		return true;
 		}
 	}
-	
+	public function setTestMode(){
+		// sets this->test to true
+		$this->test = true;
+	}
+
 	public function setUserName ($uid,$name){
 	$sql = "UPDATE `members_f2` SET username = '$name' where user_id = '$uid' ";
 		if (! $this->pdo->query($sql) ){
@@ -542,7 +546,7 @@ private static $update_fields = array(
 		return true;
 		}
 	}
-	
+
 	public function setEmailHide($uid,$flag){
 		// nobulk must be 0 or 1
 	$sql = "UPDATE `members_f2` SET email_hide = $flag where user_id = $uid ";
@@ -552,22 +556,22 @@ private static $update_fields = array(
 		return true;
 		}
 	}
-	
+
 	public function setCurrent ($uid,$current) {
 		$sql = "UPDATE `members_f2` SET user_current = ? where user_id = '$uid' ";
 		 $stmt = $this->pdo->prepare ($sql);
 		 $stmt->execute ([$current]);
-			
+
 		return true;
-		
+
 	}
 	public function setAdminNote ($uid,$note) {
 		$sql = "UPDATE `members_f2` SET admin_note = ? where user_id = '$uid' ";
 		 $stmt = $this->pdo->prepare ($sql);
 		 $stmt->execute ([$note]);
-			
+
 		return true;
-		
+
 	}
  private function setSearchCriteria($tag, $method = '')
     {
@@ -582,24 +586,24 @@ private static $update_fields = array(
            'uid' => 'user_id = ?',
            'id' => 'id = ? ',
         );
-        
+
         $field = false;
-       
+
         if (!empty($method) and isset($search_fields[$method])) {
             $field = $method;
         }
-        
+
         if ($field == 'email' or strpos($tag, '@') > 0) { #is email
             $searchfield = $search_fields['email'];
             $searchfor = [$tag];
         } elseif ($field == 'login' or $this->isLogin($tag)) { #looks like a login code
             $searchfield = $search_fields['login'];
             $searchfor = f\splitLogin($tag);
-        } elseif ($field == 'uid' or 
+        } elseif ($field == 'uid' or
         		(is_numeric($tag) && (int)$tag >= 10000)) { #is a userid
             $searchfield = $search_fields['uid'];
             $searchfor = [$tag];
-         } elseif ($field == 'uid' or 
+         } elseif ($field == 'uid' or
         		(is_numeric($tag) && (int)$tag < 10000)) { #is a id
             $searchfield = $search_fields['id'];
             $searchfor = [$tag];
@@ -612,22 +616,22 @@ private static $update_fields = array(
         			$searchfield = $search_fields['name_exact'];
             	$searchfor = [$match[1]];
          }
-        
-        
+
+
         if (empty ($searchfield)) {
         #probably matches anything ??
             $searchfield = $search_fields['name_loose'];
             $searchfor = ["%$tag%"];
-        } 
+        }
         if (empty ($searchfield)) {
             $this->error .= "Cannot understand tag $tag for member lookup";
             echo $this->error . BRNL; exit;
             return false;
         }
-        
+
         return array ($searchfield,$searchfor);
     }
- 
+
     // same as implode??
  //     private function array_to_string($arr){
 //         if (is_string($arr)){return $arr;}
@@ -638,7 +642,7 @@ private static $update_fields = array(
 //             }
 //             return $vstring;
 //         }
-//     }  
+//     }
 
 	public function addSignup($row){
 		// get new uid and passwd
@@ -646,8 +650,8 @@ private static $update_fields = array(
 			$max_uid = $this->pdo->query('select max(user_id) from `members_f2`')->fetchColumn();
 			$new_uid = $max_uid + 1;
 			$row['user_id'] = $new_uid;
-		
-			
+
+
 			$prep = u\pdoPrep($row,'','id');
  /**
  	$prep = u\pdoPrep($post_data,$allowed_list,'id');
@@ -664,14 +668,14 @@ private static $update_fields = array(
 	#	echo 'Member before update.' . BRNL;
 	#	echo "sql: " . $sql . BRNL;
 	#	u\echor($prep['data'],'Data');
-		
+
        $stmt = $this->pdo->prepare($sql);
        #exit;
        $stmt ->execute($prep['data']);
        $new_id = $this->pdo->lastInsertId();
-       
+
        return $new_uid;
-	
+
 	}
     private function randPW() {
  //Generate a 5 digit password from 20 randomly selected characters
@@ -680,37 +684,37 @@ private static $update_fields = array(
 	$pass = substr(str_shuffle($permitted_chars),0,5);
 	 return $pass;
  }
- 
+
   public function updateMember($post){
     if (empty ($uid = $post['user_id'] ?? '')){
         throw new Exception ("update Member called with no user_id.");
     }
-	
+
 	// first get existing record
 	$sql = "SELECT * from `members_f2` where user_id = $uid";
 	$md = $this->pdo->query($sql)->fetch();
-	
-	// now compare incoming record with existing and build $upd 
+
+	// now compare incoming record with existing and build $upd
 	foreach ($post as $var=>$val){
 		if ($md[$var] != $val){
 			$upd[$var] = $val;
 		}
 	}
-	
+
 	if (empty($upd)) {return true;} #no changes
-	
+
 	$upd['user_id'] = $uid;
-	
+
 	$upd = $this->check_auto_fields($upd);
-	
+
 	// prepare update data
     if (!$prepared =  u\pdoPrep($upd,self::$update_fields, 'user_id') ) {throw new Exception ("failed to prepare vars: " . print_r($post,true) ) ;}
-    
+
        $fields = $prepared['update'];
        $data = $prepared['data'];
-    #   echo "Prepared data: "; u\echoR($data); 
+    #   echo "Prepared data: "; u\echoR($data);
        $key = $prepared['key'];
-          
+
     $sql = "UPDATE `members_f2` set $fields  where user_id = $key;";
 
    if (! $stmt = $this->pdo->prepare($sql)){
@@ -723,7 +727,7 @@ private static $update_fields = array(
   }
 
 private function check_auto_fields($upd) {
-	
+
 	if (isset ($upd['user_email'])){ #changed email
 		$upd['email_chg_date'] = 'now()';
 	}
@@ -739,15 +743,15 @@ public function getLogins($tag) {
             $where = "user_email = '$tag'";
         }
         else {throw new Exception ("Request $tag not valid.");}
-        
+
         $sql = "SELECT username,user_id,upw,user_email FROM `members_f2`
             where $where";
          $result = $this->pdo->query($sql) ;
-         
-        if ($result->rowCount() == 0){ 
+
+        if ($result->rowCount() == 0){
             return false;
         }
-       
+
         $format = "   %-25s %-50s\n";
         $msg = sprintf($format,"Member Name",  "login url");
         foreach ($result as $row){ #there may be more than one
@@ -756,22 +760,22 @@ public function getLogins($tag) {
             // send message with login
             $msg .=  sprintf($format,$row['username'], $login );
         }
-      
+
       return $msg;
-        
-       
-    
+
+
+
     }
 	public function getMemberListFromAdmin($post) {
-		// gets members by email, name, ems, status, or admin 
+		// gets members by email, name, ems, status, or admin
 		// from MemberAdmin
 		$q = array ();
 		$fields = implode (',',$this->std_fields);
-		
+
 		if (!empty($name = $post['name'])){
-			$q[] = " username LIKE '%" . addslashes($post['name']) . "%' "; 
+			$q[] = " username LIKE '%" . addslashes($post['name']) . "%' ";
 		}
-		
+
 		if (!empty($email = $post['email'] ??'')){
 			$q[] = " user_email LIKE '%$email%' ";
 		}
@@ -787,23 +791,23 @@ public function getLogins($tag) {
 		if (empty($q)){
 			throw new Exception ("No search fields provided" . u\echor ($post,'post') );
 		}
-		
+
 		$sql = "SELECT * FROM `members_f2` WHERE " . implode (' AND ',$q) . " ORDER BY status " . " LIMIT 100;";
 	#	echo $sql .  BRNL;
-		
-		
+
+
 		$result = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_ASSOC);
-		
-	// enhance and contract	
+
+	// enhance and contract
 		$final = [];
 		foreach ($result as $row){
 			$final[] = $this->enhanceData($row,self::$info_fields);
-		
+
 		}
 		return $this->returnResult($final);
 	}
-	
-	
+
+
     public function getMemberCounts() {
 		 $member_status_set =  Defs::getMemberInSet();
 		 $select_all_valid	=
@@ -812,119 +816,119 @@ public function getLogins($tag) {
 	AND email_status NOT LIKE 'L%'
 	";
 	 	$counts = array();
-	 	$sql = "SELECT count(*) from `members_f2` 
+	 	$sql = "SELECT count(*) from `members_f2`
 		WHERE status in ($member_status_set)
 		";
 		$counts['total'] = $this->pdo->query($sql)->fetchColumn();
-		
-	
+
+
 		$sql = "SELECT count(*) as count FROM members_f2
 		WHERE $select_all_valid
 		;";
 		$counts['active'] = $this->pdo->query($sql)->fetchColumn();
-		
+
 		$sql = "SELECT count(*) as count FROM members_f2
 		WHERE status in ($member_status_set)
-		AND (email_status LIKE 'L_' OR email_status LIKE 'X%') 
+		AND (email_status LIKE 'L_' OR email_status LIKE 'X%')
 		;";
-		
+
 		$counts['lost'] = $this->pdo->query($sql)->fetchColumn();
-		
+
 		$sql = "SELECT count(*) as count FROM members_f2
 		WHERE status in ($member_status_set)
-		AND email_status = 'LA' 
+		AND email_status = 'LA'
 		;";
-		
+
 		$counts['aged'] = $this->pdo->query($sql)->fetchColumn();
-		
-		$sql = "SELECT count(*) from `members_f2` 
+
+		$sql = "SELECT count(*) from `members_f2`
 		WHERE $select_all_valid
 		AND no_bulk = FALSE;
 		";
 		$counts['bulk'] = $this->pdo->query($sql)->fetchColumn();
-		
-		$sql = "SELECT count(*) from `members_f2` 
+
+		$sql = "SELECT count(*) from `members_f2`
 		WHERE $select_all_valid
 		AND no_bulk= TRUE;
 		";
 		$counts['nobulk'] = $this->pdo->query($sql)->fetchColumn();
-		
-		$sql = "SELECT count(*) from `members_f2` 
+
+		$sql = "SELECT count(*) from `members_f2`
 		WHERE $select_all_valid
 		AND admin_status != '' ;
 		";
 		$counts['admin'] = $this->pdo->query($sql)->fetchColumn();
-		
-		$sql = "SELECT count(*) from `members_f2` 
+
+		$sql = "SELECT count(*) from `members_f2`
 		WHERE $select_all_valid
 		AND test_status != ''
 		";
 		$counts['test'] = $this->pdo->query($sql)->fetchColumn();
-		
-		
+
+
 		return $counts;
 	}
-	 
+
     public function getMembers($post){
          $q=[]; $messages=[];
        // returns list of members based on either a generic
-       // 'searchon' tag, or an ANDED combinaation of 
-       // all valid search keys 
+       // 'searchon' tag, or an ANDED combinaation of
+       // all valid search keys
         $valid_keys = ['email_status','status'];
-       
+
        // if there's a searchon, use that as a tag
         if (!empty($post['searchon'])){
              list ($searchfield,$searchfor) = $this->setSearchCriteria($post['searchon']);
         }
         else  {
-          
+
             $q=[];$v=[];
             foreach ($valid_keys as $key){
                 if (!empty($post[$key])){
                     $q[] = "$key  = :$key";
                     $searchfor["$key" ] = $post[$key];
                 }
-            } 
+            }
             $searchfield = implode(' AND ' ,$q);
-            
-        }   
+
+        }
         if (empty($searchfield)){
            $this->info = "No Members Found";
             return $this->returnResult();
         }
-        
+
         $sql = "SELECT * from `$this->memberTable` WHERE $searchfield ";
   //       echo $sql . BRNL; u\echoR($searchfor,'search data');
 
         $stmt = $this->pdo-> prepare($sql);
         $stmt->execute($searchfor);
-    
+
         $idcnt = $stmt->rowCount();
 //         echo "Count: $idcnt" .BRNL;
         $mb = array();
          if ($idcnt == 0) {
             $this->info = "No Members Found";
-    
+
         }
         else {
             $this->info = "$idcnt Members Found";
              foreach ($stmt as $row){
                 $short_list[] = enhanceData($row,self::short_data_fields);
             }
-         }   
-                
-        
+         }
+
+
         return $this->returnResult($short_list);
     }
-    
+
     public function getMembersByEmail($email) {
     	$sql = "SELECT username,user_id,upw from `members_f2` WHERE
     		user_email = '$email' limit 100";
     	$members = $this->pdo->query($sql)->fetchAll();
     	return $members;
     }
-    	
-    	
+
+
     public function getMemberList($tag, $limit = 100)
     {
     #echo "Starting memberlist with tag $tag" . BRNL;
@@ -942,26 +946,26 @@ public function getLogins($tag) {
         if ($idcnt > $limit) {
             $this->error .= "Got $idcnt results; only $limit allowed (searching on '$tag').";
         }
-        
-        #return array of all reesults 
+
+        #return array of all reesults
         $mb = $stmt->fetchAll();
       # u\echor($mb,'from getMemberList');
        return $this->returnResult($mb);
        ;
     }
-    
+
 
     public function getContributors () {
         // retreives donors and authors
         $sql = "SELECT user_id,username,user_email from `$this->memberTable`
         where status in ('MC','MU');";
         $authors = $this->pdo->query($sql)->fetchAll();
-        
+
          $sql = "SELECT user_id,username,user_email from `$this->memberTable`
          where contributed is not null";
-         
+
         $donors = $this->pdo->query($sql)->fetchAll();
-        
+
         $data['authors'] = $authors;
         $data['donors'] = $donors;
         return $data;
@@ -981,26 +985,26 @@ public function getLogins($tag) {
    	}
    	return 0;
    }
-   
+
     public function getLoginInfo($user)
     {
     	$login_info = self::$no_member; #initialize
     	if (empty($user)) {
     		return $login_info;
     	}
-    	
-    	$sql = "SELECT * from `members_f2` where user_id = $user ";  	
+
+    	$sql = "SELECT * from `members_f2` where user_id = $user ";
     	if (!$result = $this->pdo->query($sql)->fetch() ){
     		throw new Exception ("Attempt to Login with invalid user id");
     	}
     	//add fields and filter result
     	$login_info = $this->enhanceData($result,self::$info_fields);
     	#u\echor ($login_info,'LI info from getLoginInfo'); exit;
-    	
+
     	return $login_info;
     }
-    	
-    
+
+
 
 	public function getMemberRecord($uid, $enhanced=false)
 	{
@@ -1009,11 +1013,11 @@ public function getLogins($tag) {
 		if ($enhanced){$row = $this->enhanceData($row);}
 		return $row;
 	}
-		
-   
 
-  
-   
+
+
+
+
     public function getMemberDisplayEmail($tag)
     {
          $md = $this->getMemberData($tag);
@@ -1022,32 +1026,32 @@ public function getLogins($tag) {
         }
         return $md['data']['display_email'];
     }
-    
-   
+
+
     public function verifyEmail ($id) {
     	#check current email status and notify admin
     	# if validating an aged out address
-    	
+
     	 $sql = "Update `members_f2` set email_status='Y',
     	 	email_last_validated = NOW()
             WHERE user_id = $id;";
 		  $stmt = $this->pdo->query($sql);
-      
+
         return  date ('M d Y');
 	}
 
 	public function verifyProfile ($id) {
-     $sql = "Update `members_f2` set 
+     $sql = "Update `members_f2` set
      profile_validated = NOW()
             WHERE user_id = $id;";
         $stmt = $this->pdo->query($sql);
       $this->verifyEmail($id);
         return  date ('M d Y');
 
-    
+
 	}
 
-    
+
     public function getMemberName($tag)
     {
         $md = $this->getMemberData($tag);
@@ -1064,8 +1068,8 @@ public function getLogins($tag) {
         }
         return $md['data']['user_email'];
     }
-    
-    
+
+
     public function getMemberEmailLinked($tag)
     {
         $md = $this->getMemberData($tag);
@@ -1074,14 +1078,14 @@ public function getLogins($tag) {
         }
         return u\linkEmail($md['data'][0]['user_email'], $md['data']['username']);
     }
-    
+
     // returns [username,id]
     public function getMemberId($tag)
     {
     	#required username or alias\
     	//check for alias first
     	$tag = trim($tag);
-    	
+
     $tag =  Defs::replaceAlias($tag) ?? $tag;
   # echo $tag;exit;
         $md = $this->getMemberData($tag,'name_exact');
@@ -1089,30 +1093,84 @@ public function getLogins($tag) {
         if (empty($md['count']) or !empty($mb['error'])) {
             return false;
         }
-        
+
         return array(
         	$md['data']['username'],
         	$md['data']['user_id']
         	);
     }
-    
-    
+
+
     public function getMemberBasic ($tag)
     {
-    	 $md = $this->getMemberData($tag);
-       # u\echor ($md);
-        if (empty($md['count']) or !empty($mb['error'])) {
-            return false;
-        }
-        
+    	$where =  (is_numeric($tag))?
+    		"user_id = '$tag' " : "username = '$tag' ";
+    	$member_set = Defs::getMemberInSet();
+
+    	$sql = "SELECT username,user_id,user_email,
+    		CONCAT(upw,user_id) as login_string, status
+    		FROM `members_f2`
+    		WHERE $where
+    			";
+
+    		if (!$md['data'] = $this->pdo->query($sql)->fetch()){
+    			return [];
+    		}
+    		$md['data']['seclevel'] = Defs::getSecLevel($md['data']['status']);
+
+
+    	//  $md = $this->getMemberData($tag);
+//        // u\echor ($md); exit;
+//         if (empty($md['count']) or !empty($mb['error'])) {
+//             return false;
+//         }
+//
         return array(
         	$md['data']['username'],
         	$md['data']['user_id'],
-        	$md['data']['user_email']
+        	$md['data']['user_email'],
+        	$md['data']['login_string'],
+        	$md['data']['seclevel'],
+
         	);
     }
-    
-   
+
+    public function getActiveBasic ($tag)
+    {
+    	$where =  (is_numeric($tag))?
+    		"user_id = '$tag' " : "username = '$tag' ";
+    	$member_set = Defs::getMemberInSet();
+
+    	$sql = "SELECT username,user_id,user_email,
+    		CONCAT(upw,user_id) as login_string, status
+    		FROM `members_f2`
+    		WHERE $where
+    			AND status in ($member_set)
+    			AND email_status NOT LIKE 'L%' ";
+
+    		if (!$md['data'] = $this->pdo->query($sql)->fetch()){
+    			return [];
+    		}
+    		$md['data']['seclevel'] = Defs::getSecLevel($md['data']['status']);
+
+
+    	//  $md = $this->getMemberData($tag);
+//        // u\echor ($md); exit;
+//         if (empty($md['count']) or !empty($mb['error'])) {
+//             return false;
+//         }
+//
+        return array(
+        	$md['data']['username'],
+        	$md['data']['user_id'],
+        	$md['data']['user_email'],
+        	$md['data']['login_string'],
+        	$md['data']['seclevel'],
+
+        	);
+    }
+
+
     public function getLastLogin($tag)
     {
         $md = $this->getMemberData($tag);
@@ -1122,7 +1180,7 @@ public function getLogins($tag) {
         $last = $md ['data']['last_login'];
         return u\make_date( $last,'human','datetime');
     }
-    
+
     public function getEmailStatus($uid) {
     	$md = $this->getMemberData($uid) ;
     	if ($md['count'] == 0 or !empty($mb['error'])) {
@@ -1130,11 +1188,11 @@ public function getLogins($tag) {
         }
         return $md ['data']['email_status'];
     }
-    
+
      public function setProfileVerified ($id) {
         $sql = "Update `$this->memberTable` set profile_validated = NOW(),email_status='Y',email_last_validated = NOW()
             WHERE user_id = $id;";
-            
+
         $stmt = $this->pdo->query($sql);
        	$this->updateSession(array(
        		'email_status' => 'Y',
@@ -1142,10 +1200,10 @@ public function getLogins($tag) {
        		'email_last_validated' => date('Y-m-d'),
        		'email_verified_age' => 0,
        		'profile_valid_age' => 0,
-       		
+
        		'uid' => $id,
        		));
-       		
+
         return  date ('M d Y');
 
     }
@@ -1162,50 +1220,50 @@ public function getLogins($tag) {
     			$_SESSION['login'][$var] = $val;
     		}
     	}
-    	
+
     }
      public function setEmailVerified ($id) {
         $sql = "Update `$this->memberTable` set profile_validated = NOW(),email_status='Y',email_last_validated = NOW()
             WHERE user_id = $id;";
-            
+
         $stmt = $this->pdo->query($sql);
-       
+
         return  date ('M d Y');
 
     }
-    
+
     public function getDonors()
     {
-        $sql = "SELECT username from `$this->membersTable` where 
+        $sql = "SELECT username from `$this->membersTable` where
         contributed IS NOT NULL and contributed > CURDATE() - INTERVAL 24 month;";
         $stmt = $this->pdo->query($sql);
         $result = $stmt->fetchColumn();
-        
+
         return $result;
     }
     public function getAuthors()
     {
-        $sql = "SELECT username from `$this->membersTable` where 
+        $sql = "SELECT username from `$this->membersTable` where
         status = 'MC' ";
-        
+
          $stmt = $this->pdo->query($sql);
         $result = $stmt->fetchColumn();
-        
+
         return $result;
-        
+
     }
-    
+
    public function getNoMember() {
    	return self::$no_member;
-   } 
+   }
 
   private function buildDisplayEmail($email, $ems, $hide)
     {
         /* Returns either a linked email address or a message that the email is hidden, or a
         message that it is an invalid address.
         */
-        
-    
+
+
         if (!$email) {
             return "No email on file";
         }
@@ -1213,7 +1271,7 @@ public function getLogins($tag) {
             #echo "Invalid email address ($addr) in display_email.";
             return "**Invalid email address**";
         }
-	
+
         if ($hide) {
             $v = '(Email hidden)';
         } elseif ($ems == 'LB') {
@@ -1232,14 +1290,14 @@ public function getLogins($tag) {
 		// without this intervention
 		$set_time = ($ems == 'Y') ?
 		', email_last_validated = NOW()' : '';
-		
-		
-		$sql = "UPDATE `members_f2` SET email_status = '$ems' 
+
+
+		$sql = "UPDATE `members_f2` SET email_status = '$ems'
 			$set_time
 			WHERE user_id = '$uid';";
 		if ($this->test){
-			echo "Test mode.  SQL \n" . $sql . "\n";
-			return;
+			echo "Member Test mode.  SQL \n" . $sql . "\n";
+			return true;
 		}
 		try {
 			$this->pdo->query($sql) ;
@@ -1249,7 +1307,7 @@ public function getLogins($tag) {
        		'uid' => $uid,
        		));
 				return date('d M Y');
-			
+
 		} catch (Exception $e) {
 			echo "PDO failed: " . $e->getMessage();
 			echo "SQL: " . $sql  . BRNL . BRNL;;
@@ -1257,9 +1315,9 @@ public function getLogins($tag) {
 		}
 		return false;
 	}
-	
+
 	public function xoutUser ($uid) {
-		$sql = "UPDATE `members_f2` SET status = 'X' 
+		$sql = "UPDATE `members_f2` SET status = 'X'
 			WHERE user_id = '$uid'";
 		if (! $result = $this->pdo->query($sql) ){
 			return false;
@@ -1267,14 +1325,14 @@ public function getLogins($tag) {
 		return true;
 	}
 	public function markContribute ($uid) {
-		$sql = "UPDATE `members_f2` SET contributed = now() 
+		$sql = "UPDATE `members_f2` SET contributed = now()
 			WHERE user_id = '$uid'";
 		if (! $result = $this->pdo->query($sql) ){
 			return false;
 		}
 		return date('d M Y');
 	}
-	
+
 	public function getUpdatedEmails ($since,$test=false) {
 		// returns list of members with updated emails
 		// since must be in Y-m-d
@@ -1282,7 +1340,7 @@ public function getLogins($tag) {
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
 		$member_status_set = Defs::getMemberInSet();
-		$test_clause =  ($test)? 
+		$test_clause =  ($test)?
 		"AND test_status != '' " : "AND test_status = '' ";
 		$list = array();
 		$sql = "SELECT  * FROM `members_f2`
@@ -1298,11 +1356,11 @@ public function getLogins($tag) {
 		return $list;
 	}
 	public function getUpdatedProfiles($since,$test=false) {
-		
+
 		$member_status_set = Defs::getMemberInSet();
-		$test_clause =  ($test)? 
+		$test_clause =  ($test)?
 		"AND test_status != '' " : "AND test_status = '' ";
-		
+
 		$list = array();
 		$sql = "SELECT user_id FROM `members_f2`
 			WHERE status in ($member_status_set)
@@ -1310,11 +1368,11 @@ public function getLogins($tag) {
 			AND profile_updated > '$since'
 			AND joined < '$since';";
 
-		
+
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
 		// foreach ($result as $row){
 // 			$list[] = $this->enhanceData($row);
-// 		
+//
 // 		}
 		return $result;
 	}
@@ -1323,7 +1381,7 @@ public function getLogins($tag) {
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
 		$member_status_set = Defs::getMemberInSet();
-		$test_clause =  ($test)? 
+		$test_clause =  ($test)?
 		"AND test_status != '' " : "AND test_status = '' ";
 		$list = array();
 		$sql = "SELECT  * FROM `members_f2`
@@ -1338,21 +1396,21 @@ public function getLogins($tag) {
 		}
 		return $list;
 	}
-	
+
 	public function getNewMembers($since,$test=false) {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
 		//Get New Members
-	$test_clause =  ($test)? 
+	$test_clause =  ($test)?
 		"AND test_status != '' " : "AND test_status = '' ";
-	
+
 	$member_status_set = Defs::getMemberInSet();
 
 	$sql = "SELECT * FROM `members_f2`
 	WHERE status in ($member_status_set)
 	$test_clause
-	
+
 	AND joined > '$since'
 	ORDER BY username;
 	";
@@ -1373,7 +1431,7 @@ public function getNewLost($since,$test=false) {
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
 		//Get New Members
-		$test_clause =  ($test)? 
+		$test_clause =  ($test)?
 	"AND test_status != '' " : "AND test_status = '' ";
 	$member_status_set = Defs::getMemberInSet();
 	$sql = "SELECT * FROM `members_f2`
@@ -1384,7 +1442,7 @@ public function getNewLost($since,$test=false) {
 	$test_clause
 	ORDER BY username;
 	";// new lost
-	
+
 	$result = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
 	$list=[];
 	foreach ($result as $row){
@@ -1392,14 +1450,14 @@ public function getNewLost($since,$test=false) {
 		}
 	return $list;
 	}
-		
+
 	public function getOldLost($limit=0){
 	// old lost
-		$limit_clause =  (empty($limit)) ? '' : " LIMIT $limit "; 
+		$limit_clause =  (empty($limit)) ? '' : " LIMIT $limit ";
 		$test = false; #no need on this segment
-		$test_clause =  ($test)? 
+		$test_clause =  ($test)?
 		"AND test_status != '' " : "AND test_status = '' ";
-		
+
 		$q = "SELECT * FROM members_f2
 		WHERE status in ($this->member_status_set)
 		$test_clause
@@ -1410,7 +1468,7 @@ public function getNewLost($since,$test=false) {
 			;
 		";
 		$result = $this->pdo->query($q)->fetchAll(\PDO::FETCH_ASSOC);
-	
+
 		foreach ($result as $row){
 				$list[] = $this->enhanceData($row,self::$info_fields);
 			}
@@ -1418,7 +1476,7 @@ public function getNewLost($since,$test=false) {
 	}
 	public function getSendList($type,$tag='') {
 	// gets list of members for bulk mail
-		$fields = 
+		$fields =
 		'username,
 		user_email,
 		CONCAT(upw,user_id) as slink,
@@ -1426,19 +1484,19 @@ public function getNewLost($since,$test=false) {
 		no_bulk,
 		user_id'
 		;
-		
+
 		// these fields are retrieved in bulk_send by sequence, not name.
 		$test = false;
 		$test = ($type == 'test');
-		$test_clause =  ($test) ? 
+		$test_clause =  ($test) ?
 		"AND test_status != '' " : "AND test_status = '' ";
-        
-		$sql = "SELECT $fields FROM `members_f2` 
+
+		$sql = "SELECT $fields FROM `members_f2`
 			WHERE status in ($this->member_status_set)
 			AND email_status NOT LIKE 'L%'
 			$test_clause
 			";
-		
+
 		switch ($type) {
 			case 'test':
 				echo "Sending to test_status not empty" . BRNL;
@@ -1464,7 +1522,7 @@ public function getNewLost($since,$test=false) {
 				echo "Sending to admin status with $tag." . BRNL;
 				break;
 			case 'aged_out':
-				$sql = "SELECT $fields FROM `members_f2` 
+				$sql = "SELECT $fields FROM `members_f2`
 			WHERE status in ($this->member_status_set)
 			AND email_status = 'LA' ";
 				echo "Sending to aged out emails." . BRNL;
@@ -1473,17 +1531,17 @@ public function getNewLost($since,$test=false) {
 				$sql .= "AND status in ('MC','MA') ";
 				echo "Sending to all valid emails." . BRNL;
 				break;
-			
-			default: 
+
+			default:
 				throw new Exception ("Unknown bulk mal selection.");
 			}
-		
+
 		$sql .= " ORDER BY status DESC ;";
 		$list = $this->pdo->query($sql)->fetchAll();
 		return $list;
 
-	
+
 	}
-		
+
 } #end class
 

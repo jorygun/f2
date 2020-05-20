@@ -1,15 +1,15 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 //BEGIN START
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 $login->checkLogin(0);
 
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\MyPDO; #if need to get more $pdo
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\MyPDO; #if need to get more $pdo
 
 
 	$page_title = "New Contributions";

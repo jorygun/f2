@@ -534,7 +534,7 @@ function link_assets($input) {
          for ($i=0;$i<$n;++$i){
             $assetlink = $m[0][$i];
             $thisid = $m[1][$i];
-            if (! $assetcode = \digitalmx\flames\get_asset_by_id ($thisid) ){
+            if (! $assetcode = \DigitalMx\Flames\get_asset_by_id ($thisid) ){
                 $asset_code = "[ Could not get asset  $thisid ]";
             }
             $input = str_replace($assetlink,"$assetcode",$input);
@@ -647,7 +647,22 @@ function get_mime_from_curl($url)
 	return $mime;
 	}
 
+function array_filter_keys($arr,$allowed){
+		//creates new array from arr containing only keys in allowed list.
+		return array_intersect_key($arr, array_flip($allowed));
+}
+function array_filter_remove($arr,$remove) {
+		//creates new array from arr without $remove
+		if ( ($key = array_search($remove, $arr) ) !== false) {
+    			unset ($arr[$key]);
+    	}
+    	return $arr;
+}
 
+function isInteger($input){
+	//returns true if every character in input is a digit
+    return(ctype_digit(strval($input)));
+}
 
 function age_and_date($date_str) {
 	//takes a date and returns the age from today in days and a formatted version of date

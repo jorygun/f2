@@ -1,8 +1,8 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 $init_file = $_SERVER['DOCUMENT_ROOT'] . '/init.php';
-use digitalmx\flames\Login;
-use digitalmx as u;
+use DigitalMx\Flames\Login;
+use DigitalMx as u;
 
 ini_set('display_errors', 1);
 

@@ -1,23 +1,25 @@
 <?php
+
+namespace Digitalmx\Flames;
+
+#ini_set('display_errors', 1);
+
 //BEGIN START
-	require_once "init.php";
-	if (f2_security_below(0)){exit;}
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+if ($login->checkLevel(0)){
+   $page_title = 'About The Flames Site';
+	$page_options=[]; #ajax, votes, tiny
 
-	$nav = new navBar(false);
-	$navbar = $nav -> build_menu();
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	# other heading code here
+
+	echo $page->startBody();
+}
+
 //END START
+
 ?>
-
-<html lang="en">
-<head>
- <link rel="stylesheet" href="/css/flames2.css">
-
-<title>About The FLAMEs site</title>
-
-</head>
-<body>
-
-<?=$navbar?>
 
 <h3>About This Site</h3>
 <p>"FLAME" stands for "<b>F</b>ormer <b>L</b>oyal <b>AM</b>D <b>E</b>mployee"</p>

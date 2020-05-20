@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 // Compile news larticles from items database
 
 /*
@@ -25,12 +25,12 @@ then marked as published.
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	use digitalmx\flames\FileDefs;
-	use digitalmx\MyPDO;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+	use DigitalMx\Flames\FileDefs;
+	use DigitalMx\MyPDO;
 	
 require_once "news_functions.php";
 require_once "asset_functions.php";

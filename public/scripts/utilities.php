@@ -1,8 +1,8 @@
 <?php
 // miscellaneous utility scripts
 
-use digitalmx\MyPDO as MyPDO;
-use digitalmx as u;
+use DigitalMx\MyPDO as MyPDO;
+use DigitalMx as u;
 
 
 function send_admin($subject='FLAMEs Admin Notice',$info,$from='admin@amdflames.org'){
@@ -950,7 +950,7 @@ $simulate=0;
 		if ($send_admin){mail('admin@amdflames.org',"Lost user - $name",$admin_msg,"${GLOBALS['from_admin']}Reply-to:$send_to");}
 
 		   if ($send_user){
-		   	mail($send_to, $subj, $msg, $GLOBALS['from_admin'],"-f postmaster@amdflames.org");
+		   	mail($send_to, $subj, $msg, 'From: admin@amdflames.org',"-f postmaster@amdflames.org");
 		   	}
 		   set_mu_status ($id,$new_status);
 	 	 }

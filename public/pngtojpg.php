@@ -7,7 +7,7 @@
 require HOMEPATH . 'Sites/flames/libmx/MxConstants.php';
 require HOMEPATH . '/Sites/flames/libmx/MyPDO.php';
 
-$pdo = digitalmx\MyPDO::instance();
+$pdo = DigitalMx\MyPDO::instance();
 $thumbs = SITE_PATH . '/assets/thumbs';
 $limit = 3;
 

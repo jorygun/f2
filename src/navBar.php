@@ -1,6 +1,6 @@
 <?php
 
-	use digitalmx\MyPDO;
+	use DigitalMx\MyPDO;
 class navBar {
 
 	private $thisMenu;

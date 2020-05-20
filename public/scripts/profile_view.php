@@ -5,10 +5,10 @@
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(2)){exit;}
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	use digitalmx\flames\Member;
-	use digitalmx as u;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+	use DigitalMx\Flames\Member;
+	use DigitalMx as u;
 
 	
 	

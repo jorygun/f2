@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 
 /*
@@ -9,34 +9,30 @@ or called by a ajax.php?ajax=request GET command.
 
 */
 
-
-
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-use digitalmx as u;
-use digitalmx\flames as f;
-use digitalmx\flames\Member;
-use digitalmx\flames\MemberAdmin;
-use digitalmx\flames\Messenger;
-use digitalmx\flames\DocPage;
-#use digitalmx\flames\ActionCodes;
-use digitalmx\flames\BulkMail;
-use digitalmx\flames\StatusReport;
+use DigitalMx as u;
+use DigitalMx\Flames as f;
+use DigitalMx\Flames\Member;
+use DigitalMx\Flames\MemberAdmin;
+use DigitalMx\Flames\Messenger;
+use DigitalMx\Flames\DocPage;
+#use DigitalMx\Flames\ActionCodes;
+use DigitalMx\Flames\BulkMail;
+use DigitalMx\Flames\StatusReport;
 
-use digitalmx\flames\FileDefs;
-use digitalmx\flames\Publish;
-use digitalmx\flames\NewsIndex;
-use digitalmx\MyPDO;
-
-
+use DigitalMx\Flames\FileDefs;
+use DigitalMx\Flames\Publish;
+use DigitalMx\Flames\NewsIndex;
+use DigitalMx\MyPDO;
 
 
+// dependencies
+  $publish = $container['publish'];
+  $member = $container['member'];
 
-  $publish = new Publish();
-  $member = new Member();
- 	
- 	
-  
+
+
 // if request came in from a get, the
 // query string tells you what to do.
 if (!empty($_SERVER['QUERY_STRING'])) {
@@ -46,90 +42,90 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 	$uid = substr($q, 1); #rest of string
 	$page_options = []; # ['ajax','tiny','votes']
 
-	
+
 	#echo "Action: " . $a . BRNL;
-	
+
     switch ($action) {
         case 'V':
             $page_title = "AMD Flames Email Validation";
             break;
          case 'P':
          	$page_title = 'Profile Editor';
-				$page_options=['tiny','ajax']; #ajax, votes, tiny 
+				$page_options=['tiny','ajax']; #ajax, votes, tiny
 			case 'S':
 				$page_title = 'Signup Verification';
 				$page_options=['ajax'];
 				break;
-				
+
         default:
         	$page_title = 'AMD Flames Action Handler';
-           
+
     }
    $page = new DocPage($page_title);
-  
-	echo $page->startHead($page_options); 
+
+	echo $page->startHead($page_options);
  	echo $page ->startBody(0);
- 	
+
  	switch ($action) {
  		case 'V':
- 			if ($r = verifyEmail($uid, $member)) {
- 				list($username,$uid,$uem) = $member->getMemberBasic($uid);
+ 			if ($r = verifyEmail($uid, $container) {
+ 				list($username,$uid,$uem) = $container['member']->getMemberBasic($uid);
 				echo "$username, thanks for verifying your email.";
 			}
 			else {echo "Failed";}
  			break;
  		case 'P':
  			// not used
- 			edit_profile($uid,$madmin,$templates);
+ 			edit_profile($uid,$container['membera'], $container['templates'];
          break;
       case 'S':
       	echo signup_verify($uid);
       	break;
  		default:
  			echo "No Action Requested";
- 
+
  	}
- 		
+
 }
 
 // from ajax, it's a post
 if (! empty ($_POST)) {
 	switch ($_POST['ajax']) {
 		case 'vote':
-			return vote_action($_POST);
+			return vote_action($_POST,$container['voting']);
 		  break;
    	case 'deleteAsset':
-   		echo deleteAsset($_POST['uid']);
+   		echo deleteAsset($_POST['uid'],$container['assets']);
    		break;
    	case 'markReviewed':
-   		echo markReviewed($_POST['uid']);
+   		echo markReviewed($_POST['uid'], $container['assets']);
    		break;
 		case 'bulkmail':
 			return cancel_bulk($_POST['job']);
 		  break;
 	  case 'verifyProfile':
-	  		echo verifyProfile($_POST['uid'],$member);
+	  		echo verifyProfile($_POST['uid'],$container['member']);
 	  		break;
 		case 'sendLogin':
-			echo sendLogin($_POST['uid'], $member);
+			echo sendLogin($_POST['uid'], $container['member']);
 		  break;
 		case 'verifyEmail':
-			echo  verifyEmail($_POST['uid'], $member) ;
-			
+			echo  verifyEmail($_POST['uid'], $container) ;
+
 			break;
 		case 'runStatus':
 			$test = false;
-			echo runStatusReport($_POST['uid'],$test);
+			echo runStatusReport($container, $_POST['uid'],$test);
 			// uid used to transfer the starting date
 			break;
 		case 'indexNews':
 			echo runNewsIndex();
 			break;
-			
+
 		case 'xout':
-			return xoutUser($_POST['uid'], $member);
+			return xoutUser($_POST['uid'], $container['member)'];
 		  break;
-	  
+
 	  case 'copyIndex':
 	  		// copy news index template to new next
 	  		echo copyIndex();
@@ -140,11 +136,11 @@ if (! empty ($_POST)) {
 	  		break;
 
 		case 'getmess':
-		   #echo 'at get mess';
-			echo getmess($_POST['type']);
+		   // retrieves a template from /templates directory
+			echo getTemplate($_POST['type']);
 			break;
 		case 'markContribute':
-			return markContribute($_POST['uid'], $member);
+			return markContribute($_POST['uid'], $container['member']);
 		  break;
 		case 'initNext':
 			echo initNext();
@@ -153,7 +149,7 @@ if (! empty ($_POST)) {
 			echo setNewsTitle($_POST['title']);
 			break;
 		case 'bounceEmail':
-			echo bounceEmail($_POST['uid'], $member);
+			echo bounceEmail($_POST['uid'], $container['member']);
 			break;
 	  case 'test':
 	  		echo  atest();
@@ -167,7 +163,7 @@ if (! empty ($_POST)) {
 	  	case 'restore':
 	  		echo restore_dev();
 	  		break;
-	  		
+
 		default:
 			echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true);
 	}
@@ -178,7 +174,7 @@ function atest($x=''){
 	$ni = new NewsIndex();
 	$ni->append_index('20191225','news_191215');
 	return "adone";
-	
+
 }
 function signup_verify($uid){
 	// veirfy email in signup db
@@ -190,7 +186,7 @@ function signup_verify($uid){
 				"New Signup verify failed for id $uid . No such id in signups." );
 			die ("An error has occured.  Please contact admin@amdflames.org");
 		}
-		
+
 		$sql = "UPDATE `signups` SET status = 'A' WHERE id='$uid'";
 		if ($pdo->query($sql)) {
 			mail('admin@amdflames.org','New Signup Verified',
@@ -199,7 +195,7 @@ function signup_verify($uid){
 		} else {return "Failed";}
 	}
 function edit_profile($uid,$madmin,$templates) {
-	
+
 	$profile_data = $madmin->getProfileData($uid);
    echo  $templates->render('profile-edit', $profile_data);
 	exit;
@@ -207,11 +203,10 @@ function edit_profile($uid,$madmin,$templates) {
 
 
 function verifyProfile($uid,$member) {
-
 	$cdate = $member->verifyProfile($uid);
 	return "Verified $cdate";
 }
-function getmess($type)
+function getTemplate($type)
 {
    // return text message for bulk mail setup script
     $tp_path = REPO_PATH . "/templates/${type}.txt";
@@ -219,10 +214,10 @@ function getmess($type)
     if (!$message = file_get_contents($tp_path) ) {
     	throw new Exception ("File $tp_path does not exist") ;
     }
-    #$subject = strtok($message,"\n"); #first line	
+    #$subject = strtok($message,"\n"); #first line
 	#$text = u\email_std($message);
     list ($subject,$text) = explode("\n",$message,2);
-    
+
     $result['text']= $text;
     $result['subject']=$subject;
    #return "sub: " . $result['subject'] . 'mess: ' . $result['text'] . "\n";
@@ -230,21 +225,21 @@ function getmess($type)
 }
 
 function runNewsIndex() {
-	
+
 	$ni = new NewsIndex();
 	$ni -> rebuildJson();
-	
+
 	$ni -> buildHTML();
 	return "html done";
 }
 
 function copyLatest() {
 	$latest = FileDefs::latest_dir;
-	$latest_arch = trim(file_get_contents(FileDefs::latest_pointer)); 
+	$latest_arch = trim(file_get_contents(FileDefs::latest_pointer));
 	$archive = SITE_PATH . $latest_arch;
 	u\full_copy($latest,$archive);
 	return "Copied latest to $latest_arch";
-	
+
 
 }
 
@@ -256,42 +251,40 @@ function copyIndex() {
 	copy ($index,$nextindex);
 	return "Done";
 }
-	
+
 function initNext()
 {
-   #clears the news_next diretory and copyies the model index into it.
-    $news_dir = SITE_PATH . "/news";
-    $nextnews_dir = $news_dir . '/news_next';
+   // clears the news_next diretory and copyies the model index into it.
+
     try {
-        u\deleteDir($nextnews_dir);
-        mkdir($nextnews_dir);
-        copy("$news_dir/model-index.php", "$nextnews_dir/index.php");
+        u\deleteDir(FileDefs::next_dir);
+        mkdir(FileDefs::next_dir);
+        copy(FileDefs::news_template, FileDefs::next_dir . "/index.php");
     } catch (Exception $e) {
         return "Error: "  . $e->getMessage();
     }
     return "Done.";
 }
-function vote_action($post)
+function vote_action($post,$voting)
 {
    //post interesting/not interesting votes
-    require_once 'Voting.php';
-    $voting = new Voting();
+
     $user_id = $_SESSION['login']['user_id'] ?? '';
     if (empty($user_id)){return  "You are not logged in";}
-    
+
     if (empty($item_id = $post['item_id'])) {
         return "request to post vote without item id";
     }
     $vote = $post['this_vote']??'';
-   #echo "Recording vote  $vote for item $item_id" . BRNL;
-    $new_panel = $voting->tally_vote($item_id, $user_id, $vote);
+    $voting->record_vote($item_id, $user_id, $vote);
+    $new_panel = $voting->getVotePanel($item_id,$user_id);
     echo $new_panel;
 }
 
 function cancel_bulk($job)
 {
    // changes jobid in the bulk mail quque to xx-cancelled.  Should halt running job.
-   
+
 
     $bulkmail = new BulkMail;
     $queue = FileDefs::bulk_queue;
@@ -308,30 +301,29 @@ function cancel_bulk($job)
     echo $bulkmail -> show_bulk_jobs();
 }
 
-function runStatusReport($var) {
+function runStatusReport($container, $var) {
 
 
 	if (empty($var)){return "Error: no date supplied";}
 	$since = date('Y-m-d H:i',strtotime($var));
-	if ($sr = new StatusReport($since) ) {
+	if ($sr = new StatusReport($container, $since) ) {
 		return "Report Run";
 
 	} else {return "Failed";}
 }
 
-function sendLogin($tag, $member)
+function sendLogin($tag, $container)
 {
    //tag may be uid or email
 
-   $login_msg = $member->getLogins($tag);
+   $login_msg = $container['member']->getLogins($tag);
    if (!empty($login_msg)){
-    	$messenger = new Messenger(); 
-		 if ($messenger->sendLogins($tag, $login_msg)) {
+		 if ($container['messenger']->sendLogins($tag, $login_msg)) {
 			  return "Logins sent";
 		 }
 	}
 	return "Nope."; #actually nothing was found
-		
+
 }
 
 function setNewsTitle($title)
@@ -341,17 +333,13 @@ function setNewsTitle($title)
     return "Done";
 }
 
-function verifyEmail($uid, $member)
+function verifyEmail($uid, $container)
 {
 
-	// if (substr($ems,0,1) == 'L'){
-// 		 $messenger = new Messenger(); #true = test
-// 		 $messenger->sendMessages($uid,'not-lost');
-// 		}
-	$ma = new MemberAdmin();
-	$r = $ma->validate_email_with_notice($uid);
-	
-  return "Verified " . $member->verifyEmail($uid) ;
+
+	$r = $container['membera']->validate_email_with_notice($uid);
+
+  return "Verified " . $container['member']->verifyEmail($uid) ;
 }
 
 function markContribute($uid, $member)
@@ -363,22 +351,19 @@ function markContribute($uid, $member)
         echo "Failed";
     }
 }
-function deleteAsset ($aid){
-	$asset=new Assets();
-	$asset->deleteAsset($aid);
+function deleteAsset ($aid,$assets){
+
+	$assets->deleteAsset($aid);
 	return "$aid Deleted";
 }
 
-function markReviewed($aid) {
-	$asset=new Assets();
-	if($asset->updateStatus($aid,'R') ) return "Reviewed";
+function markReviewed($aid,$assets) {
+	if($assets->updateStatus($aid,'R') ) return "Reviewed";
 	return "Failed";
 }
 
 function xoutUser($uid, $member)
 {
-   
-
     if ($member->xoutUser($uid)) {
         echo "User xed out";
     } else {

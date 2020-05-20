@@ -1,24 +1,24 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 //BEGIN START
 	require_once 'init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
 	use f\Definitions as Defs;
-	#use digitalmx\flames\DocPage;
+	#use DigitalMx\Flames\DocPage;
 
 	$page_title = 'Asset Display';
 	$page_options = ['ajax'];
-	
-	
-    $login->checkLogin(1); 
+
+
+    $login->checkLevel(1);
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 
 
-	
+
 echo <<<EOT
    <script language="JavaScript">
 
@@ -27,7 +27,7 @@ function autoResize(id){
     var newwidth;
 
     if(document.getElementById && typeof document.getElementById(id).contentDocument === 'object' ){
-    
+
         newheight = document.getElementById(id).contentDocument.body.scrollHeight;
         newwidth = document.getElementById(id).contentDocument.body.scrollWidth;
         document.getElementById(id).height = (newheight) + "px";
@@ -36,26 +36,26 @@ function autoResize(id){
     else {
     	document.write ("Content of this frame cannot be displayed");
     }
-    
+
 }
 
 function isObject(obj) {
  	var type = typeof obj;
   	return  type === 'object' && !!obj;
-  
+
 }
 </script>
 EOT;
 
  	echo $page ->startBody();
 
-	
+
 //END START
-	
+
 
 
 $this_userid = $_SESSION['login']['user_id'] + 0; #force numeric.
-$ucom = new Comment($this_userid);
+
 if( isset ($_GET['id'])){$item_id = $_GET['id'];}
 elseif ($item_id = $_SERVER['QUERY_STRING']){}
 else {die ("No item requested");}
@@ -76,28 +76,8 @@ else {die ("No item requested");}
 *   commenting_on enables the add comment form.
 */
 
-$on_db = 'assets';
-$on_id = $item_id;
-$single = false;
-$commenting_on = false;
 
 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-	//Post data and close window
-	#print_r ($_POST);
-
-
-      $comment = trim($_POST['comment']);
-
-    $contributor_email = trim($_POST['contributor_email']);
-    $mailto = array('editor@amdflames.org','all',$contributor_email);
-
-    $r = $ucom->addComment($on_db,$on_id,$comment,$single,$mailto);
-
-
-
-}
 
 /*
 	Script to generate the an individual page for an
@@ -130,7 +110,7 @@ $row = $stmt->fetch(\PDO::FETCH_ASSOC);
     $discussion = false;
     $contributor_id = $row['contributor_id'];
     $contributor_email = ($contributor_id)? get_user_data_by_id ($contributor_id)[1] : '';
-   
+
    // display asset
     $hte = array ();
     foreach (array('title','caption','source') as $param)
@@ -147,11 +127,11 @@ $row = $stmt->fetch(\PDO::FETCH_ASSOC);
     	$url = $row['link'];
     	#$url_enc = str_replace('#','%23',$url);
     	$url_enc = myUrlEncode($url);
-    	
+
     	$linkline = "<a href='$url_enc'>$url</a>";
 		$urllinked = "<a href='$url_enc' target='_blank'>$url</a>";
     }
-    
+
 
     $type = $row['type'];
     $mimetype = $row['mime'];
@@ -192,9 +172,9 @@ EOT;
  elseif ($type == 'Web Page' || $type == 'Document' ){
 
     $asset_display= <<<EOT
-    <iframe src='$url_enc' id='iframe1' 
+    <iframe src='$url_enc' id='iframe1'
     onload='javascript:(function(o){o.style.height=o.contentWindow.document.body.scrollHeight+"px";}(this));' style="height:800px;width:100%;border:none;">
-    
+
      Content is displayed in an iframe, which your browser is not showing.  Try this:
      <a href="$url">$url</a>.
      </iframe>
@@ -246,9 +226,9 @@ function myUrlEncode($string) {
 
         <h3><?=$hte['title']?></h3>
 <p>(Note: display size on this page is limited to 1024px wide. Use URL below to retrieve raw file.)<br>
-	
+
        Link to source:  <?=$urllinked?><br>
-   
+
         (Note: some source files cannot be displayed in the iframe below.  Use source link above to view.)
         </p>
 
@@ -263,7 +243,7 @@ function myUrlEncode($string) {
         Source: <?=$credit?>  <br>
         First use: <?=$first_in ?>(<?=$first_date?>)<br>
         Size: <?=$row['sizekb']?> kB; <?=$row['height']?> h x <?=$row['width']?> w<br>
-			Raw url: <?=$url?><br> 
+			Raw url: <?=$url?><br>
 			encoded url:<?=$url_enc?><br>
         </td></tr></table>
 

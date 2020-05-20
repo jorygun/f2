@@ -1,15 +1,15 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 #ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	use digitalmx\flames\FileDefs;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+	use DigitalMx\Flames\FileDefs;
 
 
 

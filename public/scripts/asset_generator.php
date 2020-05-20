@@ -1,11 +1,11 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	$login->checkLogin(5);
 
-use digitalmx as u;
+use DigitalMx as u;
 
 //END START
 

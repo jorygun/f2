@@ -11,7 +11,7 @@
 //END START
 
 
-	use digitalmx\MyPDO;
+	use DigitalMx\MyPDO;
 require_once "MyPDO.class.php" ;
 $pdo = MyPDO::instance();
 $itemdb = 'spec_items';

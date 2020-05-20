@@ -1,11 +1,11 @@
 <?php
 /* contains a bunch of definitions and scripts used by multiple asset
     related scripts.
-    
+
     Enter with an array of asset data, with id=0 for new.
     asset source can be ext. url or local url or uploaded file.
     If uploaded file, file is saved at /assets/files
-    
+
     Every asset has a thumb file at /assets/thumbs/id.jpg
     If no thumbsource specified, thumb is vreated from asset.
     If local thumbsource thumb created from that
@@ -14,17 +14,17 @@
    If file upload thumbsource, that file is saved to /assets/thumb_urls
      and thumb createdd from that. (and thumb source changed.)
 */
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\MyPDO;
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\FileDefs;
-	use digitalmx\flames\Assets;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\MyPDO;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\FileDefs;
+	use DigitalMx\Flames\Assets;
 
 
-class AssetAdmin 
+class AssetAdmin
 {
 
 
@@ -33,36 +33,36 @@ class AssetAdmin
 	private $assets;
 	private $member;
 	private $mimeinfo;
-	
-	
-	
-	
+
+
+
+
 	private static $upload_types = array(
 		'uasset','uthumb','uuploads','uftp');
-		
-	public function __construct() {
-		$this->pdo =  MyPDO::instance();
+
+	public function __construct($container) {
+		$this->pdo =  $container['pdo'];
 		$this->archive_tag_list_sql =  Defs::getArchivalTagList();
-		$this->assets = new Assets();
-		$this->member = new Member();
+		$this->assets = $container['assets'];
+		$this->member = $container['member'];
 		$this->mimeinfo = new \finfo(FILEINFO_MIME_TYPE);
-		
-		
-		
+
+
+
 
 
 	}
 	// takes asset data array, prepares thumbs needed,
 	// and sends to Assets to store (and add computed fields).
 	// returns id of asset.
-	
+
 	public function postAssetFromForm($post) {
 	// prepare data and then send to asset to post
-	
+
 	#u\echor($post,'post data in');
 
-	
-	
+
+
 		if (! isset ($post['id'])){
 				throw new Exception ("attempt to post asset with no id set");
 		}
@@ -80,21 +80,21 @@ class AssetAdmin
 				$adata ['astatus'] = 'N';
 		}
 		// for existing items, status is not updated when item is saved
-		
+
 		// move the post data needed from thep ost to adata.
 		foreach ($this->assets::$editable_fields as $f) {
 			$adata[$f] = $post[$f]??'';
 		}
 		$adata['id'] = $id;
-		
-		#echo "pre c ookup: " . $post['contributor'] . ' ' . $post['contributor_id'] . BRNL; 
-		
+
+		#echo "pre c ookup: " . $post['contributor'] . ' ' . $post['contributor_id'] . BRNL;
+
 		// set contributor id if one not set yet and
 		// valid member name is in the contributo name field
 		if (!empty($post['contributor_id']) && $id > 0 ){
 			$adata['contributor_id'] = $post['contributor_id'];
 		} elseif (!empty ($post['contributor'] )) {
-			list ($adata['contributor'], $adata['contributor_id'] ) 
+			list ($adata['contributor'], $adata['contributor_id'] )
 				= $this->member->getMemberId($post['contributor']) ;
 				if (empty($adata['contributor'])){
 					u\echoalert("No contributor found");
@@ -104,38 +104,38 @@ class AssetAdmin
 		u\echoalert("No contributor found");
 			$adata['contributor_id'] = 0;
 		}
-		
+
 	#echo "after c ookup: " . $adata['contributor'] . ' ' . $adata['contributor_id'] . BRNL; exit;
-	
+
 		$adata['vintage'] = trim($adata['vintage']);
 		if (empty($adata['vintage'])){
 			$adata['vintage'] = date('Y');
 		}
-	
+
 		/* new thumbs is list of thumb types needed - from
 			checkboxes on the asset form or from replacing
 			existing thumbs because sources have changed.
 		*/
-		$new_thumbs = []; 
+		$new_thumbs = [];
 		foreach (Defs::getThumbTypes()  as $ttype) {
-	
+
 			if (!empty($post[$ttype])){
 				$new_thumbs[] = $ttype;
 				#echo "New thumb requested: $ttype. ";
 			}
 		}
-		
+
 	// first look for any relocates from file uploads
 	// move file into assets files or thubm-sources and
 	// change source def to match.
 	#u\echor($_FILES,'FILES');
-	
+
 		foreach (self::$upload_types as $type){
 			if (isset($_FILES[$type]) && !empty ($_FILES[$type]['name'] )){
 				#echo "Relocating $type... " ;
 				$url = $this->relocateUpload($id,$type);
 				#echo "to: $url" . BRNL;
-				
+
 				if ($type == 'uthumb'){
 					$adata['thumb_url'] = $url;
 				} else {
@@ -146,25 +146,25 @@ class AssetAdmin
 				$adata['status'] = 'N';
 			}
 		}
-		
+
 		if (empty($adata['asset_url'])) {
 			die ("Asset requires a source");
 		}
-		
-		
-		
+
+
+
 		if (!empty($post['tags']) && is_array ($post['tags'])){
 			// convert to string
 			$adata['tags'] =  charListToString($post['tags']) ;
 		}
-		
+
 		 $adata['needs'] = $this->checkThumbNeeds($adata,$new_thumbs);
-	
+
 	#exit;
-	
+
 		$this->assets->saveAsset($adata);
-		
-		
+
+
 		return $id;
 
 	}
@@ -176,7 +176,7 @@ class AssetAdmin
 		}
 		return false;
 	}
-	
+
 	public function getAssetData($id) {
 		if ($id == 0){
    		// new asset
@@ -187,16 +187,16 @@ class AssetAdmin
    		$adata['date_entered'] = date('M d, Y');
    		$adata['first_use'] = 'Never';
    		$adata['vintage'] = date('Y');
-   		
+
    		return $adata;
    	}
-   	
+
 		$adata = $this->assets->getAssetDataById($id);
-		
+
 		// set tic character for each thumb that currently exixts.
 		$adata['existing_thumbs'] = $this->getExistingThumbs($id);
 		$adata['status'] = $adata['astatus'];
-		
+
 		if (!empty($adata['contributor_id'] ) ){
 			$adata['contributor'] = $this->member->getMemberid($adata['contributor_id'])[0];
    	}
@@ -209,50 +209,50 @@ class AssetAdmin
    		$fin = $adata['first_use_in'];
    	}
    	if ($fud){
-   		$adata['first_use'] = 
+   		$adata['first_use'] =
    		"On " . date('d M Y',strtotime($fud) )
    		. " In " . "<a href='" . $fin . "'>" . $fin . "</a>";
    	}
-   	
+
 		return $adata;
 	}
-	
+
 	 public function getThumbTics($id) {
    /* returns array of all thumb types and check mark if thumb exists */
 		 $thumb_tics = [];
 		 $thumb_list = [];
 		 if ($id > 0) $thumb_list = $this->getExistingThumbs($id);
-		 
+
 		foreach(array_keys(Defs::$thumb_width) as $ttype) {
 				  $thumb_tics[$ttype] = (in_array($ttype,$thumb_list))?'&radic;':'';
 		}
 		return $thumb_tics;
    }
-                
+
 	public function getExistingThumbs ($id) {
 		// returns list of thumb types that exist
 		$thumb = "${id}.jpg";
 		$tloc = SITE_PATH . "/assets";
 		$ttypes = [];
-		foreach (Defs::getThumbTypes() as $ttype){	
+		foreach (Defs::getThumbTypes() as $ttype){
 			if (file_exists($tloc . '/' . $ttype . '/' . $thumb)){
-				$ttypes[] = $ttype; 
+				$ttypes[] = $ttype;
 			}
 		}
 		return $ttypes;
 	}
-	
+
 	private function checkThumbNeeds($adata,$new_thumbs) {
 		// set which thumbs are needed, by checkbox or by changed url
 		$id = $adata['id'];
 		$needs = array ();
 		$result = $this->getAssetData($id);
-		
+
 		$thumbs = $result['existing_thumbs']; #keys where value is ''
-		
+
 		// if either url has been changed, all the thumbs need to be regneratied.
 		if ($result['asset_url'] != $adata['asset_url']
-			|| $result['thumb_url'] != $adata['thumb_url'] 
+			|| $result['thumb_url'] != $adata['thumb_url']
 			|| in_array('all',$new_thumbs) ){
 			$needs = $thumbs; #all existing thumbs
 			$new_thumbs = array_diff ($new_thumbs,['all']) ;
@@ -261,36 +261,36 @@ class AssetAdmin
 		// add in any thumbs were checked on the form
 		$needs = array_unique(array_merge($needs,$new_thumbs));
 		#u\echor($needs,'needs after check needs'); exit;
-		
-		
+
+
 		return $needs;
 	}
-	
+
 	public function getAssetBlock($aid,$style,$show_caption=false) {
 		/* returns a div with the asset and title in it.
 		uses asset thumb or gallery size
 		shows thumb linked to asset
 		below thumb is title in bold and optional in italic
-		
+
 		style left = float left, fixed width blocks to line up
 			in a column.
 		style top = float left, fixed height blocks to line up in rows
 		style center = use gallery size thumb, no float.
-		
+
 		*/
 		if (! $adata = $this->getAssetData($aid) ) {
 			return "Asset $id not found";
 		}
 		$aurl = $adata['asset_url'];
 		$atitle = $adata['title'];
-		$acapt = ($show_caption)? 
+		$acapt = ($show_caption)?
 			"<div class='acaption'>${adata['caption']}</div>" : '';
 
 		$attr = $adata['source'];
 		$attr_block = (!empty($attr))? "<div class='asource'>-- $attr</div>" : '';
-			
-		
-		
+
+
+
 		switch($style) {
 			case 'thumb':
 				$block = <<<EOT
@@ -325,36 +325,36 @@ EOT;
 				</div>
 EOT;
 				break;
-			
-			default: 
+
+			default:
 				$block = 'Unknown asset display style';
 		}
-					
+
 		return $block;
-		
-	
-	
+
+
+
 	}
-	
-	
+
+
 	public function getAssetLinked($id,$nocache=false) {
 	/* returns the asset thumbnail, linked to the asset source */
 		$adata = $this->assets->getAssetSummaryById($id);
 		return $this->returnAssetLinked($adata,$nocache);
 	}
-	
+
 	public function returnAssetLinked ($adata,$nocache=false) {
 		$status = $adata['astatus'];
 		$id = $adata['id'];
 		if ($adata['astatus'] == 'X') {return "Asset Deleted";}
 		elseif ($adata['astatus'] == 'T') {return "Asset Temporary";}
-		
+
 		$link = $adata['asset_url'];
 		if (empty($link)){return 'No asset url';}
 		if (! u\url_exists($link)){
 			return "Linked asset doesn't exist";
 		}
-		
+
 		$thumb = "/assets/thumbs/${id}.jpg";
 		if (!file_exists(SITE_PATH . $thumb)){
 			return "No thumbnail for asset";
@@ -367,13 +367,13 @@ EOT;
 		<a href='$link' target="_blank">
 		<img src='$thumb'>
 		</a>
-EOF;	
+EOF;
 #echo "RESULT <br>$result"; exit;
 
 		return $result;
-	
+
 	}
-	
+
 
 	private function relocateUpload ($id,$type){
 		/**
@@ -381,25 +381,25 @@ EOF;
 			place and rturns the url.  Used for uploads and also
 			for other places where asset exists in one place and needs
 			to bre moved.
-			
+
 			@utype is uasset,uthumb,uftp, or uupload
 			type refers to an entry in _FILES array which has file location,
 			original name.  type also gets location info from
 			the Files object.
-			
+
 			@id is id this asset will have; may be used as file name.
 			@returns url to relocated file
-		
+
 	 		  Need: $_FILES[type]['error'] UPLOAD_ERR_OK.
 		   Need: $_FILES[type]['tmp_name'] location of file
 		     Need: $_FILES[type]['name'] orig file name
-		     
-		     
+
+
 	**/
 		if (! is_integer($id) && ! $id > 0) {
 			throw new Exception ("Calling relocate Upload without an id");
 		}
-	
+
 		if (! $this->checkUploads($type)) {exit;}
 		$orig_path = $_FILES[$type]['tmp_name'];
 		$orig_mime = $this->mimeinfo->file($orig_path) ;
@@ -409,7 +409,7 @@ EOF;
 		$new_loc = ($type == 'uthumb')? '/assets/thumb_sources/' : '/assets/files/' ;
 		$new_url = $new_loc . $id . '.' . $orig_ext;
 		$new_path = SITE_PATH . $new_url;
-		
+
 		#echo "Now moving $orig_path to $new_path" . BRNL;
 		rename ($orig_path,$new_path);
 		chmod ($new_path,0644);
@@ -419,19 +419,19 @@ EOF;
 		return $new_url;
 	}
 
-	
+
 	private function checkUploads ($utype){
 		// checks for upload errors, file exits,
 		// returns the original name of the file.
-	
+
 		 // Need: $_FILES[$utype]['error'] UPLOAD_ERR_OK.
 		  // Need: $_FILES[$utype]['tmp_name'] location of file
 		   // Need: $_FILES[$utype]['name'] orig file name
-		   
+
 		if (! in_array($utype,self::$upload_types)){
 			throw new \RuntimeException ('invalid upload type');
 		}
-		   
+
 		 if (empty($_FILES[$utype] )){
 		 	throw new \RuntimeException('No file of type $utype found in _FILES.');
 		 }
@@ -468,7 +468,7 @@ EOF;
 		 } elseif ($fmime != $tmime){
 		 	echo "Warning: file $original extension does not match mime type $fmime" . BRNL;
 		 }
-		 
+
 		 return true;
 	}
 
@@ -477,7 +477,7 @@ EOF;
 // 			// returns url to thumbnail for a youtube video.
 // 			// returns false if not a youtube video
 // 			echo "looking for yt match to $url" . BRNL;
-// 					 $pattern = 
+// 					 $pattern =
 // 					'%#match any youtube url
 // 						 (?:https?://)?  # Optional scheme. Either http or https
 // 						 (?:www\.)?      # Optional www subdomain
@@ -488,12 +488,12 @@ EOF;
 // 						 (?:          # Group path alternatives
 // 							  embed/     # Either /embed/
 // 							| v/         # or /v/
-// 							| watch\?v=  # or /watch\?v=			
+// 							| watch\?v=  # or /watch\?v=
 // 						 ) ?            # or nothing# End path alternatives.
 // 											 # End host alternatives.
 // 						 ([\w-]+)  # Allow 10-12 for 11 char youtube id.
 // 						 %x'
-// 						 ;	          
+// 						 ;
 // 					$result = preg_match($pattern, $url, $matches);
 // 					if (array_key_exists(1,$matches)){
 // 						$vid = $matches[1] ;

@@ -2,7 +2,7 @@
 // script to copy model news to news_next without doing anything else.
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	use digitalmx as u;
+	use DigitalMx as u;
 //END START
 ?>
 

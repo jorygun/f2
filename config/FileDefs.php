@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 class FileDefs {
 // directories

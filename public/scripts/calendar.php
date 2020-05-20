@@ -3,7 +3,7 @@
 ini_set('error_reporting', -1);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
-	use digitalmx\MyPDO;
+	use DigitalMx\MyPDO;
 // script reads the alendar file and produces two outputs:
 // an html table of events, and a plain text list of event highlights.
 // If run with parameter u (calendar.php?u=1) then lets you add new items.

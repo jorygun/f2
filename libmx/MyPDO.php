@@ -1,53 +1,68 @@
-<?php 
-namespace digitalmx;
-// same as MyPDO.class.php except this one in digitalmx ns.
+<?php
+namespace DigitalMx;
+// same as MyPDO.class.php except this one in DigitalMx ns.
 
 use \Exception as Exception;
 
-/* singleton instancts of PDO.  Uses constants for server config,
-	or uses <repo>/config/config.ini  if not already set.
+/* singleton instance of PDO.
+Uses DB_INI constant for path to  db params,
+
 */
 
 class MyPDO
 {
-	
-	
-	protected  $db_ini;
+
+
+
     protected static $instance;
     protected $pdo;
+    protected static $db_ini_path = DB_INI; #constant set in init
+	 protected static $repo = REPO; #from init or cron-ini
+	 protected static $platform = PLATFORM;
+
 
     protected function __construct() {
-    $this->db_ini = CONFIG_INI; #constant set in init
-    
+
+
         $opt  = array(
             \PDO::ATTR_ERRMODE            => \PDO::ERRMODE_EXCEPTION,
             \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC,
             \PDO::ATTR_EMULATE_PREPARES   => FALSE,
         );
-        
-         if (!	$dba = parse_ini_file($this->db_ini,true) ){
-        	throw new Exception ("Unable to parse " . $this->db_in);
+        if (empty(self::$db_ini_path)) {
+        		throw new Exception ("No db_ini_path defined");
+        	}
+        	if (empty(self::$repo)) {
+        		throw new Exception ("No REPO defined");
+        	}
+		if (empty(self::$platform)) {
+        		throw new Exception ("No PLATFORM defined");
+        	}
+
+         if (!	$dba = parse_ini_file(self::$db_ini_path,true) ){
+        		throw new Exception ("Unable to parse db ini " . DB_INI);
         }
-     		$mode = 'dev';
-     		$platform = $this->getPlatform();
-     		$repo = REPO; #from init or cron-ini
-        	if (in_array ($repo,['live','beta'])) {
+
+
+        	if (in_array (self::$repo,['live','beta'])) {
         		$mode='production';
-        	} 
-        	
-        	$dbname = $platform . '-' . $mode ;
-        
+        	} else {
+        		$mode = 'dev';
+        	}
+
+        	$dbname = self::$platform . '-' . $mode ;
+
         	$dbvars = $dba[$dbname];
         	if (empty($dbvars)){
-        		throw new Exception ("No db vars for $dbname");
+        		throw new Exception ("No db vars defined for db $dbname");
         	}
       	#print_r($dbvars);
-      	
-        $dsn = 
+
+        $dsn =
         	'mysql:host=' . $dbvars['DB_SERVER']
-        	. ';dbname=' . $dbvars ['DB_NAME'] 
-        	.';charset=' . $dbvars ['DB_CHAR'];
-        	
+        	. ';dbname=' . $dbvars ['DB_NAME']
+        	. ';charset=' . $dbvars ['DB_CHAR'];
+
         $this->pdo = new \PDO($dsn, $dbvars ['DB_USER'], $dbvars ['DB_PASSWORD'], $opt);
 
 
@@ -62,26 +77,8 @@ class MyPDO
         }
         return self::$instance;
     }
-	private function getPlatform(){
-	// using PWD because it seems to alwasy work, even in cron
-		$sig = $_SERVER['DOCUMENT_ROOT'];
-		$sig2 = getenv('PWD');
-		if (
-			stristr ($sig,'usr/home/digitalm') !== false 
-			|| stristr ($sig2,'usr/home/digitalm') !== false 
-			) {	
-				$platform = 'pair';
-		} elseif (
-			stristr ($sig,'Users/john') !== false 
-			|| stristr ($sig2,'Users/john') !== false 
-			) {	
-				$platform = 'ayebook';
-		} else {
-				throw new Exception( "MyPDO cannot determine platform from ROOT '$sig' or PWD '$sig2'");
-		}
-		return $platform;
-	}
-	
+
+
     // a proxy to native PDO methods
     public function __call($method, $args)
     {
@@ -89,14 +86,5 @@ class MyPDO
     }
 
     // a helper function to run prepared statements smoothly
-    public function run($sql, $args = [])
-    {
-        if (!$args)
-        {
-             return $this->query($sql);
-        }
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute($args);
-        return $stmt;
-    }
+
 }

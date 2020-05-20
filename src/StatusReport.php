@@ -1,23 +1,23 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	
-	use digitalmx\flames\FileDefs;
-    use digitalmx\flames\Member;
-    
-    
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+
+	use DigitalMx\Flames\FileDefs;
+    use DigitalMx\Flames\Member;
+
+
 /**
 	Report to generate list of new members, updated emails, etc.
-	to tag onto end of newsletter.  Also produces text file for use 
+	to tag onto end of newsletter.  Also produces text file for use
 	in weekly emal.
-	
+
 **/
 
 ##########################
@@ -27,7 +27,7 @@ class StatusReport {
 	private $namelist = array();
 	private $lostlist = array();
 	private $sadlist = array();
-	
+
 	private $member;
 
 	private static 	$type_titles = array(
@@ -41,53 +41,53 @@ class StatusReport {
 
 		);
 
-	
+
 	private $since; // start date in Y-m-d format
-	
-	
-	
-	public function __construct($since,$test=false) {
+
+
+
+	public function __construct($container,$since,$test=false) {
 		// if (! u\validateDate($since )){
 // 			throw new Exception ("$since is not a valid sql date");
 // 		}
 		$this->since = (string)$since; #is UTC timestamp
 		$this->test = $test;
-		
-		$this->member = new Member();
-		$this->member_admin = new MemberAdmin();
-		
+
+		$this->member = $container['member'];
+		$this->member_admin = $container['membera:']
+
 		$report = $this->createReport($this->since);
 		file_put_contents(FileDefs::status_report,$report);
-		
+
 		$profile_report = $this->report_profiles($this->since);
 		$directory = SITE_PATH . '/news/next';
 		$section = "profile_updates.html";
 		file_put_contents("$directory/$section",$profile_report);
-		
+
 		$name_report  = $this->createNameReport();
 		file_put_contents(FileDefs::status_tease,$name_report);
-		
-		
-		
-		
-		
+
+
+
+
+
 		#echo "Saving run time to " . FileDefs::rtime_file . BRNL;
 		file_put_contents(FileDefs::rtime_file,time());
-	
+
 	}
-	
-	
-	
+
+
+
 	private function createReport ($since) {
 		$report = "<div class='inner'><p>Member Status Report " . date('d M Y') . "<br />";
 		$report .= "Changes since $since.</p>";
     	$since = (string)$since;
-    	
+
 		$report .= $this->report_members();
    $test = true;
 		$list= $this->member->getNewMembers($since,$this->test);
    	$report .= $this->report_changes($list,'new');
-   	
+
 		$list = $this->member->getUpdatedEmails($since,$this->test);
 #    u\echor ($list, 'email updates');
 		$report .= $this->report_changes($list,'email');
@@ -96,7 +96,7 @@ class StatusReport {
 #    u\echor ($list, 'email updates');
 #		$report .= $this->report_changes($list,'profile');
 
-		
+
 		$list = $this->member->getDeceased($since,$this->test);
 		$report .= $this->report_changes($list,'deceased');
 
@@ -105,17 +105,17 @@ class StatusReport {
 
 		$list = $this->member->getOldLost(8);
 		$report .= $this->report_changes($list,'long lost');
-	
+
 		return $report;
 	}
-	
+
 	private function report_members () {
 	$counts =  $this->member->getMemberCounts();
- return "<h3>Membership</h3><p>Active Members: ${counts['active']}, plus ${counts['lost']} lost contact. 
+ return "<h3>Membership</h3><p>Active Members: ${counts['active']}, plus ${counts['lost']} lost contact.
     Total ${counts['total']}. </p>";
     }
-    
-    
+
+
     private function report_profiles ($since) {
     	/* builds a story file from updated profiles */
     	// get list of user_ids of updated profiles
@@ -124,10 +124,10 @@ class StatusReport {
     	echo "$count profile updates" . BRNL;
     	if (empty ($list)){return;}
     	list ($titletext,$subtitle) = explode ('|',self::$type_titles['profile']);
-    	
+
     	// now create a story fle to drop into newx/next
     	$story = "";
-    	
+
     	foreach ($list as $profile){
     		$row = $this->member_admin->getProfileData($profile['user_id']);
     		$story.= <<<EOT
@@ -140,7 +140,7 @@ EOT;
 			$story .= "<br /><i>${row['user_greet']}</i>";
 		}
 			$story .= "</span></p>\n";
-		
+
 		$story .= "
 		</div>
 		<div class='content'>
@@ -151,27 +151,27 @@ EOT;
 				<div class='subarticle'>${row['user_about']}</div>";
 		}
 		if (! empty ($row['user_interests']) ){
-			$story .= "<p class='subhead'>Interests:</p> 
+			$story .= "<p class='subhead'>Interests:</p>
 			<div class='subarticle'>${row['user_interests']}</div>";
 		}
 		if (! empty ($row['user_memories']) ){
-			$story .= "<p class='subhead'>Memories:</p> 
+			$story .= "<p class='subhead'>Memories:</p>
 			<div class='subarticle'>${row['user_memories']}</div>";
 		}
 		$story .= <<<EOT
 	</div></div>
-	
+
 	</div>
 EOT;
 	$this->namelist[] = $row['username'];
 		}
-		
+
 		return $story;
-		
-		
+
+
     }
-    
-    
+
+
 	private function report_changes ($result,$type){
 	 // print info on updated users, given query result and type of report
 	 // result is list of members+data supplied from members class
@@ -181,7 +181,7 @@ EOT;
 		$num_rows_display = ($num_rows == 0)? 'No ' : $num_rows;
 
 		list ($titletext,$subtitle) = explode ('|',self::$type_titles[$type]);
-		
+
 		$title = "$num_rows_display " . $titletext ;
 		if ($type == 'deceased' && $num_rows_display == 0){$title .= "<small>(whew)</small>";}
 
@@ -200,14 +200,14 @@ EOT;
 
 					$amd = $row['at_amd'] ;
 					$current = $row['user_current'];
-				
+
 
 					$location = $row['user_from'];
 					$id = $row['user_id'];
 					$greeting = $row['user_greet'];
-				
+
 					$joined = $row['join_date'];
-					
+
 					$contact = $row['email_public'];
 
 					$profile_year = date('Y',strtotime($row['profile_date'])) ?? 'none';
@@ -235,7 +235,7 @@ EOT;
 							$note='';
 							$this->namelist[] = $name;
 							break;
-						
+
 						default:
 							$note = '';
 					}
@@ -254,13 +254,13 @@ EOT;
 							  <td class='current' colspan='2'>$current in $location</td></tr>\n
 							   <tr class='atamd'><td class='tright'>At AMD: </td><td colspan='2'>$amd</td></tr>
 							   <tr><td colspan='3'>&nbsp;</td></tr>\n";
-							   
-							 
+
+
 								}
-						
+
 							}
 						 }
-					
+
 					$report .= "\n\n";
 
 				 #end while
@@ -270,7 +270,7 @@ EOT;
 			$report .= "\n";
 		return $report;
 	}
-	
+
 	public function createNameReport(){
 		#sort and make uniuqe
 		$name_report = '';
@@ -291,7 +291,7 @@ EOT;
 			}
 			$name_report = rtrim(rtrim($name_report),',') . "\n\n";
 		}
-		
+
 		$list = array_unique($this->sadlist);
 		if (!empty($list)) {
 			sort($list);
@@ -309,7 +309,7 @@ EOT;
 			}
 			$name_report = rtrim(rtrim($name_report),',') . "\n\n";
 		}
-		
+
 		$list = array_unique($this->lostlist);
 		if (!empty($list)) {
 			sort($list);
@@ -329,9 +329,9 @@ to this email)
 			}
 			$name_report = rtrim(rtrim($name_report),',') . "\n\n";
 		}
-		
+
 		return $name_report;
 	}
-		
-	
+
+
 }

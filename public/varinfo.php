@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 $verbose = false; $test = false;
 
@@ -21,19 +21,19 @@ $initial_include = get_include_path();
 $init_file = $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 require $init_file;
 
-use digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
-use digitalmx\flames as f;
+use DigitalMx\Flames\Definitions as Defs;
+use DigitalMx as u;
+use DigitalMx\Flames as f;
 
-use digitalmx\flames\Login;
-use digitalmx\flames\Menu;
-use digitalmx\flames\DocPage;
-use digitalmx\flames\Member;
+use DigitalMx\Flames\Login;
+use DigitalMx\Flames\Menu;
+use DigitalMx\Flames\DocPage;
+use DigitalMx\Flames\Member;
 
 
 
 $page_title = "Varinfo  ";
-$page_options = []; #ajax, votes, tiny 
+$page_options = []; #ajax, votes, tiny
 
 if ($login->checkLogin(0)){
 	$page = new DocPage($page_title);
@@ -48,7 +48,7 @@ if ($login->checkLogin(0)){
 ###33#####
 function echo_red ($t) {
 	echo "<p class='red'>$t</p>";
-	
+
 }
 
 
@@ -69,13 +69,14 @@ echo "<br>";
 echo "<b>sitedir:</b> " . $sitedir . "<br>\n";
 echo "<b>projdir:</b> " . $projdir . "<br>";
 echo "<b>repo:</b> " . $reponame . "<br>";
+echo "<b>Site:</b> " . SITE . "<br>";
 echo "<br>\n";
 
 if (!empty($ldata = $_SESSION['login'])){
 	echo "Logged in as:<br>";
 	echo $_SESSION['login']['username'] . BRNL;
 	echo $_SESSION['login']['seclevel'] . BRNL;
-	
+
 } else {
 	echo "No logged in User" . BRNL;
 }
@@ -87,7 +88,7 @@ $server_changes = array();
 
 if ($verbose) {
 	u\echor ($_SESSION,'Session file at after page setup');
-	
+
 	foreach ($_SERVER as $k=>$v){
 		if (!isset($_ENV[$k])){
 			$server_adds[$k] = $v;
@@ -121,14 +122,14 @@ if ($verbose) {
 echo "<br /><hr><br />";
 
 #############  EXPERIMENT BELOW HERE
-u\echor ($member->getMemberCounts(),"Members");
+u\echor ($container['member']->getMemberBasic('Ben Anixter'));
 exit;
 
 echo "Last Newsletter Date" . BRNL;
 	$last = f\getLastPub();
 	echo date('d M Y',$last);
 	exit;
-	
+
 
 
 try {
@@ -155,8 +156,8 @@ try {
 
 
 // $member = new Member();
-// 
-// $membertag = 'john@digitalmx.com';
+//
+// $membertag = 'john@DigitalMx.com';
 // $md = $member->getMemberList($membertag);
 // u\echor ($md,'Member Data for ' . $membertag);
 
@@ -181,7 +182,7 @@ try {
 // $nav = new Menu($md);
 // $navbar = $nav->getMenuBar();
 // echo $navbar;
-// 
+//
 
 
 

@@ -1,15 +1,15 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 #this script reproduces a single article with the flames comments attached.
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	if (f2_security_below(1)){exit;}
-	use digitalmx\MyPDO;
-	use digitalmx\flames as f;
-	use digitalmx as u;
-	use digitalmx\flames\Definitions as Defs;
+	use DigitalMx\MyPDO;
+	use DigitalMx\Flames as f;
+	use DigitalMx as u;
+	use DigitalMx\Flames\Definitions as Defs;
 	
 //END START
 
@@ -218,9 +218,6 @@ if ($commenting_on){
 
 }
 
-// $rarray = $ucom->getCommentsByAge('14 day');
-// echo "<p>Recent Comments</p>";
-// echo display_comments($rarray,true,8);
 
 ?>
 

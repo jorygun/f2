@@ -1,14 +1,14 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
-use digitalmx\flames\Definitions as Defs;
-use digitalmx as u;
+use DigitalMx\Flames\Definitions as Defs;
+use DigitalMx as u;
 
 /**
 	callwith php recent.php [-t] [--repo <repo> ]
 	uses repo for where to put the result file
 	displays output if -t on
-	
+
     * This script retrieves
     * the title and link for the most recently published
     * articles, and reports on number of comments and vote status.
@@ -17,16 +17,19 @@ use digitalmx as u;
     * /news_lastest directory called 'recent_articles.html'.
     * This file is included in the newsletter index file.
     *
-    *This script is run by cron ... 
-	
+    *This script is run by cron ...
 
- 
+
+
 */
 
 /*  STARTUP */
 
 $script = basename(__FILE__);
-if (! @defined ('INIT')) { include './cron-ini.php';}
+$repoloc = dirname(__FILE__,2);
+require_once "$repoloc/public/init.php";
+// $init set $pdo as well as container
+
 if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
 
 /**************   MAIN      ************/
@@ -53,7 +56,7 @@ else {file_put_contents($recent_articles, $recent_report );}
 ###################################
 
 function prepare_recent_report ( $pdo, $from='', $to='', $max_articles = 30) {
-	
+
     /*
     $max_articles = #maximum number of articles to show. 0 = no limit
 
@@ -64,9 +67,9 @@ function prepare_recent_report ( $pdo, $from='', $to='', $max_articles = 30) {
 
 	// get article links into an array
 	$link_counts = count_links($pdo);
-	
+
 #	u\echor ($link_counts, 'link counts');
-	
+
 
     $limit = ($max_articles>0)? " LIMIT $max_articles" : '';
     list ($to_date,$from_date) =  convert_dates($to,$from);
@@ -76,11 +79,11 @@ function prepare_recent_report ( $pdo, $from='', $to='', $max_articles = 30) {
 	    FROM news_items n
         LEFT JOIN  (
             SELECT item_id, on_db, count(*) as comments
-            FROM `comments` 
-            GROUP BY item_id 
+            FROM `comments`
+            GROUP BY item_id
             ) c ON c.item_id = n.id AND c.on_db = 'news_items'
         LEFT JOIN (
-            SELECT news_fk, sum(vote_rank) as net_votes 
+            SELECT news_fk, sum(vote_rank) as net_votes
             FROM `votes`
             GROUP BY news_fk
             ) v ON v.news_fk = n.id
@@ -95,12 +98,12 @@ function prepare_recent_report ( $pdo, $from='', $to='', $max_articles = 30) {
 
    # echo $sql . BRNL;
 	#echo "$from_date,$to_date" . BRNL;
-	
-	
+
+
     $pst = $pdo->query ($sql);
 
     $rowc = $pst -> rowCount();
-	
+
     # echo  "$rowc articles found.\n";
      $report = "<div style='margin-left:2em;float:left'>";
     $report .=  "<h4>Recent Article Activity</h4>";
@@ -119,7 +122,7 @@ function prepare_recent_report ( $pdo, $from='', $to='', $max_articles = 30) {
         $row['title'] .
         "</a>";
 		$contributor = (strcmp($row['contributor'] ,'FLAMES editor') == 0)? '' : $row['contributor'];
-		
+
          $ccount = $row['comments'];
         $votes = ($row['take_votes'])? $row['net_votes'] : '-';
         $dt = \DateTime::createfromformat('Y-m-d',$row['date_published']);
@@ -164,7 +167,7 @@ function str_to_ts($str,$interval=0)
 
 function count_links($pdo) {
 	#retrieves clicks on urls on articles
-	$sql = "Select article_id, count from `links` 
+	$sql = "Select article_id, count from `links`
 		where last > now() - interval 4 week";
 	$result = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	// result should be array of id, count
@@ -172,7 +175,7 @@ function count_links($pdo) {
 }
 
 function count_comments_cron($id,$pdo){
-     
+
     $sql = "SELECT count(*) from `comments` where on_db = 'news_items' and item_id = $id;";
     $nRows = $pdo->query($sql)->fetchColumn();
     return $nRows;

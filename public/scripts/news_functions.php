@@ -1,10 +1,10 @@
 <?php
-	namespace digitalmx\flames;
+	namespace DigitalMx\Flames;
 	
-	use digitalmx\MyPDO;
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
+	use DigitalMx\MyPDO;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
 $itemdb = 'news_items';
 
 require_once 'asset_functions.php';
@@ -258,7 +258,7 @@ function build_story($row,$stag=0,$etag=0,$dtag=true){
     $sections = get_sections();
     
     require_once 'asset_functions.php';
-   # if (function_exists('digitalmx\flames\get_asset_by_id')) {echo "have it";} else {echo 'nope';}
+   # if (function_exists('DigitalMx\Flames\get_asset_by_id')) {echo "have it";} else {echo 'nope';}
 
     #convert line breaks and add entities, except for protected area in content
     $webready = $row;

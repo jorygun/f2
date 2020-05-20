@@ -1,9 +1,9 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 
-use digitalmx\flames\Definitions as Defs;
-use digitalmx\flames\FileDefs;
+use DigitalMx\Flames\Definitions as Defs;
+use DigitalMx\Flames\FileDefs;
 
 class BulkMail {
 

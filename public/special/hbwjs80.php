@@ -1,61 +1,62 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 #ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	use digitalmx\flames\FileDefs;
-	
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+	use DigitalMx\Flames\FileDefs;
+
 
 
 if ($login->checkLogin(4)){
    $page_title = 'Happy Birthday, Jerry!';
-	$page_options=[]; #ajax, votes, tiny 
-	
+	$page_options=[]; #ajax, votes, tiny
+
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
-	
+
 	echo $page->startBody();
 }
-	
+
 //END START
-use digitalmx\flames\Comment;
+use DigitalMx\Flames\Comment;
 
 #require_once "../scripts/comments.class.php";
 
 
-if (isset ( $_SESSION['login']['user_id']) &&
-    is_integer($user_id = $_SESSION['login']['user_id'] + 0)) {}
-
-else{die ("Not logged in. Contact admin@amdflames.org if this is wrong.");}
-
-$ucom = new Comment ($user_id) ;
 
 #comment parameters
-$on_db = 'spec';
-$on_id = '80';
-$single = true;
-$mailto = 'admin@amdflames.org';
+$comment_params = array (
+   'on_db' => 'spec',
+   'on_id' => '80',
+   'single' => true,
+   'mailto' => [],
+   'user_id' => $_SESSION['login']['user_id'],
+   'enabled' => false,
+);
+
+
+$ucom = new Comment($container);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	//Post data and close window
 	#print_r ($_POST);
 
     $comment = trim($_POST['comment']);
-    $r = $ucom->addComment($on_db,$on_id,$comment,$single,$mailto);
+    $r = $ucom->addComment($_POST, $comment_params);
 
 
 }
 
 #do a get anyway
 
-if (1){
+
 		 $username = $_SESSION['login']['username'];
 		#$htitle = htmlspecialchars($ucom->getTitle($on,$on_id));
 		$htitle = "Happy Birthday, Jerry";
@@ -70,6 +71,7 @@ EOF;
 	<br><hr>
 	<div style='float:left;'>
 	<form method='post' >
+
 
 	<p class='content'>Send a birthday greeting from $username to Jerry here:</p>
 	<textarea name='comment' rows='4' cols='60'>
@@ -115,40 +117,47 @@ EOT;
 
 echo "<br style='clear:both'><br>";
 
+$on_db = 'spec_items';
+$carray = $ucom->getComments($comment_params);
 
-$carray = $ucom->getCommentsForItem($on_db,$on_id);
-echo "Getting comments for $on_db, $on_id" . BRNL;
+//echo "Getting " . count($carray) . " comments for $on_db, $on_id" . BRNL;
 
-#u\echor($carray,'from getCommentsForItem');
+//u\echor($carray,'from getCommentsForItem');
 
 
 if (!empty($carray)){
-    $clist = display_comments_wjs($carray);
-    echo $clist;
-}
-
-#    echo $cform;
-
+    echo display_comments_wjs($carray);
 
 }
+
+if ($comment_params['enabled']) {echo $cform;}
+
+echo "</body></html>\n\n";
+
 exit;
 ########################
 function display_comments_wjs($carray){
     if (empty($carray)){return '';}
-    $clist =  "<div style='width:100%;background-color:#eee;padding:1em;border:1px solid #393;'>";
+
+    $clist =  "<div style='width:100%;background-color:#eee; border:1px solid #393; '>\n";
+
     foreach ($carray as $cdata){
         $ucomment = htmlentities($cdata['comment']);
-            $pdate = $cdata['pdate'];
-            $cuser_id = $cdata['user_id'];
+			$pdate = $cdata['pdate'];
+			$cuser_id = $cdata['user_id'];
+			$user_contact = $cdata['username'];
 
-            $user_contact = $cdata['user_contact'];
-             $clist .= "<div class='comment_box' style='width:300px;float:left;background-color:#FFF;
-             	border:1px solid #999;'>
-             <p class='presource'> $user_contact  - $pdate</p>
+         $clist .= "
+             <div class='comment_box' style='width:28%;
+      display:inline-block;'>
+         <p class='presource'> $user_contact  - $pdate</p>
              <p class='comment'>$ucomment</p>
-             </div>\n";
+             </div>
+             ";
+
     }
-    $clist .= "<p class='clear'></p></div>\n";
+
+    $clist .= "</div>\n";
     return $clist;
 }
 

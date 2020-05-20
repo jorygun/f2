@@ -1,19 +1,19 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	use digitalmx\flames\FileDefs;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+	use DigitalMx\Flames\FileDefs;
 
 
 
-if ($login->checkLogin(0)){
+if ($login->checkLevel(0)){
    $page_title = 'Bulk Asset Uploader';
 	$page_options=[]; #ajax, votes, tiny
 
@@ -24,6 +24,7 @@ if ($login->checkLogin(0)){
 	echo $page->startBody();
 }
 
+$asseta = $container['asseta'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $dir = $_POST['dir'];
@@ -145,7 +146,8 @@ function get_titles($title_path) {
 
 function save_assets($dirpath,$filelist,$titles) {
 	echo "<h4>Saving Assets</h4>";
-	$asseta = new AssetAdmin();
+	global $container;
+
 	$finfomime = new \finfo(\FILEINFO_MIME_TYPE);
 
 	foreach ($filelist as $this_file){
@@ -172,7 +174,7 @@ function save_assets($dirpath,$filelist,$titles) {
         // u\echor ($_FILES,'from asset_generator');
 //         u\echor ($post_array,'post array from asset gen');
 
-       $ids[] =  $asseta->postAssetFromForm($post);
+       $ids[] =  $container['asseta']->postAssetFromForm($post);
     }
     return $ids;
 

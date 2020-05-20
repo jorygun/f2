@@ -2,12 +2,12 @@
 /* contains a bunch of definitions and scripts used by multiple asset
     related scripts.
 */
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\MyPDO;
-	use digitalmx as u;
-	use digitalmx\flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\MyPDO;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
 
 	use \Imagick;
 

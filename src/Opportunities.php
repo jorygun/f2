@@ -1,10 +1,10 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 #ini_set('display_errors', 1);
-use digitalmx\MyPDO;
-use digitalmx as u;
-use digitalmx\flames\Definitions as Defs;
+use DigitalMx\MyPDO;
+use DigitalMx as u;
+use DigitalMx\Flames\Definitions as Defs;
 
 
 class Opportunities 

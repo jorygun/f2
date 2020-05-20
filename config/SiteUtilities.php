@@ -1,12 +1,12 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 // site-specific utlities
 
-use digitalmx\Lib as u;
+use DigitalMx\Lib as u;
 use \Exception;
-use digitalmx\Flames\Definitions as Defs;
-use digitalmx\Flames\Member;
-use digitalmx\flames\FileDefs;
+use DigitalMx\Flames\Definitions as Defs;
+use DigitalMx\Flames\Member;
+use DigitalMx\Flames\FileDefs;
 #use Digitalmx\Flames\Configuration;
 
 

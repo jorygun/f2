@@ -1,8 +1,8 @@
-2.10	Initial setup of versions. 
+2.10	Initial setup of versions.
 2.11	Constants fixed throughout site.
 2.12	Crons rewritten to use cron.ini; cleanded up
 2.13	Using Defs for most variables
 2.5	Using new login script
 2.6	Modified MyPDO; workinig on both mac and pair
 2.9	Substnatial rewrite of all the member stuff and crons
-
+3.0  All new with classes and containers

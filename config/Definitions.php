@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 use \Exception as Exception;
 
 
@@ -7,19 +7,19 @@ use \Exception as Exception;
 	used throughout the site and grouped into
 	  Definitions (db tables, )
 	  Definitions_Email (status codes, )
-	  Definitions_News (sections, types, 
+	  Definitions_News (sections, types,
 	  Definitions_Member (status, aliases, security levels)
 	Most are public static vars, so call like
 	  Definitions::$dbTable
-	  
+
 */
 class Definitions {
-	
+
 	// days before warnings start on profile or email
 
-	public static $profile_warning = 365; 
+	public static $profile_warning = 365;
 		#days since update; warning on login and bulk email
-	public static $inactivity_limit = 365; 
+	public static $inactivity_limit = 366;
 		#days since last activity; triggers lost test
 
 	public static $asset_status = array(
@@ -33,14 +33,30 @@ class Definitions {
 
 
 );
+	// these emails are ok to send to in a test mode
+public static $test_emails = array(
+		'john@digitalmx.com',
+		'johnmx@me.com',
+		'jorygun@gmail.com',
+		'springerj@yahoo.com',
+		'john.scott.springer@gmail.com',
+);
+
+public static $local_site = 'f2.local';
+
+	public static $editor_id = 13145;
+	// userId for editor account.
+		public static $admin_id = 13146;
+	// userId for admin account.
+
 	public static $news_status = array(
 		'N'	=> 'New',
 		'Q'	=> 'Queued Next',
 		'P'	=> 'Published',
 		'X'	=>	'To Delete',
-	
+
 	);
-	
+
 	 public static $thumb_width = array(
 						 'thumbs' => 200,
 						 'galleries' => 330,
@@ -49,7 +65,7 @@ class Definitions {
 						 '330w' => 330,
 						 '800w' => 800
 						 );
-	
+
 	private static $accepted_mime_types = array(
 					'jpg' => 'image/jpeg',
 					'jpeg' => 'image/jpeg',
@@ -67,7 +83,7 @@ class Definitions {
 					'html' => 'text/html'
 
 			  );
-	
+
 	// tag codes.  * in description means archival
 	public static $asset_tags = array(
     'A' => 'Ad *',
@@ -82,7 +98,7 @@ class Definitions {
     'I' => 'Corp - Internal *',
 
     'M' => 'Marketing Pub *',
-	
+
 
     'O' => 'Historical Electronics *',
 
@@ -95,16 +111,16 @@ class Definitions {
     'W' => 'Sales Conference/Event *',
     'X' => 'x-Problem',
     'Y' => 'Posters and Symbols ',
-    
-    
+
+
 
     );
     #tag starting with Z is reserved for special searches, e.g., all archives
 
 	 public static $archival_tags = "ACDEFIMOSWY";
 
-	
-	
+
+
 
 // code => array(name,next-code,after-days)
 public static $ems_codes = array(
@@ -130,10 +146,10 @@ public static $ems_codes = array(
 		'D'  => ['Status D','D',1],
 
 		);
-	
 
-		
-	
+
+
+
 
 public static $decades = array(
 	'A'	=>	'1960s',
@@ -179,7 +195,7 @@ public static $user_aliases = array (
             'kc' => 'K.C. Murphy',
 
         );
-        
+
 public static $asset_types = array(
 	'Image' ,
 	'Cartoon' ,
@@ -197,7 +213,7 @@ public static $asset_types = array(
 
 private static $member_codes = array (
 	'N' => array ('New Signup', 1),
-	
+
 	'G' => array ('Guest', 2),
 	'GA'	=> array ('Anonymous Guest', 2),
 	'M' => array ('Member', 4),
@@ -217,24 +233,23 @@ private static $member_codes = array (
 	'X' => array ('to be deleted', 0),
 	'Y' => array ('Non-member', 0),
 	'YA' => array ('Alumni non-member', 0),
-	
+
 	'H' => array ('??' ,4),
 	);
 
 	public static $signup_status_names = array(
-		
+
 			'A' => 'Validated Email',
 			'R' => 'Needs Review',
 			'U' => 'New Unvalidated',
 			'X' => 'To Be Deleted',
 			'Z' => 'Other',
 		);
-	
+
 #these member status codes are considered members
 	private static $member_array = array(
 	'M', 'MA','MN','MC','MU','R','G'
 	);
-
 
 public static $test = 'you win';
 
@@ -248,7 +263,7 @@ public static $test = 'you win';
 	}
 	public  static function getEmsName($code){
 		if (empty($code)) return "n/a";
-		
+
 		return self::$ems_codes[$code][0];
 	}
 	public static function getEmsNameArray() {
@@ -272,7 +287,7 @@ public static $test = 'you win';
 		}
 		return 0;
 	}
-	
+
 	public static function getMemberInList(){
 		return self::$member_array;
 	}
@@ -286,13 +301,13 @@ public static $test = 'you win';
 		}
 		return "?";
 	}
-	
+
 	public  static function getMemberAliasList () {
 	// for showing list of available aliases
 		$Aliastext = "(Aliases: " . implode(', ',array_keys(self::$user_aliases)) . ")";
 		return $Aliastext;
 	}
-	
+
 	public static function replaceAlias ($alias){
     // looks for maybe in alias list and replaces with alias name if any
     if (preg_match('/^\w+$/',$alias)){ # match alias format
@@ -314,7 +329,7 @@ public static $test = 'you win';
 		}
 		return join(',',$archive_tags);
 	}
-		
+
 	public static function getAssetArchivalTags() {
 		return self::$archival_tags;
 	}
@@ -322,11 +337,11 @@ public static $test = 'you win';
 	public static function getAssetTagArray () {
 		return self::$asset_tags;
 	}
-	
+
 	public static function getThumbTypes() {
 		return array_keys(self::$thumb_width);
 	}
-	
+
 	public static function getAcceptedMime() {
 		return array_values(self::$accepted_mime_types);
 	}
@@ -338,8 +353,8 @@ public static $test = 'you win';
 
 
 
-	
-	
+
+
 
 
 

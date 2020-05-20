@@ -12,7 +12,7 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 
-	use digitalmx\MyPDO;
+	use DigitalMx\MyPDO;
 $daysback = 30; #number of days back to look.
 
 	echo <<<EOT

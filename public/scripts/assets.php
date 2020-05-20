@@ -1,11 +1,11 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
 	if (f2_security_below(1)){exit;}
-	use digitalmx\MyPDO;
-	use digitalmx as u;
-	use digitalmx\flames as f;
+	use DigitalMx\MyPDO;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
 //END START
 
 

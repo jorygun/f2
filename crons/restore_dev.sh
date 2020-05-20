@@ -21,7 +21,6 @@ gunzip -c "$latest" > $sqltemp;
 
 mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < $sqltemp 2>/dev/null
 
-echo "Dev db restored from $latest";
 rm $sqltemp
 
 

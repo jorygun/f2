@@ -13,8 +13,8 @@
 
 
 // require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
-	use digitalmx\flames\Voting;
- 	use digitalmx\MyPDO;
+	use DigitalMx\Flames\Voting;
+ 	use DigitalMx\MyPDO;
 #echo "Got to " . basename(__FILE__ ) . ' line ' .  __LINE__ . "<br />\n"; exit;
 
 $voting = new Voting();

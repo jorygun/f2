@@ -1,14 +1,14 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 ini_set('default_socket_timeout', 15);
 //BEGIN START
 	require_once 'init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\Assets;
-	#use digitalmx\flames\DocPage;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\Assets;
+	#use DigitalMx\Flames\DocPage;
 	
 
 	$page_title = 'Asset Fixer';

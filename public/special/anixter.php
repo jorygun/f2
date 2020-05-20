@@ -1,22 +1,22 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 #ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	use digitalmx\flames\FileDefs;
-	
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+	use DigitalMx\Flames\FileDefs;
+
 
 
 if ($login->checkLogin(4)){
    $page_title = 'Ben Anixter';
-	$page_options=[]; #ajax, votes, tiny 
-	
+	$page_options=[]; #ajax, votes, tiny
+
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
@@ -48,11 +48,11 @@ EOT;
 
 	echo $page->startBody();
 }
-	
+
 //END START
 
 
-use digitalmx\flames\Comment;
+use DigitalMx\Flames\Comment;
 
 
 require_once "../scripts/read_functions.php";
@@ -65,15 +65,17 @@ if (isset ( $_SESSION['user_id']) &&
 
 }
 else {$user_id = 0;$username = '';}
-$ucom = new Comment ($user_id) ;
-
+$ucom = new Comment($container);
+$enable_comments = false; #turn off commenting
 
 #comment parameters
-$on_db = 'spec';
-$on_id = '82';
-$single = true;
-$mailto = ['admin@amdflames.org'];
-$enable_comments = true;
+$comment_params = array(
+   'on_db' => 'spec',
+   'on_id' => '82',
+   'single' => true,
+   'mailto' => ['admin@amdflames.org'],
+   'enable_comments' => true,
+);
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	//Post data and close window
@@ -206,7 +208,7 @@ else {
 echo "<br style='clear:both'><br>";
 
 
-$carray = $ucom->getCommentsByItem($on_db,$on_id);
+$carray = $ucom->getComments($comment_params);
 if (!empty($carray)){
     $clist = display_comments_benji($carray);
     echo $clist;
@@ -224,16 +226,16 @@ function display_comments_benji($carray){
             $pdate = $cdata['pdate'];
             $cuser_id = $cdata['user_id'];
             $cuser_from = $cdata['user_from'];
-            $cuser_amd = $cdata['user_amd'];
+
             $cusername = $cdata['username'];
             $comment_length = strlen($ucomment);
 
-            $user_contact = $cdata['user_contact'];
+
              $clist .= <<<EOT
              <div class='local_comment'>
 
              <p >$ucomment</p>
-             <p class='local_commenter'>$cusername - $cuser_from<br>$cuser_amd</p>
+             <p class='local_commenter'>$cusername - $cuser_from</p>
 
              </div>
 EOT;

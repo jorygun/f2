@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 /*  script to build news index file
 	file catalogs all the newsletters in newsp and builds a data
@@ -13,7 +13,7 @@ namespace digitalmx\flames;
 
 */
 
-use digitalmx\flames\FileDefs;
+use DigitalMx\Flames\FileDefs;
 
 class NewsIndex {
 	

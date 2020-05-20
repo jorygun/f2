@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 ini_set('display_errors', 1);
 
 
@@ -7,18 +7,18 @@ ini_set('display_errors', 1);
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	use digitalmx\flames\FileDefs;
-	
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+	use DigitalMx\Flames\FileDefs;
+
 
 
 if ($login->checkLogin(1)){
    $page_title = 'Search Assets';
-	$page_options=['ajax']; #ajax, votes, tiny 
-	
+	$page_options=['ajax']; #ajax, votes, tiny
+
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
@@ -27,12 +27,12 @@ if ($login->checkLogin(1)){
 function asset_status_search(setter) {
 	var setterid = setter.id;
 	//alert('setterid '+setterid);
-	
+
 	var all = document.getElementById('all_active');
 	var unr = document.getElementById('unreviewed');
 	var sel = document.getElementById('status_options');
-	
-	
+
+
 	switch (setterid) {
 		case 'all_active' :
 			//alert('all active changed');
@@ -41,7 +41,7 @@ function asset_status_search(setter) {
 				sel.value= '';
 			}
 			break;
-				
+
 		case 'unreviewed' :
 		//alert('unreviewed changed');
 			if(setter.checked) {
@@ -49,7 +49,7 @@ function asset_status_search(setter) {
 				sel.value = '';
 			}
 			break;
-		
+
 		case 'status_options' :
 		//alert('options changed val ' + setter.value);
 			if(setter.value == '') {
@@ -62,7 +62,7 @@ function asset_status_search(setter) {
 			}
 			break;
 		default:
-		
+
 	}
 
 }
@@ -72,11 +72,11 @@ EOT;
 
 	echo $page->startBody();
 }
-	
+
 //END START
 
 
-$as = new AssetSearch();
+$as = new AssetSearch($container);
 
 
 
@@ -88,21 +88,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 	// save list of ids, for sequential editing.
 	$ids = $as->getIdsFromSearch($_POST);
-	
+
 	$_SESSION['last_assets_found'] = $ids;
 	$count = count($ids);
 	echo "$count assets found. (max: 100)";
 	if ($count == 0) return;
-	
+
 	if ($count < 11 ) echo join(', ',$ids) . BRNL;
-	
+
 	foreach ($ids as $id){
 		$asset = $as->getAssetSummary($id);
-		 #u\echor($asset, "selected asset $id"); 
+		 #u\echor($asset, "selected asset $id");
 		echo $templates->render('asset_mini',$asset);
 	}
 	# u\echor ($ids, 'ids');
-	
+
  	exit;
 }
 
@@ -113,4 +113,4 @@ echo $templates->render('asearch',$search_data);
 exit;
 
 
-		
+

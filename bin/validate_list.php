@@ -1,17 +1,17 @@
 <?php
 // script to validate emails for users on list
 
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 #ini_set('display_errors', 1);
 
 //BEGIN START
 	#require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 	require_once '../crons/cron-ini.php';
 	
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
 	
 
 
@@ -23,8 +23,8 @@ if (empty($list )){
     die ("No file specified\n");
 }
 
-use digitalmx\MyPDO;
-use digitalmx\flames\Member;
+use DigitalMx\MyPDO;
+use DigitalMx\Flames\Member;
 
 $pdo = MyPDO::instance();
 $member = new Member();

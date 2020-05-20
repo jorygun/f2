@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 
 
 
@@ -23,14 +23,16 @@ namespace digitalmx\flames;
 
 /*  STARTUP */
 $script = basename(__FILE__);
+$repoloc = dirname(__FILE__,2);
+require_once "$repoloc/public/init.php";
+// $init set $pdo as well as container
 
-if (! @defined ('INIT')) { include './cron-ini.php';}
 if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
 
-use \digitalmx\flames\Definitions as Defs;
+use \DigitalMx\Flames\Definitions as Defs;
 
 /* MAIN */
- if (!$quiet) 
+ if (!$quiet)
 echo "Starting $script " . BRNL;
 
 
@@ -82,14 +84,14 @@ echo "$recent_asset_file updated" . BRNL;
 
 function report_recent_assets ($pst,$rowc,$cutoff) {
     $asset_tags = Defs::$asset_tags;
-    
+
     if (empty($asset_tags)){die ("Did not get asset_tags");}
     /*
 
     */
 
 
-    
+
 	$report = "<div style='margin-left:2em;float:left'>";
     $report .=  "<h4>$rowc new Archival Assets</h4>";
     $report .= "<p style='font-size:0.9em;'>(This list shows archival assets only, not all assets.  Find any asset on the site by using Search &gt; Search Graphics/Video. 'Multimedia' means streaming audio/video. )</p>";
@@ -111,7 +113,7 @@ function report_recent_assets ($pst,$rowc,$cutoff) {
         $tagtext = implode(", ",$tagnames);
         $vintage = (empty($row['vintage']))?'?':$row['vintage'];
 		$sizemb = round($row['sizekb'] / 1000,0);
-		
+
         $edit = "<a href='/scripts/asset_edit.php?id=$id' target = 'asset_edit'>Edit</a>";
 
         $report .=  <<<EOT

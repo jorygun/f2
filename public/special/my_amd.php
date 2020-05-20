@@ -1,45 +1,47 @@
 <?php
+
+namespace Digitalmx\Flames;
+
+#ini_set('display_errors', 1);
+
 //BEGIN START
-require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
-if (f2_security_below(1)){exit;}
-	$nav = new navBar(1);
-	$navbar = $nav -> build_menu();
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\DocPage;
+	use digitalmx\flames\FileDefs;
+
+
+
+if ($login->checkLogin(0)){
+   $page_title = 'Memories of AMD';
+	$page_options=[]; #ajax, votes, tiny
+
+	$page = new DocPage($page_title);
+	echo $page -> startHead($page_options);
+	# other heading code here
+
+	echo $page->startBody();
+}
+
 //END START
 
-// script to enter/update a news item
-// call with ?id=nnn for edit.
-// call with no parameter for new
 
 
-echo <<<EOT
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script type='text/javascript' src = '/js/f2js.js'></script>
-<link rel="stylesheet" type="text/css" href="/css/news3.css">
-
-<title>Members Remember</title>
-
-
-</head>
-<body >
-$navbar
-<h3>AMD Flames Memories of AMD</h3>
-EOT;
+//EOF
 
 
 
-	use digitalmx\MyPDO;
 $pdo = MyPDO::instance();
 $get_id = $_SERVER['QUERY_STRING'];
 if (! is_numeric($get_id)){ die ("Invalid Id requested");}
 
 $sql = "
-	SELECT username, user_id, user_amd, user_memories FROM `members_f2` 
+	SELECT username, user_id, user_amd, user_memories FROM `members_f2`
 	WHERE user_id = $get_id
-	
+
 		";
 
 if (! $result = $pdo->query($sql) ){
@@ -51,12 +53,12 @@ $row = $result->fetch();
 
 
 	echo "<h4>${row['username']}, ${row['user_amd']}</h4>";
-	
+
 echo "<div style='width:600px;'>", nl2br(spchar($row['user_memories'])),"</div>" . BRNL;
 
 
 
-	
 
 
-  
+
+

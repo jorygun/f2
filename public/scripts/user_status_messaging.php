@@ -14,7 +14,7 @@
 */
 
 require_once 'init.php';
-	use digitalmx\MyPDO;
+	use DigitalMx\MyPDO;
 function add_user($id,$new_status){
         $pdo = MyPDO::instance();
 

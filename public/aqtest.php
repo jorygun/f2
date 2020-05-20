@@ -1,34 +1,34 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 #ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
-	use digitalmx\flames\DocPage;
-	use digitalmx\flames\FileDefs;
-	
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+	use DigitalMx\Flames\FileDefs;
 
 
-if ($login->checkLogin(4)){
+
+if ($login->checkLevel(4)){
    $page_title = 'test quick asset';
-	$page_options=['ajax']; #ajax, votes, tiny 
-	
+	$page_options=['ajax']; #ajax, votes, tiny
+
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
-	
+
 	echo  "<script src='/js/aq.js'></script>";
 
 	echo $page->startBody();
 }
-	
-	
 
-$asseta = new AssetAdmin();
+
+
+$asseta = $container['asseta'];
 // set default arrangement
 
 $ta = $aids = '';
@@ -37,15 +37,15 @@ if (isset($_POST['submit']) ){
 	$aids = $_POST['aids'];
 	$nlist = u\number_range($aids);
 	$nlistcnt = count($nlist);
-	
+
 	$ta = $_POST['ta'];
 	if ($nlistcnt >2){
 		$adiv = 'asset-row';
 	} elseif ($nlistcnt > 0){
 		$adiv = 'asset-column';
 	} else {$adiv = '';}
-	
-	
+
+
 	echo "
 <div class='article clearafter'>
 ";
@@ -78,7 +78,7 @@ echo "</div>" . NL; #end article
 
 
 
-	
+
 }
 
 $abutton = <<<EOT
@@ -110,5 +110,5 @@ EOT;
 
 
 
-	
+
 //END START

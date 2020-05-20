@@ -1,0 +1,50 @@
+<?php
+
+namespace DigitalMx\Flames;
+
+// use DigitalMx\Flames\DocPage;
+// use DigitalMx\Flames\Assets;
+use Pimple\Container;
+use DigitalMx\MyPDO;
+
+/* set up services in pimple container */
+
+$container = new Container();
+
+$container['pdo'] = function ($c) {
+    return MyPDO::instance();
+};
+$container['member'] = function ($c) {
+    return new Member($c);
+};
+$container['membera'] = function ($c) {
+    return new MemberAdmin($c);
+};
+$container['assets'] = function ($c) {
+    return new Assets($c);
+};
+$container['templates'] = function ($c) {
+    return new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
+};
+
+$container['article'] = function ($c) {
+    return new Article($c);
+};
+$container['asseta'] = function ($c) {
+    return new AssetAdmin($c);
+};
+$container['news'] = function ($c) {
+    return new News($c);
+};
+$container['messenger'] = function ($c) {
+    return new Messenger($c);
+};
+$container['voting'] = function ($c) {
+		return new Voting();
+};
+$container['publish'] = function ($c) {
+		return new Publish();
+};
+$container['opps'] = function ($c) {
+		return new Opportunities();
+};
