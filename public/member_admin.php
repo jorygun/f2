@@ -11,21 +11,20 @@ ini_set('display_errors', 1);
 	use DigitalMx\Flames\Definitions as Defs;
 	use DigitalMx\Flames\DocPage;
 	use DigitalMx\Flames\MemberAdmin;
-	
-	$admin = new MemberAdmin();
-	
-	
-	
-    $login->checkLogin(6); 
+
+	$admin = $container['membera'];
+
+
+    $login->checkLogin(6);
     $page_title = 'Member Admin';
 	$page_options = ['ajax'];
-	
+
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	echo $page -> startBody();
 
 	$dev_update_button = f\actionButton('Restore Dev','restore',0,'','resp');
-	
+
 //END START
 
 #display user data
@@ -38,14 +37,14 @@ if (isset($_POST['search'])){
 		echo $templates->render('new_member_list',$data);
 		exit;
 	}
-	
+
 	$mdata = $admin->listMembers ($_POST);
-	
+
 	$data = [
 		'mdata' => $mdata,
 		'info' => count ($mdata) ?? 0
 	];
-	
+
 	echo $templates->render('user_admin_list',$data);
 
 }
@@ -53,7 +52,7 @@ elseif (isset($_POST['Update'])){
 	if (empty($uid = $_POST['uid'])){
 		throw new Exception ('Attempt update member with no uid in post');
 	}
-	
+
 	echo $admin->updateMember($_POST);
 	$mdata = $admin->showUpdate($uid);
 	echo $templates->render('member_edit',$mdata);

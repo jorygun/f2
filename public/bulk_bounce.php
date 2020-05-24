@@ -28,7 +28,7 @@ if ($login->checkLogin(4)){
 $bounce_text = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-	$member_admin = new MemberAdmin();
+	$member_admin = $container['membera'];
 
 	$email_pattern = '/[a-z0-9_\-\+\.]+@[a-z0-9\-\.]+\.([a-z]{2,4})(?:\.[a-z]{2})?(?=\b)/i';
 	$bounce_text = $_POST['bouncers'];

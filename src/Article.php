@@ -15,7 +15,7 @@ class Article
     public function __construct($container)
     {
         $this->news = $container['news'];
-        $this->asseta = $container['asseta'];
+
         $this->member = $container['member'];
         $this->pdo = $container['pdo'];
         $this->voting = $container['voting'];
@@ -226,94 +226,6 @@ class Article
         return $adata;;
     }
 
-    public function buildStory()
-    {
-        // compiles article at $aid into html code
 
-        //function build_story($row,$stag=0,$etag=0,$dtag=true){
-        #stag is whether or not to show Scheduled status in story
-        #etag is whether or not to show Edit button
-        #dtag is whether or not to show the "discuss" and voting sections
-
-
-
-        $sdata = $this->adata;
-        $id = $sdata['id'];
-
-
-
-        /* detect if story is already html.  If not, do nl2br.
-        // otherwise use as is.
-        */
-
-        if (strpos($sdata['content'], '<p>') === false
-            && strpos($sdata['content'], '<table>') === false) {
-            $sdata['content'] = nl2br($sdata['content']);
-        }
-        $sdata['ed_comment'] = nl2br($sdata['ed_comment']);
-        $sdata['content'] = u\makeLinks($sdata['content']);
-
-        if (!empty($sdata['asset_list'])) {
-            $alist = u\number_range($sdata['asset_list']);
-            $alistcnt = count($alist);
-
-            if ($alistcnt >2) {
-                $adiv = 'asset-row';
-            } elseif ($alistcnt > 0) {
-                $adiv = 'asset-column';
-            } else {
-                $adiv = '';
-            }
-            $sdata['adiv'] = $adiv;
-
-            foreach ($alist as $aid) {
-                $sdata['asset_blocks'][] = $this->asseta->getAssetBlock($aid, 'thumb', false);
-            }
-        }
-
-        // set status message
-        if ($sdata['status'] == 'P') {
-            $smsg = 'Published';
-        } elseif ($sdata['use_me'] > 0) {
-            $smsg = 'Queued for Next Newsletter';
-        } else {
-            $smsg = ' Not Queued';
-        }
-         $sdata['smsg'] = $smsg;
-
-
-        $sdata['more'] = '';
-        if (!empty($url = $sdata['url'])) {
-            $ltitle = $sdata['link_title'] ?: 'web link';
-            $sdata['more'] = "<p class='more'> More: <a href='$url' target='_blank'>$ltitle</a></p>";
-        }
-
-
-        // vblock will be put into a pop div before displaying
-        $vblock = '';
-        if ($sdata['take_comments']) {
-            $vblock .= "<a href='/get-article.php?${id}d'>Comments</a> ("
-                    . $sdata['comment_count']
-                    . ') ' ;
-        }
-        if ($sdata['take_votes']) {
-
-            $voteicons = $this->voting->getVotePanel($id, $_SESSION['login']['user_id']);
-            if (!empty($vblock)) {
-                $vblock .= "&nbsp;&nbsp;&bull;&nbsp;&nbsp;";
-            }
-
-            $vblock .= "Interesting??  "
-                . $voteicons
-
-                ;
-        }
-
-        $sdata['vblock'] = "<div class='pop'>" . $vblock . "</div>";
-            //echo "Vblock: <pre>$vblock</pre>" . BRNL; exit;
-
-
-        return $sdata;
-    }
 }
 //EOF

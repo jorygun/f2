@@ -25,6 +25,7 @@ if ($login->checkLevel(4)) {
 
 $news = $container['news'];
 $article = $container['article'];
+$articlea = $container['articlea'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post = $_POST;

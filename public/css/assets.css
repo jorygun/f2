@@ -1,4 +1,4 @@
-/* Styles for asset displays 
+/* Styles for asset displays
 	old was thumbs, now asset class
 	stick these asset objects inside a div class = asset
 	*/
@@ -11,9 +11,9 @@
 	  background:#FFF;
 	  display:block;
 	  padding:5px;
-	  
+
 }
-	
+
 
 
 
@@ -22,7 +22,7 @@
         margin-left: auto;
         margin-right: auto;
         padding:0;
-              
+
 }
 
 /* float it left, and then float next divison */
@@ -32,15 +32,15 @@ div.asset-column {
 }
 
 div.asset-column .asset {
-/* make assets consistent width 
-use inside a div that floats left. 
+/* make assets consistent width
+use inside a div that floats left.
 Assets do not float (but the whole block does)
 assets  grow in lenght as needed. - no restriction
 */
     width:210px;
 
    }
-    
+
 .asset-column .asset img {
         width:200px;
 }
@@ -63,10 +63,19 @@ div.asset-row .asset {
     float:left;
 
 }
+div.gallery .asset {
+	height:350px;
+   width:350px;
 
+
+	}
 div.asset-row .asset img {
         max-height:200px;
         width:200px;
+}
+
+div.gallery .asset img {
+	width:300px;
 }
 
 
@@ -74,7 +83,7 @@ div.asset-center .asset {
     width:100%;
     max-width:440px;
     margin:auto;
-    
+
 }
 .asset-center .asset img {
         width:100%;
@@ -87,15 +96,15 @@ div.asset-center .asset {
 	font-weight:bold;
 	margin:3px;
 	color:black;
-	
+
 	font-family:Helvetica,Arial,sanserif;
-	
+
 }
 .acaption {
     font-size:0.9em;text-align:center;
     font-style:italic;
     font-weight:normal;
-   
+
     }
 
 .asset a {text-decoration:none;}

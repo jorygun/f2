@@ -48,3 +48,6 @@ $container['publish'] = function ($c) {
 $container['opps'] = function ($c) {
 		return new Opportunities();
 };
+$container['articlea'] = function ($c) {
+		return new ArticleAdmin($c);
+};

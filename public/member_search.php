@@ -28,6 +28,8 @@ if ($login->checkLevel(4)){
 //END START
 
 	$admin = $container['membera'];
+	$assets = $container['assets'];
+	$asseta = $container['asseta'];
 
 if (isset($_POST['search'])){
    if ($_POST['search'] == 'Search DB'){
@@ -42,14 +44,15 @@ if (isset($_POST['search'])){
 
 	}
 	elseif ($_POST['search']== 'Search Assets'){
-		$asset = new Asset();
+
 		$name = u\safe_like($_POST['name']);
-		$alist = $asset->getAssetsByName($name);
+		$alist = $assets->getAssetListByName($name);
+		echo "<div class='asset-row gallery'>";
 		#u\echor($alist,'assets');
 		foreach ($alist as $id){
-			echo $asset->getGalleryAsset($id);
+			echo $asseta->getAssetBlock($id,'gallery',true);
 		}
-
+		echo "</div><div class='clear'></div>";
 
 
 	}

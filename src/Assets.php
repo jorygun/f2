@@ -420,7 +420,7 @@ class Assets {
         $sql = "SELECT id from `assets2` where
         concat('', caption,title,keywords) like '%$name%' ";
 
-        $alist = self::$pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+        $alist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
         return $alist;
       }
 

@@ -1,7 +1,8 @@
 <?php
 
 namespace DigitalMx\Flames;
-
+use DigitalMx as u;
+    use DigitalMx\Flames as f;
 #ini_set('display_errors', 1);
 
 
@@ -25,8 +26,7 @@ namespace DigitalMx\Flames;
 //BEGIN START
     require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-    use DigitalMx as u;
-    use DigitalMx\Flames as f;
+
 
 //  use DigitalMx\Flames\Definitions as Defs;
 //  use DigitalMx\Flames\DocPage;
@@ -90,8 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 // in any event, get the article and display
 
-    $container['article']->getArticle($on_id);
-    $na = $container['article']->buildStory();
+
+    $na = $container['articlea']->buildStory($on_id);
+
     $na['credential'] =
     	$_SESSION['level'] > 4
     	|| $na['contributor_id'] == $_SESSION['login']['user_id'];
