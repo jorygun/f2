@@ -56,7 +56,7 @@ div.asset-row::after {
 
 div.asset-row .asset {
 /* make thumbs consistent height to floaters line up. */
-   height:220px;
+   height:240px;
    width:210px;
     overflow:auto;
   margin-right:6px;
