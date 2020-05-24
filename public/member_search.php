@@ -50,7 +50,7 @@ if (isset($_POST['search'])){
 		echo "<div class='asset-row'>";
 		#u\echor($alist,'assets');
 		foreach ($alist as $id){
-			echo $asseta->getAssetBlock($id,'thumb',true);
+			echo $asseta->getAssetBlock($id,'thumb',false);
 		}
 		echo "</div><div class='clear'></div>";
 
