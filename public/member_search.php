@@ -47,10 +47,10 @@ if (isset($_POST['search'])){
 
 		$name = u\safe_like($_POST['name']);
 		$alist = $assets->getAssetListByName($name);
-		echo "<div class='asset-row gallery'>";
+		echo "<div class='asset-row'>";
 		#u\echor($alist,'assets');
 		foreach ($alist as $id){
-			echo $asseta->getAssetBlock($id,'gallery',true);
+			echo $asseta->getAssetBlock($id,'thumb',true);
 		}
 		echo "</div><div class='clear'></div>";
 

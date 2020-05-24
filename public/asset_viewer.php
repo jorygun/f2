@@ -164,6 +164,6 @@ EOT;
 $adata['asset_display'] = $asset_display;
 
 #echo "<hr style='border:10px solid red'>";
-echo $templates->render('asset_view', $adata);
+echo $container['templates']->render('asset_view', $adata);
 
 //EOF
