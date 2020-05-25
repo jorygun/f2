@@ -11,6 +11,30 @@ class Article
 {
 
     private $news;
+	private $getarticleprep; // preped getarticlesql
+	private $getunpub_prep; // prepped getlist
+
+
+	private static $getarticlesql =  <<<EOT
+            SELECT n.*, m.username,m.user_email,t.topic_name,s.section_name,s.section_sequence
+
+            ,(SELECT count(*) FROM  comments c
+                WHERE n.id = c.item_id AND c.on_db = 'news_items') AS comment_count
+            , (SELECT count(*) FROM votes v
+                WHERE n.id = v.news_fk AND v.vote_rank <> 0) AS total_votes
+            , (SELECT SUM(`vote_rank`) FROM votes v
+                WHERE n.id = v.news_fk AND v.vote_rank <> 0) AS net_votes
+
+            FROM news_items n
+             LEFT JOIN members_f2 m on m.user_id = n.contributor_id
+             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
+
+            WHERE
+                n.id = ?;
+EOT;
+
+// select articles in two groups: use, sorted by sequence and priority, then
+// unused.  Cat is used to keep them separated.
 
     public function __construct($container)
     {
@@ -20,11 +44,48 @@ class Article
         $this->pdo = $container['pdo'];
         $this->voting = $container['voting'];
 
-        //$this->adata = $this->getArticle($id);;
+        $this->getarticleprep = $this->pdo->prepare(self::$getarticlesql);
+
 
 
     }
+	public function toggle_use($aid) {
+		// change item use_me between 0 and 2
+		$sql1 = "UPDATE `news_items` SET use_me =
+			IF(use_me>0, 0, 2)
+			WHERE id = $aid;";
+		$this->pdo->query($sql1);
+		return true;
 
+	}
+
+	private function prep_list_sql($style) {
+		  if ($style == 'unpub'){
+		  		$where = " n.status not in ('P','X')";
+			} elseif ($style == 'current'){
+				$where = " n.status = 'P' AND n.date_published > NOW() - INTERVAL 2 week";
+			}
+			else {throw new Exception (
+				"Unrecognized list style $style");
+			}
+			$sql = <<<EOT
+			 SELECT n.id, n.use_me as use_me, s.section_sequence,
+             if (n.use_me > 0,1,0) as `cat`,
+                 n.title, n.asset_list, n.asset_id, n.status,n.source,
+                 n.contributor_id,m.username,
+                 t.topic_name as topic_name,s.section_name
+            FROM news_items n
+             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
+				LEFT JOIN members_f2 m on m.user_id = n.contributor_id
+            WHERE
+           		$where
+
+            ORDER BY `cat` DESC, section_sequence, topic_name, use_me DESC
+            LIMIT 50;
+EOT;
+
+		return $sql;
+	}
     public function saveArticle($post)
     {
         try {
@@ -185,6 +246,14 @@ class Article
         return $adata;
     }
 
+	public function getArticleList($cat) {
+		$list_sql = $this->pdo->prepare($this->prep_list_sql($cat));
+		$list_sql->execute();
+
+		$alist = $list_sql->fetchAll();
+		return $alist;
+
+	}
 
     public function getArticle($id)
     {
@@ -194,38 +263,20 @@ class Article
             $this->adata = $adata;
             return $adata;
         } else {
-            $sql = "
-            SELECT *
-            ,(SELECT m.username  FROM members_f2 m
-                WHERE m.user_id = n.contributor_id) AS contributor
 
-            ,(SELECT m.user_email  FROM members_f2 m
-                WHERE m.user_id = n.contributor_id) AS contributor_email
+        	// if (! $stmt = $this->pdo->prepare(self::$getarticlesql) ){
+//         		throw new Exception ("pdo prep failed");
+//         	}
 
-            ,(SELECT count(*) FROM  comments c
-                WHERE n.id = c.item_id AND c.on_db = 'news_items') AS comment_count
-            , (SELECT count(*) FROM votes v
-                WHERE n.id = v.news_fk AND v.vote_rank <> 0) AS total_votes
-            , (SELECT SUM(`vote_rank`) FROM votes v
-                WHERE n.id = v.news_fk AND v.vote_rank <> 0) AS net_votes
-            FROM
-                news_items n
-            WHERE
-                n.id = $id;
-            ";
+        $this->getarticleprep->execute([$id]);
+		if (! $adata = $this->getarticleprep->fetch() ){
+        	die ("Invalid article id $id");
         }
-        $adata = $this->pdo->query($sql)->fetch();
-        $member_info = $this->member->getMemberBasic($adata['contributor_id']);
-        $adata['contributor'] = $member_info[0];
-        $adata['contributor_email'] = $member_info[2];
-        $adata['section'] = $this->news->getSectionForTopic($adata['topic']);
-        $adata['section_name'] = $this->news->getSectionName($adata['section']);
-        $adata['topic_name'] = $this->news->getTopicName($adata['topic']);
 
         $this->adata = $adata;  // fill this story array
-        return $adata;;
+        return $adata;
+        }
     }
-
 
 }
 //EOF

@@ -25,6 +25,7 @@ if ($login->checkLevel(0)){
 }
 
 $asseta = $container['asseta'];
+	$templates = $container['templates'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
         $dir = $_POST['dir'];

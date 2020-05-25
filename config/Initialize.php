@@ -119,7 +119,7 @@ class Initialize
 		require_once  'MxUtilities.php';
 		require_once 'SiteUtilities.php';
 
-		require_once "utilities.php";
+#		require_once "utilities.php";
 
 	}
 
@@ -137,7 +137,7 @@ class Initialize
 		. ':' . $repo . '/src'
 		. ':' . $repo . '/config'
         . ':' . $repo . '/public'
-        . ':' . $repo . '/public/scripts'
+ #       . ':' . $repo . '/public/scripts'
         . ':' . $current_path
 
         );

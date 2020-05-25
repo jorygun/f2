@@ -418,7 +418,8 @@ class Assets {
     public function getAssetListByName($name) {
     	// returns list of ids of assets matching name in several fields
         $sql = "SELECT id from `assets2` where
-        concat('', caption,title,keywords) like '%$name%' ";
+        concat('', caption,title,keywords) like '%$name%'
+        AND astatus not in ('X','E','T') ";
 
         $alist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
         return $alist;

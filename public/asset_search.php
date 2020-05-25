@@ -77,7 +77,7 @@ EOT;
 
 
 $as = new AssetSearch($container);
-
+	$templates = $container['templates'];
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){

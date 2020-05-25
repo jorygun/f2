@@ -33,9 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post['take_comments'] =  (isset($post['take_comments']))? 1 : 0;
      $id = $article->saveArticle($post);
     $_GET['id'] = $id;
+    // comment out next two lines to reload eidt window with new content
+    echo "<script>window.close()</script>\n";
+    exit;
 }
 
 $id = $_GET['id'] ?? 0;
+if (!u\isInteger($id)){
+	throw new Exception("Article ID must be an integer");
+}
 $adata = $article->getArticle($id);
 
 $adata['Aliastext'] = Defs::getMemberAliasList();

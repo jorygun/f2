@@ -30,6 +30,8 @@ use DigitalMx\MyPDO;
 // dependencies
   $publish = $container['publish'];
   $member = $container['member'];
+  	$templates = $container['templates'];
+  	$article = $container['article'];
 
 
 
@@ -200,6 +202,7 @@ function edit_profile($uid,$madmin,$templates) {
    echo  $templates->render('profile-edit', $profile_data);
 	exit;
 }
+
 
 
 function verifyProfile($uid,$member) {

@@ -191,11 +191,13 @@ class AssetAdmin
    		return $adata;
    	}
 
-		$adata = $this->assets->getAssetDataById($id);
+		if (! $adata = $this->assets->getAssetDataById($id) ){
+			throw new Exception ("No asset at $id");
+		}
 
 		// set tic character for each thumb that currently exixts.
 		$adata['existing_thumbs'] = $this->getExistingThumbs($id);
-		$adata['status'] = $adata['astatus'];
+
 
 		if (!empty($adata['contributor_id'] ) ){
 			$adata['contributor'] = $this->member->getMemberid($adata['contributor_id'])[0];
@@ -272,10 +274,10 @@ class AssetAdmin
 		shows thumb linked to asset
 		below thumb is title in bold and optional in italic
 
-		style left = float left, fixed width blocks to line up
-			in a column.
-		style top = float left, fixed height blocks to line up in rows
-		style center = use gallery size thumb, no float.
+		styles defined in assets.css
+		<div class='asset-row'>
+		foreach... echo assetblock
+		</div>
 
 		*/
 		if (! $adata = $this->getAssetData($aid) ) {

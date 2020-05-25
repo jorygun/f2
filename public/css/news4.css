@@ -95,6 +95,7 @@ td {vertical-align: top;}
 .bluei {color:blue;font-style:italic;}
 .small {font-size:0.8em;margin-top:3px;margin-bottom:3px;}
 .grayback {background:#CCC;}
+.blueback {background:#00F;color:#FFF;}
 .tright {text-align:right;}
 
 blockquote, .quoted {

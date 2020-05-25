@@ -52,6 +52,7 @@ EOT;
 
 //END START
 	 $ma = $container['membera'];
+	 $templates = $container['templates'];
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 		$uid = $_POST['user_id'];

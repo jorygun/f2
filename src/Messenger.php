@@ -89,7 +89,7 @@ User Info:
 EOT;
 
 
-	private static $templates = REPO_PATH . '/templates';
+	private static $template_dir = REPO_PATH . '/templates';
 
     private static $profile_message = "
 Your profile has not been updated in more than 2 years.
@@ -449,7 +449,7 @@ Click to Confirm
 
 	private function getUserText($code){
 		// code will be like A1
-		$msg_file = self::$templates . '/' . $code . '.txt';
+		$msg_file = self::$template_dir . '/' . $code . '.txt';
 		$message = false;
 		if ( file_exists($msg_file)){
 			$message = file_get_contents($msg_file);

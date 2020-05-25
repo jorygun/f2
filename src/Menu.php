@@ -174,20 +174,20 @@ EOT;
 
 		$t .= self::addMenu(7,$thisMenu);
 		if ($userlevel >= 7){$menulist[] = $thisMenu;}
-		$t .=    self::if_level (7, "<li><li><a href='/scripts/news_items.php' target='newsitems'>Add/View Pending Articles</a>");
+		$t .=    self::if_level (7, "<li><li><a href='/article_list.php' target='article_manager'>List Pending Articles</a>");
 
 		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='_blank'>User Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/news_admin.php'>News Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/calendar_admin.php'>Calendar Admin</a>");
 
-		 $t .= self::if_level(8,"<li><a href='/varinfo.php' target='_blank'>Var Info</a>");
+		 $t .= self::if_level(8,"<li><a href='/varinfo.php?v' target='_blank'>Var Info</a>");
 
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");
 
 
 		  $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
-		  $t .=    self::if_level (7, "<li><a href='/scripts/assets.php' target='assets'>Asset Manager</a>");
+		  $t .=    self::if_level (7, "<li><a href='asset_search.php' target='assets'>Asset Manager</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/gallery_edit.php' target='galleries'>Edit Gallery</a>");
 		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='_blank'>Web Stats</a>");
 
@@ -197,10 +197,10 @@ EOT;
 	$thisMenu = 'Authoring';
 	if ($userlevel >= 6){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu (6,$thisMenu);
-		$t .= self::if_level(6,"<li><a href='/article_editor.php'>Add/View Pending Articles</a> ");
+		$t .= self::if_level(6,"<li><a href='/article_manager.php'>List Pending Articles</a> ");
 		 $t .=  self::if_level(6,"<li><a href='/asset_search.php' target='assets'>Add/Find Graphics</a> ");
 		 $t .=  self::if_level(6,"<li><a href='/views.php' target='data'>Count of Views by Issue</a> ");
-		 $t .=  self::if_level(6,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a> ");
+
 
 	$t .=  self::closeLine(6, $thisMenu) ;
 
@@ -221,9 +221,8 @@ EOT;
 	$t .=  self::addMenu(4,$thisMenu);
 	if ($userlevel >= 4){$menulist[] = $thisMenu;}
 	$t .= self::if_level(4,"
-		<li><a href='/member_search.php' target='_blank'>Search Newsletters</a>
-		<li><a href='/member_search.php' target='_blank'>Search For a Member</a>
-		<li><a href='/asset_search.php' target='assets'>Search Graphics/Video</a>
+		<li><a href='/search.php' target='_blank'>Search For a Member or Topic</a>
+
 		<li><a href='http://www.linkedin.com/groups?gid=117629&trk=myg_ugrp_ovr' target='_blank'>AMD Alumni on LinkedIn</a>
 	");
 	$t .=  self::closeLine(4,$thisMenu) ;

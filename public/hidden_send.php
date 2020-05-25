@@ -22,6 +22,7 @@ if ($login->checkLogin(1)){
 	# other heading code here
 
 	echo $page->startBody();
+	$templates = $container['templates'];
 }
 
 //END START

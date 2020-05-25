@@ -35,7 +35,7 @@ class MemberAdmin {
 	private $member;
 	private $messenger;
 	private $pdo;
-	private $templates;
+
 
 
 	public function __construct($container){

@@ -40,7 +40,7 @@ if (isset($_POST['search'])){
 		'info' => 'Found ' . count ($mdata)
 	];
 #u\echor($data,'data found');
-	echo $templates->render('user_list',$data);
+	echo $container['templates']->render('user_list',$data);
 
 	}
 	elseif ($_POST['search']== 'Search Assets'){
@@ -63,7 +63,7 @@ if (isset($_POST['search'])){
 	}
 	else {echo "Invalid Search";}
 
-   echo "<hr><a href='/member_search.php'>New Search </a>\n";
+   echo "<hr><a href='/search.php'>New Search </a>\n";
    exit;
 }
 
@@ -72,7 +72,7 @@ if (isset($_POST['search'])){
 elseif (isset($_GET['uid']) && $uid = $_GET['uid']){
 echo "Getting profile";
     $profile_data = $ma->getProfileData($uid);
-	echo  $templates->render('profile', $profile_data);
+	echo  $container['templates']->render('profile', $profile_data);
 	exit;
 }
 
@@ -202,9 +202,9 @@ function search_news($term,$back) {
 
 
 <hr>
-<h3>Search For Members or Topics in Newsletters</h3>
+<h3>Search For Members or Topics </h3>
 
-<p><b>Locate a Member in the Member Database</b></p>
+<h4>Locate a Member in the Member Database</h4>
 To find a member enter name or email address.  Partials work. Not case sensitive. Limited to 100 found.
 <form  method = 'POST'>
 <table >
@@ -217,7 +217,7 @@ To find a member enter name or email address.  Partials work. Not case sensitive
 <input type=submit name='search' value='Search DB'>
 </form>
 <hr>
-<p><b>Locate a Member in the Photo/Asset Library</b></p>
+<h4>Locate a Member in the Photo/Asset Library</h4>
 <form  method = 'POST'>
 <table >
 <tr><th>Find by name: </th></tr>
@@ -227,7 +227,7 @@ To find a member enter name or email address.  Partials work. Not case sensitive
 <input type=submit name='search' value='Search Assets'>
 </form>
 <hr>
-<p><b>Locate references to a member (or any term) in past newsletters</b></p>
+<h4>Locate references to a member (or any term) in past newsletters</h4>
 
 <form  method = 'POST'>
 Enter the text you're looking for (NOT case-sensitive) and the range

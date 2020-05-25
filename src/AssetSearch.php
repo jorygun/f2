@@ -17,7 +17,7 @@ class AssetSearch
 
 private $member;
 private $assets;
-private $templates;
+
 private $asseta;
 
 private static $empty_search = array (
@@ -41,6 +41,7 @@ private static $empty_search = array (
 		$this->member = $container['member'];
 		$this->assets = $container['assets'];
 		$this->asseta = $container['asseta'];
+
 
 	}
 
