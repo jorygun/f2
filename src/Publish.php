@@ -44,9 +44,6 @@ namespace DigitalMx\Flames;
 	use DigitalMx\Flames as f;
 	use DigitalMx\Flames\FileDefs;
 
-	use DigitalMx\Flames\NewsIndex;
-
-
 
 class Publish {
 
@@ -58,11 +55,11 @@ class Publish {
 	private $new_archive; #name of  new dir:  news_yymmdd
 	private $nli; //news index object
 
-	public function __construct( ){
-		$this->pdo = MyPDO::instance();
+	public function __construct($container ){
+		$this->pdo = $container['pdo'];
 		$this->setTimes();
 		$this->title = $this->getTitle();
-		$this->nli = new NewsIndex();
+
 	}
 
 
@@ -117,6 +114,7 @@ class Publish {
 
 	public function publishNews() {
 		// these routines publish the new newsletter
+
 		$this->copyNextToLatest();
 		$this->addPublishFile();
 		$this->setPointers();
@@ -124,8 +122,7 @@ class Publish {
 
 		$this->copyLatestToArchive();
 
-		$this->nli->append_index($this->year_code,$this->new_archive);
-		$this->addToReads();
+		$this->addToPubs();
 		$this->setPtime();
 		$this->markPublished();
 		$this->initializeNext();
@@ -134,10 +131,6 @@ class Publish {
 	}
 
 
-
-	public function test(){
-		$this->setPointers();
-	}
 
 	public function copyNextToLatest() {
 	// copy the news_next to the news_latest directory

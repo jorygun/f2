@@ -35,7 +35,7 @@ else {
 $latest_file = u\list_recent_files (1,getcwd())[0];
 $updatetime = date ("m/d/y H:i T", filectime($latest_file));
 $footer_line = "Last update at $updatetime";
-
+<p></p>
 
 
 
