@@ -70,7 +70,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 
  	switch ($action) {
  		case 'V':
- 			if ($r = verifyEmail($uid, $container) {
+ 			if ($r = verifyEmail($uid, $container)) {
  				list($username,$uid,$uem) = $container['member']->getMemberBasic($uid);
 				echo "$username, thanks for verifying your email.";
 			}
@@ -78,7 +78,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
  			break;
  		case 'P':
  			// not used
- 			edit_profile($uid,$container['membera'], $container['templates'];
+ 			edit_profile($uid,$container['membera'], $container['templates']);
          break;
       case 'S':
       	echo signup_verify($uid);
@@ -125,7 +125,7 @@ if (! empty ($_POST)) {
 			break;
 
 		case 'xout':
-			return xoutUser($_POST['uid'], $container['member)'];
+			return xoutUser($_POST['uid'], $container['member)']);
 		  break;
 
 	  case 'copyIndex':
@@ -230,7 +230,7 @@ function getTemplate($type)
 function runNewsIndex() {
 
 	$ni = new NewsIndex();
-	$ni -> rebuildJson();
+	//$ni -> rebuildJson();
 
 	$ni -> buildHTML();
 	return "html done";
@@ -338,8 +338,6 @@ function setNewsTitle($title)
 
 function verifyEmail($uid, $container)
 {
-
-
 	$r = $container['membera']->validate_email_with_notice($uid);
 
   return "Verified " . $container['member']->verifyEmail($uid) ;

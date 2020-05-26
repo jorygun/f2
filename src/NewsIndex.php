@@ -1,11 +1,33 @@
 <?php
-namespace DigitalMx\Flames;
+
+namespace Digitalmx\Flames;
+
+#ini_set('display_errors', 1);
+
+//BEGIN START
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+
+	use digitalmx as u;
+	use digitalmx\flames as f;
+	use digitalmx\flames\Definitions as Defs;
+	use digitalmx\flames\DocPage;
+
+use DigitalMx\Flames\FileDefs;
+use DigitalMX\MyPDO;
+
+
+//END START
+
+
+
+//EOF
+
 
 /*  script to build news index file
 	file catalogs all the newsletters in newsp and builds a data
-	file of them, then uses data file to build an html ul of the 
+	file of them, then uses data file to build an html ul of the
 	data when can be displayed as a collapsible list.
-	
+
   file has 3 functions:
   rebuild database from scratch
   add item to database (new issue, for example)
@@ -13,48 +35,49 @@ namespace DigitalMx\Flames;
 
 */
 
-use DigitalMx\Flames\FileDefs;
+
 
 class NewsIndex {
-	
+
 	// produces html ul file at this location:
 	private static $newsindexinc=FileDefs::news_index_inc;
 
    //  source directory for archived newsletters
     private static $newsarchivedir = FileDefs::archive_dir;
-    
+
     private static $json_file = FileDefs::news_index_json;
 
     private $file_index = array();
-	
-	
+	private $pdo;
+
     function __construct() {
-    	
+		$this->pdo= MyPDO::instance();
+
     }
-  		
+
   public function rebuildJson() {
-  	$this->file_index = $this->buildFileList( FileDefs::archive_dir);
-  	file_put_contents(FileDefs::news_index_json,json_encode($this->file_index ));
-  	
+  	$file_index = $this->buildFileList( FileDefs::archive_dir);
+  	file_put_contents(FileDefs::news_index_json,json_encode($file_index ));
+
   	}
-      
+
 	public function append_index ($datecode , $path) {
-		$this->file_index = json_decode(file_get_contents(FileDefs::news_index_json),true);
-      $this -> file_index [$datecode] = $path;
-      file_put_contents(FileDefs::news_index_json,json_encode($this->file_index ));
+		$file_index = json_decode(file_get_contents(FileDefs::news_index_json),true);
+      $file_index [$datecode] = $path;
+      file_put_contents(FileDefs::news_index_json,json_encode($file_index ));
       $this->buildHTML();
-        
+
     }
 
 	public function buildHTML() {
 		$html = $this->jsonToHtml(FileDefs::news_index_json);
 		file_put_contents(FileDefs::news_index_inc,$html);
 	}
-	
-     
-   
+
+
+
     private function buildFileList($newsarchive) {
-    	
+
     	echo "<p>NewsIndex is indexing $newsarchive.</p>" ;
        if (! $dh = opendir($newsarchive) ){
        	die ("No dir at $newsarchive");
@@ -97,12 +120,31 @@ class NewsIndex {
         return $files;
     }
 
-  
-		
+
+
     private function jsonToHtml ($json) {
       $letters=0; $lyear=0;
 		$file_index = json_decode (file_get_contents(FileDefs::news_index_json),true);
-		
+		;
+			//clear pubs table;
+	echo count($file_index) . " records in json index" . BRNL;
+
+		$this->pdo->query('DELETE FROM `pubs`;');
+
+try {
+		$insertsql = "INSERT INTO pubs (issue, rcount, title, pubdate, url)
+		VALUES (:issue, :rcount, :title, :pubdate, :url);";
+		//$insertsql = "INSERt INtO pubs (issue, rcount) VALUES (:issue, :rcount)";
+		//ON DUPLICATE KEY UPDATE  url=values(url), pubdate=values(pubdate)";
+		$getreadssql = "SELECT read_cnt from `read_table` where issue = ?  LIMIT 1;";
+		$getreadsprep = $this->pdo->prepare($getreadssql);
+		$insertprep = $this->pdo->prepare($insertsql);
+} catch (\PDOException $e) {
+	echo $e->getMessage(); exit;
+}
+
+//echo "ok" . BRNL; exit;
+
         $listcode = "<ul class='collapsibleList' style='margin-bottom:6px;'>\n";
         foreach ($file_index as $dcode => $f){
            # echo "$dt => $f<br>\n";
@@ -112,6 +154,7 @@ class NewsIndex {
 
             $year = $dt->format('Y');
             $cdate = $dt->format('M j, Y');
+            $sdate = $dt->format('Y-m-d');
 
             if ($year <> $lyear){
                 if ($lyear <>''){$listcode .= "</ul>\n";}
@@ -119,9 +162,46 @@ class NewsIndex {
                 $listcode .= "<li>$year <ul>";
             }
             $thisline = "<li style='margin-bottom:6px;'><a href='$url' target='_blank' style='text-align:left'>$cdate </a></li>\n";
-         
+
             $listcode .= $thisline;
 
+				$reads = 0;
+				if (substr($dcode,0,4) >= 2016)  {
+					$oldissue =  (int)substr($dcode,2);
+					try {
+
+							if ($getreadsprep->execute([$oldissue]) ) {
+								$reads = $getreadsprep->fetchColumn() ;
+							}
+
+						} catch (\PDOException $e) {
+							$reads = 0;
+							echo $e->getMessage(); exit;
+						}
+					}
+
+// look for title file if the url is a subdir of newsp
+				$title = '';
+				$dir = dirname($url);
+				if (substr($dir,-5) != 'newsp') {
+					#echo "path $dir" . BRNL;
+						$titlefile = SITE_PATH . $dir . '/title.txt';
+						#echo "looking for $titlefile" . BRNL;
+						if (file_exists($titlefile)) {
+							$title = file_get_contents($titlefile);
+						}
+				}
+
+				$pdovars = array(
+					':issue' => (int)$dcode,
+					':url' => $url,
+					':pubdate' => $sdate,
+					':rcount' => (int)$reads,
+					':title' => $title,
+					);
+
+            	#u\echor($pdovars,'pdovars');
+            $insertprep->execute($pdovars);
         }
             $listcode .= "</ul>
             </ul>
@@ -133,7 +213,7 @@ class NewsIndex {
 
 
         return $html;
-       
+
 
 
     }

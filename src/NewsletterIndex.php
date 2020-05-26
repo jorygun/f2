@@ -13,6 +13,8 @@ namespace DigitalMx\Flames;
 ini_set('display_errors', 1);
 ini_set('error_reporting', E_ALL);
 
+use DigitalMx\Flames\MyPDO;
+
 
 class NewsletterIndex {
 
@@ -20,10 +22,12 @@ class NewsletterIndex {
     private $jfile = SITE_PATH . "/newsp/index.json";
     private $hfile = SITE_PATH . "/newsp/index_inc.html";
     private $newsfile = SITE_PATH . "/news/index_inc.html";
+	private $pdo;
 
     private $file_index = array ();
 
     function __construct($rebuild=false) {
+    	$this->pdo = MyPDO::instance();
         echo "<p>Indexing</p>" ;
         // chec all files
           if ( $rebuild==true or ! file_exists($this->jfile) ){
@@ -44,6 +48,7 @@ class NewsletterIndex {
 
         if ( (! file_exists($this->hfile)) or (filemtime($this->hfile) < filemtime($this->jfile) ) )
         {
+        	echo "Rebuilding HTML and DB";
           $this->rebuild_html();
         }
 
@@ -100,6 +105,9 @@ class NewsletterIndex {
 
     private function rebuild_html() {
       $letters=0; $lyear=0;
+		$sql = "INSERT INTO `pubs` (issue,url,pubdate) VALUES (:issue,:url,:pubdate) ON DUPLICATE KEY
+			UPDATE  url=:url, pubdate= :pubdate ";
+			$sqlprep = $this->pdo->prepare($sql);
 
         $listcode = "<ul class='collapsibleList'>\n";
         ;
@@ -119,6 +127,8 @@ class NewsletterIndex {
             }
             $year = $dt->format('Y');
             $cdate = $dt->format('M j, Y');
+            $sdate = $dt->format('Y-m-d');
+
 
             if ($year <> $lyear){
                 if ($lyear <>''){$listcode .= "</ul>\n";}
@@ -128,10 +138,17 @@ class NewsletterIndex {
             $thisline = "<li><a href='$url' target='_blank' style='text-align:left'>$cdate </a></li>\n";
 
             $listcode .= $thisline;
+            $pdovars = array(
+            	':issue' => $dcode,
+            	':url' => $url,
+            	':pubdate' => $sdate
+            	);
+            $sqlprep->execute($pdovars);
 
         }
             $listcode .= "</ul>
             </ul>
+
             ";
 
         $title = sprintf ("<h3>$letters Newsletters Indexed On %s</h3>\n", date("M j, Y"));

@@ -5,14 +5,14 @@ namespace DigitalMx\Flames;
 // use DigitalMx\Flames\DocPage;
 // use DigitalMx\Flames\Assets;
 use Pimple\Container;
-use DigitalMx\MyPDO;
+
 
 /* set up services in pimple container */
 
 $container = new Container();
 
 $container['pdo'] = function ($c) {
-    return MyPDO::instance();
+    return \DigitalMx\MyPDO::instance();
 };
 $container['member'] = function ($c) {
     return new Member($c);
