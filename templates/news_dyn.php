@@ -14,48 +14,38 @@ use DigitalMx\Flames\FileDefs;
 
 // contains routines needed for the news page
 
-//PUBLISH DATA
+$pdo = $container['pdo'];
+$news = $container['news'];
 
-// set up for unpublished newsletter
-	$publish_time = $pubdate = $date_code = '';
-	$page_title = 'Flame News';
-#test to see if newsletter has been publsihed or not
-if (file_exists(FileDefs::pubfile)){
-    $min_security = 2;
-    $pubdata = trim(file_get_contents(FileDefs::pubfile));
-    list($pubdate,$date_code)  = explode('|',$pubdata);
-   # echo "got $pubdate,$date_code" . BRNL;
+
+// get enclosing folder name
+$ndir = dirname(__FILE__);
+preg_match('/(\d+)$/',$ndir,$m);
+$issue = $m[1];
+if (!$issue || ! u\isInteger($issue )){
+	die ("No issue no. in $ndir"):
 }
 
-else {
-#Set up data for preview edition
-	$min_security = 4;
-
-}
-$latest_file = u\list_recent_files (1,getcwd())[0];
-$updatetime = date ("m/d/y H:i T", filectime($latest_file));
-$footer_line = "Last update at $updatetime";
-<p></p>
-
-
+$issue_data = $news->getIssueData($issue);
+$page_title = 'Flame News';
 
 $page_options = ['ajax'];
 
 
 if ($login->checkLogin($min_security)){
-	$read = new ReadNews();
-	$subtitle = $read ->getTitle();
+	$subtitle = $issue_data['title'];
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 
 	echo $page->startBody(1,$subtitle);
-
 }
 
 
-if ($date_code){$read->increment_reads($date_code);}
+if (1){$news->increment_reads($issue);}
+$rcount = $new->getReads($issue);
 
 #breaking news added after publication
+
 $read->echo_if('breaking.html');
 
 $sections = $read->get_sections();

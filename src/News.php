@@ -114,7 +114,17 @@ public function getLatestIssue(){
 	return $latest;
 }
 
+public function incrementReads($issue) {
+	$sql = "UPDATE `pubs` SET rcount = rcount+1 WHERE issue = '$issue';";
+	$this->pdo->query($sql);
+	return ;
 
+}
+public function getReads($issue) {
+ $sql = "SELECT rcount from `pubs` where issue ='$issue';";
+ $rcount = $this->pdo->query($sql)->fetchColumn();
+ return $rcount;
+}
 
 public function buildChart($chart_url) {
 
@@ -243,34 +253,5 @@ public function getTopicName($topic) {
 	return $this->topics[$topic];
 }
 
-###########################################################
-
-    public function news_head($title,$tcomment=''){
-        $hcode = "<div class='divh2'>$title\n";
-        if ($tcomment != ''){$hcode .= "<br><span class='comment'>$tcomment</span>";}
-        $hcode .= "</div>\n";
-        return $hcode;
-    }
-
-    public function news_subhead($title){
-        $hcode = "<h3>" . u\special($title) . "</h3>\n";
-        return $hcode;
-    }
-
-	public function incrementReads($issue){
-		#echo "sstart increment reads";
-
-		if ($_SESSION['level']>7){ return;} #don't count admin access
-		$sql1 = "UPDATE read_table SET read_cnt = read_cnt + 1 WHERE issue = $issue;";
-		$sql2 = "INSERT INTO read_table SET read_cnt = 1 , issue = $issue;";
-#INSERT INTO table (id, name, age) VALUES(1, "A", 19) ON DUPLICATE KEY UPDATE    name="A", age=19
-		$sql3 = "INSERT INTO read_table (issue,read_cnt) VALUES ($issue,1)
-		    ON DUPLICATE KEY UPDATE read_cnt = read_cnt + 1";
-		$this->pdo->query($sql3);
-		return 1;
-	}
-
-
-
-
 }
+//EOF
