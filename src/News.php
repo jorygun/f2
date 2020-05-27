@@ -101,7 +101,7 @@ public function getNewsIndex() {
                 $listcode .= "<li>$year <ul>";
       }
 
-      $listcode .= "<li style='margin-bottom:6px;'><a href='${r['url']} target='_blank' style='text-align:left'>" . $r['hdate'] .  "</a> ${r['title']}</li>\n";
+      $listcode .= "<li style='margin-bottom:6px;'><a href='${r['url']}' target='_blank' style='text-align:left'>" . $r['hdate'] .  "</a> ${r['title']}</li>\n";
 
 	}
 	return $listcode;

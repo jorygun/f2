@@ -13,7 +13,7 @@ ini_set('display_errors', 1);
 	use DigitalMx\Flames\MemberAdmin;
 
 	$admin = $container['membera'];
-
+	$templates = $container['templates'];
 
     $login->checkLogin(6);
     $page_title = 'Member Admin';

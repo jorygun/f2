@@ -5,17 +5,13 @@
 
  */
 
-use DigitalMx\Flames\Login;
-
 function f2_security_below ($min) {
+	   return security_below($min);
 
-	   $login->checkLevel($min);
-
-   return false;
 }
 
 function security_below($min) {
-
-	   $login->checkLevel($min);
-	return false;
+	   if ($_SESSION['level'] >= $min) {return true;}
+		echo "Not Logged In: " . $_SESSION['level'] . $min . BRNL;
+		exit;
 }

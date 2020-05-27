@@ -78,8 +78,6 @@ if (REPO == 'live'){
 }
 
 
-require $repoloc . "/config/f2_transition.php";
-
 if (!empty($_SERVER)) {
 	//login checks for an secode and updates Session['login']
 	$login = new Login($container);
@@ -91,6 +89,9 @@ if (!empty($_SERVER)) {
 	$menu = new Menu ();
 	$_SESSION['menubar'] = $menu-> getMenuBar();
 }
+
+require $repoloc . "/config/f2_transition.php";
+
 $pdo = $container['pdo'];
 
  define ('INIT',1);

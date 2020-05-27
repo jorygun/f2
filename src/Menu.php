@@ -83,10 +83,10 @@ EOT;
 
 		$vroot = basename(REPO_PATH);
 		$vfile = REPO_PATH . "/config/version.txt";
-		$vdate = REPO_PATH . "/config/commit_timestamp"; #touched after evry commit in master
-		if (! file_exists($vfile)){throw new Exception ("No version file");}
+		$vdate = REPO_PATH . "/var/commit_timestamp"; #touched after evry commit in master
+		if (! file_exists($vfile) || ! file_exists($vdate) ){throw new Exception ("No version file");}
 
-		$vrel =  date('d M Y H:i',trim(file_get_contents($vdate)));
+		$vrel =  trim(file_get_contents($vdate));
 
 		#$vnum = $init->getVersion();
 		$vfh = fopen($vfile,'r');
