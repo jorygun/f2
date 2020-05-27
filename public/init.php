@@ -88,8 +88,8 @@ if (!empty($_SERVER)) {
 
 	// easiest to retrieve menu bar from session array.
 	// docpage doesn;t use the container.
-	$menu = new Menu ($container);
-	$_SESSION['menubar'] = $menu-> setMenuBar($_SESSION['login']);
+	$menu = new Menu ();
+	$_SESSION['menubar'] = $menu-> getMenuBar();
 }
 $pdo = $container['pdo'];
 

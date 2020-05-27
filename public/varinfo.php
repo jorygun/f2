@@ -179,7 +179,7 @@ try {
 
 // $md = $member->getInfoFromLogin('6kQ4k11602');
 // u\echor ($md,'Member from Login');
-// $nav = new Menu($md);
+// $nav = new Menu();
 // $navbar = $nav->getMenuBar();
 // echo $navbar;
 //

@@ -32,4 +32,4 @@ unused/
 
 # live dirs containt their own .gitignore
 public/news/current/
-
+var/

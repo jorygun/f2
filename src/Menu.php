@@ -13,6 +13,7 @@ use DigitalMx\MyPDO;
 use DigitalMx\Flames\Opportunities;
 use DigitalMx\Flames\FileDefs;
 
+
 class Menu {
 
 	private $menubar;
@@ -34,9 +35,14 @@ class Menu {
 	);
 
 
-	public function __construct ($container) {
+	public function __construct ($login='') {
 
-		$this->opp = $container['opps'];
+		$this->opp = new Opportunities();
+		if (empty($login)){
+			$login = $_SESSION['login'];
+		}
+
+		$this->menubar = $this->setMenuBar($login);
 
 	}
 
