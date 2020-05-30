@@ -7,10 +7,10 @@ use \Exception as Exception;
 	echopre(string) / echos <pre>string</pre>
 	echor(array,title) / echos tiel and print_r array
 	echop(string) / echos <p>string</p>
-	
+
 	string = spchar($string) /replaces spec chars
 	string = spchard($string / restores spec chars
-	
+
 	bool = delete_dir(path) /removes files, subs, and dir
 	bool = isValidEmail (email) /checks with filter
 	array = get_url(url) /uses curl, content is in [content=>xxx]
@@ -18,9 +18,9 @@ use \Exception as Exception;
 	array = list_recent_files ($path,number) / list of file names in path
 	string = sqldate(format,when) /date or time, now or a date
 	string = safelike($string) / excapes _ and %
-	
+
 	array = pdoPrep(post,accept,key) / complicated.  data for a pdo insert or update
-	array = stripslashes_deep(array) / removes slashes 
+	array = stripslashes_deep(array) / removes slashes
 	string = buildCheckBoxSet(var_name, def_array,checkedlist) / builds set of checkbox
 	bool = full_copy(source,dest) / copies source dir to dest dir (like cp -r)
 	string = decompress (keys,defs) / lists values of defs for items in keys
@@ -28,7 +28,7 @@ use \Exception as Exception;
 	string = makelinks(strings) / replaces urls with links
 	d = days_ago(date) /days since date
 	void = catchError ($e, $more)
-	
+
 */
 
 function echop($text){
@@ -72,7 +72,7 @@ function catchError ( $e , $more=[]){
 			echo "<b>$var: </b><br> $val" . BRNL;
 		}
 	}
-				
+
 	echo "<hr>\n";
 }
 
@@ -90,7 +90,7 @@ function deleteDir($src, $keep=false) {
     if (!is_dir($src)) {
         throw new \InvalidArgumentException("$src is not a directory");
     }
-    
+
      if (file_exists($src)) {
         $dir = opendir($src);
         while (false !== ($file = readdir($dir))) {
@@ -108,8 +108,8 @@ function deleteDir($src, $keep=false) {
         elseif (! rmdir($src) ){ echo "Cannot delete $src" . BRNL;}
         return true;
     }
-    
-   
+
+
 }
 function emptyDir ($path) {
 
@@ -142,7 +142,7 @@ function is_valid_email($email){
 
 function echoAlert($text) {
 	#$text=addslashes($text);
-	
+
 	echo '<script>alert("' .$text . '")</script>';
 	return ;
 }
@@ -155,7 +155,7 @@ function detab_text($message){
 function email_std ($message){
 	$message = str_replace("\t",'    ',$message);
 	$message = preg_replace('/\r?\n/',"\r\n",$message);
-	
+
   $array = explode("\r\n", $message);
   $message = "";
   foreach($array as $line) {
@@ -173,13 +173,13 @@ function email_std ($message){
 function list_recent_files($number,$path){
 /**
 	#returns a list of n most recent files of type in directory.
-	
+
 **/
 	$latest_ctime = 0;
 	$mods = array(); $fnames=array(); $files=array();
-	
+
 	if (is_dir($path) == false){return [];}
-	
+
     foreach (glob($path . '/*') as $f) {
         $mtimes[filemtime($f)] = $f;
     }
@@ -197,10 +197,10 @@ function make_date ($when, $form='human',$type = 'date'){
 		@ when is either text date/time or unix timestamp or 'now' or empty (= never)
 		@ form is human, sql, rfc or ts (time-stamp)
 		@ type is date or datetime
-		
+
 	// when is either timestampe text data/time
 	*/
-	
+
 	if (empty($when)){
 		$ts = 1; #Jan 1 1970
 	} elseif ($when == 'now'){
@@ -210,12 +210,12 @@ function make_date ($when, $form='human',$type = 'date'){
 	} else {
 		$ts = (int)strtotime($when);
 	}
-	
+
 	if ($ts <= 1){return 'Never';}
-	
+
 	$dt = new \DateTime();
 	$dt->setTimestamp($ts);
-	
+
 	switch ($form){
 		case 'sql' :
 			$format = ($type == 'datetime')?
@@ -227,7 +227,7 @@ function make_date ($when, $form='human',$type = 'date'){
 			break;
 		case 'rfc' :
 			$format = 'c';
-			
+
 			break;
 		case 'ts' :
 			return $ts;
@@ -235,13 +235,13 @@ function make_date ($when, $form='human',$type = 'date'){
 		default :
 			throw new Exception ("unknown format $form for make_date");
 	}
-	
+
 
 	if (! $dt ){
 		echo "Cannot set date from $when in make_date";
 		return '??';
 	}
-	return $dt->format($format);  
+	return $dt->format($format);
 }
 
 
@@ -305,20 +305,20 @@ function pdoPrep($data,$include=[], $key=''){
             // ignore any fields not listed in valid fields
             if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
-            
+
             $null = null;
             // if (empty($val)){ #catches 0, '', and false
-//             	if ($var == 'asset_id'){ 
+//             	if ($var == 'asset_id'){
 //             		$val = 0;
 //             		#echo "setting asset id to 0";
 //             	} #leave out of list // no, leave in and set to null
-//    
+//
 //             }
-            
+
 				$db[$var] = htmlspecialchars_decode($val);
 				//$db[$var] = $val;
-				
-				
+
+
             $ufields[] = "`$var` = :$var";
             $ifields[] = "`$var`";
             $ivalues[] = ":$var";
@@ -341,7 +341,7 @@ function stripslashes_deep ($value){
 }
 
 function buildOptions($val_array,$check='',$choose = true){
-	// val array is keys and values, check is current selection, 
+	// val array is keys and values, check is current selection,
 	// choose is true to include the Choose One... line
 	$opt = '';
 	if ($choose) {
@@ -379,7 +379,7 @@ function buildCheckBoxSet(
     // $check is string with multiple characters to match against the val array
     //per_row is how many items to put in a row; 1 is verticle list
         $opt = '';
-   
+
     $rowcount = 0;
     $tablestyle=false;
     asort($val_array);
@@ -394,7 +394,7 @@ function buildCheckBoxSet(
 
         $label = $v;
         $label .= ($show_code)? " ($k)" : '';
-			
+
           $checkme = (strstr($check, (string)$k))?"checked":'';
           if ($tablestyle){ $opt .= "<td>";}
           $opt .= "<span class='nobreak'><input type='checkbox' name='${var_name}[]' value='$k' $checkme>$label</span> ";
@@ -459,11 +459,11 @@ function is_valid_url($url) {
 function decompress($data,$defs){
 	/**
 	Converts string of chars into string of defs, comma sep
-	
+
 	@data  character string, like ABCD
 	@defs array of defs, like B=>'letter B'
 	@returns comma separated list of defs for strings in data
-	
+
 **/
 		$choices = [];
 
@@ -500,7 +500,7 @@ function linkHref($url,$label='',$target='' ){
 function make_inlist_from_list($list){
 	if (empty($list) )return false;
 	$qlist = array_map(function ($c) {return "'$c'";},$list);
-	
+
 	$inlist = join(',',$qlist);
 	return $inlist;
 }
@@ -527,10 +527,10 @@ function make_links($input){
     return $input;
 }
 
-function link_assets($input) {
+function link_assets($input) { return $input; //disable this
 // links [asset n] to thumbnail of asset id n
   if ($n = preg_match_all ('/\[asset (\d+)\]/i',$input,$m)) {
-     		require_once SITE_PATH . "/scripts/asset_functions.php";
+
          for ($i=0;$i<$n;++$i){
             $assetlink = $m[0][$i];
             $thisid = $m[1][$i];
@@ -550,7 +550,7 @@ function number_range ($text){
 		/* accepts a string of numbers separated by anything
 			AND ALSO expansion of pairs of numbers separated by a -
 			and returns a php array of numbers
-			
+
 		*/
 		$number_list = [];
 
@@ -586,8 +586,8 @@ function days_ago ($date_str = '1') {
 	//takes a date and returns the age from today in days
 	// date_str can be normal string or timestamp.
 	// routine converts to timestamp and returns days from now.
-	
-	
+
+
 	$dt = new \DateTime();
 	; #may change
 	if (is_numeric($date_str)){
@@ -599,13 +599,13 @@ function days_ago ($date_str = '1') {
 
 	#is unix time
 	$dt->setTimeStamp($t);
-	
+
 	$dtnow = new \DateTime();
-	
+
 	$diff = $dt -> diff($dtnow);
 	$diff_str = $diff->format('%a');
-	
-	
+
+
 	return $diff_str;
 }
 
@@ -614,7 +614,7 @@ function url_exists($url)
 	if ($path = is_local($url)) return file_exists($path);
 	elseif (is_valid_url($url) && get_mime_from_curl($url) ) return true;
 		// use curl instead of get headers to avoid timeout problems
-		
+
    return false;
 	}
 
@@ -626,11 +626,11 @@ function get_mime_from_url($url)
 	} elseif (is_http($url) ){
 		$mime = get_mime_from_curl($url);
 	} else { $mime = '';}
-	
+
 	return $mime;
 	}
-	
-		
+
+
 function get_mime_from_curl($url)
 	{
 	// also checks if url exists
@@ -643,7 +643,7 @@ function get_mime_from_curl($url)
 	$code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	if ($code >= 400) return false;
 	$mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-	
+
 	return $mime;
 	}
 
@@ -668,7 +668,7 @@ function age_and_date($date_str) {
 	//takes a date and returns the age from today in days and a formatted version of date
 	// note if date is from a db timestamp field, db will return a date string.
 	// was "age" in old utilities.
-	
+
 	if (!$date_str){ #blank or NULL??
 		return array('99999','no_date');
 	}

@@ -10,14 +10,15 @@
 	use DigitalMx\MyPDO; #if need to get more $pdo
 	use DigitalMx\Flames\DocPage;
 
-
-
+	$templates = $container['templates'];
+		$opps = $container['opps'];
 
 
 if ($login->checkLogin(0)){
 	$page_title = "Current Opportunities";
 	$page_options = ['tiny']; # ['ajax','tiny','votes']
 	$page = new DocPage($page_title);
+
 	echo $page -> startHead($page_options);
 	echo <<<EOT
 <script>
@@ -33,8 +34,8 @@ EOT;
 
 
 //END START
-	use DigitalMx\Flames\Opportunities;
-	$opps = $container['opps'];
+
+
 	$opp_id = $_GET['id'] ?? 0;
 	/* set type as user, admin or public
 		user can edittheir own
@@ -45,8 +46,7 @@ EOT;
 	if (isset($_POST['id'])){
 		#save data
 		$id = $opps->postOpp($_POST);
-		$opp_row = $opps->getOpp($id);
-		show_data($opp_row);
+		echo $opps->showOpp($id);
 		exit;
 	}
 
@@ -57,39 +57,35 @@ EOT;
 	}
 	elseif ($opp_id){ #asked for a specific opp
 		#show the opp data
-		if (! $opp_row = $opps->getOpp($opp_id) ){
-			throw new Exception ("Opp id $opp_id does not exist");
-		}
-		show_data($opp_row);
+
+		echo $opps->showOpp($opp_id);
 	}
 
 	else {#display opp list for edits
-		if (!$opp_list = $opps->linkOppList() ){
+		if (!$opp_list = $opps->getOppList() ){
 			throw new Exception ("No opp list");
 		}
 		#u\echor ($opp_list,'opps');
-
+		echo "<p>You may create new opportunities or edit opportunities that you created.</p>";
 		echo "<ul>\n";
-		foreach ($opp_list as $line){
-			echo "<li>$line\n";
+		foreach ($opp_list as $id => $opp_row){
+			$line = $button = '';
+
+			if ( $_SESSION['level'] > 7
+				or ($_SESSION['login']['user_id'] == $opp_row['user_id']) )
+			{
+				$buttonlink = "/show_opp.php?id=$id&edit=true";
+				$button = "<button type='button' "
+				.	"onClick=window.open('$buttonlink')>Edit</button>\n";
+			}
+			$line = "<li><a href='/show_opp.php?id=$id'>${opp_row['title']}</a> ";
+			#u\echor($_SESSION,'session'); exit;
+			echo $line . $button;
 		}
 		echo "</ul>";
+
 	}
 
-	function show_data($row) {
-		$description = $row['description'] ?? '';
-		$status = $row['active']? 'Active':'Inactive';
-		$id = $row['id'];
-			echo <<<EOT
-	<h3>{$row['title']}</h3>
-		Location: ${row['location']};<br>
-		Contact: ${row['owner']}; Contact: <a href=mailto:${row['owner_email']}>${row['owner_email']}</a><br>
-		 Posted: ${row['created']} Expires: ${row['expired']}<br>
-		 <hr>$description<hr>
-		 More Info: <a href='${row['link']}' target='_blank'>Link</a><br>
-		 <i>Status: $status ($id)</i>
-EOT;
-}
 
 	function show_edit ($opp_row){
 

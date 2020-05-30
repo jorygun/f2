@@ -14,12 +14,12 @@ function addVote(id,rank) {
 }
 
 function cancel_bulk(job) {
-     
+
 	$.ajax({
 	url: "/action.php",
 	data:'ajax=bulkmail&job='+job,
 	type: "POST",
-	
+
 	success: function(bjobs){
 		$('#in_bulk_queue').html(bjobs);
 	}
@@ -33,12 +33,28 @@ function setTitle() {
 
 	data:'ajax=setNewsTitle&title='+title,
 	type: "POST",
-	
+
 	success: function(response){
 		alert (response);
 	}
 	});
 }
+
+function countClick(anchor,artid=0) {
+	var href = anchor.href;
+	//alert ("href is " + href);
+	var action = 'click';
+	$.ajax({
+	   url: "/action.php",
+	   data: 'ajax='+action+'&ref='+href+'&art='+artid,
+	   type: "POST",
+	   success: function (response) {
+            alert (response);
+        }
+	 });
+ return false; // always go to the href;
+}
+
 // this scriput used for verifyEmail, sendLogin,
 
 /* action is name passed to action.php
@@ -49,6 +65,8 @@ function setTitle() {
     otherwise whatever is in message fielld will be in the alert
 */
 
+
+
 function takeAction (action,uid=0,affectid='',message='') {
    $.ajax({
    url: "/action.php",
@@ -58,11 +76,11 @@ function takeAction (action,uid=0,affectid='',message='') {
 
             if (message == 'resp') {alert (response);}
             else if (message != '') {alert (message);}
-            
+
 
             if (affectid != '') { $('#'+affectid).html(response);}
         }
- });  
+ });
 }
 
 
@@ -74,10 +92,10 @@ function verifyProfile(uid) {
         success: function (response) {
             $('#profver').html(response);
             $('#warning').hide();
-         
+
         }
-       
-    
+
+
  });
 }
 
@@ -92,8 +110,8 @@ function verifyEmail(uid) {
             $('#emver-'+uid).html(response);
             $('#emstat-'+uid).html('Y');
         }
-       
-    
+
+
  });
 }
 
@@ -108,9 +126,9 @@ function runStatus(pid) {
     success: function (response) {
         alert (response);
         }
-   
+
  });
-   
+
 }
 // for getting content of bulk email messages
 function getMessage (type) {
@@ -119,11 +137,11 @@ function getMessage (type) {
    data: 'ajax=getmess&type='+type,
    dataType: 'json',
   method: 'post',
-  
+
    success: function (messdata) {
       console.log(messdata);
       var result = messdata;
-     
+
       $('#mcontent').html(result['text']);
       $('#msubject').val(result['subject']);
    },

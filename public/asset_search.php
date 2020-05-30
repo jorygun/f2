@@ -103,9 +103,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	}
 	# u\echor ($ids, 'ids');
 
- 	exit;
-}
 
+}
+echo "<hr";
 $last_search = $_SESSION['last_asset_search'] ?? [] ;
 $search_data = $as->prepareSearch ($last_search );
 echo $templates->render('asearch',$search_data);

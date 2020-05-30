@@ -12,7 +12,7 @@ function check_the_box (obj,state){
 	// checks/unchecks a checkbox obj (true/false)
 	document.getElementById(obj).checked = state;
 }
-	
+
 function check_form(params) {
     var err='';
   for (i=0; i<params.length; i++) {
@@ -29,13 +29,14 @@ function check_form(params) {
          alert(err);
          return false;
     }
+
   return true;
 }
 
 function gotoNewId(url,idvar){
     /* replaces the 'newid' text in url with the value of idvar
     if it is a number, or the value of the object whose id is named in idvar
-    
+
     */
     var newid=0;
     if (Number.isInteger(idvar) ){ newid=idvar;}
@@ -110,8 +111,8 @@ function showWarn(content){
     +'</body></html');
     warn.document.close()
     }
-    
-    
+
+
 function setCaretPosition(elemId, caretPos) {
 // use to determine how many characcters have been typed in a text area
 // to prevent submitting sparse data

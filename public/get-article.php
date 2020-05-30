@@ -31,26 +31,21 @@ use DigitalMx as u;
 //  use DigitalMx\Flames\Definitions as Defs;
 //  use DigitalMx\Flames\DocPage;
 //  use DigitalMx\Flames\FileDefs;
+$asseta = $container['asseta'];
 
-if ($login->checkLogin(4)) {
-    $page_title = 'News Article';
-    $page_options=['votes','tiny']; #ajax, votes, tiny
+$login->checkLevel(4);
 
-    $page = new DocPage($page_title);
-    echo $page -> startHead($page_options);
-    # other heading code here
+ $page_title = 'News Article';
+ $page_options=['votes','tiny','ajax']; #ajax, votes, tiny
 
-    echo $page->startBody();
-}
+ $page = new DocPage($page_title);
+ echo $page -> startHead($page_options);
+ # other heading code here
 
-$comment_params = array(
-    'user_id' => $_SESSION['login']['user_id'],
-    'username' => $_SESSION['login']['username'],
-    'on_db' => 'article',
-    'mailto' => ['commenters','contributor','editor',13105],
-    'single' => false,
-    'on_id' => 0,
-    );
+ echo $page->startBody();
+
+
+
 
 // have to get on_id, either from posted message or from GET
 $mode = 's'; // no discussion
@@ -72,7 +67,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $on_id = $id;
     }
 }
-$comment_params['on_id'] = $on_id;
+$comment_params = array(
+    'user_id' => $_SESSION['login']['user_id'],
+    'username' => $_SESSION['login']['username'],
+    'on_db' => 'article',
+    'mailto' => ['commenters','contributor','editor',13105],
+    'single' => false,
+    'on_id' => $on_id,
+    'admin_note' => '',
+    );
+
 
 if (u\isInteger($on_id) && $on_id > 0) {
 } else {
@@ -84,12 +88,12 @@ $ucom = new Comment($container);
 
 // if post, add the comment and set the mode to d to display omments on return
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
         $ucom -> addComment($_POST,$comment_params);
         $mode='d';
 }
 
 // in any event, get the article and display
-
 
     $na = $container['articlea']->buildStory($on_id);
 
@@ -108,22 +112,26 @@ if ($mode == 'd') {
      echo "<div class='comment_background'>
          <h2>Reader Comments</h2>
          ";
-    if (empty($carray)) {
-        echo "No Comments Yet";
-    } else {
+
         foreach ($carray as $row) {
+        //u\echor($row);
+			if (!empty($row['asset_list'])) {
+				 $row['asset'] = $asseta->getAssetBlock($row['asset_list'], 'thumb', false);
+			} else {
+				$row['asset'] = '';
+			}
             echo $container['templates']->render('comment', $row);
         }
-    }
+
         echo "</div>" . NL;
 
     if ($na['take_comments']) {
         echo "<hr>";
-        $nc['username'] = $comment_params['username'];
-			$nc['admin_note'] = '';
-			$nc['on_id'] = $on_id;
-        echo $container['templates']->render('new_comment', $nc);
-    }
+
+        echo $container['templates']->render('new_comment', $comment_params);
+    } else {
+    	echo "New comments are disabled on this article" . BRNL;
+   }
 }
 
 //EOF

@@ -17,7 +17,7 @@ namespace Digitalmx\Flames;
 
 if ($login->checkLevel(4)){
    $page_title = 'Article Manager';
-	$page_options=[]; #ajax, votes, tiny
+	$page_options=['ajax']; #ajax, votes, tiny
 
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
@@ -50,7 +50,8 @@ $articlea = $container['articlea'];
 if (!empty($_POST['toggle_use'])) {
 	$id = $_POST['toggle_use'];
 	$article->toggle_use($id);
-} else {
+}
+
 	$style='unpub';
 	if (!empty($_POST['style'])) {
 		$style = $_POST['style'];
@@ -58,7 +59,11 @@ if (!empty($_POST['toggle_use'])) {
 	$d= $articlea->getArticleList($style);
 #	u\echor($d); exit;
 	echo $templates->render('article_list', $d);
-}
+	echo "<hr>\n";
+
+
+	echo f\actionButton('Save Next','save-next',0,'','resp');
+
 
 exit;
 

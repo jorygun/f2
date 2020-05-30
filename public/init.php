@@ -77,7 +77,7 @@ if (REPO == 'live'){
     ini_set('display_errors', 1);
 }
 
-
+// if running from web, check for login, set session, build menus
 if (!empty($_SERVER)) {
 	//login checks for an secode and updates Session['login']
 	$login = new Login($container);
@@ -86,13 +86,15 @@ if (!empty($_SERVER)) {
 
 	// easiest to retrieve menu bar from session array.
 	// docpage doesn;t use the container.
-	$menu = new Menu ();
+
+	$menu = new Menu ($container);
 	$_SESSION['menubar'] = $menu-> getMenuBar();
 }
 
 require $repoloc . "/config/f2_transition.php";
 
 $pdo = $container['pdo'];
+
 
  define ('INIT',1);
 

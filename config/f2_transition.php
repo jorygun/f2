@@ -3,6 +3,9 @@
    all old files call this to create a login and check security
    This causes the new login to be triggered instead.
 
+   Note this thing is kind of backward.  Question is level below,
+   so true means forbid access.
+
  */
 
 function f2_security_below ($min) {
@@ -11,7 +14,9 @@ function f2_security_below ($min) {
 }
 
 function security_below($min) {
-	   if ($_SESSION['level'] >= $min) {return true;}
-		echo "Not Logged In: " . $_SESSION['level'] . $min . BRNL;
-		exit;
+	   if ($_SESSION['level'] < $min) {
+			echo "Not Allowed: " . $_SESSION['level'] . $min . BRNL;
+			exit;
+		}
+		return false;
 }

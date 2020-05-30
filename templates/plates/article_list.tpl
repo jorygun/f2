@@ -18,7 +18,7 @@ Edit Any Article id: <input type='text' size=6 id='editme' name='editme' value='
 Edit</button> (Use id 0 for new article)<br>
 Lists:
 <button  name='style' value='unpub'>List Unpub</button>
-<button  name='style' value='current'>List current</button>
+<button  name='style' value='recent'>List Recent</button>
 <br>
 
 
@@ -53,8 +53,10 @@ Lists:
 
 			<td s><?=$row['asset_count']?> Assets <?=$row['image']?></td>
 			<td>
+				<?=$row['view-button']?>
 				<?=$row['edit-button']?><br>
 				<?=$row['use-button']?>
+
 			</td>
 		</tr>
 

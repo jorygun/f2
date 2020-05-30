@@ -4,14 +4,12 @@ namespace DigitalMx\Flames;
 // ini_set('error_reporting', E_ALL);
 
 /* routine to build menus and return them as html text.
-// also includes some javascript to close the open
-//  menus on mobile, because they stick open.
-	run this at login to set the menu in the session file.
+	Menu is run once during init right after login is set.
+
 
 */
-use DigitalMx\MyPDO;
-use DigitalMx\Flames\Opportunities;
-use DigitalMx\Flames\FileDefs;
+
+
 
 
 class Menu {
@@ -22,7 +20,7 @@ class Menu {
 	private $userlevel, $text;
 	public $header;
 	private $login = array();
-	private $opp;
+	private $opps;
 
 	private $opp_count;
 
@@ -35,14 +33,11 @@ class Menu {
 	);
 
 
-	public function __construct ($login='') {
+	public function __construct ($container) {
+		$this->login = $_SESSION['login'];
+		$this->opps = $container['opps'];
+		$this->menubar = $this->setMenuBar($this->login);
 
-		$this->opp = new Opportunities();
-		if (empty($login)){
-			$login = $_SESSION['login'];
-		}
-
-		$this->menubar = $this->setMenuBar($login);
 
 	}
 
@@ -63,13 +58,13 @@ class Menu {
 
 
 
-	private function addMenu ($level,$id,$title=''){
+	private function addMenu ($level,$id,$title='',$href='#'){
 		$text='';
 		if ($this->userlevel >= $level){
 			if (empty($title)){$title = $id;}
 			$text = <<<EOT
 
-		<li id='$id'><a href='#' >$title</a>
+		<li id='$id'><a href='$href' >$title</a>
 		<ul id='${id}_child'>
 EOT;
     # removed this line from above:
@@ -210,11 +205,11 @@ EOT;
 
 	$t .=  self::closeLine(6, $thisMenu) ;
 
-	$opp_rows = $this->opp->getOppCount();
+	$opp_rows = $this->opps->getOppCount();
 	$thisMenu = "Opportunities ($opp_rows)";
 	$menulist[] = $thisMenu;
-	$opp_list = $this->opp->linkOppList();
-	$t .= self::addMenu (0,$thisMenu);
+	$opp_list = $this->opps->linkOppList();
+	$t .= self::addMenu (0,$thisMenu,$thisMenu,'/show_opp.php');
 
 	foreach ($opp_list as $line){
 		$t .=  "<li>$line";

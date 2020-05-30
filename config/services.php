@@ -43,10 +43,10 @@ $container['voting'] = function ($c) {
 		return new Voting();
 };
 $container['publish'] = function ($c) {
-		return new Publish();
+		return new Publish($c);
 };
 $container['opps'] = function ($c) {
-		return new Opportunities();
+		return new Opportunities($c);
 };
 $container['articlea'] = function ($c) {
 		return new ArticleAdmin($c);

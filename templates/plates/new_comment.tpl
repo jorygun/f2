@@ -32,8 +32,19 @@ Please don't.
 
 <form method='post' >
 <input type='hidden' name='on_id' value='<?=$on_id?>' >
+
 <p>Use the tools in the toolbar below to format your comments with HTML</p>
 	<textarea name='comment' id='comment' class='useredit' rows='4' cols='60' onkeyup='stoppedTyping()'></textarea>
+	<p><b>Assets</b></p>
+	Create or assign an asset (e.g., photo) to be displayed with your comment. You can find existing assets or create a new one here.<br>
+	Your asset: <input type=text name='asset_list' size = 6 >
+	<button type = 'button' onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >Create a new asset</button>
+
+	<button type='button' onclick="window.open('/asset_search.php' ,'assets','width=1100,left=160');">Search Assets</button>
+<br>
+
+
+
 	<p>If other people comment on this thread, you will receive their comment by email, UNLESS you...<br>
 	<input type=checkbox name="no_email" value='1'> check here to block email from other commentors.</p>
 	<button type='submit' id='submit_button'   >Submit Comment </button>

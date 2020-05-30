@@ -75,7 +75,8 @@ EOT;
          ";
         }
         if (!empty($options) &&
-        (in_array('ajax', $options) ||  in_array('votes', $options) )) {
+        (in_array('ajax', $options) ||  in_array('votes', $options) || in_array('links', $options) )
+        ) {
             $t .= "
          <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
          <script src='/js/ajax.js'></script>

@@ -3,6 +3,8 @@ namespace DigitalMx\Flames;
 #ini_set('display_errors', 1);
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';;
+$login->checkLevel();
+
 #require_once "ReadNews.php";
 
 
@@ -12,19 +14,26 @@ use DigitalMx\Flames\ReadNews;
 use DigitalMx\Flames\FileDefs;
 
 
+
+
+
 // contains routines needed for the news page
 
 $pdo = $container['pdo'];
 $news = $container['news'];
 
 
+
 // get enclosing folder name
-$ndir = dirname(__FILE__);
-preg_match('/(\d+)$/',$ndir,$m);
-$issue = $m[1];
-if (!$issue || ! u\isInteger($issue )){
+$ndir = basename(dirname(__FILE__));
+if (preg_match('/(\d+)$/',$ndir,$m) ){
+	$issue = $m[1];
+} else { $issue = 0; #preview
+}
+if ( ! u\isInteger($issue )){
 	die ("No issue no. in $ndir"):
 }
+
 
 $issue_data = $news->getIssueData($issue);
 $page_title = 'Flame News';
@@ -32,7 +41,8 @@ $page_title = 'Flame News';
 $page_options = ['ajax'];
 
 
-if ($login->checkLogin($min_security)){
+
+
 	$subtitle = $issue_data['title'];
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
@@ -40,17 +50,35 @@ if ($login->checkLogin($min_security)){
 	echo $page->startBody(1,$subtitle);
 }
 
-
-if (1){$news->increment_reads($issue);}
-$rcount = $new->getReads($issue);
+$rcount = 0;
+if (!empty($issue)){
+	$news->increment_reads($issue);
+	$rcount = $new->getReads($issue);
+}
 
 #breaking news added after publication
+
+/*
+	sequence:
+	get issue (from dir)
+	show user warning
+	show breaking news
+	show all news articles
+	display opps (live)
+	display calendar (live)
+	show status report
+	display recent (live)
+
+*/
 
 $read->echo_if('breaking.html');
 
 $sections = $read->get_sections();
 #u\echoR($sections);
 
+$artlist = $this->news->getNewsIdsForIssue($issue);
+u\echor($artlist,'artlist');
+exit;
 
 foreach ($sections as $section => $section_data){
 	list ($section_name,$section_subhead) = explode ('|',$section_data);

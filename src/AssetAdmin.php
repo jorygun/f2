@@ -155,7 +155,7 @@ class AssetAdmin
 
 		if (!empty($post['tags']) && is_array ($post['tags'])){
 			// convert to string
-			$adata['tags'] =  charListToString($post['tags']) ;
+			$adata['tags'] =  u\charListToString($post['tags']) ;
 		}
 
 		 $adata['needs'] = $this->checkThumbNeeds($adata,$new_thumbs);
@@ -192,7 +192,7 @@ class AssetAdmin
    	}
 
 		if (! $adata = $this->assets->getAssetDataById($id) ){
-			throw new Exception ("No asset at $id");
+			return [];
 		}
 
 		// set tic character for each thumb that currently exixts.
@@ -281,7 +281,7 @@ class AssetAdmin
 
 		*/
 		if (! $adata = $this->getAssetData($aid) ) {
-			return "Asset $id not found";
+			return "Asset $aid not found";
 		}
 		$aurl = $adata['asset_url'];
 		$atitle = $adata['title'];

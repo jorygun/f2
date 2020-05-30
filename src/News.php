@@ -86,6 +86,23 @@ class News {
 		return $popnews;
 	}
 
+ public function getNewsIdsForIssue($issue) {
+ 	if ($issue == 1) {
+ 		// preview
+ 		$where = "use_me > 0";
+ 	} else {
+ 		$where = "issue = '$issue' ";
+ 	}
+ 	$sql = "SELECT id from `news_items`
+ 		WHERE $where";
+ 	try {
+ 		$artlist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+ 	} catch (PDOException $e) {
+ 		return [];
+ 	}
+ 	return $artlist;
+
+ }
 
 public function getNewsIndex() {
 	$sql = "SELECT issue,url,title, pubdate, DATE_FORMAT(pubdate,'%d %b, %Y') as hdate FROM `pubs` ORDER BY pubdate DESC";
@@ -107,6 +124,11 @@ public function getNewsIndex() {
 	return $listcode;
 }
 
+public function getIssueData($issue) {
+	$sql = "SELECT * FROM pubs where issue = '$issue' LIMIT 1;";
+	$issue_data = $this->pdo->query($sql)->fetch();
+	return $issue_data;
+}
 public function getLatestIssue(){
 	// returns array of issue and human date for last entry in pubs
 	$sql = "SELECT issue, DATE_FORMAT(pubdate,'%b %d, %Y') as hdate from `pubs` ORDER By pubdate DESC LIMIT 1";

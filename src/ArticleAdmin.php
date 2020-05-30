@@ -7,9 +7,6 @@ use DigitalMx\Flames as f;
 use DigitalMx\Flames\Definitions as Defs;
 
 
-// require_once "news_functions.php";
-// require_once "asset_functions.php";
-
 
 class ArticleAdmin
 {
@@ -57,13 +54,16 @@ class ArticleAdmin
 			$credential = $_SESSION['level'] >= 7 || $_SESSION['login']['user_id'] == $row['contributor_id'];
 
 			$row['edit-button'] = ($credential) ?
-				"<button type='button' onClick=window.open('/article_editor.php?id=$id','aedit')>Edit $id</button>"
+				"<button type='button' onClick=window.open('/article_editor.php?id=$id','aedit')>Edit</button>"
 				: '';
 			// news admin can add remove article from queue
 			$row['use-button'] = ($_SESSION['level']>= 7) ?
 				"<button type='submit' form='alist_form' name='toggle_use' value = $id
 				style='background:orange;'>Toggle Use</button>"
 				: "";
+			$row['view-button'] =
+				"<button type='button' onClick = window.open('/get-article.php?$id')>View</button>";
+
 			if ($credential) {
 				$editable[] = $row;
 			} else {
@@ -128,7 +128,7 @@ class ArticleAdmin
         $sdata['more'] = '';
         if (!empty($url = $sdata['url'])) {
             $ltitle = $sdata['link_title'] ?: 'web link';
-            $sdata['more'] = "<p class='more'> More: <a href='$url' target='_blank'>$ltitle</a></p>";
+            $sdata['more'] = "<p class='more'> More: <a href='$url' onClick = 'return countClick(this,$id);' target='_blank'>$ltitle</a></p>";
         }
 
 
@@ -158,6 +158,7 @@ class ArticleAdmin
 
         return $sdata;
     }
+
 
 	private function setStatusMessage($sdata) {
         // set status message

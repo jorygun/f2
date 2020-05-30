@@ -128,7 +128,10 @@ button:hover {
 input:invalid {color:red;}
 input:valid {color:#000;}
 
-
+div.box {
+	border: 1px solid gray;
+	padding: 3px;
+}
 div.head {margin: auto;
     /*width: 600px;*/
 	vertical-align:bottom;
@@ -337,6 +340,11 @@ div.comment_box {
     padding:3px;
     background-color:#FFF;
 
+}
+div.comment_box::after {
+ content: "";
+  clear: both;
+  display: table;
 }
 
 div.comment_background {

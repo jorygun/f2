@@ -114,7 +114,9 @@ class Comment
         $on_db = self::$db_names[$params['on_db']];
         $on_id = $params['on_id'];
 			$user_id = $params['user_id'];
+
         $ucomment = $post['comment'];
+        $asset_list = $post['asset_list'] ?: '0';
 
         $no_email = (isset($post['no_email'])) ? 1:0;
 
@@ -125,7 +127,8 @@ class Comment
             user_id = '$user_id',
             comment = ?,
             no_email= $no_email,
-            cdate = NOW()
+            cdate = NOW(),
+            asset_list = '$asset_list'
             ;
             ";
 
@@ -134,7 +137,8 @@ class Comment
 
         $sql_update = "UPDATE comments SET
             comment=?,
-            cdate = NOW()
+            cdate = NOW(),
+            asset_list='$asset_list',
             WHERE on_db = '$on_db' and
             item_id = '$on_id' and
             user_id = '$this->user_id'
@@ -155,14 +159,16 @@ class Comment
 			$comment_action = 'Update';
 		} else {
 			// insert new comment
+	//echo $sql_insert . BRNL;
 		  $stmt_insert = $this->pdo->prepare($sql_insert);
 			$stmt_insert -> execute([$ucomment]);
 			$comment_action = 'Insert';
 			$inserted_rows = $stmt_insert->rowCount();
 		}
 	// prepare to mail all the involved parties
-		$this->getComments($params); #to buildd the list of commenters
-      if (!empty($this->mailto)) {$this->sendEmails($ucomment); }
+		$carray = $this->getComments($params); #to buildd the list of comments
+
+		if (!empty($this->mailto)) {$this->sendEmails($ucomment); }
 		else {echo "No recipeints" . BRNL;}
         // rerun the recent.php to generate new comment count display
         //include_once(SITE_PATH . "/scripts/recent.php");
@@ -265,6 +271,7 @@ private function sendEmails ($ucomment)
 
 <h4>$title</h4>
 $ucomment
+
 <hr>
 <ul>
 <li> To POST a reply on the website that emails other commenters, click this link:
@@ -313,8 +320,8 @@ EOT;
 		$on_id = $params['on_id'];
 
 		 $sql = "
-            SELECT c.id, c.user_id,c.comment,c.on_db,c.item_id,c.no_email,
-            DATE_FORMAT(c.cdate,'%d %b %Y %H:%i' ) as pdate,
+            SELECT c.id, c.user_id,c.comment,c.on_db,c.item_id,c.no_email,c.asset_list,
+            DATE_FORMAT(c.cdate,'%e %b %Y' ) as pdate,
             u.username,u.user_email,u.user_from
             FROM `comments` c
             JOIN `members_f2` u  on c.user_id = u.user_id
@@ -324,7 +331,9 @@ EOT;
 
          $carray = $this->pdo->query($sql)->fetchAll();
         # u\echor ($carray, $sql); exit;
-         $this->buildCommenters($carray);
+
+			$this->buildCommenters($carray); // builds commenters, emails, no-email list
+
 
         return $carray;
 
@@ -348,74 +357,4 @@ private function getArticleInfo($on_db,$on_id)
 
 
 
-    private function _extract_email ($text)
-    {
-        $text = trim($text);
-       if ( preg_match('/^(.\s+)?.*?([\w\.\-]+@[\w\.\-]+)/',$text,$m) ){
-       	 $email = $m[2];
-        	return $email;
-        }
-    }
-
-// display omments with
-//  foreach (
-
-    public function display_comments ($carray,$show_title,$limit=99) {
-        if (empty($carray)){return '(no comments)';}
-
-        #echo "carray:\n<pre>" . print_r($carray,true) . "</pre>\n";
-        $clist =  "<div style='width:100%;background-color:#eee;padding:1em;border:1px solid #393;'>";
-        $j=0;
-        $num_comments = count($carray);
-        $first_to_show = max(1,$num_comments - $limit + 1);
-
-        foreach ($carray as $cdata){
-            ++$j;
-            if ($j<$first_to_show){continue;}
-
-            $ucomment = nl2br($cdata['comment']);
-            $ucomment = make_links($ucomment);
-
-            $cid = $cdata['cid'];
-            $pdate = $cdata['pdate'];
-            $cuser_id = $cdata['user_id'];
-            $dbtable = $cdata['dbtable'];
-            $dbitem = $cdata['item'];
-            $title = htmlentities($cdata['title']);
-            if ($dbtable == 'news_items'){
-                $dblink = "/scripts/news_article_c.php?id=$dbitem";
-            }
-            elseif ($dbtable == 'assets'){
-                $dblink = "/scripts/asset_c.php?id=$dbitem";
-            }
-            elseif ($dbtable == 'spec_items'){
-                $dblink = "/special/";
-            }
-            else {$dblink = "#";}
-
-            $itemlink = $show_title ?
-            "<p style='margin-top:4px;'><i>On $dbtable <a href='$dblink'> $title</a> </i></p>"
-            : '';
-            $user_contact = $cdata['user_contact'];
-            $user_profile = $cdata['user_profile'];
-
-
-            $user_about = $cdata['user_about'];
-             $clist .= "
-	<div class='comment_box' style='width:600px;background-color:#FFF;
-                border:1px solid #999;'>
-        <div class='presource'>
-            $itemlink
-             <p style='float:left;margin-top:4px;'> $user_contact  - $pdate<br>
-             <span style='<font-size:0.8em;font-style:italic;margin-left:1em;'> $user_about </span> </p>
-        </div>
-        <p class='comment' style='clear:both'>$ucomment</p>
-		<p style='text-align:right;font-size:small;margin-top:4px; clear:both'>(cid # $cid)</p>
-
-    </div>
-    ";
-        }
-        $clist .= "</div>\n";
-        return $clist;
-    }
 }

@@ -448,7 +448,7 @@ class Assets {
    	$sql = "SELECT * from `assets2` a
    		where a.id = $id";
    	if (!$adata = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){ #arra
-   		echo "Failed to retrieve data record from id $id.<br>";
+
    		return [];
    	}
 

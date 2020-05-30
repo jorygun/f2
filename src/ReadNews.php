@@ -5,7 +5,7 @@ namespace DigitalMx\Flames;
 // functions used in reading a newsletter
 
 
-
+use DigitalMx\Flames\Definitions as Defs;
 
 
 class ReadNews {
@@ -106,6 +106,40 @@ function get_sections(){
 		 $opp_rows = $this->opps->getOppCount();
 		 return $opp_rows;
 	}
+
+	public function user_welcome() {
+		$user = $_SESSION['login'];
+		$ems = $user['email_status'];
+		$age = $user['profile_age'];
+
+		$t = "<div class='box'>";
+		$t .= "<p>Welcome back  ${user['username']}.
+		Flames member since ${user['join_date']}</p>";
+
+		$err = [];
+		if ($ems != 'Y'){
+			$err[] = "There is an issue with your email address: "
+				 . Defs::getEmsName($ems)
+				 . NL;
+		}
+		if ($age > 360) {
+			$err[] = "Your profile has not been updated in over a year.  Please have a look.";
+		}
+		if (!empty($err)) {
+			$t .= "<p><span class='red'>There are some problems
+			with your account.</span> <br>
+			You can fix these by
+				editing your profile under your name in the menu bar.</p>
+				<ul>";
+			foreach ($err as $e){
+				$t .= '<li>' . $e;
+			}
+			$t .= "</ul>" . NL;
+		}
+		$t .= "</div>" . NL;
+	return $t;
+}
+
 
 	public function echo_if ($filename,$heading='',$subhead='') {
 		#echo "Called echo_if on $filename<br>\n";

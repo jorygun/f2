@@ -136,6 +136,7 @@ class Login
         $this->loginfo = $log_info;
         $_SESSION['login'] = $log_info;
         $_SESSION['level'] = $log_info['seclevel'];
+		$this->member->setLastLogin($log_info['user_id']);
 
         return true;
     }

@@ -11,8 +11,8 @@ namespace DigitalMx\Flames;
 	use DigitalMx\Flames\DocPage;
 	use DigitalMx\Flames\FileDefs;
 	use DigitalMx\MyPDO;
-	
-	
+
+
 	// script reads the alendar file and produces two outputs:
 // an html table of events, and a plain text list of event highlights.
 // If run with parameter u (calendar.php?u=1) then lets you add new items.
@@ -28,7 +28,7 @@ namespace DigitalMx\Flames;
 
 class Calendar {
 
-	
+
     private $pdo;
     private $item_list = array();
      #list(id,datetime,$event,$city,$location,$contact,$info)
@@ -40,8 +40,8 @@ class Calendar {
     	'contact' => '',
     	'info' => '',
     	);
-    
-    
+
+
 	public function __construct () {
 		$this->pdo = MyPDO::instance();
 		$this->calendar_items = $this->get_items();
@@ -56,9 +56,9 @@ class Calendar {
     	$items = $this->pdo -> query($sql)->fetchAll(\PDO::FETCH_UNIQUE);
     	#u\echor ($items); exit;#
     	return $items;
-		
+
 	}
-	
+
 	public function show_item_list ($edit = true ){
 		$elink = '';
 		if (! $this->calendar_items){
@@ -75,11 +75,11 @@ class Calendar {
 			$output .= "</table><br>\n";
 		}
 		$output .= "<form method='get'><input type='submit' name='id' value='New Event' ></form>";
-		
+
 		return $output;
 
    }
-	
+
 
 public function show_event($id) {
 		 // form yto enter new calendar item
@@ -92,7 +92,7 @@ public function show_event($id) {
 		$location = u\special($row['location']);
 		$contact = u\special($row['contact']);
 		$info = u\special($row['info']);
-		
+
 		 $f = <<<EOT
 	<hr>
 	<b>Edit/Create calendar item</b>
@@ -114,13 +114,13 @@ EOT;
 
 
 public function save_event($post){
-	
+
 	u\echor($post) . BRNL;
 	echo $post['cdate'] . BRNL;
 	if (! $ctime = strtotime($post['cdate']) ){
 		die ("Date ${post['cdate']} not recognized");
 	}
-	
+
 
 	 $cdata = array(
 	 		'id' => $post['id'],
@@ -131,15 +131,15 @@ public function save_event($post){
         'contact' => u\despecial($post['ccontact']),
         'info' => u\despecial($post['cinfo'])
     );
-    
+
     $prep = u\pdoPrep($cdata,'','id');
     #u\echor($prep); exit;
-  
+
     if ($post['id'] == 0){ #new entry
     	$sql = "INSERT into `events` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
        $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
        $new_id = $this->pdo->lastInsertId();
-    	
+
    } else { #update
   	 $sql = "UPDATE `events` SET ${prep['update']} WHERE id = ${prep['key']} ;";
        $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
@@ -159,7 +159,7 @@ public function build_calendar () {
 			$output .= "<table id='calendar'>";
 			$teaser = "\nOn The Calendar\n----------------------------\n";
 			foreach ($this->calendar_items as $id => $row){
-				
+
 				$udate = strtotime($row['datetime']);
         		$edate = date('M d, Y',$udate);
         		$etime = date('g:i a', $udate);
@@ -167,32 +167,34 @@ public function build_calendar () {
 				$event = u\special($row['event']);
 				$city = u\special($row['city']);
 				$location = u\make_links(nl2br(u\special($row['location'])));
-				$contact = ($row['contact'])? 
+				$contact = ($row['contact'])?
 					'Contact: <br>' . u\make_links(u\special($row['contact']))
 					:
 					'';
-					
+
 				$info = u\make_links(nl2br(u\special($row['info'])));
-				$output .= 
+				$output .=
 				"<tr class='first'><td class='date'> $edate $etime</td>
 		<td class='event'><b>$event</b></td><td class='location'>$city</td></tr>
 		<tr><td>$contact</td><td>$info</td><td>$location</td></tr>
 		";
 			$teaser .= sprintf("%15s  %s: %s\n",$edate,$city,$event);
-			
+
 			}
 
 		$output .= "</table></div>\n";
 		}
-	
-		
-		echo $output;
-		echo "<hr>";
-		echo "<pre>$teaser</pre>";
+
+
+		//echo $output;
+		//echo "<hr>";
+		//echo "<pre>$teaser</pre>";
 		file_put_contents(FileDefs::calendar_html,$output);
-		file_put_contents(FileDefs::calendar_tease,$teaser);
-		
-		
+		if (!empty($teaser)){
+			file_put_contents(FileDefs::calendar_tease,$teaser);
+		}
+
+		return $output;
 
 }
 
@@ -204,7 +206,7 @@ echo "text:<br><pre>",$calendar_t,"</pre><hr>\n";
 echo "html:<br>", $calendar_h,"<hr>\n";
 
 echo "<p>Generating Files</p>";
- 
+
 file_put_contents($calendar_html_file,$calendar_h);
 file_put_contents($calendar_tease_file, $calendar_t);
 
@@ -216,7 +218,7 @@ function get_events_db(){
     // reads upcoming events from events table and produces
     // html for newsletter and text file for use in email.
 
-    
+
     $sql = 'SELECT * FROM `events` WHERE `datetime` >= NOW() ORDER BY datetime;';
    # $sql = 'SELECT * FROM `events` ORDER BY datetime;';
     $stmt = $this->pdo -> query($sql);
@@ -225,7 +227,7 @@ function get_events_db(){
 	$output_t = "\nUpcoming Events\n----------------------------\n";
 	$output_h .= "<tr><th>Date/Time</th><th >Event</th><th>Where</th></tr>";
 
-   
+
 }
 
     private function show_item($row,$edit) {
@@ -271,13 +273,13 @@ function get_events_db(){
     }
 
 
-	
+
 
 
 
 function generate_files($h,$t){
     echo "<p>Generating Files</p>";
- 
+
     file_put_contents(calendar_html_file,$h);
     #file_put_contents($calendar_test,$calendar_h);
     file_put_contents(calendar_tease_file, $t);

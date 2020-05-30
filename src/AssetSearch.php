@@ -54,8 +54,8 @@ private static $empty_search = array (
 		// fill in blank fields
 		$asdata = array_merge(self::$empty_search,$sdata);
 		// comopute options, selects
-		$asdata['use_options'] = build_options(array('On','Before','After'),$asdata['relative']);
-		  $asdata['type_options'] = build_options(Defs::$asset_types,$asdata['type']);
+		$asdata['use_options'] = u\buildOptions(array('On','Before','After'),$asdata['relative']);
+		  $asdata['type_options'] = u\buildOptions(Defs::$asset_types,$asdata['type']);
 		 //$status_options = build_options($asset_status,$pdata['status']);
 
 		  $asdata['all_active_checked'] = (!empty($asdata['all_active'])) ?
@@ -73,7 +73,7 @@ private static $empty_search = array (
 			 $asdata['tag_options'] = u\buildCheckBoxSet('tags',$search_asset_tags,$tag_data,3);
 
 		  $asdata['status_options'] = u\buildOptions(Defs::$asset_status,$asdata['status']) ;
-		  $asdata['searchon_hte'] =  spchar($asdata['searchon']);
+		  $asdata['searchon_hte'] =  u\special($asdata['searchon']);
 		  $asdata['vintage'] =  $asdata['vintage'] ?? '';
 		  $asdata['plusminus'] = $asdata['plusminus'] ?? '';
 
@@ -246,7 +246,7 @@ private function token_search ($searchstring){
     $keyword_tokens = array_map(
         function($keyword) {
 
-            return addslashes(spchard(trim($keyword)));
+            return u\despecial(trim($keyword));
         },
         $keyword_tokens
     );

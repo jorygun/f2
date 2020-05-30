@@ -94,22 +94,22 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 if (! empty ($_POST)) {
 	switch ($_POST['ajax']) {
 		case 'vote':
-			return vote_action($_POST,$container['voting']);
+			return vote_action($_POST,$container);
 		  break;
    	case 'deleteAsset':
-   		echo deleteAsset($_POST['uid'],$container['assets']);
+   		echo deleteAsset($_POST['uid'],$container);
    		break;
    	case 'markReviewed':
-   		echo markReviewed($_POST['uid'], $container['assets']);
+   		echo markReviewed($_POST['uid'], $container);
    		break;
 		case 'bulkmail':
 			return cancel_bulk($_POST['job']);
 		  break;
 	  case 'verifyProfile':
-	  		echo verifyProfile($_POST['uid'],$container['member']);
+	  		echo verifyProfile($_POST['uid'],$container);
 	  		break;
 		case 'sendLogin':
-			echo sendLogin($_POST['uid'], $container['member']);
+			echo sendLogin($_POST['uid'], $container);
 		  break;
 		case 'verifyEmail':
 			echo  verifyEmail($_POST['uid'], $container) ;
@@ -125,10 +125,10 @@ if (! empty ($_POST)) {
 			break;
 
 		case 'xout':
-			return xoutUser($_POST['uid'], $container['member)']);
+			return xoutUser($_POST['uid'], $container);
 		  break;
 
-	  case 'copyIndex':
+	  case 'installNextIndex':
 	  		// copy news index template to new next
 	  		echo copyIndex();
 	  		break;
@@ -142,16 +142,16 @@ if (! empty ($_POST)) {
 			echo getTemplate($_POST['type']);
 			break;
 		case 'markContribute':
-			return markContribute($_POST['uid'], $container['member']);
+			return markContribute($_POST['uid'], $container);
 		  break;
 		case 'initNext':
 			echo initNext();
 			break;
 		case 'setNewsTitle':
-			echo setNewsTitle($_POST['title']);
+			echo setNewsTitle($_POST['title'], $container);
 			break;
 		case 'bounceEmail':
-			echo bounceEmail($_POST['uid'], $container['member']);
+			echo bounceEmail($_POST['uid'], $container);
 			break;
 	  case 'test':
 	  		echo  atest();
@@ -163,15 +163,33 @@ if (! empty ($_POST)) {
 	  		echo  $publish->publishNews();
 	  		break;
 	  	case 'restore':
-	  		echo restore_dev();
+	  		echo system(REPO_PATH . '/crons/restore_dev.sh');
 	  		break;
-
+		case 'save-next':
+			echo save_next($container);
+			break;
+		case 'click':
+			echo count_click($_POST,$container);
+			break;
 		default:
 			echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true);
 	}
 }
 // else, just load the script so the functions can be used.
 
+function count_click($post,$container) {
+//echo "In count_click for $ref";
+	$pdo = $container['pdo'];
+	$ref = substr($post['ref'],0,255); // drop loong line
+	$art = $post['art'];
+	$sql = "INSERT INTO `links` (count,url,article_id)  VALUES (1,'$ref',$art)
+		ON DUPLICATE KEY UPDATE count = count+1, article_id = $art";
+
+	if ($pdo->query($sql) ){
+		return 'Success';
+	}
+	return 'Failed';
+}
 function atest($x=''){
 	$ni = new NewsIndex();
 	$ni->append_index('20191225','news_191215');
@@ -205,7 +223,8 @@ function edit_profile($uid,$madmin,$templates) {
 
 
 
-function verifyProfile($uid,$member) {
+function verifyProfile($uid,$container) {
+	$member = $container['member'];
 	$cdate = $member->verifyProfile($uid);
 	return "Verified $cdate";
 }
@@ -228,7 +247,8 @@ function getTemplate($type)
 }
 
 function runNewsIndex() {
-
+// no longer used
+	return 'Not used';
 	$ni = new NewsIndex();
 	//$ni -> rebuildJson();
 
@@ -245,7 +265,10 @@ function copyLatest() {
 
 
 }
-
+function save_next($container) {
+	$result = $container['publish']->setNextArticles();
+	return ($result)? 'Saved' : 'failed';
+}
 function copyIndex() {
 	$index = FileDefs::news_template;
 	$nextindex = FileDefs::next_dir . "/index.php";
@@ -268,10 +291,10 @@ function initNext()
     }
     return "Done.";
 }
-function vote_action($post,$voting)
+function vote_action($post,$container)
 {
    //post interesting/not interesting votes
-
+	$voting = $container['voting'];
     $user_id = $_SESSION['login']['user_id'] ?? '';
     if (empty($user_id)){return  "You are not logged in";}
 
@@ -329,10 +352,9 @@ function sendLogin($tag, $container)
 
 }
 
-function setNewsTitle($title)
+function setNewsTitle($title,$container)
 {
-    $title_file = SITE_PATH . '/news/next/title.txt';
-    file_put_contents($title_file, $title);
+    $container['publish']->setNextTitle($title);
     return "Done";
 }
 
@@ -343,47 +365,44 @@ function verifyEmail($uid, $container)
   return "Verified " . $container['member']->verifyEmail($uid) ;
 }
 
-function markContribute($uid, $member)
+function markContribute($uid, $container)
 {
 
-    if ($r = $member->markContribute($uid)) {
+    if ($r = $container['member']->markContribute($uid)) {
         echo  $r;
     } else {
         echo "Failed";
     }
 }
-function deleteAsset ($aid,$assets){
-
+function deleteAsset ($aid,$container){
+	$assets = $container['assets'];
 	$assets->deleteAsset($aid);
 	return "$aid Deleted";
 }
 
-function markReviewed($aid,$assets) {
+function markReviewed($aid,$container) {
+	$assets = $container['assets'];
 	if($assets->updateStatus($aid,'R') ) return "Reviewed";
 	return "Failed";
 }
 
-function xoutUser($uid, $member)
+function xoutUser($uid, $container)
 {
-    if ($member->xoutUser($uid)) {
+    if ($container['member']->xoutUser($uid)) {
         echo "User xed out";
     } else {
         echo "Failed User x-out";
     }
 }
 
-function bounceEmail($uid, $member)
+function bounceEmail($uid, $container)
 {
 
-    if ($member->setEmailStatus($uid, 'LB')) {
+    if ($container['member']->setEmailStatus($uid, 'LB')) {
         return  "LB";
     } else {
         return false;
     }
 }
 
-function restore_dev()
-{
-	#restore dev db from last production db
-	return system(REPO_PATH . '/crons/restore_dev.sh');
-}
+

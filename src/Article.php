@@ -59,33 +59,8 @@ EOT;
 
 	}
 
-	private function prep_list_sql($style) {
-		  if ($style == 'unpub'){
-		  		$where = " n.status not in ('P','X')";
-			} elseif ($style == 'current'){
-				$where = " n.status = 'P' AND n.date_published > NOW() - INTERVAL 2 week";
-			}
-			else {throw new Exception (
-				"Unrecognized list style $style");
-			}
-			$sql = <<<EOT
-			 SELECT n.id, n.use_me as use_me, s.section_sequence,
-             if (n.use_me > 0,1,0) as `cat`,
-                 n.title, n.asset_list, n.asset_id, n.status,n.source,
-                 n.contributor_id,m.username,
-                 t.topic_name as topic_name,s.section_name
-            FROM news_items n
-             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
-				LEFT JOIN members_f2 m on m.user_id = n.contributor_id
-            WHERE
-           		$where
 
-            ORDER BY `cat` DESC, section_sequence, topic_name, use_me DESC
-            LIMIT 50;
-EOT;
 
-		return $sql;
-	}
     public function saveArticle($post)
     {
         try {
@@ -120,7 +95,7 @@ EOT;
                 WHERE id =  ${prep['key']} ;";
             $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
         }
-        echo "Saved to $id" . BRNL;
+        //echo "Saved to $id" . BRNL;
         return $id;
     }
 
@@ -246,11 +221,74 @@ EOT;
         return $adata;
     }
 
-	public function getArticleList($cat) {
-		$list_sql = $this->pdo->prepare($this->prep_list_sql($cat));
-		$list_sql->execute();
+	private function getWhereForCat($cat) {
+	/* produces WHERE clause based on selected category:
+		if a date, choose pubdate > date
+		if 'recent', chooses pubdate within 2 weeks
+		if 'next' chooses articles assigned to next newsletter (issue = 1)
+		if and integer, chooses article in issue_id = integer
+	*/
 
-		$alist = $list_sql->fetchAll();
+		if (u\validateDate($cat)) {
+			$where = "n.status = 'P' AND n.date_published > '$cat' ";
+		} elseif (u\isInteger($cat)) {
+					//$stye is issue id; 1 = preview issue
+					$sql = "SELECT stories from `pubs` WHERE issue = '$cat'";
+					$list = json_decode ($this->pdo->query($sql)->fetchColumn() );
+					$idlist = u\make_inlist_from_list($list);
+					$where = "n.id in ($idlist)";
+		} else {
+			switch ($cat) {
+			  case 'unpub':
+					$where = " n.status not in ('P','X')";
+					break;
+				case 'recent':
+					$where = " n.status = 'P' AND n.date_published > NOW() - INTERVAL 2 week";
+					break;
+				case  'next':
+					$where = "n.use_me > 0";
+					break;
+
+				default:
+					throw new Exception (
+						"Unrecognized list style $style");
+
+				}
+			}
+		return $where;
+	}
+	public function getArticleIds($cat) {
+		$where = $this->getWhereForCat($cat);
+		$sql = "SELECT n.id
+							FROM news_items n
+							WHERE $where";
+		$list = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+		return $list;
+	}
+
+	public function getArticleList($cat) {
+		$where = $this->getWhereForCat($cat);
+	echo "where: $cat : $where" . BRNL;
+		$sql = <<<EOT
+			 SELECT n.id, n.use_me as use_me, s.section_sequence,
+             if (n.use_me > 0,1,0) as `cat`,
+                 n.title, n.asset_list, n.asset_id, n.status,n.source,
+                 n.contributor_id,m.username,
+                 DATE_FORMAT('%y %m %d',n.date_published) as pubdate,
+                 t.topic_name as topic_name,s.section_name,count(c.id) as comment_count
+            FROM news_items n
+             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
+				LEFT JOIN members_f2 m on m.user_id = n.contributor_id
+				LEFT JOIN comments c on n.id = c.item_id and c.on_db = 'news_items'
+            WHERE
+           		$where
+				GROUP BY n.id
+            ORDER BY `cat` DESC, section_sequence, topic_name, use_me DESC
+            LIMIT 50;
+EOT;
+
+		$alist = $this->pdo->query($sql)->fetchAll();;
+
 		return $alist;
 
 	}

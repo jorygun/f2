@@ -24,9 +24,6 @@
 			<?=$vblock?>
 		<?php endif; ?>
 
-
-
-
 	</div>
 
  <?php if ($credential): ?>

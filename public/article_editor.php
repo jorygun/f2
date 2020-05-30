@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
      $id = $article->saveArticle($post);
     $_GET['id'] = $id;
     // comment out next two lines to reload eidt window with new content
+    // window.close only works if page opened with js, which it normally is.
     echo "<script>window.close()</script>\n";
     exit;
 }

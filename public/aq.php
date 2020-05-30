@@ -3,21 +3,22 @@ namespace DigitalMx\Flames;
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
-if (!$login->checkLevel(4)) {exit;}
+$login->checkLevel(4);
+
 $idmsg = '';
 $contributor = $_SESSION['login']['username'];
 $vintage = date('Y');
 
 if (isset($_POST['submit'])){
-  $asseta = $container('asseta');
+  $asseta = $container['asseta'];
   if ($id = $asseta->postAssetFromForm($_POST) ) {
-  	echo "<a href='asset_editor.php?id=$id' target='asset_editor'>View in Editor</a>" . BRNL;
+  	echo "<a href='/asset_editor.php?id=$id' target='asset_editor'>View in Editor</a>" . BRNL;
 
   	}
   	else {
   		echo  'Failed to post asset' . BRNL; exit ;
   	}
-
+ exit;
 }
 
 ?>
@@ -50,7 +51,7 @@ if (isset($_POST['submit'])){
             		var newid = matches[1];
             	}
 
-               // alert('ID: ' + newid);
+                alert('ID: ' + newid);
                 var target = window.opener;
                 target.postMessage(newid);
 

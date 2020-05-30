@@ -55,14 +55,20 @@ class Publish {
 	private $new_archive; #name of  new dir:  news_yymmdd
 	private $nli; //news index object
 
-	public function __construct($container ){
+	public function __construct($container){
 		$this->pdo = $container['pdo'];
 		$this->setTimes();
-		$this->title = $this->getTitle();
+		$this->article = $container['article'];
+
 
 	}
 
+public function getLastPubDate() {
+	$sql = "SELECT max(pubdate) from `pubs` ";
+	$last_pub_date = $this->pdo->query($sql)->fetchColumn();
+	return $last_pub_date;
 
+}
 
 	public function wrapupNews() {
 		// these routines clean up everything once
@@ -101,16 +107,18 @@ class Publish {
 	$this->new_archive = 'news_' . $this->now_code;
 
 }
-	public function getTitle(){
-#get latest title from news_next
-
-    if (file_exists(FileDefs::titlefile)){
-        $title = trim(file_get_contents(FileDefs::titlefile));
-
+	public function getNextTitle()
+	{
+		// returns title of issue 1
+		$sql = "SELECT title from `pubs` where issue = 1;";
+		$title = $this->pdo->query($sql)->fetchColumn();
+		return $title;
 	}
-	else {$title = '';}
-	return $title;
- }
+	public function setNextTitle($title) {
+		$sql = "UPDATE `pubs` set title ='$title' WHERE issue = 1";
+		$this->pdo->query($sql);
+		return true;
+	}
 
 	public function publishNews() {
 		// these routines publish the new newsletter
@@ -130,8 +138,26 @@ class Publish {
 
 	}
 
+	public function setNextArticles () {
+
+		$article_list = $this->article->getArticleIds('next');
+
+		$alistj = json_encode($article_list);
+		$sql = "UPDATE `pubs` SET stories = '$alistj' WHERE issue = 1";
+		if ($this->pdo->query($sql) ){
+			return true;
+		}
+		return false;
+	}
+	public function getIssueArticles ($issue) {
+		$sql = "SELECT stories FROM `pubs` WHERE issue = '$issue'";
+		$alist = $this->pdo->query($sql)->fetchColumn();
 
 
+		//$alist = json_decode($alistj);
+		return $alist;
+
+	}
 	public function copyNextToLatest() {
 	// copy the news_next to the news_latest directory
 		if (file_exists (FileDefs::latest_dir)) {
