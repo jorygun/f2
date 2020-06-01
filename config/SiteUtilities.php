@@ -9,20 +9,20 @@ use DigitalMx\Flames\Member;
 use DigitalMx\Flames\FileDefs;
 #use Digitalmx\Flames\Configuration;
 
-
-function getLastPub() {
-	$lts_file = FileDefs::last_pubdate;
-	if (file_exists($lts_file)){
-		return trim( file_get_contents($lts_file) );
-	}
-	else {
-		echo "<p class='red'>$lts_file not found; setting to -7 days.</p>";
-		return strtotime('-7 days');
-	}
-	return false;
-
-
-}
+// replace with Publish->getLastPub() #defaults to pubdate
+// function getLastPub() {
+// 	$lts_file = FileDefs::last_pubdate;
+// 	if (file_exists($lts_file)){
+// 		return trim( file_get_contents($lts_file) );
+// 	}
+// 	else {
+// 		echo "<p class='red'>$lts_file not found; setting to -7 days.</p>";
+// 		return strtotime('-7 days');
+// 	}
+// 	return false;
+//
+//
+// }
 
 function actionButton($label,$action,$uid=0,$affects='',$message='') {
 	/* script to buld button for ajax

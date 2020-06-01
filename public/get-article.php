@@ -41,7 +41,12 @@ $login->checkLevel(4);
  $page = new DocPage($page_title);
  echo $page -> startHead($page_options);
  # other heading code here
+ // aq1 puts retrieved asset id in asset_list field, replacing whatevers there.
+ // aq ADDs the retrieved asset id to existing content.
+ // use aq1 for comments (only 1 asset) and aq for article editor (multiples.)
 
+echo  "<script src='/js/aq1.js'></script>";
+//echo  "<script src='/js/aq.js'></script>";
  echo $page->startBody();
 
 

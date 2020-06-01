@@ -578,11 +578,11 @@ public function showUpdate($uid) {
 EOT;
     $tdata['edit_button'] = ($credential )? $button_text : '';
 
-	$tdata['decade_boxes'] = buildCheckBoxSet('amd_when',Defs::$decades,$row['amd_when'],6);
+	$tdata['decade_boxes'] = u\buildCheckBoxSet('amd_when',Defs::$decades,$row['amd_when'],6);
 
-	$tdata['location_boxes'] = buildCheckBoxSet('amd_where',Defs::$locations,$row['amd_where'],4);
+	$tdata['location_boxes'] = u\buildCheckBoxSet('amd_where',Defs::$locations,$row['amd_where'],4);
 
-	$tdata['department_boxes'] = buildCheckBoxSet('amd_dept',Defs::$departments,$row['amd_dept'],6);
+	$tdata['department_boxes'] = u\buildCheckBoxSet('amd_dept',Defs::$departments,$row['amd_dept'],6);
 
 
    $tdata['profile_warning'] = Defs::$profile_warning;

@@ -96,6 +96,7 @@ td {vertical-align: top;}
 .small {font-size:0.8em;margin-top:3px;margin-bottom:3px;}
 .grayback {background:#CCC;}
 .blueback {background:#00F;color:#FFF;}
+.greenback {background:#0C0;color:#FFF;}
 .tright {text-align:right;}
 
 blockquote, .quoted {
@@ -147,6 +148,18 @@ p.title {
 	margin-left:auto;margin-right:auto;
 	margin-bottom:0;
 	width:90%;
+	}
+
+p.preview {
+	color:#fff;
+	background:#090;
+	text-align:center;
+	font-weight:bold;
+	font-size:1.5em;
+	margin-left:auto;margin-right:auto;
+	margin-bottom:0;
+	width:100%;
+	float:left;
 	}
 
 div.hidden {display:none; border:2px solid green;}

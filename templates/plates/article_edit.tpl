@@ -117,17 +117,17 @@ it will be shown as "Read More...". Link URL must start with 'http://' or 'https
 	<td>Assign asset ids to surround the article content, and/or assign 1 asset to occupy the full width of the article.  You can find existing assets or create a new one here.<br>
 	<button type = 'button' onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >Create a new asset</button>
 
-	<button type='button' onclick="window.open('/scripts/assets.php' ,'assets','width=1100,left=160');">Search Assets</button>
+	<button type='button' onclick="window.open('/asset_search.php?mode=j' ,'assets','width=1100,left=160');">Search Assets</button>
 </td></tr>
-	
+
 <tr><td>Surrounding asset ids (left/top)</td>
-   <td> First two will be on left of article; remaining ones across the top.</br><input type=text name='asset_list' size = 40 value='<?=$asset_list?>'>
+   <td> First two will be on left of article; remaining ones across the top.</br><input type=text name='asset_list' id='asset_list' size = 40 value='<?=$asset_list?>'>
    </td></tr>
-   
+
 <tr><td>Central asset id (in body):</td>
-	<td><input type=text name='asset_id' size=8 value='<?=$asset_id?>'>
+	<td><input type=text name='asset_id' id=size=8 value='<?=$asset_id?>'>
 	</td></tr>
-	
+
 
 <tr><td colspan='2'>Allow Comments? <input type='checkbox' value='1' name='take_comments' <?= $comments_checked ?>> &bull;
 Allow Votes? <input type='checkbox' value='1' name='take_votes' <?= $votes_checked ?>></td></tr>

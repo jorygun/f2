@@ -41,6 +41,7 @@ $article = $container['article'];
 $templates = $container['templates'];
 $asseta = $container['asseta'];
 $articlea = $container['articlea'];
+$publish = $container['publish'];
 
 // if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 // 	u\echor ($_POST,'post'); exit;
@@ -62,7 +63,8 @@ if (!empty($_POST['toggle_use'])) {
 	echo "<hr>\n";
 
 
-	echo f\actionButton('Save Next','save-next',0,'','resp');
+
+	echo publish::$preview_button;
 
 
 exit;

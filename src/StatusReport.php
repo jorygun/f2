@@ -54,25 +54,22 @@ class StatusReport {
 		$this->test = $test;
 
 		$this->member = $container['member'];
-		$this->member_admin = $container['membera:']
+		$this->member_admin = $container['membera'];
 
+	// create report of member status updates
 		$report = $this->createReport($this->since);
-		file_put_contents(FileDefs::status_report,$report);
+		file_put_contents(FileDefs::next_dir . '/status_report.html',$report);
 
-		$profile_report = $this->report_profiles($this->since);
-		$directory = SITE_PATH . '/news/next';
-		$section = "profile_updates.html";
-		file_put_contents("$directory/$section",$profile_report);
+	// create html article of profile updates
+		$report = $this->report_profiles($this->since);
+		file_put_contents(FileDefs::next_dir . '/profile_updates.html',$report);
 
-		$name_report  = $this->createNameReport();
-		file_put_contents(FileDefs::status_tease,$name_report);
+	// create list of updates for email teasers
+		$report  = $this->createNameReport();
+		file_put_contents(FileDefs::next_dir . '/tease_status.txt',$report);
 
-
-
-
-
-		#echo "Saving run time to " . FileDefs::rtime_file . BRNL;
-		file_put_contents(FileDefs::rtime_file,time());
+		// update timestamp on next pub record
+		$container['publish']->setNextUpdated();
 
 	}
 
@@ -81,7 +78,6 @@ class StatusReport {
 	private function createReport ($since) {
 		$report = "<div class='inner'><p>Member Status Report " . date('d M Y') . "<br />";
 		$report .= "Changes since $since.</p>";
-    	$since = (string)$since;
 
 		$report .= $this->report_members();
    $test = true;

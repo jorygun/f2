@@ -175,7 +175,7 @@ EOT;
 
 		$t .= self::addMenu(7,$thisMenu);
 		if ($userlevel >= 7){$menulist[] = $thisMenu;}
-		$t .=    self::if_level (7, "<li><li><a href='/article_list.php' target='article_manager'>List Pending Articles</a>");
+		$t .=    self::if_level (7, "<li><li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
 
 		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='_blank'>User Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/news_admin.php'>News Admin</a>");
@@ -198,7 +198,7 @@ EOT;
 	$thisMenu = 'Authoring';
 	if ($userlevel >= 6){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu (6,$thisMenu);
-		$t .= self::if_level(6,"<li><a href='/article_manager.php'>List Pending Articles</a> ");
+		$t .= self::if_level(6,"<li><a href='/article_manager.php'>Create/Edit Articles</a> ");
 		 $t .=  self::if_level(6,"<li><a href='/asset_search.php' target='assets'>Add/Find Graphics</a> ");
 		 $t .=  self::if_level(6,"<li><a href='/views.php' target='data'>Count of Views by Issue</a> ");
 

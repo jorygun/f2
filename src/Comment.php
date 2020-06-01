@@ -109,6 +109,7 @@ class Comment
     {
     /* the post array must contain on_id and on_db and user_id */
     //u\echor($post); exit;
+		$this->params = $params;
 
         if ($params['user_id'] == 0){echo "error: cannot post if not logged in";} #not logged in; can't post
         $on_db = self::$db_names[$params['on_db']];
@@ -117,7 +118,20 @@ class Comment
 
         $ucomment = $post['comment'];
         $asset_list = $post['asset_list'] ?: '0';
+        $aid = $asset_list;
 
+        if (! empty($aid)){
+        		if (! u\isInteger($aid)  ) {
+        				u\echoAlert ("Invalid Asset Requested");
+        				u\goBack();
+        	 	}
+
+        		$sql = "SELECT count(*) FROM `assets2` WHERE id ='$aid' ";
+        		if (! $this->pdo->query($sql)->fetchColumn()) {
+        			u\echoAlert ("No such asset");
+        			u\goBack();
+        		}
+	}
         $no_email = (isset($post['no_email'])) ? 1:0;
 
     // use this sql to insert a new comment into the db
@@ -141,14 +155,14 @@ class Comment
             asset_list='$asset_list',
             WHERE on_db = '$on_db' and
             item_id = '$on_id' and
-            user_id = '$this->user_id'
+            user_id = '$user_id'
             ;";
 
     // if called as single, first see if there is already a comment by this user
     	$stmt_count = 0;
 		if ($params['single']){
 			$sql_count = "SELECT count(*) from comments
-				WHERE user_id = '$this->user_id'
+				WHERE user_id = '$user_id'
 				AND on_db = '$on_db' AND item_id = '$on_id' ";
 			$stmt_count = $this->pdo->query($sql_count)->fetchColumn();
 		}
@@ -168,17 +182,17 @@ class Comment
 	// prepare to mail all the involved parties
 		$carray = $this->getComments($params); #to buildd the list of comments
 
-		if (!empty($this->mailto)) {$this->sendEmails($ucomment); }
+		if (!empty($params['mailto'])) {$this->sendEmails($ucomment, $params); }
 		else {echo "No recipeints" . BRNL;}
         // rerun the recent.php to generate new comment count display
         //include_once(SITE_PATH . "/scripts/recent.php");
     }
 
-private function sendEmails ($ucomment)
+private function sendEmails ($ucomment, $params)
     {
 
-    list($title,$cid) = $this->getArticleInfo($this->on_db,$this->on_id);
-    $mailto = $this->mailto;
+    list($title,$cid) = $this->getArticleInfo($params['on_db'],$params['on_id']);
+    $mailto = $params['mailto'];
     if (in_array('commenters',$mailto)){
 		 $recipients = $this->commenter_list;
 		 $recipient_names = $this->commenter_names;
@@ -190,6 +204,7 @@ private function sendEmails ($ucomment)
 		 if (!empty($ma = $this->member->getActiveBasic($cid) )){
 		 	$recipients[$cid] = $ma;
 		 	$recipient_names[] = $recipients[$cid][0];
+
 		 }
     	 $mailto = u\array_filter_remove($mailto,'contributor');
     }
@@ -209,9 +224,11 @@ private function sendEmails ($ucomment)
     if (!empty($mailto)){
     	foreach ($mailto as $id){
     		if (!is_numeric($id)){
-    			throw new Exception ("Unknown entry in mailto list: $id");
+    			throw new Exception ("Undefined entry in mailto list: $id");
     		}
-    		$recipients[$id] = $this->member->getActiveBasic($id);
+    		if (!$recipients[$id] = $this->member->getActiveBasic($id) ) {
+    			throw new Exception ("Unknown recipient in mailto list: $id");
+    		}
     		 $recipient_names[] = $recipients[$id][0];
     	}
     }
@@ -245,28 +262,38 @@ private function sendEmails ($ucomment)
     	foreach (array_values($recipients) as  $r){
     		list ($name,$uid,$email,$login,$level) = $r;
     		if (empty($email)) continue;
+    		if ( SITE == Defs::$local_site ) {
+    			if ( ! in_array($email,Defs::$safe_emails) ) {
+    				continue;
+    			} else {
+    				echo "Mailing from local site to $name ($uid) at $email" . BRNL;
+    			}
+    		}
     		#echo "mailer: $name at $email" . BRNL;
 
     		// set up the message
 
    		$elink =  SITE_URL
-   			. "/get-article.php?id=$this->on_id&m=d&s=$login";
+   			. "/get-article.php?id=${params['on_id']}&m=d&s=$login";
     		// different for spec items!
 
-    		$emsg = $this->formMessage($this->username,$title,$elink,$cclist,$ucomment);
+    		$emsg = $this->formMessage($name,$title,$commenter_name, $elink,$cclist,$ucomment);
+    		// block sending of emails from the local dev site, unless on safe list
 
-    	 	$this->mailer->addAddress($email);
-		 	$this->mailer->Body = $emsg;
-		 	$this->mailer->send();
-		 	$this->mailer->clearAddresses();
+
+				$this->mailer->addAddress($email);
+				$this->mailer->Body = $emsg;
+				$this->mailer->send();
+				$this->mailer->clearAddresses();
 
    }
 
  }
 
- private function formMessage($commenter,$title, $elink,$cclist,$ucomment) {
+ private function formMessage($name,$title,$commenter_name, $elink,$cclist,$ucomment) {
 	$msg = <<<EOT
-<p>A comment has been added by $commenter to this
+<p>Greetings $name,<br><br>
+A comment has been added by $commenter_name to this
     Flames item you suggested or previously commented on:</p>
 
 <h4>$title</h4>
@@ -277,7 +304,7 @@ $ucomment
 <li> To POST a reply on the website that emails other commenters, click this link:
     $elink<br>
 
-<li> To email a PRIVATE reply only to $commenter, just reply to this email.
+<li> To email a PRIVATE reply only to $commenter_name, just reply to this email.
   (You should remove the personal login above from the reply.)
 </ul>
 <p>This email was sent to $cclist.</p>
@@ -315,7 +342,7 @@ EOT;
  }
 	public function getComments($params){
 	// retrieves all comments into a list.
-
+	$this->params = $params;
 		$on_db =  self::$db_names[$params['on_db']] ?? $params['on_db'];
 		$on_id = $params['on_id'];
 
@@ -344,7 +371,7 @@ private function getArticleInfo($on_db,$on_id)
         #echo "Getting article data $dbtable, $item_id<br>";
 
         #if ($dbtable == 'spec_items'){return "Special web page $item_id";}
-        #$_on_db = self::nameToTable($dbn);
+        $on_db = self::$db_names[$on_db] ?? $on_db;
         $sql = "Select title,contributor_id from `$on_db` where id = '$on_id'";
         // url is used for spec items, where it is the page name in /spec_items
         if (! $ainfo  = $this->pdo->query($sql)->fetch() ) {

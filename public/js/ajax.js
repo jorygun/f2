@@ -26,8 +26,8 @@ function cancel_bulk(job) {
 	});
 }
 
-function setTitle() {
-     var title = $('#title_text').val();
+function setTitle(t) {
+     var title = $('#'+t).val();
 	$.ajax({
 	url: "/action.php",
 
@@ -35,7 +35,8 @@ function setTitle() {
 	type: "POST",
 
 	success: function(response){
-		alert (response);
+
+		return true;
 	}
 	});
 }
@@ -121,7 +122,7 @@ function runStatus(pid) {
     var ptime = $('#'+pid).val();
    $.ajax ({
     url: "/action.php",
-    data: 'ajax=runStatus&uid=' + ptime,
+    data: 'ajax=runStatus&ptime=' + ptime,
     type: "POST",
     success: function (response) {
         alert (response);

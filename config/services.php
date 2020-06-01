@@ -23,6 +23,10 @@ $container['membera'] = function ($c) {
 $container['assets'] = function ($c) {
     return new Assets($c);
 };
+$container['asseta'] = function ($c) {
+    return new AssetAdmin($c);
+};
+
 $container['templates'] = function ($c) {
     return new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
 };
@@ -30,9 +34,11 @@ $container['templates'] = function ($c) {
 $container['article'] = function ($c) {
     return new Article($c);
 };
-$container['asseta'] = function ($c) {
-    return new AssetAdmin($c);
+$container['articlea'] = function ($c) {
+		return new ArticleAdmin($c);
 };
+
+
 $container['news'] = function ($c) {
     return new News($c);
 };
@@ -48,6 +54,4 @@ $container['publish'] = function ($c) {
 $container['opps'] = function ($c) {
 		return new Opportunities($c);
 };
-$container['articlea'] = function ($c) {
-		return new ArticleAdmin($c);
-};
+

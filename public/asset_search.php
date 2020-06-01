@@ -13,15 +13,28 @@ ini_set('display_errors', 1);
 	use DigitalMx\Flames\DocPage;
 	use DigitalMx\Flames\FileDefs;
 
+$mode = $_GET['mode'] ?? '';  // j when opened by javascript
 
-
-if ($login->checkLogin(1)){
+$login->checkLevel(1);
    $page_title = 'Search Assets';
 	$page_options=['ajax']; #ajax, votes, tiny
 
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
+	echo <<<EOT
+<script>
+  function send_id(aid) {
+  	var target = window.opener;
+   target.postMessage(aid);
+    window.close();
+   return true;
+  	}
+</script>
+EOT;
+
+
+
 	echo <<<EOT
 <script>
 function asset_status_search(setter) {
@@ -70,14 +83,15 @@ function asset_status_search(setter) {
 
 EOT;
 
-	echo $page->startBody();
-}
+echo $page->startBody();
+
 
 //END START
 
 
 $as = new AssetSearch($container);
 	$templates = $container['templates'];
+
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -98,17 +112,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 	foreach ($ids as $id){
 		$asset = $as->getAssetSummary($id);
+		$asset['mode'] = $mode; // was seach opened from javascript?
 		 #u\echor($asset, "selected asset $id");
 		echo $templates->render('asset_mini',$asset);
+
 	}
 	# u\echor ($ids, 'ids');
 
 
 }
-echo "<hr";
+
+echo "<hr>";
 $last_search = $_SESSION['last_asset_search'] ?? [] ;
 $search_data = $as->prepareSearch ($last_search );
 echo $templates->render('asearch',$search_data);
+echo "</body></html>" . NL;
 
 exit;
 

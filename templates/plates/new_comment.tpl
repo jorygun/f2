@@ -36,11 +36,11 @@ Please don't.
 <p>Use the tools in the toolbar below to format your comments with HTML</p>
 	<textarea name='comment' id='comment' class='useredit' rows='4' cols='60' onkeyup='stoppedTyping()'></textarea>
 	<p><b>Assets</b></p>
-	Create or assign an asset (e.g., photo) to be displayed with your comment. You can find existing assets or create a new one here.<br>
-	Your asset: <input type=text name='asset_list' size = 6 >
+	Create or assign an asset (e.g., photo) to be displayed with your comment. You can find existing assets or create a new one here. ID is number over 1000. Only one allowed.<br>
+	Your asset id: <input type=text id='asset_list' name='asset_list' size = 6 pattern = "^\d+$" value='' >
 	<button type = 'button' onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >Create a new asset</button>
 
-	<button type='button' onclick="window.open('/asset_search.php' ,'assets','width=1100,left=160');">Search Assets</button>
+	<button type='button' onclick="window.open('/asset_search.php?mode=j' ,'assets','width=1100,left=160');">Search Assets</button>
 <br>
 
 

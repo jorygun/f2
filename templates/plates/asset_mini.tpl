@@ -20,7 +20,11 @@
    <?php if ($astatus != 'R') : ?>
    	<button type='button' id='rb<?=$id?>' onclick="takeAction('markReviewed',<?=$id?>,'rb<?=$id?>','')">
    	OK?</button>
-   <?php endif; ?>
+   <?php endif; ?> <br>
+	<?php endif; ?>
+
+	<?php if ($mode == 'j') : ?>
+		<button type='button' onclick='send_id(<?=$id?>)'>Send ID</button>
 	<?php endif; ?>
 
 	</td><td>

@@ -7,6 +7,7 @@ class FileDefs {
 	const  latest_dir = REPO_PATH . "/public/news/latest";
 	const  archive_dir = REPO_PATH . "/public/newsp";
 	const  current_dir = REPO_PATH . '/public/news/current';
+	const template_dir = REPO_PATH . '/templates';
 
 // model for newsletter index file
 	const  news_template = REPO_PATH . "/templates/news_index.php";

@@ -95,7 +95,7 @@ EOT;
 
 
 
-    public function startBody($style = 2, $subtitle = '')
+    public function startBody($style = 2, $subtitle = '', $preview=false)
     {
      //style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page, 4 for collapsible list
         $title = $this->title;
@@ -130,15 +130,18 @@ EOT;
                 break;
             case 1: #for newsletter
             case 'nl':
-                $t .= <<<EOT
+                $t .= "
          <img class='left' alt='AMD Flames' src='/graphics/logo-FLAMEs.gif'>
          <p class='title'>$title<br>
          <span style='font-size:0.5em;'>$subtitle</span>
-         </p>
-         $this->menubar
-EOT;
+         </p>";
+			if ($preview) {
+					$t .= "<p class='preview'><b>Preview</b> " . date('M j, Y') . '</p>';
+				}
 
+         $t .= $this->menubar;
                 break;
+
             case 2: #other pages
             case 4:
             case 'small':

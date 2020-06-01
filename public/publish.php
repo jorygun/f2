@@ -31,8 +31,8 @@ echo $page->startBody();
 
 // set date last newsletter published;
 
-    $ptime = $publish->getLastPubDate();
-    echo $ptime;
+    $ptime = $publish->getLastPub('predate');
+
 
 //get current title, if any
 
@@ -56,8 +56,8 @@ echo $page->startBody();
 <button type='button' onClick="window.open('/article_manager.php','article_list')">News Items</button></li>
 <br>
 
-<li>Run the change report.  This creates a report of all the member changes since the  last newsletter was was published.  If necessary, set some other date/time.  This simply sets the time that the update report will work against.  <br>
-    <input type=text id='ptime' value="<?=$ptime?>">
+<li>Run the change reports.  This creates a report of all the member changes since the  last newsletter was was published.  If necessary, set some other date/time.    <br>
+    Since: <input type=text id='ptime' value="<?=$ptime?>">
    <button type='button' onClick = "runStatus('ptime');">Run Report</button>
 
 
@@ -65,17 +65,17 @@ echo $page->startBody();
 <li>Set the Newsletter title<br>
 
     Title: <input type='text' name='title' id='title_text' placeholder = 'Title Not Set' value='<?=$current_title?>'>
-    <button type='button' onClick = "setTitle()">Set Title</button>
+    <button type='button' onClick = "setTitle('title_text')">Set Title</button>
 
 
 <li> Check the newsletter carefully before you publish.<br>
-<button type='button' onClick="window.open('/news/next','preview')">Preview Next</button></li>
+<?=Publish::$preview_button?></li>
 
 <li>Publish the newsletter.  This script assembles the pieces in news_next, places it into a directory at /news/news_latest, and copies that directory to newsp/news_yymmdd (the normal repository for news), and sets the path to that directory in news/current/index.php as a relocate command. It also rebuilds the news index.
-	<br><?=$publishaction?><br>
+	<br><?=Publish::$publish_button?><br>
 
 <li>Check the latest news</a>, to make sure it published.
-<button type='button' onClick="window.open('/news/current','latest_news')">Latest News</button></li>
+<button type='button' onClick="window.open('/news/current','current')">Latest News</button></li>
 
 
 <li>Run the bulk email to send out the Flame News Is Ready Email. Note: the email will pull "teasers"
@@ -98,7 +98,7 @@ echo f\actionButton('publish->next-to-latest ','move-next',0,'','resp');
 <h3>Utilities</h3>
 <p>Update News/next Index from template <?=$indexaction?></p>
 <p>Rebuild Newsletter Index from scratch <?=$rebuildaction?></p>
-<p>Copy news/latest (updated) to copy in archive <?=$updateaction?>
+<p>Copy news/latest (updated) to copy in archive <?=$updateaction?></p>
 
 
 <p><b>Add a breaking news to current newsletter</b></p>

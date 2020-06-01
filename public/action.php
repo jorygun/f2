@@ -117,7 +117,7 @@ if (! empty ($_POST)) {
 			break;
 		case 'runStatus':
 			$test = false;
-			echo runStatusReport($container, $_POST['uid'],$test);
+			echo runStatusReport($container, $_POST['ptime']);
 			// uid used to transfer the starting date
 			break;
 		case 'indexNews':
@@ -148,7 +148,7 @@ if (! empty ($_POST)) {
 			echo initNext();
 			break;
 		case 'setNewsTitle':
-			echo setNewsTitle($_POST['title'], $container);
+			return setNewsTitle($_POST['title'], $container);
 			break;
 		case 'bounceEmail':
 			echo bounceEmail($_POST['uid'], $container);
@@ -170,6 +170,12 @@ if (! empty ($_POST)) {
 			break;
 		case 'click':
 			echo count_click($_POST,$container);
+			break;
+		case 'preview':
+			$publish->buildPreview();
+			break;
+		case 'publish':
+			echo $publish->publishNews();
 			break;
 		default:
 			echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true);
@@ -328,8 +334,6 @@ function cancel_bulk($job)
 }
 
 function runStatusReport($container, $var) {
-
-
 	if (empty($var)){return "Error: no date supplied";}
 	$since = date('Y-m-d H:i',strtotime($var));
 	if ($sr = new StatusReport($container, $since) ) {
@@ -354,8 +358,8 @@ function sendLogin($tag, $container)
 
 function setNewsTitle($title,$container)
 {
-    $container['publish']->setNextTitle($title);
-    return "Done";
+	return $container['publish']->setNextTitle($title) ;
+
 }
 
 function verifyEmail($uid, $container)

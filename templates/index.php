@@ -122,8 +122,9 @@ foreach ($opps->linkOppList() as $opp) {
 echo $calendar->build_calendar();
 
 echo $read->news_head("Recent Activity");
-$read->echo_if ('recent_articles.html');
 $read->echo_if('recent_assets.html');
+
+$read->echo_if ('recent_articles.html');
 echo "<div style='clear:both'></div>\n";
 
 

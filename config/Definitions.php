@@ -33,7 +33,12 @@ class Definitions {
 
 
 );
-	// these emails are ok to send to in a test mode
+
+
+public static $local_site = 'f2.local';
+
+// these emails are ok to send to from local_site (dev site)
+// all others will be blocked, to prevent embarrassing mistakes
 public static $test_emails = array(
 		'john@digitalmx.com',
 		'johnmx@me.com',
@@ -41,8 +46,6 @@ public static $test_emails = array(
 		'springerj@yahoo.com',
 		'john.scott.springer@gmail.com',
 );
-
-public static $local_site = 'f2.local';
 
 	public static $editor_id = 13145;
 	// userId for editor account.
@@ -147,8 +150,15 @@ public static $ems_codes = array(
 
 		);
 
+// emails that are safe for sending in test mode.
+public static $safe_emails = [
+'john@digitalmx.com',
+'editor@amdflames.org',
+'johnmx@me.com',
+'springerj@yahoo.com',
+'jorygun@gmail.com',
 
-
+];
 
 
 public static $decades = array(

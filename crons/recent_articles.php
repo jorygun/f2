@@ -36,7 +36,7 @@ if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
  if (!$quiet)
 echo "Starting $script " . BRNL;
 
-$recent_articles = REPO_PATH . '/var/live/recent_articles.html';
+$recent_articles = REPO_PATH . '/public/news/current/recent_articles.html';
 
 $lastest_ts = trim(file_get_contents(REPO_PATH . "/var/data/last_published_ts.txt"));
 if (empty ($latest_ts)){ $latest_ts = strtotime(' - 14 days'); }

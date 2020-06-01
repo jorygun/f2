@@ -13,7 +13,7 @@ class Article
     private $news;
 	private $getarticleprep; // preped getarticlesql
 	private $getunpub_prep; // prepped getlist
-
+	private $publish;
 
 	private static $getarticlesql =  <<<EOT
             SELECT n.*, m.username,m.user_email,t.topic_name,s.section_name,s.section_sequence
@@ -33,6 +33,7 @@ class Article
                 n.id = ?;
 EOT;
 
+
 // select articles in two groups: use, sorted by sequence and priority, then
 // unused.  Cat is used to keep them separated.
 
@@ -40,15 +41,17 @@ EOT;
     {
         $this->news = $container['news'];
 
-        $this->member = $container['member'];
+         $this->member = $container['member'];
         $this->pdo = $container['pdo'];
         $this->voting = $container['voting'];
+//         $this->publish = $container['publish'];
 
-        $this->getarticleprep = $this->pdo->prepare(self::$getarticlesql);
+         $this->getarticleprep = $this->pdo->prepare(self::$getarticlesql);
 
 
 
     }
+
 	public function toggle_use($aid) {
 		// change item use_me between 0 and 2
 		$sql1 = "UPDATE `news_items` SET use_me =
@@ -99,6 +102,18 @@ EOT;
         return $id;
     }
 
+	public function setArticlesPublished ($issue,$pubdate) {
+		$article_list = $this->getArticleIds('next');
+		$article_in = u\make_inlist_from_list($article_list);
+		$sql = "UPDATE `news_items` SET use_me = 0, status = 'P',
+			date_published = '$pubdate', issue='$issue'
+			WHERE id in ($article_in)";
+		if (!$this->pdo->query($sql) ){
+			throw new Exception ("setArticlesPublished failed.");
+		}
+
+
+	}
 
     private function checkArticle($post)
     {
@@ -227,15 +242,14 @@ EOT;
 		if 'recent', chooses pubdate within 2 weeks
 		if 'next' chooses articles assigned to next newsletter (issue = 1)
 		if and integer, chooses article in issue_id = integer
+		if an array, then it's a list of article ids. (from pub[stories])
 	*/
 
-		if (u\validateDate($cat)) {
-			$where = "n.status = 'P' AND n.date_published > '$cat' ";
-		} elseif (u\isInteger($cat)) {
+		if (u\isInteger($cat)) {
 					//$stye is issue id; 1 = preview issue
-					$sql = "SELECT stories from `pubs` WHERE issue = '$cat'";
-					$list = json_decode ($this->pdo->query($sql)->fetchColumn() );
-					$idlist = u\make_inlist_from_list($list);
+				$where = "n.id = $cat";
+		} elseif (is_array($cat)) {
+					$idlist = u\make_inlist_from_list($cat);
 					$where = "n.id in ($idlist)";
 		} else {
 			switch ($cat) {
@@ -268,30 +282,37 @@ EOT;
 
 	public function getArticleList($cat) {
 		$where = $this->getWhereForCat($cat);
-	echo "where: $cat : $where" . BRNL;
+
+	//echo "where: $where" . BRNL;
 		$sql = <<<EOT
 			 SELECT n.id, n.use_me as use_me, s.section_sequence,
              if (n.use_me > 0,1,0) as `cat`,
                  n.title, n.asset_list, n.asset_id, n.status,n.source,
                  n.contributor_id,m.username,
                  DATE_FORMAT('%y %m %d',n.date_published) as pubdate,
-                 t.topic_name as topic_name,s.section_name,count(c.id) as comment_count
+                 t.topic_name as topic_name,s.section_name,
+                 count(c.id) as comment_count
+
             FROM news_items n
              LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
 				LEFT JOIN members_f2 m on m.user_id = n.contributor_id
 				LEFT JOIN comments c on n.id = c.item_id and c.on_db = 'news_items'
+
             WHERE
            		$where
 				GROUP BY n.id
             ORDER BY `cat` DESC, section_sequence, topic_name, use_me DESC
             LIMIT 50;
 EOT;
-
+// echo $sql . BRNL;
+// exit;
 		$alist = $this->pdo->query($sql)->fetchAll();;
 
 		return $alist;
 
 	}
+
+
 
     public function getArticle($id)
     {

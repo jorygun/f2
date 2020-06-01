@@ -68,21 +68,18 @@ EOT;
 		#u\echor ($opp_list,'opps');
 		echo "<p>You may create new opportunities or edit opportunities that you created.</p>";
 		echo "<ul>\n";
-		foreach ($opp_list as $id => $opp_row){
-			$line = $button = '';
 
+		foreach ($opp_list as $id => $opp_row){
+			echo "<li><a href='/show_opp.php?id=$id'>${opp_row['title']}</a> ";
 			if ( $_SESSION['level'] > 7
 				or ($_SESSION['login']['user_id'] == $opp_row['user_id']) )
 			{
-				$buttonlink = "/show_opp.php?id=$id&edit=true";
-				$button = "<button type='button' "
-				.	"onClick=window.open('$buttonlink')>Edit</button>\n";
+				echo $opps->opp_edit_button($id);
 			}
-			$line = "<li><a href='/show_opp.php?id=$id'>${opp_row['title']}</a> ";
-			#u\echor($_SESSION,'session'); exit;
-			echo $line . $button;
 		}
 		echo "</ul>";
+		$id=0;
+		echo $opps->opp_edit_button(0);
 
 	}
 
@@ -138,6 +135,7 @@ EOT;
 	</form>
 
 EOT;
+
 }
 
 

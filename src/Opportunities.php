@@ -46,7 +46,7 @@ class Opportunities
 	}
 	public function showOpp($oppid) {
 	//u\echor($this->opp_list); exit;
-		return $this->templates->render('opp',$this->opp_list[$oppid]);
+		return $this->templates->render('opp',$this->getOpp($oppid));
 
 	}
 	public function linkOppList() {
@@ -91,12 +91,31 @@ class Opportunities
 			);
 		}
 		else {
-			$sql = "Select * from `opportunities` where id= $id";
+			 $sql = "SELECT *,
+			 if (expired < NOW(),'Expired',
+			 	if (active = 1 ,'Active','Inactive')
+			 	) as status
+
+			 	 FROM opportunities
+			 where id= $id";
 			$row = $this->pdo->query($sql)->fetch();
+			$row['credential'] = ($_SESSION['level'] > 7
+				|| $_SESSION['login']['user_id'] == $row['user_id']) ? 1 : 0;
+			$row['edit_button'] = ($row['credential']) ? $this->opp_edit_button($id) : '';
 		}
 		return $row;
 
 	}
+
+	public function opp_edit_button($id) {
+		$buttonlink = "/show_opp.php?id=$id&edit=true";
+		$bname = ($id==0)? 'New Opportunity' : 'Edit';
+		$button = "<button type='button' "
+				.	"onClick=window.open('$buttonlink')>$bname</button>\n";
+		return $button;
+
+	}
+
 	public function postOpp ($post) {
 		if (empty($post['title'])){
 			throw new Exception ("No data submitted for opportunity");
@@ -126,8 +145,9 @@ class Opportunities
        	$new_id = $this->pdo->lastInsertId();
       }
       else {
-      	 $sql = "UPDATE `opportunities` SET ${prep['update']} WHERE id = ${prep['key']} ;";
-       	$stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+      	 $sql = "UPDATE `opportunities` SET ${prep['updateu']} WHERE id = ${prep['key']} ;";
+      	// u\echor($prep,$sql); exit;
+       	$stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
 
        }
 

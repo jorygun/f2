@@ -26,7 +26,7 @@ namespace DigitalMx\Flames;
 
 	update recent
 
-	copy data/last_update_run to last_update_published
+
 	set all the news items to published
 	remove everything from next and copy the index template
 
@@ -48,12 +48,28 @@ namespace DigitalMx\Flames;
 class Publish {
 
 	private $pdo;
+	private $article;
 
-	private $now_code;
-	private $now_human;
-	private $title;
-	private $new_archive; #name of  new dir:  news_yymmdd
-	private $nli; //news index object
+	private $issue;
+	private $pubdate;
+	private $pubdate_human;
+
+
+
+	public static $preview_button = <<<EOT
+		<button type='button' onClick=
+			"takeAction('preview'); window.open('/news/next','preview');"
+			>Preview
+		</button>
+EOT;
+
+	public static $publish_button = <<<EOT
+		<button type='button' onClick=
+			"takeAction('publish','','','resp'); "
+			>Publish
+		</button>
+EOT;
+//window.open('/news/current','current');
 
 	public function __construct($container){
 		$this->pdo = $container['pdo'];
@@ -63,52 +79,51 @@ class Publish {
 
 	}
 
-public function getLastPubDate() {
-	$sql = "SELECT max(pubdate) from `pubs` ";
-	$last_pub_date = $this->pdo->query($sql)->fetchColumn();
-	return $last_pub_date;
+public function getLastPub($field = 'pubdate') {
+	$sql = "SELECT * from `pubs` ORDER by pubdate DESC limit 1";
+	$last_pub = $this->pdo->query($sql)->fetch();
+	return $last_pub[$field];
 
 }
+ public function setNextUpdated() {
+ 	$sql = "UPDATE `pubs` SET updated = NOW() WHERE issue = 1";
+ 	$this->pdo->query($sql);
 
-	public function wrapupNews() {
-		// these routines clean up everything once
-		// publish is successful
-	}
+ }
+
 	private function write_breaking($content) {
 		$now = date('d M Y H:i');
 		$bnews = "<div style='border:2px solid black;padding:1em;'>"
     . "<p style='color:red;'><b>Update posted at " .$now . "</b></p>\n"
 	. u\txt2html($content)
 	. "</div>\n";
-	file_put_contents(FileDefs::breaking_news,$bnews);
+	file_put_contents(FileDefs::current_dir . '/breaking.html',$bnews);
 	}
 
 
 
 
 	private function setTimes(){
-//get date of last pub (never used)
-// 	if ($last_timestamp = f\getLastPub() ){
-// 		$last_timestamp = strtotime('- 7 days');
-// 		echo "<p class='red'>No last pub timestamp; set to -7 days</p>";
-// 	}
+
 // 	$pubdate_dt = new \DateTime('@' . $last_timestamp() );
 // 	$this->pubdate_code = $pubdate_dt -> format('ymd');
 // 	$this->pubdate_human = $pubdate_dt -> format('j M Y');
 
 
 // get current date forms
-	$this->nowtime = time();
-	$now_dt = new \DateTime();
-	$this->now_code = $now_dt -> format ('ymd');
-	$this->year_code = $now_dt -> format ('Ymd');
-	$this->now_human = $now_dt -> format ('j M Y');
 
-	$this->new_archive = 'news_' . $this->now_code;
+	$now_dt = new \DateTime();
+	$this->issue = $now_dt -> format ('Ymd');
+	//$this->issue = '2';
+	$this->pubdate_human = $now_dt -> format ('j M Y');
+	$this->pubdate = $now_dt-> format ('Y-m-d H:i');
+
+
 
 }
 	public function getNextTitle()
 	{
+
 		// returns title of issue 1
 		$sql = "SELECT title from `pubs` where issue = 1;";
 		$title = $this->pdo->query($sql)->fetchColumn();
@@ -116,32 +131,66 @@ public function getLastPubDate() {
 	}
 	public function setNextTitle($title) {
 		$sql = "UPDATE `pubs` set title ='$title' WHERE issue = 1";
-		$this->pdo->query($sql);
-		return true;
+		if ($this->pdo->query($sql) ) {
+			return true;
+		}
+		return false; // true|false
 	}
 
 	public function publishNews() {
 		// these routines publish the new newsletter
+		//shell_exec ("chmod -R g+w " . FileDefs::latest_dir);
+		$issue = $this->issue;
 
-		$this->copyNextToLatest();
-		$this->addPublishFile();
-		$this->setPointers();
-		shell_exec ("chmod -R g+w " . FileDefs::latest_dir);
+		$archive = '/news_' . $issue;
 
-		$this->copyLatestToArchive();
+	try{
 
-		$this->addToPubs();
-		$this->setPtime();
-		$this->markPublished();
-		$this->initializeNext();
+		$this->addIssueToPubs($issue,$this->pubdate);
+		$this->setCurrentToArchive($archive);
+		$this->copyNextToArchive($archive);
+
+		$this->article->setArticlesPublished($issue,$this->pubdate);
+		#$this->initializeNext();
 
 
+	} catch (Exception $e) {
+		echo "Publish failed: " . $e->getMessage();
+		return false;
+	}
+		return $archive;
 	}
 
-	public function setNextArticles () {
 
-		$article_list = $this->article->getArticleIds('next');
+   public function buildPreview () {
+   // prepares issue 1 and views it.
+		try {
 
+			$article_list = $this->article->getArticleIds('next');
+			$this->setNextArticles($article_list);
+
+		// run all rhe update reports
+
+
+		} catch (Exception $e) {
+			echo $e->getMessage();
+			return false;
+		}
+		return true;
+   }
+
+	private function setCurrentToArchive($archive) {
+		$current = FileDefs::current_dir . '/index.php';
+		$reloc = <<<EOT
+<?php
+header("location:/newsp/$archive");
+EOT;
+		file_put_contents($current,$reloc);
+	}
+
+
+	private function setNextArticles ($article_list) {
+	// records article in pub 1 (preview)
 		$alistj = json_encode($article_list);
 		$sql = "UPDATE `pubs` SET stories = '$alistj' WHERE issue = 1";
 		if ($this->pdo->query($sql) ){
@@ -149,88 +198,87 @@ public function getLastPubDate() {
 		}
 		return false;
 	}
+
 	public function getIssueArticles ($issue) {
+	// returns list of article ids from the stories field of pubs
 		$sql = "SELECT stories FROM `pubs` WHERE issue = '$issue'";
 		$alist = $this->pdo->query($sql)->fetchColumn();
-
-
 		//$alist = json_decode($alistj);
 		return $alist;
 
 	}
-	public function copyNextToLatest() {
-	// copy the news_next to the news_latest directory
-		if (file_exists (FileDefs::latest_dir)) {
-			u\deleteDir(FileDefs::latest_dir);
-		}
-		u\full_copy(FileDefs::next_dir,FileDefs::latest_dir);
+
+
+	private function addIssueToPubs($issue,$pubdate) {
+		// copy the data for issue 1 to the new issue
+		// get data for issue 1 and clear it
+		$sql = "SELECT title, stories,updated FROM pubs WHERE issue = 1";
+		$d = $this->pdo->query($sql)->fetch();
+		//u\echor ($d ,'issue data');
+
+
+		// add new info for this pub
+		$darray['title'] = $d['title'];
+		$darray['stories'] = $d['stories'];
+		$darray['issue'] = $issue;
+		$darray['url'] = '/newsp/news_'. $issue;
+		$darray['pubdate'] = $pubdate;
+		$darray['predate'] = $d['updated']; //preview times stamp is last status updated
+
+		//u\echor($darray);
+
+
+	 /**
+		$prep = pdoPrep($post_data,$allowed_list,'id');
+
+		 $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+			 $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+			 $new_id = $pdo->lastInsertId();
+
+		 $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
+			 $stmt = $pdo->prepare($sql)->execute($prep['data']);
+
+	  **/
+		$prep = u\pdoPrep($darray,[],'issue');
+
+
+
+		$sql = "INSERT into `pubs` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} )
+			ON DUPLICATE KEY UPDATE  ${prep['updateu']} ";
+
+		//u\echor($prep['data'] , $sql);
+
+	$stmt = $this->pdo->prepare($sql);
+		$stmt->bindValue(':title',$darray['title']);
+		$stmt->bindValue(':stories',$darray['stories']);
+		$stmt->bindValue(':issue',$darray['issue']);
+		$stmt->bindValue(':url',$darray['url']);
+		$stmt->bindValue(':pubdate',$darray['pubdate']);
+		$stmt->bindValue(':predate',$darray['predate']);
+		$stmt->bindValue(':utitle',$darray['title']);
+		$stmt->bindValue(':ustories',$darray['stories']);
+		$stmt->bindValue(':uurl',$darray['url']);
+		$stmt->bindValue(':upubdate',$darray['pubdate']);
+		$stmt->bindValue(':predate',$darray['predate']);
+
+	$stmt->execute();
+
+		$sql = "UPDATE pubs set title='',stories='' WHERE issue = 1";
+		//$this->pdo->query($sql);
+	}
+
+	private function copyNextToArchive($archive) {
+		$dir = FileDefs::archive_dir  . '/' . $archive;
+		u\full_copy(FileDefs::next_dir,$dir);
 
 	}
 
-	private function addPublishFile() {
-	// add a file with the publish date to latest dir.
-		file_put_contents(FileDefs::pubfile,$this->now_human . '|' . $this->now_code);
-	}
-
-	private function copyLatestToArchive() {
-		$new = FileDefs::archive_dir  . '/' . $this->new_archive;
-		u\full_copy(FileDefs::latest_dir,$new);
-
-
-	}
-
-
-	private function setPointers() {
-		$pointer="/newsp/" . $this->new_archive;
-		file_put_contents (FileDefs::latest_pointer,  $pointer);
-		file_put_contents (FileDefs::current_dir.'/index.php', "<?php\n header('location:$pointer');\n");
-		file_put_contents (FileDefs::last_pubdate,$this->nowtime);
-
-	}
-
-	private function setPtime(){
-		// copies the last update run time to the
-		// last published run time
-		copy (FileDefs::rtime_file,FileDefs::ptime_file);
-	}
-
-
-	private function markPublished() {
-
-        $sql = "
-            UPDATE news_items
-            SET status = 'P',
-            date_published = now(),
-            use_me = 0
-            WHERE use_me > 0;
-            ";
-         // only change db on live, beta, or f2 repos
-         // not on test or trial or dev
-         if (in_array(REPO ,['live','f2'])){
-        		$result = $this->pdo->query($sql);
-        	}
-
-	}
-
-	public function addToReads() {
-			$pubdate_code = $this->now_code;
-
-			  $sql = "INSERT INTO `read_table` SET issue = '$pubdate_code',read_cnt=0;";
-			  try {
-			 	$result = $this->pdo->query($sql);
-			 	} catch (\Exception $e){
-					echo "Add to $pubdate_code to reads database failed. Probably already exists.<br>";
-					return false;
-				}
-				echo "Adding $pubdate_code to reads database<br>";
-				return true;
-	}
 	private function initializeNext() {
 		// create empty news/next with just the
 		// index file in it.
 		u\emptyDir(FileDefs::next_dir);
-		copy (FileDefs::news_template,FileDefs::next_dir . "/index.php");
-		copy (FileDefs::git_ignore,FileDefs::next_dir . "/.gitignore");
+		copy (FileDefs::template_dir . '/index.php',FileDefs::next_dir . "/index.php");
+
 	}
 
 }

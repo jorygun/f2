@@ -40,8 +40,12 @@ function echopre($text){
 }
 
 function echor($var,$title=''){
-
-    echo "<h4>$title:</h4>";
+	if (empty($title)) {
+		$bt = debug_backtrace();
+  		$caller = array_shift($bt);
+		$title = basename($caller['file']) . '(' . $caller['line'] . ')';
+		}
+    echo "<h4>$title</h4>";
     echo "<pre>" .  print_r($var,true) . "</pre>\n";
 }
 function txt2html($text){
@@ -192,6 +196,9 @@ function makeDate($when, $form='human',$type = 'date') {
 	return  make_date ($when, $form,$type);
 }
 
+function sqlnow() {
+	return make_date('now','sql','datetime');
+}
 function make_date ($when, $form='human',$type = 'date'){
 	/* returns formated date or datetime or 'never'
 		@ when is either text date/time or unix timestamp or 'now' or empty (= never)
@@ -283,52 +290,60 @@ function pdoPrep($data,$include=[], $key=''){
 
    $prep = pdoPrep($post_data,array_keys($model),'id');
 
-    $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+    $sql = "INSERT into `Table` ( ${prep['ifields']} )
+    		VALUES ( ${prep['ivals']} )
+    		ON DUPLICATE KEY UPDATE ${prep['update']};
+    		";
        $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
        $new_id = $pdo->lastInsertId();
 
     $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
-       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+       $stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
 
 
   **/
-         $db =  $ufields = $ifields = $ivalues = array ();
+         $db =  $ufields = $ifields = $ivalues = $dbu =  array ();
+
 
         #transfer fields from arr to db
 
         foreach ($data as $var => $val){
-            // find key field which is returned separately
-            if (!isset($result['key'])  and ($var === $key)){
-                $prepared['key'] = $val;
-                continue; #get next var
-            }
-            // ignore any fields not listed in valid fields
+
+         // ignore any fields not listed in valid fields
             if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
 
-            $null = null;
-            // if (empty($val)){ #catches 0, '', and false
-//             	if ($var == 'asset_id'){
-//             		$val = 0;
-//             		#echo "setting asset id to 0";
-//             	} #leave out of list // no, leave in and set to null
-//
-//             }
-
-				$db[$var] = htmlspecialchars_decode($val);
-				//$db[$var] = $val;
+            // find key field which is returned separately
+            if (!isset($prepared['key'])  and ($var === $key)){
+                $prepared['key'] = $val;
+         	}
 
 
-            $ufields[] = "`$var` = :$var";
+				//$db[$var] = htmlspecialchars_decode($val);
+				$db[$var] = $val;
+
+
+			// leave key out of update fields
+				if ($var !== $key) {
+					$uvar = 'u'.$var;
+					$udb[":$uvar"] = $val;
+					$ufieldsu[] = "`$var` = :$uvar"; #new way
+            	$ufields[] = "`$var` = :$var"; #old way
+            }
             $ifields[] = "`$var`";
             $ivalues[] = ":$var";
 
+
+
         }
 
-        $prepared['data'] = $db;
+        $prepared['data'] = $db; #all data for insert
         $prepared['update'] = implode(', ',$ufields);
+        $prepared['updateu'] = implode(', ',$ufieldsu);
         $prepared['ifields'] = implode(', ',$ifields);
         $prepared['ivals'] = implode(', ',$ivalues);
+			$prepared['udata'] = $udb; #all values for an insert
+
 
         return $prepared;
     }
@@ -661,7 +676,14 @@ function array_filter_remove($arr,$remove) {
 
 function isInteger($input){
 	//returns true if every character in input is a digit
+	if (is_array($input)) {
+		return false;
+	}
     return(ctype_digit(strval($input)));
+}
+
+function goBack() {
+	echo "<script>window.history.go(-1);</script>";
 }
 
 function age_and_date($date_str) {
