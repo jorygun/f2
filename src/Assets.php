@@ -105,7 +105,7 @@ class Assets {
 		'temptest',
 	);
 
-	private  $new_asset = array(
+	public  $new_asset = array(
 		'title' => '',
 		'source' => '',
 		'contributor_id' => '',
@@ -314,7 +314,7 @@ class Assets {
 
 
 		$prep = u\pdoPrep($adata,$allowed_fields,'id');
-			#u\echor ($prep, 'Prep'); exit;
+
  /**
  	$prep = pdoPrep($post_data,$allowed_list,'id');
 
@@ -328,8 +328,9 @@ class Assets {
   **/
   			// asset id already created, so this is ALWAYS an update.
 
-		$sql = "UPDATE `assets2` SET ${prep['update']} WHERE id = ${prep['key']} ;";
-		$stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+		$sql = "UPDATE `assets2` SET ${prep['updateu']} WHERE id = ${prep['key']} ;";
+		//u\echor ($prep, $sql); exit;
+		$stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
 
 		return $id;
 

@@ -180,7 +180,7 @@ class AssetAdmin
 	public function getAssetData($id) {
 		if ($id == 0){
    		// new asset
-   		$adata = $this->new_asset;
+   		$adata = $this->assets->new_asset;
    		$adata['contributor_id']  = $_SESSION['login']['user_id'];
    		$adata['contributor'] = $_SESSION['login']['username'];
    		$adata['id'] = 0;

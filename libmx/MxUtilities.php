@@ -310,14 +310,14 @@ function pdoPrep($data,$include=[], $key=''){
         foreach ($data as $var => $val){
 
          // ignore any fields not listed in valid fields
-            if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
 
             // find key field which is returned separately
-            if (!isset($prepared['key'])  and ($var === $key)){
+            if (! empty($key) && $var === $key){
                 $prepared['key'] = $val;
          	}
 
+				if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
 				//$db[$var] = htmlspecialchars_decode($val);
 				$db[$var] = $val;
@@ -330,6 +330,7 @@ function pdoPrep($data,$include=[], $key=''){
 					$ufieldsu[] = "`$var` = :$uvar"; #new way
             	$ufields[] = "`$var` = :$var"; #old way
             }
+
             $ifields[] = "`$var`";
             $ivalues[] = ":$var";
 
