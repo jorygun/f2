@@ -54,4 +54,7 @@ $container['publish'] = function ($c) {
 $container['opps'] = function ($c) {
 		return new Opportunities($c);
 };
+$container['galleries'] = function ($c) {
+		return new Galleries($c);
+};
 

@@ -636,12 +636,18 @@ function url_exists($url)
 
 function get_mime_from_url($url)
 	{
+	$finfo = new \finfo(FILEINFO_MIME_TYPE);
+	$mime = '';
 	if ($path=is_local($url) ){
-		 $finfo = new \finfo(FILEINFO_MIME_TYPE);
+		 if (! file_exists($path)){
+		 	echo "Tyring to get mime from non-existent file $path";
+		 }
 		 $mime = $finfo->file($path);
 	} elseif (is_http($url) ){
-		$mime = get_mime_from_curl($url);
-	} else { $mime = '';}
+		if (!$mime = get_mime_from_curl($url) ){
+			echo "Trying to get mime from non-existent url $url";
+		}
+	}
 
 	return $mime;
 	}

@@ -123,6 +123,11 @@ public static $test_emails = array(
 	 public static $archival_tags = "ACDEFIMOSWY";
 
 
+public static $gallery_status = array(
+    'G' => 'Good.  Publish',
+    'D' => 'Delete',
+    'N' => 'New'
+    );
 
 
 // code => array(name,next-code,after-days)

@@ -290,9 +290,14 @@ class Assets {
 		}
 
 		$adata['sizekb'] = 0;
+		try {
 		$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
 		$adata['type'] = $this->getTypeFromMime($adata['mime']);
-
+		} catch (Exception $e) {
+			echo "Failed to get mime info for asset $id";
+			echo $e->getMessage();
+			exit;
+		}
 		if ($path = u\is_local($adata['asset_url']) ) {
 			$size = filesize($path);
 			$adata['sizekb'] = (int)($size/1000);
@@ -367,19 +372,38 @@ class Assets {
 		} elseif (u\is_http($tsource) && u\url_exists($tsource) ){
 			if ($temp_source = $this->getTempSource($id,$tsource) ){
 				$tsource = $temp_source;
-				$mime = u\get_mime_from_url($temp_source);
+				try {
+					$mime = u\get_mime_from_url($temp_source);
+				} catch (Exception $e) {
+					echo "Failed to get mime info for asset $id";
+					echo $e->getMessage();
+					exit;
+				}
+			} else {
+				throw new Exception ("Cannot download thumb source $tsource");
 			}
-			else {throw new Exception ("Cannot download thumb source $tsource");}
-
 		} else {
-			$mime = u\get_mime_from_url ($tsource);
+			try{
+				$mime = u\get_mime_from_url ($tsource);
+				} catch (Exception $e) {
+					echo "Failed to get mime info for asset $id";
+					echo $e->getMessage();
+					exit;
+				}
 		}
 
-
-
+	if (empty($tsource) ) {die ("No thumb source");}
+	if (u\is_local($tsource) && ! file_exists(SITE_PATH . $tsource) ) {
+		die ("Thumb source file $tsource does not exist. (in " . SITE_PATH . ")");
+	}
+	if (empty($mime)) {
+		if (!$mime = u\get_mime_from_url($tsource) ) {
+			die ("Cannot get mime from url $tsource");
+		}
+	}
 		#echo " from $tsource. " . BRNL;
 
-		foreach ($adata['needs'] as $need){
+		foreach ($needs as $need){
 			$this->saveThumb($need,$id,$mime,$tsource);
 		}
 		if (isset($temp_source) && file_exists($temp_source)){unlink($temp_source);}
@@ -488,7 +512,8 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 			creates thubm types in list $needs for asset id $id.
 			returns true
 
-			requires the thumb source and mime type, which comes from db entry.
+			requires the thumb source
+			Gets mime type from get_mime_from_url (using finfo or curl).
 
 		source is url to source document for the thumbnail
 		(image, video, youtube, whatever).
@@ -502,6 +527,7 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 
 	returns true if everything works.
 	 */
+	//$mime = u\get_mime_from_url($turl);
 
 	 echo "Starting thumb $ttype on $id, mime $mime, from $turl. " .BRNL;
 	 $thumb = "${id}.jpg";

@@ -8,8 +8,8 @@ namespace Digitalmx\Flames;
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
 
 	use digitalmx as u;
-	use digitalmx\flames as f;
-	use digitalmx\flames\Definitions as Defs;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
 	use DigitalMx\Flames\DocPage;
 
 

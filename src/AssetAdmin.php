@@ -268,6 +268,14 @@ class AssetAdmin
 		return $needs;
 	}
 
+
+	public static function getAttribute($source) {
+		//$attr = $adata['source'];
+			$attr_block = (!empty($source))? "<div class='asource'>-- $source</div>" : '';
+			return $attr_block;
+		}
+
+
 	public function getAssetBlock($aid,$style,$show_caption=false) {
 		/* returns a div with the asset and title in it.
 		uses asset thumb or gallery size
@@ -281,16 +289,16 @@ class AssetAdmin
 
 		*/
 		if (! $adata = $this->getAssetData($aid) ) {
-			return "Asset $aid not found";
+			return "<div class='asset'>Asset $aid not found</div>";
 		}
+
 		$aurl = $adata['asset_url'];
 		$atitle = $adata['title'];
 		$acapt = ($show_caption)?
 			"<div class='acaption'>${adata['caption']}</div>" : '';
 
-		$attr = $adata['source'];
-		$attr_block = (!empty($attr))? "<div class='asource'>-- $attr</div>" : '';
 
+		$attr_block = self::getAttribute($adata['source']);
 
 
 		switch($style) {
