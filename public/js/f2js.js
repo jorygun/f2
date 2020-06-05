@@ -8,6 +8,9 @@ function showDiv(divid) {
         div.style.display = 'block';
     }
 }
+
+
+
 function check_the_box (obj,state){
 	// checks/unchecks a checkbox obj (true/false)
 	document.getElementById(obj).checked = state;

@@ -3,6 +3,7 @@
 namespace Digitalmx\Flames;
 
 #ini_set('display_errors', 1);
+use DigitalMx\Flames\DocPage;
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';

@@ -17,7 +17,7 @@ $mode = $_GET['mode'] ?? '';  // j when opened by javascript
 
 $login->checkLevel(1);
    $page_title = 'Search Assets';
-	$page_options=['ajax']; #ajax, votes, tiny
+	$page_options=['ajax','help']; #ajax, votes, tiny
 
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
@@ -89,8 +89,8 @@ echo $page->startBody();
 //END START
 
 
-$as = new AssetSearch($container);
-	$templates = $container['templates'];
+$as = $container['assetsrch'];
+$templates = $container['templates'];
 
 
 
@@ -126,9 +126,5 @@ echo "<hr>";
 $last_search = $_SESSION['last_asset_search'] ?? [] ;
 $search_data = $as->prepareSearch ($last_search );
 echo $templates->render('asearch',$search_data);
-echo "</body></html>" . NL;
-
-exit;
-
-
-
+// echo "</body></html>" . NL;
+//

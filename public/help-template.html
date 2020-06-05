@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>AMD Flames Help</title>
+   <link rel='stylesheet' href = '/css/news4.css' />
+    <script src='/js/f2js.js'></script>
+     <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
+    <script src='/js/ajax.js'></script>
+	<script>
+	   function get_help(){
+		var elem = window.opener.document.getElementById('helpdiv');
+		return elem.innerHTML;
+		}
+	</script>
+
+</head>
+<body>
+<!-- <body onBlur = "hwin.close();"> -->
+<h4>Help</h4>
+<div id='helpbox' class='help'>
+<script>
+var elem = window.opener.document.getElementById('helpdiv');
+document.write(get_help());
+
+</script>
+</div>
+
+</body></html>

@@ -26,9 +26,14 @@ $container['assets'] = function ($c) {
 $container['asseta'] = function ($c) {
     return new AssetAdmin($c);
 };
+$container['assetsrch'] = function ($c) {
+	return new AssetSearch($c);
+};
 
 $container['templates'] = function ($c) {
-    return new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
+	$pl = new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
+	$pl->addFolder('help', REPO_PATH . '/templates/help');
+    return $pl;
 };
 
 $container['article'] = function ($c) {

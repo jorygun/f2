@@ -6,10 +6,10 @@
 	<array>
 		<string>C7605AAE-065E-41A6-A3C2-59CA3C5D884E</string>
 		<string>149ACB6D-79BE-42AB-9275-EE675EF5294C</string>
+		<string>34474972-9CE4-44F7-BD88-A92E0F95D20F</string>
 		<string>6462125D-4C9C-4746-8FEF-FA1C7AE7CED3</string>
 		<string>704BAC64-F01F-4C38-A058-CE17F56E5F90</string>
 		<string>8F457416-D0E3-4E06-88EB-67CBEB1070DF</string>
-		<string>464101EF-927F-4EDF-999F-12018EC32805</string>
 	</array>
 	<key>ProjectItems</key>
 	<dict>
@@ -64,7 +64,7 @@
 			<key>UserOverrideItemName</key>
 			<true/>
 		</dict>
-		<key>464101EF-927F-4EDF-999F-12018EC32805</key>
+		<key>34474972-9CE4-44F7-BD88-A92E0F95D20F</key>
 		<dict>
 			<key>ItemData</key>
 			<dict>

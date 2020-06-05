@@ -1080,24 +1080,21 @@ public function getLogins($tag) {
     }
 
     // returns [username,id]
-    public function getMemberId($tag)
+    public function getMemberId($name)
     {
     	#required username or alias\
     	//check for alias first
-    	$tag = trim($tag);
+    	$name = trim($name);
 
-    $tag =  Defs::replaceAlias($tag) ?? $tag;
+    $name =  Defs::replaceAlias($name) ?? $name;
   # echo $tag;exit;
-        $md = $this->getMemberData($tag,'name_exact');
+        $md = $this->getMemberData($name,'name_exact');
        # u\echor ($md);
         if (empty($md['count']) or !empty($mb['error'])) {
             return false;
         }
 
-        return array(
-        	$md['data']['username'],
-        	$md['data']['user_id']
-        	);
+        return [ $md['data']['user_id'], $md['data']['username'] ];
     }
 
 

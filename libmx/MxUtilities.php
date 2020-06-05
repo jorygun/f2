@@ -288,7 +288,7 @@ function pdoPrep($data,$include=[], $key=''){
         'key' is value of field named in $key, used in WHERE clause
 
 
-   $prep = pdoPrep($post_data,array_keys($model),'id');
+   $prep = u\pdoPrep($post_data,array_keys($model),'id');
 
     $sql = "INSERT into `Table` ( ${prep['ifields']} )
     		VALUES ( ${prep['ivals']} )
@@ -561,7 +561,9 @@ function link_assets($input) { return $input; //disable this
 
 
 
-
+function range_to_list($text) {
+	return number_range($text);
+}
 function number_range ($text){
 		/* accepts a string of numbers separated by anything
 			AND ALSO expansion of pairs of numbers separated by a -

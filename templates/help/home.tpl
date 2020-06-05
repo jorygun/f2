@@ -1,37 +1,3 @@
-<?php
-
-namespace DigitalMx\Flames;
-
-#ini_set('display_errors', 1);
-
-//BEGIN START
-	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
-
-	use DigitalMx as u;
-	use DigitalMx\Flames as f;
-	use DigitalMx\Flames\Definitions as Defs;
-	use DigitalMx\Flames\DocPage;
-
-
-
-
-$login->checkLevel(0);
-
-$page_title = 'AMD Flames Help';
-$page_options=[]; #ajax, votes, tiny
-
-$page = new DocPage($page_title);
-echo $page -> startHead($page_options);
-# other heading code here
-
-echo $page->startBody();
-
-
-//END START
-
-
-?>
-//EOF
 <h1>Help</h1>
 <p>The FLAMEsite is for previous employees and associates (like reps and contractors) of Advanced Micro Devices.
 </p>

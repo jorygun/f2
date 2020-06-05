@@ -201,10 +201,11 @@ class Assets {
 					if (file_exists(SITE_PATH . $val) ) $srcok = true;
 				}
 				elseif (u\is_http ($val) ) {
-					if ( u\url_exists ($val) ) $srcok = true;
+					//if ( u\url_exists ($val) ) $srcok = true;
+					throw new Exception ("Thumb url must be a local file.");
 				}
 				if (! $srcok){
-					throw new Exception ("Thumb source not understood " . $val) ;
+					throw new Exception ("Thumb source not useable " . $val) ;
 				}
 				break;
 
@@ -309,7 +310,7 @@ class Assets {
 
 		// save all tbunbs, including thumb if not there.
 		$needs = $adata['needs'];
-		$this->createThumbs($id,$needs,$adata);
+
 
 			/*
 			external fields are not included here.  This is an
@@ -337,77 +338,86 @@ class Assets {
 		//u\echor ($prep, $sql); exit;
 		$stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
 
+		$this->createThumbs($id,$needs);
+
 		return $id;
 
 	}
+	private function updateThumbUrl($id,$url) {
+		$sql = "UPDATE `assets2` SET thumb_url = '$url' WHERE id = '$id' ";
+		$this->pdo->query($sql);
+	}
 
-	public function createThumbs($id,$needs,$adata=[]){
+	public function createThumbs($id,$needs){
 		/* routine to create thumbs of any sizes.
-		retrieves source from the id record, creates
-		temp file if off-site source, uses imagick to
-		create thumb and save it.
-		$needs is an array of needed thumb types
+
+			id is asset id
+			needs is an array of needed thumb types ['thumb','gallery']
+
+		If the asset has thumb_url, then that is the source
+		of the thumb file.  It is generated from the source
+		(which must be local) using imagick.
+
+		if there is no thumb_url, then the source_url is used.
+		If the source is a local file, thumb is generated.
+		If the source is youtube, a thumb is retrieved from youtube,
+			saved in /assets/thumb_sources/, and that is placed into thumb_url
+		If the source is any other url except youtube, a generic icon for the
+			mime type is used.
+
 		*/
 		if (empty($needs)) return true;
-		if (empty($adata) ) $adata = $this->getAssetDataById($id);
 
-		/*
-			if source is a remote url, download the contents
-			to a local temp file for creating thumb
-			*/
-			/* if asset is a youtube url, then get the youtube
-			image for the thumb file
-			*/
+		if (! $adata = $this->getAssetDataById($id) ) {
+			throw new Exception ("Trying to create thumbs but no asset at id $id");
+		}
+		$turl = $adata['thumb_url'];
+		$aurl = $adata['asset_url'];
+		$amime = $adata['mime'];
 
-		if (empty( $tsource = $adata['thumb_url'] ) ){
-				$tsource = $adata['asset_url'];
-				$mime = $adata['mime'];
-		} elseif ($yturl = $this->getYoutubeThumb($adata['asset_url'] ) ){
+		// set thumb source from db
+		$tsource = $turl;
+
+			// need to get thumb from the asset.
+			// is the asset local
+		if (! $tsource && u\is_local($aurl)) {
+				$tsource = $aurl;
+		}
+		// is the asset a hyoutube video?
+		if (! $tsource && $yturl = $this->getYoutubeThumb($adata['asset_url'] ) ){
 			#echo "yturl $yturl". BRNL;
-			$thumb = "${id}.jpg";
-			$thumb_url = "/assets/thumb_sources/$thumb";
+			// is http://youtube.com/...../xx.jpg
+			$thumb_url = "/assets/thumb_sources/${id}.jpg";
+			//copy from the youtube site to local thumb source dir
 			copy ($yturl , SITE_PATH . $thumb_url);
-			$adata['thumb_url'] = $thumb_url;
-
-		} elseif (u\is_http($tsource) && u\url_exists($tsource) ){
-			if ($temp_source = $this->getTempSource($id,$tsource) ){
-				$tsource = $temp_source;
-				try {
-					$mime = u\get_mime_from_url($temp_source);
-				} catch (Exception $e) {
-					echo "Failed to get mime info for asset $id";
-					echo $e->getMessage();
-					exit;
-				}
-			} else {
-				throw new Exception ("Cannot download thumb source $tsource");
-			}
-		} else {
-			try{
-				$mime = u\get_mime_from_url ($tsource);
-				} catch (Exception $e) {
-					echo "Failed to get mime info for asset $id";
-					echo $e->getMessage();
-					exit;
-				}
+			$this->updateThumbUrl($id,$thumb_url);
+			$tsource = $thumb_url;
 		}
-
-	if (empty($tsource) ) {die ("No thumb source");}
-	if (u\is_local($tsource) && ! file_exists(SITE_PATH . $tsource) ) {
-		die ("Thumb source file $tsource does not exist. (in " . SITE_PATH . ")");
-	}
-	if (empty($mime)) {
-		if (!$mime = u\get_mime_from_url($tsource) ) {
-			die ("Cannot get mime from url $tsource");
+		if ($tsource && ! file_exists(SITE_PATH . $tsource) ) {
+			throw new Exception ("Thumb source file $tsource does not exist.");
 		}
-	}
-		#echo " from $tsource. " . BRNL;
+		if ( (!$tsource) && u\is_http($aurl) && u\url_exists($aurl) ){
+				$tsource = $adata['asset_url'];
+				// but will use icons for the thumb
+		}
+			// if ($temp_source = $this->getTempSource($id,$tsource) ){
+// 				$tsource = $temp_source;
+// 				try {
+// 					$mime = u\get_mime_from_url($temp_source);
+// 				} catch (Exception $e) {
+// 					echo "Failed to get mime info for asset $id";
+// 					echo $e->getMessage();
+// 					exit;
+// 				}
+// 			} else {
+// 				throw new Exception ("Cannot download thumb source $tsource");
+// 			}
+
+		if (! $tsource)  {die ("No valid thumb source for asset $id");}
 
 		foreach ($needs as $need){
-			$this->saveThumb($need,$id,$mime,$tsource);
+			$this->saveThumb($need,$id,$tsource,$amime);
 		}
-		if (isset($temp_source) && file_exists($temp_source)){unlink($temp_source);}
-
 
 		return true;
 
@@ -506,7 +516,26 @@ class Assets {
 	}
 
 
-public function saveThumb ($ttype,$id,$mime,$turl){
+public function getThumbUrl($id,$type){
+// delivers the url to a thumb image, making it if necessary.
+	// tesst for valid thumb type
+	if (empty( Defs::$thumb_width[$type] )) {
+		throw new Exception ("Illegal thumb type requested $type");
+	}
+
+	$url = '/assets/' . $type . "/$id.jpg";
+	if (file_exists (SITE_PATH . $url)) {
+		return $url;
+	} elseif (0) {//put another file test here
+	} else {
+	// go make it
+		//echo "Making new thumb $type for asset $id" . BRNL;
+		$this->createThumbs($id,[$type] );
+	}
+	return $url;
+}
+
+public function saveThumb ($ttype,$id,$turl,$amime){
 
 		/*
 			creates thubm types in list $needs for asset id $id.
@@ -515,9 +544,9 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 			requires the thumb source
 			Gets mime type from get_mime_from_url (using finfo or curl).
 
-		source is url to source document for the thumbnail
-		(image, video, youtube, whatever).
-
+		turl is url to source document for the thumbnail
+			(image, video, youtube, whatever).
+		amime is the mime type of the asset the thumb is for.
 
 		ttype is thumb type
 		 If thumbs, creates a 200w thumb in the thumbs directory.
@@ -527,64 +556,63 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 
 	returns true if everything works.
 	 */
-	//$mime = u\get_mime_from_url($turl);
 
-	 echo "Starting thumb $ttype on $id, mime $mime, from $turl. " .BRNL;
-	 $thumb = "${id}.jpg";
-	if (substr($turl,0,4) == '/tmp') {
-		$tpath = $turl;
-	} else {
-		$tpath = SITE_PATH . $turl;
-	}
-	#echo " from path $tpath." . BRNL;
-
-	if (! $max_dim = Defs::$thumb_width[$ttype]){
+	 if (! $max_dim = Defs::$thumb_width[$ttype]){
 		throw new Exception ("Invalid thumb type requested for thumbnail: $ttype");
 	 }
 
-			switch ($mime) {
-				case 'application/msword' :
-					$use_icon="doc.jpg";
+	$tmime = u\get_mime_from_url($turl);
 
-					copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
-					break;
-				case 'application/pdf' :
-				case 'image/gif':
-				case 'image/jpeg':
-				case 'image/png':
-				case 'image/tiff':
-					$thumb = $this->buildImThumbnail($id,$mime,$tpath, $ttype);
-					break;
+	 //echo "Starting thumb $ttype on $id, mime $amime, from $turl. " .BRNL;
+	 $thumb = "${id}.jpg";
 
-				case 'text/html':
-					$use_icon="web.jpg";
+	if (u\is_local($turl)) {
+		$tpath = SITE_PATH . $turl;
+	}
 
-					copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
-					break;
-				case 'video/mp4':
-					$use_icon = 'mp4.jpg';
 
-					copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+		switch ($amime) {
+			case 'application/msword' :
+				$use_icon="doc.jpg";
 
-					break;
-				case 'audio/mp3':
-				case 'audio/m4a':
-					$ext = substr($mime,6,3);
-					$use_icon = "${ext}.jpg";
-					copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
-					break;
-				case 'video/quicktime':
-					$use_icon = 'mov.jpg';
-					copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
-					break;
+				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				break;
+			case 'application/pdf' :
+			case 'image/gif':
+			case 'image/jpeg':
+			case 'image/png':
+			case 'image/tiff':
+				$thumb = $this->buildImThumbnail($id, $tpath,$ttype);
+				break;
 
-				default:
-					$use_icon = 'default.jpg';
-					copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
-					break;
-			}
-			echo " /$ttype/$thumb created." . BRNL;
-			return true;
+			case 'text/html':
+				$use_icon="web.jpg";
+				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				break;
+
+			case 'video/mp4':
+				$use_icon = 'mp4.jpg';
+				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				break;
+
+			case 'audio/mp3':
+			case 'audio/m4a':
+				$ext = substr($amime,-3,3);
+				$use_icon = "${ext}.jpg";
+				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				break;
+			case 'video/quicktime':
+				$use_icon = 'mov.jpg';
+				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				break;
+
+			default:
+				$use_icon = 'default.jpg';
+				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				break;
+		}
+		//echo " /$ttype/$thumb created." . BRNL;
+		return true;
 	}
 
 
@@ -592,17 +620,12 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 
 
 
-	private function buildImThumbnail ($id,$source_mime,$path,$ttype){
+	private function buildImThumbnail ($id,$path,$ttype){
 		 $thumb = $id . '.jpg';
 		 if (!$max_dim = Defs::$thumb_width[$ttype]){
 		 	throw new Exception ("unknown thumb type requested: $ttype.");
 		 }
-		 if ($source_mime == 'application/pdf'){
-		 	// $ipath = getenv('PATH');
-// 		 	if (strpos($ipath,'/usr/local/bin') === false)
-// 		 		putenv("PATH=" . $ipath . ':/usr/local/bin');
-		 	echo $_SERVER['PATH'];
-
+		 if (strcasecmp (pathinfo($path,PATHINFO_EXTENSION),'pdf') == 0){
 			$path = trim($path) . '[0]'; #page 1
 		 }
 		 echo "calling imagick on $path" . BRNL;
@@ -610,15 +633,11 @@ public function saveThumb ($ttype,$id,$mime,$turl){
 			$im->readImage($path);
 		 $im->setImageFormat('jpg');
 
-		#autoRotateImage($im);
-
-
 		 $im->thumbnailImage($max_dim, $max_dim,true); #best fit
 		 $im->writeImage(SITE_PATH . "/assets/$ttype/$thumb");
 
 		 return $thumb;
 	}
-
 
 
 	private function getTypeFromMime ($mime) {

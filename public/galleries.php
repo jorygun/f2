@@ -26,14 +26,31 @@ if ($login->checkLogin(1)){
 
 $galleries = $container['galleries'];
 
-
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	$gid = $galleries->post_gallery($_POST);
+	$galleries->display_gallery($gid);
+	exit;
+}
 
 if ($gid = $_SERVER['QUERY_STRING']){
-	$galleries->display_gallery($gid);
+
+	if (u\isInteger($gid)) {
+		$galleries->display_gallery($gid);
+		exit;
+	}
+	else  {
+		$gid = $_GET['id'] ?? '0';
+		$mode = $_GET['mode'] ?? '';
+
+		if ($mode == 'edit') {
+			$galleries->edit_gallery($gid);
+			exit;
+		}
+	}
 }
-else{
-	$galleries->show_galleries();
-}
+// if allelse fails
+$galleries->show_galleries();
+
 
 
 echo "</body></html>\n";

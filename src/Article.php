@@ -138,19 +138,10 @@ EOT;
         // set contributor id if one not set yet and
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
-        if (!empty($post['contributor_id']) && $id > 0) {
-            $adata['contributor_id'] = $post['contributor_id'];
-        } elseif (!empty($post['contributor'])) {
-            list ($contributor, $adata['contributor_id'] )
-                = $this->member->getMemberId($post['contributor']) ;
-            if (empty($contributor)) {
-                u\echoalert("No contributor found");
-                $adata['contributor_id'] = 0;  #no contributor defined
-            }
-        } else {
-            u\echoalert("No contributor listed");
-            $adata['contributor_id'] = 0;
-        }
+        $cd = f\setContributor($adata['contributor_id'], $adata['contributor'],$this->member);
+        //put the new contrib info into the adata array
+ 			$adata = array_merge($adata,$cd);
+
         if (!empty($adata['asset_id'] = trim($post['asset_id']))) {
             if (! preg_match('/^\d{4,5}$/', $adata['asset_id'])) {
                 throw new Exception("Non-integer in asset_id");

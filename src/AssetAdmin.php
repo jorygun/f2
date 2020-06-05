@@ -87,25 +87,14 @@ class AssetAdmin
 		}
 		$adata['id'] = $id;
 
-		#echo "pre c ookup: " . $post['contributor'] . ' ' . $post['contributor_id'] . BRNL;
-
 		// set contributor id if one not set yet and
-		// valid member name is in the contributo name field
-		if (!empty($post['contributor_id']) && $id > 0 ){
-			$adata['contributor_id'] = $post['contributor_id'];
-		} elseif (!empty ($post['contributor'] )) {
-			list ($adata['contributor'], $adata['contributor_id'] )
-				= $this->member->getMemberId($post['contributor']) ;
-				if (empty($adata['contributor'])){
-					u\echoalert("No contributor found");
-					$adata['contributor_id'] = 0;  #no contributor defined
-				}
-		} else {
-		u\echoalert("No contributor found");
-			$adata['contributor_id'] = 0;
-		}
+            // valid member name is in the contributo name field
+            // no contributor (=0) is not an error
+        $cd = f\setContributor($adata['contributor_id'], $adata['contributor'],$this->member);
+        //put the new contrib info into the adata array
+ 			$adata = array_merge($adata,$cd);
 
-	#echo "after c ookup: " . $adata['contributor'] . ' ' . $adata['contributor_id'] . BRNL; exit;
+
 
 		$adata['vintage'] = trim($adata['vintage']);
 		if (empty($adata['vintage'])){
@@ -289,7 +278,7 @@ class AssetAdmin
 
 		*/
 		if (! $adata = $this->getAssetData($aid) ) {
-			return "<div class='asset'>Asset $aid not found</div>";
+			throw new Exception (" Asset $aid not found");
 		}
 
 		$aurl = $adata['asset_url'];
@@ -300,45 +289,29 @@ class AssetAdmin
 
 		$attr_block = self::getAttribute($adata['source']);
 
-
-		switch($style) {
-			case 'thumb':
-				$block = <<<EOT
-				<div class= 'asset'>
-					<a href='/asset_viewer.php?$aid' target='viewer'>
-					<img src='/assets/thumbs/$aid.jpg' /> </a>
-					$attr_block
-					<div class='atitle'>$atitle</div>
-					$acapt
-				</div>
-EOT;
-				break;
-			case 'gallery':
-				$block = <<<EOT
-				<div class='asset'>
-					<a href='/asset_viewer.php?$aid' target='viewer'>
-					<img src='/assets/galleries/$aid.jpg' /> </a>
-					$attr_block
-					<div class='atitle'>$atitle </div>
-					$acapt
-				</div>
-EOT;
-				break;
-			case 'toon' :
-				$block = <<<EOT
-				<div class='asset'>
-					<a href='/asset_viewer.php?$aid' target='viewer'>
-					<img src='/assets/toons/$aid.jpg' /> </a>
-					$attr_block
-					<div class='atitle'>$atitle</div>
-					$acapt
-				</div>
-EOT;
-				break;
-
-			default:
-				$block = 'Unknown asset display style';
+		try {
+						$image_data = "<img src='"
+						. $this->assets->getThumbUrl($aid,$style)
+						. "' />";
+		} catch (Exception $e) {
+						$image_data = "Could not create thumbnail for gallery<br>"
+						. $e->getMessage()
+						. BRNL;
 		}
+
+
+				$block = <<<EOT
+				<div class='asset'>
+					<a href='/asset_viewer.php?$aid' target='viewer'>
+					$image_data </a>
+					$attr_block
+					<div class='atitle'>$atitle</div>
+					$acapt
+				</div>
+EOT;
+
+
+
 
 		return $block;
 

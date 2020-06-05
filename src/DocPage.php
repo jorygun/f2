@@ -65,30 +65,28 @@ class DocPage
 
    <title>$title</title>
    <link rel='stylesheet' href = '/css/news4.css' />
-   <script src='/js/f2js.js'></script>
+
+   <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
+	<script src='/js/f2js.js'></script>
+	<script src='/js/ajax.js'></script>
+
 EOT;
         if (!empty($options) && in_array('tiny', $options)) {
             $t .= "
-          <script src='https://cdn.tiny.cloud/1/5rh2pclin81y4q8k7r0ddqfz2gcow6nvxqk1yxv4zci54rpx/tinymce/5/tinymce.min.js'</script>
-         <script src='/jsmx/tinymce/tinymce.min.js'></script>
-         <script src='/js/tiny_init.js'></script>
+            <script src='https://cdn.tiny.cloud/1/5rh2pclin81y4q8k7r0ddqfz2gcow6nvxqk1yxv4zci54rpx/tinymce/5/tinymce.min.js'></script>
+
+         	<script src='/js/tiny_init.js'></script>
          ";
         }
-        if (!empty($options) &&
-        (in_array('ajax', $options) ||  in_array('votes', $options) || in_array('links', $options) )
-        ) {
+//  <script src='/jsmx/tinymce/tinymce.min.js'></script>
+
+        if (!empty($options) && in_array('help', $options)) {
             $t .= "
-         <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
-         <script src='/js/ajax.js'></script>
-         ";
+        <script src='/js/help.js'></script>
+        ";
         }
 
-        if (!empty($options) && in_array('no-cache', $options)) {
-             $t .= '<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-            <meta http-equiv="Pragma" content="no-cache"/>
-            <meta http-equiv="Expires" content="0"/>
-            ';
-        }
+
 
         return $t;
     }

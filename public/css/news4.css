@@ -137,6 +137,20 @@ div.head {margin: auto;
     /*width: 600px;*/
 	vertical-align:bottom;
 	}
+div.float-left {
+	float:left;
+	display:block;
+	margin-right:6px;
+}
+div.help {
+	display:block;
+	margin:3px;
+	border:2px solid #060;
+	padding: 1em;
+	background:#DFD;
+
+}
+
 div.page_head {margin:auto;
    vertical-align:bottom;
    }
@@ -346,6 +360,13 @@ table.article_list tr th {padding:6px; font-weight:bold;text-align:center;
 
 table.alternate tr:nth-child(even) {background: #EEE}
 table.alternate tr:nth-child(odd) {background: #FFF}
+
+table.bordered {
+	border:1px solid #030;
+}
+table.row-lines td{
+	border-top:1px solid gray;
+}
 
 div.comment_box {
     margin:1em;

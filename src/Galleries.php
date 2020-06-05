@@ -11,6 +11,8 @@ class Galleries
  	private $pdo;
  	private $assets;
  	private $asseta;
+ 	private $templates;
+ 	private $member;
 
 	private $new_gallery = array (
 	'id' => 0,
@@ -21,6 +23,8 @@ class Galleries
    'gallery_items' => '',
    'contributor' => '',
    'contributor_id' => 0,
+   'contributor' => '',
+   'thumb_id' => 0,
 
 	);
 
@@ -28,8 +32,11 @@ class Galleries
 		$this->pdo = $container['pdo'];
 		$this->asseta = $container['asseta'];
 		$this->assets = $container['assets'];
+		$this->templates = $container['templates'];
+		$this->member = $container['member'];
 		$this->new_gallery['vintage'] = date('Y');
-		$this->new_gallery['contributor'] = date('Y');
+		$this->new_gallery['contributor_id'] = $_SESSION['login']['user_id'];
+		$this->new_gallery['contributor'] = $_SESSION['login']['username'];
 		$this->credential = ($_SESSION['level'] > 6); #user can edit
 
 
@@ -47,28 +54,19 @@ class Galleries
 			  show_galleries("No such gallery $gid");
 		 }
 
-		$gitems = $row['gallery_items'];
-		// may be list of numbers or a search assets command
-		// as search: tags like '%A%'
-		if (preg_match('/^\s*search: (.*)/i',$gitems,$m) ){
-			$crit = $m[1];
-			$sql = "Select id from `assets` where status not in ('E','X','D') AND $crit";
-			$note =  "<p>Searching assets where: $crit </p>";
-			$aids = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
-			#recho ($assets,"Found $crit");
-
-		} else {
-			  $aids = u\number_range($row['gallery_items']);
-		}
+		$aids = $this->getGalleryItems($row['gallery_items']);
 		if (empty($aids)){die ("No asset list for gallery $gid ");}
 
-		echo "<h2>${row['title']}</h3>";
+		 echo "<div class = asset-row>";
+		echo "<h3>${row['title']}</h3>";
+		echo "<p>${row['caption']}</p>";
+		echo "<hr>" . NL;
 
 		foreach ($aids as $aid){
 			//echo "Gallery block $aid goes here";
-			echo $this->asseta->getAssetBlock($aid,'gallery',false) ;
+			echo $this->asseta->getAssetBlock($aid,'galleries',false) ;
 		}
-
+		echo "</div>";
 	}
 
 
@@ -83,11 +81,41 @@ class Galleries
 	public function getCredential() {
 		return $this->credential;
 	}
-	public function getGalleryData() {
+
+	private function getGalleryItems($gitems) {
+
+		// may be list of numbers or a search assets command
+		// as search: tags like '%A%'
+		if (preg_match('/^\s*search: (.*)/i',$gitems,$m) ){
+			$crit = $m[1];
+			$sql = "Select id from `assets` where status not in ('E','X','D') AND $crit";
+			$note =  "<p>Searching assets where: $crit </p>";
+			$aids = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+			#recho ($assets,"Found $crit");
+
+		} else {
+			  $aids = u\number_range($gitems);
+		}
+		return $aids;
+
+	}
+
+	public function getGalleryData($gid=0) { #gets all unless gid specified
+		$where = ''; $limit = '';
+		if ($gid > 0) {
+			$where = "WHERE g.id = '$gid' ";
+			$limit = "LIMIT 1 ";
+		}
+
+
 		$sql = "SELECT g.*,m.username as contributor
 		FROM galleries g
 		LEFT JOIN members_f2 m on g.contributor_id = m.user_id
-		ORDER BY vintage DESC, date_created DESC;";
+		$where
+		ORDER BY vintage DESC, date_created DESC
+		$limit
+		;";
+
 		$gdata = $this->pdo->query($sql)->fetchAll();
 
 		return $gdata;
@@ -110,11 +138,12 @@ class Galleries
 
 
 EOT;
-		 $gall = $this->getGalleryData(); // all data indexed by gid
+		 $gall = $this->getGalleryData(); // all data  if no gid
 
 		 $last_vintage = 0;
+		 echo "<div class = asset-row>";
 		 foreach ($gall as $gdata) {
-		 u\echor($gdata);
+		// u\echor($gdata);
 		 	$vintage = $gdata['vintage'];
 		 	if ($vintage != $last_vintage){
 					 if (empty($vintage )){$vintage = "Multiple Years";}
@@ -124,6 +153,7 @@ EOT;
 		 	echo $this->getGalleryBlock($gdata) ;
 			$last_vintage = $vintage;
 		}
+		echo "<div class='clear'></div></div>";
 
 	}
 
@@ -139,232 +169,115 @@ EOT;
 			  $caption = u\special($gdata['caption']);
 			  $gid = $gdata['id'];
 
+				$error = '';
 			  // get designated id or first in asset list to use as thumb
+
 			  if (empty($aid = $gdata['thumb_id'])) {
-				  preg_match('/^(\d+).*/',$gdata['gallery_items'],$m);
-			 	 $aid = $m[1];
-			 	}
-			 	if (empty($aid)) {
-			 		die ("Must designate thumb id for gallery $gid");
-			 	}
+			  		$aid = u\range_to_list($gdata['gallery_items'])[0]; #first in list
+			  	}
+			  	if (!$aid) {
+			  		throw new Exception ("Cannot get asset id for gallery thumb");
 
-		$lc = 0; #loop counter to get out
-		$image =  '/assets/galleries' . "/$aid.jpg";
-		if (!file_exists(SITE_PATH . $image) ) {
-			// go make one
-			if (!$this->assets->createThumbs($aid,['galleries']) ) {
-				die ("Unable to create gallery thumb for as. $aid");
+			 	} else {
+			 		try {
+						$image_data = "<img src='"
+						. $this->assets->getThumbUrl($aid,'thumbs')
+						. "' />";
+					} catch (Exception $e) {
+						$image_data = "Could not create thumbnail for gallery<br>"
+						. $e->getMessage()
+						. BRNL;
+					}
+				}
+
+
+			$edit_button = '';
+		if ($this->credential) {
+			$edit_button = "<button type='button' onClick = window.open('/galleries.php?id=$gid&mode=edit')>Edit</button>
+			";
 			}
-		}
-
 		$attr_block = $this->getAttribute($gdata['contributor']);
 		$block = <<<EOT
 				<div class='asset'>
 					<a href='/galleries.php?$gid' target='gallery'>
-					<img src='$image' /> </a>
+					$image_data </a>
 					$attr_block
 					<div class='atitle'>${gdata['title']} </div>
-
+					$error
+					$edit_button
 				</div>
 EOT;
 		return $block;
 	}
 
-	public  function getAttribute($source) {
+	public function getAttribute($source) {
 		//$attr = $adata['source'];
 			$attr_block = (!empty($source))? "<div class='asource'>-- $source</div>" : '';
 			return $attr_block;
 		}
 	public function edit_gallery($gid) {
 
-		$sql = "SELECT * FROM `galleries` WHERE id ='$gid';";
-
 		if (empty($gid)) {
 			$d = $this->new_gallery;
-		} elseif (! $d = $pdo->query($sql)->fetch() ) {
-            die ("No gallery found at $gid");
-      }
 
-      $this->templates->render('edit_gallery', $d);
+		} else {
+			if(! $gd = $this->getGalleryData($gid) ) {
+            die ("No gallery found at $gid");
+     		 }
+     		 $d = $gd[0]; // gd is an array
+
+		}
+
+		 $d['alias_list'] = Defs::getMemberAliasList();
+		 //u\echor($d);
+      echo $this->templates->render('gallery', $d);
 	}
 
+	public function post_gallery($post) {
+	#make sure there are gallery files for each photo
+
+		$aids = $this->getGalleryItems($post['gallery_items']);
+	u\echor($aids);
+
+		foreach ($aids as $aid) {
+			if (! $post['thumb_id'] ) {
+				$post['thumb_id'] = $aid;
+			}
+			if (! file_exists(SITE_PATH . '/assets/galleries' . "/$aid.jpg")) {
+				echo "Need new gallery file at $aid.jpg";
+			}
+
+		}
+
+exit;
+
+       $allowed = array(
+       	'id','title','caption','vintage','gallery_items','thumb_file',
+       	'thumb_id','contributor_id');
+
+       	// set contributor id if one not set yet and
+            // valid member name is in the contributo name field
+            // no contributor (=0) is not an error
+        $cd = f\setContributor($post['contributor_id'], $post['contributor'],$this->member);
+        //put the new contrib info into the adata array
+ 			$post = array_merge($post,$cd);
+
+		$prep = u\pdoPrep($post,$allowed,'id');
 
 
+       $sql = "INSERT into `galleries` ( ${prep['ifields']} )
+    		VALUES ( ${prep['ivals']} )
+    		ON DUPLICATE KEY UPDATE ${prep['updateu']};
+    		";
+		$combined = array_merge($prep['data'],$prep['udata']);
+u\echor($combined,$sql);
+       $stmt = $this->pdo->prepare($sql)->execute($combined);
+       $new_id = $post['id'] ?: $this->pdo->lastInsertId();
 
 
+        echo "New Gallery id: $new_id" . BRNL;
+        return $new_id;
 
-
+  }
 }
-
-/*
-
-
-######################################################################
-function thumb_for_asset ($asset_list){
-    #returns thumb for first asset listed
-    preg_match('/^(\d+)/',$asset_list,$m);
-    $first_asset = $m[1];
-    echo "Obtaining thumb from asset $first_asset";
-    $pdo = MyPDO::instance();
-    $sql = "SELECT thumb_file from `assets` where id = $first_asset";
-
-    if (!$thumb = $pdo->query($sql)->fetchColumn() ){
-        die ("sql failed: $sql");
-    }
-    echo " $thumb" . BRNL;
-    return $thumb;
-}
-
-
-function make_gallery_images($itemlist) {
-    foreach ($itemlist as $id){
-        if (!empty ($gfile = choose_graphic_url('/assets/galleries',$id))){
-            continue; #have the file
-        }
-        #make gallery file
-        #get source for asset; create thumb
-        $pdo = MyPDO::instance();
-        $sql = "SELECT url , link from `assets` where id = $id";
-        $fresult = $pdo->query($sql)->fetch();
-        $fsource = '';
-        if (! empty($fresult['url'])){$fsource = $fresult['url'];}
-        elseif (! empty($fresult['link'])){$fsource = $fresult['link'];}
-        else {
-        echo "Cannot find source file for thumb at asset id $id";
-        	continue;
-        	}
-        if (!empty ($fsource)){create_thumb($id,$fsource,'galleries');}
-
-
-    }
-
-}
-
-
-public function post_gallery($post){
-    $pdo = MyPDO::instance();
-
-    #recho ($post,"Incoming post");
-     $values = array(
-            $post['title'],
-            $post['caption'],
-            $post['vintage'],
-            $post['gallery_items'],
-            $post['thumb_file'],
-            $post['admins']
-            );
-
-
-    #make sure there are gallery files for each photo
-        make_gallery_images(list_numbers($post['gallery_items']));
-
-
-    if (empty($post['id']) or $post['id'] == 0){
-        # get thumb file for first asset
-        $thumb = thumb_for_asset($post['gallery_items']);
-        $values = array(
-            $post['title'],
-            $post['caption'],
-            $post['vintage'],
-            $post['gallery_items'],
-            $thumb,
-            $post['admins']
-            );
-
-
-
-        $sql = "Insert into `galleries` (title,caption,vintage,gallery_items,thumb_file,admins,status)
-            values (?,?,?,?,?,?,'N')";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($values);
-        $newid = $pdo->lastInsertId();
-        echo "New Gallery id: $newid" . BRNL;
-        return $newid;
-
-    }
-    else {
-        $id = $post['id'];
-        if (empty($post['thumb_file'])){
-            $post['thumb_file'] = thumb_for_asset($post['gallery_items']);
-        }
-        if (empty($post['thumb_file'])){
-            echo "Error: cannot get thumb_file for this asset" . BRNL;
-            exit;
-        }
-        $values = array(
-            $post['title'],
-            $post['caption'],
-            $post['vintage'],
-            $post['gallery_items'],
-            $post['thumb_file'],
-            $post['admins']
-            );
-
-        $sql = "Update `galleries` set title = ?, caption = ?, vintage = ?, gallery_items = ?,thumb_file = ?, admins=? where id = $id;";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($values);
-        return $id;
-    }
-}
-
-function get_gallery_data($id){
-    $pdo = MyPDO::instance();
-
-     $itemdata = array(); #store data to display
-    #echo "Starting get_asset_data";
-
-        // retrieve existing record
-        $sql = "SELECT * FROM `galleries` WHERE id =?;";
-        $stmt = $pdo->prepare($sql);
-
-         $stmt->execute([$id]);
-       if (!$itemdata = $stmt ->fetch(\PDO::FETCH_ASSOC)  ){
-                    die ("No gallery found at $id");
-        }
-
-
-
-    #print_r ($itemdata);
-    return $itemdata;
-}
-
-
-function show_gallery_form($itemdata,$gallery_status) {
-    $id = (isset($itemdata['id'] ))?$itemdata['id']: 0 ;
-
-// display form using data from itemdata
-
-foreach (['title','caption'] as $f){
-    $hte[$f] = hte($itemdata[$f]);
-}
-$statuscheckedG = $statuscheckedD = $statuscheckedN = '';
-if($itemdata['status'] == 'G'){$statuscheckedG = 'checked';}
-if($itemdata['status'] == 'D'){$statuscheckedD = 'checked';}
-if($itemdata['status'] == 'N'){$statuscheckedN = 'checked';}
-
-$statusfield = <<<EOT
-    <input name = 'status' type='radio' value='G' $statuscheckedG >${gallery_status['G']}
-    <input name = 'status' type='radio' value='N' $statuscheckedN >${gallery_status['N']}
-    <input name = 'status' type='radio' value='D' $statuscheckedD >${gallery_status['D']}
-EOT;
-//
-
-echo "<button onClick=showDiv('glist')>Show Galleries</button>
-    <div class='hidden' id='glist'>";
-    echo list_galleries();
-echo "</div>\n";
-
-    echo <<< EOT
-<h4>Gallery Edit/Entry (main)</h4>
-<p>
-
-Edit Gallery (0 for new) <input type=text name='egallery' id='egallery'>
-<button onClick = 'choose_gallery()'>Go</button>
-</p>
-
-
-
-
-
-
 
