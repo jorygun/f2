@@ -658,11 +658,19 @@ function get_mime_from_url($url)
 function get_mime_from_curl($url)
 	{
 	// also checks if url exists
+	 $options = array(
+        CURLOPT_RETURNTRANSFER => true,     // return web page
+        CURLOPT_HEADER         => false,    // don't return headers
+        CURLOPT_FOLLOWLOCATION => false,     // follow redirects
+        CURLOPT_ENCODING       => "",      // handle all encodings
+        CURLOPT_USERAGENT      => "asset_search", // who am i
+        CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+        CURLOPT_CONNECTTIMEOUT => 10,      // timeout on connect
+        CURLOPT_TIMEOUT        => 10,      // timeout on response
+        CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+    );
 	$ch = curl_init($url);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-	curl_setopt($ch, CURLOPT_HEADER, 1);
-	curl_setopt($ch, CURLOPT_NOBODY, 1);
+	curl_setopt_array( $ch, $options );
 	if (!curl_exec($ch) ) return false;
 	$code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	if ($code >= 400) return false;
@@ -670,7 +678,6 @@ function get_mime_from_curl($url)
 
 	return $mime;
 	}
-
 function array_filter_keys($arr,$allowed){
 		//creates new array from arr containing only keys in allowed list.
 		return array_intersect_key($arr, array_flip($allowed));
