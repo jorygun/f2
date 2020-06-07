@@ -83,7 +83,8 @@ public static $test_emails = array(
 					'tiff' => 'image/tiff',
 					'doc' => 'application/msword',
 					'docx' => 'application/msword',
-					'html' => 'text/html'
+					'html' => 'text/html',
+					'' => 'video/x-youtube',
 
 			  );
 
