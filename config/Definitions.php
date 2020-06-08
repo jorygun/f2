@@ -87,6 +87,23 @@ public static $test_emails = array(
 					'' => 'video/x-youtube',
 
 			  );
+	private static $mime_groups = array (
+
+		'image/jpeg' => '',
+		'image/jpeg' => 'Image',
+		'image/png' => 'Image',
+		'image/gif' => 'Image',
+		'application/pdf' => 'Doc',
+		'video/mp4' => 'Video',
+		'video/quicktime' => 'Video',
+		'audio/mpeg' => 'Audio',
+		'audio/mp4' => 'Audio',
+		'image/tiff' => 'Image',
+		'image/tiff' => 'Image',
+		'application/msword' => 'Doc',
+		'text/html' => 'Web',
+		'video/x-youtube' => 'Video',
+	);
 
 	// tag codes.  * in description means archival
 	public static $asset_tags = array(
@@ -363,6 +380,12 @@ public static $test = 'you win';
 	}
 	public static function getMimeFromExt($ext) {
 		return self::$accepted_mime_types[$ext] ?? '';
+	}
+
+	public static function getMimeGroup($mime) {
+		$group = self::$mime_groups[$mime] ?? 'oops';
+		return $group;
+
 	}
 
 }
