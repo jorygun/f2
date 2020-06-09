@@ -23,7 +23,7 @@ class Definitions {
 		#days since last activity; triggers lost test
 
 	public static $asset_status = array(
-        'R' => 'Reviewed',
+    'R' => 'Reviewed',
     'T' => 'temp holding',
     'E' => 'Data Error',
     'X' => 'Deleted',
@@ -63,10 +63,7 @@ public static $test_emails = array(
 	 public static $thumb_width = array(
 						 'thumbs' => 200,
 						 'galleries' => 330,
-						 'toons' => 800,
-						 '200w' => 200,
-						 '330w' => 330,
-						 '800w' => 800
+						 'toons' => 800
 						 );
 
 	private static $accepted_mime_types = array(
@@ -87,21 +84,21 @@ public static $test_emails = array(
 					'' => 'video/x-youtube',
 
 			  );
-	private static $mime_groups = array (
+		// all accept mime types for assets and their group
+	public static $mime_groups = array (
 
-		'image/jpeg' => '',
 		'image/jpeg' => 'Image',
 		'image/png' => 'Image',
 		'image/gif' => 'Image',
-		'application/pdf' => 'Doc',
+		'application/pdf' => 'Document',
 		'video/mp4' => 'Video',
 		'video/quicktime' => 'Video',
 		'audio/mpeg' => 'Audio',
 		'audio/mp4' => 'Audio',
 		'image/tiff' => 'Image',
 		'image/tiff' => 'Image',
-		'application/msword' => 'Doc',
-		'text/html' => 'Web',
+		'application/msword' => 'Document',
+		'text/html' => 'Web Page',
 		'video/x-youtube' => 'Video',
 	);
 
@@ -286,6 +283,13 @@ private static $member_codes = array (
 
 public static $test = 'you win';
 
+#####################
+public static function getMimeGroup($mime) {
+	$group = self::$mime_groups[$mime] ?? '';
+	return $group;
+
+}
+
 ######## Getters
 	/* returns the list at teh var */
 	public  static function getEmsData($code){
@@ -343,6 +347,7 @@ public static $test = 'you win';
 
 	public static function replaceAlias ($alias){
     // looks for maybe in alias list and replaces with alias name if any
+    $alias = strtolower($alias) ; #all aliases are lower case
     if (preg_match('/^\w+$/',$alias)){ # match alias format
         if (in_array($alias,array_keys(Definitions::$user_aliases))){
             $lookup = Definitions::$user_aliases[$alias];
@@ -382,11 +387,6 @@ public static $test = 'you win';
 		return self::$accepted_mime_types[$ext] ?? '';
 	}
 
-	public static function getMimeGroup($mime) {
-		$group = self::$mime_groups[$mime] ?? 'oops';
-		return $group;
-
-	}
 
 }
 
