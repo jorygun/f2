@@ -253,8 +253,8 @@ function getTemplate($type)
 }
 
 function runNewsIndex() {
-// no longer used
-	return 'Not used';
+// no longer used ???
+	//return 'Not used';
 	$ni = new NewsIndex();
 	//$ni -> rebuildJson();
 
