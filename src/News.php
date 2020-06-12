@@ -127,7 +127,8 @@ public function getNewsIndex() {
 public function getIssueData($issue) {
 	$sql = "SELECT * FROM pubs where issue = '$issue' LIMIT 1;";
 	$issue_data = $this->pdo->query($sql)->fetch();
-	$issue_data['stories'] = json_decode($issue_data['stories']);
+	//echo "Issue $issue: " ; u\echor($issue_data) ; exit;
+	$issue_data['stories'] = json_decode($issue_data['stories'],true) ?? [];
 	return $issue_data;
 }
 public function getLatestIssue(){

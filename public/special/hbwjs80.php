@@ -118,7 +118,7 @@ EOT;
 echo "<br style='clear:both'><br>";
 
 $on_db = 'spec_items';
-$carray = $ucom->getComments($comment_params);
+$carray = $ucom->getComments(80,'spec');
 
 //echo "Getting " . count($carray) . " comments for $on_db, $on_id" . BRNL;
 

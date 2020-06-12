@@ -55,6 +55,11 @@ class NewsIndex {
 
     }
 
+	public function rebuildAll() {
+		$this->rebuildJson();
+		$this buildHTML();
+	}
+
   public function rebuildJson() {
   	$file_index = $this->buildFileList( FileDefs::archive_dir);
   	file_put_contents(FileDefs::news_index_json,json_encode($file_index ));
@@ -123,6 +128,7 @@ class NewsIndex {
 
 
     private function jsonToHtml ($json) {
+    // also sticks entry into pubs table
       $letters=0; $lyear=0;
 		$file_index = json_decode (file_get_contents(FileDefs::news_index_json),true);
 		;

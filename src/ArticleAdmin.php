@@ -89,11 +89,11 @@ class ArticleAdmin
 		return $mylist;
 
 	}
-	public function getDblock($pop,$params) {
+	public function getDblock($id) {
 	// builds the discussion block
 
 		// get the comments
-   		 $carray = $this->comment->getComments($params);
+   		 $carray = $this->comment->getComments($id,'article');
 
    		$dblock =  "<div class='comment_background'>
          <h2>Reader Comments</h2>
@@ -111,11 +111,7 @@ class ArticleAdmin
 
         $dblock .=  "</div>" . NL;
 
-		 if ($pop['take_comments']) {
-			  $dblock .=  $this->templates->render('new_comment', $params);
-		 } else {
-			$dblock .=  "New comments are disabled on this article" . BRNL;
-		}
+
 		return $dblock;
 	}
 
@@ -146,20 +142,21 @@ class ArticleAdmin
         return  $ablock ;
         // array with two entries: adiv and ablock
       }
-	function getLiveArticle ($params,$show) {
-		// params is the comment param block, which includes article_id. user_id, username,
-		// show is show_comments, show_vblock
+	function getLiveArticle ($id,$user,$show) {
+		// user includes user_id, username,
+		// show is comments, pops (activity summary)
 		// returns array of data ready for rendering in the article template
 
-		$id = $params['on_id'] ;
-		$pops = $this->article->getPops($id); // array take_votes, credential,etc
-		//u\echor($pops,'pops');
-		$adata = $this->article->getArticle($id);
 
+		$pops = $this->article->getPops($id); // array take_votes, credential,etc
+//u\echor($pops,'pops');
+		$adata = $this->article->getArticle($id);
+//u\echor($adata,'adata');
 		$article = "<div class='article'>";
 		$adata = array_merge($adata, $this->getAssetBlock($adata)); #2 rows
 
 		$adata = array_merge($adata,$this->buildStory($adata) ); // date for story
+//u\echor($adata); exit;
 
 		$pblock = '';
 		if ($show['pops']) {
@@ -170,11 +167,19 @@ class ArticleAdmin
 				$adata['pblock']  = $pblock;
 	$dblock = '';
 		if ($show['comments'] ){
-			if ($pops['take_comments'])  {
-				$dblock = $this->getDblock($pops,$params);
+				$dblock = $this->getDblock($id);
+			if ( $pops['take_comments'])  {
+				$nc_data = $user;
+				$nc_data['on_id'] = $id;
+				$nc_data['admin_note'] = '';
+
+			  $dblock .=  $this->templates->render('new_comment', $nc_data);
+			 } else {
+				$dblock .=  "New comments are disabled on this article" . BRNL;
+			}
 
 				//is a div of text
-			}
+
 		}
 		$adata['dblock'] = $dblock;
 
@@ -193,6 +198,7 @@ class ArticleAdmin
 
 	public function buildStory($sdata)
     {
+
 	// builds html for a story
 
         $id = $sdata['id']; // might be noew article, so orignal was id = 0
@@ -226,7 +232,7 @@ class ArticleAdmin
 
 	public function getPblock($cc,$pops) {
 	// need comment count, article id, take comments, take votes, this userid
-		// params is
+		// pops is
 	// builds block listing comments and taking votes
 		$id = $pops['article_id'];
 	    $pblock = '';

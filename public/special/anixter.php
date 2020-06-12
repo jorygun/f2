@@ -55,7 +55,7 @@ EOT;
 use DigitalMx\Flames\Comment;
 
 
-require_once "../scripts/read_functions.php";
+#require_once "../scripts/read_functions.php";
 
 
 
@@ -208,7 +208,7 @@ else {
 echo "<br style='clear:both'><br>";
 
 
-$carray = $ucom->getComments($comment_params);
+$carray = $ucom->getComments(82,'spec');
 if (!empty($carray)){
     $clist = display_comments_benji($carray);
     echo $clist;

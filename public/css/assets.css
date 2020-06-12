@@ -29,6 +29,7 @@
 div.asset-column {
 	float:left;
 	display:inline-block;
+	margin-right:1em;
 }
 
 div.asset-column .asset {

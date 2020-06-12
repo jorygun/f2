@@ -61,35 +61,28 @@ $show = array(
 		'comments' => false,
 		'pops' =>true,
 	);
-
+$user = array(
+    'user_id' => $_SESSION['login']['user_id'],
+    'username' => $_SESSION['login']['username'],
+    );
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $on_id = $_POST['on_id'] ?? 0;  // 0 shoul be error
+    $id = $_POST['on_id'] ?? 0;  // 0 shoul be error
 } elseif (isset($_GET['id'])) {
     // from ?id=n&m=mode
-        $on_id = $_GET['id'] ?? 0;
+        $id = $_GET['id'] ?? 0;
         $mode = $_GET['m']?? 's';
 } else {
     // from query string ?n[m]
         $id = trim($_SERVER['QUERY_STRING']);
     if (strpos($id, 'd') !== false) {
         $mode = 'd'; #story + discusson
-        $on_id = substr($id, 0, -1);
+        $id = substr($id, 0, -1);
     } else {
         $mode = 's'; #show story
-        $on_id = $id;
+
     }
 }
-$params = array(
-    'user_id' => $_SESSION['login']['user_id'],
-    'username' => $_SESSION['login']['username'],
-    'on_db' => 'article',
-    'mailto' => ['commenters','contributor','editor',13105],
-    'single' => false,
-    'on_id' => $on_id,
-    'admin_note' => '',
-    );
-
 
 if ($mode == 'd') {
 	$show = array(
@@ -98,15 +91,24 @@ if ($mode == 'd') {
 	);
 }
 
-if (u\isInteger($on_id) && $on_id > 0) {
+if (u\isInteger($id) && $id > 0) {
 } else {
-    die("Invalid item id requested: $on_id");
+    die("Invalid item id requested: $id");
 }
 
 
 
 // if post, add the comment and set the mode to d to display omments on return
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+		$params = array(
+		 'user_id' => $_SESSION['login']['user_id'],
+		 'username' => $_SESSION['login']['username'],
+		 'on_db' => 'article',
+		 'mailto' => ['commenters','contributor','editor',13105],
+		 'single' => false,
+		 'on_id' => $id,
+		 'admin_note' => '',
+    );
         $container['comment'] -> addComment($_POST,$params);
         $show = array(
 			'comments' => true,
@@ -129,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	*/
 
-    $sdata = $articlea->getLiveArticle($params,$show);
+    $sdata = $articlea->getLiveArticle($id, $user, $show);
 
 
      //u\echor($sdata, 'story array');

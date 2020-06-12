@@ -15,7 +15,7 @@ function f2_security_below ($min) {
 
 function security_below($min) {
 	   if ($_SESSION['level'] < $min) {
-			echo "Not Allowed: " . $_SESSION['level'] . $min . BRNL;
+			echo "Permission Denied: (${_SESSION['level']} / $min )" . BRNL;
 			exit;
 		}
 		return false;

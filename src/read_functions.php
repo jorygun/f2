@@ -168,9 +168,10 @@ function replace_new_discussion ($content) {
         	$content1 = preg_replace_callback(
             	'|<!-- comment (\d+) -->|',
             	function ($matches){
+            		$id = $matches[1];
             		$cp = "
-          		 <a href='/scripts/news_article_c.php?id=$matches[1]' target='cpage'>Discuss this article </a>";
-          		 	$cp .=  '<br />' . get_commenters($matches[1]);
+          		 <a href='/get-article.php?id=$id&m=d' target='cpage'>Discuss this article </a>";
+
             		return $cp;
             	}
 				,
@@ -276,9 +277,10 @@ function get_commenters($aid) {
 }
 
 // iincluded for compatability with old newsletters
+
+
 class navBar
 {
-
 	public function build_menu() {
 		return $_SESSION['menubar'];
 	}

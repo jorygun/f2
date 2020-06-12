@@ -11,7 +11,7 @@
 		</div>
 	<?php endif; ?>
 
-	<div class='story  clearafter'>
+	<div class='story '>
 
 		<?=$content?>
 		<?=$more?>

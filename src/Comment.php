@@ -180,7 +180,7 @@ class Comment
 			$inserted_rows = $stmt_insert->rowCount();
 		}
 	// prepare to mail all the involved parties
-		$carray = $this->getComments($params); #to buildd the list of comments
+		$carray = $this->getComments($on_id,$on_db); #to buildd the list of comments
 
 		if (!empty($params['mailto'])) {$this->sendEmails($ucomment, $params); }
 		else {echo "No recipeints" . BRNL;}
@@ -340,11 +340,13 @@ EOT;
  	// u\echor($this->no_email_list,'nomail list');
  	//	u\echor($this->commenter_names,'name list');
  }
-	public function getComments($params){
+	public function getComments($on_id,$on_db = 'article'){
 	// retrieves all comments into a list.
-	$this->params = $params;
-		$on_db =  self::$db_names[$params['on_db']] ?? $params['on_db'];
-		$on_id = $params['on_id'];
+	// on_db is the foregin database, always news_items
+	// on_id is the id the item in the foregin dataabase, i.e., article id
+
+
+		$on_db =  self::$db_names[$on_db] ?? $on_db;
 
 		 $sql = "
             SELECT c.id, c.user_id,c.comment,c.on_db,c.item_id,c.no_email,c.asset_list,

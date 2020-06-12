@@ -123,10 +123,14 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			$ostatus = $row['status']; #old status
 			$new_list = trim(join(" ",$row['asset_id'], $row['asset_list']));
 
+		$in_issue = ''; // issue this was published in
+		$pub_date = $row['date_published'];
+		// translate to issue and make sure it exits
+
 
 
 			####### DO thE WORK ############
-			$new_fields = array (
+			$new_record = array (
 			'id'	=>	$row['id'],
 			'use_me'	=>	$row['use_me'],
 			'title'	=>	$row['title'],
@@ -142,18 +146,17 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			'ed_comment'	=>	$row['ed_comment'],
 			'take_comments'	=>	$row['take_comments'],
 			'take_votes'	=>	$row['take_votes'],
-			'pub_in'	=>	$row['pub_in'],
+			'pub_issue'	=>	$in_issue,
 			'date_entered'	=>	$row['date_entered'],
 			'date_edited'	=>	$row['date_edited'],
 			'date_published'	=>	$row['date_published'],
-			'graphic_url'	=>	$row['graphic_url'],
-			'graphic_caption'	=>	$row['graphic_caption'],
+
 			);
 
 
 			####################
 
-			record_result($b);
+			record_result($new_record);
 
 		} #end while adb loop
 	$next_id = $last_id + 1;
@@ -173,7 +176,7 @@ function record_result($b) {
 		if (empty($stmti)){
 			$prep = u\pdoPrep($b,[],''); #no key field.  Must retain id
 
-			$sqli = "INSERT into `assets2` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+			$sqli = "INSERT into `articles ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
 			echo "Setting insert sql:<br>
 			$sqli" . BRNL;
 			$stmti = $pdo->prepare($sqli);
@@ -217,10 +220,9 @@ function logrec($aid,$e,$msg,$src='') {
 
 function create_news2( $pdo ) {
 
-$pdo->query("DROP TABLE IF EXISTS `news2`;");
+$pdo->query("DROP TABLE IF EXISTS `articles`;");
 
-
-CREATE TABLE `news2` (
+CREATE TABLE `articles` (
   `id` smallint(6) NOT NULL AUTO_INCREMENT,
   `use_me` tinyint(1) NOT NULL DEFAULT '0',
   `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -236,13 +238,11 @@ CREATE TABLE `news2` (
   `ed_comment` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `take_comments` tinyint(1) DEFAULT '0',
   `take_votes` tinyint(1) NOT NULL DEFAULT '1',
-  `pub_in` tinytext COLLATE utf8mb4_unicode_ci,
+  `pub_issue` tinytext COLLATE utf8mb4_unicode_ci,
    `date_entered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_edited` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `date_published` date DEFAULT NULL,
 
-    `graphic_url` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `graphic_caption` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
 
   PRIMARY KEY (`id`),
   KEY `topic` (`topic`) USING BTREE
