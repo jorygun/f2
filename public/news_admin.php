@@ -29,7 +29,7 @@ if ($login->checkLogin(4)){
 //END START
 
     $titlefile = SITE_PATH . '/news/next/title.txt';
-    $publish = new Publish();
+    $publish = $container['publish'];
 
 
 // get time of last status report
