@@ -153,10 +153,13 @@ try {
 
         $listcode = "<ul class='collapsibleList' style='margin-bottom:6px;'>\n";
         foreach ($file_index as $dcode => $f){
-           # echo "$dt => $f<br>\n";
+           // echo "$dcode => $f<br>\n";
            $letters++;
             $url = "/newsp/$f";
-            $dt = \DateTime::createFromFormat('Ymd',$dcode);
+            if(! $dt = \DateTime::createFromFormat('Ymd',$dcode) ){
+            	echo "Cannot convert date on $dcode:$f" . BRNL;
+            	continue;
+            }
 
             $year = $dt->format('Y');
             $cdate = $dt->format('M j, Y');
