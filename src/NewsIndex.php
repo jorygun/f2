@@ -57,7 +57,7 @@ class NewsIndex {
 
 	public function rebuildAll() {
 		$this->rebuildJson();
-		$this buildHTML();
+		$this->buildHTML();
 	}
 
   public function rebuildJson() {
