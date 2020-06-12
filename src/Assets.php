@@ -302,9 +302,9 @@ class Assets {
 		if ($path = u\is_local($adata['asset_url']) ) {
 			$size = filesize($path);
 			$adata['sizekb'] = (int)($size/1000);
-			if ($adata['type'] == 'Image'){
-				list($adata['width'], $adata['height'], $junk) = getimagesize(SITE_PATH . $adata['asset_url']);
-			}
+			// if ($adata['type'] == 'Image'){
+// 				list($adata['width'], $adata['height'], $junk) = getimagesize(SITE_PATH . $adata['asset_url']);
+// 			}
 		}
 		#echo "Saving Asset $id" . BRNL;
 
@@ -460,13 +460,6 @@ class Assets {
         return $alist;
       }
 
-	public function getAssetSummaryById($id) {
-		// returns minimal set of asset data
-		$sql = "SELECT id,title,caption,asset_url , astatus
-			FROM `assets2` WHERE id = $id";
-		$d = $this->pdo->query($sql)->fetch();
-		return $d;
-	}
 
 	public function getAssetSummaryFromList($id_list){
 		// returns minimal set of asset data
@@ -480,14 +473,13 @@ class Assets {
 
    public function getAssetDataById($id){
 
-   	$sql = "SELECT * from `assets2` a
-   		where a.id = $id";
+   	$sql = "SELECT a.*,m.username as contributor from `assets2` a
+   			LEFT JOIN members_f2 m on a.contributor_id = m.user_id
+   			WHERE a.id = $id";
    	if (!$adata = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC) ){ #arra
-
    		return [];
    	}
 
-   	if (empty($adata['contributor_id'] )) $adata['contributor_id'] = 0;
    	$adata['status'] = $adata['astatus'];
 
 
@@ -1055,6 +1047,7 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 		// used to retrieve list of ids selected by the
 		// WHERE clause in sdata
 		$sql = "SELECT id from `assets2` WHERE $where LIMIT 100";
+		// u\echoc($sql,'search sql');
 		$found = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
 
 		return $found;

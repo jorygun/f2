@@ -59,7 +59,7 @@ $bauto = array();
 $bvars = array_merge($bsame,array_keys($bnew));
 $sqli = '';
 
-$logfile = SITE_PATH . '/log.asset_fixer.log';
+$logfile = SITE_PATH . '/asset_fixer.log';
 
 
 if (empty($_GET)) {

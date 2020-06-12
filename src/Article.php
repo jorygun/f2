@@ -75,7 +75,8 @@ EOT;
         }
         $id = $post['id'];
         $prep = u\pdoPrep($adata, [], 'id');
-        #u\echor ($prep , 'PDO data');
+   //u\echor ($prep , 'PDO data');
+
 
      /**
         $prep = pdoPrep($post_data,$allowed_list,'id');
@@ -94,9 +95,11 @@ EOT;
             $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
             $id = $this->pdo->lastInsertId();
         } else {
-            $sql = "UPDATE `news_items` SET ${prep['update']}
+            $sql = "UPDATE `news_items` SET ${prep['updateu']}
                 WHERE id =  ${prep['key']} ;";
-            $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+            u\echor($prep['udata'] , $sql);
+
+            $stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
         }
         //echo "Saved to $id" . BRNL;
         return $id;
@@ -113,6 +116,21 @@ EOT;
 		}
 
 
+	}
+	public function getPops($id) {
+		// retrieves story extra info, including comments and votes
+
+		$sql = "SELECT take_comments, take_votes, contributor_id FROM `news_items`
+			WHERE id = $id";
+		$pops = $this->pdo->query($sql)->fetch();
+		 $user_id = $_SESSION['login']['user_id'];
+		// editing privileges
+		$pops['edit_credential'] = $_SESSION['level'] > 4
+    		|| $pops['contributor_id'] == $user_id;
+    	$pops['user_id'] = $user_id;
+    	$pops['article_id'] = $id;
+
+		return $pops;
 	}
 
     private function checkArticle($post)
@@ -131,6 +149,8 @@ EOT;
             throw new Exception("Article must have a topic");
         }
         $adata['content'] = $post['content'];
+		$adata['url'] = $post['url'];
+		$adata['link_title'] = $post['link_title'];
 
         $adata['take_votes'] =  (empty($post['take_votes'])) ? 0 : 1 ;
         $adata['take_comments'] = (empty($post['take_comments'])) ? 0 : 1 ;
@@ -138,7 +158,7 @@ EOT;
         // set contributor id if one not set yet and
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
-        $cd = f\setContributor($adata['contributor_id'], $adata['contributor'],$this->member);
+        $cd = f\setContributor($post['contributor_id'], $post['contributor'],$this->member);
         //put the new contrib info into the adata array
  			$adata = array_merge($adata,$cd);
 
@@ -313,11 +333,7 @@ EOT;
             $this->adata = $adata;
             return $adata;
         } else {
-
-        	// if (! $stmt = $this->pdo->prepare(self::$getarticlesql) ){
-//         		throw new Exception ("pdo prep failed");
-//         	}
-
+		// returns article data along with contributor name, etc
         $this->getarticleprep->execute([$id]);
 		if (! $adata = $this->getarticleprep->fetch() ){
         	die ("Invalid article id $id");

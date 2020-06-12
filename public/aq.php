@@ -7,6 +7,8 @@ $login->checkLevel(4);
 
 $idmsg = '';
 $contributor = $_SESSION['login']['username'];
+$contributor_id = $_SESSION['login']['user_id'];
+
 $vintage = date('Y');
 
 if (isset($_POST['submit'])){
@@ -72,7 +74,7 @@ if (isset($_POST['submit'])){
 
 <input type='hidden' name ='id' value = '0' >
 <input type='hidden' name ='astatus' value = 'N' >
-<input type='hidden' name='contributor' value = '<?=$contributor?>' >
+<input type='hidden' name='contributor_id' value = '<?=$contributor_id?>' >
 
 <table class='assettable'>
 <tr><td>Asset (reqd)</td><td>

@@ -4,18 +4,22 @@ table {border:1px solid black; }
 .assettable td {size:1em;}
 </style>
 
-<h2 style="border-top:1px solid black;">Asset Editor</h2>
 
 <?php if ($id>0): ?>
-	<h4>Existing ID</h4>
-	<ul>
-	<li><b>ID: <?=$id?></b> <?=$list_note?>
-	<li> <b>Status:</b> <span style='<?=$status_style?>'><?=$astatus?> <?=$status_name?> </span><b>Entered:</b> <?=$date_entered?> 
-<li><b>Mime:</b> <?=$mime?> Type: <?=$type?> 
-<li><b>Size: </b><?=$sizekb?> KB. <?=$height?>h x <?=$width?>w
-<li><b>First Use:</b> <?=$first_use?>
-<li><b>Test tag:</b> <?=$temptest?>
-</ul>
+	<h2>Existing ID <?=$id?></h2>
+	<?=$list_note?>
+	<table>
+
+	<tr><td> Status:</td>
+		<td> <span style='<?=$status_style?>'><?=$astatus?>
+		<?=$status_name?> </span></td></tr>
+<tr><td> Entered: </td><td><?=$date_entered?> </td></tr>
+<tr><td>Mime &amp; Group: </td><td><?=$mime?> -> <?=$type?> </td></tr>
+<tr><td>Size: </td><td><?=$sizekb?> KB. </td></tr>
+<tr><td>First Use:</td><td> <?=$first_use?></td></tr>
+
+</table>
+<br>
 <?php else:?>
 
 	<h4>Create New Asset</h4>
@@ -23,7 +27,7 @@ table {border:1px solid black; }
 <?php endif;?>
 
 <form  method="POST" enctype="multipart/form-data"  name="asset_form" id="asset_form">
-	
+
 <input type='hidden' name ='id' value ='<?=$id?>'>
 <input type='hidden' name ='astatus' value = '<?=$astatus?>'
 
@@ -40,10 +44,10 @@ table {border:1px solid black; }
 <tr><td>Origin</td><td>Vintage: <input type='text' name='vintage' value = "<?=$vintage?>" size="6"> Attribute to <input type='text' name='source' value="<?=$source?>" size="40"> </td></tr>
 <tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' onfocus="form.contributor_id.value='';"
     style = '$cont_style'> id: <input type='text' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ><br><?=$Aliastext?></td></tr>
-    
+
     <tr><td>Tags</td><td><?=$tag_options?></td></tr>
     <tr><td colspan='2'>&nbsp;</td></tr>
- 
+
 <tr><td colspan='2'>Enter EITHER a url to the asset  OR select a file to upload</td></tr>
 
 <tr><td colspan='2'>Link asset to this file or url </td></tr>
@@ -53,7 +57,7 @@ Upload file <input type="file" name="uasset" > <br>
     <br>
      <span class='red'><?=$source_warning?></span>
     Use '/ftp/xxx' for files in ftp dir; 'uploads/xxx' for files in uploads dir.
-   
+
 </td></tr>
 
 

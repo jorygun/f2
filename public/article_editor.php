@@ -31,12 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post = $_POST;
     $post['take_votes'] =  (isset($post['take_votes']))? 1 : 0;
     $post['take_comments'] =  (isset($post['take_comments']))? 1 : 0;
+
      $id = $article->saveArticle($post);
     $_GET['id'] = $id;
-    // comment out next two lines to reload eidt window with new content
+    // comment out echo line below to reload eidt window with new content
     // window.close only works if page opened with js, which it normally is.
-    echo "<script>window.close()</script>\n";
-    exit;
+
+   // echo "<script>window.close()</script>\n"; exit;
 }
 
 $id = $_GET['id'] ?? 0;

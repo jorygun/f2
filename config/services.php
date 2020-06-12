@@ -62,4 +62,7 @@ $container['opps'] = function ($c) {
 $container['galleries'] = function ($c) {
 		return new Galleries($c);
 };
+$container['comment'] = function ($c) {
+	return new Comment($c);
+};
 

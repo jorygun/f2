@@ -50,13 +50,21 @@ echo  "<script src='/js/aq1.js'></script>";
  echo $page->startBody();
 
 
+$articlea = $container['articlea'];
+$templates = $container['templates'];
 
 
 // have to get on_id, either from posted message or from GET
 $mode = 's'; // no discussion
 
+$show = array(
+		'comments' => false,
+		'pops' =>true,
+	);
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $on_id = $_POST['on_id'] ?? 0;
+    $on_id = $_POST['on_id'] ?? 0;  // 0 shoul be error
 } elseif (isset($_GET['id'])) {
     // from ?id=n&m=mode
         $on_id = $_GET['id'] ?? 0;
@@ -72,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $on_id = $id;
     }
 }
-$comment_params = array(
+$params = array(
     'user_id' => $_SESSION['login']['user_id'],
     'username' => $_SESSION['login']['username'],
     'on_db' => 'article',
@@ -83,60 +91,51 @@ $comment_params = array(
     );
 
 
+if ($mode == 'd') {
+	$show = array(
+		'comments' => true,
+		'pops' =>false,
+	);
+}
+
 if (u\isInteger($on_id) && $on_id > 0) {
 } else {
     die("Invalid item id requested: $on_id");
 }
 
-$ucom = new Comment($container);
 
 
 // if post, add the comment and set the mode to d to display omments on return
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
-        $ucom -> addComment($_POST,$comment_params);
-        $mode='d';
+        $container['comment'] -> addComment($_POST,$params);
+        $show = array(
+			'comments' => true,
+			'pops' =>false,
+			);
 }
 
 // in any event, get the article and display
+// pass on the comment_params to get id, user, etc.
 
-    $na = $container['articlea']->buildStory($on_id);
+	/* returns array of all ldata needed to render story:
+		story = html content of the story
+		( from pops)
+		take commments,
+		take_votes,
+		contributor_id
+		edit_credential,
+		vblock (if requested)
+		cblock (comments) if requested
 
-    $na['credential'] =
-    	$_SESSION['level'] > 4
-    	|| $na['contributor_id'] == $_SESSION['login']['user_id'];
+	*/
 
-    $na['mode'] = $mode; //if 's' ,displays voting block after article
+    $sdata = $articlea->getLiveArticle($params,$show);
 
-    # u\echor($na, 'story array');
-    echo $container['templates']->render('article', $na);
 
-// if mode == 'd' ,display comment section (but not voting block)
-if ($mode == 'd') {
-    $carray = $ucom->getComments($comment_params);
-     echo "<div class='comment_background'>
-         <h2>Reader Comments</h2>
-         ";
+     //u\echor($sdata, 'story array');
+   // echo $container['templates']->render('article', $sdata);
 
-        foreach ($carray as $row) {
-        //u\echor($row);
-			if (!empty($row['asset_list'])) {
-				 $row['asset'] = $asseta->getAssetBlock($row['asset_list'], 'thumb', false);
-			} else {
-				$row['asset'] = '';
-			}
-            echo $container['templates']->render('comment', $row);
-        }
+	echo $templates->render('article',$sdata);
 
-        echo "</div>" . NL;
-
-    if ($na['take_comments']) {
-        echo "<hr>";
-
-        echo $container['templates']->render('new_comment', $comment_params);
-    } else {
-    	echo "New comments are disabled on this article" . BRNL;
-   }
-}
 
 //EOF

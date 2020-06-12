@@ -31,7 +31,7 @@ echo $page->startBody();
 
 
 ?>
-//EOF
+
 <h1>Help</h1>
 <p>The FLAMEsite is for previous employees and associates (like reps and contractors) of Advanced Micro Devices.
 </p>
@@ -52,11 +52,9 @@ problems.  It's only software; there's always something wrong.</p>
 
 <p>If you are member and need to retrieve your login, enter your email here: <br>Email: <input type="text" id='em' name="email" size="40"> <button type='button' onClick = "var em = getElementById('em').value; takeAction('sendLogin',em,'','resp');">Send Logins</button></p>
 
-<p>If you know your login code, you can enter it here to log in: <br>Login: <input type="text" name="stext" id="litext" > <input type=button value="Go" onclick= "var s = getElementById('litext').value;window.location.assign('/?s='+s)"></p>
-
 
 <h3 name='touchscreen'>Touchscreen Users</h3>
-Touchscreens behave a bit differently than mouse-driven screens.  As a result, menus that you open on a touch devices may not not close until you touch another menu.  So there is a "Close Menus" button at the right side of the menu bar.  Click on that and any open menu will go away on a touchscreen device like a phone or tablet. Maybe.
+Touchscreens behave a bit differently than mouse-driven screens.  If menus that you open on a touch devices don't close until you touch another menu, use thethere is  "X" button at the right side of the menu bar.  Click on that and any open menu will go away on a touchscreen device like a phone or tablet. Maybe.
 
 </div>
 

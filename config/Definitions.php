@@ -25,12 +25,13 @@ class Definitions {
 	public static $asset_status = array(
     'R' => 'Reviewed',
     'T' => 'temp holding',
-    'E' => 'Data Error',
+    'E' => 'Missing Graphic or bad URL',
     'X' => 'Deleted',
     'N' => 'New',
     'U' => 'Updated. Needs Review',
-    'K' => 'OK',
+    'K' => 'OKK',
     'W' => 'Warning but usable',
+    'O' => 'OKO',
 
 );
 
@@ -104,30 +105,24 @@ public static $test_emails = array(
 
 	// tag codes.  * in description means archival
 	public static $asset_tags = array(
-    'A' => 'Ad *',
+    'A' => 'Ad',
 
-    'C' => 'Corp - External *',
-    'D' => 'Stories About AMD *',
-    'E' => 'Events *',
-    'F' => 'Facilities *',
-    'G' => 'Gatherings',
+    'C' => 'Corp - External',
+    'D' => 'Stories About AMD',
+    'E' => 'Events',
+    'F' => 'Facilities',
 
-    'H' => 'Flames People',
-    'I' => 'Corp - Internal *',
+    'I' => 'Corp - Internal',
 
-    'M' => 'Marketing Pub *',
+    'M' => 'Marketing Pub',
+    'P' => 'Data sheet/Apps ',
 
+    'S' => 'Sales/Mktg Bulletins',
 
-    'O' => 'Historical Electronics *',
+	'U' => 'Interviews',
 
-    'P' => 'Data sheet/Apps *',
-    'R' => '',
-    'S' => 'Sales/Mktg Bulletins *',
-    'T' => 'Cartoons',
-	'U' => 'Interviews *',
-    'V' => 'Car stuff',
-    'W' => 'Sales Conference/Event *',
-    'X' => 'x-Problem',
+    'W' => 'Sales Conference',
+
     'Y' => 'Posters and Symbols ',
 
 
@@ -359,13 +354,13 @@ public static function getMimeGroup($mime) {
 
 	public static function getArchivalTagList()  {
 		// returns an sql formatted list of aarchival tags for "in ( ) statement: 'A','B' etc.
-		$archival_tags = [];
-		foreach (self::$asset_tags as $tag=>$label){
-			if (strpos($label,'*') !== false){
-				$archive_tags[] = "'$tag'";
-			}
-		}
-		return join(',',$archive_tags);
+		// $archival_tags = [];
+// 		foreach (self::$asset_tags as $tag=>$label){
+// 			if (strpos($label,'*') !== false){
+// 				$archive_tags[] = "'$tag'";
+// 			}
+// 		}
+		return join(',',array_keys(self::$asset_tags));
 	}
 
 	public static function getAssetArchivalTags() {

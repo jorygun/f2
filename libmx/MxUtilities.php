@@ -39,12 +39,32 @@ function echopre($text){
     echo "<pre>\n$text\n</pre>\n";
 }
 
+function echoc($text,$title=''){
+// echo block of code
+    echo "<div class='code'>";
+    if ($title) echo "<u>$title:</u><br><br>";
+    echo nl2br($text) ;
+    echo "</div>" . NL;
+}
+
+function getref() {
+	// remove any refs to this file
+	$me = basename(__FILE__);
+	$bt = debug_backtrace();
+	$caller['file'] = $me;
+  	while (strpos($caller['file'], $me) !== false ) {$caller = array_shift($bt);}
+	$title = basename($caller['file']) . '(' . $caller['line'] . ')';
+	return $title;
+}
+
 function echor($var,$title=''){
-	if (empty($title)) {
-		$bt = debug_backtrace();
-  		$caller = array_shift($bt);
-		$title = basename($caller['file']) . '(' . $caller['line'] . ')';
-		}
+	$title = $title ?: getref();
+
+	// if (empty($title)) {
+// 		$bt = debug_backtrace();
+//   		$caller = array_shift($bt);
+// 		$title = basename($caller['file']) . '(' . $caller['line'] . ')';
+// 		}
     echo "<h4>$title</h4>";
     echo "<pre>" .  print_r($var,true) . "</pre>\n";
 }
@@ -79,7 +99,141 @@ function catchError ( $e , $more=[]){
 
 	echo "<hr>\n";
 }
+function get_youtube_id($url) {
+	return youtube_id_from_url($url);
+}
+function youtube_id_from_url($url) {
 
+             $pattern =
+				'%#match any youtube url
+                (?:https?://)?  # Optional scheme. Either http or https
+                (?:www\.)?      # Optional www subdomain
+                (?:             # Group host alternatives
+                  youtu\.be/    # Either youtu.be,
+                | youtube\.com/
+                )				# or youtube.com
+                (?:          # Group path alternatives
+                    embed/     # Either /embed/
+                  | v/         # or /v/
+                  | watch\?v=  # or /watch\?v=
+                ) ?            # or nothing# End path alternatives.
+                               # End host alternatives.
+                ([\w-]+)  # Allow 10-12 for 11 char youtube id.
+                %x'
+                ;
+            $result = preg_match($pattern, $url, $matches);
+            if (array_key_exists(1,$matches)){
+            	$vid = $matches[1] ;
+           	 	#echo "Matched youtube $matches[0] to video id $vid " . BRNL;
+           		return $vid;
+           	}
+            else {
+            	#echo "No youtube id in $url" . BRNL;
+            	return false;
+            }
+ }
+
+ function get_url_data($url) {
+     $options = array(
+        CURLOPT_RETURNTRANSFER => true,     // return web page
+        CURLOPT_HEADER         => false,    // don't return headers
+        CURLOPT_FOLLOWLOCATION => false,     // follow redirects
+        CURLOPT_ENCODING       => "",      // handle all encodings
+        CURLOPT_USERAGENT      => "MxUtilities", // who am i
+        CURLOPT_AUTOREFERER    => true,     // set referer on redirect
+        CURLOPT_CONNECTTIMEOUT => 10,      // timeout on connect
+        CURLOPT_TIMEOUT        => 10,      // timeout on response
+        CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+         CURLOPT_REFERER		=> 'https://amdflames.org',
+    );
+
+    $ch      = curl_init( $url );
+    curl_setopt_array( $ch, $options );
+    $data = curl_exec( $ch );
+
+    if (!is_string($data)) return $data;
+
+    unset($charset);
+    $content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+
+    /* 1: HTTP Content-Type: header */
+    preg_match( '@([\w/+]+)(;\s*charset=(\S+))?@i', $content_type, $matches );
+    if ( isset( $matches[3] ) )
+        $charset = $matches[3];
+
+    /* 2: <meta> element in the page */
+    if (!isset($charset)) {
+        preg_match( '@<meta\s+http-equiv="Content-Type"\s+content="([\w/]+)(;\s*charset=([^\s"]+))?@i', $data, $matches );
+        if ( isset( $matches[3] ) )
+            $charset = $matches[3];
+    }
+
+    /* 3: <xml> element in the page */
+    if (!isset($charset)) {
+        preg_match( '@<\?xml.+encoding="([^\s"]+)@si', $data, $matches );
+        if ( isset( $matches[1] ) )
+            $charset = $matches[1];
+    }
+
+    /* 4: PHP's heuristic detection */
+    if (!isset($charset)) {
+        $encoding = mb_detect_encoding($data);
+        if ($encoding)
+            $charset = $encoding;
+    }
+
+    /* 5: Default for HTML */
+    if (!isset($charset)) {
+        if (strstr($content_type, "text/html") === 0)
+            $charset = "ISO 8859-1";
+    }
+
+    /* Convert it if it is anything but UTF-8 */
+    /* You can change "UTF-8"  to "UTF-8//IGNORE" to
+       ignore conversion errors and still output something reasonable */
+    if (isset($charset) && strtoupper($charset) != "UTF-8")
+        $data = iconv($charset, 'UTF-8', $data);
+
+
+    $err     = curl_errno( $ch );
+    $errmsg  = curl_error( $ch );
+    $header  = curl_getinfo( $ch );
+    curl_close( $ch );
+
+    $header['errno']   = $err;
+    $header['errmsg']  = $errmsg;
+    $header['content'] = $data;
+    return $header;
+}
+
+
+function humanSecs($esecs){
+    // express time in secs in human readable
+    if (! $esecs = intval($esecs) ) {
+		die ("$esecs is not an integer.");
+	}
+
+    $t = '';
+    $edays = intval ($esecs/ 86400);
+    if ($edays > 0){
+        $esecs %= 86400;
+        $t .= "$edays days, ";
+    }
+    $ehrs = intval ($esecs / 3600);
+    if ($ehrs > 0) {
+        $esecs %=  3600;
+        $t .= "$ehrs hours, ";
+    }
+    $emins = intval ($esecs / 60);
+    if ($emins > 0) {
+        $esecs %= 60;
+        $t .= "$emins minutes,  ";
+    }
+
+    $t .= "$esecs seconds.";
+
+    return $t;
+}
 function validateDate($date, $format = 'Y-m-d')
 {
     $d = \DateTime::createFromFormat($format, $date);
@@ -513,6 +667,9 @@ function linkHref($url,$label='',$target='' ){
 		return "<a href='$url' $target >$label</a>" ;
 	}
 }
+function list_to_inlist($list) {
+	return make_inlist_from_list($list);
+}
 function make_inlist_from_list($list){
 	if (empty($list) )return false;
 	$qlist = array_map(function ($c) {return "'$c'";},$list);
@@ -642,12 +799,16 @@ function get_mime_from_url($url)
 	$mime = '';
 	if ($path=is_local($url) ){
 		 if (! file_exists($path)){
-		 	echo "Tyring to get mime from non-existent file $path";
+		 	throw new Exception ( "Tyring to get mime from non-existent file $path");
+		 	return false;
 		 }
 		 $mime = $finfo->file($path);
+	} elseif (get_youtube_id($path) ){
+		$mime = 'video/x-youtube';
 	} elseif (is_http($url) ){
 		if (!$mime = get_mime_from_curl($url) ){
-			echo "Trying to get mime from non-existent url $url";
+			throw new Exception ( "Trying to get mime from non-existent url $url");
+			return false;
 		}
 	}
 
@@ -655,29 +816,42 @@ function get_mime_from_url($url)
 	}
 
 
-function get_mime_from_curl($url)
+
+function get_mime_from_curl ($url) {
+	return get_mimesize_from_curl($url,'mime');
+}
+function get_size_from_curl($url) {
+	return get_mimesize_from_curl ($url,'size');
+}
+function get_mimesize_from_curl($url,$param)
 	{
 	// also checks if url exists
 	 $options = array(
         CURLOPT_RETURNTRANSFER => true,     // return web page
-        CURLOPT_HEADER         => false,    // don't return headers
-        CURLOPT_FOLLOWLOCATION => false,     // follow redirects
+        CURLOPT_HEADER         => 1,    // don't return headers
+        CURLOPT_FOLLOWLOCATION => true,     // follow redirects
         CURLOPT_ENCODING       => "",      // handle all encodings
         CURLOPT_USERAGENT      => "asset_search", // who am i
         CURLOPT_AUTOREFERER    => true,     // set referer on redirect
         CURLOPT_CONNECTTIMEOUT => 10,      // timeout on connect
         CURLOPT_TIMEOUT        => 10,      // timeout on response
         CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
+        CURLOPT_NOBODY			=> true,
     );
 	$ch = curl_init($url);
 	curl_setopt_array( $ch, $options );
 	if (!curl_exec($ch) ) return false;
 	$code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	if ($code >= 400) return false;
-	$mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
-
-	return $mime;
+	if ($param== 'mime' && $mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE) ) {
+		return $mime;
+	} elseif ($param == 'size' && $size = curl_getinfo($ch,CURLINFO_CONTENT_LENGTH_DOWNLOAD) ){
+		return $size;
 	}
+	return false;
+}
+
+
 function array_filter_keys($arr,$allowed){
 		//creates new array from arr containing only keys in allowed list.
 		return array_intersect_key($arr, array_flip($allowed));

@@ -89,7 +89,7 @@ else $id = 0;
 $current_count = (isset($_SESSION['last_assets_found'])) ?
 		count($_SESSION['last_assets_found']) : 0;
 
-if (! $asset_data = $asseta->getAssetData ($id) ){
+if (! $asset_data = $asseta->getAssetDataEnhanced ($id) ){
 		die ("No such asset number");
 }
 

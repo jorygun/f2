@@ -59,17 +59,9 @@ the link <a href="http://paypal.me/amdflames">paypal.me/amdflames</a>.  </p>
 </div>
 
 <h3>Authors</h3>
-These members can write articles and upload graphics to the site. If you&rsquot;d like to do have that ability,
+Many members can write articles and upload graphics to the site. If you&rsquot;d like to do have that ability,
 <a href='mailto:editor@amdflames.org'>contact the editor</a>.
-<ul>
- <?php
- $q="SELECT username,user_email,contributed FROM `members_f2` WHERE status = 'MC' ";
- $result = $pdo -> query($q);
-  while ($row = $result->fetch()){
-    echo "<li>${row['username']}</li>";
-    }
- ?>
-</ul>
+
 
 <h3>How it Works</h3>
 <p>The site is hosted by <a href='http://www.pair.com'>pair.com</a>.  I highly recommend them.</p>

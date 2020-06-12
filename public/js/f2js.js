@@ -57,8 +57,8 @@ function playsound(soundid){
     // separately define <audio id='xxx' src='/audio/file.mp3'>
 }
 
-function clearForm(oForm) {
-    // call from name of form
+function clearForm(formid) {
+   var oForm = document.getElementById(formid);
   var elements = oForm.elements;
   oForm.reset();
 
@@ -86,11 +86,16 @@ function clearForm(oForm) {
 	  }
     }
     // for asset search form, set status to all active
-    if (oForm.id == 'select_assets'){
-    	var abox = document.getElementById('all_active');
-    	abox.checked = true;
-    }
+   //  if (formid == 'select_assets'){
+//     	let element = document.getElementById('status_select');
+//    		 element.value = 'active';
+// 	}
+	   if (element = document.getElementById('status_select')){
+   		 element.value = 'active';
+   		}
 }
+
+
 function new_edit_win(url,winname){
     var wwidth=650
     var screenwidth = window.screen.availWidth;

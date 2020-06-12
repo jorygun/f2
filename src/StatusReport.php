@@ -190,7 +190,7 @@ EOT;
 
 		if ($num_rows >0){
 
-			$report .= "<table class='update_data'>";
+			$report .= "<table >";
 				foreach ($result as $row ) {
 					$name = $row['username'];
 

@@ -90,7 +90,9 @@ class AssetAdmin
 		// set contributor id if one not set yet and
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
-        $cd = f\setContributor($adata['contributor_id'], $adata['contributor'],$this->member);
+        $cd = f\setContributor($post['contributor_id'], $post['contributor'],$this->member);
+       // u\echor($cd);
+
         //put the new contrib info into the adata array
  			$adata = array_merge($adata,$cd);
 
@@ -166,7 +168,7 @@ class AssetAdmin
 		return false;
 	}
 
-	public function getAssetData($id) {
+	public function getAssetDataEnhanced($id) {
 		if ($id == 0){
    		// new asset
    		$adata = $this->assets->new_asset;
@@ -184,16 +186,12 @@ class AssetAdmin
 			return [];
 		}
 
+
 		// set tic character for each thumb that currently exixts.
 		$adata['existing_thumbs'] = $this->getExistingThumbs($id);
 
 
-		if (!empty($adata['contributor_id'] ) ){
-			$adata['contributor'] = $this->member->getMemberid($adata['contributor_id'])[0];
-   	}
-   	else {
-   		$adata['contributor'] = "(no contributor)";
-   	}
+
    	$adata['first_use'] = "Never.";
    	if  (! empty($fud = $adata['first_use_date'])) {
    		$fud = $adata['first_use_date'];
@@ -204,7 +202,22 @@ class AssetAdmin
    		"On " . date('d M Y',strtotime($fud) )
    		. " In " . "<a href='" . $fin . "'>" . $fin . "</a>";
    	}
+		$adata['status_label'] = Defs::$asset_status[$adata['astatus']];
+		$adata['show_thumbs'] = join(',',$adata['existing_thumbs']) ?:
+	  'None';
 
+		// this returns "Not available" etc depending on asset status
+		 $adata['image'] = $this->returnAssetLinked($adata) ;
+		$adata['warning'] = '';
+		if ($adata['status'] == 'D' )	$adata['warning'] = 'Deleted';
+
+		if ($adata['status'] == 'W' )	$adata['warning'] = "<br><span style='background:#CCC;'>${adata['errors']}</span>";
+
+		if ($adata['status'] == 'E' )	$adata['warning'] = "<br><span style='color:red;'>${adata['errors']}</span>";
+
+
+
+//u\echor($adata);
 		return $adata;
 	}
 
@@ -237,7 +250,7 @@ class AssetAdmin
 		// set which thumbs are needed, by checkbox or by changed url
 		$id = $adata['id'];
 		$needs = array ();
-		$result = $this->getAssetData($id);
+		$result = $this->getAssetDataEnhanced($id);
 
 		$thumbs = $result['existing_thumbs']; #keys where value is ''
 
@@ -277,7 +290,7 @@ class AssetAdmin
 		</div>
 
 		*/
-		if (! $adata = $this->getAssetData($aid) ) {
+		if (! $adata = $this->getAssetDataEnhanced($aid) ) {
 			throw new Exception (" Asset $aid not found");
 		}
 
@@ -322,21 +335,25 @@ EOT;
 
 	public function getAssetLinked($id,$nocache=false) {
 	/* returns the asset thumbnail, linked to the asset source */
-		$adata = $this->assets->getAssetSummaryById($id);
+		$adata = $this->assets->getAssetDataById($id);
 		return $this->returnAssetLinked($adata,$nocache);
 	}
 
 	public function returnAssetLinked ($adata,$nocache=false) {
 		$status = $adata['astatus'];
 		$id = $adata['id'];
-		if ($adata['astatus'] == 'X') {return "Asset Deleted";}
-		elseif ($adata['astatus'] == 'T') {return "Asset Temporary";}
+		switch ($status) {
+			case 'T':
+				return "Temporary Asset";
+				break;
+			case 'D':
+				return "Asset Deleted";
+				break;
+		}
+
 
 		$link = $adata['asset_url'];
 		if (empty($link)){return 'No asset url';}
-		if (! u\url_exists($link)){
-			return "Linked asset doesn't exist";
-		}
 
 		$thumb = "/assets/thumbs/${id}.jpg";
 		if (!file_exists(SITE_PATH . $thumb)){

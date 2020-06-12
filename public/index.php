@@ -71,7 +71,7 @@ exit;
 	<p>This site is for former employees and associates of Advanced Micro Devices.</p>
 	<p>You must access the site with your FLAMES-supplied link to enter the site. <br>
 	If you are already a member and have lost your login link, retrieve it <a href="/help.php">here</a>.<br>
-	If you are not a member but would like to be,choose the sign-up option under the menu above.</p>
+	If you are not a member but would like to be, <a href='signup.php'>click here to sign up</a>.</p>
 	</div>
 EOT;
 

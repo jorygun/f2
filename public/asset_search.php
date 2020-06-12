@@ -15,7 +15,8 @@ ini_set('display_errors', 1);
 
 $mode = $_GET['mode'] ?? '';  // j when opened by javascript
 
-$login->checkLevel(1);
+$login->checkLevel(0);
+
    $page_title = 'Search Assets';
 	$page_options=['ajax','help']; #ajax, votes, tiny
 
@@ -35,53 +36,7 @@ EOT;
 
 
 
-	echo <<<EOT
-<script>
-function asset_status_search(setter) {
-	var setterid = setter.id;
-	//alert('setterid '+setterid);
 
-	var all = document.getElementById('all_active');
-	var unr = document.getElementById('unreviewed');
-	var sel = document.getElementById('status_options');
-
-
-	switch (setterid) {
-		case 'all_active' :
-			//alert('all active changed');
-			if(setter.checked) {
-				unr.checked = false;
-				sel.value= '';
-			}
-			break;
-
-		case 'unreviewed' :
-		//alert('unreviewed changed');
-			if(setter.checked) {
-				all.checked = false;
-				sel.value = '';
-			}
-			break;
-
-		case 'status_options' :
-		//alert('options changed val ' + setter.value);
-			if(setter.value == '') {
-				all.checked = true;
-				unr.checked = false;
-			}
-			else {
-				unr.checked = false;
-				all.checked = false;
-			}
-			break;
-		default:
-
-	}
-
-}
-</script>
-
-EOT;
 
 echo $page->startBody();
 
@@ -101,24 +56,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	$_SESSION['last_asset_search'] = $_POST;
 
 	// save list of ids, for sequential editing.
-	$ids = $as->getIdsFromSearch($_POST);
 
-	$_SESSION['last_assets_found'] = $ids;
-	$count = count($ids);
-	echo "$count assets found. (max: 100)";
-	if ($count == 0) return;
+	$data = $as->getIdsFromSearch($_POST);
+	u\echoc($data['sql'],'search WHERE');
 
-	if ($count < 11 ) echo join(', ',$ids) . BRNL;
+	if (!empty($data['error'])) {
+		echo $data['error'];
+	} else {
 
-	foreach ($ids as $id){
-		$asset = $as->getAssetSummary($id);
-		$asset['mode'] = $mode; // was seach opened from javascript?
-		 #u\echor($asset, "selected asset $id");
-		echo $templates->render('asset_mini',$asset);
+		$ids = $data['list'];
+		# u\echor ($ids, 'ids');
+
+		$_SESSION['last_assets_found'] = $ids;
+		$count = count($ids);
+		echo "$count assets found. (max: 100)";
+
+		if ($count < 11 ) echo join(', ',$ids) . BRNL;
+
+		foreach ($ids as $id){
+			$asset = $as->getAssetSummary($id);
+
+			$asset['mode'] = $mode; // was seach opened from javascript?
+			 #u\echor($asset, "selected asset $id");
+			echo $templates->render('asset_mini',$asset);
+
+		}
+
 
 	}
-	# u\echor ($ids, 'ids');
-
 
 }
 

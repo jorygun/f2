@@ -1,4 +1,4 @@
-<div class='article'>
+<div class='article clearafter'>
 	<p class='topic'><u><?= $topic_name ?></u> in <?=$section_name?></p>
 	<p class='headline'> <?= $title ?></p>
 
@@ -11,24 +11,23 @@
 		</div>
 	<?php endif; ?>
 
-	<div class='story  clearafter'>
-
+	<div class='content'>
 		<?=$content?>
 		<?=$more?>
 
 		<p class='source'> From <?=$source?>
-			<span class='contributor'> -- Contributed by <?=$contributor?></span></p>
-
+		<span class='contributor'> -- Contributed by <?=$contributor?></span></p>
 		<?php if (!empty($ed_comment)) : ?>
 			<div class='ed_comment'> <?=$ed_comment?></div>
 		<?php endif; ?>
+		<?php if (!empty($vblock) && $mode == 's') : ?>
+			<?=$vblock?>
+		<?php endif; ?>
 
 	</div>
-<div class='clear'></div>
 
-	<?= $pblock?>
-	<?= $dblock?>
-
+ <?php if ($credential): ?>
+ 	<div class='clear status-display'>'<?=$smsg?></div>
+ <?php endif; ?>
 </div>
-
 

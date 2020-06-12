@@ -1,28 +1,32 @@
 
 
-<div class='float-left box' >
-	<button type='button' onClick = "window.open('/asset_editor.php')">New Asset</button><br>
-	<button type='button' onclick="clearForm(this.form);">Clear Form</button><br>
-	<button type='button' name='SearchHelp' id ='help-button' value='assets' >Help</button>
+<div class='box'>
+	<button type='button' onClick = "window.open('/asset_editor.php?id=0')">New Asset</button>
+	<button type='button' onclick="clearForm('select_assets');">Clear Form</button>
+	<button type='button' name='SearchHelp' id ='help-button' value='assets' >Help</button><br>
+	<b>Choose any of the parameters below to find photos, videos, and audio files.</b>
 </div>
 
 
-<div class='float-left'>
-
+<hr>
 <form method='post' name='select_assets' id='select_assets'>
-	<b>Choose any of the parameters below to find photos, videos, and audio files.</b>
-	<hr>
+
+
 	<table>
+		<tr>
+			<td>Asset id or range</td>
+			<td>
+			<input type="text" name='id_range' value='<?=$id_range?>'>
+			<br><small>(id <i>1234</i>, range <i>1234 - 1239</i>, or list <i>1234, 1239, 1247 ...</i>)</small></td>
+		</tr>
 
 		<tr>
-			<td>Search Terms</td>
+			<td>Phrases</td>
 			<td>
-			<input type='text' name='searchon' value='<?=$searchon_hte?>'></td>
+			<input type='text' name='searchon' value='<?=$searchon_hte?>'>
+			<br><small>Search is not case sensitive. Search terms can include spaces (like 'John East'). Separate terms with commas. </small></td>
 		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><small>Search is not case sensitive. Search terms can include spaces (like 'John East'). Separate terms with commas. </small></td>
-		</tr>
+
 		<tr>
 			<td>Vintage (year)</td>
 			<td>
@@ -30,55 +34,46 @@
 			<input type="text" name='plusminus' size="3" value='<?=$plusminus?>'></td>
 		</tr>
 		<tr>
-			<td>Asset Type</td>
+			<td>Type</td>
 			<td>
 			<select name='type'>
-
-<?=$type_options?>
+				<?=$type_options?>
 			</select>
 			</td>
 		</tr>
 		<tr>
 			<td>Tags (* tags are 'archival')</td>
 			<td>
-<?=$tag_options?>
+				<?=$tag_options?>
 			</td>
 		</tr>
-		<tr>
-			<td>Asset id or range</td>
-			<td>
-			<input type="text" name='id_range' value='<?=$id_range?>'></td>
-		</tr>
+
 <?php if ($_SESSION['level'] > 4 ) : ?>
 		<tr>
 			<td>Status</td>
-			<td> <input type='checkbox' name='all_active' id='all_active' value=1
-<?=$all_active_checked?>
-			onchange = 'asset_status_search(this)' > All Active or ... <input type='checkbox' name='unreviewed' id='unreviewed' value=1
-<?=$unreviewed_checked?>
-			onchange = 'asset_status_search(this)' > Unreviewed or ...
-			<select name='status' id='status_options' onchange='asset_status_search(this)'>
-
-<?=$status_options?>
+			<td>
+			<select name='status' id = 'status_select'>
+				<?=$status_options?>
 			</select>
 			</td>
 		</tr>
 <?php else : ?>
 		<tr>
 			<td>
-			<input type='hidden' name='all_active' value="1">
-			<input type='hidden' name='status' value=''></td>
+			<input type='hidden' name='status' value='active'>
+			</td>
 		</tr>
 <?php endif; ?>
 		<tr $hideme>
-			<td>Contributor<br> </td>
-			<td><input type='text' name='contributor' id='contributor' value='<?=$contributor?>' </td>
+			<td>Contributor Name </td>
+			<td><input type='text' name='contributor' id='contributor' value='<?=$contributor?>'>
+			<br><small>(must match Flames user name)</small></td>
 		</tr>
 		<tr>
 			<td>First Use Date</td>
 			<td>
 			<select name='relative'>
-<?=$use_options?>
+				<?=$use_options?>
 			</select>
 			<input type='text' name='searchuse' value='<?=$searchuse?>'></td>
 		</tr>
