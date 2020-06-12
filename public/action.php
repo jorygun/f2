@@ -258,7 +258,7 @@ function runNewsIndex() {
 	$ni = new NewsIndex();
 	//$ni -> rebuildJson();
 
-	$ni -> rebuildAllL();
+	$ni -> rebuildAll();
 	return "html done";
 }
 
