@@ -220,7 +220,8 @@ function logrec($aid,$e,$msg,$src='') {
 
 function create_articles( $pdo ) {
 
-$pdo->query("DROP TABLE IF EXISTS `articles`;");
+	$sql = <<<EOT
+DROP TABLE IF EXISTS `articles`;
 
 CREATE TABLE `articles` (
   `id` smallint(6) NOT NULL AUTO_INCREMENT,
@@ -248,6 +249,10 @@ CREATE TABLE `articles` (
   KEY `topic` (`topic`) USING BTREE
 ) ENGINE=MyISAM AUTO_INCREMENT=1774 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+EOT;
+	$pdo->query($sql);
+
+}
 
 function show_form() {
 
