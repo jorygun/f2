@@ -14,7 +14,7 @@ namespace Digitalmx\Flames;
 
 use DigitalMx\Flames\FileDefs;
 use DigitalMX\MyPDO;
-
+require 'read_functions.php';
 
 //END START
 
@@ -133,25 +133,29 @@ class NewsIndex {
 		$file_index = json_decode (file_get_contents(FileDefs::news_index_json),true);
 		;
 			//clear pubs table;
-	echo count($file_index) . " records in json index" . BRNL;
+	   echo count($file_index) . " records in json index" . BRNL;
 
-		$this->pdo->query('DELETE FROM `pubs`;');
+		$this->pdo->query('DELETE FROM `pubs`;'); #clear the file
 
-try {
-		$insertsql = "INSERT INTO pubs (issue, rcount, title, pubdate, url)
-		VALUES (:issue, :rcount, :title, :pubdate, :url);";
-		//$insertsql = "INSERt INtO pubs (issue, rcount) VALUES (:issue, :rcount)";
-		//ON DUPLICATE KEY UPDATE  url=values(url), pubdate=values(pubdate)";
+
 		$getreadssql = "SELECT read_cnt from `read_table` where issue = ?  LIMIT 1;";
 		$getreadsprep = $this->pdo->prepare($getreadssql);
-		$insertprep = $this->pdo->prepare($insertsql);
-} catch (\PDOException $e) {
-	echo $e->getMessage(); exit;
-}
+
+			//$insertsql = "INSERt INtO pubs (issue, rcount) VALUES (:issue, :rcount)";
+		//ON DUPLICATE KEY UPDATE  url=values(url), pubdate=values(pubdate)";
+
+
+
 
 //echo "ok" . BRNL; exit;
 
-        $listcode = "<ul class='collapsibleList' style='margin-bottom:6px;'>\n";
+   $listcode = "<ul class='collapsibleList' style='margin-bottom:6px;'>\n";
+
+   $insertsql = "INSERT INTO pubs (issue, rcount, title, pubdate, url)
+		VALUES (:issue, :rcount, :title, :pubdate, :url);";
+	$insertprep = $this->pdo->prepare($insertsql);
+	$this->create_pubs() ;
+
         foreach ($file_index as $dcode => $f){
            // echo "$dcode => $f<br>\n";
            $letters++;
@@ -178,16 +182,17 @@ try {
 				if (substr($dcode,0,4) >= 2016)  {
 					$oldissue =  (int)substr($dcode,2);
 					try {
-
-							if ($getreadsprep->execute([$oldissue]) ) {
-								$reads = $getreadsprep->fetchColumn() ;
-							}
-
-						} catch (\PDOException $e) {
-							$reads = 0;
-							echo $e->getMessage(); exit;
+						if ($getreadsprep->execute([$oldissue]) ) {
+							$reads = $getreadsprep->fetchColumn() ;
 						}
+					} catch (\PDOException $e) {
+						$reads = 0;
+						echo $e->getMessage(); exit;
 					}
+				}
+
+
+
 
 // look for title file if the url is a subdir of newsp
 				$title = '';
@@ -226,6 +231,28 @@ try {
 
 
     }
+
+	private function create_pubs() {
+
+	$this->pdo->query("DROP TABLE IF EXISTS `pubs`;");
+
+	$sql = "
+	CREATE TABLE `pubs` (
+  `issue` int(11) NOT NULL COMMENT 'yymmdd',
+  `rcount` int(11) NOT NULL DEFAULT '0',
+  `title` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `pubdate` datetime NOT NULL,
+  `url` tinytext NOT NULL,
+  `stories` json DEFAULT NULL,
+  `updated` datetime DEFAULT NULL,
+  `predate` datetime DEFAULT NULL,
+  PRIMARY KEY (`issue`),
+  KEY `pubdate` (`pubdate`) USING BTREE
+	) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+	";
+	$this->pdo->query($sql);
+
+	}
 
 
 }
