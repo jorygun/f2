@@ -50,7 +50,7 @@ $adata['Aliastext'] = Defs::getMemberAliasList();
 // admin users get more choices on topics
 $user_level = ($_SESSION['level'] > 4)? 'A' : 'U' ;
 $mytopics = $news->getTopics($user_level);
-$adata['topic_options'] = u\buildOptions($mytopics, $adata['topic']);
+$adata['topic_options'] = u\buildOptions($mytopics, $adata['type']);
 $adata['status_options'] = u\buildOptions(Defs::$news_status, $adata['status']);
 $adata['status_name'] = Defs::$news_status[$adata['status']];
 // convert use_me to a string (its retreived integer in db).

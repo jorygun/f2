@@ -27,7 +27,7 @@ class Article
 
             FROM news_items n
              LEFT JOIN members_f2 m on m.user_id = n.contributor_id
-             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
+             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.type
 
             WHERE
                 n.id = ?;
@@ -144,8 +144,8 @@ EOT;
              // title case
         $adata['title'] = ucwords($post['title']);
         $adata['id'] = $id = $post['id']?? 0;
-        $adata['topic'] = $post['topic'];
-        if (empty($adata['topic'])) {
+        $adata['type'] = $post['topic'];
+        if (empty($adata['type'])) {
             throw new Exception("Article must have a topic");
         }
         $adata['content'] = $post['content'];
@@ -226,7 +226,7 @@ EOT;
             'source_date' => '',
             'url' => '',
             'link_title' => '',
-            'topic' => '',
+            'type' => '',
             'date_published'  => '',
             'status'=> 'N',
             'content' => '',
@@ -305,7 +305,7 @@ EOT;
                  count(c.id) as comment_count
 
             FROM news_items n
-             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
+             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.type
 				LEFT JOIN members_f2 m on m.user_id = n.contributor_id
 				LEFT JOIN comments c on n.id = c.item_id and c.on_db = 'news_items'
 
