@@ -234,21 +234,22 @@ class NewsIndex {
 
 	private function create_pubs() {
 
-	$this->pdo->query("DROP TABLE IF EXISTS `pubs`;");
+
 
 	$sql = "
-	CREATE TABLE `pubs` (
+	DROP TABLE IF EXISTS `pubs`;
+CREATE TABLE `pubs` (
   `issue` int(11) NOT NULL COMMENT 'yymmdd',
   `rcount` int(11) NOT NULL DEFAULT '0',
-  `title` tinytext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `pubdate` datetime NOT NULL,
-  `url` tinytext NOT NULL,
-  `stories` json DEFAULT NULL,
+  `title` tinytext DEFAULT NULL,
+  `pubdate` datetime DEFAULT NULL,
+  `url` tinytext DEFAULT NULL,
+  `stories` tinytext DEFAULT NULL ,
   `updated` datetime DEFAULT NULL,
   `predate` datetime DEFAULT NULL,
   PRIMARY KEY (`issue`),
   KEY `pubdate` (`pubdate`) USING BTREE
-	) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 	";
 	$this->pdo->query($sql);
 

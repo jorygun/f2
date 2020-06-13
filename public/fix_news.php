@@ -22,7 +22,7 @@ ini_set('display_errors',1);
  	echo $page -> startHead($page_options);
 //
 
-// script to modify news_items and get
+// script to modify news_items and get articles
 
 
 
@@ -218,7 +218,7 @@ function logrec($aid,$e,$msg,$src='') {
 	return "($e) $msg ". NL;
 }
 
-function create_news2( $pdo ) {
+function create_articles( $pdo ) {
 
 $pdo->query("DROP TABLE IF EXISTS `articles`;");
 
