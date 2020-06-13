@@ -79,7 +79,9 @@ EOT;
 		$vroot = basename(REPO_PATH);
 		$vfile = REPO_PATH . "/config/version.txt";
 		$vdate = REPO_PATH . "/var/commit_timestamp"; #touched after evry commit in master
-		if (! file_exists($vfile) || ! file_exists($vdate) ){throw new Exception ("No version file");}
+		if (! file_exists($vfile) || ! file_exists($vdate) ){
+			echo "No version or commit_timstamp file";
+		}
 
 		$vrel =  trim(file_get_contents($vdate));
 
