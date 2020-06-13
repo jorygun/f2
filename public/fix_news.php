@@ -1,5 +1,5 @@
 <?php
-namespace digitalmx\flames;
+namespace DigitalMx\Flames;
 ini_set('default_socket_timeout', 10);
 ini_set('display_errors',1);
 
