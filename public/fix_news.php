@@ -56,19 +56,42 @@ file_put_contents($logfile,
 
 echo "Starting from $start_id at $start_human" . BRNL;
 
-// if ($start_id == 0 ) {
-// 	#rebuild assets2 from scratch
-// 	create_assets2($pdo) ;
-// } else {
-//
-// 		$whereend = $end_id != 0  ? " AND id <= $end_id " : '';
-// 	// remove assets between start and end
-// 	$sql = "DELETE from assets2 WHERE id >= $start_id $whereend ";
-// 	if($pdo->query($sql) ) {
-// 		echo "deleted from $start_id to $whereend" . BRNL;
-// 	} else {echo "delete failed";
-// 	}
-// }
+
+
+if ($start_id == 0 ) {
+	#rebuild assets2 from scratch
+	create_articles($pdo) ;
+} else {
+
+		$whereend = $end_id != 0  ? " AND id <= $end_id " : '';
+	// remove assets between start and end
+	$sql = "DELETE from articles WHERE id >= $start_id $whereend ";
+	if($pdo->query($sql) ) {
+		echo "deleted from $start_id to $whereend" . BRNL;
+	} else {echo "delete failed";
+	}
+}
+
+$bsame = array(
+		'id'	,
+		'use_me',
+		'title',
+		'source',
+		'contributor_id',
+		'source_date',
+		'link_title',
+		'status',
+		'content',
+		'ed_comment',
+		'take_comments',
+		'take_votes',
+		'date_entered',
+		'date_edited',
+		'date_published',
+	);
+
+	$bnew = array (
+	);
 
 $last_id = runit($pdo,$start_id,$end_id,$bsame,$bnew,$check_yt);
 
@@ -122,7 +145,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			}
 			$last_id = $id;
 			$ostatus = $row['status']; #old status
-			$new_list = trim(join(" ",$row['asset_id'], $row['asset_list']));
+			$new_list = trim($row['asset_id'] . ' ' . $row['asset_list']);
 
 		$in_issue = ''; // issue this was published in
 		$pub_date = $row['date_published'];
@@ -131,33 +154,23 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 
 
 			####### DO thE WORK ############
-			$new_record = array (
-			'id'	=>	$row['id'],
-			'use_me'	=>	$row['use_me'],
-			'title'	=>	$row['title'],
+			$mod_record = array (
 			'topic'	=>	$row['type'],
-			'source'	=>	$row['source'],
-			'contributor_id'	=>	$row['contributor_id'],
-			'source_date'	=>	$row['source_date'],
-			'link_title'	=>	$row['link_title'],
 			'link'	=>	$row['url'],
 			'asset_list'	=>	$new_list,
-			'status'	=>	$row['status'],
-			'content'	=>	$row['content'],
-			'ed_comment'	=>	$row['ed_comment'],
-			'take_comments'	=>	$row['take_comments'],
-			'take_votes'	=>	$row['take_votes'],
 			'pub_issue'	=>	$in_issue,
-			'date_entered'	=>	$row['date_entered'],
-			'date_edited'	=>	$row['date_edited'],
-			'date_published'	=>	$row['date_published'],
 
 			);
 
 
 			####################
+		$new_record = [];
+	foreach ($bsame as $var ){
+		$new_record[$var] = $row[$var];
+	}
+	$new_record = array_merge ($new_record,$mod_record);
 
-			record_result($new_record);
+			if (!record_result($new_record) ) {echo "oops"; exit;}
 
 		} #end while adb loop
 	$next_id = $last_id + 1;
@@ -170,14 +183,15 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 function record_result($b) {
 	global $pdo,$null;
 	global $verbose;
-	$mytrack = false; #this routine only
+	$mytrack = true; #this routine only
 	$track = $mytrack || $verbose;
 
 	static $stmti,$sqli;
+	try {
 		if (empty($stmti)){
 			$prep = u\pdoPrep($b,[],''); #no key field.  Must retain id
 
-			$sqli = "INSERT into `articles ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+			$sqli = "INSERT into `articles` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
 			echo "Setting insert sql:<br>
 			$sqli" . BRNL;
 			$stmti = $pdo->prepare($sqli);
@@ -185,17 +199,17 @@ function record_result($b) {
 			// only need to do once
 		}
 
-		try {
+
 			$prep = u\pdoPrep($b,[],''); #no key field.  Must retain id
-			if (empty($prep['data']['first_use_date']) ) {
-				$prep['data']['first_use_date'] = $null;
-			}
-			if ($track) u\echor ($prep['data'],$sqli);
+			//if ($track) u\echor ($prep['data'],$sqli);
+
+
+
 			$stmti->execute($prep['data']) ;
 		} catch (\PDOException $e) {
 			echo "Error writing data". BRNL;
 			echo $e->getMessage() . BRNL;
-			u\echor ($prep['data'],$sqli);
+			if ($track) u\echor ($prep['data'],$sqli);
 			return false;
 		}
 		return true;
@@ -220,27 +234,27 @@ function logrec($aid,$e,$msg,$src='') {
 }
 
 function create_articles( $pdo ) {
+	$pdo->query("DROP TABLE IF EXISTS `articles`");
 
 	$sql = <<<EOT
-DROP TABLE IF EXISTS `articles`;
 
 CREATE TABLE `articles` (
   `id` smallint(6) NOT NULL AUTO_INCREMENT,
   `use_me` tinyint(1) NOT NULL DEFAULT '0',
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `topic` varchar(32) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `source` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `contributor_id` smallint(6) DEFAULT NULL,
-  `source_date` varchar(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `link_title` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `asset_list` tinytext COLLATE utf8mb4_unicode_ci,
-  `status` char(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'N',
-  `content` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `ed_comment` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `title` varchar(255)  ,
+  `topic` varchar(32) ,
+  `source` varchar(255) ,
+  `contributor_id` smallint(6) DEFAULT '0',
+  `source_date` varchar(25)  ,
+  `link_title` mediumtext  ,
+  `link` varchar(255) ,
+  `asset_list` tinytext ,
+  `status` char(2)  NOT NULL DEFAULT 'N',
+  `content` mediumtext ,
+  `ed_comment` mediumtext,
   `take_comments` tinyint(1) DEFAULT '0',
   `take_votes` tinyint(1) NOT NULL DEFAULT '1',
-  `pub_issue` tinytext COLLATE utf8mb4_unicode_ci,
+  `pub_issue` tinytext ,
    `date_entered` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `date_edited` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `date_published` date DEFAULT NULL,
