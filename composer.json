@@ -28,8 +28,9 @@
     "autoload": {
          "psr-4": {
             "DigitalMx\\": "libmx/" ,
-            "DigitalMx\\Flames\\" : ["src/","config/"]
+            "DigitalMx\\Flames\\" : ["src/","config/"] ,
 
+	"digitalmx\\flames\\" : ["src/", "config/"]
             }
 
       }
