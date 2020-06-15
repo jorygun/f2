@@ -86,7 +86,13 @@ $pubindex = [];
 
 	// retrieve articles with this pub date
 		$stories = '';$idsj = ''; $ids=[];
-		$art_select->execute([$sdate]);
+
+		$sql = "SELECT id FROM `articles`
+		WHERE date_published BETWEEN '$sdate'
+		AND $sdate' - INTERVAL 2 day)";
+
+		$art_select = $pdo->prepare($sql);
+
 		if ($ids = $art_select->fetchAll(\PDO::FETCH_COLUMN) )  {
 			//u\echor($ids,$sdate); exit;
 			$stories = join(',',$ids);
