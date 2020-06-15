@@ -51,8 +51,15 @@ echo "Rebuild Pubs at " . date('M d Y H:i') . BRNL;
 		VALUES (:issue, :rcount, :title, :pubdate, :url, :stories);";
 	$insertprep = $pdo->prepare($insertsql);
 
-	$sql = 'SELECT id FROM articles WHERE date_published = ?';
-	$art_select = $pdo->prepare($sql);
+	$artsql = "SELECT id FROM articles
+		WHERE date_published <= :sdate
+		AND date_published >= DATE_SUB(:sdate1 , INTERVAL 4 day);
+		";
+
+		$art_stmt = $pdo->prepare($artsql);
+
+
+
 
         foreach ($file_index as $dcode => $f){
             //echo "$dcode => $f . ";
@@ -88,26 +95,25 @@ echo "Rebuild Pubs at " . date('M d Y H:i') . BRNL;
 	// retrieve articles with this pub date
 		$stories = '';$idsj = ''; $ids=[];
 
-		$sql = "SELECT id FROM `articles`
-		WHERE date_published BETWEEN :sdate
-		AND :sdate1 - INTERVAL 2 day";
 
-		$art_stmt = $pdo->prepare($sql);
 		$art_stmt->bindvalue(':sdate',$sdate);
 		$art_stmt->bindvalue(':sdate1',$sdate);
 
 
 
-			if (!$art_stmt->execute() ) {
+		if (!$art_stmt->execute() ) {
 				echo "art_seelct failed on $sdate";
 
-			} elseif ($ids = $art_stmt->fetchAll(\PDO::FETCH_COLUMN) )  {
+		} elseif ($ids = $art_stmt->fetchAll(\PDO::FETCH_COLUMN) )  {
 				//u\echor($ids,$sdate); exit;
 				$stories = join(',',$ids);
 				$idsj = json_encode($ids);
-				echo "$idsj ";
 
-			}
+
+		} else {
+			//echo "No stories for $sdate" . BRNL;
+		}
+
 
 
 // look for title file if the url is a subdir of newsp
