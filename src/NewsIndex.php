@@ -63,7 +63,7 @@ class NewsIndex {
 
   public function rebuildJson() {
   	$json = $this->buildFileList( FileDefs::archive_dir);
-  	$test = json_decode($json);
+  	$test = json_decode($json ,true);
   	$testc = count($test);
   	echo "$testc items in json file" . BRNL;
 
