@@ -16,7 +16,7 @@
 		<?=$content?>
 		<?=$more?>
 
-		<p class='source'> From <?=$source?>
+		<p class='source'>  <?=$sfrom?>
 			<span class='contributor'> -- Contributed by <?=$contributor?></span></p>
 
 		<?php if (!empty($ed_comment)) : ?>

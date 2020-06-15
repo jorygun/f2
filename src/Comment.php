@@ -60,6 +60,7 @@ class Comment
    private static $db_names = array(
         'article' => 'news_items',
         'spec'=>'spec_items',
+        'articles' => 'news_items',
 
     );
 

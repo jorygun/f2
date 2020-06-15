@@ -170,27 +170,22 @@ EOT;
 			  $gid = $gdata['id'];
 
 				$error = '';
-			  // get designated id or first in asset list to use as thumb
 
-			  if (empty($aid = $gdata['thumb_id'])) {
-			  		$aid = u\range_to_list($gdata['gallery_items'])[0]; #first in list
-			  	}
-			  	if (!$aid) {
-			  		throw new Exception ("Cannot get asset id for gallery thumb");
+			  // if no thumbget designated id or first in asset list to use as thumb
 
-			 	} else {
-			 		try {
-						$image_data = "<img src='"
-						. $this->assets->getThumbUrl($aid,'thumbs')
-						. "' />";
-					} catch (Exception $e) {
-						$image_data = "Could not create thumbnail for gallery<br>"
-						. $e->getMessage()
-						. BRNL;
+			  if (empty($aid = $gdata['thumb_id'])) { #try standard thumb
+			  		// ok try first asset in gallery asset list
+			  		$aid = u\range_to_list($gdata['gallery_items'])[0];
+			  		if ($aid) {
+			 			if ($image = $this->assets->getThumbUrl($aid,'thumbs') ) {
+			 				$image_data = "<img src='$image' />";
+			 			} else {
+			 				return "<div class='asset'>Could not create thumbnail for gallery</div>";
+			 			}
+					} else {
+						throw new Exception ("No assets are listed for gallery $gid");
 					}
 				}
-
-
 			$edit_button = '';
 		if ($this->credential) {
 			$edit_button = "<button type='button' onClick = window.open('/galleries.php?id=$gid&mode=edit')>Edit</button>

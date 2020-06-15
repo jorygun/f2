@@ -26,30 +26,38 @@ class ArticleAdmin
 	public function getArticleList ($cat) {
 
 	$alist = $this->article->getArticleList($cat);
-	//u\echor($alist);
+	//u\echor($alist, 'from article->getArticleList');
 	// add thumb image and image count to each item
 	// add action buttons to each item
 	// divide into editable and non-editable lists
 		$editable=[];$noneditable=[];
 		foreach ($alist as $row){
 			$id = $row['id'];
-			$asset_id = 0;
+
 			$asset_count=0;
 			$asset_list = [];
 			$image='';
-			$asset_center = $row['asset_id']?? '';
+			// count the assets and get one
+			$asset_center = $row['asset_main']?? '';
 			if (!empty($r = trim($asset_center . ' ' . $row['asset_list']) )) {
 				$asset_list = preg_split('/[\s,]+/',$r);
 
 				$asset_count = count($asset_list);
 				$asset_id = array_shift($asset_list);
-			}
-			if ($asset_id) {
-				$image = $this->asseta->getAssetBlock($asset_id,'thumbs',false);
+
+
+				if ($asset_id) {
+					$image = $this->asseta->getAssetBlock($asset_id,'thumbs',false);
+				}
 			}
 			$row['image'] = $image;
 			$row['asset_count'] = $asset_count;
-
+			if ($row['status'] == 'P' ) {
+				$row['use_msg'] = '';
+			} else {
+				$row['use_msg'] = ($row['use_me'] > 0 ) ?
+					"Queued For Next" : "Not Scheduled";
+			}
 			// move status message to another function
 			//$row['smsg'] = $this->setStatusMessage($row);
 
@@ -81,6 +89,7 @@ class ArticleAdmin
 
 		$mylist['editable'] = $editable;
 		$mylist['noneditable'] = $noneditable;
+
 
 
 		$mylist['emsg']['editable'] = "Articles You Can Manage";
@@ -122,7 +131,8 @@ class ArticleAdmin
 	}
 
 	public function getAssetBlock($sdata) {
-	if (!empty($sdata['asset_list'])) {
+		$ablock = [];
+		if (!empty($sdata['asset_list'])) {
             $alist = u\number_range($sdata['asset_list']);
             $alistcnt = count($alist);
 
@@ -142,10 +152,15 @@ class ArticleAdmin
         return  $ablock ;
         // array with two entries: adiv and ablock
       }
-	function getLiveArticle ($id,$user,$show) {
+
+	function getLiveArticle ($id,$show='') {
 		// user includes user_id, username,
-		// show is comments, pops (activity summary)
+		// show is 'comments','pops', or ''
 		// returns array of data ready for rendering in the article template
+	$user = array(
+		 'user_id' => $_SESSION['login']['user_id'],
+		 'username' => $_SESSION['login']['username'],
+    );
 
 
 		$pops = $this->article->getPops($id); // array take_votes, credential,etc
@@ -159,14 +174,14 @@ class ArticleAdmin
 //u\echor($adata); exit;
 
 		$pblock = '';
-		if ($show['pops']) {
+		if ($show == 'pops') {
 			$pblock = $this->getPblock($adata['comment_count'],$pops)  ;
 			// is a div of text
 
 		}
 				$adata['pblock']  = $pblock;
 	$dblock = '';
-		if ($show['comments'] ){
+		if ($show == 'comments'){
 				$dblock = $this->getDblock($id);
 			if ( $pops['take_comments'])  {
 				$nc_data = $user;
@@ -198,6 +213,7 @@ class ArticleAdmin
 
 	public function buildStory($sdata)
     {
+		if (empty($sdata)){die ("Trying to build story on no story data");}
 
 	// builds html for a story
 
@@ -217,13 +233,13 @@ class ArticleAdmin
 
 
 		$sdata['status_message'] = $this->setStatusMessage($sdata);
-
+		$sdata['sfrom'] = ($sdata['source']) ? "From " . $sdata['source'] : '';
 
         $sdata['more'] = '';
-        if (!empty($url = $sdata['url'])) {
+        if (!empty($link = $sdata['link'])) {
             $ltitle = $sdata['link_title'] ?: 'web link';
 
-           $sdata['more'] = "<p class='more'> More: <a href='$url' onClick = 'return countClick(this,$id);' target='_blank'>$ltitle</a></p>";
+           $sdata['more'] = "<p class='more'> More: <a href='$link' onClick = 'return countClick(this,$id);' target='_blank'>$ltitle</a></p>";
         }
 
 
@@ -232,7 +248,7 @@ class ArticleAdmin
 
 	public function getPblock($cc,$pops) {
 	// need comment count, article id, take comments, take votes, this userid
-		// pops is
+		// params is
 	// builds block listing comments and taking votes
 		$id = $pops['article_id'];
 	    $pblock = '';

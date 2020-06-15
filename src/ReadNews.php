@@ -48,7 +48,7 @@ class ReadNews {
 
 		 $sql = "SELECT count(*) as cnt, on_db,item_id from `comments` group by on_db,item_id";
 
-		  $sqln = "Update `news_items` set comment_count = ? where id = ?";
+		  $sqln = "Update `articles` set comment_count = ? where id = ?";
 		 $qn = $this->pdo -> prepare($sqln);
 
 		 $qs = $this->pdo -> query($sql);

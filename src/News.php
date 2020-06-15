@@ -78,7 +78,7 @@ class News {
 			, (SELECT SUM(`vote_rank`) FROM votes v
 				WHERE n.id = v.news_fk AND v.vote_rank <> 0) AS net_votes
 			FROM
-				news_items n
+				articles n
 			WHERE
 				$where
 			";
@@ -93,7 +93,7 @@ class News {
  	} else {
  		$where = "issue = '$issue' ";
  	}
- 	$sql = "SELECT id from `news_items`
+ 	$sql = "SELECT id from `articles`
  		WHERE $where";
  	try {
  		$artlist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
@@ -139,9 +139,12 @@ public function getLatestIssue(){
 }
 
 public function incrementReads($issue) {
-	$sql = "UPDATE `pubs` SET rcount = rcount+1 WHERE issue = '$issue';";
+	// sets and uses last_insert_id to return the new value
+	$sql = "UPDATE `pubs` SET rcount = last_insert_id(rcount+1) WHERE issue = '$issue';";
 	$this->pdo->query($sql);
-	return ;
+	$new_val = $this->pdo->lastInsertId();
+
+	return $new_val;
 
 }
 public function getReads($issue) {

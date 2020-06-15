@@ -84,7 +84,7 @@ function despecial($var) {
 }
 
 function catchError ( $e , $more=[]){
-	echo "<p class='red'>Failed " . $e->getFile() . ' at ' . $e->getLine() . ': </p>' . BRNL;
+	echo "<p class='red'>Error  " . $e->getFile() . ' (' . $e->getLine() . ') </p>' . BRNL;
 	echo $e->getMessage() . BRNL;
 	if ($more) {
 		echo "------------" .BRNL ;

@@ -16,7 +16,8 @@ class Article
 	private $publish;
 
 	private static $getarticlesql =  <<<EOT
-            SELECT n.*, m.username,m.user_email,t.topic_name,s.section_name,s.section_sequence
+            SELECT n.*, m.username as contributor,m.user_email,
+            t.topic_name,s.section_name,s.section_sequence
 
             ,(SELECT count(*) FROM  comments c
                 WHERE n.id = c.item_id AND c.on_db = 'news_items') AS comment_count
@@ -25,9 +26,9 @@ class Article
             , (SELECT SUM(`vote_rank`) FROM votes v
                 WHERE n.id = v.news_fk AND v.vote_rank <> 0) AS net_votes
 
-            FROM news_items n
+            FROM articles n
              LEFT JOIN members_f2 m on m.user_id = n.contributor_id
-             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.type
+             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
 
             WHERE
                 n.id = ?;
@@ -54,7 +55,7 @@ EOT;
 
 	public function toggle_use($aid) {
 		// change item use_me between 0 and 2
-		$sql1 = "UPDATE `news_items` SET use_me =
+		$sql1 = "UPDATE `articles` SET use_me =
 			IF(use_me>0, 0, 2)
 			WHERE id = $aid;";
 		$this->pdo->query($sql1);
@@ -91,13 +92,14 @@ EOT;
       **/
 
         if ($id == 0) {
-            $sql = "INSERT into `news_items` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+            $sql = "INSERT into `articles` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+           // u\echor($prep['data'],$sql); exit;
             $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
             $id = $this->pdo->lastInsertId();
         } else {
-            $sql = "UPDATE `news_items` SET ${prep['updateu']}
+            $sql = "UPDATE `articles` SET ${prep['updateu']}
                 WHERE id =  ${prep['key']} ;";
-            u\echor($prep['udata'] , $sql);
+           //u\echor($prep['udata'] , $sql);
 
             $stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
         }
@@ -108,7 +110,7 @@ EOT;
 	public function setArticlesPublished ($issue,$pubdate) {
 		$article_list = $this->getArticleIds('next');
 		$article_in = u\make_inlist_from_list($article_list);
-		$sql = "UPDATE `news_items` SET use_me = 0, status = 'P',
+		$sql = "UPDATE `articles` SET use_me = 0, status = 'P',
 			date_published = '$pubdate', issue='$issue'
 			WHERE id in ($article_in)";
 		if (!$this->pdo->query($sql) ){
@@ -120,7 +122,7 @@ EOT;
 	public function getPops($id) {
 		// retrieves story extra info, including comments and votes
 
-		$sql = "SELECT take_comments, take_votes, contributor_id FROM `news_items`
+		$sql = "SELECT take_comments, take_votes, contributor_id FROM `articles`
 			WHERE id = $id";
 		$pops = $this->pdo->query($sql)->fetch();
 		 $user_id = $_SESSION['login']['user_id'];
@@ -144,12 +146,12 @@ EOT;
              // title case
         $adata['title'] = ucwords($post['title']);
         $adata['id'] = $id = $post['id']?? 0;
-        $adata['type'] = $post['topic'];
-        if (empty($adata['type'])) {
+        $adata['topic'] = $post['topic'];
+        if (empty($adata['topic'])) {
             throw new Exception("Article must have a topic");
         }
         $adata['content'] = $post['content'];
-		$adata['url'] = $post['url'];
+		$adata['link'] = $post['link'];
 		$adata['link_title'] = $post['link_title'];
 
         $adata['take_votes'] =  (empty($post['take_votes'])) ? 0 : 1 ;
@@ -160,11 +162,11 @@ EOT;
             // no contributor (=0) is not an error
         $cd = f\setContributor($post['contributor_id'], $post['contributor'],$this->member);
         //put the new contrib info into the adata array
- 			$adata = array_merge($adata,$cd);
+ 			$adata['contributor_id'] = $cd['contributor_id']; // cont name not stored in record
 
-        if (!empty($adata['asset_id'] = trim($post['asset_id']))) {
-            if (! preg_match('/^\d{4,5}$/', $adata['asset_id'])) {
-                throw new Exception("Non-integer in asset_id");
+        if (!empty($adata['asset_main'] = trim($post['asset_main']))) {
+            if (! preg_match('/^\d{4,5}$/', $adata['asset_main'])) {
+                throw new Exception("Non-integer in asset_main");
             }
         }
 
@@ -203,7 +205,7 @@ EOT;
          //echo "setting use me to $pri type " . gettype($pri) . BRNL;
          // not set from form post: date_published, comment_count, net_votes
 
-        //u\echor($adata, 'After check');
+       // u\echor($adata, 'After check');
         $this->adata = $adata;
         return $adata;
     }
@@ -224,19 +226,19 @@ EOT;
                 'title' => '',
             'source' => '',
             'source_date' => '',
-            'url' => '',
+            'link' => '',
             'link_title' => '',
             'type' => '',
             'date_published'  => '',
             'status'=> 'N',
             'content' => '',
             'contributor_id' => $_SESSION['login']['user_id'],
-            'contributor' => $_SESSION['login']['username'],
+           'contributor' => $_SESSION['login']['username'],
             'contributor_email' => '',
             'total_votes' => 0,
             'net_votes' => 0,
             'comment_count' => 0,
-            'asset_id' => '',
+            'asset_main' => 0,
             'asset_list'  => '',
             'ed_comment'  => '',
             'use_me'  => '0',
@@ -257,21 +259,22 @@ EOT;
 	*/
 
 		if (u\isInteger($cat)) {
-					//$stye is issue id; 1 = preview issue
+					//if integer, get this article
 				$where = "n.id = $cat";
 		} elseif (is_array($cat)) {
+			// is list of articles, probably retrieved from issue article list
 					$idlist = u\make_inlist_from_list($cat);
 					$where = "n.id in ($idlist)";
 		} else {
 			switch ($cat) {
 			  case 'unpub':
-					$where = " n.status not in ('P','X')";
+					$where = " n.status not in ('P','X','T')";
 					break;
 				case 'recent':
 					$where = " n.status = 'P' AND n.date_published > NOW() - INTERVAL 2 week";
 					break;
 				case  'next':
-					$where = "n.use_me > 0";
+					$where = "n.use_me > 0 AND n.status not in ('P','X','T')";
 					break;
 
 				default:
@@ -285,7 +288,7 @@ EOT;
 	public function getArticleIds($cat) {
 		$where = $this->getWhereForCat($cat);
 		$sql = "SELECT n.id
-							FROM news_items n
+							FROM articles n
 							WHERE $where";
 		$list = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
 		return $list;
@@ -296,16 +299,16 @@ EOT;
 
 	//echo "where: $where" . BRNL;
 		$sql = <<<EOT
-			 SELECT n.id, n.use_me as use_me, s.section_sequence,
+			 SELECT n.id, n.use_me as use_me, n.topic, s.section_sequence,
              if (n.use_me > 0,1,0) as `cat`,
-                 n.title, n.asset_list, n.asset_id, n.status,n.source,
+                 n.title, n.asset_list, n.asset_main, n.status,n.source,
                  n.contributor_id,m.username,
                  DATE_FORMAT('%y %m %d',n.date_published) as pubdate,
                  t.topic_name as topic_name,s.section_name,
                  count(c.id) as comment_count
 
-            FROM news_items n
-             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.type
+            FROM articles n
+             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
 				LEFT JOIN members_f2 m on m.user_id = n.contributor_id
 				LEFT JOIN comments c on n.id = c.item_id and c.on_db = 'news_items'
 

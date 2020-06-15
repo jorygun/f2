@@ -76,7 +76,7 @@ function prepare_recent_report ( $pdo, $from='', $to='', $max_articles = 30) {
 
     $sql = "
        SELECT n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source, c.comments, v.net_votes
-	    FROM news_items n
+	    FROM articles n
         LEFT JOIN  (
             SELECT item_id, on_db, count(*) as comments
             FROM `comments`

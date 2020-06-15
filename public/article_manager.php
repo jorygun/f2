@@ -58,7 +58,7 @@ if (!empty($_POST['toggle_use'])) {
 		$style = $_POST['style'];
 	}
 	$d= $articlea->getArticleList($style);
-#	u\echor($d); exit;
+	//u\echor($d); exit;
 	echo $templates->render('article_list', $d);
 	echo "<hr>\n";
 

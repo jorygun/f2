@@ -64,6 +64,9 @@ require $repoloc . "/vendor/autoload.php";
 // set up exceptions under my namespace.  Just so I don't have to put \ in front
 class Exception extends \Exception {}
 class RuntimeException extends \RuntimeException {}
+// use where function fails because some data is missing.
+class ResourceException extends \RuntimeException{}
+
 
 // sets paths, constants, requires
 $init = new Initialize();

@@ -43,7 +43,7 @@ function update_comment_counts(){
     $sql = "SELECT count(*) as cnt, on_db,item_id from `comments` group by on_db,item_id";
     $sqla = "Update `assets` set comment_count = ? where id = ?";
     $qa = $pdo -> prepare($sqla);
-     $sqln = "Update `news_items` set comment_count = ? where id = ?";
+     $sqln = "Update `articles` set comment_count = ? where id = ?";
     $qn = $pdo -> prepare($sqln);
 
     $qs = $pdo -> query($sql);

@@ -135,9 +135,6 @@ class NewsIndex {
 			//clear pubs table;
 	   echo count($file_index) . " records in json index" . BRNL;
 
-		$this->pdo->query('DELETE FROM `pubs`;'); #clear the file
-
-
 		$getreadssql = "SELECT read_cnt from `read_table` where issue = ?  LIMIT 1;";
 		$getreadsprep = $this->pdo->prepare($getreadssql);
 
@@ -151,10 +148,6 @@ class NewsIndex {
 
    $listcode = "<ul class='collapsibleList' style='margin-bottom:6px;'>\n";
 
-   $insertsql = "INSERT INTO pubs (issue, rcount, title, pubdate, url)
-		VALUES (:issue, :rcount, :title, :pubdate, :url);";
-	$insertprep = $this->pdo->prepare($insertsql);
-	$this->create_pubs() ;
 
         foreach ($file_index as $dcode => $f){
            // echo "$dcode => $f<br>\n";
@@ -178,21 +171,6 @@ class NewsIndex {
 
             $listcode .= $thisline;
 
-				$reads = 0;
-				if (substr($dcode,0,4) >= 2016)  {
-					$oldissue =  (int)substr($dcode,2);
-					try {
-						if ($getreadsprep->execute([$oldissue]) ) {
-							$reads = $getreadsprep->fetchColumn() ;
-						}
-					} catch (\PDOException $e) {
-						$reads = 0;
-						echo $e->getMessage(); exit;
-					}
-				}
-
-
-
 
 // look for title file if the url is a subdir of newsp
 				$title = '';
@@ -206,16 +184,7 @@ class NewsIndex {
 						}
 				}
 
-				$pdovars = array(
-					':issue' => (int)$dcode,
-					':url' => $url,
-					':pubdate' => $sdate,
-					':rcount' => (int)$reads,
-					':title' => $title,
-					);
 
-            	#u\echor($pdovars,'pdovars');
-            $insertprep->execute($pdovars);
         }
             $listcode .= "</ul>
             </ul>
@@ -232,31 +201,9 @@ class NewsIndex {
 
     }
 
-	private function create_pubs() {
-
-
-
-	$sql = "
-	DROP TABLE IF EXISTS `pubs`;
-CREATE TABLE `pubs` (
-  `issue` int(11) NOT NULL COMMENT 'yymmdd',
-  `rcount` int(11) NOT NULL DEFAULT '0',
-  `title` tinytext DEFAULT NULL,
-  `pubdate` datetime DEFAULT NULL,
-  `url` tinytext DEFAULT NULL,
-  `stories` tinytext DEFAULT NULL ,
-  `updated` datetime DEFAULT NULL,
-  `predate` datetime DEFAULT NULL,
-  PRIMARY KEY (`issue`),
-  KEY `pubdate` (`pubdate`) USING BTREE
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-	";
-	$this->pdo->query($sql);
-
-	}
-
 
 }
+//EOT
 
 
 

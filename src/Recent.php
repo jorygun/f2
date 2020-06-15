@@ -73,7 +73,7 @@ class Recent
        l.count as clicks,
        if (n.take_votes,v.vote_rank,'-') as votes
 
-	    FROM news_items n
+	    FROM articles n
 
        LEFT JOIN members_f2 m on m.user_id = n.contributor_id
 		LEFT JOIN comments c on n.id = c.item_id and c.on_db = 'news_items'

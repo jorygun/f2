@@ -26,6 +26,7 @@ echo  "<script src='/js/aq.js'></script>";
 $news = $container['news'];
 $article = $container['article'];
 $articlea = $container['articlea'];
+$member = $container['member'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post = $_POST;
@@ -50,7 +51,7 @@ $adata['Aliastext'] = Defs::getMemberAliasList();
 // admin users get more choices on topics
 $user_level = ($_SESSION['level'] > 4)? 'A' : 'U' ;
 $mytopics = $news->getTopics($user_level);
-$adata['topic_options'] = u\buildOptions($mytopics, $adata['type']);
+$adata['topic_options'] = u\buildOptions($mytopics, $adata['topic']);
 $adata['status_options'] = u\buildOptions(Defs::$news_status, $adata['status']);
 $adata['status_name'] = Defs::$news_status[$adata['status']];
 // convert use_me to a string (its retreived integer in db).
@@ -59,7 +60,7 @@ $adata['queue_options' ] =
   u\buildOptions($news->getQueueOptions(), $queue_select, false);
 $adata['votes_checked'] = $adata['take_votes'] ? 'checked' : '';
 $adata['comments_checked'] = $adata['take_comments'] ? 'checked' : '';
-
+$adata['contributor'] = ($adata['contributor_id'] == 0) ? $_SESSION['login']['username'] : $member->getMemberName($adata['contributor_id']);
 echo $container['templates']->render('article_edit', $adata);
 
 

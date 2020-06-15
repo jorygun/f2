@@ -57,10 +57,7 @@ $templates = $container['templates'];
 // have to get on_id, either from posted message or from GET
 $mode = 's'; // no discussion
 
-$show = array(
-		'comments' => false,
-		'pops' =>true,
-	);
+$show ='pops';
 $user = array(
     'user_id' => $_SESSION['login']['user_id'],
     'username' => $_SESSION['login']['username'],
@@ -85,10 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 if ($mode == 'd') {
-	$show = array(
-		'comments' => true,
-		'pops' =>false,
-	);
+	$show =	'comments';
 }
 
 if (u\isInteger($id) && $id > 0) {
@@ -110,10 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		 'admin_note' => '',
     );
         $container['comment'] -> addComment($_POST,$params);
-        $show = array(
-			'comments' => true,
-			'pops' =>false,
-			);
+        $show = 'comments' ;
 }
 
 // in any event, get the article and display
@@ -131,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 	*/
 
-    $sdata = $articlea->getLiveArticle($id, $user, $show);
+    $sdata = $articlea->getLiveArticle($id, $show);
 
 
      //u\echor($sdata, 'story array');

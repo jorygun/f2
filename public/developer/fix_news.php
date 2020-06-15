@@ -156,9 +156,10 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			####### DO thE WORK ############
 			$mod_record = array (
 			'topic'	=>	$row['type'],
-			'link'	=>	$row['url'],
+			'link'	=>	$row['link'],
 			'asset_list'	=>	$new_list,
 			'pub_issue'	=>	$in_issue,
+			'asset_main' = '',
 
 			);
 
@@ -249,6 +250,7 @@ CREATE TABLE `articles` (
   `link_title` mediumtext  ,
   `link` varchar(255) ,
   `asset_list` tinytext ,
+  `asset_main` tinytext,
   `status` char(2)  NOT NULL DEFAULT 'N',
   `content` mediumtext ,
   `ed_comment` mediumtext,

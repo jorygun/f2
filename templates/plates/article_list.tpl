@@ -34,9 +34,9 @@ Lists:
 		<th>Title/Contributor/Source</th>
 		<th>Assets (only 1 shown)</th><th>Manage</th></tr>
 	<?php foreach ($$estat as $row) : ?>
-		<?php if ($row['smsg'] != $lastmsg): ?>
-			<tr><td colspan='5' style='background-color:#CFC;'><b><?=$row['smsg']?></b></td></tr>
-		<?php $lastmsg = $row['smsg']; endif; ?>
+		<?php if ($row['use_msg'] != $lastmsg): ?>
+			<tr><td colspan='5' style='background-color:#CFC;'><b><?=$row['use_msg']?></b></td></tr>
+		<?php $lastmsg = $row['use_msg']; endif; ?>
 
 		<tr>
 

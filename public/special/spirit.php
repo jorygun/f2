@@ -46,7 +46,7 @@ EOT;
 
 //END START
 
-require_once 'asset_functions.php';
+
 
 // don't think newsfunctions needed
 
@@ -59,8 +59,8 @@ $star_articles = array(
 $star_set = "'" . implode("','",$star_articles) . "'";
 
 $sql =
-	"SELECT n.id,n.title,m.username,n.source, n.asset_id
-	FROM `news_items` n
+	"SELECT n.id,n.title,m.username,n.source
+	FROM `articles` n
 	INNER JOIN `members_f2` m ON m.user_id = n.contributor_id
 	WHERE n.id in ($star_set)
 	ORDER BY FIELD (n.id,$star_set);";
@@ -76,8 +76,8 @@ $stars .= "</ul>\n";
 
 #get others
 $sql =
-	"SELECT n.id,n.title,m.username,n.source, n.asset_id
-	FROM `news_items` n
+	"SELECT n.id,n.title,m.username,n.source
+	FROM `articles` n
 	INNER JOIN `members_f2` m ON m.user_id = n.contributor_id
 	WHERE n.type='spirit'   and n.id not in ($star_set)
 	ORDER BY n.date_published DESC";

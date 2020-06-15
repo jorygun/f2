@@ -369,7 +369,7 @@ class Assets {
 		if (empty($needs)) return true;
 
 		if (! $adata = $this->getAssetDataById($id) ) {
-			throw new Exception ("Trying to create thumbs but no asset at id $id");
+			throw new ResourceException ("Trying to create thumb but no asset at id $id");
 		}
 		$turl = $adata['thumb_url'];
 		$aurl = $adata['asset_url'];
@@ -394,7 +394,7 @@ class Assets {
 			$tsource = $thumb_url;
 		}
 		if ($tsource && ! file_exists(SITE_PATH . $tsource) ) {
-			throw new Exception ("Thumb source file $tsource does not exist.");
+			throw new ResourceException ("Thumb source file $tsource does not exist.");
 		}
 		if ( (!$tsource) && u\is_http($aurl) && u\url_exists($aurl) ){
 				$tsource = $adata['asset_url'];
@@ -413,7 +413,7 @@ class Assets {
 // 				throw new Exception ("Cannot download thumb source $tsource");
 // 			}
 
-		if (! $tsource)  {die ("No valid thumb source for asset $id");}
+		if (! $tsource)  {throw new ResourceException ("No valid thumb source for asset $id");}
 
 		foreach ($needs as $need){
 			$this->saveThumb($need,$id,$tsource,$amime);
@@ -512,7 +512,7 @@ public function getThumbUrl($id,$type){
 // delivers the url to a thumb image, making it if necessary.
 	// tesst for valid thumb type
 	if (empty( Defs::$thumb_width[$type] )) {
-		throw new Exception ("Illegal thumb type requested $type");
+		throw new RuntimeException ("Illegal thumb type requested $type");
 	}
 
 	$url = '/assets/' . $type . "/$id.jpg";
@@ -520,9 +520,10 @@ public function getThumbUrl($id,$type){
 		return $url;
 	} elseif (0) {//put another file test here
 	} else {
+		return false;
 	// go make it
 		//echo "Making new thumb $type for asset $id" . BRNL;
-		$this->createThumbs($id,[$type] );
+		//$this->createThumbs($id,[$type] );
 	}
 	return $url;
 }

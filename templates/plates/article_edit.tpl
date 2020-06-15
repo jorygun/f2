@@ -103,7 +103,7 @@ it will be shown as "Read More...". Link URL must start with 'http://' or 'https
 
 <tr><td >Source</td><td><input type='text' name='source' value="<?=$source?>" size="30"> date: <input type='text' name='source_date' value = "<?=$source_date?>" size="15"></td></tr>
 
-<tr><td>url for more info</td><td><input type='text' name='url' value = "<?=$url?>" size="60"></td></tr>
+<tr><td>url for more info</td><td><input type='text' name='link' value = "<?=$link?>" size="60"></td></tr>
 
 
 <tr><td >title for above url</td><td><input type='text' size='60' name='link_title' value="<?=$link_title?>"></td></tr>
@@ -125,7 +125,7 @@ it will be shown as "Read More...". Link URL must start with 'http://' or 'https
    </td></tr>
 
 <tr><td>Central asset id (in body):</td>
-	<td><input type=text name='asset_id' id=size=8 value='<?=$asset_id?>'>
+	<td><input type=text name='asset_main' id=size=8 value='<?=$asset_main?>'>
 	</td></tr>
 
 

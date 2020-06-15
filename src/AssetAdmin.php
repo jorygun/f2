@@ -291,7 +291,11 @@ class AssetAdmin
 
 		*/
 		if (! $adata = $this->getAssetDataEnhanced($aid) ) {
-			throw new Exception (" Asset $aid not found");
+			return "
+				<div class='asset'>
+					Asset $aid does not exist
+				</div>
+			";
 		}
 
 		$aurl = $adata['asset_url'];
@@ -302,25 +306,21 @@ class AssetAdmin
 
 		$attr_block = self::getAttribute($adata['source']);
 
-		try {
-						$image_data = "<img src='"
-						. $this->assets->getThumbUrl($aid,$style)
-						. "' />";
-		} catch (Exception $e) {
-						$image_data = "Could not create thumbnail for gallery<br>"
-						. $e->getMessage()
-						. BRNL;
+		if ($image = $this->assets->getThumbUrl($aid,$style) ) {
+			$image_data =  "<img src='$image' />";
+		} else {
+			return "<div class='asset'>Could not get Thumb for asset $aid</div>";
 		}
 
 
-				$block = <<<EOT
-				<div class='asset'>
-					<a href='/asset_viewer.php?$aid' target='viewer'>
-					$image_data </a>
-					$attr_block
-					<div class='atitle'>$atitle</div>
-					$acapt
-				</div>
+			$block = <<<EOT
+			<div class='asset'>
+				<a href='/asset_viewer.php?$aid' target='viewer'>
+				$image_data </a>
+				$attr_block
+				<div class='atitle'>$atitle</div>
+				$acapt
+			</div>
 EOT;
 
 
