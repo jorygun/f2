@@ -40,7 +40,7 @@ if (! $file_index = json_decode (file_get_contents(FileDefs::news_index_json),tr
 }
 
 $pubindex = [];
-echo "Rebuild Pubs at " . date('M d Y H:i') . BRNL;
+echo "Rebuild Pubs version 9 at " . date('M d Y H:i') . BRNL;
 
  echo count($file_index) . " records in json index" . BRNL;
 
