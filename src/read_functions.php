@@ -138,6 +138,7 @@ function get_news_file($filename,$extra=''){
 		return $content1;
 	}
 	function replace_voting_content ($content) {
+
 	  global $voting; #need access to voting class object
 		return preg_replace_callback(
 			'|<!-- vote (\d+) -->|',

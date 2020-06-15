@@ -16,7 +16,8 @@ class Article
 	private $publish;
 
 	private static $getarticlesql =  <<<EOT
-            SELECT n.*, m.username as contributor,m.user_email,
+            SELECT n.*, DATE_FORMAT(n.date_entered,'%d %M %Y') as date_entered_human,
+            m.username as contributor,m.user_email,
             t.topic_name,s.section_name,s.section_sequence
 
             ,(SELECT count(*) FROM  comments c

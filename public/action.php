@@ -255,7 +255,6 @@ function getTemplate($type)
 function runNewsIndex() {
 
 	$ni = new NewsIndex();
-
 	$ni -> rebuildAll();
 	return "index done";
 }

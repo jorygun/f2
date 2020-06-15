@@ -78,7 +78,6 @@ $bsame = array(
 		'title',
 		'source',
 		'contributor_id',
-		'source_date',
 		'link_title',
 		'status',
 		'content',
@@ -151,7 +150,8 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 		$pub_date = $row['date_published'];
 		// translate to issue and make sure it exits
 
-
+		// remove source date if theres no wource
+		$src_date = (empty($row['source']) ) ? '' : $row['source_date'] ;
 
 			####### DO thE WORK ############
 			$mod_record = array (
@@ -160,6 +160,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			'asset_list'	=>	$new_list,
 			'pub_issue'	=>	$in_issue,
 			'asset_main' => '',
+			'source_date' => $src_date,
 
 			);
 

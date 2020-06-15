@@ -17,7 +17,7 @@
 		<?=$more?>
 
 		<p class='source'>  <?=$sfrom?>
-			<span class='contributor'> -- Contributed by <?=$contributor?></span></p>
+			<span class='contributor'> -- Contributed by <?=$contributor?> on <?=$date_entered_human?></span></p>
 
 		<?php if (!empty($ed_comment)) : ?>
 			<div class='ed_comment'> <?=$ed_comment?></div>

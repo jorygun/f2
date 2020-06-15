@@ -20,3 +20,7 @@ function security_below($min) {
 		}
 		return false;
 }
+
+class Voting extends \DigitalMx\Flames\Voting {};
+
+

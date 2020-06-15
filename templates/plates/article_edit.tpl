@@ -9,7 +9,7 @@
 (Data below cannot be changed)<br>
 ID: <input type='text' name = 'id' value='<?=$id?>' READONLY><br>
 Entered: <?=$date_entered?><br>
-Status: <?=$status_name?><br>
+Status: <?=$status_name?> <?=$date_published?><br>
 
 </div>
 
@@ -141,7 +141,9 @@ Allow Votes? <input type='checkbox' value='1' name='take_votes' <?= $votes_check
     </td></tr>
 <?php endif; ?>
 
-</table><input type='submit' value='Submit Article' style='background:#CFC;'>
+</table>
+<input type='submit' value='Submit Article' style='background:#CFC;'>
+<button type='button' style='background:#CFC;' onClick ='window.open("/get-article.php?<?=$id?>")'>View Article</button>
 
 </form>
 </div>
