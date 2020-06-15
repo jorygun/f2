@@ -56,6 +56,7 @@ class NewsIndex {
     }
 
 	public function rebuildAll() {
+		echo "Rebuild indexes at " . date('H:i') . BRNL;
 		$this->rebuildJson();
 		$this->buildHTML();
 	}
