@@ -160,6 +160,25 @@ function get_latest_file($dir) {
 	return "$dir/$file";
 }
 
+function get_recent_files($number,$path){
+	#returns name of n most recent files in directory.
+	#returns a string if only 1; otherwise an array
+	$latest_ctime = 0;
+	$mods = array();
+	if (is_dir($path) == false){return "";}
+
+    foreach (glob($path . '/*') as $f) {
+        $mods[filemtime($f)] = $f;
+    }
+    krsort($mods);
+    $fnames = array_values(array_slice($mods, 0, $number, true));
+    $fnames = str_replace("$path/",'',$fnames);
+    if ($number == 1){return $fnames[0];} #if only 1, just return it
+    return $fnames; #otherwise return the list
+}
+
+
+
 function get_popular() {
 }
 
