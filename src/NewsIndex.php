@@ -88,43 +88,52 @@ class NewsIndex {
        	die ("No dir at $newsarchive");
        }
         $filecount=$dircount=0;
-
+		$files = [];
         while ($thisfile = readdir($dh)){
-            $filename = $dtag = '';
+
+            $filename = $dtag = $dtagstr = '';
             // first get traditional news-xxx.php files
             if (is_file ("$newsarchive/$thisfile")){
-                if(preg_match('/news- ?(\d+)\.php/',$thisfile,$m)){
+                if(preg_match('/news[-_](\d+)\.php/',$thisfile,$m)){
                     $dtag = $m[1];
                     $filename = $m[0];
                     ++$filecount;
                 }
             }
             elseif (is_dir("$newsarchive/$thisfile")){
-                if (preg_match('/news[-_](\d+)$/',$thisfile,$m)){
+                if (preg_match('/news[-_](\d+)\/?$/',$thisfile,$m)){
                     $dtag = $m[1];
                     $filename = "$m[0]/";
                     ++$dircount;
                 }
+            } else { continue; } // what could it be?
+
+			 if (empty($dtag) ){
+            	//echo "No dtag on $filename" . NL;
+            	continue;
+            }
+            if (empty($filename)){
+            	echo "No filename on $dtag" . NL;
+            	continue;
             }
 
-        #	echo "$m[1], $m[0]\n";
-        // drop the index at the end of folder names
+				$dtagstr = sprintf("%06d",$dtag);
+				if ($dtagstr != $dtag) {echo "changed dtag $dtag" . NL;}
+				// is yymmdd; change to Ymd
+				 if (substr($dtagstr,0,1) == '9'){$dtagstr = '19' . $dtagstr;}
+				 else {$dtagstr = '20' . $dtagstr;}
 
-
-            if (! empty($filename)){
-                $dtags = sprintf("%06d",$dtag);
-                if (substr($dtags,0,1) == '9'){$dtags = '19' . $dtags;}
-                else {$dtags = '20' . $dtags;}
-
-                $files[$dtags] = $filename; #date tag -> filename
-            }
-
-
+				if (!empty($files[$dtagstr]) ) {
+					echo "Duplicate dtag: $dtag old : new \n" . $files[$dtagstr] ." : " . $thisfile . NL;
+				}
+				 $files[$dtagstr] = $filename; #date tag -> filename
         }
 
         ksort ($files);
         $total_items = $filecount + $dircount;
+        $fcount = count($files);
         echo "Indexed $filecount files + $dircount directories = $total_items items." . BRNL;
+        echo $fcount . " Entries in file array" . NL;
 
 
         return $files;

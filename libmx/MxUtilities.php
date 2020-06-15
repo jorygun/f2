@@ -27,7 +27,7 @@ use \Exception as Exception;
 	string = charListToString(list) / implodes list
 	string = makelinks(strings) / replaces urls with links
 	d = days_ago(date) /days since date
-	void = catchError ($e, $more)
+	void = catchError ($emsg, $e, $more)
 
 */
 
@@ -83,8 +83,9 @@ function despecial($var) {
 	return htmlspecialchars_decode($var);
 }
 
-function catchError ( $e , $more=[]){
-	echo "<p class='red'>Error  " . $e->getFile() . ' (' . $e->getLine() . ') </p>' . BRNL;
+function catchError ( $emsg, $e , $more=[]){
+	echo "<p class='red'>Error $emsg</p> " . NL;
+	echo $e->getFile() . ' (' . $e->getLine() . ') </p>' . BRNL;
 	echo $e->getMessage() . BRNL;
 	if ($more) {
 		echo "------------" .BRNL ;

@@ -40,7 +40,7 @@ if (! $file_index = json_decode (file_get_contents(FileDefs::news_index_json),tr
 }
 
 $pubindex = [];
-echo "Rebuild Pubs at " . date('M d Y H:i');
+echo "Rebuild Pubs at " . date('M d Y H:i') . BRNL;
 
  echo count($file_index) . " records in json index" . BRNL;
 
@@ -89,17 +89,24 @@ echo "Rebuild Pubs at " . date('M d Y H:i');
 		$stories = '';$idsj = ''; $ids=[];
 
 		$sql = "SELECT id FROM `articles`
-		WHERE date_published BETWEEN '$sdate'
-		AND '$sdate' - INTERVAL 2 day";
+		WHERE date_published BETWEEN :sdate
+		AND :sdate1 - INTERVAL 2 day";
 
-		$art_select = $pdo->prepare($sql);
+		$art_stmt = $pdo->prepare($sql);
+		$art_stmt->bindvalue(':sdate',$sdate);
+		$art_stmt->bindvalue(':sdate1',$sdate);
 
-		if ($ids = $art_select->fetchAll(\PDO::FETCH_COLUMN) )  {
-			//u\echor($ids,$sdate); exit;
-			$stories = join(',',$ids);
-			$idsj = json_encode($ids);
 
-		}
+
+			if (!$art_stmt->execute() ) {
+				echo "art_seelct failed on $sdate";
+
+			} elseif ($ids = $art_stmt->fetchAll(\PDO::FETCH_COLUMN) )  {
+				//u\echor($ids,$sdate); exit;
+				$stories = join(',',$ids);
+				$idsj = json_encode($ids);
+
+			}
 
 
 // look for title file if the url is a subdir of newsp
