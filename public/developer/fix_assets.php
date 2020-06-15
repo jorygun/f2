@@ -1,5 +1,9 @@
 <?php
 namespace digitalmx\flames;
+
+// this script needs to run in the old site to copy assets to assets2,
+// which the new site will use.
+
 ini_set('default_socket_timeout', 10);
 ini_set('display_errors',1);
 

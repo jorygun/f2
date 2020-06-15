@@ -159,7 +159,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			'link'	=>	$row['link'],
 			'asset_list'	=>	$new_list,
 			'pub_issue'	=>	$in_issue,
-			'asset_main' = '',
+			'asset_main' => '',
 
 			);
 
