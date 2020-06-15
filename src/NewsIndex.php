@@ -102,14 +102,14 @@ class NewsIndex {
             elseif (is_dir("$newsarchive/$thisfile")){
                 if (preg_match('/news[-_](\d+)$/',$thisfile,$m)){
                     $dtag = $m[1];
-                    $filename = "$m[0]/index.php";
+                    $filename = "$m[0]/";
                     ++$dircount;
                 }
             }
 
         #	echo "$m[1], $m[0]\n";
         // drop the index at the end of folder names
-        	$filename = str_replace('/index.php','/',$filename);
+
 
             if (! empty($filename)){
                 $dtags = sprintf("%06d",$dtag);
@@ -123,7 +123,9 @@ class NewsIndex {
         }
 
         ksort ($files);
-        echo "Indexed $filecount files and $dircount directories<br>\n";
+        $total_items = $filecount + $dircount;
+        echo "Indexed $filecount files + $dircount directories = $total_items items." . BRNL;
+
 
         return $files;
     }
