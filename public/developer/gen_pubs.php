@@ -89,7 +89,7 @@ $pubindex = [];
 
 		$sql = "SELECT id FROM `articles`
 		WHERE date_published BETWEEN '$sdate'
-		AND '$sdate' - INTERVAL 2 day)";
+		AND '$sdate' - INTERVAL 2 day";
 
 		$art_select = $pdo->prepare($sql);
 
