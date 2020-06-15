@@ -105,6 +105,7 @@ echo "Rebuild Pubs at " . date('M d Y H:i') . BRNL;
 				//u\echor($ids,$sdate); exit;
 				$stories = join(',',$ids);
 				$idsj = json_encode($ids);
+				echo "$idsj ";
 
 			}
 
