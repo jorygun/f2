@@ -40,6 +40,7 @@ if (! $file_index = json_decode (file_get_contents(FileDefs::news_index_json),tr
 }
 
 $pubindex = [];
+echo "Rebuild Pubs at " . date('M d Y H:i');
 
  echo count($file_index) . " records in json index" . BRNL;
 
@@ -54,7 +55,7 @@ $pubindex = [];
 	$art_select = $pdo->prepare($sql);
 
         foreach ($file_index as $dcode => $f){
-            //echo "$dcode => $f<br>\n";
+            //echo "$dcode => $f . ";
 				$f = str_replace('/index.php','',$f);
 
             $url = "/newsp/$f";

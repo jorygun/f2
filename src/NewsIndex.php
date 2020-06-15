@@ -108,6 +108,9 @@ class NewsIndex {
             }
 
         #	echo "$m[1], $m[0]\n";
+        // drop the index at the end of folder names
+        	$filename = str_replace('/index.php','',$filename);
+
             if (! empty($filename)){
                 $dtags = sprintf("%06d",$dtag);
                 if (substr($dtags,0,1) == '9'){$dtags = '19' . $dtags;}
