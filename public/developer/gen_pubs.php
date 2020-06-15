@@ -144,7 +144,7 @@ function check_articles($pdo,$pubindex) {
 		}
 		//else { echo "$aid found $pdate";}
 	}
-	echo count($no_issue) . " articles found with no pubdate in index" . BRNL;
+	echo $nocount . " articles found with no pubdate in index" . BRNL;
 	foreach ($no_issue as $pdate=>$alist){
 		echo "$pdate : " . join(',',$alist)  . BRNL;
 	}
