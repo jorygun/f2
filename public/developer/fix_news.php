@@ -156,7 +156,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			####### DO thE WORK ############
 			$mod_record = array (
 			'topic'	=>	$row['type'],
-			'link'	=>	$row['link'],
+			'link'	=>	$row['url'],
 			'asset_list'	=>	$new_list,
 			'pub_issue'	=>	$in_issue,
 			'asset_main' => '',
