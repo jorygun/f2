@@ -62,8 +62,8 @@ class NewsIndex {
 	}
 
   public function rebuildJson() {
-  	$file_index = $this->buildFileList( FileDefs::archive_dir);
-  	file_put_contents(FileDefs::news_index_json,json_encode($file_index ));
+  	$json = $this->buildFileList( FileDefs::archive_dir);
+  	file_put_contents(FileDefs::news_index_json,$json);
 
   	}
 
@@ -137,7 +137,7 @@ class NewsIndex {
         echo $fcount . " Entries in file array" . NL;
 
 
-        return $files;
+        return json_encode($files);
     }
 
 
@@ -145,8 +145,8 @@ class NewsIndex {
     private function jsonToHtml ($json) {
     // also sticks entry into pubs table
       $letters=0; $lyear=0;
-		$file_index = json_decode (file_get_contents(FileDefs::news_index_json),true);
-		;
+		$file_index = json_decode (file_get_contents($json),true);
+
 			//clear pubs table;
 	   echo count($file_index) . " records in json index" . BRNL;
 
