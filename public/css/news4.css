@@ -509,8 +509,8 @@ div.apology {
 	border:2px solid gray;margin-left:1em;padding:1em;
 }
 
-.btn-votes {display:inline;}
-.net-votes {float:left;}
+.btn-votes {display:inline-block;}
+.net-votes {display:inline-block;}
 
 button.up {border: 0; background: transparent;cursor:pointer;}
 button.up:hover {background: #CFC; }
