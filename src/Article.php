@@ -229,7 +229,7 @@ EOT;
             'source_date' => '',
             'link' => '',
             'link_title' => '',
-            'type' => '',
+            'topic' => '',
             'date_published'  => '',
             'status'=> 'N',
             'content' => '',

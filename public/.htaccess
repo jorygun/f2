@@ -10,6 +10,7 @@ Options -Indexes
  <IfModule mod_rewrite.c>
      RewriteEngine On
      RewriteRule ^test2$ /developer/htaccess_tester.php [L]
+# rule below to switch old article/coomment page to new one.  query goes across
      RewriteRule ^scripts/news_article_c.php$ /get-article.php [L]
  </IfModule>
 
