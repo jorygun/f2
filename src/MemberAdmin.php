@@ -773,7 +773,7 @@ EOT;
 
   	$sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id = ${prep['key']} ;";
   	//echo $sql . BRNL;
-  	//u\echor ($prep['data'],' prep data');
+  	u\echor ($prep['data'],' prep data'); exit;
  $stmt = $this->pdo->prepare($sql);
  $stmt -> execute($prep['data']);
 

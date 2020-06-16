@@ -138,6 +138,15 @@ public function getLatestIssue(){
 	return $latest;
 }
 
+public function getTitle($issue){
+
+	$sql = "SELECT title from pubs where issue = '$issue'";
+	$title = $this->pdo->query($sql)->fetchColumn();
+
+	return $title;
+ }
+
+
 public function incrementReads($issue) {
 	// sets and uses last_insert_id to return the new value
 	$sql = "UPDATE `pubs` SET rcount = last_insert_id(rcount+1) WHERE issue = '$issue';";

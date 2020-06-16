@@ -13,6 +13,7 @@ namespace DigitalMx\Flames;
 
 
 	$publish = $container['publish'];
+	$news = $container['news'];
 
 $login->checkLevel(4);
 $page_title = 'News Admin';
@@ -31,12 +32,12 @@ echo $page->startBody();
 
 // set date last newsletter published;
 
-    $ptime = $publish->getLastPub('predate');
+    $ptime = $news->getLatestIssue()['predate'];
 
 
 //get current title, if any
 
-   $current_title = $publish->getNextTitle();
+   $current_title = $news->getTitle(1);
 
 
 // action buttons for ajax stuff
