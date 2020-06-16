@@ -6,13 +6,11 @@ DirectoryIndex index.html index-down.php  index.php
 Options +FollowSymLinks
 Options -Indexes
 
- RewriteEngine on
-# RewriteRule ^view_asset/([0-9]+)$ /scripts/asset_c.php?id=$1 [L]
-RewriteRule scripts/news_article_c.php?id=([0-9]+) /get-article.php?$1 [L]
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteRule ^.*$ /developer/htaccess_tester.php
+	RewriteRule scripts/news_article_c.php?id=([0-9]+) /get-article.php?$1 [L]
 </IfModule>
 
 
