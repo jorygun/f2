@@ -132,7 +132,7 @@ $sql = "
 		// enhance data
 	  foreach ($rlist as &$r) {
 		$id = $r['id'];
-			  $r['link'] = "<a href='/asset_view.php?id=$id' target='asset_view'>"
+			  $r['link'] = "<a href='/asset_view.php?id=$id' target='viewer'>"
 					. u\special($r['title'])
 					.  "</a>";
 
@@ -144,7 +144,7 @@ $sql = "
 			  $r['vintage'] = (empty($r['vintage']))?'?':$r['vintage'];
 			$r['sizemb'] = round($r['sizekb'] / 1000,0);
 
-			  $r['edit'] = "<a href='/scripts/asset_edit.php?id=$id' target = 'asset_edit'>Edit</a>";
+			  $r['edit'] = "<a href='/asset_editor.php?id=$id' target = 'asset_edit'>Edit</a>";
 
 	  }
 	// u\echor($rlist);  exit;

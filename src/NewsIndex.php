@@ -186,7 +186,7 @@ class NewsIndex {
                 $lyear = $year;
                 $listcode .= "<li>$year <ul>";
             }
-            $thisline = "<li style='margin-bottom:6px;'><a href='$url' target='_blank' style='text-align:left'>$cdate </a></li>\n";
+            $thisline = "<li style='margin-bottom:6px;'><a href='$url' target='news' style='text-align:left'>$cdate </a></li>\n";
 
             $listcode .= $thisline;
 

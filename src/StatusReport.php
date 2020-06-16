@@ -237,7 +237,7 @@ EOT;
 					}
 						 $report .= <<<EOT
 						 <tr class='brow'>
-							  <td class='username'><a href= '/profile.php?uid=$id' target = '_blank'>$name</a></td>
+							  <td class='username'><a href= '/profile.php?uid=$id' target = 'profile'>$name</a></td>
 							  <td >$location</td>
 							  <td>$contact</td></tr>
 EOT;

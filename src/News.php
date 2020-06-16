@@ -118,7 +118,7 @@ public function getNewsIndex() {
                 $listcode .= "<li>$year <ul>";
       }
 
-      $listcode .= "<li style='margin-bottom:6px;'><a href='${r['url']}' target='_blank' style='text-align:left'>" . $r['hdate'] .  "</a> ${r['title']}</li>\n";
+      $listcode .= "<li style='margin-bottom:6px;'><a href='${r['url']}' target='news' style='text-align:left'>" . $r['hdate'] .  "</a> ${r['title']}</li>\n";
 
 	}
 	return $listcode;
@@ -133,7 +133,7 @@ public function getIssueData($issue) {
 }
 public function getLatestIssue(){
 	// returns array of issue and human date for last entry in pubs
-	$sql = "SELECT issue, DATE_FORMAT(pubdate,'%b %d, %Y') as hdate from `pubs` ORDER By pubdate DESC LIMIT 1";
+	$sql = "SELECT issue, url, DATE_FORMAT(pubdate,'%b %d, %Y') as hdate from `pubs` ORDER By pubdate DESC LIMIT 1";
 	$latest = $this->pdo->query($sql)->fetch();
 	return $latest;
 }

@@ -364,7 +364,7 @@ EOT;
 			$thumb .= "?nocache=$time";
 		}
 		$result = <<<EOF
-		<a href='$link' target="_blank">
+		<a href='$link' target="assetl">
 		<img src='$thumb'>
 		</a>
 EOF;

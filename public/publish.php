@@ -80,7 +80,7 @@ echo $page->startBody();
 
 <li>Run the bulk email to send out the Flame News Is Ready Email. Note: the email will pull "teasers"
 from the news_latest directory, so they reflect last news published.
-<br><form><a href="/bulk_admin.php" target = "_blank">Set up Bulk Email</a>
+<br><form><a href="/bulk_admin.php" target = "bulk_admin">Set up Bulk Email</a>
 </form>
 
 

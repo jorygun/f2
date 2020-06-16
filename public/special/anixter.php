@@ -152,10 +152,10 @@ Flames members can post their rememberances here.  At the appropriate time, we w
 
 
 <p>Like most AMDer's, Ben loved the showmanship of the annual sales conference.
-One of the presentations he was most proud of producing is this one, <a href='/asset_display.php?3809' target='_blank'>"Coming to America"</a>,
+One of the presentations he was most proud of producing is this one, <a href='/asset_display.php?3809' target='viewer'>"Coming to America"</a>,
 from the 1981 sales conference. It was a 16-projector slide show. It was magnificent. Enjoy!  (Hat tip to Barry Fitzgerald for supplying the VHS tape.)</p>
 
-<p>There's lots of pictures of Ben on the site.  Go to the <a href='/scripts/assets.php' target='_blank'>Asset manager</a>, and enter "Anixter" in the search field.</p>
+<p>There's lots of pictures of Ben on the site.  Go to the <a href='/asset_manager.php' target='asset_manager'>Asset manager</a>, and enter "Anixter" in the search field.</p>
 
 <div style='border:2px solid black;margin:1em;padding:1em; font-family:bookman,times,serif; font-size:0.9em;'>
 <h4 class='center'>Benjamin Martin Anixter</h4>

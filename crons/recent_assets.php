@@ -114,7 +114,7 @@ function report_recent_assets ($pst,$rowc,$cutoff) {
         $vintage = (empty($row['vintage']))?'?':$row['vintage'];
 		$sizemb = round($row['sizekb'] / 1000,0);
 
-        $edit = "<a href='/scripts/asset_edit.php?id=$id' target = 'asset_edit'>Edit</a>";
+        $edit = "<a href='/asset_editor?id=$id' target = 'asset_edit'>Edit</a>";
 
         $report .=  <<<EOT
             <tr >

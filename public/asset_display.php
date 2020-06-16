@@ -121,7 +121,7 @@ $row = $stmt->fetch(\PDO::FETCH_ASSOC);
     $caption = make_links(nl2br($row['caption']));
 
 	$first_date = ($row['first_use_date'] == '0000-00-00')?'Undated' : $row['first_use_date'];
-	$first_in = ($row['first_use_in'])? "<a href='${row['first_use_in']}' target='_blank'>${row['first_use_in']}</a>" : "Not Used";
+	$first_in = ($row['first_use_in'])? "<a href='${row['first_use_in']}' target='news'>${row['first_use_in']}</a>" : "Not Used";
     $url = $row['url']; #source file
     if (!empty($row['link'])){
     	$url = $row['link'];

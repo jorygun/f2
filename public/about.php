@@ -26,7 +26,7 @@ if ($login->checkLevel(0)){
 <p>"FLAME" stands for "<b>F</b>ormer <b>L</b>oyal <b>AM</b>D <b>E</b>mployee"</p>
 <p>The FLAME website was created in 1997 by John McKean, an AMD FAE from Toronto, as a way for former and current AMDers to stay connected. After compiling the suggestions that were sent to him each week, and adding his own commentary, in italics, signed/jm. He published his weekly FLAME newsletter to more than 2,000 readers, around the world, over the past 17 years.</p><p>
 John passed away suddenly in September, 2014.  John will be remembered by many for his contributions to AMD as an integral part of the Toronto field sales office from 1981-1996.</p><p>
-Read our <a href="/special/McKean.html" target="_blank">tribute to John here</a>.</p>
+Read our <a href="/special/McKean.html" target="special">tribute to John here</a>.</p>
 
 
 <h3>Editor</h3>

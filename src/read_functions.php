@@ -190,7 +190,7 @@ function replace_new_discussion ($content) {
             	function ($matches){
             		$id = $matches[1];
             		$cp = "
-          		 <a href='/get-article.php?id=$id&m=d' target='cpage'>Discuss this article </a>";
+          		 <a href='/get-article.php?id=$id&m=d' target='article'>Discuss this article </a>";
 
             		return $cp;
             	}
