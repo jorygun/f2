@@ -9,7 +9,7 @@ Options -Indexes
 
  <IfModule mod_rewrite.c>
      RewriteEngine On
-     RewriteRule ^test2$ /developer/htaccess_tester.php
+     RewriteRule ^test2$ /developer/htaccess_tester.php [L]
      RewriteRule ^scripts/news_article_c.php$ /get-article.php [L]
  </IfModule>
 
