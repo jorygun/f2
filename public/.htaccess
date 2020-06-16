@@ -7,10 +7,10 @@ Options +FollowSymLinks
 Options -Indexes
 
 
-# <IfModule mod_rewrite.c>
+ <IfModule mod_rewrite.c>
 #     RewriteEngine On
 #     RewriteRule ^.*$ /developer/htaccess_tester.php
 #     RewriteRule scripts/news_article_c.php?id=([0-9]+) /get-article.php?$1 [L]
-# </IfModule>
+ </IfModule>
 
 
