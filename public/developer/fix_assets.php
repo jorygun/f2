@@ -29,7 +29,7 @@ ini_set('display_errors',1);
 // script to copy assets to assets, and to check values
 
 
-require_once 'scripts/asset_functions.php';
+//require_once 'scripts/asset_functions.php';
 
 
 $adb = array(
