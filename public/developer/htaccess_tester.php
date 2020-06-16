@@ -26,7 +26,7 @@ if (strpos($_SERVER['REQUEST_URI'], 'htaccess_tester.php') === false) {
 } elseif (is_readable($root . '/.htaccess') ) {
 
     echo "<p>The file .htaccess exists and is readable to the webserver. These are its contents: </p>\n<textarea style='width: 700px; height: 200px;'>";
-    echo file_get_contents(__DIR__.'/.htaccess');
+    echo file_get_contents($root .'/.htaccess');
     echo "</textarea>";
 
 } else {
