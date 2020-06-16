@@ -18,12 +18,12 @@
 #htaccess tester, version 1.0
 
 echo "<h1>Bolt Apache <tt>.htaccess</tt> tester.</h1>";
-
+$root = dirname (__FILE__,2);
 if (strpos($_SERVER['REQUEST_URI'], 'htaccess_tester.php') === false) {
 
     echo "<p><tt>mod_rewrite</tt> is working! You used the path <tt>" . $_SERVER['REQUEST_URI'] . "</tt> to request this page.</p>";
 
-} elseif (is_readable(__DIR__.'/.htaccess') ) {
+} elseif (is_readable($root . '/.htaccess') ) {
 
     echo "<p>The file .htaccess exists and is readable to the webserver. These are its contents: </p>\n<textarea style='width: 700px; height: 200px;'>";
     echo file_get_contents(__DIR__.'/.htaccess');
