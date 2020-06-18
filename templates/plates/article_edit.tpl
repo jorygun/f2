@@ -18,35 +18,33 @@ Status: <?=$status_name?> <?=$date_published?><br>
 
 
  <div id='AboutArticles'  style="display:none; border:2px solid green;"  >
-        <p>"News Articles" are the stories that will be published in a FLAMEs newsletter.  You create an article with a title and some content and optional link to some website.  You can simultaneously add a graphic to the asset database, and link it to your article.</p>
+        <p>"News Articles" are the stories that appear in a FLAMEs newsletter.  You create an article by providing a title and some content and optional link to some website, and maybe a graphic in the Flames asset database.</p>
         <p>All articles are reviewed by the editor prior to being published, so if you make a mistake, don't worry; just let the editor know what you want.
         </p>
         <p><b>Create Your Article Content</b></p>
         <table>
-        <tr><td>Title</td><td><i> The Item Title is the headline on the news article</i></td></tr>
+        <tr><td>Title</td><td><i> The Item Title is the headline on the news article</i>.  It will be converted to Title Case.  Any characters are fine.</td></tr>
         <tr><td>Topic</td><td><i> The Topic determines what section of the newsletter the article will be in.</i></td></tr>
-        <tr><td>Source (optional)</td><td><i>If this is from some other publication or source, enter the publication or event or other source and its date. (Date is unformatted text and just for information, so it doesn't have to be in any particular format.)</i></td></tr>
-        <tr><td>link title and url (optional)</td><td><i>If there is a link to another site, enter its title and url here.  It will show as a link below your article. If you leave out a title,
-it will be shown as "Read More...". Link URL must start with 'http://' or 'https://'</i></td></tr>
+        <tr><td>Source and Date (optional)</td><td><i>If this is from some other publication or source, enter the publication or event or other source and its date. (Date is unformatted text and just for information, so it doesn't have to be in any particular format.)</i></td></tr>
+        <tr><td>Link title and url (optional)</td><td><i>If there is a link to another site, enter its title and url here.  It will show as a link below your article. If you leave out a title, it will be shown as "Read More...". Link URL must start with 'http://' or 'https://' or it will be interpreted as a link to someplace on the Flames site.</i></td></tr>
         <tr><td>Content</td><td><i>The content of the article, typically a few lines from a magazine article, or whatever you want to say. Content should normally be filled in, but you CAN publish an article without any content, but just title and a graphic. <br> Carriage returns are converted to line breaks. URLs are linked IF they are preceeded by a space; otherwise they display whatever html you type in.</i></td></tr>
         <tr><td>Comment</td><td><i>Your comment on the story; appears in green below the story</i></td></tr>
         <tr><td colspan=2><hr /><b>Adding a Graphic, File, or other Asset</b>
         <br>
-            Assets are photos, movies or pdf files catalogued in the searchable "Asset" database on the site.  One or more assets can displayed along with your article. <br>
-            Assets are displayed as a "thumbnail" in a 200px wide box to the left of your article text.  Clicking on the thumbnail will bring up a full size display of the asset and the url if someone wants to download it.
+        	You add a graphic be entering its asset id number with your article. You can list several assets in the "asset list" field or one in the "asset main" field.  The assets in the list will be displayed as thumbnails along the left edge or top of your articles.  An asset-main will completely fill the content area of your article.
+        	<br>
+            Assets are photos, movies or pdf files catalogued in the searchable "Asset" database on the site. Every asset has an id, and you can create a new one immediately.  <br>
+            Assets are displayed as a "thumbnail".  Clicking on the thumbnail will bring up a full size display of the asset and the url if someone wants to download it.
             <br><br>
-            Every asset has an id number. Assets can be a file stored on the
-            site, or can just be a pointer to some url somewhere else.  You add a graphic that's already on the site by referencing its existing ID, or you can create a new asset by uploading a file or a url to a file on the web.<br></td></tr>
+           <br></td></tr>
 
             <tr><td colspan='2'><b>Create New Asset</b></td></tr>
-            <tr><td></td><td><i>If you have a new graphic to display with your article, you can enter it here.
+            <tr><td></td><td><i>If you have a new graphic to display with your article, you can enter it into the site's asset database here.
              It will be assigned an ID number, entered into the Asset catalog, and displayed with your article.
-            <tr><td>Asset Type</td><td><i>
-                Assets can be images, documents (e.g., PDF), multimedia (mp3, mp4), or web pages (urls to some other place.)
-            </i></td></tr>
+            </td><tr>
 
             <tr><td>Title</td><td><i>
-                Short title.  Searched, but not usually displayed.
+                Short title.  Searchable, but not always displayed.
             </i></td></tr>
 
             <tr><td>Source and Year</td><td><i>
@@ -56,14 +54,10 @@ it will be shown as "Read More...". Link URL must start with 'http://' or 'https
             </i></td></tr>
 
             <tr><td>Caption</td><td><i>
-               Usually displayed under the graphic.  This field is searched, so
+               Sometimes displayed under the graphic.  This field is searchable, so
                be sure to include the names of people in the photo.
             </i></td></tr>
 
-<tr><td>Thumb Source</td><td><i>The "thumb source" is the file used to create
-        the image used inthe asset thumbnail.  Often, this is also the file the
-        thumbnail should point to.  You can either specify a url or, most
-        commonly, just upload a file</i></td></tr>
 <tr><td>Choose a File</td><td><i>
                 Press this to open a file dialog box on your computer, from which you can select a file to upload.  Try to keep file
                 size minimal (say below 2MB) but larger files and videos can be
@@ -72,17 +66,11 @@ it will be shown as "Read More...". Link URL must start with 'http://' or 'https
 
 <tr><td>URL</td><td><i>
                You can simply point to a url on another site (hopefully it is a
-               reasonably permanent url). If it's a graphic, then a local thumbnail will be created too. URLs to files on amdflames.org should start with a /.  External files should start with "http://".
+               reasonably permanent url). If it's a graphic or youtube video, then a local thumbnail will be created too. URLs to files on amdflames.org should start with a /.  External files should start with "http://".
             </i></td></tr>
-<tr><td>Link Thumb Elsewhere</td><td><i>If you want the asset to point to
-    something other than the image used to create the thumbnail, then enter
-    that url here.  Use this when the asset is not simply the image used for
-    the thumbnail, like a video or audio file. </i></td></tr>
 
- <tr><td><b>Or use existing asset(s)</b></td></tr>
- <tr><td></td>Asset IDs<td><i>
-            If the graphic you want is already in the asset database, enter its id number here. You can search assets here: <button type='button' onclick="window.open('/scripts/assets.php' ,'assets','width=1100,left=160');">Search</button>. You can add multiple assets. They will line up left to right. </i>
-            </td></tr>
+
+
         </table>
         <button type='button' style='background:#cfc' name='ShowAbout' onclick="showDiv('AboutArticles')">Close</button>
 
