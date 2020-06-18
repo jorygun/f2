@@ -185,9 +185,10 @@ CREATE TABLE `pubs` (
   `rcount` int(11) NOT NULL DEFAULT '0',
   `title` varchar(255) DEFAULT NULL,
   `pubdate` datetime DEFAULT NULL,
-  `url` varchar(64) NOT NULL,
+  `url` varchar(64) DEFAULT NULL,
   `stories` varchar(255) DEFAULT NULL,
-  `updated` datetime DEFAULT NULL,
+  `updated` datetime DEFAULT NULL  ON UPDATE CURRENT_TIMESTAMP,
+  `last_scan` datetime DEFAULT NULL,
 
   PRIMARY KEY (`issue`),
   UNIQUE KEY `url` (`url`) USING BTREE,
