@@ -75,6 +75,7 @@ if (isset($_POST['submit'])){
 <input type='hidden' name ='id' value = '0' >
 <input type='hidden' name ='astatus' value = 'N' >
 <input type='hidden' name='contributor_id' value = '<?=$contributor_id?>' >
+<input type='hidden' name='contributor' value = '' >
 
 <table class='assettable'>
 <tr><td>Asset (reqd)</td><td>

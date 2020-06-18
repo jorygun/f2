@@ -69,7 +69,7 @@ class StatusReport {
 		file_put_contents(FileDefs::next_dir . '/tease_status.txt',$report);
 
 		// update timestamp on next pub record
-		$container['publish']->setNextUpdated();
+		$container['publish']->setLastScan();
 
 	}
 

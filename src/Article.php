@@ -161,7 +161,7 @@ EOT;
         // set contributor id if one not set yet and
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
-        $cd = f\setContributor($post['contributor_id'], $post['contributor'],$this->member);
+        $cd = $this->member->setContributor($post['contributor_id'], $post['contributor']);
         //put the new contrib info into the adata array
  			$adata['contributor_id'] = $cd['contributor_id']; // cont name not stored in record
 

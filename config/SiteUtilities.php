@@ -95,23 +95,3 @@ function getWarning () {
 
 }
 
-  function setContributor($cid,$cname,$member) {
-   // set contributor id if one not set yet and
-            // valid member name is in the contributo name field
-            // no contributor (=0) is not an error
-         $ncid = $ncname = '';
-        if (!empty($cid) ) {
-        	$ncid = $cid;
-         $ncname = $member->getMemberBasic($cname)[0] ;
-        } elseif (!empty($cname)) {
-           list( $ncid, $ncname) = $member->getMemberId($cname) ;
-
-        } else {
-            u\echoAlert("No contributor name or id listed");
-            $ncid = 0; $ncname='';
-        }
-        return array(
-        	'contributor_id' => $ncid,
-        	'contributor' => $ncname,
-        	);
-   }

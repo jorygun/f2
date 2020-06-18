@@ -148,7 +148,7 @@ if (! empty ($_POST)) {
 			echo initNext();
 			break;
 		case 'setNewsTitle':
-			return setNewsTitle($_POST['title'], $container);
+			echo setNewsTitle($_POST['title'], $container);
 			break;
 		case 'bounceEmail':
 			echo bounceEmail($_POST['uid'], $container);
@@ -355,7 +355,9 @@ function sendLogin($tag, $container)
 
 function setNewsTitle($title,$container)
 {
-	return $container['publish']->setNextTitle($title) ;
+	// title is sent using uriencode
+	$title_decode = rawurldecode($title);
+	return $container['publish']->setNextTitle($title_decode) ;
 
 }
 

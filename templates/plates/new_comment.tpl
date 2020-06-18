@@ -11,9 +11,7 @@
 Comments will automatically include your name and will be emailed to the article's author and any previous commenters.</p>
 <p>You can use the "tinymce" editor bar to format your comment.  You can edit/modify html code by clicking the right-most icon on the toolbar.   </p>
 
-<p>You can include a graphic/photo that is already in the site's assets. Just type <code>[asset <i>nn</i>]</code>, where nn is the asset id.  The thumbnail (200 x 200 pixels) of the asset will be inserted. <br>
-
-Use the <a href='/asset_search.php' target='assets'>Search Graphics</a> menu item to find assets.  You can also upload a new graphic from there.
+<p>You can include a graphic/photo.  If it's already on the site, just enter the id number for it. (Use the "Search Assets" to find it; click the "Send ID" button to place the id into the asset field for your comment.)  Or, you can add a new graphic to the site library by clicking the add graphic button.  You will need to supply a title, at least.
  </p>
 
  <p>Inappropriate comments will be removed.<br>

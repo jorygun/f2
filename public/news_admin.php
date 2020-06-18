@@ -32,7 +32,7 @@ echo $page->startBody();
 
 // set date last newsletter published;
 
-    $ptime = $news->getLatestIssue()['predate'];
+    $ptime = $news->getLatestIssue()['last_scan'];
 
 
 //get current title, if any
@@ -47,6 +47,8 @@ echo $page->startBody();
     $publishaction = f\actionButton('Publish','publish',0,'','resp');
 
 
+
+
 ?>
 
 
@@ -54,10 +56,10 @@ echo $page->startBody();
 /news/news_next by assembling component files into that directory.  News articles are in the article database, and pressing "Build Files" will insert the article files and teasers into the news_newxt directory.  The Update Report puts a list of all member changes since last publication into news_next. When published, the files are moved to news_latest and then into the main news directory at /newsp/news_yymmdd/. Finally copy news_model into news_next to set it up for the next newsletter.</p>
 <ol>
 <li>Prepare and build the news article collection.<br>
-<button type='button' onClick="window.open('/article_manager.php','article_list')">News Items</button></li>
+<button type='button' onClick="window.open('/article_manager.php','article_manager')">News Items</button></li>
 <br>
 
-<li>Run the change reports.  This creates a report of all the member changes since the  last newsletter was was published.  If necessary, set some other date/time.    <br>
+<li>Run the change reports.  This creates a report of all the member changes since the  last scan before the last newsletter was was published.  If necessary, set some other date/time.    <br>
     Since: <input type=text id='ptime' value="<?=$ptime?>">
    <button type='button' onClick = "runStatus('ptime');">Run Report</button>
 
@@ -66,14 +68,14 @@ echo $page->startBody();
 <li>Set the Newsletter title<br>
 
     Title: <input type='text' name='title' id='title_text' placeholder = 'Title Not Set' value='<?=$current_title?>'>
-    <button type='button' onClick = "setTitle('title_text')">Set Title</button>
+    <button type='button' onClick="setTitle('title_text');">Set Title</button>
 
 
 <li> Check the newsletter carefully before you publish.<br>
-<?=Publish::$preview_button?></li>
+	<?=$publish::$previewbutton?></li>
 
 <li>Publish the newsletter.  This script assembles the pieces in news_next, places it into a directory at /news/news_latest, and copies that directory to newsp/news_yymmdd (the normal repository for news), and sets the path to that directory in news/current/index.php as a relocate command. It also rebuilds the news index.
-	<br><?=Publish::$publish_button?><br>
+	<br><?=$publishaction?><br>
 
 <li>Check the latest news</a>, to make sure it published.
 <button type='button' onClick="window.open('/news/current','current')">Latest News</button></li>

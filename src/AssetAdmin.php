@@ -90,8 +90,8 @@ class AssetAdmin
 		// set contributor id if one not set yet and
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
-        $cd = f\setContributor($post['contributor_id'], $post['contributor'],$this->member);
-       // u\echor($cd);
+        $cd = $this->member->setContributor($post['contributor_id'], $post['contributor']);
+       // u\echor($cd); exit;
 
         //put the new contrib info into the adata array
  			$adata = array_merge($adata,$cd);
@@ -473,41 +473,6 @@ EOF;
 	}
 
 
-	// private function getYoutubeThumb($url) {
-// 			// returns url to thumbnail for a youtube video.
-// 			// returns false if not a youtube video
-// 			echo "looking for yt match to $url" . BRNL;
-// 					 $pattern =
-// 					'%#match any youtube url
-// 						 (?:https?://)?  # Optional scheme. Either http or https
-// 						 (?:www\.)?      # Optional www subdomain
-// 						 (?:             # Group host alternatives
-// 							youtu\.be/    # Either youtu.be,
-// 						 | youtube\.com/
-// 						 )				# or youtube.com
-// 						 (?:          # Group path alternatives
-// 							  embed/     # Either /embed/
-// 							| v/         # or /v/
-// 							| watch\?v=  # or /watch\?v=
-// 						 ) ?            # or nothing# End path alternatives.
-// 											 # End host alternatives.
-// 						 ([\w-]+)  # Allow 10-12 for 11 char youtube id.
-// 						 %x'
-// 						 ;
-// 					$result = preg_match($pattern, $url, $matches);
-// 					if (array_key_exists(1,$matches)){
-// 						$vid = $matches[1] ;
-// 						echo "Matched youtube $matches[0] to video id $vid " . BRNL;
-// 						if ($yturl = "http://img.youtube.com/vi/$vid/mqdefault.jpg" ){
-// 							return $yturl;
-// 						} else {
-// 							throw new Exception ("Cannot retrieve thumbnail for you tube video.");
-// 						}
-// 					}
-// 					else { // not a youtube video
-// 						return false;
-// 					}
-// 	 }
 
 
 }

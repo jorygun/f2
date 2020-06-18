@@ -116,7 +116,7 @@ function youtube_id_from_url($url) {
                 (?:          # Group path alternatives
                     embed/     # Either /embed/
                   | v/         # or /v/
-                  | watch\?v=  # or /watch\?v=
+                  | watch\?.*?v=  # or /watch\?xxxxx&v=
                 ) ?            # or nothing# End path alternatives.
                                # End host alternatives.
                 ([\w-]+)  # Allow 10-12 for 11 char youtube id.
@@ -798,13 +798,14 @@ function get_mime_from_url($url)
 	{
 	$finfo = new \finfo(FILEINFO_MIME_TYPE);
 	$mime = '';
+
 	if ($path=is_local($url) ){
 		 if (! file_exists($path)){
 		 	throw new Exception ( "Tyring to get mime from non-existent file $path");
 		 	return false;
 		 }
 		 $mime = $finfo->file($path);
-	} elseif (get_youtube_id($path) ){
+	} elseif (!empty($vid = get_youtube_id($url) ) ){
 		$mime = 'video/x-youtube';
 	} elseif (is_http($url) ){
 		if (!$mime = get_mime_from_curl($url) ){
@@ -845,6 +846,9 @@ function get_mimesize_from_curl($url,$param)
 	$code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	if ($code >= 400) return false;
 	if ($param== 'mime' && $mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE) ) {
+		if ($scpos = strpos($mime,';')  ){
+			$mime = substr($mime,0,$scpos);
+		}
 		return $mime;
 	} elseif ($param == 'size' && $size = curl_getinfo($ch,CURLINFO_CONTENT_LENGTH_DOWNLOAD) ){
 		return $size;

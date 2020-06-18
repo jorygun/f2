@@ -28,15 +28,16 @@ function cancel_bulk(job) {
 
 function setTitle(t) {
      var title = $('#'+t).val();
+
 	$.ajax({
 	url: "/action.php",
 
-	data:'ajax=setNewsTitle&title='+title,
+	data:'ajax=setNewsTitle&title='+encodeURIComponent(title),
 	type: "POST",
 
 	success: function(response){
+		alert (response);
 
-		return true;
 	}
 	});
 }

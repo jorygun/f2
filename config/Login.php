@@ -14,7 +14,10 @@ class Login
 
     public function __construct ($container)
     {
-        $this->member = $container['member'];
+        foreach (['member'] as $dclass) {
+			$this->$dclass = $container[$dclass];
+		}
+		$this->logger = $container['logger-dbug'];
 
 
     }
@@ -41,8 +44,13 @@ class Login
     {
             if (isset ($_GET['s']) ){
                 $login_code = $_GET['s'] ;
+
                 #uid 0 for non-member
-                $uid = $this->member->checkPass($login_code) ;
+                if ($uid = $this->member->checkPass($login_code) ) {
+                	$this->logger->info("Login user $uid");
+                } else {
+                	$this->logger->info("Login failed with $login_code");
+                }
                 #u\echoAlert ("new login user $uid");
 
             } else {

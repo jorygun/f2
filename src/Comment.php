@@ -375,7 +375,7 @@ private function getArticleInfo($on_db,$on_id)
 
         #if ($dbtable == 'spec_items'){return "Special web page $item_id";}
         $on_db = self::$db_names[$on_db] ?? $on_db;
-        $sql = "Select title,contributor_id from `$on_db` where id = '$on_id'";
+        $sql = "Select title,contributor_id from `articles` where id = '$on_id'";
         // url is used for spec items, where it is the page name in /spec_items
         if (! $ainfo  = $this->pdo->query($sql)->fetch() ) {
         	die ("Failed to ftch on $sql");
