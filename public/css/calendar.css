@@ -1,0 +1,22 @@
+
+table#calendar  {
+	border:1px solid #030; border-collapse:collapse;
+	margin-left:2em; margin-right:2em;
+	max-width:800px;
+
+}
+
+table#calendar tr td {padding:3px;}
+table#calendar tr.first {border-top:1px solid #030;}
+table#calendar td.date {text-align:left;}
+table#calendar td.event {text-align:left; font-weight:bold;}
+table#calendar td.location {
+	text-align:center;
+	width:50%;
+	}
+table#calendar td.info {
+	padding-left:2em;
+	padding-right:2em;
+	}
+
+

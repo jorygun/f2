@@ -204,7 +204,6 @@ if (!is_object($assets)) die ("No asset class");
 					}
 
 					if ($estatus != 'E' ) {
-
 						if ($timage = imagescale($simage,Defs::$thumb_width['thumbs']) ) {
 							imagejpeg($timage, $tpjpg, 90);
 							imagedestroy($simage);

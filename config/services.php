@@ -67,6 +67,11 @@ $container['galleries'] = function ($c) {
 $container['comment'] = function ($c) {
 	return new Comment($c);
 };
+$container['calendar'] = function ($c) {
+	return new Calendar($c);
+};
+
+
 // logger is monolog, with swiftmail used to email Critical incidents
 $container['logger-prod'] = function($c) {
 	$logger = new Logger('prod');

@@ -58,7 +58,8 @@ function getref() {
 }
 
 function echor($var,$title=''){
-	$title = $title ?: getref();
+	$ref = getref();
+	$title = "$title ($ref)";
 
 	// if (empty($title)) {
 // 		$bt = debug_backtrace();
@@ -414,8 +415,18 @@ function safe_like ($text){
 	return $safe;
 }
 
+function makeButton($type='open',$label,$href) {
+	// types open=window.open, loc = window.location
+	if ($type=='open'){$wf = "window.open('$href');";}
+	elseif ($type ='loc'){$wf = "location='$href';";}
+	else {die ("unrecognized type '$type' for makeButton");}
 
+	$b = <<<EOT
+	<button type='button' onClick = $wf >$label</button>
+EOT;
 
+	return $b;
+}
 
 function pdoPrep($data,$include=[], $key=''){
 
@@ -547,17 +558,17 @@ function prepPDO($type,$datain,$include=[], $keyfield=''){
 /**
 PREP:
    $prep = u\prepPDO ($type, $post_data,allowed_list,'id');
-   	type = U | I | IU: update, innsert, insert on dup update
+   	type = U | I | IU: update, innsert, insert on dup uset
 
 INSERT:
-		$sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']})";
+		$sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']})";
 
 UPDATE:
-		$sql = "UPDATE `Table` SET ${prep['update']} WHERE id = :pdokey ;";
+		$sql = "UPDATE `Table` SET ${prep['uset']} WHERE id = :pdokey ;";
 
 INSERT ON DUP UPDATE:
-   	$sql = INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} )
-    			ON DUPLICATE KEY UPDATE ${prep['update']};
+   	$sql = INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} )
+    			ON DUPLICATE KEY UPDATE ${prep['uset']};
     		";
 
 THEN:
@@ -565,8 +576,6 @@ THEN:
 THEN:
 		$sth->execute($prep['data']);
        $new_id = $pdo->lastInsertId();
-
-
 **/
 
   	if (! in_array($type,['U','I','UI'])) {
@@ -588,7 +597,7 @@ THEN:
   		if (!empty($keyfield) && empty($datain[$keyfield]) ){
   			throw new Exception ("prepPDO update missing key field in data");
   		}
-  		if (strpos($type,'U') !== false  && empty($keyfield)) { // is insert on DUP
+  		if (strpos($type,'I') !== false  && empty($keyfield)) { // is insert on DUP
   				throw new Exception ("prepPDO has UI transaction with no key field defined");
   		}
 
@@ -601,6 +610,7 @@ THEN:
    #transfer fields from datain to dataout
 
 	foreach ($datain as $var => $val){
+		echo "$var - $val" . BRNL;
    	 // ignore any fields not listed in valid fields
 		if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
@@ -624,14 +634,14 @@ THEN:
 
 	}
 
-        $prepared['data'] = $data; #all data for insert
-        $prepared['ifields'] = implode(', ',$if_array);
-        $prepared['ivalues'] = implode(', ',$ival_array);
+	  $prepared['data'] = $data; #all data for insert
+	  $prepared['ifields'] = implode(', ',$if_array);
+	  $prepared['ivalues'] = implode(', ',$ival_array);
 
-        $prepared['uset'] = implode(', ',$uset_array);
+	  $prepared['uset'] = implode(', ',$uset_array);
 
-        return $prepared;
-    }
+	  return $prepared;
+   }
 
 function stripslashes_deep ($value){
     $value = is_array($value) ?
