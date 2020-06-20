@@ -69,6 +69,7 @@ class DocPage
    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
 	<script src='/js/f2js.js'></script>
 	<script src='/js/ajax.js'></script>
+	<script src='/js/help.js'></script>
 
 EOT;
         if (!empty($options) && in_array('tiny', $options)) {
@@ -80,11 +81,11 @@ EOT;
         }
 //  <script src='/jsmx/tinymce/tinymce.min.js'></script>
 
-        if (!empty($options) && in_array('help', $options)) {
-            $t .= "
-        <script src='/js/help.js'></script>
-        ";
-        }
+     //    if (!empty($options) && in_array('help', $options)) {
+//             $t .= "
+//         <script src='/js/help.js'></script>
+//         ";
+//         }
 
 
 

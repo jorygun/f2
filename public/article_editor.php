@@ -43,9 +43,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 $id = $_GET['id'] ?? 0;
 if (!u\isInteger($id)){
-	throw new Exception("Article ID must be an integer");
+	die ("Article ID must be an integer");
 }
-$adata = $article->getArticle($id);
+try {
+	$adata = $article->getArticle($id);
+ } catch (Exception $e) {
+            echo "Article data error." . BRNL . $e->getMessage();
+            echo "<button type='button'  onclick = 'history.back();'>back</button>" . BRNL;
+            exit;
+}
 
 $adata['Aliastext'] = Defs::getMemberAliasList();
 // admin users get more choices on topics

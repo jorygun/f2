@@ -190,7 +190,7 @@ EOT;
 
 
 		  $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
-		  $t .=    self::if_level (7, "<li><a href='/asset_search.php' target='assets'>Asset Manager</a>");
+		  $t .=    self::if_level (7, "<li><a href='/asset_search.php' target='asearch'>Asset Manager</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/gallery_edit.php' target='gallery'>Edit Gallery</a>");
 		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='_blank'>Web Stats</a>");
 
@@ -201,7 +201,7 @@ EOT;
 	if ($userlevel >= 6){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu (6,$thisMenu);
 		$t .= self::if_level(6,"<li><a href='/article_manager.php' target='article_manager'>Create/Edit Articles</a> ");
-		 $t .=  self::if_level(6,"<li><a href='/asset_search.php' target='assets'>Add/Find Graphics</a> ");
+		 $t .=  self::if_level(6,"<li><a href='/asset_search.php' target='asearch'>Add/Find Graphics</a> ");
 		 $t .=  self::if_level(6,"<li><a href='/views.php' target='data'>Count of Views by Issue</a> ");
 
 
@@ -211,7 +211,7 @@ EOT;
 	$thisMenu = "Opportunities ($opp_rows)";
 	$menulist[] = $thisMenu;
 	$opp_list = $this->opps->linkOppList();
-	$t .= self::addMenu (0,$thisMenu,$thisMenu,'/show_opp.php');
+	$t .= self::addMenu (0,$thisMenu,$thisMenu,'/opp-manager.php');
 
 	foreach ($opp_list as $line){
 		$t .=  "<li>$line";

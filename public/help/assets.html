@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>AMD Flames Help</title>
+   <link rel='stylesheet' href = '/css/news4.css' />
+
+
+</head>
+<body>
+<!-- <body onBlur = "hwin.close();"> -->
+<div id='helpbox' class='help'>
+
+<h4>Help on Assets</h4>
+        <p>"Assets" are the various pictures, documents, and audio/video items that
+have been uploaded to the site over the years.  The assets have been (mostly)
+indexed in a database for easy search and retrieval.  Use <a href='/asset_search.php' target='asearch'>this page</a> to
+find and retrieve an asset.</p>
+<p>Graphic assets are stored at the original resolution and also one or more fixed size 'thumbnails'.  Thumbnails are used to display the asset in news articles and elsewhere.  Clicking on a thumbnail retrieves the original image. .</p>
+
+<p>Assets have various attributes, including a title, caption, vintage, and keywords,
+a "source" - the original document referenced, and a thumbnail image - a small graphic to represent the source.
+</p>
+<p class='bold'>Asset Data</p>
+<table class='bordered row-lines'>
+<tr><td>Top Table</td><td>
+	Contains some useful information: Status, Date/time entered, mime-type and corresponding type, size, and first use.  If the first use is recorded, you can click on the link to view it.
+	</td></tr>
+<tr><td>Item title</td><td>
+	Title for the asset.  Searchable.  Limited  to 64 characters.
+	</td></tr>
+
+<tr><td>Caption</td><td>
+	Caption, especially names of people in a picture.  Searchable.  Can be as long as you need within reasonable limits.
+	</td></tr>
+<tr><td>Status (admin only)</td><td>
+	Set status to various codes for reviewed, errors.
+	</td></tr>
+
+<tr><td>Origin</td><td>
+	Enter the guestimated year this item was created and an attribution to a person or organization or publication.
+	</td></tr>
+<tr><td>Contributor</td><td>
+	Name and id of the person contributing this item.  Usually autoomatically set based on logged in user.  User name must exactly match Flames user name. (id will be set automatically from the name.)
+	</td></tr>
+<tr><td>Tags</td><td>
+	Tags are another way to categorize an archival asset.    Tags are completely optional.</td></tr>
+<tr><td>Source URL</td><td>This is the url of the document this asset represents.  It can be a local file ('/assets/files/4566.php') or a remote web page. (Remote web pages may not be reliable over a long term.)  Youtube videos are often used.</td></tr>
+<tr><td>Thumb Source</td><td>
+	Normally you can leave this blank and the thumbnail image for the asset is created automatically from the source document.  The always works for images, pdf files, and youtube videos.  For other documents, a generic icon might be used.  But the uploader can manually specify another source for the thumbnail. For example another different graphic can be specified, or a graphic file uploaded. This is especially useful for video assets that aren't on youtube, so a useful thumb can't be automatically created. The Thumb URL should always be stored locally, not a remote web page.
+	</td></tr>
+
+	<tr><td>Notes</td><td>
+	Uploader notes.  Saved but not displayed or searchable.  Often contains the name of the original source that was uploade, like 'image_005.jpg'.
+	</td></tr>
+	<tr><td>Thumb Images</td><td>
+	Thumbs may exist in 3 different sizes: Thumb (~200px), Gallery (~350px), or Toon (~800px). Every asset has a thumb image.  Gallery are larger ones used in gallery displays.  Toon is page width size and used for cartoons at top of news or full-width displays in articles ('article-main').  This panel shows you which sizes exist and lets you check to create or recreate.<br><br>
+	The normal thumbs is displayed under the editor form.  Sometimes this image does not get updated on your browser after a change, due to caching.  If in doubt, right-click on the image and choose to open image in a new tab, and then you can refresh it.  Usually.  Sometimes.
+	</td></tr>
+</table>
+
+
+</div>
+</body></html>

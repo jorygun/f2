@@ -445,14 +445,20 @@ function pdoPrep($data,$include=[], $key=''){
 
    $prep = u\pdoPrep($post_data,array_keys($model),'id');
 
+	$sql = "INSERT into `Table` ( ${prep['ifields']} )
+			VALUES ( ${prep['ivals']} );
+
+		$stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+		$new_id = $pdo->lastInsertId();
+
     $sql = "INSERT into `Table` ( ${prep['ifields']} )
     		VALUES ( ${prep['ivals']} )
     		ON DUPLICATE KEY UPDATE ${prep['update']};
     		";
-       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+       $stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
        $new_id = $pdo->lastInsertId();
 
-    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
+    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = :pdokey ;";
        $stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
 
 
@@ -467,7 +473,7 @@ function pdoPrep($data,$include=[], $key=''){
          // ignore any fields not listed in valid fields
 
 
-            // find key field which is returned separately
+            //find key field which is returned separately
             if (! empty($key) && $var === $key){
                 $prepared['key'] = $val;
          	}
@@ -478,12 +484,15 @@ function pdoPrep($data,$include=[], $key=''){
 				$db[$var] = $val;
 
 
-			// leave key out of update fields
+			// leave key out of update fields, but add value back in as pdokey
 				if ($var !== $key) {
 					$uvar = 'u'.$var;
 					$udb[":$uvar"] = $val;
 					$ufieldsu[] = "`$var` = :$uvar"; #new way
             	$ufields[] = "`$var` = :$var"; #old way
+            }
+            else {
+            	$udb[':pdokey'] = $val;
             }
 
             $ifields[] = "`$var`";
@@ -493,6 +502,10 @@ function pdoPrep($data,$include=[], $key=''){
 
         }
 
+			if (! empty($key) && empty($prepared['key'])) {
+				throw new Exception ("Key $key specified but did not find key in data");
+			}
+
         $prepared['data'] = $db; #all data for insert
         $prepared['update'] = implode(', ',$ufields);
         $prepared['updateu'] = implode(', ',$ufieldsu);
@@ -500,6 +513,122 @@ function pdoPrep($data,$include=[], $key=''){
         $prepared['ivals'] = implode(', ',$ivalues);
 			$prepared['udata'] = $udb; #all values for an insert
 
+
+        return $prepared;
+    }
+
+function prepPDO($type,$datain,$include=[], $keyfield=''){
+
+ /**
+  *   Rewrite of pdoPrep
+  *  to prepare fields for a pdo execute.
+  *
+  *  $datain = data array (var=>val),
+  *  $include = list of vars in $data to insert/update
+  *    ( all vars included if include is empty; )
+  *  if $keyfield is specified, it will be removed from update data
+  *     and its value is returned in the data array as ':pdokey',
+  *		so "sql = ... WHERE id = :pdokey"
+
+  *
+  *  returns array of arrays:
+      'data' = array of placeholder=>val,
+        	(datain with :var => val, but only with fields in include_vars)
+
+      'uset' = text string for update SET assignment, like
+            email=:email,status=:status
+
+      'ifields' text like email,status,... for use in insert fields.
+      'ivals' text like :email,:status,... for use in insert values .
+
+
+   	if type == IU, (insert ON DUP KEY update) then the data includes additional
+   	rows :uvar = val for use in the update portion (cannot re-use names )
+/**
+PREP:
+   $prep = u\prepPDO ($type, $post_data,allowed_list,'id');
+   	type = U | I | IU: update, innsert, insert on dup update
+
+INSERT:
+		$sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']})";
+
+UPDATE:
+		$sql = "UPDATE `Table` SET ${prep['update']} WHERE id = :pdokey ;";
+
+INSERT ON DUP UPDATE:
+   	$sql = INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} )
+    			ON DUPLICATE KEY UPDATE ${prep['update']};
+    		";
+
+THEN:
+       $sth = $pdo->prepare($sql);
+THEN:
+		$sth->execute($prep['data']);
+       $new_id = $pdo->lastInsertId();
+
+
+**/
+
+  	if (! in_array($type,['U','I','UI'])) {
+  		throw new Exception ("Illegal prepPDO type: $type");
+  	}
+  	if (!is_array($datain)){
+  		throw new Exception ("prepPDO called with no data array");
+  	}
+  	if (!is_array($include)){
+  		throw new Exception ("prepPDO called with no include array");
+  	}
+  	if ( strpos($type,'U') !== false ) {
+  		// if update, then the sql needs a WHERE clause.
+  		// if user defines key field here, it will be replaced in data array
+  		// with :pdokey=val so user says WHERE field = :pdokey,
+  		// if its an update and no key is specified, then all datain will
+  		// be in update set var=val and user manually does the WHEre clause.
+  		//
+  		if (!empty($keyfield) && empty($datain[$keyfield]) ){
+  			throw new Exception ("prepPDO update missing key field in data");
+  		}
+  		if (strpos($type,'U') !== false  && empty($keyfield)) { // is insert on DUP
+  				throw new Exception ("prepPDO has UI transaction with no key field defined");
+  		}
+
+  	}
+
+	$data = $if_array = $ival_array = $uset_array = array();
+	$upset = $pdokey = $ifields = $ivalues =  '';
+
+
+   #transfer fields from datain to dataout
+
+	foreach ($datain as $var => $val){
+   	 // ignore any fields not listed in valid fields
+		if ( !empty($include) and ! in_array($var,$include) ){ continue; }
+
+		$ivar = ":i$var";
+		$uvar = ":u$var";
+		if (strpos($type,'I') !== false) { // insert needed
+     		$if_array[] = $var;
+     		$ival_array[] = $ivar;
+     		$data[$ivar] = $val;
+     	}
+     	if (strpos($type,'U') !== false) {
+     		if ($var == $keyfield) {
+     			// remove from data, but set $key
+     			$data[':pdokey'] = $val;
+     		} else {
+     			$uset_array[] = "$var = $uvar";
+				$data[$uvar] = $val;
+			}
+
+      }
+
+	}
+
+        $prepared['data'] = $data; #all data for insert
+        $prepared['ifields'] = implode(', ',$if_array);
+        $prepared['ivalues'] = implode(', ',$ival_array);
+
+        $prepared['uset'] = implode(', ',$uset_array);
 
         return $prepared;
     }
@@ -518,8 +647,9 @@ function buildOptions($val_array,$check='',$choose = true){
 	if ($choose) {
 		$opt = "<option value=''>Choose One...</option>";
 	}
-	#if 2 dimmensional array
-	if( count(array_filter(array_keys($val_array), 'is_string')) > 0){
+
+
+	if( isAssociative($val_array)){
         foreach ($val_array as $k => $v){
             $checked = ($k == $check)?"selected":'';
             $opt .= "<option value='$k' $checked>$v</option>";
@@ -536,7 +666,10 @@ function buildOptions($val_array,$check='',$choose = true){
 	#echo "check: $check.  options:", $opt,"<br>";
 	return $opt;
 }
-
+function isAssociative($arr)
+{
+    return array_keys($arr) !== range(0, count($arr) - 1);
+}
 
 function buildCheckBoxSet(
     $var_name,
@@ -581,8 +714,15 @@ function buildCheckBoxSet(
 }
 
 function is_local ($url) {
-	if (substr($url,0,1) == '/') return SITE_PATH . $url;
-	return false;
+// url may be local or remote
+// if remote, returns false
+// if local and file exists, returns path to file
+// else returns ''
+
+	if (substr($url,0,1) != '/') return false;
+	$path = SITE_PATH . $url;
+	if (! file_exists($path)) return '';
+	return $path;
 }
 function is_http ($url) {
 	if (substr($url,0,4) == 'http') {

@@ -3,7 +3,7 @@
 <div class='box'>
 	<button type='button' onClick = "window.open('/asset_editor.php?id=0')">New Asset</button>
 	<button type='button' onclick="clearForm('select_assets');">Clear Form</button>
-	<button type='button' name='SearchHelp' id ='help-button' value='assets' >Help</button><br>
+	<button type='button' name='SearchHelp' class='help-button' id ='help-button' value='asearch' >Help</button><br>
 	<b>Choose any of the parameters below to find photos, videos, and audio files.</b>
 </div>
 
@@ -23,7 +23,7 @@
 		<tr>
 			<td>Phrases</td>
 			<td>
-			<input type='text' name='searchon' value='<?=$searchon_hte?>'>
+			<input type='text' size='40' name='searchon' value='<?=$searchon_hte?>'>
 			<br><small>Search is not case sensitive. Search terms can include spaces (like 'John East'). Separate terms with commas. </small></td>
 		</tr>
 
@@ -42,7 +42,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td>Tags (* tags are 'archival')</td>
+			<td>Tags</td>
 			<td>
 				<?=$tag_options?>
 			</td>
@@ -89,7 +89,5 @@
 </form>
 
 </div>
-<div id='helpdiv' style='display:none'>
-<?php $this->insert('help::assets'); ?>
-</div>
+
 </body></html>

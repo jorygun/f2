@@ -47,24 +47,47 @@ $publish = $container['publish'];
 // 	u\echor ($_POST,'post'); exit;
 // }
 
+$d = [];
+$ilist = $publish->getIssueList();
+// date -> issue
+//u\echor($ilist);
+
+//$ioptions = u\buildOptions(['one' => 1]);
+
+$stories = [];
 
 if (!empty($_POST['toggle_use'])) {
 	$id = $_POST['toggle_use'];
 	$article->toggle_use($id);
 }
 
-	$style='unpub';
-	if (!empty($_POST['style'])) {
-		$style = $_POST['style'];
+	$cat='unpub'; //defaullt
+	if (!empty($_POST['cat'])) {
+		$cat = $_POST['cat'];
 	}
-	$d= $articlea->getArticleList($style);
+
+	if ($cat == 'issue'){
+			#get articles from POST['issue']
+			$issue = $_POST['issue'];
+			if (!$stories = $publish->getArticlesFromIssue($issue) ){
+				die ("Did not get any stories for issue $issue");
+			}
+
+			$cat .= " " . $ilist[$issue];  // add the issue to the command so
+			// it will be in the title
+
+
+	}
+	$d = $articlea->getArticleList($cat,$stories);
+	$d['ioptions'] = u\buildOptions($ilist);
+
 	//u\echor($d); exit;
 	echo $templates->render('article_list', $d);
 	echo "<hr>\n";
 
 
 
-	echo publish::$preview_button;
+
 
 
 exit;

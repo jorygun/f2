@@ -23,9 +23,9 @@ class ArticleAdmin
 
 	}
 
-	public function getArticleList ($cat) {
+	public function getArticleList ($cat,$data=[]) {
 
-	$alist = $this->article->getArticleList($cat);
+	$alist = $this->article->getArticleList($cat,$data);
 	//u\echor($alist, 'from article->getArticleList');
 	// add thumb image and image count to each item
 	// add action buttons to each item
@@ -82,10 +82,21 @@ class ArticleAdmin
 			}
 		}
 
-		$selmsg = array(
-			'unpub' => "Unpublished Articles",
-			'current' => 'Recently Published',
-		);
+		// get title message for the listing
+			$seltok = trim(strtok($cat, ' '));
+			switch ($seltok) {
+				case 'unpub':
+					$selmsg = "Unpublished Articles";
+					break;
+				case  'current' :
+					$selmsg = 'Recently Published';
+					break;
+				case 'issue':
+					$selmsg = 'From ' . $cat ;
+					break;
+				default:
+					$selmsg = $cat;
+		};
 
 		$mylist['editable'] = $editable;
 		$mylist['noneditable'] = $noneditable;
@@ -94,7 +105,7 @@ class ArticleAdmin
 
 		$mylist['emsg']['editable'] = "Articles You Can Manage";
 		$mylist['emsg']['noneditable'] = "Articles Managed By Others";
-		$mylist['emsg']['selected'] = $selmsg[$cat] ?? 'Undefined';
+		$mylist['emsg']['selected'] = $selmsg;
 		return $mylist;
 
 	}

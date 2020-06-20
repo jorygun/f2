@@ -53,6 +53,7 @@ li {margin-bottom:0.5em;}
 .italic { font-style: italic; }
 .indent {margin: 0.5em 3em 0.5em 3em;}
 .no-margin {margin:0;padding:0}
+.bold {font-weight:bold;}
 
 .centered {text-align:center;margin-left:auto;margin-right:auto;}
 .right {text-align:right;}
@@ -133,9 +134,11 @@ button {
 button:hover {
     background:#99ff99;
 }
+button.help-button {
+	background:#ccccff;
+}
 
-
-.input, input {background-color:#ccc; }
+.input, input {background-color:#eee; }
 .required {background-color:#ffa;}
 input:invalid {color:red;}
 input:valid {color:#000;}
@@ -360,8 +363,12 @@ table.alternate tr:nth-child(odd) {background: #FFF}
 table.bordered {
 	border:1px solid #030;
 }
+table.row-lines {
+	border-collapse:collapse;
+}
 table.row-lines td{
 	border-top:1px solid gray;
+	padding:6px;
 }
 
 div.comment_box {

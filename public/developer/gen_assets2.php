@@ -1,8 +1,11 @@
 <?php
 namespace digitalmx\flames;
 
-// this script needs to run in the old site to copy assets to assets2,
-// which the new site will use.
+/* this script needs to run in the old site to copy assets to assets2,
+ which the new site will use.
+	Rewritten 6/19 to remove trying to fix thumbs.  Need a separate fix_thumbs script.
+
+*/
 
 ini_set('default_socket_timeout', 10);
 ini_set('display_errors',1);
@@ -56,6 +59,8 @@ $bnew = array (
 'mime'=>'',
 'type'=>'Other',
 );
+
+$asset_db = 'live_assets'; #local copy of product assets table
 
 // leave out date modified ; they are automatic
 $bauto = array();
@@ -117,9 +122,10 @@ exit;
 #######################
 
 function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
+	global $asset_db;
 	$rept_interval = 25; // print progress every this many records;
 	$end_condition = ($end > 0) ? " AND id <= $end " : '';
-	$sql = "SELECT * from `assets` WHERE id >= ? $end_condition and status not in ('T','X') order by id  LIMIT 200";
+	$sql = "SELECT * from `$asset_db` WHERE id >= ? $end_condition and status not in ('T','X') order by id  LIMIT 200";
 	echo $sql . BRNL;
 
 	$stmtb = $pdo->prepare($sql);
@@ -151,7 +157,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 
 			$id = $row['id'];
 			$tsrc = $src = '';
-			if (is_integer($rc/$rept_interval)) echo "<small>getting record $rc id $id</small><br>";
+			if (is_integer($rc/$rept_interval)) echo "<small>At record $rc id $id</small><br>";
 
 			if ($end != 0 && $id > $end){
 				$done = true;
@@ -182,7 +188,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			// at the end set astataus = estatus || original status
 			// this preserves the old status settings.
 			// status at the end.
-			$b['vintage'] = $row['vintage'] ?: '0';
+			$b['vintage'] = $row['vintage'] ;
 			$b['sizekb'] = $row['sizekb'] ?: 0;
 
 			$b['date_entered'] =  $row['date_entered'] ?: date('Y-m-d');
@@ -194,16 +200,16 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			}
 			$b['first_use_date'] = $fud;
 
-			if ($ostatus == 'E'){
+			if ($ostatus == 'E'){ // existing status field: Error
 				// just copy stuff over with the E status
 				$b['mime'] = $row['mime'];
 				$b['asset_url'] = $row['link'];
 				$b['type'] =  Defs::getMimeGroup($mime) ?: 'Other';
-				$thumbu = $row['url'];
-				if (empty($thumbu) || $thumbu == $row['link']) {
-					$thumbu = '';  // blank for now.  will gt written back to the b array.
+				$thumburl = $row['url'];
+				if ( empty($thumburl) || $thumburl == $row['link'] ) {
+					$thumburl = '';  // blank for now.  will gt written back to the b array.
 				}
-				$b['thumb_url'] = $thumbu;
+				$b['thumb_url'] = $thumburl;
 				$b['astatus'] = 'E';
 
 			} else { #do everything ellse
@@ -213,6 +219,14 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 				$estatus = 'E';
 				$b['errors'] .= logrec($id, $estatus, "No source (link) specified ");
 
+			}
+
+			if ($estatus != 'E') {
+				if ($thumburl = $row['url'] ) {
+					if ( $thumburl == $row['link'] ) {
+						$thumburl = '';  // blank for now.  will gt written back to the b array.
+					}
+				}
 			}
 
 			if ($estatus != 'E') {
@@ -229,6 +243,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 					$b['errors'] .= logrec($id, $estatus, "Source does not exist or can't get mime",$src);
 
 				}
+				$b['thumb_url'] = $thumburl;
 				$b['mime'] = $mime;
 				$b['asset_url'] = $src;
 				$type =  Defs::getMimeGroup($mime) ?: 'Other';
@@ -238,140 +253,8 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 
 		// check valid thumb source,
 
-			if ($estatus != 'E') {
-				//set thumb_url and computed thumb  src
-				$thumbu = $row['url'];
-					// compare with original link, since src may have been altered
-				if (empty($thumbu) || $thumbu == $row['link']) {
-					$thumbu = '';  // blank for now.  will gt written back to the b array.
-					$tsrc = $src; // used to validate file
-					// already knoiwn to be a valid url
-				} else {
-					$tsrc = $thumbu;  // different url
-				}
-				// now check validity
-				 if (u\is_local($tsrc) ) {
-					if (source_exists($tsrc,$check_yt) ) {
-						//ok
-					}
-					else {
-						$estatus = 'E';
-						$b['errors'] .= logrec($id,$estatus,"Local thumb source does not exist",$tsrc);
-
-					}
-				} elseif ($videoid = u\get_youtube_id($tsrc) ) {
-					// ok
-					if (1) { // reconstruct youtube thumbs
-					echo "reconstructing video thumb for $id" . BRNL;
-						$yturl = "http://img.youtube.com/vi/$videoid/mqdefault.jpg" ;
-						copy ($yturl , SITE_PATH . "/assets/thumbs/${id}.jpg" );
-					}
-				} elseif ( $type == 'Image' ) {
-					// try creating thumb from remote url useing gd
-				echo "Creating image for id $id from remote url $tsrc";
-				$simage = null;
-				try {
-					$sizem = u\get_size_from_curl($tsrc) / 1000000; #MB
-					if ($sizem > 32) { //MB
-						throw new Exception ("Remote File too large for GD: " . (int) $sizem . 'MB');
-					}
-
-					switch ($mime) {
-						case 'image/jpeg':
-							$simage = imagecreatefromjpeg($tsrc);
-							break;
-						case 'image/gif':
-							$simage = imagecreatefromgif($tsrc);
-							break;
-						case 'image/png':
-							$simage = imagecreatefrompng($tsrc);
-							break;
-						default:
-							$simage = null;
-					}
-
-				} catch (Exception $e) {
-						echo "Nope" . BRNL;
-						$estatus = 'E';
-						$b['errors'] .= logrec($id,$estatus,$e->getMessage(),$tsrc);
-						$simage = null;
-				}
-
-				if ($estatus != 'E' ) {
-
-						if ($timage = imagescale($simage,Defs::$thumb_width['thumbs']) ) {
-							imagejpeg($timage, $tpjpg, 90);
-							imagedestroy($simage);
-							imagedestroy($timage);
-							echo "..Yup" . BRNL;
-
-						} else {
-							$estatus = 'E';
-							$b['errors'] .= logrec($id,$estatus,"Could not create thumb with GD",$tsrc);
-							echo "..Nope" . BRNL;
-						}
-					}
 
 
-				} elseif ($icon = get_generic_thumb ($id,$mime) ) {
-					// set thumb source to generic icon
-						$thumbu = "/assets/icons/$icon"; // new thumb source
-						if (! file_exists(SITE_PATH . $thumbu)) {
-							$estatus = 'E';
-							$b['errors'] .= logrec($id, $estatus,"Tried to set non-existent icon as thumb source: $icon");
-
-						} else {
-							$estatus = 'W';
-							$b['errors'] .= logrec($id, $estatus, "Set generic $icon as thumb source");
-
-						}
-				} else {
-					$estatus = 'E';
-					$b['errors'] .=  logrec($id, $estatus,"Invalid thumb source.", $tsrc);
-
-				}
-
-				$b['thumb_url'] = $thumbu;
-
-			}
-
-
-			if ($estatus != 'E') {
-			// now check existance of thumbs
-
-
-				// not doing for galleries .. too complicated.
-				$tpjpg = SITE_PATH . '/assets/thumbs/' . $id . '.jpg';
-				$tppng = SITE_PATH . '/assets/thumbs/' . $id . '.png';
-
-				if (file_exists($tpjpg)){
-					#ok
-				} elseif (file_exists($tppng) ) { // have a png, change to jpg
-					$imaget = imagecreatefrompng($tppng);
-					imagejpeg($imaget, $tpjpg, 90);
-					imagedestroy($imaget);
-					logrec ($id,'',"Created a jpeg from existing png");
-				} else { // create a new thumb
-
-					#echo "create_thumb($id,$tsrc,'thumbs')" . BRNL;
-					if (create_thumb($id,$tsrc,'thumbs') ){
-						#ok
-						logrec($id,' ',"New Thumb from source" ,$tsrc);
- 					} else {
- 						$estatus = 'E';
-						$b['errors'] .=  logrec($id, $estatus,"Cannot create thumb jpg",$tsrc);
-
-					}
-				}
-				// one last check
-				if ($estatus != 'E') {
-					if (!file_exists($tpjpg)){
-						$estatus = 'E';
-						$b['errors'] .= logrec($id,$estatus,"No Thumb File exists");
-
-					}
-				}
-			}
 
 
 			// copy old status if nothing changed.
@@ -533,7 +416,7 @@ try {
 	  `type` text COLLATE utf8mb4_unicode_ci,
 	  `thumb_url` text COLLATE utf8mb4_unicode_ci,
 	  `asset_url` text COLLATE utf8mb4_unicode_ci,
-	  `vintage` int(4) NOT NULL DEFAULT '0',
+	  `vintage` int(4) DEFAULT NULL,
 	  `source` mediumtext COLLATE utf8mb4_unicode_ci,
 	  `contributor_id` smallint(4) DEFAULT NULL,
 	  `date_entered` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
@@ -560,25 +443,6 @@ EOT;
 		echo $e-getMessage() . BRNL;
 		exit;
 	}
-}
-function get_generic_thumb($aid,$mime) {
-	// if url is useable to geneatethumb
-
-	$use_mime = array(
-		'application/msword' 	=>	'doc.jpg',
-		'application/pdf' 	=>	'pdf.jpg',
-		'image/gif'	=>	'image.jpg',
-		'image/jpeg'	=>	'image.jpg',
-		'image/png'	=>	'image.jpg',
-		'image/tiff'	=>	'image.jpg',
-		'text/html'	=>	'web.jpg',
-		'video/mp4'	=>	'mp4.jpg',
-		'audio/mp3'	=>	'mp3.jpg',
-		'audio/m4a'	=>	'm4a.jpg',
-		'video/quicktime'	=>	'mov.jpg',
-	);
-	$icon = $use_mime[$mime] ?? 'default.jpg';
-	return $icon;
 }
 
 function show_form() {

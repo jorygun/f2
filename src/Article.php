@@ -68,29 +68,12 @@ EOT;
 
     public function saveArticle($post)
     {
-        try {
-            $adata = $this->checkArticle($post);
-        } catch (Exception $e) {
-            echo "Article data error." . BRNL . $e->getMessage();
-            echo "<button type='button'  onclick = 'history.back();'>back</button>" . BRNL;
-            exit;
-        }
-        $id = $post['id'];
+
+			$adata = $this->checkArticle($post);
+
+			 $id = $post['id'];
         $prep = u\pdoPrep($adata, [], 'id');
    //u\echor ($prep , 'PDO data');
-
-
-     /**
-        $prep = pdoPrep($post_data,$allowed_list,'id');
-
-        $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-           $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
-           $new_id = $pdo->lastInsertId();
-
-        $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
-           $stmt = $pdo->prepare($sql)->execute($prep['data']);
-
-      **/
 
         if ($id == 0) {
             $sql = "INSERT into `articles` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
@@ -250,24 +233,18 @@ EOT;
         return $adata;
     }
 
-	private function getWhereForCat($cat) {
+	private function getWhereForCat($cat,$data=[]) {
 	/* produces WHERE clause based on selected category:
 		if a date, choose pubdate > date
 		if 'recent', chooses pubdate within 2 weeks
 		if 'next' chooses articles assigned to next newsletter (issue = 1)
-		if and integer, chooses article in issue_id = integer
-		if an array, then it's a list of article ids. (from pub[stories])
+		if list or article, chooses selects articles in data array
+
 	*/
 
-		if (u\isInteger($cat)) {
-					//if integer, get this article
-				$where = "n.id = $cat";
-		} elseif (is_array($cat)) {
-			// is list of articles, probably retrieved from issue article list
-					$idlist = u\make_inlist_from_list($cat);
-					$where = "n.id in ($idlist)";
-		} else {
-			switch ($cat) {
+		$catcommand = trim(strtok($cat,' '));
+
+			switch ($catcommand) {
 			  case 'unpub':
 					$where = " n.status not in ('P','X','T')";
 					break;
@@ -277,17 +254,23 @@ EOT;
 				case  'next':
 					$where = "n.use_me > 0 AND n.status not in ('P','X','T')";
 					break;
-
+				case 'article':
+					$where = "n.id = " . $shift($data) ;
+					break;
+				case 'list':
+				case 'issue':
+					$idlist = u\make_inlist_from_list($data);
+					$where = "n.id in ($idlist)";
+					break;
 				default:
-					throw new Exception (
-						"Unrecognized list style $style");
+					throw new Exception ("Unrecognized list style '$catcommand'");
 
 				}
-			}
+
 		return $where;
 	}
-	public function getArticleIds($cat) {
-		$where = $this->getWhereForCat($cat);
+	public function getArticleIds($cat,$data=[]) {
+		$where = $this->getWhereForCat($cat,$data);
 		$sql = "SELECT n.id
 							FROM articles n
 							WHERE $where";
@@ -295,8 +278,8 @@ EOT;
 		return $list;
 	}
 
-	public function getArticleList($cat) {
-		$where = $this->getWhereForCat($cat);
+	public function getArticleList($cat, $data=[]) {
+		$where = $this->getWhereForCat($cat,$data);
 
 	//echo "where: $where" . BRNL;
 		$sql = <<<EOT
@@ -319,8 +302,7 @@ EOT;
             ORDER BY `cat` DESC, section_sequence, topic_name, use_me DESC
             LIMIT 50;
 EOT;
-// echo $sql . BRNL;
-// exit;
+//echo $sql . BRNL;
 		$alist = $this->pdo->query($sql)->fetchAll();;
 
 		return $alist;

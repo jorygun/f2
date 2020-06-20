@@ -25,7 +25,7 @@ table {border:1px solid black; }
 	<h4>Create New Asset</h4>
 	<p><b>ID:</b> <?=$id?>  <b>Status:</b> <?=$status?> <?=$status_name?> <b>Entered:</b> <?=$date_entered?> </p>
 <?php endif;?>
-
+<button type='button' name='SearchHelp' class='help-button' id ='help-button' value='assets' >Help</button><br>
 <form  method="POST" enctype="multipart/form-data"  name="asset_form" id="asset_form">
 
 <input type='hidden' name ='id' value ='<?=$id?>'>

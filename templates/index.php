@@ -84,7 +84,7 @@ echo $read->user_welcome();
 // order and with topics and section info
 $stories = $issue_data['stories']; #list of ids
 
-$artlist = $article->getArticleList($stories);
+$artlist = $article->getArticleList('issue',$stories);
 
  // now display all the articles tied to this issue.
 $last_section = '';

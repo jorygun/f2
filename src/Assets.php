@@ -612,7 +612,7 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 
 
 
-
+// not using GD instead of Imagick because gd can't do pdfs.
 	private function buildImThumbnail ($id,$path,$ttype){
 		 $thumb = $id . '.jpg';
 		 if (!$max_dim = Defs::$thumb_width[$ttype]){

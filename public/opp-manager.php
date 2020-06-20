@@ -70,7 +70,7 @@ EOT;
 		echo "<ul>\n";
 
 		foreach ($opp_list as $id => $opp_row){
-			echo "<li><a href='/show_opp.php?id=$id'>${opp_row['title']}</a> ";
+			echo "<li><a href='/opp-manager.php?id=$id'>${opp_row['title']}</a> ";
 			if ( $_SESSION['level'] > 7
 				or ($_SESSION['login']['user_id'] == $opp_row['user_id']) )
 			{
@@ -88,7 +88,7 @@ EOT;
 
 		$id = $opp_row['id'];
 		echo <<<EOT
-		<h3>Edit/Create Opportunity</h3>
+		<h3>Edit/Create Opportunity <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='opps'>Help</button></h3>
 		(Yellow fields are required. <br>
 		You will not see a new opportunity on your menu until you log in again.)
 		<form method='post'>

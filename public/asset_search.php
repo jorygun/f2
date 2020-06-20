@@ -44,7 +44,7 @@ echo $page->startBody();
 //END START
 
 
-$as = $container['assetsrch'];
+$as = $container['assetsearch'];
 $templates = $container['templates'];
 
 

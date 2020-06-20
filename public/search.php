@@ -30,6 +30,7 @@ if ($login->checkLevel(4)){
 	$admin = $container['membera'];
 	$assets = $container['assets'];
 	$asseta = $container['asseta'];
+	$pdo = $container['pdo'];
 
 if (isset($_POST['search'])){
    if ($_POST['search'] == 'Search DB'){
@@ -45,12 +46,13 @@ if (isset($_POST['search'])){
 	}
 	elseif ($_POST['search']== 'Search Assets'){
 
-		$name = u\safe_like($_POST['name']);
+		$name = $_POST['name'];
 		$alist = $assets->getAssetListByName($name);
+		echo "<h4>Assets with '$name'  </h4>";;
 		echo "<div class='asset-row'>";
 		#u\echor($alist,'assets');
 		foreach ($alist as $id){
-			echo $asseta->getAssetBlock($id,'thumb',false);
+			echo $asseta->getAssetBlock($id,'thumbs',false);
 		}
 		echo "</div><div class='clear'></div>";
 
@@ -59,7 +61,7 @@ if (isset($_POST['search'])){
 	elseif ($_POST['search'] == 'Search News'){
 	   $term = $_POST['news_name']??'';
 	   $back = $_POST['back']??'';
-      echo search_news($term,$back);
+      echo search_news($term,$back,$pdo);
 	}
 	else {echo "Invalid Search";}
 
@@ -78,56 +80,57 @@ echo "Getting profile";
 
 ###########################################
 
-function search_news($term,$back) {
-
-   static $months = array(
-	'01' => 'Jan',
-	'02' => 'Feb',
-	'03' => 'Mar',
-	'04' => 'Apr',
-	'05' => 'May',
-	'06' => 'Jun',
-	'07' => 'Jul',
-	'08' => 'Aug',
-	'09' => 'Sep',
-	'10' => 'Oct',
-	'11' => 'Nov',
-	'12' => 'Dec',
-	);
+function search_news($term,$back,$pdo) {
 
 	$this_year = date('Y');
 	$limit_year = $this_year - $back;
 	$found = 0;
-	if (empty($term)){return "Invalid Search";}
+	if (empty($term)){return "No search term";}
 	echo "Search for '$term' in newsletters published in $limit_year or later<br>";
 
-// Open the news folder to array $files[] (only news-*.htm(l) files)
-#echo file_get_contents(FileDefs::news_index_json);
+// get the urls for the newsletters to search
+	$sql = "SELECT issue,url,DATE_FORMAT(pubdate,'%M %d, %Y') as pdate from pubs WHERE pubdate > '${limit_year}-01-01' ";
 
- $file_list = json_decode(file_get_contents(FileDefs::news_index_json),true);
+ 	$issuest = $pdo->query($sql)->fetchAll();
+
+ // set up search term.  will use grep
+	$sterm = trim($term);
+	//$sterm = preg_quote($term,'/'); #escape regex specials
+	$filesall = [];
+	foreach ($issuest as $issued) {
+		// set vars
+		foreach (['url','pdate','issue'] as $var){
+			$$var = $issued[$var];
+		}
+		echo BR. "$issue: $url" . BRNL;
+
+		$search_path = PROJ_PATH . '/shared' . $url; // file or  folder
+
+/*
+		$files =  exec "grep -Ril $sterm $search"
+			foreach $files as $file {
+				print file info
+				grep -C1 $sterm $file
+				print results
+			}
+		}
+*/
+		$exec = "grep -iRl --include '*.html'  '$sterm' $search_path ";
+		//$exec = "grep -iRl --include '*.html'  'springer' .* ";
+		//grep -iRl --include "*.html" 'springer' .*
+		//echo $exec . BRNL;
+
+		echo $issued['issue'] . ': ' . exec($exec) . BR . BRNL;
+// 		  if ( $files = exec($exec ) ) {
+// 		 	$filesall[$url][] = explode("\n",$files);
+// 		 }
 
 
 
-	$term = trim($term);
-	$sterm = preg_quote($term,'/'); #escape regex specials
-	$sterm = preg_replace('/\s+/','\s+',$sterm); // Dodge LF's in the target string. // Dodge LF's in the target string.
-	$rx = '(.{0,60})\b'.$sterm.'\b(?=(.{0,60}))';
 
-	#echo "looking for /$rx/im <br>";
-   $out = '<ul>';
-	 foreach ($file_list as $dt => $filename) {
-		if (!$filename){continue;}
-
-		$year = substr($dt,0,4);
-		$month = substr($dt,4,2);
-		$month_name = $months[$month];
-		$day = substr($dt,6,2);
-
-		if ($year < $limit_year){continue;}
-
-		$show_date = "$month_name $day, $year";
-
-        $filenames = array($filename); #array of files to look in
+	}
+/*
+      $filenames = array($filename); #array of files to look in
         if (stripos($filename,'index.php')>0){
             $testfile = $filename;
             $filenames[]=$filename;
@@ -192,7 +195,8 @@ function search_news($term,$back) {
 
 
     }
-	$out .= "</ul>";
+    */
+	u\echor($filesall);
 
 	if ($found){return "$found newsletters had '$term' in them.<br> " . $out;}
 	else {return "Nothing Found.<br>";}

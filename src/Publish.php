@@ -281,8 +281,28 @@ EOT;
 
 	}
 
+	public function getArticlesFromIssue($issue) {
+		$sql = "SELECT stories from pubs
+			WHERE issue = '$issue'
+		";
+		$stories = $this->pdo->query($sql)->fetchColumn();
+		$story_list = u\number_range($stories);
+		return $story_list;
 
+	}
 
+	public function getIssueList() {
+		// returns array of issues and dates that have articles listed
+		// in the last year
+		$sql = "SELECT issue,DATE_FORMAT(pubdate,'%Y %M %d') as pubdate
+			FROM pubs
+			WHERE stories is not null AND pubdate > DATE_SUB(NOW(),INTERVAL 1 year)
+			ORDER BY pubdate DESC
+			";
+		$list = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+		//$list = array_flip($list); // swap keys and values
+		return $list;
+	}
 	public function setLastScan(){
 
 		$sql = "UPDATE pubs set last_scan = NOW() WHERE issue = 1";

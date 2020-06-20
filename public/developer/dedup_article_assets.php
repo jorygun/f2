@@ -1,6 +1,7 @@
 <?php
 
 namespace DigitalMx\Flames;
+/* script to remove duplicated entries of an asset in asset_list in articles */
 
 #ini_set('display_errors', 1);
 

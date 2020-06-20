@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+ <meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>AMD Flames Help</title>
+   <link rel='stylesheet' href = '/css/news4.css' />
+
+</head>
+<body>
+<!-- <body onBlur = "hwin.close();"> -->
+<div id='helpbox' class='help'>
+
+<h4>Help on the Article Manager</h4>
+        <p>"Articles" are news stories that are published in the newsletter.  Each article has an id. A newsletter issue consists of a series of article ids, sorted by section and topic.
+
+       </p>
+
+<p>Articles have various attributes, including a title, content, link for more info, and optional graphics.  This tool allows you to view basic information about multiple articles at once.  There are several ways for you to choose the set of articles you will view.  For each article in the viewed list, you may have
+any of several controls, depending on your login status.</p>
+
+
+<p>Also, the lists are grouped into these divisions:</>
+<ul>Publish status (Unpublished or Published)
+	<ul>Management (articles you can manage or not)
+		<ul>Queue status (Queued for next newsletter or not scheduled)
+		</ul>
+	</ul>
+</ul>
+<p>You can select any of several lists of articles to view:</p>
+<dl>
+<dt>All Unpublished <dd>This will display all articles that have been created but not published.  This is the default list when you first open the screen.
+<dt>Recently Published <dd> This shows you all the articles that have been published in the last 2 weeks.  Edits made to these articles will immediately appear in the newsletter.
+<dt>One Issue<dd>You can view all the articles that are any issue.  The selector list shows all the issues for the last year.  Choose one and press the "Go" button.
+<p> You can view or edit the articles shown in the list. To make this more useful, you can also enter any article id to edit, or use article 0 to create a new one.
+<p class='bold'>Article Data</p>
+<table class='bordered row-lines'>
+<tr><td>Section (priority)</td><td>
+	Each article is assigned a "topic" and each topic belongs to a section.  When the newsletter is displayed, Sections are divided by major headings, and then the articles appear below sorted by topic.  It is also possible to prioritize articles within a topic to get them to appear in a different order.  The priorities are 1 for highest, 3 for lowest, 2 is default, (and 0 means don't use - not queued).
+	</td></tr>
+
+	<tr><td>ID</td><td>
+	The unique article id
+	</td></tr>
+
+	<tr><td>Title/Contributor/Source</td><td>
+	The article's title and name of the Flames member who contributed the article.
+	The source is listed too if there is one provided.
+	</td></tr>
+
+	<tr><td>Assets</td><td>
+	This shows you the count of assets on the article (asset_list + asset_main). The thumbnail of the first asset is shown.  If you choose to View the article, then of course you will see all the assets.
+	</td></tr>
+
+<tr><td>Contributor</td><td>
+	Name and id of the person contributing this item.  Usually autoomatically set based on logged in user.  User name must exactly match Flames user name. (id will be set automatically from the name.)
+	</td></tr>
+<tr><td>Manage</td><td>
+<dl>
+<dt>View<dd>Opens the article in a window rendered as it would be in an newsletter,
+including all the assets, and comment and voting tools
+<dt>Edit<dd>Opens the article in the article editor.  You will only see this button if you have editing privileges on the article.  Generally that means you are either admin or you submitted the article.
+<dt>Toggle Use<dd>This is a tool for the newsletter editor to select and deselect articles to appear in the next newsletter.
+</dl>
+</td></tr>
+
+</table>
+
+</div>
+</body></html>

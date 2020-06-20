@@ -57,7 +57,7 @@ class Opportunities
 		foreach ($this->opp_list as $id => $opp_row){
 			$line = $button = '';
 
-			$list[] = "<a href='/show_opp.php?id=$id'>${opp_row['title']}</a> ";
+			$list[] = "<a href='/opp-manager.php?id=$id'>${opp_row['title']}</a> ";
 
 			#u\echor($_SESSION,'session'); exit;
 
@@ -108,7 +108,7 @@ class Opportunities
 	}
 
 	public function opp_edit_button($id) {
-		$buttonlink = "/show_opp.php?id=$id&edit=true";
+		$buttonlink = "/opp-manager.php?id=$id&edit=true";
 		$bname = ($id==0)? 'New Opportunity' : 'Edit';
 		$button = "<button type='button' "
 				.	"onClick=window.open('$buttonlink')>$bname</button>\n";

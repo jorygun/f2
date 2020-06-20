@@ -34,7 +34,7 @@ $container['assetsearch'] = function ($c) {
 
 $container['templates'] = function ($c) {
 	$pl = new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
-	$pl->addFolder('help', REPO_PATH . '/templates/help');
+	//$pl->addFolder('help', REPO_PATH . '/templates/help');
     return $pl;
 };
 

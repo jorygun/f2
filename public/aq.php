@@ -29,19 +29,17 @@ if (isset($_POST['submit'])){
 <head>
 <style>
 	table {border:1px solid black; border-collapse:collapse; }
-	.assettable td {size:1em;}
 
-	.assettable {width:550px;}
-	.required {background:#FFC;}
 	body {width:800px;}
-
 </style>
+<link rel='stylesheet' href='/css/news4.css'>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
   <script src="http://malsup.github.com/jquery.form.js"></script>
+<script src='/js/help.js'></script>
 <script>
 
         // wait for the DOM to be loaded
-        $( (function() {
+        $( function() {
             // bind 'myForm' and provide a simple callback function
             $('#asset_form').ajaxForm(function(responseText, statusText, xhr, $form) {
             	if(statusText != 'success') {alert ('Failed'); return false;}
@@ -68,7 +66,7 @@ if (isset($_POST['submit'])){
 </head>
 <body>
 <?=$idmsg?>
-<h4>Create New Asset</h4>
+<h4>Quick Asset <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='qassets' >Help</button></h4>
 
 <form  method="POST" enctype="multipart/form-data"  name="asset_form" id="asset_form" action = '/aq.php'>
 
@@ -77,7 +75,7 @@ if (isset($_POST['submit'])){
 <input type='hidden' name='contributor_id' value = '<?=$contributor_id?>' >
 <input type='hidden' name='contributor' value = '' >
 
-<table class='assettable'>
+<table class='row-lines'>
 <tr><td>Asset (reqd)</td><td>
 Upload file <input type="file" name="uasset"> <br>
     or URL: <input type='text' name='asset_url' size=40>
@@ -87,9 +85,10 @@ Upload file <input type="file" name="uasset"> <br>
 	<td><input type='text' size='40' name='title' id='title' class='required'></td></tr>
 <tr><td>Caption</td>
 	<td><textarea  name='caption' id='caption' rows=2 cols=40></textarea></td></tr>
-<tr><td>Vintage</td>
-	<td><input type='text' name='vintage' id='vintage' size="6" value='<?=$vintage?>'> </td></tr>
-<tr><td>Attribution </td><td><input type='text' name='source' id='source' size="30"> </td></tr>
+<tr><td>Source and Year</td>
+	<td><input type='text' name='source' id='source' size="30"><br>
+	Est Year: <input type='text' name='vintage' id='vintage' size="6" pattern='^\d{4}$' value='<?=$vintage?>'>
+	</td></tr>
 
 
 </table>
