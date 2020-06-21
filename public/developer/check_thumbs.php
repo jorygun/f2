@@ -177,7 +177,7 @@ if (!is_object($assets)) die ("No asset class");
 					echo "Creating image for id $id from remote url $tsrc";
 					$simage = null;
 					try {
-						$sizem = u\get_size_from_curl($tsrc) / 1000000; #MB
+						$sizem = u\get_info_from_curl($tsrc)['size'] / 1000000; #MB
 						if ($sizem > 32) { //MB
 							throw new Exception ("Remote File too large for GD: " . (int) $sizem . 'MB');
 						}
@@ -414,13 +414,8 @@ function source_exists($src, $check_yt=false) {
 	}
 
 	if ($track)  echo "checking source $src.. " ;
-	if (substr($src,0,1) == '/'){
+	if ($path = u\is_local($src)) {
 		if ($track)  echo "is local...";
-			$path = SITE_PATH . $src;
-			if (! file_exists($path)){
-				if ($track)  echo "no file..". BRNL;;
-				return false;
-			}
 			$mime = $mimeinfo->file($path);
 			if ($track)  echo "file exists $mime." . BRNL;
 			return $mime;
@@ -431,8 +426,8 @@ function source_exists($src, $check_yt=false) {
 		if ($check_yt) {
 			$ytapi = "https://www.googleapis.com/youtube/v3/videos?id=$ytid&part=status&key=AIzaSyAU30eOK0Xbqe4Yj0OMG9fUj3A9C_K_edU";
 
-			 try {
-				$result = u\get_url_data($ytapi);
+			 try {  // get the thumb from youtbue
+				$result = u\get_url($ytapi);
 				$content = (array) json_decode($result['content']); // class ojbect
 				//u\echor($content);
 				// no entry for items seems to mean the video has been removed.
@@ -457,13 +452,12 @@ function source_exists($src, $check_yt=false) {
 		return 'video/x-youtube';
 
 
-	} elseif (u\is_valid_url($src) ) {
-
+	} elseif (! $mime = u\is_http($src) ) {
+		return false;
+	}
 		if ($track)  echo "is url... ";
 
-		if (!$mime = u\get_mime_from_curl($src) ) {
-			return false;
-		}
+
 		foreach (array_keys(Defs::$mime_groups) as $m) {
 			if (strpos($mime,$m) !== false) {
 				$mime = $m;

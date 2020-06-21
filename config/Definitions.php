@@ -132,6 +132,9 @@ public static $test_emails = array(
 
 	 public static $archival_tags = "ACDEFIMOSWY";
 
+//id to use youtube api
+public static $ytapikey = 'AIzaSyAU30eOK0Xbqe4Yj0OMG9fUj3A9C_K_edU';
+
 
 public static $gallery_status = array(
     'G' => 'Good.  Publish',

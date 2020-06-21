@@ -19,6 +19,7 @@ ini_set('display_errors',1);
 	use digitalmx\flames\Assets;
 	#use digitalmx\flames\DocPage;
 
+$Assets = $container['assets'];
 
 	$page_title = 'Asset Fixer';
 	$page_options = [];
@@ -38,34 +39,31 @@ ini_set('display_errors',1);
 $adb = array(
 	'id',	'status',	'title',	'caption',	'keywords',	'mime',	'type',	'url',	'thumb_file',	'link',	'vintage',	'source',	'contributor',	'contributor_id',	'date_entered',	'mod_date',	'height',	'width',	'sizekb',	'notes',	'has_thumb',	'has_gallery',	'has_toon',	'review_ts',	'skip_ts',	'first_use_date',	'first_use_in',	'tags',	'reviews',	'up_votes',	'down_votes',	'votes',	'comment_count',	'gallery_items',	'user_info',	'temptest',
 	);
-$bsame = array(
-	'id',	'keywords','type','vintage','source','contributor_id','date_entered',			'sizekb','notes',	'first_use_date',	'first_use_in','tags', 'title',	'caption',	'mime','type',
+$bnew = array (
+	'astatus' => 'N',
+	'thumb_url' =>'',
+	'asset_url' => '',
+	'errors' => '',
+
+	'mime'=>'',
+	'type'=>'Other',
+	);
+
+$bsame = array( // 8
+	'id',	'keywords','vintage','source','notes','first_use_in','tags', 'mime',
+
+	);
+$bchanged = array ( //10
+	'title','caption','astatus','sizekb','date_entered','contributor_id',
+	'first_use_date','asset_url','type','thumb_url'
+
+$bauto = array ( //2
+	'date_modified', 'errors'
 	);
 
 
-
-$removed = array (
-'contributor','height',	'width','has_thumb',	'has_gallery',	'has_toon',
-'reviews',	'up_votes',	'down_votes',	'votes',	'comment_count',	'gallery_items',	'user_info',	'temptest','url', 'link','status','mod_date',
-'review_ts',	'skip_ts','thumb_file'
-);
-// initialize new or altered fields
-$bnew = array (
-'astatus' => 'N',
-'thumb_url' =>'',
-'asset_url' => '',
-'errors' => '',
-
-'mime'=>'',
-'type'=>'Other',
-);
-
 $asset_db = 'live_assets'; #local copy of product assets table
 
-// leave out date modified ; they are automatic
-$bauto = array();
-
-$bvars = array_merge($bsame,array_keys($bnew));
 $sqli = '';
 
 $logfile = SITE_PATH . '/log.asset_fixer.log';
@@ -149,6 +147,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 
 
 
+
 		while ($row = $stmtb->fetch() ){
 			++$rc;
 			$b = $bnew; // new data set
@@ -172,48 +171,21 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 			if (in_array($row['status'],['X','T','D'])){continue;}
 
 			// make new array 'b'
+			$b = translate_fields($row,$bnew,$bsame);
 
-			foreach ($bsame as $v){
-				$b[$v] = $row[$v];
+			try{
+				$c = $Assets->checkAssetData($b);
+
+			} catch (Exception $e) {
+				echo "Error in asset data. Asset not saved." . BRNL;
+				echo $e->getMessage();
+				exit;
+			}
+
 			}
 
 
-
-			$b['title'] = stripslashes($row['title']) ?: 'Untitled';
-			$b['caption'] = stripslashes($row['caption']);
-			if ( $b['title'] == $b['caption']) {$b['caption'] = '';}
-			$b['astatus'] = '';
-
-			//develop estatus during scan for errors and warnings.
-			// at the end set astataus = estatus || original status
-			// this preserves the old status settings.
-			// status at the end.
-			$b['vintage'] = $row['vintage'] ;
-			$b['sizekb'] = $row['sizekb'] ?: 0;
-
-			$b['date_entered'] =  $row['date_entered'] ?: date('Y-m-d');
-			$b['contributor_id'] = $row['contributor_id'] ?: 13146; // flames admin
-
-			$fud = $row['first_use_date'];
-			if (empty($fud) || $fud == '0000-00-00') {
-				$fud = $null;
-			}
-			$b['first_use_date'] = $fud;
-
-			if ($ostatus == 'E'){ // existing status field: Error
-				// just copy stuff over with the E status
-				$b['mime'] = $row['mime'];
-				$b['asset_url'] = $row['link'];
-				$b['type'] =  Defs::getMimeGroup($mime) ?: 'Other';
-				$thumburl = $row['url'];
-				if ( empty($thumburl) || $thumburl == $row['link'] ) {
-					$thumburl = '';  // blank for now.  will gt written back to the b array.
-				}
-				$b['thumb_url'] = $thumburl;
-				$b['astatus'] = 'E';
-
-			} else { #do everything ellse
-
+// do checks in assets.php
 			//check link
 			if (empty($src = $row['link'])) {
 				$estatus = 'E';
@@ -229,12 +201,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 				}
 			}
 
-			if ($estatus != 'E') {
-			// fix relocated sources
-				$src = preg_replace('|^/reunions|','/assets/reunions',$src);
-				$src = preg_replace('|^/newsp/SalesConf|','/assets/sales_conferences',$src);
-				$src = preg_replace('|^/sales_conferences|','/assets/sales_conferences',$src);
-			}
+
 
 
 			if ($estatus != 'E') {
@@ -244,10 +211,7 @@ function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
 
 				}
 				$b['thumb_url'] = $thumburl;
-				$b['mime'] = $mime;
-				$b['asset_url'] = $src;
-				$type =  Defs::getMimeGroup($mime) ?: 'Other';
-				$b['type'] = $type;
+
 			}
 
 
@@ -303,7 +267,7 @@ function source_exists($src, $check_yt=false) {
 			$ytapi = "https://www.googleapis.com/youtube/v3/videos?id=$ytid&part=status&key=AIzaSyAU30eOK0Xbqe4Yj0OMG9fUj3A9C_K_edU";
 
 			 try {
-				$result = u\get_url_data($ytapi);
+				$result = u\get_url($ytapi);
 				$content = (array) json_decode($result['content']); // class ojbect
 				//u\echor($content);
 				// no entry for items seems to mean the video has been removed.
@@ -328,11 +292,13 @@ function source_exists($src, $check_yt=false) {
 		return 'video/x-youtube';
 
 
-	} elseif (u\is_valid_url($src) ) {
+	} elseif (!$mime = u\is_vhttp ($src) ) {
+		return false;
+	}
 
 		if ($track)  echo "is url... ";
 
-		if (!$mime = u\get_mime_from_curl($src) ) {
+		if (!$mime = u\get_info_from_curl($src)['mime'] ) {
 			return false;
 		}
 		foreach (array_keys(Defs::$mime_groups) as $m) {
@@ -345,6 +311,57 @@ function source_exists($src, $check_yt=false) {
 		} else { return false;}
 }
 
+function translate_fields($a,$bnew,$bsame) {
+	// $a is existing assets data, returns new asset2 data
+
+	// make new array 'b'
+	$b = $bnew;
+
+	foreach ($bsame as $v){
+		$b[$v] = $a[$v];
+	}
+	$ostatus = $a['status']; #old status
+
+	$b['title'] = stripslashes($a['title']) ?: 'Untitled';
+	$b['caption'] = stripslashes($a['caption']);
+	if ( $b['title'] == $b['caption']) {$b['caption'] = '';}
+	$b['astatus'] = $ostatus;
+
+	//develop estatus during scan for errors and warnings.
+	// at the end set astataus = estatus || original status
+	// this preserves the old status settings.
+	// status at the end.
+
+	$b['sizekb'] = $a['sizekb'] ?: 0;
+
+	$b['date_entered'] =  $row['date_entered'] ?: date('Y-m-d');
+	$b['contributor_id'] = $row['contributor_id'] ?: Defs::$editor_id;
+
+	$fud = $row['first_use_date'];
+	if (empty($fud) || $fud == '0000-00-00') {
+		$fud = $null;
+	}
+	$b['first_use_date'] = $fud;
+
+
+
+	$b['type'] =  Defs::getMimeGroup($mime) ?: 'Other';
+	$thumburl = $a['url'];
+	if ( empty($thumburl) || $thumburl == $a['link'] ) {
+		$thumburl = '';  // blank for now.  will gt written back to the b array.
+	}
+	$b['thumb_url'] = $thumburl;
+	$b['astatus'] = 'E';
+
+
+	$src = $a['link'];
+		$src = preg_replace('|^/reunions|','/assets/reunions',$src);
+		$src = preg_replace('|^/newsp/SalesConf|','/assets/sales_conferences',$src);
+		$src = preg_replace('|^/sales_conferences|','/assets/sales_conferences',$src);
+	$b['asset_url'] = $src;
+
+	return $b;
+}
 
 
 function record_result($b) {

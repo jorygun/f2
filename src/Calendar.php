@@ -40,6 +40,9 @@ class Calendar {
     	'location' => '',
     	'contact' => '',
     	'info' => '',
+    	'contributor_id' => '',
+    	'map_link' => '',
+    	'link' => '',
 
     	);
 
@@ -57,13 +60,19 @@ class Calendar {
 		$spec = [];
 
 		if ($select != 'new'){
-			$whereid =  ($select) ? " AND id = $select " : '';
-			$sql = "SELECT *,
-				DATE_FORMAT(datetime,'%M %d, %Y') as edate,
-				DATE_FORMAT(datetime,'%H:%i') as etime
-				FROM `events` WHERE `datetime` >= NOW() $whereid ORDER BY datetime" ;
-		echo $sql . BRNL;
-    		$items = $this->pdo -> query($sql)->fetchAll();
+			$whereid =  ($select) ? " AND e.id = $select " : '';
+			$sql = "SELECT e.*,
+				DATE_FORMAT(e.datetime,'%M %d, %Y') as edate,
+				DATE_FORMAT(e.datetime,'%H:%i') as etime,
+				m.username,m.user_email
+				FROM `events` e
+				LEFT JOIN `members_f2` m  on m.user_id = e.contributor_id
+				WHERE e.datetime >= NOW() $whereid
+				ORDER BY datetime" ;
+	//	echo $sql . BRNL;
+    		if (!$items = $this->pdo -> query($sql)->fetchAll() ) {
+    			return $citems;
+    		}
 
 			foreach ($items as $row){
 				$id = $row['id'];
@@ -72,14 +81,18 @@ class Calendar {
 				}
 				//$spec['edit_link'] = "<a href='/calendar.php?edit=${row['id']}'>Edit</a>";
 				$spec['edit_link'] = u\makeButton('loc','Edit',"/calendar.php?edit=$id");
+				$spec['loc_link'] = ($row['map_link']) ?
+					"<a href='${row['map_link']}>'>Map</a>" : '' ;
 
+				$spec['linked_contact'] = u\makeLinks($spec['contact']);
+				$spec['linked_info'] = u\makeLinks($spec['info']);
 				$citems[] = $spec;
 			}
 
 		} else {
 			$citems[] = self::$empty_item;
 		}
-//	u\echor ($citems);
+//u\echor ($citems);
 
     	return $citems;
 
@@ -89,62 +102,62 @@ class Calendar {
 
 
 
-public function saveEvent($post){
+	public function saveEvent($post){
 
-	//u\echor($post, 'POST') . BRNL;
+		//u\echor($post, 'POST') . BRNL;
 
-	if (! $ctime = strtotime($post['datetime']) ){
-		echo "<script>
-			alert('Date ${post['datetime']} not recognized');
-			history.back();
-			</script>
-		";
-	}
-	if ($ctime < time()){
-		echo "<script>
-			alert('You cannot enter an event for a past date');
-			history.back();
-			</script>
-		";
-	}
-	$post['datetime'] =  date('Y-m-d H:i', $ctime);
+		if (! $ctime = strtotime($post['datetime']) ){
+			echo "<script>
+				alert('Date ${post['datetime']} not recognized');
+				history.back();
+				</script>
+			";
+		}
+		if ($ctime < time()){
+			echo "<script>
+				alert('You cannot enter an event for a past date');
+				history.back();
+				</script>
+			";
+		}
+		$post['datetime'] =  date('Y-m-d H:i', $ctime);
 
-	$id = $post['id'];
-	foreach ($post as $var => $val) {
-		$despec[$var] = $val;
-	}
+		$id = $post['id'];
+		foreach ($post as $var => $val) {
+			$despec[$var] = $val;
+		}
 
+		$prep = u\prepPDO($despec,array_keys(self::$empty_item),'id');
+		 if ($despec['id'] == 0){ #new entry
 
+			$sql = "INSERT into `events` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} );";
+			//u\echor($prep,$sql);
+			 $stmt = $this->pdo->prepare($sql);
 
+			 $stmt->execute($prep['idata']);
+			 $new_id = $this->pdo->lastInsertId();
 
-    if ($post['id'] == 0){ #new entry
-    	$prep = u\prepPDO('I',$despec,array_keys(self::$empty_item));
-    	$sql = "INSERT into `events` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} );";
-    	//u\echor($prep,$sql);
-       $stmt = $this->pdo->prepare($sql);
+		} else { #update
+			$prep = u\prepPDO($despec,array_keys(self::$empty_item),'id');
+			$sql = "UPDATE `events` SET ${prep['uset']} WHERE id = ${prep['ukey']};";
+			//	u\echor($prep,$sql);
+			 $stmt = $this->pdo->prepare($sql);
 
-       $stmt->execute($prep['data']);
-       $new_id = $this->pdo->lastInsertId();
-
-   } else { #update
-   	$prep = u\prepPDO('U',$despec,array_keys(self::$empty_item),'id');
-  	 	$sql = "UPDATE `events` SET ${prep['uset']} WHERE id = :pdokey;";
-      //	u\echor($prep,$sql);
-       $stmt = $this->pdo->prepare($sql);
-
-       $stmt->execute($prep['data']);
-		$new_id = $id;
-	}
-	return $new_id;
+			 $stmt->execute($prep['udata']);
+			$new_id = $id;
+		}
+		return $new_id;
 }
 
-public function display_calendar() {
-	$data['citems'] = $this->getItems();
-	$data['credential'] = false;
+	public function display_calendar() {
+		$data['citems'] = $this->getItems();
+		$data['credential'] = false;
 
-	return $container['templates']->render('calendar',$data);
+		return $container['templates']->render('calendar',$data);
+	}
+
 }
-
+//EOF;
 
 
 

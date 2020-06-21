@@ -64,7 +64,7 @@ class Assets {
     public $mimeinfo;
 
 
-    private $member;
+    private $Member;
 
 
 
@@ -125,7 +125,7 @@ class Assets {
     public function __construct($container){
         $this->pdo = $container['pdo'];
         $this->mimeinfo  = new \finfo(FILEINFO_MIME_TYPE);
-			$this->member = $container['member'];
+			$this->Member = $container['member'];
 
     }
 
@@ -148,7 +148,7 @@ class Assets {
 		return true;
 	}
 
-	private function checkAssetData($adata) {
+	public function checkAssetData($adata) {
 	// id
 // 	asset_url  (nee link) (asset source url)
 // 	thumb_url (nee url) (thumb source url)
@@ -179,32 +179,17 @@ class Assets {
 				break;
 
 			case 'asset_url':
-				$srcok = false;
 				if (empty($adata['asset_url'])){
 					throw new Exception ("No source for asset specified");
 				}
-
-				if (u\is_local($val) ){
-					if (file_exists(SITE_PATH . $val) ) $srcok = true;
-				}
-				elseif (u\is_http ($val) ) {
-					if ( u\url_exists ($val) ) $srcok = true;
-				}
-				if (! $srcok){
+				if (! u\url_exists ($val) ) {
 					throw new Exception ("Asset source does not exist." . $val) ;
 				}
 				break;
 			case 'thumb_url':
 				if(empty($val)) break;
-				$srcok = false;
-				if (u\is_local($val) ){
-					if (file_exists(SITE_PATH . $val) ) $srcok = true;
-				}
-				elseif (u\is_http ($val) ) {
-					//if ( u\url_exists ($val) ) $srcok = true;
-					throw new Exception ("Thumb url must be a local file.");
-				}
-				if (! $srcok){
+				// thumb must be either local or a youtube
+				if (! u\is_local($val) && ! is_youtube($val) ){
 					throw new Exception ("Thumb source not useable " . $val) ;
 				}
 				break;
@@ -228,15 +213,15 @@ class Assets {
 				break;
 
 			case 'contributor_id' :
-				if (! is_integer ( (int)$val)){ #0 is allowed
-					throw new Exception ("No contributor id");
+				if (! $this->Member->getMemberBasic($val) ){ #0 is allowed
+					throw new Exception ("No user found for contributor id " . $val);
 				}
 				break;
 
 			case 'needs':
-				if (empty($val)) $val = [];
+				if (empty($val)) break;
 				if (! is_array($val) ){
-					throw new Exception ("Thumb requested not in a list.");
+					throw new Exception ("Thumb requested not in a string. " . typeof($val) );
 				}
 				foreach ($val as $ttype) {
 					if (! in_array($ttype, Defs::getThumbTypes() ) ) {
@@ -246,16 +231,16 @@ class Assets {
 				break;
 
 			case 'tags':
-				if (!empty($val)){
-					foreach (str_split($val) as $tag){
-						if (! in_array($tag,array_keys(Defs::$asset_tags)))
-						throw new Exception (__LINE__ . " Unknown asset tag $tag");
-					}
+				if (empty($val)) break;
+				foreach (str_split($val) as $tag){
+					if (! in_array($tag,array_keys(Defs::$asset_tags)))
+					throw new Exception (__LINE__ . " Unknown asset tag $tag");
 				}
+
 				break;
 			case 'mime':
 				if (!in_array($val,Defs::getAcceptedMime() ) )
-			 		throw new Exception ("Source type $mime is not accdptable");
+			 		throw new Exception ("Source type $mime is not acceptable: " . $val);
 			 	break;
 
 			default: #do nothing
@@ -299,7 +284,8 @@ class Assets {
 			echo $e->getMessage();
 			exit;
 		}
-		if ($path = u\is_local($adata['asset_url']) ) {
+		if (u\is_local($adata['asset_url']) ) {
+			$path = SITE_PATH . $adata['asset_url'];
 			$size = filesize($path);
 			$adata['sizekb'] = (int)($size/1000);
 			// if ($adata['type'] == 'Image'){
@@ -353,6 +339,8 @@ class Assets {
 
 			id is asset id
 			needs is an array of needed thumb types ['thumb','gallery']
+// try with id,src,mime,needs
+src is thumb_url || asset_url
 
 		If the asset has thumb_url, then that is the source
 		of the thumb file.  It is generated from the source
@@ -384,7 +372,7 @@ class Assets {
 				$tsource = $aurl;
 		}
 		// is the asset a hyoutube video?
-		if (! $tsource && $ytid = u\youtube_id_from_url($adata['asset_url'] ) ){
+		if (! $tsource && $ytid = u\youtube_id_from_url($aurl) ){
 			$yturl = "http://img.youtube.com/vi/$ytid/mqdefault.jpg";
 			//echo "yturl $yturl". BRNL;exit;
 			// is http://youtube.com/...../xx.jpg
@@ -397,8 +385,8 @@ class Assets {
 		if ($tsource && ! file_exists(SITE_PATH . $tsource) ) {
 			throw new ResourceException ("Thumb source file $tsource does not exist.");
 		}
-		if ( (!$tsource) && u\is_http($aurl) && u\url_exists($aurl) ){
-				$tsource = $adata['asset_url'];
+		if ( (!$tsource) && u\is_http($aurl)  ){
+				$tsource = $aurl;
 				// but will use icons for the thumb
 		}
 			// if ($temp_source = $this->getTempSource($id,$tsource) ){
@@ -560,7 +548,8 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 	 echo "Starting thumb $ttype on $id, asset mime $amime, from $turl. " .BRNL;
 	 $thumb = "${id}.jpg";
 
-	$tpath = u\is_local($turl);
+	if (u\is_local($turl) ){
+		$tpath = SITE_PATH . $turl;
 
 
 		switch ($amime) {
@@ -607,7 +596,7 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 		echo " /$ttype/$thumb created." . BRNL;
 		return true;
 	}
-
+}
 
 
 
@@ -648,14 +637,14 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 	 	echo "Getting Mimesize for $url ... ";
 		if (! u\url_exists ($url)) die ("url cannot be located");
 
-		if ($path = u\is_local($url)){
-			$mime = $this->mimeinfo->file($path);
+		if ($mime = u\is_local($url)){
+			$path = SITE_PATH . $url;
 			$size = filesize($path) ?? 0;
 
 		 }
 		 else {
 
-			$mime = u\get_mime_from_curl($url);
+			$mime = u\get_info_from_curl($url)['mime'];
 			$size = 0;
 
 		 }

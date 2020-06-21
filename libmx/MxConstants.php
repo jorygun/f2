@@ -11,6 +11,11 @@ namespace DigitalMx;
 				possibly followed by a ? and then any number of \w.=&-():% or #
 			*/
 
+	defined ('EMAIL_REGEX') or
+			define ('EMAIL_REGEX', '/([\w\-\.]+\@[\w\-\.]+)/' );
+			/*flakey but will work for most addresses
+			*/
+
 	defined ('BRNL') or
 			define ('BRNL',"<br>\n");
 	defined ('CRLF') or
@@ -21,4 +26,4 @@ namespace DigitalMx;
 			define ('NL',"\n");
 	defined ('LF') or
 			define ('LF', "\n");
-		
+

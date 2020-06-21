@@ -42,9 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 	exit;
 }
 
-
 $data['citems'] = $Calendar->getItems();
-$data['credential'] = $_SESSION['level'] > 6 ;
+
 //u\echor($data);
 
 echo $Templates->render('calendar',$data);

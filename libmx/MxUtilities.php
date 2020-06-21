@@ -105,6 +105,10 @@ function get_youtube_id($url) {
 	return youtube_id_from_url($url);
 }
 function youtube_id_from_url($url) {
+	return is_youtube($url);
+}
+
+function is_youtube($url) {
 
              $pattern =
 				'%#match any youtube url
@@ -135,7 +139,7 @@ function youtube_id_from_url($url) {
             }
  }
 
- function get_url_data($url) {
+ function get_url($url) {
      $options = array(
         CURLOPT_RETURNTRANSFER => true,     // return web page
         CURLOPT_HEADER         => false,    // don't return headers
@@ -528,8 +532,8 @@ function pdoPrep($data,$include=[], $key=''){
         return $prepared;
     }
 
-function prepPDO($type,$datain,$include=[], $keyfield=''){
-
+function prepPDO($datain,$include=[], $keyfield=''){
+$type = 'UI'; // do both
  /**
   *   Rewrite of pdoPrep
   *  to prepare fields for a pdo execute.
@@ -555,16 +559,17 @@ function prepPDO($type,$datain,$include=[], $keyfield=''){
 
    	if type == IU, (insert ON DUP KEY update) then the data includes additional
    	rows :uvar = val for use in the update portion (cannot re-use names )
+
 /**
+including key field removes that field from udata and adds value to ukey
 PREP:
-   $prep = u\prepPDO ($type, $post_data,allowed_list,'id');
-   	type = U | I | IU: update, innsert, insert on dup uset
+   $prep = u\prepPDO ($post_data,allowed_list,'key_field_name');
 
 INSERT:
 		$sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']})";
 
 UPDATE:
-		$sql = "UPDATE `Table` SET ${prep['uset']} WHERE id = :pdokey ;";
+		$sql = "UPDATE `Table` SET ${prep['uset']} WHERE id = $prep['ukey'];";
 
 INSERT ON DUP UPDATE:
    	$sql = INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} )
@@ -574,7 +579,7 @@ INSERT ON DUP UPDATE:
 THEN:
        $sth = $pdo->prepare($sql);
 THEN:
-		$sth->execute($prep['data']);
+		$sth->execute($prep['idata']); // for insert, or udata for update or merge for both
        $new_id = $pdo->lastInsertId();
 **/
 
@@ -597,20 +602,20 @@ THEN:
   		if (!empty($keyfield) && empty($datain[$keyfield]) ){
   			throw new Exception ("prepPDO update missing key field in data");
   		}
-  		if (strpos($type,'I') !== false  && empty($keyfield)) { // is insert on DUP
-  				throw new Exception ("prepPDO has UI transaction with no key field defined");
-  		}
+  		// if (strpos($type,'I') !== false  && empty($keyfield)) { // is insert on DUP
+//   				throw new Exception ("prepPDO has UI transaction with no key field defined");
+//   		}
 
   	}
 
 	$data = $if_array = $ival_array = $uset_array = array();
-	$upset = $pdokey = $ifields = $ivalues =  '';
+	$uset = $pdokey = $ifields = $ivalues =  $ukey = '';
 
 
    #transfer fields from datain to dataout
 
 	foreach ($datain as $var => $val){
-		echo "$var - $val" . BRNL;
+		//echo "$var - $val" . BRNL;
    	 // ignore any fields not listed in valid fields
 		if ( !empty($include) and ! in_array($var,$include) ){ continue; }
 
@@ -619,25 +624,27 @@ THEN:
 		if (strpos($type,'I') !== false) { // insert needed
      		$if_array[] = $var;
      		$ival_array[] = $ivar;
-     		$data[$ivar] = $val;
+     		$idata[$ivar] = $val;
      	}
      	if (strpos($type,'U') !== false) {
      		if ($var == $keyfield) {
      			// remove from data, but set $key
-     			$data[':pdokey'] = $val;
+     			$ukey = $val;
      		} else {
      			$uset_array[] = "$var = $uvar";
-				$data[$uvar] = $val;
+				$udata[$uvar] = $val;
 			}
 
       }
 
 	}
 
-	  $prepared['data'] = $data; #all data for insert
+	  $prepared['idata'] = $idata; #all data for insert
+	  $prepared['udata'] = $udata; #all data for insert
+
 	  $prepared['ifields'] = implode(', ',$if_array);
 	  $prepared['ivalues'] = implode(', ',$ival_array);
-
+		$prepared['ukey'] = $ukey;
 	  $prepared['uset'] = implode(', ',$uset_array);
 
 	  return $prepared;
@@ -724,22 +731,28 @@ function buildCheckBoxSet(
 }
 
 function is_local ($url) {
-// url may be local or remote
-// if remote, returns false
-// if local and file exists, returns path to file
-// else returns ''
+// returns false if not a local format
+// returns '' if local, but no such file
+// if local and file exists, returns mime type
+	static $finfo;
 
 	if (substr($url,0,1) != '/') return false;
 	$path = SITE_PATH . $url;
 	if (! file_exists($path)) return '';
-	return $path;
+	$mime = mime_content_type($path);
+	return $mime;
+
 }
+
+
 function is_http ($url) {
-	if (substr($url,0,4) == 'http') {
-		return is_valid_url($url);
-	}
-	return false;
+	if (!substr($url,0,4) == 'http') {return false;}
+	// valid url an it exists.  returns mime type
+	 if(filter_var($url, FILTER_VALIDATE_URL) == FALSE)  {return false;}
+	 if (! $mime = get_info_from_curl($url)['mime']) { return '';}
+ 	return $mime;
 }
+
 function is_valid_url($url) {
 	if(filter_var($url, FILTER_VALIDATE_URL) !== FALSE) return true;
 	return false;
@@ -834,7 +847,7 @@ function makeLinks($input) {
 }
 function make_links($input){
     // replaces http:... with a link
-    // replaces [asset nn] with a thumbnail to the asset item.
+   // replaces emailaddr with link
 
 
     // first find urls
@@ -845,8 +858,18 @@ function make_links($input){
            $input = str_replace($u,"<a href='$u' target='_blank' title='$u'>$u</a>",$input); //<a href='$u' target='_blank' title='$u'>$u</a>"
         }
     }
-    #also look for asset references
-    $input = link_assets($input);
+    #also look for emails
+
+    $n = preg_match_all(EMAIL_REGEX,$input,$m);
+    #echo "input" . " n=$n";
+    	if ($n){
+        $urls = array_unique($m[0]);
+        foreach ($urls as $u){
+            $u = trim($u);
+           $input = str_replace($u,"<a href='mailto:$u'>$u</a>",$input); //<a href='$u' target='_blank' title='$u'>$u</a>"
+        }
+    }
+
 
     return $input;
 }
@@ -937,73 +960,62 @@ function days_ago ($date_str = '1') {
 
 function url_exists($url)
 	{
-	if ($path = is_local($url)) return file_exists($path);
-	elseif (is_valid_url($url) && get_mime_from_curl($url) ) return true;
-		// use curl instead of get headers to avoid timeout problems
-
-   return false;
+	return get_mime_from_url($url);
 	}
 
 function get_mime_from_url($url)
+	//returns mime type for all 3 sources (local, youtube, web) ,
+	// or false if invalid url
 	{
-	$finfo = new \finfo(FILEINFO_MIME_TYPE);
-	$mime = '';
+	$mime = false;
 
-	if ($path=is_local($url) ){
-		 if (! file_exists($path)){
-		 	throw new Exception ( "Tyring to get mime from non-existent file $path");
-		 	return false;
-		 }
-		 $mime = $finfo->file($path);
-	} elseif (!empty($vid = get_youtube_id($url) ) ){
-		$mime = 'video/x-youtube';
-	} elseif (is_http($url) ){
-		if (!$mime = get_mime_from_curl($url) ){
-			throw new Exception ( "Trying to get mime from non-existent url $url");
-			return false;
-		}
+	if (!$mime) {
+		$mime=is_local($url);
+
+	} elseif (!$mime) {
+		$vid = get_youtube_id($url);
+		if ($vid) {$mime = 'video/x-youtube';}
+	} elseif (!$mime) {
+		$mime = is_http($url) ;
+		// ok
 	}
 
 	return $mime;
-	}
-
-
-
-function get_mime_from_curl ($url) {
-	return get_mimesize_from_curl($url,'mime');
 }
-function get_size_from_curl($url) {
-	return get_mimesize_from_curl ($url,'size');
-}
-function get_mimesize_from_curl($url,$param)
-	{
+
+
+
+function get_info_from_curl ($url) {
+	#reutrns array of info about this url
 	// also checks if url exists
 	 $options = array(
         CURLOPT_RETURNTRANSFER => true,     // return web page
-        CURLOPT_HEADER         => 1,    // don't return headers
+        CURLOPT_HEADER         => 1,    //  return headers
         CURLOPT_FOLLOWLOCATION => true,     // follow redirects
         CURLOPT_ENCODING       => "",      // handle all encodings
-        CURLOPT_USERAGENT      => "asset_search", // who am i
+        CURLOPT_USERAGENT      => "http:/amdflames.org", // who am i
         CURLOPT_AUTOREFERER    => true,     // set referer on redirect
         CURLOPT_CONNECTTIMEOUT => 10,      // timeout on connect
         CURLOPT_TIMEOUT        => 10,      // timeout on response
         CURLOPT_MAXREDIRS      => 10,       // stop after 10 redirects
-        CURLOPT_NOBODY			=> true,
+        CURLOPT_NOBODY			=> true,		// don't retrieve the body of the url
     );
 	$ch = curl_init($url);
 	curl_setopt_array( $ch, $options );
 	if (!curl_exec($ch) ) return false;
 	$code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 	if ($code >= 400) return false;
-	if ($param== 'mime' && $mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE) ) {
-		if ($scpos = strpos($mime,';')  ){
-			$mime = substr($mime,0,$scpos);
-		}
-		return $mime;
-	} elseif ($param == 'size' && $size = curl_getinfo($ch,CURLINFO_CONTENT_LENGTH_DOWNLOAD) ){
-		return $size;
+	$mime = curl_getinfo($ch, CURLINFO_CONTENT_TYPE)  ;
+	if ($semipos = strpos($mime,';')  ){
+		$mime = substr($mime,0,$semipos);
 	}
-	return false;
+	$size = curl_getinfo($ch,CURLINFO_CONTENT_LENGTH_DOWNLOAD) ;
+	$result = array (
+		'mime' => $mime,
+		'size' => $size,
+	);
+	return result;
+
 }
 
 
