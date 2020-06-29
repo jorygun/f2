@@ -4,10 +4,11 @@ namespace digitalmx\flames;
 /* this script needs to run in the old site to copy assets to assets2,
  which the new site will use.
 	Rewritten 6/19 to remove trying to fix thumbs.  Need a separate fix_thumbs script.
+	Rewritten 6/27 to use asset and checking routines from AssetAdmiin
 
 */
 
-//ini_set('default_socket_timeout', 10);
+ini_set('default_socket_timeout', 10);
 //ini_set('display_errors',1);
 
 //BEGIN START
