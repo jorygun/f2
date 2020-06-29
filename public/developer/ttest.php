@@ -49,7 +49,6 @@ echo "<image src='$turl' />";
 
 exit;
 
-
 ##################################
 function show_form($id='') {
 		echo <<<EOT

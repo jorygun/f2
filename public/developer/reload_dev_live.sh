@@ -41,14 +41,17 @@ if [[ $HOME == '/Users/john' ]] ; then
 	echo "Mac Done."
 else
 	echo "Updating pair dev db";
+
 	SITEPATHL="$HOME/Sites/flames/live/public"
 	SITEPATHD="$HOME/Sites/flames/dev/public"
+
 
 	if [[ ! -f $sqltemp ]] ; then
 	/usr/local/bin/mysqldump -hdb151d.pair.com -udigitalm_r -p${PWlive} digitalm_db1 assets news_items read_table > $sqltemp 2>/dev/null
 	fi
 
 	/usr/local/bin/mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < $sqltemp 2>/dev/null
+
 
 	cp "$SITEPATHL/news/current/news_index.json" "$SITEPATHD/news/current/news_index.json"
 

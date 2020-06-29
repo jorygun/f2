@@ -55,6 +55,7 @@ Refresh assets, news_items, read_table and index.json from live db to dev
 
 <li><button name='run'
 onClick = "window.open('/developer/gen_articles.php','genn');return false;" value='articles'>Build Articles</button>
+
 Build new Articles table from old news_items
 
 <li><button name='run'
