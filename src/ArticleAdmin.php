@@ -19,6 +19,7 @@ class ArticleAdmin
 		$this->asseta = $container['asseta'];
 		$this->voting = $container['voting'];
 		$this->templates = $container['templates'];
+		$this->assetv = $container['assetv'];
 		$this->comment = $container['comment'];
 
 	}
@@ -47,7 +48,7 @@ class ArticleAdmin
 
 
 				if ($asset_id) {
-					$image = $this->asseta->getAssetBlock($asset_id,'thumbs',false);
+					$image = $this->assetv->getAssetBlock($asset_id,'small',false);
 				}
 			}
 			$row['image'] = $image;
@@ -122,7 +123,7 @@ class ArticleAdmin
 			foreach ($carray as $row) {
 			  //u\echor($row);
 				if (!empty($row['asset_list'])) {
-					 $row['asset'] = $this->asseta->getAssetBlock($row['asset_list'], 'thumbs', false);
+					 $row['asset'] = $this->assetv->getAssetBlock($row['asset_list'], 'thumbs', false);
 				} else {
 					$row['asset'] = '';
 				}
@@ -141,28 +142,28 @@ class ArticleAdmin
 		return $story;
 	}
 
-	public function getAssetBlock($sdata) {
-		$ablock = [];
-		if (!empty($sdata['asset_list'])) {
-            $alist = u\number_range($sdata['asset_list']);
-            $alistcnt = count($alist);
-
-            if ($alistcnt >2) {
-                $adiv = 'asset-row';
-            } elseif ($alistcnt > 0) {
-                $adiv = 'asset-column';
-            } else {
-                $adiv = '';
-            }
-            $ablock ['adiv'] = $adiv;
-
-            foreach ($alist as $aid) {
-                $ablock ['asset_blocks'][] = $this->asseta->getAssetBlock($aid, 'thumbs', false);
-            }
-        }
-        return  $ablock ;
-        // array with two entries: adiv and ablock
-      }
+	// public function getAssetBlock($sdata) {
+// 		$ablock = [];
+// 		if (!empty($sdata['asset_list'])) {
+//             $alist = u\number_range($sdata['asset_list']);
+//             $alistcnt = count($alist);
+//
+//             if ($alistcnt >2) {
+//                 $adiv = 'asset-row';
+//             } elseif ($alistcnt > 0) {
+//                 $adiv = 'asset-column';
+//             } else {
+//                 $adiv = '';
+//             }
+//             $ablock ['adiv'] = $adiv;
+//
+//             foreach ($alist as $aid) {
+//                 $ablock ['asset_blocks'][] = $this->asseta->getAssetBlock($aid, 'thumbs', false);
+//             }
+//         }
+//         return  $ablock ;
+//         // array with two entries: adiv and ablock
+//       }
 
 	function getLiveArticle ($id,$show='') {
 		// user includes user_id, username,

@@ -41,6 +41,8 @@ private static $empty_search = array (
 		$this->member = $container['member'];
 		$this->assets = $container['assets'];
 		$this->asseta = $container['asseta'];
+		$this->assetv = $container['assetv'];
+
 
 
 	}
@@ -55,7 +57,7 @@ private static $empty_search = array (
 		$asdata = array_merge(self::$empty_search,$sdata);
 		// comopute options, selects
 		$asdata['use_options'] = u\buildOptions(array('On','Before','After'),$asdata['relative']);
-		  $asdata['type_options'] = u\buildOptions(Defs::$asset_types,$asdata['type']);
+		  $asdata['type_options'] = u\buildOptions(Defs::getAssetTypes(),$asdata['type']);
 		 //$status_options = build_options($asset_status,$pdata['status']);
 
 
@@ -315,7 +317,7 @@ private function tag_search ($clist) {
 
   		 // returns
 
-        $adata = $this->asseta->getAssetDataEnhanced($id);
+        $adata = $this->assets->getAssetDataEnhanced($id);
 
 
      // u\echor($adata); return ;

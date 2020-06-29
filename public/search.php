@@ -31,6 +31,8 @@ if ($login->checkLevel(4)){
 	$assets = $container['assets'];
 	$asseta = $container['asseta'];
 	$pdo = $container['pdo'];
+	$thumbs = $container['thumbs'];
+
 
 if (isset($_POST['search'])){
    if ($_POST['search'] == 'Search DB'){
@@ -52,7 +54,7 @@ if (isset($_POST['search'])){
 		echo "<div class='asset-row'>";
 		#u\echor($alist,'assets');
 		foreach ($alist as $id){
-			echo $asseta->getAssetBlock($id,'thumbs',false);
+			echo $thumbs->getAssetBlock($id,'thumbs',false);
 		}
 		echo "</div><div class='clear'></div>";
 

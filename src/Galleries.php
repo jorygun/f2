@@ -32,8 +32,10 @@ class Galleries
 		$this->pdo = $container['pdo'];
 		$this->asseta = $container['asseta'];
 		$this->assets = $container['assets'];
+		$this->thumbs = $container['thumbs'];
 		$this->templates = $container['templates'];
 		$this->member = $container['member'];
+
 		$this->new_gallery['vintage'] = date('Y');
 		$this->new_gallery['contributor_id'] = $_SESSION['login']['user_id'];
 		$this->new_gallery['contributor'] = $_SESSION['login']['username'];
@@ -64,7 +66,7 @@ class Galleries
 
 		foreach ($aids as $aid){
 			//echo "Gallery block $aid goes here";
-			echo $this->asseta->getAssetBlock($aid,'galleries',false) ;
+			echo $this->thumbs->getAssetBlock($aid,'galleries',false) ;
 		}
 		echo "</div>";
 	}

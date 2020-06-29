@@ -29,9 +29,9 @@ class Definitions {
     'X' => 'Deleted',
     'N' => 'New',
     'U' => 'Updated. Needs Review',
-    'K' => 'OKK',
+    'I' => 'OK, override asset url error',  //use for inacessible asset url
     'W' => 'Warning but usable',
-    'O' => 'OKO',
+    'O' => 'OK',
 
 );
 
@@ -64,44 +64,78 @@ public static $test_emails = array(
 	 public static $thumb_width = array(
 						 'thumbs' => 200,
 						 'galleries' => 330,
-						 'toons' => 800
+						 'toons' => 800,
+						 'small' => 200,
+						 'medium' => 330,
+						 'large' => 800
 						 );
 
-	private static $accepted_mime_types = array(
-					'jpg' => 'image/jpeg',
-					'jpeg' => 'image/jpeg',
-					'png' => 'image/png',
-					'gif' => 'image/gif',
-					'pdf' => 'application/pdf',
-					'mp4' => 'video/mp4',
-					'mov' => 'video/quicktime',
-					'mp3' => 'audio/mpeg',
-					'm4a' => 'audio/mp4',
-					'tif' => 'image/tiff',
-					'tiff' => 'image/tiff',
-					'doc' => 'application/msword',
-					'docx' => 'application/msword',
-					'html' => 'text/html',
-					'' => 'video/x-youtube',
-
-			  );
+	// private static $accepted_mime_types = array(
+// 					'jpg' => 'image/jpeg',
+// 					'jpeg' => 'image/jpeg',
+// 					'png' => 'image/png',
+// 					'gif' => 'image/gif',
+// 					'pdf' => 'application/pdf',
+// 					'mp4' => 'video/mp4',
+// 					'mov' => 'video/quicktime',
+// 					'mp3' => 'audio/mpeg',
+// 					'm4a' => 'audio/mp4',
+// 					'tif' => 'image/tiff',
+// 					'tiff' => 'image/tiff',
+// 					'doc' => 'application/msword',
+// 					'docx' => 'application/msword',
+// 					'html' => 'text/html',
+// 					'' => 'video/x-youtube',
+//
+// 			  );
 		// all accept mime types for assets and their group
-	public static $mime_groups = array (
+	public static $asset_types = array (
 
+		'application/msword' => 'Document',
+		'application/pdf' => 'Document',
+		'audio/mp4' => 'Audio',
+		'audio/m4a'	=>	'Audio',
+		'audio/mp3'	=>	'Audio',
+		'audio/mpeg' => 'Audio',
+		'image/gif' => 'Image',
 		'image/jpeg' => 'Image',
 		'image/png' => 'Image',
-		'image/gif' => 'Image',
-		'application/pdf' => 'Document',
+		'image/tiff' => 'Image',
+		'text/html' => 'Web Page',
 		'video/mp4' => 'Video',
 		'video/quicktime' => 'Video',
-		'audio/mpeg' => 'Audio',
-		'audio/mp4' => 'Audio',
-		'image/tiff' => 'Image',
-		'image/tiff' => 'Image',
-		'application/msword' => 'Document',
-		'text/html' => 'Web Page',
 		'video/x-youtube' => 'Video',
 	);
+
+	private static $mime_icons = array(
+		'application/msword' 	=>	'doc.jpg',
+		'application/pdf' 	=>	'pdf.jpg',
+		'audio/m4a'	=>	'm4a.jpg',
+		'audio/mp3'	=>	'mp3.jpg',
+		'audio/mpeg' => 'm4a.jpg',
+		'image/gif'	=>	'image.jpg',
+		'image/jpeg'	=>	'image.jpg',
+		'image/png'	=>	'image.jpg',
+		'image/tiff'	=>	'image.jpg',
+		'text/html'	=>	'web.jpg',
+		'video/mp4'	=>	'mp4.jpg',
+		'video/quicktime'	=>	'mov.jpg',
+		'video/x-youtube' => 'mov.jpg',
+	);
+
+
+// public static $asset_types = array(
+// 	'Image' ,
+// 	'Cartoon' ,
+//  	'Multimedia' ,
+// 	'Document' ,
+// 	'Album' ,
+// 	'Web Page',
+// 	 'Web Video',
+// 	'Other',
+//    'Member Photo'
+//     );
+
 
 	// tag codes.  * in description means archival
 	public static $asset_tags = array(
@@ -130,7 +164,7 @@ public static $test_emails = array(
     );
     #tag starting with Z is reserved for special searches, e.g., all archives
 
-	 public static $archival_tags = "ACDEFIMOSWY";
+	 public static $archival_tags = "ACDEFIMPSUWY";
 
 //id to use youtube api
 public static $ytapikey = 'AIzaSyAU30eOK0Xbqe4Yj0OMG9fUj3A9C_K_edU';
@@ -224,18 +258,6 @@ public static $user_aliases = array (
 
         );
 
-public static $asset_types = array(
-	'Image' ,
-	'Cartoon' ,
- 	'Multimedia' ,
-	'Document' ,
-	'Album' ,
-	'Web Page',
-	 'Web Video',
-	'Other',
-   'Member Photo'
-    );
-
 
 // code => [name, seclevel]
 
@@ -283,9 +305,22 @@ public static $test = 'you win';
 
 #####################
 public static function getMimeGroup($mime) {
-	$group = self::$mime_groups[$mime] ?? '';
+	$group = self::$asset_types[$mime] ?? '';
 	return $group;
 
+}
+
+public static function getIconForMime($mime) {
+	return self::$mime_icons[$mime] ?? 'default.jpg';
+}
+
+public static function getAssetType($mime) {
+	$type = self::$asset_types[$mime] ?? 'Other';
+	return $type;
+
+}
+public static function getAssetTypes() {
+	return array_keys(array_flip(self::$asset_types));
 }
 
 ######## Getters
@@ -379,11 +414,9 @@ public static function getMimeGroup($mime) {
 	}
 
 	public static function getAcceptedMime() {
-		return array_values(self::$accepted_mime_types);
+		return array_keys(self::$asset_types);
 	}
-	public static function getMimeFromExt($ext) {
-		return self::$accepted_mime_types[$ext] ?? '';
-	}
+
 
 
 }

@@ -12,12 +12,12 @@ namespace DigitalMx\Flames;
 	use DigitalMx\Flames\Definitions as Defs;
 	use DigitalMx\Flames\DocPage;
 
-
+	use DigitalMx\Flames\Thumbs2 as Thumbs;
 
 
 $login->checkLevel(0);
 
-$page_title = '';
+$page_title = 'Thumb tests';
 $page_options=[]; #ajax, votes, tiny
 
 $page = new DocPage($page_title);
@@ -29,38 +29,32 @@ echo $page->startBody();
 
 //END START
 
-if (empty ($_GET['id']) ){
+$assetv = $container['assetv'];
+
+if (empty ( $_POST['id']) ){
 	show_form();
 	exit;
 }
+$id =  $_POST['id'];
 
-
-$id = $_GET['id'];
+$id = $_POST['id'] ?? '';
 echo "getting id $id" . BRNL;
 
-$adata = $container['assets'] -> getAssetDataById($id);
-//u\echor($adata);
-
-$aurl = $adata['asset_url'];
-$turl = $adata['thumb_url'];
-
-echo "Current asset mime " . $adata['mime'] . BRNL;
 
 
 
-$thumbs = new Thumbs($id,$aurl,$turl);
+$turl = $assetv->getThumb($id,'medium');
+echo "<image src='$turl' />";
 
-$ttype = 'thumbs';
 
-$thumbs->createThumb($ttype);
-echo "<a href='$aurl'><img src='/assets/" . $ttype . "/${id}.jpg' /> </a>" . BRNL;
-
-show_form();
 exit;
-function show_form() {
+
+
+##################################
+function show_form($id='') {
 		echo <<<EOT
-<form method='GET'>
-Get id: <input type=text name='id' > <button type='submit'>submit</button>
+<form method='POST'>
+Get id: <input type=text name='id' value = '$id' autofocus > <button type='submit'>submit</button>
 </form>
 
 EOT;

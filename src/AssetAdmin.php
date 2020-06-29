@@ -30,8 +30,8 @@ class AssetAdmin
 
 	private $pdo;
 	private $archive_tag_list_sql;
-	private $assets;
-	private $member;
+	private $Assets;
+	private $Member;
 	private $mimeinfo;
 
 
@@ -43,15 +43,16 @@ class AssetAdmin
 	public function __construct($container) {
 		$this->pdo =  $container['pdo'];
 		$this->archive_tag_list_sql =  Defs::getArchivalTagList();
-		$this->assets = $container['assets'];
-		$this->member = $container['member'];
+		$this->Assets = $container['assets'];
+		$this->Member = $container['member'];
 		$this->mimeinfo = new \finfo(FILEINFO_MIME_TYPE);
-
-
-
+		$this->Assetv = $container['assetv'];
 
 
 	}
+
+
+
 	// takes asset data array, prepares thumbs needed,
 	// and sends to Assets to store (and add computed fields).
 	// returns id of asset.
@@ -61,36 +62,55 @@ class AssetAdmin
 
 	#u\echor($post,'post data in');
 
-
+		$changed = false;
 
 		if (! isset ($post['id'])){
 				throw new Exception ("attempt to post asset with no id set");
 		}
+
+			// block empty post before it gets far.
 		if (
 			empty($post['title'])
 			// || (empty($post['asset_url']) && empty($_FILES['uasset']['tmp_name']) )
 			) {
 			die ("Asset needs title.");
 		}
+
+		// move the post data needed from thep ost to adata.
+		foreach ($this->Assets::$editable_fields as $f) { // includes astatus
+			$adata[$f] = $post[$f]??'';
+		}
+
+
+	//echo 'stat is ' . $post ['astatus'] . ' was ' . $post['old_status'] . BRNL;
+		if ($adata ['astatus'] != 'E' &&
+			$post['old_status'] == 'E') {
+				$adata['errors'] = '';
+		}
+
 		// must have id before all the data is saved to place files.
 		// this creates a skeleton asset record and gets the id.
 		if (empty ($id = $post['id'])) {
-				$id = $this->assets->getNewID();
+				$id = $this->Assets->getNewID();
 				#echo "New id $id obtained." . BRNL;
 				$adata ['astatus'] = 'N';
+				$changed = true;
+		} elseif ($adata['asset_url'] != $post['old_aurl']
+			|| $adata['thumb_url'] != $post['old_turl'] ) {
+				$changed = true;
+				$adata['astatus'] = 'U';
 		}
-		// for existing items, status is not updated when item is saved
 
-		// move the post data needed from thep ost to adata.
-		foreach ($this->assets::$editable_fields as $f) {
-			$adata[$f] = $post[$f]??'';
-		}
-		$adata['id'] = $id;
+		$adata['id'] = $id;  // to pick up new id from new entery
+
+	// if status changed fro E status, then clear the errors field
+
+
 
 		// set contributor id if one not set yet and
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
-        $cd = $this->member->setContributor($post['contributor_id'], $post['contributor']);
+        $cd = $this->Member->setContributor($post['contributor_id'], $post['contributor']);
        // u\echor($cd); exit;
 
         //put the new contrib info into the adata array
@@ -103,24 +123,7 @@ class AssetAdmin
 			$adata['vintage'] = date('Y');
 		}
 
-		/* new thumbs is list of thumb types needed - from
-			checkboxes on the asset form or from replacing
-			existing thumbs because sources have changed.
-		*/
-		$new_thumbs = [];
-		foreach (Defs::getThumbTypes()  as $ttype) {
-
-			if (!empty($post[$ttype])){
-				$new_thumbs[] = $ttype;
-				#echo "New thumb requested: $ttype. ";
-			}
-		}
-
-	// first look for any relocates from file uploads
-	// move file into assets files or thubm-sources and
-	// change source def to match.
-	#u\echor($_FILES,'FILES');
-
+// looks for uploaded files from the form
 		foreach (self::$upload_types as $type){
 			if (isset($_FILES[$type]) && !empty ($_FILES[$type]['name'] )){
 				#echo "Relocating $type... " ;
@@ -133,27 +136,83 @@ class AssetAdmin
 					$adata['asset_url'] = $url;
 					$adata['notes'] .= "Uploaded from " . $_FILES[$type]['name'] . "\n";
 				}
-				$new_thumbs[] = 'all'; #flag to recreate thunbs
-				$adata['status'] = 'N';
+				$changed = true;
+				$adata['astatus'] = 'U';
+
 			}
 		}
 
 		if (empty($adata['asset_url'])) {
-			die ("Asset requires a source");
+			die ("Asset $id has no asset source");
 		}
 
 
 
-		if (!empty($post['tags']) && is_array ($post['tags'])){
-			// convert to string
-			$adata['tags'] =  u\charListToString($post['tags']) ;
+		$adata['sizekb'] = 0;
+		if (1 || $adata['astatus'] != 'I' ){ #error override
+
+				$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
+				$adata['type'] = Defs::getAssetType($adata['mime']);
+				if (!$adata['mime']){
+					$adata['status'] = 'E';
+				}
+
+
+				if (u\is_local($adata['asset_url']) ) {
+					$path = SITE_PATH . $adata['asset_url'];
+					$size = filesize($path);
+					$adata['sizekb'] = (int)($size/1000);
+				}
 		}
 
-		 $adata['needs'] = $this->checkThumbNeeds($adata,$new_thumbs);
+			if (!empty($post['tags']) && is_array ($post['tags'])){
+				// convert to string
+				$adata['tags'] =  u\charListToString($post['tags']) ;
+			}
+
+	//	 $adata['needs'] = $this->checkThumbNeeds($adata,$new_thumbs);
 
 	#exit;
 
-		$this->assets->saveAsset($adata);
+		if ($changed) { //new or changed urls.  Make sure thumb sources are in place
+			// remove eisting thumbs
+			foreach (
+				['/assets/thumb_generated',
+				'/assets/thumbnails/small',
+				'/asset/thumbnails/medium',
+				'/assets/thumbnails/large'
+				] as $thumb) {
+				$tpath = SITE_PATH . $thumb . "/${id}.jpg";
+				if (file_exists($tpath)){unlink ($tpath) ;}
+			}
+
+
+			echo "Asset sources ahve changed." . BRNL;
+			$adata['local_src'] = $this->checkThumbSources
+				($id,$adata['asset_url'],$adata['thumb_url'],$adata['mime'] ) ;
+			if (!$adata['local_src'] ){ // could not verify thumb sources
+				throw new Exception ("Could not generate local source for asset $id");
+
+			}
+			// geneerate small thumb always
+			$desturl = "/assets/thumbnails/small/${id}.jpg";
+			$this->Assetv::buildGdImage($adata['local_src'],$desturl, 'small');
+
+
+		}
+	//u\echor($adata,"Precheck save data");
+
+
+		try {
+				 $this->checkAssetData($adata);
+
+		} catch (Exception $e) {
+				echo "Error in asset data. Asset not saved." . BRNL;
+				echo $e->getMessage();
+				exit;
+		}
+
+		$this->Assets->saveAsset($adata);
 
 
 		return $id;
@@ -168,75 +227,125 @@ class AssetAdmin
 		return false;
 	}
 
-	public function getAssetDataEnhanced($id) {
-		if ($id == 0){
-   		// new asset
-   		$adata = $this->assets->new_asset;
-   		$adata['contributor_id']  = $_SESSION['login']['user_id'];
-   		$adata['contributor'] = $_SESSION['login']['username'];
-   		$adata['id'] = 0;
-   		$adata['date_entered'] = date('M d, Y');
-   		$adata['first_use'] = 'Never';
-   		$adata['vintage'] = date('Y');
+public function checkAssetData($adata) {
 
-   		return $adata;
-   	}
+	/* checks that required dat a is present.
+		Does NOT check that urls exist, because that is
+		done by checkThumbSources in assetadmin
 
-		if (! $adata = $this->assets->getAssetDataById($id) ){
-			return [];
-		}
+		If a url is not accessible, the asset status should be
+		set to ....  to indicate it has a known problem but is ok.
+
+	Fields:
+
+	id
+	asset_url  (nee link) (asset source url)
+	thumb_url (nee url) (thumb source url)
+	title
+	caption
+	keywords
+	tags
+	source
+	vintage
+	contributor id
+	astatus
+
+	first_use_date
+	first_use_in
+
+	mime
+	type
+	sizekb
+
+	date entered
+	date modified
+*/
+
+	#u\echor($adata,'Into Checking asset data:');
+	$id = $adata['id'];
+//u\echor($adata);exit;
+
+	foreach ($adata as $var => $val){
+		switch ($var) {
+			case 'id':
+				if (! is_integer( (int)$val) ) die ("bad id: ". $val);
+				break;
+
+			case 'asset_url':
+				if (empty($val)) {
+					die ("Id $id: No source for asset specified");
+				}
+				if ($adata['astatus'] != 'I' ) { #over-ride inaccessible source
+					$amime = u\url_exists ($val);
+					//echo "$val is mime '$amime'";
+					if ($amime === false) {
+						throw new Exception ("Id $id: Asset source cannot be accessed." . $val) ;
+					}
+				}
+				break;
+			case 'thumb_url':
+				if(empty($val)) break;
+				// thumb must be either local or a youtube
+				if ( strpos($val,'/') === 0 ||  u\is_youtube($val) ){
+					#ok
+				} else {
+					throw new Exception ("Id $id: Thumb source is remote " . $val) ;
+				}
+				break;
+
+			case 'title':
+				if (empty($val)){
+					throw new Exception ("Id $id: No title provided");
+				}
+				break;
+			case 'vintage':
+				 if (! u\isInteger ($val) ){
+				 	throw new Exception ("Id $id: Vintage is not a number");
+				 }
+				 if ( $val > 2050 ){ #to cast as numeric
+						throw new Exception ("Id $id: Vintage is not a valid year");
+					}
+				break;
+			case 'astatus':
+				if (! in_array($val,array_keys(Defs::$asset_status))){
+					die ("Id $id: Unknown asset status $val");
+				}
+				break;
+
+			case 'contributor_id' :
+				if (! $this->Member->getMemberBasic($val) ){ #0 is allowed
+					throw new Exception ("Id $id: No user found for contributor id " . $val);
+				}
+				break;
 
 
-		// set tic character for each thumb that currently exixts.
-		$adata['existing_thumbs'] = $this->getExistingThumbs($id);
+			case 'tags':
+				if (empty($val)) break;
+				foreach (str_split($val) as $tag){
+					if (! in_array($tag,array_keys(Defs::$asset_tags)))
+					throw new Exception (" Id $id: Unknown asset tag $tag");
+				}
 
+				break;
+			case 'mime':
 
+				if (!in_array($val,Defs::getAcceptedMime() ) )
+			 		throw new Exception ("Id $id: Source mime $val is not acceptable: " . $val);
+			 	break;
 
-   	$adata['first_use'] = "Never.";
-   	if  (! empty($fud = $adata['first_use_date'])) {
-   		$fud = $adata['first_use_date'];
-   		$fin = $adata['first_use_in'];
-   	}
-   	if ($fud){
-   		$adata['first_use'] =
-   		"On " . date('d M Y',strtotime($fud) )
-   		. " In " . "<a href='" . $fin . "'>" . $fin . "</a>";
-   	}
-		$adata['status_label'] = Defs::$asset_status[$adata['astatus']];
-		$adata['show_thumbs'] = join(',',$adata['existing_thumbs']) ?:
-	  'None';
+			default: #do nothing
 
-		// this returns "Not available" etc depending on asset status
-		 $adata['image'] = $this->returnAssetLinked($adata) ;
-		$adata['warning'] = '';
-		if ($adata['status'] == 'D' )	$adata['warning'] = 'Deleted';
+		} #end switch
+	}
+	return true;
 
-		if ($adata['status'] == 'W' )	$adata['warning'] = "<br><span style='background:#CCC;'>${adata['errors']}</span>";
-
-		if ($adata['status'] == 'E' )	$adata['warning'] = "<br><span style='color:red;'>${adata['errors']}</span>";
-
-
-
-//u\echor($adata);
-		return $adata;
 	}
 
-	 public function getThumbTics($id) {
-   /* returns array of all thumb types and check mark if thumb exists */
-		 $thumb_tics = [];
-		 $thumb_list = [];
-		 if ($id > 0) $thumb_list = $this->getExistingThumbs($id);
-
-		foreach(array_keys(Defs::$thumb_width) as $ttype) {
-				  $thumb_tics[$ttype] = (in_array($ttype,$thumb_list))?'&radic;':'';
-		}
-		return $thumb_tics;
-   }
 
 	public function getExistingThumbs ($id) {
 		// returns list of thumb types that exist
 		$thumb = "${id}.jpg";
-		$tloc = SITE_PATH . "/assets";
+		$tloc = SITE_PATH . "/assets/thumbnails";
 		$ttypes = [];
 		foreach (Defs::getThumbTypes() as $ttype){
 			if (file_exists($tloc . '/' . $ttype . '/' . $thumb)){
@@ -246,133 +355,171 @@ class AssetAdmin
 		return $ttypes;
 	}
 
-	private function checkThumbNeeds($adata,$new_thumbs) {
-		// set which thumbs are needed, by checkbox or by changed url
-		$id = $adata['id'];
-		$needs = array ();
-		$result = $this->getAssetDataEnhanced($id);
 
-		$thumbs = $result['existing_thumbs']; #keys where value is ''
-
-		// if either url has been changed, all the thumbs need to be regneratied.
-		if ($result['asset_url'] != $adata['asset_url']
-			|| $result['thumb_url'] != $adata['thumb_url']
-			|| in_array('all',$new_thumbs) ){
-			$needs = $thumbs; #all existing thumbs
-			$new_thumbs = array_diff ($new_thumbs,['all']) ;
-		}
-		if (! in_array('thumbs',$thumbs)){$new_thumbs[] = 'thumbs';} #always need this
-		// add in any thumbs were checked on the form
-		$needs = array_unique(array_merge($needs,$new_thumbs));
-		#u\echor($needs,'needs after check needs'); exit;
-
-
-		return $needs;
+	private function yt_info ($tyid) {
+	//use this with curl to retrieve a lot of info abut a youtube video
+				return "https://www.googleapis.com/youtube/v3/videos?id="
+					. $ytid
+					. "&part=status&key="
+					. Defs::$ytapikey;
 	}
 
 
-	public static function getAttribute($source) {
-		//$attr = $adata['source'];
-			$attr_block = (!empty($source))? "<div class='asource'>-- $source</div>" : '';
-			return $attr_block;
-		}
+// replace this with something to force receck of thumb sources
+// 	private function checkThumbNeeds($adata,$new_thumbs) {
+// 		// set which thumbs are needed, by checkbox or by changed url
+// 		$id = $adata['id'];
+// 		$needs = array ();
+// 		$result = $this->getAssetDataEnhanced($id);
+//
+// 		$thumbs = $result['existing_thumbs']; #keys where value is ''
+//
+// 		// if either url has been changed, all the thumbs need to be regneratied.
+// 		if ($result['asset_url'] != $adata['asset_url']
+// 			|| $result['thumb_url'] != $adata['thumb_url']
+// 			|| in_array('all',$new_thumbs) ){
+// 			$needs = $thumbs; #all existing thumbs
+// 			$new_thumbs = array_diff ($new_thumbs,['all']) ;
+// 		}
+// 		if (! in_array('thumbs',$thumbs)){$new_thumbs[] = 'thumbs';} #always need this
+// 		// add in any thumbs were checked on the form
+// 		$needs = array_unique(array_merge($needs,$new_thumbs));
+// 		#u\echor($needs,'needs after check needs'); exit;
+//
+//
+// 		return $needs;
+// 	}
 
 
-	public function getAssetBlock($aid,$style,$show_caption=false) {
-		/* returns a div with the asset and title in it.
-		uses asset thumb or gallery size
-		shows thumb linked to asset
-		below thumb is title in bold and optional in italic
 
-		styles defined in assets.css
-		<div class='asset-row'>
-		foreach... echo assetblock
-		</div>
 
+private function buildImagicImage ($src_url,$dest_url){
+		// imagick image will go into thumb sources
+		$max_dim = 800; // pixels for saved thumb source image
+		$tpath = $src_url;
+		if (strpos($src_url,'/') === 0 ){$tpath = SITE_PATH . $src_url;}
+
+		$destpath = SITE_PATH . $dest_url;
+
+		 echo "calling imagick on $tpath" . BRNL;
+		  	 $im = new \Imagick ();
+		  	 $im->setResolution(300,300);
+			$im->readImage($tpath);
+			$im->setImage($im->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN));
+		 $im->setImageFormat('jpeg');
+
+		 $im->thumbnailImage($max_dim, $max_dim,true); #best fit
+		 $im->writeImage($destpath);
+
+		 return true;
+	}
+
+
+
+	public function checkThumbSources ($id,$aurl,$turl,$amime) {
+		/* set thumb ssource
+			make sure thumb sources are avaialble.
+			$tsrc will be turl or aurl.
+
+			if it's local and graphic, you're set
+			if it's remote and graphic, download to thumb_sources
+			if it's local or remote and a pdf, make image in thumb_sauto
+			if it's a youtube video, download the yt thumb and put in thumb_auto
+
+			returns the local thumb source
+
+			else use the icon for the asset mime time ?? or do this at get thumb time??
+			also will create small thumb, as every asset needs one.
 		*/
-		if (! $adata = $this->getAssetDataEnhanced($aid) ) {
-			return "
-				<div class='asset'>
-					Asset $aid does not exist
-				</div>
-			";
+
+
+		$genurl = "/assets/thumb_generated/$id.jpg" ;
+		$gurl = (file_exists(SITE_PATH . $genurl) ) ? $genurl : '';
+
+		$tsrc = '';
+		if (!empty($turl)){
+			if (!file_exists(SITE_PATH . $turl)){
+				throw new Exception ("Deisngated thumb url on id $id does not exist");
+			} elseif (! u\is_local($turl)) {
+				throw new Exception ("Thumb url is not local file");
+			} else {
+			$tsrc = $turl;
+			}
+		}
+		if (empty($tsrc) && !empty($gurl)){
+			$tsrc = $gurl;
 		}
 
-		$aurl = $adata['asset_url'];
-		$atitle = $adata['title'];
-		$acapt = ($show_caption)?
-			"<div class='acaption'>${adata['caption']}</div>" : '';
-
-
-		$attr_block = self::getAttribute($adata['source']);
-
-		if ($image = $this->assets->getThumbUrl($aid,$style) ) {
-			$image_data =  "<img src='$image' />";
-		} else {
-			return "<div class='asset'>Could not get Thumb for asset $aid</div>";
-		}
-
-
-			$block = <<<EOT
-			<div class='asset'>
-				<a href='/asset_viewer.php?$aid' target='viewer'>
-				$image_data </a>
-				$attr_block
-				<div class='atitle'>$atitle</div>
-				$acapt
-			</div>
-EOT;
-
-
-
-
-		return $block;
-
-
-
-	}
-
-
-	public function getAssetLinked($id,$nocache=false) {
-	/* returns the asset thumbnail, linked to the asset source */
-		$adata = $this->assets->getAssetDataById($id);
-		return $this->returnAssetLinked($adata,$nocache);
-	}
-
-	public function returnAssetLinked ($adata,$nocache=false) {
-		$status = $adata['astatus'];
-		$id = $adata['id'];
-		switch ($status) {
-			case 'T':
-				return "Temporary Asset";
-				break;
-			case 'D':
-				return "Asset Deleted";
-				break;
+		if (empty ($tsrc) && !empty($aurl)) {
+			$tsrc = $aurl;
 		}
 
 
-		$link = $adata['asset_url'];
-		if (empty($link)){return 'No asset url';}
+		$tmime = '';
+		$local_src = '';
 
-		$thumb = "/assets/thumbs/${id}.jpg";
-		if (!file_exists(SITE_PATH . $thumb)){
-			return "No thumbnail for asset";
+		$tmime = u\is_local($tsrc) ;
+		if ($tmime ) {
+			//echo "$tsrc is local $tmime" . BR;
+			// is local file
+			if (strpos($tmime,'image') !== false) {
+				// is an image file.  Ok to use as is
+				$local_src = $tsrc;
+
+			}
+			elseif (strpos($tmime,'pdf') !== false) {
+				// is pdf.  Use imagic to make image and put it in thumb sources
+				$this->buildImagicImage($tsrc.'[0]', $genurl);
+				$local_src = $genurl;
+			}
 		}
-		if ($nocache){
-			$time = time();
-			$thumb .= "?nocache=$time";
+		if (empty($local_src)){
+			$ytid = u\youtube_id_from_url($aurl) ;
+			if (!empty($ytid)){
+				//echo "$aurl is youtube" . BRNL;
+				$tmime = 'video/x-youtube';
+			// get url to youtube's thumb file for this video
+				$yturl = "http://img.youtube.com/vi/$ytid/mqdefault.jpg";
+
+				if (! @copy ($yturl ,  SITE_PATH . $genurl)  ) {
+					throw new Exception ("Youtube thumb cannot be retrieved on id $id");
+				}
+				$local_src = $genurl;
+			}
 		}
-		$result = <<<EOF
-		<a href='$link' target="assetl">
-		<img src='$thumb'>
-		</a>
-EOF;
-#echo "RESULT <br>$result"; exit;
 
-		return $result;
+		if (!$local_src ) {
+			$tmime = u\is_http($aurl);
+			if ($tmime) {
+				//echo "http tmime $tmime" . BRNL;
+				$sizem = u\get_info_from_curl($aurl)['size'] / 1000000; #MB
+				if ( $sizem <= 2 && strpos($tmime,'image') !== false) { //MB
+					if (! @copy ($aurl ,  $genurl) ) {
+						throw new Exception ("Failed to copy $aurl on id $id");
+					}
+					$local_src = $genurl;
+				} elseif ($sizem <= 16 && strpos($tmime,'pdf') !== false) {
+					if (!$this->buildImagicImage($aurl.'[0]', $genurl) ) {
+						throw new Exception ("Failed to build imiage of pdf id $id");
+					}
+					$local_src = $genurl;
+				}
+			}
+		}
+		if (! $local_src) { // use icon from mime
+			echo " Using icon for $amime on id $id $tsrc." . BRNL;
+		// return generic icon for amime type
+		  $icon = Defs::getIconForMime($amime) ;
+			$local_src =  "/assets/icons/$icon";
+		}
+//echo "Local source $local_src" . BRNL;
+		return $local_src;
 
-	}
+		}
+
+
+
+
 
 
 	private function relocateUpload ($id,$type){
@@ -405,12 +552,12 @@ EOF;
 		$orig_mime = $this->mimeinfo->file($orig_path) ;
 		$orig_name = $_FILES[$type]['name'];
 		$orig_ext = strtolower(pathinfo($orig_name, PATHINFO_EXTENSION));
-		echo "Moving uploaded $type file $orig_name ... " ;
+
 		$new_loc = ($type == 'uthumb')? '/assets/thumb_sources/' : '/assets/files/' ;
 		$new_url = $new_loc . $id . '.' . $orig_ext;
 		$new_path = SITE_PATH . $new_url;
 
-		#echo "Now moving $orig_path to $new_path" . BRNL;
+		echo "Now moving $orig_path to $new_url" . BRNL;
 		rename ($orig_path,$new_path);
 		chmod ($new_path,0644);
 		if (! file_exists($new_path)){ die ("file did not move to $new_url");}
@@ -462,11 +609,6 @@ EOF;
 		$ok_mimes = Defs::getAcceptedMime() ;
 		 if (! in_array ($fmime, $ok_mimes)) {
 			  throw new \RuntimeException ("uploaded file $original type $fmime is not an accepted type.");
-		 }
-		 if (empty($tmime = Defs::getMimeFromExt($ext) ) ){
-		 	echo "Warning: file extension $ext not in accepted mime extensions" . BRNL;
-		 } elseif ($fmime != $tmime){
-		 	echo "Warning: file $original extension does not match mime type $fmime" . BRNL;
 		 }
 
 		 return true;
