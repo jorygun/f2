@@ -42,8 +42,8 @@ if [[ $HOME == '/Users/john' ]] ; then
 else
 	echo "Updating pair dev db";
 
-	SITEPATHL="$HOME/Sites/flames/live/public"
-	SITEPATHD="$HOME/Sites/flames/dev/public"
+	SITEPATHL=$HOME/Sites/flames/live/public
+	SITEPATHD=$HOME/Sites/flames/dev/public
 
 
 	if [[ ! -f $sqltemp ]] ; then
@@ -52,9 +52,12 @@ else
 
 	/usr/local/bin/mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < $sqltemp 2>/dev/null
 
+	$JSON=/news/current/news_index.json
+	echo -e "$SITEPATHL/$JSON" ; ls -l "$SITEPATHL/$JSON"
 
-	cp "$SITEPATHL/news/current/news_index.json" "$SITEPATHD/news/current/news_index.json"
 
+	cp "$SITEPATHL/$JSON" "$SITEPATHD/$JSON";
+	echo -e "$SITEPATHD/$JSON" ; ls -l "$SITEPATHL/$JSON"
 
 # 	mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev <<EOT
 # 	DROP TABLE IF EXISTS backup_assets;
