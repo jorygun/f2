@@ -53,6 +53,8 @@ else
 	/usr/local/bin/mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < $sqltemp 2>/dev/null
 
 	JSON="/news/current/news_index.json"
+	echo "Starting copy of $JSON"
+
 	echo $(/bin/ls -l "$SITEPATHL/$JSON")
 
 
