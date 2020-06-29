@@ -55,9 +55,9 @@ else
 
 
 	echo "Starting copy of $JSON"
-	/bin/ls -l $SITEPATHL/$JSON
+	echo $(/bin/ls -l $SITEPATHL/$JSON)
 	/bin/ls -l '$SITEPATHL/$JSON'
-	/bin/ls -l "$SITEPATHL/$JSON"
+	echo $(/bin/ls -l "$SITEPATHL/$JSON")
 	/bin/ls -l ${SITEPATHL}/${JSON}
 
 	/bin/cp -v "$SITEPATHL/$JSON" "$SITEPATHD//news/current/";
