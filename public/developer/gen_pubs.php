@@ -41,7 +41,13 @@ $logfile = SITE_PATH . $logurl;
 
 create_pubs($pdo) ;
 
-if (! $file_index = json_decode (file_get_contents(FileDefs::news_index_json),true) ) {
+if (strpos(__FILE__,'/Users/john') !== false) {
+	$index_json = PROJ_PATH . '/f2/public/news/current/news_index.json';
+} else {
+	$index_json = PROJ_PATH . '/live/public/news/current/news_index.json';
+}
+
+if (! $file_index = json_decode (file_get_contents($index_json),true) ) {
 	die ("Cant find file index");
 }
 
@@ -150,7 +156,7 @@ echo "Rebuild Pubs version " . date('m/d H:i',filemtime(__FILE__)) . " at " . da
 
         }
 //u\echor($pubindex);
-
+			echo "Pubs built; now looking for matching articles"  . BRNL;
          check_articles($pdo,$pubindex);
 
          exit;
@@ -160,10 +166,13 @@ echo "Rebuild Pubs version " . date('m/d H:i',filemtime(__FILE__)) . " at " . da
 function check_articles($pdo,$pubindex) {
 	// index is date -> issue
 	$sql = "SELECT id, date_published FROM articles";
-	$arts = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
+	$arts = $pdo->query($sql);
 	$no_issue = []; $nocount=0;
 
-	foreach ($arts as $aid => $pdate) {
+	while ($row = $arts->fetch() ) {
+		$aid = $row['id'];
+		$pdate = $row['date_published'];
+
 
 		if (empty($pubindex[$pdate] )) {
 			$no_issue[$pdate][] = $aid;
@@ -171,7 +180,8 @@ function check_articles($pdo,$pubindex) {
 		}
 		//else { echo "$aid found $pdate";}
 	}
-	echo $nocount . " articles found with no pubdate in index" . BRNL;
+	echo $nocount . " articles found with no matching pubdate" . BRNL;
+	echo "PUBDATE.......ARTICLES";
 	foreach ($no_issue as $pdate=>$alist){
 		echo "$pdate : " . join(',',$alist)  . BRNL;
 	}

@@ -60,7 +60,7 @@ Build new Articles table from old news_items
 
 <li><button name='run'
 onClick = "window.open('/developer/gen_pubs.php','genp');return false;" value='pubs'>Build Pubs</button>
-Build new Pubs table from Articles and read_table
+Build new Pubs table from live version of index.json and Articles and read_table
 
 <li><button name='run'
 onClick = "window.open('/developer/gen_assets2.php','gena');return false;" value='assets'>Build Assets2</button>

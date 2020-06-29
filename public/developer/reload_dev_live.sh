@@ -71,4 +71,3 @@ fi
 rm $sqltemp
 
 
-
