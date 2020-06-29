@@ -55,9 +55,12 @@ else
 
 
 	echo "Starting copy of $JSON"
+	/bin/ls -l $SITEPATHL/$JSON
+	/bin/ls -l '$SITEPATHL/$JSON'
 	/bin/ls -l "$SITEPATHL/$JSON"
+	/bin/ls -l ${SITEPATHL}/${JSON}
 
-	cp -v "$SITEPATHL/$JSON" "$SITEPATHD//news/current/";
+	/bin/cp -v "$SITEPATHL/$JSON" "$SITEPATHD//news/current/";
 	/bin/ls -l "$SITEPATHD/$JSON"
 
 # 	mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev <<EOT
