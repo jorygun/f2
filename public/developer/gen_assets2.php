@@ -124,7 +124,11 @@ while ($row = $stmta -> fetch() ) {
 
 	$id = $row['id'];
 	$tsrc = $src = '';
-	if (is_integer($rc/$rept_interval)) echo "<small>At record $rc id $id</small><br>";
+	if (is_integer($rc/$rept_interval)) {
+		echo "<small>At record $rc id $id</small><br>";
+		myFlush();
+	}
+
 
 
 	$b = translate_fields($row);
@@ -372,4 +376,12 @@ function show_form() {
 EOT;
  return $t;
 
+}
+
+function myFlush() {
+    echo(str_repeat(' ', 1024));
+    if (@ob_get_contents()) {
+        @ob_end_flush();
+    }
+    flush();
 }
