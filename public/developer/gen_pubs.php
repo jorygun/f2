@@ -42,8 +42,11 @@ $logfile = SITE_PATH . $logurl;
 create_pubs($pdo) ;
 
 
-$index_json = SITE_PATH .  '/news/current/news_index.json';
-
+if (strpos(__FILE__,'/Users/john') !== false) {
+		$index_json = PROJ_PATH . '/f2/public/news/current/news_index.json';
+} else {
+	$index_json = PROJ_PATH . '/live/public/news/current/news_index.json';
+}
 
 if (! $file_index = json_decode (file_get_contents($index_json),true) ) {
 	die ("Cant find file index");
