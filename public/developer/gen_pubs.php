@@ -41,11 +41,9 @@ $logfile = SITE_PATH . $logurl;
 
 create_pubs($pdo) ;
 
-if (strpos(__FILE__,'/Users/john') !== false) {
-	$index_json = PROJ_PATH . '/f2/public/news/current/news_index.json';
-} else {
-	$index_json = PROJ_PATH . '/live/public/news/current/news_index.json';
-}
+
+$index_json = SITE_PATH .  '/news/current/news_index.json';
+
 
 if (! $file_index = json_decode (file_get_contents($index_json),true) ) {
 	die ("Cant find file index");
@@ -181,7 +179,7 @@ function check_articles($pdo,$pubindex) {
 		//else { echo "$aid found $pdate";}
 	}
 	echo $nocount . " articles found with no matching pubdate" . BRNL;
-	echo "PUBDATE.......ARTICLES";
+	echo "PUBDATE.......ARTICLES" . BRNL;
 	foreach ($no_issue as $pdate=>$alist){
 		echo "$pdate : " . join(',',$alist)  . BRNL;
 	}
