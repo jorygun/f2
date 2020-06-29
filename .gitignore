@@ -29,5 +29,8 @@ unused/
 
 
 #files conaining live data
+public/news/current
+public/news/next
+public/news/latest
 
 var/
