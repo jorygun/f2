@@ -55,11 +55,11 @@ else
 	JSON="/news/current/news_index.json"
 	echo "Starting copy of $JSON"
 
-	echo $(/bin/ls -l "$SITEPATHL/$JSON")
+	/bin/ls -l "$SITEPATHL/$JSON"
 
 
 	cp "$SITEPATHL/$JSON" "$SITEPATHD/$JSON";
-	echo $(/bin/ls -l "$SITEPATHL/$JSON")
+	/bin/ls -l "$SITEPATHL/$JSON"
 
 # 	mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev <<EOT
 # 	DROP TABLE IF EXISTS backup_assets;
