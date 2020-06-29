@@ -52,7 +52,7 @@ else
 
 	/usr/local/bin/mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < $sqltemp 2>/dev/null
 
-	$JSON=/news/current/news_index.json
+	JSON="/news/current/news_index.json"
 	echo -e "$SITEPATHL/$JSON" ; ls -l "$SITEPATHL/$JSON"
 
 
