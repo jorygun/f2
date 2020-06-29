@@ -53,11 +53,11 @@ else
 	/usr/local/bin/mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < $sqltemp 2>/dev/null
 
 	JSON="/news/current/news_index.json"
-	echo -e $( ls -l "$SITEPATHL/$JSON")
+	ls -l "$SITEPATHL/$JSON"
 
 
 	cp "$SITEPATHL/$JSON" "$SITEPATHD/$JSON";
-	echo -e $(ls -l "$SITEPATHL/$JSON")
+	ls -l "$SITEPATHL/$JSON"
 
 # 	mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev <<EOT
 # 	DROP TABLE IF EXISTS backup_assets;
