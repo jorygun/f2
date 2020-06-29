@@ -7,8 +7,8 @@ namespace digitalmx\flames;
 
 */
 
-ini_set('default_socket_timeout', 10);
-ini_set('display_errors',1);
+//ini_set('default_socket_timeout', 10);
+//ini_set('display_errors',1);
 
 //BEGIN START
 		require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
@@ -20,8 +20,9 @@ ini_set('display_errors',1);
 	#use digitalmx\flames\DocPage;
 
 $Assets = $container['assets'];
+$Asseta = $container['asseta'];
 
-	$page_title = 'Asset Fixer';
+	$page_title = 'Gen Assets2';
 	$page_options = [];
 	//
 //
@@ -47,40 +48,41 @@ $bnew = array (
 
 	'mime'=>'',
 	'type'=>'Other',
+	'local_src' => '',
 	);
 
 $bsame = array( // 8
-	'id',	'keywords','vintage','source','notes','first_use_in','tags', 'mime',
+	'id',	'keywords','vintage','source','notes','first_use_in', 'mime',
 
 	);
 $bchanged = array ( //10
 	'title','caption','astatus','sizekb','date_entered','contributor_id',
-	'first_use_date','asset_url','type','thumb_url'
-
+	'first_use_date','asset_url','type','thumb_url','tags'
+);
 $bauto = array ( //2
 	'date_modified', 'errors'
 	);
 
 
-$asset_db = 'live_assets'; #local copy of product assets table
-
+$asset_db = 'assets'; #local copy of product assets table
+$null = null;
 $sqli = '';
 
-$logfile = SITE_PATH . '/log.asset_fixer.log';
+$logfile = SITE_PATH . '/log.gen2.log';
 
 
-if (empty($_GET)) {
-	echo show_form();
-	exit;
-// } else {
-// 	u\echor($_GET);
+// if (empty($_GET)) {
+// 	echo show_form();
 // 	exit;
-}
+// // } else {
+// // 	u\echor($_GET);
+// // 	exit;
+// }
 $check_yt = false;
 $start_id = $_GET['start'] ?? 0;
 $end_id = $_GET['end'] ?? 0;
 $check_yt = $_GET['check_yt'] ?? false;
-
+$rept_interval = 25; // ping every this many records
 
 $start_time = time();
 $verbose = false; #gloabl tracking flag
@@ -88,231 +90,109 @@ $verbose = false; #gloabl tracking flag
 $dt = new  \DateTime('now',new \DateTimeZone('America/Los_Angeles'));
 $start_human = $dt->format ('M d, Y H:i') ;
 file_put_contents($logfile,
-"Fix Assets starting $start_human" . NL . NL);
+"Gen_assets2 starting $start_human" . NL . NL);
 
 echo "Starting from $start_id at $start_human" . BRNL;
 
 if ($start_id == 0 ) {
 	#rebuild assets2 from scratch
 	create_assets2($pdo) ;
-} else {
-
-		$whereend = $end_id != 0  ? " AND id <= $end_id " : '';
-	// remove assets between start and end
-	$sql = "DELETE from assets2 WHERE id >= $start_id $whereend ";
-	if($pdo->query($sql) ) {
-		echo "deleted from $start_id to $whereend" . BRNL;
-	} else {echo "delete failed";
-	}
 }
 
-$last_id = runit($pdo,$start_id,$end_id,$bsame,$bnew,$check_yt);
+$sql = "SELECT * from `$asset_db` WHERE  status not in ('T','X','D') order by id";
+$stmta = $pdo->query($sql);
+$cnt = $stmta->rowCount();
+echo "$cnt records in $asset_db" . BRNL;
 
+
+$estatus = '';
+$rc = 0;
+$scount = array (
+	'E' => 0,
+	'R' => 0,
+	'N' => 0,
+	'O' => 0,
+	'K' => 0,
+	);
+	// count of status codes
+while ($row = $stmta -> fetch() ) {
+	++$rc;
+	$b = $bnew; // new data set
+	$estatus = ''; // capture e and w codes
+	$ostatus = $row['status']; #old status
+
+	$id = $row['id'];
+	$tsrc = $src = '';
+	if (is_integer($rc/$rept_interval)) echo "<small>At record $rc id $id</small><br>";
+
+
+	$b = translate_fields($row);
+	// set mime type based on real url
+
+
+	if ($estatus != 'E') {
+		if ( !$mime = u\url_exists($b['asset_url'] ) ) {
+			$estatus = 'E';
+			$b['errors'] .= logrec($id, $estatus, "Source does not exist or can't get mime",$src);
+
+		} else {
+			$b['mime'] = $mime;
+			$b['type'] = Defs::getAssetType($mime);
+		}
+	}
+
+	if ($estatus != 'E') {
+		try{
+			$c = $Asseta->checkAssetData($b);
+
+		} catch (Exception $e) {
+			$msg = $e->getMessage();
+			//echo "Error in asset data: " .$msg . BRNL;
+			$estatus = 'E';
+			$b['errors'] .= logrec($id, $estatus, $msg);
+
+		}
+	}
+	if ($estatus != 'E') {
+	  try{
+			$b['local_src'] = $Asseta->checkThumbSources($id,$b['asset_url'] , $b['thumb_url'], $b['mime']);
+		} catch (Exception $e) {
+			$msg = $e->getMessage();
+			//echo "Error in thumb sources: " .$msg . BRNL;
+			$estatus = 'E';
+			$b['errors'] .= logrec($id, $estatus, $msg);
+		}
+	}
+
+	$b['astatus'] = $estatus ?: $ostatus;
+	$last_id = $id;
+	record_result($b);
+
+
+}
+
+#### FINISH ####
 
 $end_time = time();
 $elapsed = $end_time - $start_time + 1; // so you don't get 0
 $elapsedh = u\humanSecs ($elapsed);
 echo "done.  $elapsedh. Last ID $last_id. <br>";
-//add time to url to prevent caching
-echo "<a href='/asset_fixer.log?$end_time' target = 'log'>Log</a>" . BRNL;
+u\echor($scount);
+
+
+echo "<a href='/gen2.log?$end_time' target = 'log'>Log</a>" . BRNL;
+
+
 exit;
 
 #######################
 
-function runit($pdo,$next_id,$end,$bsame,$bnew,$check_yt) {
-	global $asset_db;
-	$rept_interval = 25; // print progress every this many records;
-	$end_condition = ($end > 0) ? " AND id <= $end " : '';
-	$sql = "SELECT * from `$asset_db` WHERE id >= ? $end_condition and status not in ('T','X') order by id  LIMIT 200";
-	echo $sql . BRNL;
-
-	$stmtb = $pdo->prepare($sql);
-	$done = false;
-	$null = null;
-
-	$estatus = '';
-	$rc = 0;
-
-	while (!$done ){
-
-		echo "<p><i>Getting records >=  $next_id" . $end_condition . "</i></p>" . BRNL;
-		//echo $sql . BRNL;
-
-		$stmtb->execute([$next_id]);
-		if (! $stmtb->rowCount() ){#no more records to get
-			$done = true;
-			echo "No more rows". BRNL;
-			return $last_id;
-		}
 
 
 
-
-		while ($row = $stmtb->fetch() ){
-			++$rc;
-			$b = $bnew; // new data set
-			$estatus = ''; // capture e and w codes
-			$ostatus = $row['status']; #old status
-
-			$id = $row['id'];
-			$tsrc = $src = '';
-			if (is_integer($rc/$rept_interval)) echo "<small>At record $rc id $id</small><br>";
-
-			if ($end != 0 && $id > $end){
-				$done = true;
-				$next_id = $last_id + 1;
-				return $last_id;
-			}
-			$last_id = $id;
-			// path to thumb as jpg
-			$tpjpg = SITE_PATH . '/assets/thumbs/' . $id . '.jpg';
-
-
-			if (in_array($row['status'],['X','T','D'])){continue;}
-
-			// make new array 'b'
-			$b = translate_fields($row,$bnew,$bsame);
-
-			try{
-				$c = $Assets->checkAssetData($b);
-
-			} catch (Exception $e) {
-				echo "Error in asset data. Asset not saved." . BRNL;
-				echo $e->getMessage();
-				exit;
-			}
-
-			}
-
-
-// do checks in assets.php
-			//check link
-			if (empty($src = $row['link'])) {
-				$estatus = 'E';
-				$b['errors'] .= logrec($id, $estatus, "No source (link) specified ");
-
-			}
-
-			if ($estatus != 'E') {
-				if ($thumburl = $row['url'] ) {
-					if ( $thumburl == $row['link'] ) {
-						$thumburl = '';  // blank for now.  will gt written back to the b array.
-					}
-				}
-			}
-
-
-
-
-			if ($estatus != 'E') {
-				if ( !$mime = source_exists($src,$check_yt))  {
-					$estatus = 'E';
-					$b['errors'] .= logrec($id, $estatus, "Source does not exist or can't get mime",$src);
-
-				}
-				$b['thumb_url'] = $thumburl;
-
-			}
-
-
-		// check valid thumb source,
-
-
-
-
-
-			// copy old status if nothing changed.
-			$b['astatus'] = $estatus ?: $ostatus;
-			} #end if old status not error
-			record_result($b);
-
-		} #end while adb loop
-	$next_id = $last_id + 1;
-	} #end while !done loop
-
-} #end function
-
-###########
-function source_exists($src, $check_yt=false) {
-	/* checks if the source file or url exists, and
-		if so, returns the mime type.  Done together
-		because it saves processing
-		check_yt checks to see if a youtube link is stil a valid video.
-	*/
-	static $mimeinfo;
-	global $verbose;
-	$mytrack = false; #this routine only
-	$track = $mytrack || $verbose;
-
-	if (empty($mimeinfo)){
-		$mimeinfo = new \finfo(FILEINFO_MIME_TYPE); // finfo->mime
-	}
-
-	if ($track)  echo "checking source $src.. " ;
-	if (substr($src,0,1) == '/'){
-		if ($track)  echo "is local...";
-			$path = SITE_PATH . $src;
-			if (! file_exists($path)){
-				if ($track)  echo "no file..". BRNL;;
-				return false;
-			}
-			$mime = $mimeinfo->file($path);
-			if ($track)  echo "file exists $mime." . BRNL;
-			return $mime;
-
-	} elseif ($ytid = u\get_youtube_id ($src)) {
-
-		if ($track)  echo "is youtube $ytid... " ;
-		if ($check_yt) {
-			$ytapi = "https://www.googleapis.com/youtube/v3/videos?id=$ytid&part=status&key=AIzaSyAU30eOK0Xbqe4Yj0OMG9fUj3A9C_K_edU";
-
-			 try {
-				$result = u\get_url($ytapi);
-				$content = (array) json_decode($result['content']); // class ojbect
-				//u\echor($content);
-				// no entry for items seems to mean the video has been removed.
-				if (!empty($items =  @$content['items'][0] ) ) {
-					$ps = $items->status->privacyStatus;
-				} else {
-						$ps = 'no items returned';
-				}
-
-			} catch (Exception $e) {
-				$ps = 'yt exception';
-			}
-			if ($ps != 'public') {
-				if ($track)  echo "Failed youtube $src. ps= $ps" . BRNL;
-				//u\echor($content);
-				return false;
-			}
-			elseif ($track) {
-				echo " OK" . BRNL;
-			}
-		}
-		return 'video/x-youtube';
-
-
-	} elseif (!$mime = u\is_vhttp ($src) ) {
-		return false;
-	}
-
-		if ($track)  echo "is url... ";
-
-		if (!$mime = u\get_info_from_curl($src)['mime'] ) {
-			return false;
-		}
-		foreach (array_keys(Defs::$mime_groups) as $m) {
-			if (strpos($mime,$m) !== false) {
-				$mime = $m;
-			} #eliminate other data
-		}
-		if ($track)  echo "yup $mime". BRNL;
-		return $mime;
-		} else { return false;}
-}
-
-function translate_fields($a,$bnew,$bsame) {
+function translate_fields($a) {
 	// $a is existing assets data, returns new asset2 data
+	global $bsame,$bnew,$null;
 
 	// make new array 'b'
 	$b = $bnew;
@@ -334,24 +214,31 @@ function translate_fields($a,$bnew,$bsame) {
 
 	$b['sizekb'] = $a['sizekb'] ?: 0;
 
-	$b['date_entered'] =  $row['date_entered'] ?: date('Y-m-d');
-	$b['contributor_id'] = $row['contributor_id'] ?: Defs::$editor_id;
+	$b['date_entered'] =  $a['date_entered'] ?: date('Y-m-d');
+	$b['contributor_id'] = $a['contributor_id'] ?: Defs::$editor_id;
 
-	$fud = $row['first_use_date'];
+	$fud = $a['first_use_date'];
 	if (empty($fud) || $fud == '0000-00-00') {
 		$fud = $null;
 	}
 	$b['first_use_date'] = $fud;
 
+	$b['tags'] = '';
+
+	foreach (str_split($a['tags']) as $tag){
+		if (in_array($tag,array_keys(Defs::$asset_tags))) {
+			$b['tags'] .= $tag;
+		}
+	}
 
 
-	$b['type'] =  Defs::getMimeGroup($mime) ?: 'Other';
+
 	$thumburl = $a['url'];
 	if ( empty($thumburl) || $thumburl == $a['link'] ) {
 		$thumburl = '';  // blank for now.  will gt written back to the b array.
 	}
+
 	$b['thumb_url'] = $thumburl;
-	$b['astatus'] = 'E';
 
 
 	$src = $a['link'];
@@ -367,6 +254,10 @@ function translate_fields($a,$bnew,$bsame) {
 function record_result($b) {
 	global $pdo,$null;
 	global $verbose;
+	global $scount;
+
+	++$scount[$b['astatus']];
+
 	$mytrack = false; #this routine only
 	$track = $mytrack || $verbose;
 
@@ -418,9 +309,9 @@ function logrec($aid,$e,$msg,$src='') {
 
 function create_assets2 ($pdo) {
 
-try {
 	$pdo->query("DROP TABLE IF EXISTS `assets2`;");
 
+	try {
 
 	$sql = <<<EOT
 	CREATE TABLE `assets2` (
@@ -444,20 +335,21 @@ try {
 	  `first_use_in` mediumtext COLLATE utf8mb4_unicode_ci,
 	  `tags` tinytext COLLATE utf8mb4_unicode_ci,
 	  `errors` mediumtext COLLATE utf8mb4_unicode_ci,
+	  `local_src` mediumtext COLLATE utf8mb4_unicode_ci,
 
 	  UNIQUE KEY `id` (`id`) USING BTREE
 	) ENGINE=InnoDB AUTO_INCREMENT=5405 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 EOT;
 
-		if ($pdo->query($sql)) {
+	if ($pdo->query($sql)) {
 			echo "Rebuilding assets2" . BRNL;
 			return true;
 		}
 		echo "Rebuilding table failed";
 		return false;
 	} catch (\PDOException $e) {
-		echo "Failed to drop assets2 tABLE";
-		echo $e-getMessage() . BRNL;
+		echo "PDO error ";
+		echo $e->getMessage() . BRNL;
 		exit;
 	}
 }

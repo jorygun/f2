@@ -29,7 +29,7 @@ use DigitalMx\Flames\Definitions as Defs;
 	first_use_date
 	first_use_in
 
-	needs [thumbs,galleries,toons]  // list of needed thumbs
+
 
 	set automatically:
 		sizekb
@@ -41,14 +41,13 @@ use DigitalMx\Flames\Definitions as Defs;
 	This class has these public methods
 	save_asset (array) -
 		updates or creates asset with values in array
-		creates thumbs reequested in needs
+
 		returns asset id
-	save_thumbs (id,needs)
-		creates thumbs from thumb source for id.
-	check_thumb_files (id)
+
+	get_existing_thumbs (id)
 		returns list of thumb files that exist
-	get_asset_data_by_id
-		returns array of asset data
+	get_asset_data_enhanced
+		returns array of asset data, with added info
 	get_asset_list_by_name
 		returns list of ids matching name in title,caption, or keys
 
@@ -80,7 +79,7 @@ class Assets {
 		'source',
 		'vintage',
 		'contributor_id',
-
+'astatus',
 		'notes',
 
 		);
@@ -91,9 +90,10 @@ class Assets {
 		'mime',
 		'type',
 		'sizekb',
-		'astatus',
-		'height',
-		'width',
+		'local_src',
+		'errors',
+
+
 
 	);
 
@@ -105,7 +105,7 @@ class Assets {
 		'temptest',
 	);
 
-	public  $new_asset = array(
+	public static $new_asset = array(
 		'title' => '',
 		'source' => '',
 		'contributor_id' => '',
@@ -117,7 +117,8 @@ class Assets {
 		'tags' => '',
 		'vintage' => '',
 		'notes' => '',
-		'existing_thumbs' => [],
+
+
 	);
 
 
@@ -148,270 +149,129 @@ class Assets {
 		return true;
 	}
 
-	public function checkAssetData($adata) {
-	// id
-// 	asset_url  (nee link) (asset source url)
-// 	thumb_url (nee url) (thumb source url)
-// 	title
-// 	caption
-// 	keywords
-// 	tags
-// 	source
-// 	vintage
-// 	contributor id
-// 	astatus
-//
-// 	first_use_date
-// 	first_use_in
-//
-// 	mime
-// 	type
-// 	sizekb
-//
-// 	date entered
-// 	date modified
-
-	#u\echor($adata,'Into Checking asset data:');
-	foreach ($adata as $var => $val){
-		switch ($var) {
-			case 'id':
-				if (! is_integer( (int)$val) ) throw new Exception ("bad id: ". $val);
-				break;
-
-			case 'asset_url':
-				if (empty($adata['asset_url'])){
-					throw new Exception ("No source for asset specified");
-				}
-				if (! u\url_exists ($val) ) {
-					throw new Exception ("Asset source does not exist." . $val) ;
-				}
-				break;
-			case 'thumb_url':
-				if(empty($val)) break;
-				// thumb must be either local or a youtube
-				if (! u\is_local($val) && ! is_youtube($val) ){
-					throw new Exception ("Thumb source not useable " . $val) ;
-				}
-				break;
-
-			case 'title':
-				if (empty($val)){
-					throw new Exception ("No title provided");
-				}
-				break;
-			case 'vintage':
-				 if (! is_integer (0 + $val)
-				 	|| $val < 1800
-				 	|| $val > 2050 ){ #to cast as numeric
-						throw new Exception ("Vintage is not a valid year");
-					}
-				break;
-			case 'astatus':
-				if (! in_array($val,array_keys(Defs::$asset_status))){
-					throw new Exception ("Unknown asset status $val");
-				}
-				break;
-
-			case 'contributor_id' :
-				if (! $this->Member->getMemberBasic($val) ){ #0 is allowed
-					throw new Exception ("No user found for contributor id " . $val);
-				}
-				break;
-
-			case 'needs':
-				if (empty($val)) break;
-				if (! is_array($val) ){
-					throw new Exception ("Thumb requested not in a string. " . typeof($val) );
-				}
-				foreach ($val as $ttype) {
-					if (! in_array($ttype, Defs::getThumbTypes() ) ) {
-						throw new Exception ("Unrecognized thumb requested $ttype");
-					}
-				}
-				break;
-
-			case 'tags':
-				if (empty($val)) break;
-				foreach (str_split($val) as $tag){
-					if (! in_array($tag,array_keys(Defs::$asset_tags)))
-					throw new Exception (__LINE__ . " Unknown asset tag $tag");
-				}
-
-				break;
-			case 'mime':
-				if (!in_array($val,Defs::getAcceptedMime() ) )
-			 		throw new Exception ("Source type $mime is not acceptable: " . $val);
-			 	break;
-
-			default: #do nothing
-
-		} #end switch
-	}
-	return true;
-
-	}
 
 
 	public function saveAsset($adata) {
 		/* adata is array with all the asset fields..
 		// check data before saving
-			adata['needs'] is array of required thumb types that
-			will be created.  thumbs are never deleted (unless record
-			is deleted).  So once created, you don't need to ask again
-			ujless source is updated.
-		*/
-			// data already checked in AssetAdmin
 
-			//db field 'astatus' may be in post astatus or just status
+		*/
 
 			$id = $adata['id'];
 
-		try {
-				 $this->checkAssetData($adata);
 
-		} catch (Exception $e) {
-				echo "Error in asset data. Asset not saved." . BRNL;
-				echo $e->getMessage();
-				exit;
-		}
 
-		$adata['sizekb'] = 0;
-		try {
-		$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
-		$adata['type'] = $this->getTypeFromMime($adata['mime']);
-		} catch (Exception $e) {
-			echo "Failed to get mime info for asset $id";
-			echo $e->getMessage();
-			exit;
-		}
-		if (u\is_local($adata['asset_url']) ) {
-			$path = SITE_PATH . $adata['asset_url'];
-			$size = filesize($path);
-			$adata['sizekb'] = (int)($size/1000);
-			// if ($adata['type'] == 'Image'){
-// 				list($adata['width'], $adata['height'], $junk) = getimagesize(SITE_PATH . $adata['asset_url']);
-// 			}
-		}
 		#echo "Saving Asset $id" . BRNL;
 
-		// save all tbunbs, including thumb if not there.
-		$needs = $adata['needs'];
-
-
-			/*
-			external fields are not included here.  This is an
-			update, so existing values do not get changed.
-			*/
 		$allowed_fields = array_merge (self::$editable_fields, self::$calculated_fields);
 
 
 		$prep = u\pdoPrep($adata,$allowed_fields,'id');
 
- /**
- 	$prep = pdoPrep($post_data,$allowed_list,'id');
-
-    $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
-       $new_id = $pdo->lastInsertId();
-
-    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
-       $stmt = $pdo->prepare($sql)->execute($prep['data']);
-
-  **/
   			// asset id already created, so this is ALWAYS an update.
 
 		$sql = "UPDATE `assets2` SET ${prep['updateu']} WHERE id = ${prep['key']} ;";
 		//u\echor ($prep, $sql); exit;
 		$stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
-			// save the data because createThumbs always wants to get start from db.
-		$this->createThumbs($id,$needs);
 
 		return $id;
 
 	}
+
+	public function getAssetDataEnhanced($id) {
+		if ($id == 0){
+   		// new asset
+   		$adata = self::$new_asset;
+   		$adata['contributor_id']  = $_SESSION['login']['user_id'];
+   		$adata['contributor'] = $_SESSION['login']['username'];
+   		$adata['id'] = 0;
+   		$adata['date_entered'] = date('M d, Y');
+   		$adata['first_use'] = 'Never';
+   		$adata['vintage'] = date('Y');
+   		$adata['errors'] = '';
+
+   		return $adata;
+   	}
+
+		if (! $adata = $this->getAssetDataById($id) ){
+			return [];
+		}
+
+
+	// set first_use text
+   	$adata['first_use'] = "Never.";
+   	if  (! empty($fud = $adata['first_use_date'])) {
+   		$fud = $adata['first_use_date'];
+   		$fin = $adata['first_use_in'];
+   	}
+   	if ($fud){
+   		$adata['first_use'] =
+   		"On " . date('d M Y',strtotime($fud) )
+   		. " In " . "<a href='" . $fin . "'>" . $fin . "</a>";
+   	}
+
+
+		$adata['status_label'] = Defs::$asset_status[$adata['astatus']];
+
+
+		$adata['link'] = $this->getAssetLinked($adata);
+
+		$adata['warning'] = '';
+		if ($adata['status'] == 'D' )	$adata['warning'] = 'Deleted';
+
+		if ($adata['status'] == 'W' )	$adata['warning'] = "<br><span style='background:#CCC;'>${adata['errors']}</span>";
+
+		if ($adata['status'] == 'E' )	$adata['warning'] = "<br><span style='color:red;'>${adata['errors']}</span>";
+
+
+
+//u\echor($adata);
+		return $adata;
+	}
+
+	private function getAssetLinked($adata) {
+	/* returns the asset thumbnail, linked to the asset source */
+
+		$status = $adata['astatus'];
+		$id = $adata['id'];
+		switch ($status) {
+			case 'T':
+				return "Temporary Asset";
+				break;
+			case 'D':
+				return "Asset Deleted";
+				break;
+		}
+
+
+		$link = $adata['asset_url'];
+		if (empty($link)){return 'No asset url';}
+
+		$thumb = "/assets/thumbnails/small/${id}.jpg";
+
+
+		if (!file_exists(SITE_PATH . $thumb)){
+			return "No small thumbnail for asset";
+		}
+		if (1){  // add time to var to prevent caching
+			$time = time();
+			$thumb .= "?nocache=$time";
+		}
+		$result = <<<EOF
+		<a href='$link' target="assetl">
+		<img src='$thumb'>
+		</a>
+EOF;
+#echo "RESULT <br>$result"; exit;
+
+		return $result;
+
+	}
+
 	private function updateThumbUrl($id,$url) {
 		$sql = "UPDATE `assets2` SET thumb_url = '$url' WHERE id = '$id' ";
 		$this->pdo->query($sql);
 	}
-
-	public function createThumbs($id,$needs){
-		/* routine to create thumbs of any sizes.
-
-			id is asset id
-			needs is an array of needed thumb types ['thumb','gallery']
-// try with id,src,mime,needs
-src is thumb_url || asset_url
-
-		If the asset has thumb_url, then that is the source
-		of the thumb file.  It is generated from the source
-		(which must be local) using imagick.
-
-		if there is no thumb_url, then the source_url is used.
-		If the source is a local file, thumb is generated.
-		If the source is youtube, a thumb is retrieved from youtube,
-			saved in /assets/thumb_sources/, and that is placed into thumb_url
-		If the source is any other url except youtube, a generic icon for the
-			mime type is used.
-
-		*/
-		if (empty($needs)) return true;
-
-		if (! $adata = $this->getAssetDataById($id) ) {
-			throw new ResourceException ("Trying to create thumb but no asset at id $id");
-		}
-		$turl = $adata['thumb_url'];
-		$aurl = $adata['asset_url'];
-		$amime = $adata['mime'];
-
-		// set thumb source from db
-		$tsource = $turl;
-
-			// need to get thumb from the asset.
-			// is the asset local
-		if (! $tsource && u\is_local($aurl)) {
-				$tsource = $aurl;
-		}
-		// is the asset a hyoutube video?
-		if (! $tsource && $ytid = u\youtube_id_from_url($aurl) ){
-			$yturl = "http://img.youtube.com/vi/$ytid/mqdefault.jpg";
-			//echo "yturl $yturl". BRNL;exit;
-			// is http://youtube.com/...../xx.jpg
-			$thumb_url = "/assets/thumb_sources/${id}.jpg";
-			//copy from the youtube site to local thumb source dir
-			copy ($yturl , SITE_PATH . $thumb_url);
-			$this->updateThumbUrl($id,$thumb_url);
-			$tsource = $thumb_url;
-		}
-		if ($tsource && ! file_exists(SITE_PATH . $tsource) ) {
-			throw new ResourceException ("Thumb source file $tsource does not exist.");
-		}
-		if ( (!$tsource) && u\is_http($aurl)  ){
-				$tsource = $aurl;
-				// but will use icons for the thumb
-		}
-			// if ($temp_source = $this->getTempSource($id,$tsource) ){
-// 				$tsource = $temp_source;
-// 				try {
-// 					$mime = u\get_mime_from_url($temp_source);
-// 				} catch (Exception $e) {
-// 					echo "Failed to get mime info for asset $id";
-// 					echo $e->getMessage();
-// 					exit;
-// 				}
-// 			} else {
-// 				throw new Exception ("Cannot download thumb source $tsource");
-// 			}
-
-		if (! $tsource)  {throw new ResourceException ("No valid thumb source for asset $id");}
-
-		foreach ($needs as $need){
-			$this->saveThumb($need,$id,$tsource,$amime);
-		}
-
-		return true;
-
-	}
-
 
 	private function getTempSource($id,$tsource) {
 			/* downloads a web url to make a thumb and rturns path.
@@ -427,7 +287,6 @@ src is thumb_url || asset_url
 					return false;
 				}
 	}
-
 
 
 
@@ -599,7 +458,18 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 }
 
 
+public function getThumbData($id) {
+	$sql = "SELECT asset_url,mime, astatus,
+	local_src,title, caption,source
+	FROM Assets2
+	WHERE id = $id";
 
+	if ($result = $this->pdo->query($sql)->fetch( ) ){
+		return $result;
+	} else {
+		return [];
+	}
+}
 
 // not using GD instead of Imagick because gd can't do pdfs.
 	private function buildImThumbnail ($id,$path,$ttype){
@@ -620,17 +490,6 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 
 		 return $thumb;
 	}
-
-
-	private function getTypeFromMime ($mime) {
-		 if (strpos($mime,'image') !== false){$type = 'Image';}
-        elseif (strpos($mime,'audio') !== false){$type = 'Multimedia';}
-        elseif (strpos($mime,'video') !== false){$type = 'Multimedia';}
-        elseif (strpos($mime,'application') !== false){$type = 'Document';}
-        elseif (strpos($mime,'html') !== false){$type = 'Web Page';}
-      return $type;
-   }
-
 
 
 	private function getMimeSize ($url) {

@@ -3,6 +3,9 @@
 namespace DigitalMx\Flames;
 
 #ini_set('display_errors', 1);
+/*
+	Uses articles and read_table and json index file to build new pubs table
+*/
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
@@ -32,6 +35,9 @@ echo $page->startBody();
 
 
 //EOF
+
+$logurl =  '/developer/logs/log.gen_pubs.log';
+$logfile = SITE_PATH . $logurl;
 
 create_pubs($pdo) ;
 

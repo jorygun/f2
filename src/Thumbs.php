@@ -13,7 +13,6 @@ asset itself (may be different from thumb url), and a type of thumb (thumb,galle
 From this it will generate the apprpirate thumb image and put it in the
 /assets/type/id.jpg
 
-Don't run this if thumbs already exist.  Just to create new or recreate.
 
 CreateThumb($type) returns a possibly new thumb_url for the asset.
 
@@ -22,29 +21,91 @@ CreateThumb($type) returns a possibly new thumb_url for the asset.
 
 class Thumbs
 {
-	public function __construct($id,$asset_url,$thumb_url='' ){
+
+private $asset_url='';
+private $thumb_url='';
+private $id = 0;
+
+private static $mime_icons = array(
+		'application/msword' 	=>	'doc.jpg',
+		'application/pdf' 	=>	'pdf.jpg',
+		'image/gif'	=>	'image.jpg',
+		'image/jpeg'	=>	'image.jpg',
+		'image/png'	=>	'image.jpg',
+		'image/tiff'	=>	'image.jpg',
+		'text/html'	=>	'web.jpg',
+		'video/mp4'	=>	'mp4.jpg',
+		'audio/mp3'	=>	'mp3.jpg',
+		'audio/m4a'	=>	'm4a.jpg',
+		'video/quicktime'	=>	'mov.jpg',
+	);
+
+
+	public function __construct($id='',$asset_url='',$thumb_url='' ){
 		/*
-		mime is the mime type of the asset itself, not necessarily
-		the asset source, which is in $source.  mime type determines
-		what kind of a default thumb might be used.
-		Source is the asset thumb_url || asset_url
+		To build a thumbnail, first load the item info: id, aurl, turl
+		either at creation or with reLoad.
+		aurl is needed as possible thumb source, and also because asset mime type
+		determines generic thumb for docs, m4a, etc.
+
+		turl is an alternative grapic source for the thumbnail
+
+		Thumbnail is created from turl || aurl.
+
+		Once instantiated, thumbnail is created by
+			create_thumb (type)
+		which creates correct graphic and puts it at assets/thumbs/type/id.jpg
+
+		Sometimes (like first time) the turl needs to be created from the sources,
+		so there is a local thumb source graphic.  For example for youtube videos,
+		the youtube id is obtained and the youtube thumbnail downloaded into
+		/assets/thumbsources/id.jpg and that is returned as the new turl.
+
+		This is done by
+			$turl = rebuildSource ();
+
+
 		*/
+
+		$this->asset_dir = FileDefs::asset_dir;
+		$this->thumb_dir = FileDefs::thumb_dir;
+
+		if ($id && $asset_url) {
+			$this->reLoad($id,$asset_url,$thumb_url);
+		}
+
+
+
+	}
+	public function reLoad($id,$asset_url,$thumb_url='') {
+	//echo "Loading data: $id, $asset_url, $thumb_url" . BRNL;
+
+		if (empty($id) || empty($asset_url) ){
+			die ("Must have id and asset_url to load data");
+		}
 		$this->id = $id;
 		$this->aurl = $asset_url;
 		$this->turl = $thumb_url;
 		$this->tsource = $thumb_url ?: $asset_url;
-
-		$this->amime = u\get_mime_from_url($asset_url);
-
-		$this->thumbfile = "${id}.jpg"; // always
-		$this->asset_dir = FileDefs::asset_dir;
-
+		$this->thumbfile = "${id}.jpg"; // alway
+		$this->amime = u\get_mime_from_url($asset_url); // of asset, not thumb
 
 	}
+	function rebuildThumbUrl () {
+		// uses sources to rebuild the thumb url
+		if (! ($this->id && $this->aurl) ) {
+			die ('No data loaded.  Do $thumbs->loadData($id,$asset_url [,$thumb_url]');
+		}
 
+
+
+
+	|
 	public function createThumb ($ttype) {
 
-
+		if (! ($this->id && $this->aurl) ) {
+			die ('No data loaded.  Do $thumbs->loadData($id,$asset_url [,$thumb_url]');
+		}
 		$new_thumb_url = '';
 
 		if (! $max_dim = Defs::$thumb_width[$ttype]){
@@ -52,48 +113,40 @@ class Thumbs
 		}
 
 		// set source for thumb.  Maybe same; maybe changed.
-		$new_thumb_url = $this->setNewThumbUrl () ;
-
-			$thumb_url = $this->makeThumbFromSource($new_thumb_url,$ttype);
+			$tsrc = $this->getThumbSource () ;
+			if ($tsrc != $this->tsource) {
+				// put new tsrc into asset db
+				echo "New thumb source needs to be saved $tsrc";
+			}
+			$thumb_url = $this->makeThumb($tsrc,$ttype);
 			echo "$thumb_url created" . BRNL;
+			return $thumb_url;
 	}
 
 
-	private function makeThumbFromSource($tsource ,$ttype) {
-	echo "Make thumb $ttype from $tsource (mime $this->amime) ." . BRNL;
-			$id = $this->id;
-			$mime = $this->amime; // of asset, not thumb
-			$tsource = $this->tsource;
-			$thumbpath = $this->asset_dir . "/${ttype}/${id}.jpg";
+	private function makeThumb($tsrc, $ttype) {
+		$id = $this->id;
+		if (! $tmime = $this->tmime) {
+			throw new Exception ("thumb source mime not set");
+		}
+		$thumbpath = $this->thumb_dir . "/${ttype}/${id}.jpg";
 
-			// first see if source is the icon file.  If so,
-			// just copy it over
-			if (strpos($tsource,'/assets/icons') !== false) {
-				copy (SITE_PATH . $tsource,$thumbpath);
-				return;
-			}
+		echo "Making thumb $ttype from $tsrc (mime $tmime) ." . BRNL;
 
-			$tmime = u\get_mime_from_url($tsource);
-			$tgroup = Defs::$mime_groups[$tmime];
 
-			if (u\is_local($tsource) ) {
-				$tspath = SITE_PATH . $tsource;
+			if (! u\is_local($tsrc) ) {
+				$tspath = SITE_PATH . $tsrc;
 			} else {
-				$tspath = $tsource;
+				throw new Exception ("non-local source for thumb on id $id");
 			}
 
 			// if source is an image, then try to create using gd
+			$tgroup = Defs::$asset_types[$tmime];
+
 			if ( $tgroup == 'Image' ) {
 					// try creating thumb from remote or local useing gd
 					echo "Creating thumb using gd for id $id from image at $tsource";
 					$simage = null;
-					if (! u\is_local($tsource) ){
-
-						$sizem = u\get_info_from_curl($tsource)['size'] / 1000000; #MB
-						if ($sizem > 32) { //MB
-							throw new Exception ("Remote File too large for GD: " . (int) $sizem . 'MB');
-						}
-					}
 
 				switch ($tmime) {
 					case 'image/jpeg':
@@ -120,7 +173,8 @@ class Thumbs
 					throw new Exception ("Failed to make thumb $ttype on id $id");
 				}
 			} elseif (strpos($mime,'pdf') !== false) {
-				$thumb = $this->buildImThumbnail($id,$tspath,$ttype);
+				$thumb = $this->buildImThumbnail($id,$tspath,$ttype,$thumbpath);
+				// id, path to source, thumb type, path to destination
 
 			}
 
@@ -129,52 +183,71 @@ class Thumbs
 
 
 
-	private function setNewThumbUrl () {
-		/* set thumburl based on source.
-			If local, that's the source
+private function getThumbSource () {
+		/* set thumb ssource
+			set real thumb source based on tsource (turl || aurl)
 			if youtube, get the thumb from youtube, download it, and set thumburl
 			If web, use an icon based on asset mime type
+			else Exception
+
+			returns _local_ url to thumb source
 		*/
-		$new_thumb_url = '';
+
 		$id = $this->id;
-		$amime = $this->amime;
-		$source = $this->tsource;
+
+		if (!$tmime = u\url_exists($this->tsource) ) {
+				throw new Exception ("Thumb source $this->tsource does not exist.");
+			}
 
 
-		if (u\is_local($source) ){ // local file exists
-			$new_thumb_url = $source;
+		if ( u\is_local($this->tsource) ) {
+			$tsrc = $this->tsource;
 
-		} elseif ($ytid = u\youtube_id_from_url($source) ) {
+		} elseif ($ytid = u\youtube_id_from_url($this->turl) ) {
 			// get url to youtube's thumb file for this video
-			$yturl = "http://img.youtube.com/vi/$ytid/mqdefault.jpg";
+				$yturl = "http://img.youtube.com/vi/$ytid/mqdefault.jpg";
+				$local_url = "/assets/thumb_sources/${id}.jpg";
+				$local_path = SITE_PATH . $local_url;
+				//copy from the youtube site to local thumb source dir
+				copy ($yturl ,  $local_path);
 
-			$local_source = "/assets/thumb_sources/${id}.jpg";
-			//copy from the youtube site to local thumb source dir
-			copy ($yturl , SITE_PATH . $local_source);
-
-			$new_thumb_url = $local_source;
+				$tsrc = $local_url;
 
 
-
-		} elseif (0 && $tmime = is_http($source)) {
-			// do not allow remote sources for thumbs
-			// But if you did, you'd set new thumb and go on.
-			$new_thumb_url = $source;
-
-		} elseif ($icon = $this->get_generic_thumb ($id,$amime) ) {
-			// set thumb source to generic icon
-				$thumburl = "/assets/icons/$icon"; // new thumb source
-				if (! file_exists(SITE_PATH . $thumburl)) {
-					throw new Exception ("No generic icon for $amime");
+		} elseif (0 && $tmime = is_http($this->tsource)) {
+				$sizem = u\get_info_from_curl($tsource)['size'] / 1000000; #MB
+				if ($sizem > 32) { //MB
+					//"Remote File too large for GD: " . (int) $sizem . 'MB');
+					$tsrc = getIconThumb($tmime);
+				} elseif (
+					strpos($tmime('image') !== false)
+					|| strpos($tmime('pdf') !== false)
+				) {
+						$local_url = "/assets/thumb_sources/${id}.jpg";
+						$local_path = SITE_PATH . $local_url;
+				//copy from the site to local thumb source dir
+						copy ($this->tsource ,  $local_path);
+						$tsrc = $local_url;
 				}
-				$new_thumb_url = $thumburl;
+
+
+
+		} elseif ( $tsrc = $this->getIconThumb ($this->amime) ) {
+			// set thumb source to generic icon
+			$tsrc = getIconThumb($tmime);
+
 
 		} else {
-			throw new Exception ("Could not determine thumb source for asset $id");
-
+			throw new Exception ("Could not create thumb for asset $id");
 		}
-		return $new_thumb_url;
-	}
+		if (! u\is_local($tsrc)) {throw new Exception (
+			"Genereated non-local url for thumb on id $id: $tsrc"
+			);
+		}
+		$this->tmime = $tmime;
+		$this->tsrc = $tsrc;
+		return $tsrc;
+}
 
 
 private function yturl ($tyid) {
@@ -187,54 +260,45 @@ private function yturl ($tyid) {
 
 
 
-	private function buildImThumbnail ($id,$path,$ttype){
-		 $thumb = $id . '.jpg';
-		 if (!$max_dim = Defs::$thumb_width[$ttype]){
-		 	throw new Exception ("unknown thumb type requested: $ttype.");
-		 }
-		 if (strcasecmp (pathinfo($path,PATHINFO_EXTENSION),'pdf') == 0){
-			$path = trim($path) . '[0]'; #page 1
-		 }
-		 echo "calling imagick on $path" . BRNL;
-		  	 $im = new \Imagick ();
-		  	 $im->setResolution(300,300);
-			$im->readImage($path);
-			$im->setImage($im->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN));
-		 $im->setImageFormat('jpeg');
+private function buildImThumbnail ($id,$path,$ttype,$dest){
 
-		 $im->thumbnailImage($max_dim, $max_dim,true); #best fit
-		 $im->writeImage(SITE_PATH . "/assets/$ttype/$thumb");
-
-		 return $thumb;
+	if (!$max_dim = Defs::$thumb_width[$ttype]){
+		throw new Exception ("unknown thumb type requested: $ttype.");
 	}
+	if (strcasecmp (pathinfo($path,PATHINFO_EXTENSION),'pdf') == 0){
+		$path = trim($path) . '[0]'; #page 1
+	}
+	echo "calling imagick on $path" . BRNL;
+	$im = new \Imagick ();
+	$im->setResolution(300,300);
+	$im->readImage($path);
+	$im->setImage($im->mergeImageLayers(\Imagick::LAYERMETHOD_FLATTEN));
+	$im->setImageFormat('jpeg');
 
-private function get_generic_thumb($aid,$amime) {
-	// if url is useable to geneatethumb
+	$im->thumbnailImage($max_dim, $max_dim,true); #best fit
+	$im->writeImage($dest);
 
-	$use_mime = array(
-		'application/msword' 	=>	'doc.jpg',
-		'application/pdf' 	=>	'pdf.jpg',
-		'image/gif'	=>	'image.jpg',
-		'image/jpeg'	=>	'image.jpg',
-		'image/png'	=>	'image.jpg',
-		'image/tiff'	=>	'image.jpg',
-		'text/html'	=>	'web.jpg',
-		'video/mp4'	=>	'mp4.jpg',
-		'audio/mp3'	=>	'mp3.jpg',
-		'audio/m4a'	=>	'm4a.jpg',
-		'video/quicktime'	=>	'mov.jpg',
-	);
-	$icon = $use_mime[$amime] ?? 'default.jpg';
-	return $icon;
+	return true;
+}
+
+private function getIconThumb($mime) {
+	// returns url for asset mime type
+	$icon = self::mime_icons[$mime] ?? 'default.jpg';
+	$tsrc = "/assets/icons/$icon"; // new thumb source
+	if (! file_exists(SITE_PATH . $tsrc)) {
+			throw new Exception ("No generic icon for $this->amime");
+	}
+	return $tsrc;
 }
 
 
 
-	private function checkThumbsExist() {
+	private function checkThumbsExist($id,$ttype) {
 			// now check existance of thumbs
 				// not doing for galleries .. too complicated.
-				$tpjpg = SITE_PATH . '/assets/thumbs/' . $id . '.jpg';
-				$tppng = SITE_PATH . '/assets/thumbs/' . $id . '.png';
+				$tfile = "${id}.jpg";
+				$tpjpg = $this->thumb_dir . "/$ttype" . "/$tfile";
+				$tppng = $this->thumb_dir . "/$ttype" . "${id}.png";
 
 				if (file_exists($tpjpg)){
 					#ok

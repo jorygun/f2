@@ -14,7 +14,7 @@ table {border:1px solid black; }
 		<td> <span style='<?=$status_style?>'><?=$astatus?>
 		<?=$status_name?> </span></td></tr>
 <tr><td> Entered: </td><td><?=$date_entered?> </td></tr>
-<tr><td>Mime &amp; Group: </td><td><?=$mime?> -> <?=$type?> </td></tr>
+<tr><td>Mime &amp; Asset Type: </td><td><?=$mime?> : <?=$type?> </td></tr>
 <tr><td>Size: </td><td><?=$sizekb?> KB. </td></tr>
 <tr><td>First Use:</td><td> <?=$first_use?></td></tr>
 
@@ -23,13 +23,16 @@ table {border:1px solid black; }
 <?php else:?>
 
 	<h4>Create New Asset</h4>
-	<p><b>ID:</b> <?=$id?>  <b>Status:</b> <?=$status?> <?=$status_name?> <b>Entered:</b> <?=$date_entered?> </p>
+	<p><b>ID:</b> <?=$id?>  <b>Status:</b> <?=$astatus?> <?=$status_name?> <b>Entered:</b> <?=$date_entered?> </p>
 <?php endif;?>
 <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='assets' >Help</button><br>
 <form  method="POST" enctype="multipart/form-data"  name="asset_form" id="asset_form">
 
 <input type='hidden' name ='id' value ='<?=$id?>'>
-<input type='hidden' name ='astatus' value = '<?=$astatus?>'
+<input type='hidden' name ='old_status' value = '<?=$astatus?>'>
+<input type='hidden' name='old_aurl' value = '<?=$asset_url?>'>
+<input type='hidden' name='old_turl' value = '<?=$thumb_url?>'>
+
 
 <hr>
 
@@ -39,7 +42,7 @@ table {border:1px solid black; }
 <tr><td>Caption (not reqd)</td><td><textarea  name='caption' rows=5 cols=60><?=$caption?></textarea></td></tr>
 <tr><td>Other Keywords (comma sep)</td><td><input type='text' name='keywords' value='<?=$keywords?>' size='60'/></td></tr>
 
-<tr><td>Status</td><td><select name='status'><?=$status_options?></select></td></tr>
+<tr><td>Status</td><td><select name='astatus'><?=$status_options?></select></td></tr>
 
 <tr><td>Origin</td><td>Vintage: <input type='text' name='vintage' value = "<?=$vintage?>" size="6"> Attribute to <input type='text' name='source' value="<?=$source?>" size="40"> </td></tr>
 <tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' onfocus="form.contributor_id.value='';"
@@ -70,20 +73,32 @@ Upload file <input type="file" name="uasset" > <br>
 
 
 
-<tr><td style="vertical-align:text-top;">Notes (not published)</td><td><textarea rows=2 cols=40 name='notes'><?=$notes?></textarea></td></tr>
+<tr><td style="vertical-align:text-top;">Notes (not published)</td>
+	<td><textarea rows=2 cols=40 name='notes'><?=$notes?></textarea></td></tr>
+
+<tr><td style="vertical-align:text-top;">Errors</td>
+	<td><textarea rows=2 cols=40 name='errors' READONLY><?=$errors?></textarea>
+</td></tr>
+
 <tr><td>Thumb Images</td>
-	<td><table class='thumbtable'>
-	<tr><th>Form</th><th>Exists</th><th>Create/Recreate</th></tr>
-	<tr ><td>Thumb </td><td ><?=$thumb_tics['thumbs']?></td>
-	<td><input type='checkbox' name='thumbs' <?=$thumb_checked?>></td></tr>
-	<tr><td>Gallery </td><td><?=$thumb_tics['galleries']?></td>
-	<td><input type='checkbox' name='galleries'></td></tr>
-	<tr><td>Toon </td><td><?=$thumb_tics['toons']?></td>
-	<td><input type='checkbox' name='toons'></td></tr>
-	</td></tr>
-</table>
+	<td>
+	Local Source: <?=$local_src?><br>
+	<table class='thumbtable'>
+
+	<tr><th>Form</th><th>Exists</th></tr>
+
+	<tr ><td>Small </td><td ><?=$thumb_tics['small']?></td></tr>
+	<tr><td>Medium </td><td><?=$thumb_tics['medium']?></td><tr>
+
+	<tr><td>Large </td><td><?=$thumb_tics['large']?></td></tr>
+
+	</table>
+</td></tr>
+
 
 </table>
+
+
 
 <hr>
 <?php if (!empty($current_count) && $current_count > 1) : ?>

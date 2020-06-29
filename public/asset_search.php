@@ -44,7 +44,7 @@ echo $page->startBody();
 //END START
 
 
-$as = $container['assetsearch'];
+$AssetSearch = $container['assetsearch'];
 $templates = $container['templates'];
 
 
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 	// save list of ids, for sequential editing.
 
-	$data = $as->getIdsFromSearch($_POST);
+	$data = $AssetSearch->getIdsFromSearch($_POST);
 	u\echoc($data['sql'],'search WHERE');
 
 	if (!empty($data['error'])) {
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 		if ($count < 11 ) echo join(', ',$ids) . BRNL;
 
 		foreach ($ids as $id){
-			$asset = $as->getAssetSummary($id);
+			$asset = $AssetSearch->getAssetSummary($id);
 
 			$asset['mode'] = $mode; // was seach opened from javascript?
 			 #u\echor($asset, "selected asset $id");
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 echo "<hr>";
 $last_search = $_SESSION['last_asset_search'] ?? [] ;
-$search_data = $as->prepareSearch ($last_search );
+$search_data = $AssetSearch->prepareSearch ($last_search );
 echo $templates->render('asearch',$search_data);
 // echo "</body></html>" . NL;
 //

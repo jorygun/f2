@@ -135,7 +135,7 @@ if (!is_object($assets)) die ("No asset class");
 			if (!$do_all && file_exists($tpjpg)) {continue;}
 
 			if ($amime = $row['mime'] ) {
-				$type = Defs::$mime_groups[$amime];
+				$type = Defs::$asset_types[$amime];
 			} else {
 				$estatus = 'E';
 				$b['errors'] .= logrec($id,$estatus,"No mime on id $id");
@@ -414,10 +414,9 @@ function source_exists($src, $check_yt=false) {
 	}
 
 	if ($track)  echo "checking source $src.. " ;
-	if ($path = u\is_local($src)) {
+	if ($mime = u\is_local($src)) {
 		if ($track)  echo "is local...";
-			$mime = $mimeinfo->file($path);
-			if ($track)  echo "file exists $mime." . BRNL;
+
 			return $mime;
 
 	} elseif ($ytid = u\get_youtube_id ($src)) {
@@ -458,7 +457,7 @@ function source_exists($src, $check_yt=false) {
 		if ($track)  echo "is url... ";
 
 
-		foreach (array_keys(Defs::$mime_groups) as $m) {
+		foreach (array_keys(Defs::$asset_types) as $m) {
 			if (strpos($mime,$m) !== false) {
 				$mime = $m;
 			} #eliminate other data

@@ -23,8 +23,9 @@ if ($login->checkLevel(1)){
 	echo $page->startBody();
 }
 
-
+$assets = $container['assets'];
 $asseta = $container['asseta'];
+$assetv = $container['assetv'];
 
 $next_id = 0;
 $list_note = '';
@@ -89,7 +90,7 @@ else $id = 0;
 $current_count = (isset($_SESSION['last_assets_found'])) ?
 		count($_SESSION['last_assets_found']) : 0;
 
-if (! $asset_data = $asseta->getAssetDataEnhanced ($id) ){
+if (! $asset_data = $assets->getAssetDataEnhanced ($id) ){
 		die ("No such asset number");
 }
 
@@ -99,25 +100,24 @@ $asset_data['current_count'] = $current_count;
 $asset_data['status_style'] = ($asset_data['astatus'] == 'X')? 'color:red':'';
 $asset_data['source_warning']='';
 
-$asset_data['thumb_tics'] = $asseta->getThumbTics($id);
-// check new thumb if new id or no existing thumb
-#$asset_data['thumb_checked'] = ($id == 0)? 'checked':'';
-$asset_data['thumb_checked'] = ($asset_data['thumb_tics'] ) ? '' : 'checked';
+
+$asset_data['thumb_tics'] = getThumbTics($asseta->getExistingThumbs($id));
+
 
 // build some input boxes
 $asset_data['tag_options'] = u\buildCheckBoxSet ('tags',Defs::$asset_tags,$asset_data['tags'],3);
 $asset_data['status_options'] = u\buildOptions(Defs::$asset_status,$asset_data['astatus']);
 $asset_data['Aliastext'] = Defs::getMemberAliasList();
 
-$asset_data['thumb_tics'] = $asseta->getThumbTics($id);
+
 $asset_data['status_name'] = Defs::$asset_status[$asset_data['astatus']];
 
 if ($id > 0 && ! u\url_exists($asset_data['asset_url']) ){
-	$asset_data['source_warning'] = "Source cannot be found <br />";
+	$asset_data['source_warning'] = "Unable to access source. <br />";
 }
 
-	$asset_data['link'] = ($id > 0)? $asseta->getAssetLinked($id,true) : '';
-	#true prevents cachine of image
+
+
 
 
 
@@ -127,5 +127,17 @@ echo $container['templates']->render('asset_edit',$asset_data);
 
 
 #################################
+function getThumbTics($thumb_list) {
+   /* returns array of all thumb types and check mark if thumb exists */
+		 $thumb_tics = [];
+		$typelist = array_keys(Defs::$thumb_width);
+		$typelist[] = 'source';
+		foreach($typelist as $ttype) {
+				  $thumb_tics[$ttype] = (in_array($ttype,$thumb_list))?'&radic;':'';
+		}
+
+		return $thumb_tics;
+}
+
 
 

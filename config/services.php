@@ -31,10 +31,16 @@ $container['asseta'] = function ($c) {
 $container['assetsearch'] = function ($c) {
 	return new AssetSearch($c);
 };
+$container['assetv'] = function ($c) {
+	return new AssetView($c);
+};
 
 $container['templates'] = function ($c) {
 	$pl = new \League\Plates\Engine(REPO_PATH . '/templates/plates','tpl');
 	//$pl->addFolder('help', REPO_PATH . '/templates/help');
+	$pl->registerFunction('nl2br', function ($string) {
+    return nl2br($string);
+    });
     return $pl;
 };
 
@@ -70,6 +76,7 @@ $container['comment'] = function ($c) {
 $container['calendar'] = function ($c) {
 	return new Calendar($c);
 };
+
 
 
 // logger is monolog, with swiftmail used to email Critical incidents
