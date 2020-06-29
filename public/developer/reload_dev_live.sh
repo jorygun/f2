@@ -44,6 +44,7 @@ else
 
 	SITEPATHL=$HOME/Sites/flames/live/public
 	SITEPATHD=$HOME/Sites/flames/dev/public
+	JSON="/news/current/news_index.json"
 
 
 	if [[ ! -f $sqltemp ]] ; then
@@ -52,14 +53,12 @@ else
 
 	/usr/local/bin/mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < $sqltemp 2>/dev/null
 
-	JSON="/news/current/news_index.json"
+
 	echo "Starting copy of $JSON"
-
 	/bin/ls -l "$SITEPATHL/$JSON"
 
-
-	cp "$SITEPATHL/$JSON" "$SITEPATHD/$JSON";
-	/bin/ls -l "$SITEPATHL/$JSON"
+	cp -v "$SITEPATHL/$JSON" "$SITEPATHD//news/current/";
+	/bin/ls -l "$SITEPATHD/$JSON"
 
 # 	mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev <<EOT
 # 	DROP TABLE IF EXISTS backup_assets;
