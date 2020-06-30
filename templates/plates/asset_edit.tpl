@@ -4,6 +4,18 @@ table {border:1px solid black; }
 .assettable td {size:1em;}
 </style>
 
+<form  method="POST" enctype="multipart/form-data"  name="asset_form" id="asset_form">
+
+<div style='background:#FFC; border=1px solid black;'>
+<p>Current search result list: <?=$current_count?> assets.
+Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> </p>
+<button name='submit' value='save'>Save and Review</button>
+<button name='submit' value='next'> Save and Go Next</button>
+<button name='submit' value='skip'>Skip and Go Next</button>
+<button name='submit' value = 'new'>New Asset</button>
+<br>
+<button type='button' name='SearchHelp' class='help-button' id ='help-button' value='assets' >Help</button>
+</div>
 
 <?php if ($id>0): ?>
 	<h2>Existing ID <?=$id?></h2>
@@ -17,6 +29,9 @@ table {border:1px solid black; }
 <tr><td>Mime &amp; Asset Type: </td><td><?=$mime?> : <?=$type?> </td></tr>
 <tr><td>Size: </td><td><?=$sizekb?> KB. </td></tr>
 <tr><td>First Use:</td><td> <?=$first_use?></td></tr>
+<tr><td>Errors</td>
+	<td><textarea rows=2 cols=40 name='errors' READONLY><?=$errors?></textarea>
+</td></tr>
 
 </table>
 <br>
@@ -25,15 +40,11 @@ table {border:1px solid black; }
 	<h4>Create New Asset</h4>
 	<p><b>ID:</b> <?=$id?>  <b>Status:</b> <?=$astatus?> <?=$status_name?> <b>Entered:</b> <?=$date_entered?> </p>
 <?php endif;?>
-<button type='button' name='SearchHelp' class='help-button' id ='help-button' value='assets' >Help</button><br>
-<form  method="POST" enctype="multipart/form-data"  name="asset_form" id="asset_form">
-
+<hr>
 <input type='hidden' name ='id' value ='<?=$id?>'>
 <input type='hidden' name ='old_status' value = '<?=$astatus?>'>
 <input type='hidden' name='old_aurl' value = '<?=$asset_url?>'>
 <input type='hidden' name='old_turl' value = '<?=$thumb_url?>'>
-
-
 <hr>
 
 <table class='assettable' style='width:750px;'>
@@ -76,9 +87,7 @@ Upload file <input type="file" name="uasset" > <br>
 <tr><td style="vertical-align:text-top;">Notes (not published)</td>
 	<td><textarea rows=2 cols=40 name='notes'><?=$notes?></textarea></td></tr>
 
-<tr><td style="vertical-align:text-top;">Errors</td>
-	<td><textarea rows=2 cols=40 name='errors' READONLY><?=$errors?></textarea>
-</td></tr>
+
 
 <tr><td>Thumb Images</td>
 	<td>
@@ -100,16 +109,20 @@ Upload file <input type="file" name="uasset" > <br>
 
 
 
-<hr>
-<?php if (!empty($current_count) && $current_count > 1) : ?>
-<p>Current search list: <?=$current_count?> assets.</p>
-<input type='submit' name='submit' value='Save'>
-<input type='submit' name='submit' value='Save and edit next'>
-<input type='submit' name='submit' value='Skip and edit next'>
-<?php else : ?>
-<input type='submit' name='submit' value='Save'>
-<?php endif; ?>
+<div style='background:#FFC; border=1px solid black;'>
+<p>Current search result list: <?=$current_count?> assets.
+Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> </p>
+<button name='submit' value='save'>Save and Review</button>
+<button name='submit' value='next'> Save and Go Next</button>
+<button name='submit' value='skip'>Skip and Go Next</button>
+<button name='submit' value = 'new'>New Asset</button>
+<br>
+<button type='button' name='SearchHelp' class='help-button' id ='help-button' value='assets' >Help</button>
+</div>
+
+
+
 </form>
-</form>
+
 <?=$link?>
 <hr>

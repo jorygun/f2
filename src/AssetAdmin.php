@@ -218,13 +218,37 @@ class AssetAdmin
 		return $id;
 
 	}
-	public function removeIdFromSavedList($id) {
+	public function removeFromLIst($id) {
+		// removes id from the saved list
+
 		if (!empty($_SESSION['last_assets_found']) ){
 			$_SESSION['last_assets_found']
 			= array_diff($_SESSION['last_assets_found'],[$id]);
-			return true;
 		}
-		return false;
+	}
+
+	public function getNext($id) {
+		//returns
+		// next id from the list (if there is a list):
+		//  or next incrementally (if empty list)
+		// or 0 if no next
+		if (!empty($_SESSION['last_assets_found']) ){
+				$next_id = array_shift($_SESSION['last_assets_found']);
+		} else {
+			// get next sequential id
+			$sql = "SELECT id FROM `assets2` WHERE id >= $id ORDER by id LIMIT 2";
+			if ($result = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN) ) {
+				if (count($result) == 2) {
+					$next_id = $result[1];
+				} else {
+					$next_id = 0;
+				}
+			} else {
+				$next_id = 0;
+			}
+		}
+
+		return $next_id;
 	}
 
 public function checkAssetData($adata) {

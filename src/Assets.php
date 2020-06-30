@@ -189,6 +189,8 @@ class Assets {
    		$adata['first_use'] = 'Never';
    		$adata['vintage'] = date('Y');
    		$adata['errors'] = '';
+   		$adata['next_edit'] = '0';
+   		$adata['local_src'] = 'Not Created Yet';
 
    		return $adata;
    	}
@@ -212,6 +214,7 @@ class Assets {
 
 
 		$adata['status_label'] = Defs::$asset_status[$adata['astatus']];
+
 
 
 		$adata['link'] = $this->getAssetLinked($adata);

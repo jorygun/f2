@@ -15,14 +15,44 @@
 <h4>Help on Assets</h4>
         <p>"Assets" are the various pictures, documents, and audio/video items that
 have been uploaded to the site over the years.  The assets have been (mostly)
-indexed in a database for easy search and retrieval.  Use <a href='/asset_search.php' target='asearch'>this page</a> to
+indexed in a database for easy search and retrieval.  Use <a href='/asset_search.php' target='asearch'>Asset Search</a> to
 find and retrieve an asset.</p>
-<p>Graphic assets are stored at the original resolution and also one or more fixed size 'thumbnails'.  Thumbnails are used to display the asset in news articles and elsewhere.  Clicking on a thumbnail retrieves the original image. .</p>
+<p>Assets are stored as the original document and also one or more fixed size 'thumbnails'.  Thumbnails are images used to display the asset in news articles and elsewhere.  Clicking on a thumbnail retrieves the original image. Every asset has a thumbnail, which may be a version of a graphic, a youtube thumbnail, a image of a pdf page, or an icon representing the document type.</p>
 
 <p>Assets have various attributes, including a title, caption, vintage, and keywords,
-a "source" - the original document referenced, and a thumbnail image - a small graphic to represent the source.
+a "source" - the original document referenced, a "type" - Audio, Video, Document, Graphic, and optionally "Tags" - check boxes that you can search for.
 </p>
-<p class='bold'>Asset Data</p>
+<p class='bold'>Search Assets</p>
+The <a href='/asset_search.php' target='asearch'>Asset Search</a> page gives you a number of options for searching the asset database.  SEARCH CRITERIA ARE STICKY.  That means if you open a new search, it has your last search criteria filled in already.  Sometimes this is handy and sometimes it's a nuisance.  If it's a nuisance, click the "Clear Form" button.
+<br>
+Search criteria are mostly obvious.  All criteria are ANDED: results must satisfy all of them.
+<dl>
+<dt>Search Ids</dt><dd>You can put in a single id, a list of id1,id2,id3..., or a range
+id1 - id2.  Or maybe a combination.  Not sure.</dd>
+<dt>Phrases</dt><dd>Type in a term to look for.  Searches in the title, caption and keywords fields.  Terms can include spaces.  Multiple terms are ANDED and separated by commas.  (Never found a use for this, but it was easy to code it.)</dd>
+<dt>Vintage</dt><dd>Vintage is a year, and you can put in a +/- years.  Some items don't have vintages, and vintages are not very reliable.</dd>
+<dt>Type</dt><dd>Type is like Image, Video, etc.  Type is automatically set from the mime type of the source (e.g, 'audio/m4a'). If you don't choose one, all types are searched.</dd>
+
+</dl>
+<p class='bold'>Editing Assets</p>
+When you use the <a href='/asset_editor.php' target='aedit'>Asset Editor</a>, it displays all the asset data and it has several buttons for saving and what to do next.
+
+<p>
+When you run an <a href='/asset_search.php' target='asearch'>Asset Search</a>, then it saves the list of the results (for at least a few days).
+At the top of the save-button area, it tells you how many assets are in that list,
+and shows a "Next Edit" box.  The Next Edit box contains the id you will go to if you hit one of the "go next" buttons below.  If there is a list, the box will contain the id of the next asset in the list.  If there is no list, then it will contain the next sequential existing asset. Otherwise, it shows 0 for New Asset. You can manually put any asset number you want in this box, including 0, and go there directly by pressing "Skip and Go Next".
+</p><p>
+If you open the asset_editor with "asset_editor.php?id=nnn", it will open showing asset nnn. Asset 0 means a new asset. If you open it without the "?id=nnn", it will show you the next asset in the saved list (see below), or, if there is not list, it will open a new asset.
+</p><p>
+Below the Next Edit info, there are several buttons:
+<dl>
+<dt>Save</dt><dd>Save any changes made on this asset screen, remove it from the list,  and then show the results</dd>
+<dt>Save and Go Next</dt><dd>Save this asset, remove it from the list, and then show the one listed in the "Next Edit" field</dd>
+<td>Skip and Go Next</dt><dd>Do not save this asset, but remove it from the list and go to the next one. </dd>
+<dt>New></dt><dd>Open a new asset.  After entering info you can Save (which saves data and shows you the edit screen on the new asset), Save and Go Next (which saves and gives you another new asset) or Skip (which essentailly does nothing). The list is not affected.</dd>
+</dl>
+</p>
+<p >Asset Data</p>
 <table class='bordered row-lines'>
 <tr><td>Top Table</td><td>
 	Contains some useful information: Status, Date/time entered, mime-type and corresponding type, size, and first use.  If the first use is recorded, you can click on the link to view it.
@@ -45,18 +75,20 @@ a "source" - the original document referenced, and a thumbnail image - a small g
 	Name and id of the person contributing this item.  Usually autoomatically set based on logged in user.  User name must exactly match Flames user name. (id will be set automatically from the name.)
 	</td></tr>
 <tr><td>Tags</td><td>
-	Tags are another way to categorize an archival asset.    Tags are completely optional.</td></tr>
-<tr><td>Source URL</td><td>This is the url of the document this asset represents.  It can be a local file ('/assets/files/4566.php') or a remote web page. (Remote web pages may not be reliable over a long term.)  Youtube videos are often used.</td></tr>
-<tr><td>Thumb Source</td><td>
-	Normally you can leave this blank and the thumbnail image for the asset is created automatically from the source document.  The always works for images, pdf files, and youtube videos.  For other documents, a generic icon might be used.  But the uploader can manually specify another source for the thumbnail. For example another different graphic can be specified, or a graphic file uploaded. This is especially useful for video assets that aren't on youtube, so a useful thumb can't be automatically created. The Thumb URL should always be stored locally, not a remote web page.
+	Tags are another way to categorize an asset.    Tags are completely optional.</td></tr>
+<tr><td>Source URL</td><td>This is the url of the document this asset represents.  It can be a local file ('/assets/files/4566.php') or a remote web page. (Remote web pages may not be reliable over a long term.)  Youtube videos are often used here.</td></tr>
+<tr><td>Thumb URL</td><td>
+	Normally you can leave this blank and the thumbnail image for the asset is created automatically from the source document.  This always works for images, pdf files, and youtube videos.  For other documents, a generic icon might be used.  But the uploader can manually specify or upload a completely different source for the thumbnail. This is especially useful for video assets that aren't on youtube, so a useful thumb can't be automatically created. The Thumb URL must always be stored locally, not a remote web page.
 	</td></tr>
 
 	<tr><td>Notes</td><td>
 	Uploader notes.  Saved but not displayed or searchable.  Often contains the name of the original source that was uploade, like 'image_005.jpg'.
 	</td></tr>
 	<tr><td>Thumb Images</td><td>
-	Thumbs may exist in 3 different sizes: Thumb (~200px), Gallery (~350px), or Toon (~800px). Every asset has a thumb image.  Gallery are larger ones used in gallery displays.  Toon is page width size and used for cartoons at top of news or full-width displays in articles ('article-main').  This panel shows you which sizes exist and lets you check to create or recreate.<br><br>
-	The normal thumbs is displayed under the editor form.  Sometimes this image does not get updated on your browser after a change, due to caching.  If in doubt, right-click on the image and choose to open image in a new tab, and then you can refresh it.  Usually.  Sometimes.
+	At the top of this is the "local source" for the thumb.  This is the url of the image actually used to create the thumb images.  It is sometimes automatically generated.
+	<br>
+	Thumbs may exist in 3 different sizes: Small (~200px), Medium (~350px), or Large (~800px). Every asset has a thumb image. The small ones are used for displaying images with articles.  The medium ones are used in Photo galleries.  The large ones are used for opening cartoons or for filling the content of an article. <br><br>
+	The normal thumb view is displayed under the editor form.  Sometimes this image does not get updated on your browser after a change, due to caching.  If in doubt, right-click on the image and choose to open image in a new tab, and then you can refresh it.  Usually.  Sometimes.
 	</td></tr>
 </table>
 
