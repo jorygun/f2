@@ -105,6 +105,8 @@ public static $test_emails = array(
 		'video/mp4' => 'Video',
 		'video/quicktime' => 'Video',
 		'video/x-youtube' => 'Video',
+		'video/x-m4v' => 'Video',
+		'audio/x-m4a' => 'Audio',
 	);
 
 	private static $mime_icons = array(
@@ -121,6 +123,8 @@ public static $test_emails = array(
 		'video/mp4'	=>	'mp4.jpg',
 		'video/quicktime'	=>	'mov.jpg',
 		'video/x-youtube' => 'mov.jpg',
+		'video/x-m4v' => 'mp4.jpg',
+		'audio/x-m4a' => 'm4a.jpg',
 	);
 
 

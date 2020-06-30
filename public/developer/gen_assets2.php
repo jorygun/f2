@@ -69,7 +69,10 @@ $asset_db = 'assets'; #local copy of product assets table
 $null = null;
 $sqli = '';
 
-$logfile = SITE_PATH . '/log.gen2.log';
+$logurl =  '/developer/logs/log.gen_assets2.log';
+$logfile = SITE_PATH . $logurl;
+date_default_timezone_set("America/Los_Angeles");
+
 
 
 // if (empty($_GET)) {
@@ -185,7 +188,7 @@ echo "done.  $elapsedh. Last ID $last_id. <br>";
 u\echor($scount);
 
 
-echo "<a href='/gen2.log?$end_time' target = 'log'>Log</a>" . BRNL;
+echo "<a href='$logurl?$end_time' target = 'log'>Log</a>" . BRNL;
 
 
 exit;
@@ -299,12 +302,13 @@ function logrec($aid,$e,$msg,$src='') {
 	// logs errors in logfile reclog and also returns the message to go
 	// into the new record array[errors]
 	global $logfile;
-	$local=localtime();
-	$t = $local[1] . ':' . $local[0];
+
+
+	$ts = date('H:i');
 
 	echo "<p class='red'>$aid: $msg</p>";
 	file_put_contents($logfile,
-		sprintf("%6s %4s %1s %s\n",$t,$aid,$e,$msg),FILE_APPEND);
+		sprintf("%6s %4s %1s %s\n",$ts,$aid,$e,$msg),FILE_APPEND);
 	if (!empty($src)) {
 		file_put_contents($logfile,
 		sprintf("%12s %s\n",'',$src),FILE_APPEND);
@@ -333,7 +337,7 @@ function create_assets2 ($pdo) {
 	  `source` mediumtext COLLATE utf8mb4_unicode_ci,
 	  `contributor_id` smallint(4) DEFAULT NULL,
 	  `date_entered` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-	  `date_modified` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+	  `date_modified` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	  `sizekb` int(11) DEFAULT NULL,
 	  `notes` mediumtext COLLATE utf8mb4_unicode_ci,
 	  `first_use_date` timestamp NULL DEFAULT NULL,

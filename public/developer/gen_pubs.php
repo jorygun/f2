@@ -41,6 +41,8 @@ $logfile = SITE_PATH . $logurl;
 
 create_pubs($pdo) ;
 
+// gets the old news_indexx here because for some reason I can't copy
+// over using a shell scrpt.  ??
 
 if (strpos(__FILE__,'/Users/john') !== false) {
 		$index_json = PROJ_PATH . '/f2/public/news/current/news_index.json';
