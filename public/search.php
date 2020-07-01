@@ -106,7 +106,7 @@ function search_news($term,$back,$pdo) {
 		}
 		echo BR. "$issue: $url" . BRNL;
 
-		$search_path = PROJ_PATH . '/shared' . $url; // file or  folder
+		$search_path = FileDefs::shared_dir . $url; // file or  folder
 
 /*
 		$files =  exec "grep -Ril $sterm $search"
@@ -123,7 +123,8 @@ function search_news($term,$back,$pdo) {
 		//echo $exec . BRNL;
 		$result = exec($exec);
 		if ($result) {
-			echo $issued['issue'] . ': ' . "<a href='$result' target='news'>$result</a>" . BR . BRNL;
+			echo $issued['issue'] . ': ' . "<a href='$result' target='news'>$result</a>"   .BRNL;
+		}
 // 		  if ( $files = exec($exec ) ) {
 // 		 	$filesall[$url][] = explode("\n",$files);
 // 		 }
