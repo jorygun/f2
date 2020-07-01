@@ -91,7 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 }
 
 echo "<hr>";
-$last_search = $_SESSION['last_asset_search'] ?? [] ;
+//$last_search = $_SESSION['last_asset_search'] ?? [] ;
+$last_search = [];
 $search_data = $AssetSearch->prepareSearch ($last_search );
 echo $templates->render('asearch',$search_data);
 // echo "</body></html>" . NL;
