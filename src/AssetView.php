@@ -10,7 +10,7 @@ use DigitalMx\Flames\FileDefs;
 Builds the source files for a thumbnail image,
 Creates thumbs of a given type for an id.
 
-Thumb of type ttype for id id will be in /assets/thumbs/ttype/id.jpg
+Thumb of type ttype for id id will be in /thumbnails/ttype/id.jpg
 
 Strategy:
 
@@ -59,7 +59,7 @@ private $Assets;
 		are stored in /assets/thumb_sources/id.jpg.
 
 		thumbs are created from turl || autourl || aurl
-		and saved in /assets/thumbs/type/id.jpg
+		and saved in /thumbnails/type/id.jpg
 
 		Once instantiated, thumbnail is created by
 			create_thumb (type)
@@ -127,10 +127,10 @@ EOT;
 		*/
 
 
-		$thumb_loc = "/assets/thumbnails/$ttype/${id}.jpg";
+		$thumb_loc = "/$ttype/${id}.jpg";
  	 echo "Looking for $thumb_loc" . BRNL ;
 
-		if (file_exists(SITE_PATH . $thumb_loc)) {
+		if (file_exists(FileDefs::thumb_dir . $thumb_loc)) {
 			return $thumb_loc;
 		}
 
@@ -141,7 +141,9 @@ EOT;
 		if ($id != $this->id) {
 			$this->loadId($id);
 		}
-
+		if (! file_exists(SITE_PATH . $this->local_src)){
+			return '';
+		|
 		$this -> buildGdImage($this->local_src,$thumb_loc, $ttype);
 		return $thumb_loc;
 
@@ -190,7 +192,7 @@ public function getAssetBlock($id,$style,$show_caption=false) {
 EOT;
 			return $block;
 		} else {
-			return "<div class='asset'>Could not get Thumb for asset $id</div>";
+			return "<div class='asset'>Could not get Thumb for asset $id (local souce missing?)</div>";
 		}
 
 

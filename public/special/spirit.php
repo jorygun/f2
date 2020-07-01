@@ -50,7 +50,7 @@ EOT;
 
 // don't think newsfunctions needed
 
-$bookthumb = "<img src='/assets/thumbs/4913.jpg'>";
+$bookthumb = "<img src='/thumbnails/medium/4913.jpg'>";
 
 #get stars
 

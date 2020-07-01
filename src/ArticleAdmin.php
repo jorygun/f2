@@ -123,7 +123,7 @@ class ArticleAdmin
 			foreach ($carray as $row) {
 			  //u\echor($row);
 				if (!empty($row['asset_list'])) {
-					 $row['asset'] = $this->assetv->getAssetBlock($row['asset_list'], 'thumbs', false);
+					 $row['asset'] = $this->assetv->getAssetBlock($row['asset_list'], 'small', false);
 				} else {
 					$row['asset'] = '';
 				}

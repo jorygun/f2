@@ -166,7 +166,7 @@ else { #IS POST; set up the job
 	// replace ref to image with image
 	$message = preg_replace(
 		'/\[image (\d+)\]/',
-		"<img src='https://amdflames.org/assets/thumbs/$1.jpg' style='margin-right:auto;margin-left:auto;text-align:center;'>",
+		"<img src='https://amdflames.org/thumbnails/small/$1.jpg' style='margin-right:auto;margin-left:auto;text-align:center;'>",
 		$message
 		);
 

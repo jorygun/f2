@@ -11,20 +11,20 @@ ini_set('display_errors', 1);
 	use DigitalMx\Flames\Definitions as Defs;
 	use DigitalMx\Flames\DocPage;
 	use DigitalMx\Flames\FileDefs;
-	
+
 
 
 if ($login->checkLogin(4)){
    $page_title = 'asset test page';
-	$page_options=[]; #ajax, votes, tiny 
-	
+	$page_options=[]; #ajax, votes, tiny
+
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
-	
+
 	echo $page->startBody();
 }
-	
+
 //END START
 $id = '5189';
 $testa = array (
@@ -42,8 +42,8 @@ $testa = array (
 	'first_use_in' => '' ,
 	'status' => 'N',
 	'notes' => 'just a test',
-	
-	
+
+
 
 );
 
@@ -57,9 +57,9 @@ $id = $aa-> postAssetFromForm ($testa);
 // $am -> saveThumbs($id,['galleries']);
 #echo $am->updateStatus($id,'R');
 
-$th =  "/assets/thumbs/$id.jpg";
+$th =  "/thumbnails/small/$id.jpg";
 
 echo <<<EOF
 
-<image src='$th' >; 
+<image src='$th' >;
 EOF;
