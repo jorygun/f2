@@ -124,9 +124,9 @@ function search_news($term,$back,$pdo) {
 		//echo $exec . BRNL;
 		$result = exec($exec);
 		if ($result) {
-			$context = exec("grep  -Ri '$sterm' $result"); // get context
+			$context = shell_exec("grep  -Ri '$sterm' $result"); // get context, multiline
 			echo "<a href='$url' target='news'> Issue $issue ($hdate) </a>: " . BR;
-			echo strip_tags($context) . BR . BRNL;
+			echo nl2br(strip_tags($context)) . BR . BRNL;
 
 		}
 // 		  if ( $files = exec($exec ) ) {
