@@ -106,12 +106,12 @@ private $Assets;
 		}
 		if (empty($tdata['mime'] )) {
 			return "Asset $id does not have a defined mime type.";
-			 false;
+
 		}
 
 		if (!file_exists(SITE_PATH . $tdata['local_src']) ){
-			echo "Local thumb source $local_src for id $id does not exist";
-			return false;
+			return "Local thumb source $local_src for id $id does not exist";
+
 		}
 
 		$info =  <<<EOT
@@ -123,7 +123,7 @@ private $Assets;
 
 EOT;
 	//echo nl2br($info);
-		return true;
+		return '';
 
 }
 
@@ -149,7 +149,8 @@ EOT;
 		//echo ".. building new. " . BRNL;
 
 		if ($id != $this->id) {
-			if (!empty($load_error = $this->loadId($id) )) { // returned errors
+			$load_error = $this->loadId($id) );
+			if (!empty($load_error)){ // returned errors
 				return '**ERROR** ' . $load_error ;
 			}
 		}
@@ -191,7 +192,7 @@ public function getAssetBlock($id,$style,$show_caption=false) {
 
 		if ($image = $this->getThumb($id,$style) ) {
 			if (strpos($image,'**ERROR') !== false){
-					$image_data = $image; // is error
+					$image_data = $image . BR; // is error
 			} else {
 				$image_data =  "<img src='$image' />";
 			}

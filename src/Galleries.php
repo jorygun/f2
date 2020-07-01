@@ -184,7 +184,7 @@ EOT;
 					//echo "getting thumb for asset $aid" . BRNL;
 					if ($image = $this->assetv->getThumb($aid,'small') ) {
 						if (strpos($image,'**ERROR') !== false){
-							$image_data = $image; // is error
+							$image_data = $image . BR; // is error
 						} else {
 						$image_data = "<img src='$image' />";
 						}
