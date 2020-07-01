@@ -88,7 +88,7 @@ function search_news($term,$back,$pdo) {
 	$limit_year = $this_year - $back;
 	$found = 0;
 	if (empty($term)){return "No search term";}
-	echo "Search for '$term' in newsletters published in $limit_year or later<br>";
+	echo "<h3>Search for '$term' in newsletters published in $limit_year or later</h3>";
 
 // get the urls for the newsletters to search
 	$sql = "SELECT issue,url,DATE_FORMAT(pubdate,'%M %d, %Y') as pdate from pubs WHERE pubdate > '${limit_year}-01-01' ";
