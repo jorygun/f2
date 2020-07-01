@@ -838,6 +838,9 @@ function list_to_inlist($list) {
 	return make_inlist_from_list($list);
 }
 function make_inlist_from_list($list){
+	/* takes php list ['a','b','c']
+		returns list  for sql IN() : 'a','b','c',
+	*/
 	if (empty($list) )return false;
 	$qlist = array_map(function ($c) {return "'$c'";},$list);
 

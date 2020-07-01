@@ -224,8 +224,8 @@ EOT;
 	$t .=  self::addMenu(4,$thisMenu);
 	if ($userlevel >= 4){$menulist[] = $thisMenu;}
 	$t .= self::if_level(4,"
-		<li><a href='/search.php' target='search'>Search For a Member or Topic</a>
-
+		<li><a href='/search.php' target='search'>Search For a Member or Newsletter Topic</a>
+		<li><a href='/asset_search.php' target='asearch'>Search Assets (Graphics, Videos, Documents)</a>
 		<li><a href='http://www.linkedin.com/groups?gid=117629&trk=myg_ugrp_ovr' target='_blank'>AMD Alumni on LinkedIn</a>
 	");
 	$t .=  self::closeLine(4,$thisMenu) ;

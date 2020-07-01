@@ -121,8 +121,9 @@ function search_news($term,$back,$pdo) {
 		//$exec = "grep -iRl --include '*.html'  'springer' .* ";
 		//grep -iRl --include "*.html" 'springer' .*
 		//echo $exec . BRNL;
-
-		echo $issued['issue'] . ': ' . exec($exec) . BR . BRNL;
+		$result = exec($exec);
+		if ($result) {
+			echo $issued['issue'] . ': ' . "<a href='$result' target='news'>$result</a>" . BR . BRNL;
 // 		  if ( $files = exec($exec ) ) {
 // 		 	$filesall[$url][] = explode("\n",$files);
 // 		 }
