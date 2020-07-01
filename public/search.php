@@ -93,21 +93,41 @@ function search_news($term,$back,$pdo) {
 // get the urls for the newsletters to search
 	$sql = "SELECT issue,url,DATE_FORMAT(pubdate,'%M %d, %Y') as pdate from pubs WHERE pubdate > '${limit_year}-01-01' ";
 
- 	$issuest = $pdo->query($sql)->fetchAll();
+ 	if(! $issuest = $pdo->query($sql)->fetchAll() ) {
+ 		die ("No issues found");
+ 	}
 
  // set up search term.  will use grep
 	$sterm = trim($term);
 	//$sterm = preg_quote($term,'/'); #escape regex specials
-	$filesall = [];
+	$issue_count = 0;
+	$last_issue = '';
+	$hits = [];
+
 	foreach ($issuest as $issued) {
 		// set vars
-		foreach (['url','pdate','issue'] as $var){
+		$issue = $issued['issue'];
+		if (!empty($hits) && $last_issue && $last_issue != $issue){
+			// get context
+			echo "<a href='$url' target='news'> Issue $last_issue ($hdate) </a>: " . BR;
+			foreach ($hits as $hit){
+				$context = shell_exec("grep  -hi '$sterm' $hit"); // get context, multiline
+				echo nl2br(strip_tags($context)) . BR ;
+			}
+			echo BRNL;
+			++$issue_count;
+			$hits = [];
+		}
+
+		foreach (['url','pdate'] as $var){
 			$$var = $issued[$var];
 		}
 
 		$hdate = date('M d, Y',strtotime($pdate));
 
 		$search_path = FileDefs::shared_dir . $url; // file or  folder
+
+		//echo "Searching in $search_path" . BR;
 
 /*
 		$files =  exec "grep -Ril $sterm $search"
@@ -122,16 +142,10 @@ function search_news($term,$back,$pdo) {
 		//$exec = "grep -iRl --include '*.html'  'springer' .* ";
 		//grep -iRl --include "*.html" 'springer' .*
 		//echo $exec . BRNL;
-		$results = explode("\n",shell_exec($exec)); // file with matching term
-		u\echor($results); exit;
-		if ($results) {
-			echo "<a href='$url' target='news'> Issue $issue ($hdate) </a>: " . BR;
-			foreach ($results as $path){
-				$context = shell_exec("grep  -Ri '$sterm' $path"); // get context, multiline
-				echo nl2br(strip_tags($context)) . BR ;
-			}
-			echo BRNL;
-		}
+		$hit = exec($exec); // file with matching term
+		if (!empty($hit)) {$hits[]=$hit;}
+		$last_issue = $issue;
+
 // 		  if ( $files = exec($exec ) ) {
 // 		 	$filesall[$url][] = explode("\n",$files);
 // 		 }
@@ -207,9 +221,9 @@ function search_news($term,$back,$pdo) {
 
     }
     */
-	u\echor($filesall);
 
-	if ($found){return "$found newsletters had '$term' in them.<br> " . $out;}
+
+	if ($issue_count){return "$issue_count newsletters had '$term' in them.";}
 	else {return "Nothing Found.<br>";}
  }
 #show search screen
