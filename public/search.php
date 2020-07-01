@@ -124,8 +124,10 @@ function search_news($term,$back,$pdo) {
 		//echo $exec . BRNL;
 		$result = exec($exec);
 		if ($result) {
-			echo "Issue $issue ($hdate): ";
-			echo  "<a href='$url' target='news'>$url</a>"   .BRNL;
+			$context = grep -C '$sterm' $result; // get context
+			echo "<a href='$url' target='news'> Issue $issue ($hdate) </a>: " . BR;
+			echo nl2br($context) . BR . BRNL;
+
 		}
 // 		  if ( $files = exec($exec ) ) {
 // 		 	$filesall[$url][] = explode("\n",$files);
