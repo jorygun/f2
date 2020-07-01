@@ -123,6 +123,7 @@ function search_news($term,$back,$pdo) {
 		//grep -iRl --include "*.html" 'springer' .*
 		//echo $exec . BRNL;
 		$results = explode("\n",shell_exec($exec)); // file with matching term
+		u\echor($results); exit;
 		if ($results) {
 			echo "<a href='$url' target='news'> Issue $issue ($hdate) </a>: " . BR;
 			foreach ($results as $path){
