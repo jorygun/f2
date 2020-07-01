@@ -104,7 +104,8 @@ function search_news($term,$back,$pdo) {
 		foreach (['url','pdate','issue'] as $var){
 			$$var = $issued[$var];
 		}
-		echo BR. "$issue: $url" . BRNL;
+
+		$hdate = date('M d, Y',strtotime($pdate));
 
 		$search_path = FileDefs::shared_dir . $url; // file or  folder
 
@@ -123,7 +124,8 @@ function search_news($term,$back,$pdo) {
 		//echo $exec . BRNL;
 		$result = exec($exec);
 		if ($result) {
-			echo $issued['issue'] . ': ' . "<a href='$result' target='news'>$result</a>"   .BRNL;
+			echo "Issue $issue ($hdate): ";
+			echo  "<a href='$result' target='news'>$result</a>"   .BRNL;
 		}
 // 		  if ( $files = exec($exec ) ) {
 // 		 	$filesall[$url][] = explode("\n",$files);
