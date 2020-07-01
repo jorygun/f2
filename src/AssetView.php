@@ -48,27 +48,27 @@ private $Assets;
 
 	public function __construct($container){
 		/*
-		To build a thumbnail, first load the item info: id, aurl, turl
+		To build a thumbnail, first load the item info: id, asset_url, thumb_url
 		either at creation or with reLoad.
-		aurl is needed as possible thumb source, and also because asset mime type
+		asset_url is needed as possible thumb source, and also because asset mime type
 		determines generic thumb for docs, m4a, etc.
 
-		turl is an alternative local grapic source for the thumbnail
+		thumb_url is an alternative local grapic source for the thumbnail
 
 		autourl is an automatically created local sources for youtube or default icon
 		are stored in /assets/thumb_sources/id.jpg.
 
-		thumbs are created from turl || autourl || aurl
+		thumbs are created from thumb_url || autourl || asset_url
 		and saved in /thumbnails/type/id.jpg
 
 		Once instantiated, thumbnail is created by
 			create_thumb (type)
 		which creates correct graphic and puts it at assets/thumbs/type/id.jpg
 
-		Sometimes (like first time) the turl needs to be created from the sources,
+		Sometimes (like first time) the thumb_url needs to be created from the sources,
 		so there is a local thumb source graphic.  For example for youtube videos,
 		the youtube id is obtained and the youtube thumbnail downloaded into
-		/assets/thumbsources/id.jpg and that is returned as the new turl.
+		/assets/thumbsources/id.jpg and that is returned as the new thumb_url.
 		*/
 
 		$this->Assets = $container['assets'];
@@ -79,16 +79,21 @@ private $Assets;
 
 	public function loadId($id) {
 	//echo "Loading data: $id, $asset_url, $thumb_url" . BRNL;
+	// loads id, return true if ok.
+	// if an error, then it returns the error message
+	// so test if(! empty ($errors = loadId($id))){ xxx
 
 		if (empty($id) ){
-			die ("Must have id to load data");
+			return "Must have id to load data";
+
 		}
 
 		if (empty($tdata = $this->Assets->getThumbData($id) ) ) {
-			die ("Asset $id does not exist.");
+			return "Asset $id does not exist.";
+
 		}
 
-u\echor($tdata); exit;
+//u\echor($tdata); exit;
 
 		foreach ($tdata as $var=>$val) {
 			$this->$var = $val;
@@ -96,25 +101,29 @@ u\echor($tdata); exit;
 
 
 		if (empty($tdata['asset_url'] )) {
-			die ("Asset $id does not have a source defined.");
+			return "Asset $id does not have a source defined.";
+
 		}
 		if (empty($tdata['mime'] )) {
-			die ("Asset $id does not have a defined mime type.");
+			return "Asset $id does not have a defined mime type.";
+			 false;
 		}
 
-		if (!file_exists(SITE_PATH . $local_src) ){
-			die ("Local thumb source $local_src for id $id does not exist");
+		if (!file_exists(SITE_PATH . $tdata['local_src']) ){
+			echo "Local thumb source $local_src for id $id does not exist";
+			return false;
 		}
 
 		$info =  <<<EOT
 		LOADED id: $id,
-		aurl: $this->aurl,
-		turl: $this->turl,
-		amime: $this->amime,
+		asset_url: $this->asset_url,
+		thumb_url: $this->thumb_url,
+		amime: $this->mime,
 		local: $this->local_src,
 
 EOT;
-	echo nl2br($info);
+	//echo nl2br($info);
+		return true;
 
 }
 
@@ -122,27 +131,30 @@ EOT;
 	public function getThumb($id,$ttype) {
 		/* returns url assets/thumbs/type/id,jpg if exists
 			otherwise creates it using gd for the sources available
-			(turl, aurl, or autourl)
+			(thumb_url, asset_url, or autourl)
 			returns url to icon for mime if those aren't available
+			return **ERROR** if there is an error
 		*/
 
 
-		$thumb_loc = "/$ttype/${id}.jpg";
- 	 echo "Looking for $thumb_loc" . BRNL ;
+		$thumb_loc = "/thumbnails/$ttype/${id}.jpg";
+ 	 //echo "Looking for $thumb_loc" . BRNL ;
 
-		if (file_exists(FileDefs::thumb_dir . $thumb_loc)) {
+		if (file_exists(SITE_PATH . $thumb_loc)) {
 			return $thumb_loc;
 		}
 
 
 		// else build one using gd
-		echo ".. building new. " . BRNL;
+		//echo ".. building new. " . BRNL;
 
 		if ($id != $this->id) {
-			$this->loadId($id);
+			if (!empty($load_error = $this->loadId($id) )) { // returned errors
+				return '**ERROR** ' . $load_error ;
+			}
 		}
 		if (! file_exists(SITE_PATH . $this->local_src)){
-			return '';
+			return '**ERROR** local source does not exist';
 		}
 
 		$this -> buildGdImage($this->local_src,$thumb_loc, $ttype);
@@ -150,10 +162,9 @@ EOT;
 
 }
 
-
 public function getAssetBlock($id,$style,$show_caption=false) {
 		/* returns a div with the asset and title in it.
-		uses asset thumb or gallery size
+		uses asset small or medium size
 		shows thumb linked to asset
 		below thumb is title in bold and optional in italic
 
@@ -165,23 +176,30 @@ public function getAssetBlock($id,$style,$show_caption=false) {
 		*/
 
 		if ($id != $this->id) {
-			$this->loadId($id);
+			if (!empty($load_error = $this->loadId($id) )) { // returned errors
+				echo "Asset $id could not be loaded";
+				return '**ERROR** ' . $load_error ;
+			}
 		}
 
 
-		$aurl = $this->aurl;
+		$asset_url = $this->asset_url;
 
 		$acapt = ($show_caption)?
 			"<div class='acaption'>" . $this->caption . "</div>" : '';
 
 
 		if ($image = $this->getThumb($id,$style) ) {
-			$image_data =  "<img src='$image' />";
+			if (strpos($image,'**ERROR') !== false){
+					$image_data = $image; // is error
+			} else {
+				$image_data =  "<img src='$image' />";
+			}
 			$src_data = ($this->source)? "<div class='asource'>--"
 				.  $this->source
 				. "</div>"
 				: '';
-			$id = $this->id;
+
 			$block = <<<EOT
 			<div class='asset'>
 				<a href='/asset_viewer.php?$id' target='viewer'>

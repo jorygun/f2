@@ -72,17 +72,18 @@ EOT;
 			$adata = $this->checkArticle($post);
 
 			 $id = $post['id'];
-        $prep = u\pdoPrep($adata, [], 'id');
+u\echor($adata);
+        $prep = u\prepPDO($adata, [], 'id');
    //u\echor ($prep , 'PDO data');
 
         if ($id == 0) {
-            $sql = "INSERT into `articles` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+            $sql = "INSERT into `articles` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} );";
            // u\echor($prep['data'],$sql); exit;
-            $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+            $stmt = $this->pdo->prepare($sql)->execute($prep['idata']);
             $id = $this->pdo->lastInsertId();
         } else {
-            $sql = "UPDATE `articles` SET ${prep['updateu']}
-                WHERE id =  ${prep['key']} ;";
+            $sql = "UPDATE `articles` SET ${prep['uset']}
+                WHERE id =  ${prep['ukey']} ;";
            //u\echor($prep['udata'] , $sql);
 
             $stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
@@ -147,6 +148,7 @@ EOT;
         $cd = $this->member->setContributor($post['contributor_id'], $post['contributor']);
         //put the new contrib info into the adata array
  			$adata['contributor_id'] = $cd['contributor_id']; // cont name not stored in record
+			unset ($adata['contributor']);
 
         if (!empty($adata['asset_main'] = trim($post['asset_main']))) {
             if (! preg_match('/^\d{4,5}$/', $adata['asset_main'])) {
@@ -155,7 +157,7 @@ EOT;
         }
 
         if (!empty($adata['asset_list'] = trim($post['asset_list']))) {
-            foreach (preg_split('/\s+/', $adata['asset_list']) as $aid) {
+            foreach (preg_split('/\D+/', $adata['asset_list']) as $aid) {
                 if (! preg_match('/^\d{4,5}$/', $aid)) {
                     throw new Exception("Non-integer in asset_list: $aid");
                 }

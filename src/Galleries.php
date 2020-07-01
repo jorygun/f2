@@ -32,7 +32,7 @@ class Galleries
 		$this->pdo = $container['pdo'];
 		$this->asseta = $container['asseta'];
 		$this->assets = $container['assets'];
-		$this->thumbs = $container['assetv'];
+		$this->assetv = $container['assetv'];
 		$this->templates = $container['templates'];
 		$this->member = $container['member'];
 
@@ -66,7 +66,7 @@ class Galleries
 
 		foreach ($aids as $aid){
 			//echo "Gallery block $aid goes here";
-			echo $this->thumbs->getAssetBlock($aid,'medium',false) ;
+			echo $this->assetv->getAssetBlock($aid,'medium',false) ;
 		}
 		echo "</div>";
 	}
@@ -152,14 +152,14 @@ EOT;
 					echo "<div class='clear'><br><p style='background:#393;color:white;font-size:1.2em;'  >$vintage</p>";
 			  }
 
-		 	echo $this->getGalleryBlock($gdata) ;
+		 	echo $this->makeGalleryBlock($gdata) ;
 			$last_vintage = $vintage;
 		}
-		echo "<div class='clear'></div></div>";
+
 
 	}
 
-	public function getGalleryBlock($gdata) {
+	public function makeGalleryBlock($gdata) {
 		/* returns an asset block, but linked to the gallery gid instead of
 		the asset image. gid is this gallery.  aid is the id of the asset to
 		display as the gallery thumb.  It will choose /assets/galleries/aid.jpg
@@ -176,18 +176,25 @@ EOT;
 			  // if no thumbget designated id or first in asset list to use as thumb
 
 			  if (empty($aid = $gdata['thumb_id'])) { #try standard thumb
+			 	 echo "No thumb listed for gallery $gid" . BRNL;
 			  		// ok try first asset in gallery asset list
 			  		$aid = u\range_to_list($gdata['gallery_items'])[0];
-			  		if ($aid) {
-			 			if ($image = $this->assets->getThumbUrl($aid,'small') ) {
-			 				$image_data = "<img src='$image' />";
-			 			} else {
-			 				return "<div class='asset'>Could not create thumbnail for gallery</div>";
-			 			}
+			  	}
+				if ($aid) {
+					//echo "getting thumb for asset $aid" . BRNL;
+					if ($image = $this->assetv->getThumb($aid,'small') ) {
+						if (strpos($image,'**ERROR') !== false){
+							$image_data = $image; // is error
+						} else {
+						$image_data = "<img src='$image' />";
+						}
 					} else {
-						throw new Exception ("No assets are listed for gallery $gid");
+						$image_data =  "Could not create thumbnail for gallery.";
 					}
+				} else {
+					throw new Exception ("No assets are listed for gallery $gid");
 				}
+
 			$edit_button = '';
 		if ($this->credential) {
 			$edit_button = "<button type='button' onClick = window.open('/galleries.php?id=$gid&mode=edit')>Edit</button>
@@ -195,7 +202,7 @@ EOT;
 			}
 		$attr_block = $this->getAttribute($gdata['contributor']);
 		$block = <<<EOT
-				<div class='asset'>
+				<div class='asset '>
 					<a href='/galleries.php?$gid' target='gallery'>
 					$image_data </a>
 					$attr_block
@@ -203,6 +210,7 @@ EOT;
 					$error
 					$edit_button
 				</div>
+
 EOT;
 		return $block;
 	}

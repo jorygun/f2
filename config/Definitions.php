@@ -402,7 +402,7 @@ public static function getAssetTypes() {
 // 				$archive_tags[] = "'$tag'";
 // 			}
 // 		}
-		return join(',',array_keys(self::$asset_tags));
+		return "'" . implode("','",array_keys(self::$asset_tags)) . "'" ;
 	}
 
 	public static function getAssetArchivalTags() {

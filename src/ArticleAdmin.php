@@ -123,7 +123,7 @@ class ArticleAdmin
 			foreach ($carray as $row) {
 			  //u\echor($row);
 				if (!empty($row['asset_list'])) {
-					 $row['asset'] = $this->assetv->getAssetBlock($row['asset_list'], 'small', false);
+					 $row['asset'] = $this->getAssetDiv($row['asset_list']);
 				} else {
 					$row['asset'] = '';
 				}
@@ -142,28 +142,28 @@ class ArticleAdmin
 		return $story;
 	}
 
-	// public function getAssetBlock($sdata) {
-// 		$ablock = [];
-// 		if (!empty($sdata['asset_list'])) {
-//             $alist = u\number_range($sdata['asset_list']);
-//             $alistcnt = count($alist);
-//
-//             if ($alistcnt >2) {
-//                 $adiv = 'asset-row';
-//             } elseif ($alistcnt > 0) {
-//                 $adiv = 'asset-column';
-//             } else {
-//                 $adiv = '';
-//             }
-//             $ablock ['adiv'] = $adiv;
-//
-//             foreach ($alist as $aid) {
-//                 $ablock ['asset_blocks'][] = $this->asseta->getAssetBlock($aid, 'thumbs', false);
-//             }
-//         }
-//         return  $ablock ;
-//         // array with two entries: adiv and ablock
-//       }
+	public function getAssetDiv($asset_list) {
+		$ablock = [];
+		if (!empty($asset_list)) {
+            $alist = u\number_range($asset_list);
+            $alistcnt = count($alist);
+
+            if ($alistcnt >2) {
+                $adiv = 'asset-row';
+            } elseif ($alistcnt > 0) {
+                $adiv = 'asset-column';
+            } else {
+                $adiv = '';
+            }
+            $ablock ['adiv'] = $adiv;
+
+            foreach ($alist as $aid) {
+                $ablock ['asset_blocks'][] = $this->assetv->getAssetBlock($aid, 'small', false);
+            }
+        }
+        return  $ablock ;
+        // array with two entries: adiv and ablock
+      }
 
 	function getLiveArticle ($id,$show='') {
 		// user includes user_id, username,
@@ -180,7 +180,9 @@ class ArticleAdmin
 		$adata = $this->article->getArticle($id);
 //u\echor($adata,'adata');
 		$article = "<div class='article'>";
-		$adata = array_merge($adata, $this->getAssetBlock($adata)); #2 rows
+
+		// adata asset block needs to a list of asset blocks
+		$adata = array_merge($adata, $this->getAssetDiv($adata['asset_list'])); #2 rows
 
 		$adata = array_merge($adata,$this->buildStory($adata) ); // date for story
 //u\echor($adata); exit;

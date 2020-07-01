@@ -43,8 +43,15 @@ echo "getting id $id" . BRNL;
 
 
 
-$turl = $assetv->getThumb($id,'medium');
-echo "<image src='$turl' />";
+$image = $assetv->getThumb($id,'medium');
+u\echop($image);
+echo "<hr>" . NL;
+if (strpos($image,'ERROR') !== false){
+		$image_data = $image; // is error
+} else {
+	$image_data = "<image src='$image' />";
+}
+//echo $image_data ;
 
 
 exit;

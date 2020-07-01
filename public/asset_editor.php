@@ -91,18 +91,22 @@ if (!empty($_POST['submit'] )) {
 // set id to get to last id or get or 0 for new
 //END START
 
-if (isset ($_GET['id'])) $id = $_GET['id']  ;
+if (isset ($_GET['id'])) {
+	$id = $_GET['id'] ;
+	$asseta->removeFromList($id);
 // if next id set in post command, that's where to go next
 // may be 0
-elseif (isset($next_id)) $id = $next_id;
+} elseif (isset($next_id)) {
+	$id = $next_id;
 // else looks for get id (may be 0, for new asset)
 
 // else, just get next id off the stack
-elseif (!empty($_SESSION['last_assets_found'])){
+} elseif (!empty($_SESSION['last_assets_found'])){
 	$id = array_shift ($_SESSION['last_assets_found']);
 	$list_note = '(Retrieved next id from current search list)';
+} else {
+	$id = 0;
 }
-else $id = 0;
 
 
 

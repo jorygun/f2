@@ -182,8 +182,13 @@ class AssetAdmin
 				FileDefs::thumb_dir .'/ medium'. "/${id}.jpg",
 				FileDefs::thumb_dir . '/large'. "/${id}.jpg",
 				] as $thumb) {
-
-				if (file_exists($thumb)){unlink ($thumb) ;}
+				echo "checking $thumb .. ";
+				if (file_exists($thumb)){
+					echo "removing <br>";
+					unlink ($thumb) ;
+				} else {
+				echo "<br>";
+				}
 			}
 
 
@@ -218,6 +223,7 @@ class AssetAdmin
 		return $id;
 
 	}
+
 	public function removeFromLIst($id) {
 		// removes id from the saved list
 

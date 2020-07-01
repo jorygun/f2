@@ -9,8 +9,8 @@ class FileDefs {
 	const  current_dir = REPO_PATH . '/public/news/current';
 	const template_dir = REPO_PATH . '/templates';
 	const shared_dir = PROJ_PATH . '/shared';
-	const asset_dir = shared_dir .'/public/assets';
-	const thumb_dir = shared_dir . '/thumbnails';
+	const asset_dir = self::shared_dir .'/assets';
+	const thumb_dir = self::shared_dir . '/thumbnails';
 
 // model for newsletter index file
 	const  news_template = REPO_PATH . "/templates/news_index.php";

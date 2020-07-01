@@ -19,6 +19,7 @@ $page_options = [];
  $login->checkLogin(1);
 $page = new DocPage($page_title);
 $asseta = $container['asseta'];
+$assets = $container['assets'];
 
 echo $page -> startHead($page_options);
 

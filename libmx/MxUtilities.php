@@ -599,7 +599,7 @@ THEN:
   		// if its an update and no key is specified, then all datain will
   		// be in update set var=val and user manually does the WHEre clause.
   		//
-  		if (!empty($keyfield) && empty($datain[$keyfield]) ){
+  		if (!empty($keyfield) && ! isset ($datain[$keyfield]) ){
   			throw new Exception ("prepPDO update missing key field in data");
   		}
   		// if (strpos($type,'I') !== false  && empty($keyfield)) { // is insert on DUP

@@ -215,7 +215,7 @@ class Assets {
 
 		$adata['status_label'] = Defs::$asset_status[$adata['astatus']];
 
-
+		$adata['image'] = $this->getAssetLinked($adata);
 
 		$adata['link'] = $this->getAssetLinked($adata);
 
@@ -529,7 +529,7 @@ public function getThumbData($id) {
 		// used to retrieve list of ids selected by the
 		// WHERE clause in sdata
 		$sql = "SELECT id from `assets2` WHERE $where LIMIT 100";
-		// u\echoc($sql,'search sql');
+		 u\echoc($sql,'search sql');
 		$found = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
 
 		return $found;

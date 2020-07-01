@@ -300,7 +300,9 @@ private function tag_search ($clist) {
      $slist = [];
      foreach ($clist as $c){
      	if ($c == 'Z') { #all archival
-     		$slist[] = "tags in (" . Defs::getArchivalTagList() . ")";
+     		$slist[] = "tags in ("
+     			. Defs::getArchivalTagList()
+     			. ")";
      	}
      	else {
        	 $slist[] = "tags like '%$c%' ";
@@ -324,7 +326,8 @@ private function tag_search ($clist) {
 			// enhance data
 
 
-
+		$tlist = $this->asseta->getExistingThumbs($id);
+		$adata['show_thumbs'] = join(', ',$tlist);
 
 
 		$adata['tag_display'] = '';

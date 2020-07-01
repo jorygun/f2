@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	// save list of ids, for sequential editing.
 
 	$data = $AssetSearch->getIdsFromSearch($_POST);
-	u\echoc($data['sql'],'search WHERE');
+	//u\echoc($data['sql'],'search WHERE');
 
 	if (!empty($data['error'])) {
 		echo $data['error'];
@@ -69,9 +69,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 
 		$_SESSION['last_assets_found'] = $ids;
 		$count = count($ids);
-		echo "$count assets found. (max: 100)";
+		echo "$count assets found and saved to search list";
+		// echo "<br>First few: ";
+// 		$limit = min(11,$count);
+// 		for ($i=0;$i<$limit;++$i) { echo ($ids[$i] . ", ");}
+		echo BRNL;
 
-		if ($count < 11 ) echo join(', ',$ids) . BRNL;
 
 		foreach ($ids as $id){
 			$asset = $AssetSearch->getAssetSummary($id);

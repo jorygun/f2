@@ -50,11 +50,11 @@ function countClick(anchor,artid=0) {
 	   url: "/action.php",
 	   data: 'ajax='+action+'&ref='+href+'&art='+artid,
 	   type: "POST",
-	   success: function (response) {
-            alert (response);
-        }
+	   // success: function (response) {
+//             alert (response);
+//         }
 	 });
- return false; // always go to the href;
+ return true; // always go to the href;
 }
 
 // this scriput used for verifyEmail, sendLogin,
