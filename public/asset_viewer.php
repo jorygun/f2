@@ -68,8 +68,8 @@ if (!$item_id || ! is_numeric($item_id) || !$item_id > 0) {
     die("Invalid asset item id: $item_id");
 }
 
-if (!$adata = $assets->getAssetDataEnhanced($item_id)) {
-    die("No asset at id $item_id");
+if (empty($adata = $assets->getAssetDataEnhanced($item_id)) {
+    die("Asset $id is missing");
 }
 
 #u\echor ($adata, "Retrieve adata");
