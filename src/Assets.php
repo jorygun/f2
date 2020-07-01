@@ -359,106 +359,8 @@ EOF;
 	}
 
 
-public function getThumbUrl($id,$type){
-// delivers the url to a thumb image, making it if necessary.
-	// tesst for valid thumb type
-	if (empty( Defs::$thumb_width[$type] )) {
-		throw new RuntimeException ("Illegal thumb type requested $type");
-	}
-
-	$url = '/assets/' . $type . "/$id.jpg";
-	if (file_exists (SITE_PATH . $url)) {
-		return $url;
-	} elseif (0) {//put another file test here
-	} else {
-		return false;
-	// go make it
-		//echo "Making new thumb $type for asset $id" . BRNL;
-		//$this->createThumbs($id,[$type] );
-	}
-	return $url;
-}
-
-public function saveThumb ($ttype,$id,$turl,$amime){
-
-		/*
-			creates thubm types in list $needs for asset id $id.
-			returns true
-
-			requires the thumb source
-			Gets mime type from get_mime_from_url (using finfo or curl).
-
-		turl is url to source document for the thumbnail
-			(image, video, youtube, whatever).
-		amime is the mime type of the asset the thumb is for.
-
-		ttype is thumb type
-		 If thumbs, creates a 200w thumb in the thumbs directory.
-		 If galleries, it creates a 330w image in galleries directory
-		 If toons, it creates an 800w image in the toons directory
-		 (see thumb_width array in Defs)
-
-	returns true if everything works.
-	 */
-
-	 if (! $max_dim = Defs::$thumb_width[$ttype]){
-		throw new Exception ("Invalid thumb type requested for thumbnail: $ttype");
-	 }
-
-	$tmime = u\get_mime_from_url($turl);
-
-	 echo "Starting thumb $ttype on $id, asset mime $amime, from $turl. " .BRNL;
-	 $thumb = "${id}.jpg";
-
-	if (u\is_local($turl) ){
-		$tpath = SITE_PATH . $turl;
 
 
-		switch ($amime) {
-			case 'application/msword' :
-				$use_icon="doc.jpg";
-
-				copy (FileDefs::asset_dir . "/icons/$use_icon" , FileDefs::thumb_dir . "/$ttype/$thumb");
-				break;
-			case 'application/pdf' :
-			case 'image/gif':
-			case 'image/jpeg':
-			case 'image/png':
-			case 'image/tiff':
-			case 'video/x-youtube':
-				$thumb = $this->buildImThumbnail($id, $tpath,$ttype);
-				break;
-
-			case 'text/html':
-				$use_icon="web.jpg";
-				copy (FileDefs::asset_dir . "/icons/$use_icon" , FileDefs::thumb_dir . "/$ttype/$thumb");
-				break;
-
-			case 'video/mp4':
-				$use_icon = 'mp4.jpg';
-				copy (FileDefs::asset_dir . "/icons/$use_icon" , FileDefs::thumb_dir . "/$ttype/$thumb");
-				break;
-
-			case 'audio/mp3':
-			case 'audio/m4a':
-				$ext = substr($amime,-3,3);
-				$use_icon = "${ext}.jpg";
-				copy (FileDefs::asset_dir . "/icons/$use_icon", FileDefs::thumb_dir . "/$ttype/$thumb");
-				break;
-			case 'video/quicktime':
-				$use_icon = 'mov.jpg';
-				copy (FileDefs::asset_dir . "/icons/$use_icon", FileDefs::thumb_dir . "/$ttype/$thumb");
-				break;
-
-			default:
-				$use_icon = 'default.jpg';
-				copy (FileDefs::asset_dir . "/icons/$use_icon", FileDefs::thumb_dir . "/$ttype/$thumb");
-				break;
-		}
-		echo " /$ttype/$thumb created." . BRNL;
-		return true;
-	}
-}
 
 
 public function getThumbData($id) {
@@ -470,6 +372,7 @@ public function getThumbData($id) {
 	if ($result = $this->pdo->query($sql)->fetch( ) ){
 		return $result;
 	} else {
+	echo "Canot get thumbdata for id $id" . BRNL;
 		return [];
 	}
 }
