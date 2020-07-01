@@ -125,7 +125,7 @@ function search_news($term,$back,$pdo) {
 		$result = exec($exec);
 		if ($result) {
 			echo "Issue $issue ($hdate): ";
-			echo  "<a href='$result' target='news'>$result</a>"   .BRNL;
+			echo  "<a href='$url' target='news'>$url</a>"   .BRNL;
 		}
 // 		  if ( $files = exec($exec ) ) {
 // 		 	$filesall[$url][] = explode("\n",$files);
