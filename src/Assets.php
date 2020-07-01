@@ -250,7 +250,7 @@ class Assets {
 		$link = $adata['asset_url'];
 		if (empty($link)){return 'No asset url';}
 
-		$thumb = "/assets/thumbnails/small/${id}.jpg";
+		$thumb = "/thumbnails/small/${id}.jpg";
 
 
 		if (!file_exists(SITE_PATH . $thumb)){
@@ -418,7 +418,7 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 			case 'application/msword' :
 				$use_icon="doc.jpg";
 
-				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				copy (FileDefs::asset_dir . "/icons/$use_icon" , FileDefs::thumb_dir . "/$ttype/$thumb");
 				break;
 			case 'application/pdf' :
 			case 'image/gif':
@@ -431,28 +431,28 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 
 			case 'text/html':
 				$use_icon="web.jpg";
-				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				copy (FileDefs::asset_dir . "/icons/$use_icon" , FileDefs::thumb_dir . "/$ttype/$thumb");
 				break;
 
 			case 'video/mp4':
 				$use_icon = 'mp4.jpg';
-				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				copy (FileDefs::asset_dir . "/icons/$use_icon" , FileDefs::thumb_dir . "/$ttype/$thumb");
 				break;
 
 			case 'audio/mp3':
 			case 'audio/m4a':
 				$ext = substr($amime,-3,3);
 				$use_icon = "${ext}.jpg";
-				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				copy (FileDefs::asset_dir . "/icons/$use_icon", FileDefs::thumb_dir . "/$ttype/$thumb");
 				break;
 			case 'video/quicktime':
 				$use_icon = 'mov.jpg';
-				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				copy (FileDefs::asset_dir . "/icons/$use_icon", FileDefs::thumb_dir . "/$ttype/$thumb");
 				break;
 
 			default:
 				$use_icon = 'default.jpg';
-				copy (SITE_PATH . "/assets/icons/$use_icon" , SITE_PATH . "/assets/$ttype/$thumb");
+				copy (FileDefs::asset_dir . "/icons/$use_icon", FileDefs::thumb_dir . "/$ttype/$thumb");
 				break;
 		}
 		echo " /$ttype/$thumb created." . BRNL;
@@ -464,7 +464,7 @@ public function saveThumb ($ttype,$id,$turl,$amime){
 public function getThumbData($id) {
 	$sql = "SELECT asset_url,mime, astatus,
 	local_src,title, caption,source
-	FROM Assets2
+	FROM `assets2`
 	WHERE id = $id";
 
 	if ($result = $this->pdo->query($sql)->fetch( ) ){

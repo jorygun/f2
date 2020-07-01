@@ -6,7 +6,7 @@
     asset source can be ext. url or local url or uploaded file.
     If uploaded file, file is saved at /assets/files
 
-    Every asset has a thumb file at /assets/thumbs/id.jpg
+    Every asset has a thumb file at /thumbnails/$type/id.jpg
     If no thumbsource specified, thumb is vreated from asset.
     If local thumbsource thumb created from that
     If ext thubmsource, source is downloaded to temp file and thumb
@@ -177,13 +177,13 @@ class AssetAdmin
 		if ($changed) { //new or changed urls.  Make sure thumb sources are in place
 			// remove eisting thumbs
 			foreach (
-				['/assets/thumb_generated',
-				'/assets/thumbnails/small',
-				'/asset/thumbnails/medium',
-				'/assets/thumbnails/large'
+				[FileDefs::asset_dir . '/thumb_generated' . "/${id}.jpg",
+				FileDefs::thumb_dir . '/small'. "/${id}.jpg",
+				FileDefs::thumb_dir .'/ medium'. "/${id}.jpg",
+				FileDefs::thumb_dir . '/large'. "/${id}.jpg",
 				] as $thumb) {
-				$tpath = SITE_PATH . $thumb . "/${id}.jpg";
-				if (file_exists($tpath)){unlink ($tpath) ;}
+
+				if (file_exists($thumb)){unlink ($thumb) ;}
 			}
 
 
@@ -195,7 +195,7 @@ class AssetAdmin
 
 			}
 			// geneerate small thumb always
-			$desturl = "/assets/thumbnails/small/${id}.jpg";
+			$desturl = "/thumbnails/small/${id}.jpg";
 			$this->Assetv::buildGdImage($adata['local_src'],$desturl, 'small');
 
 
@@ -369,7 +369,7 @@ public function checkAssetData($adata) {
 	public function getExistingThumbs ($id) {
 		// returns list of thumb types that exist
 		$thumb = "${id}.jpg";
-		$tloc = SITE_PATH . "/assets/thumbnails";
+		$tloc = SITE_PATH . "/thumbnails";
 		$ttypes = [];
 		foreach (Defs::getThumbTypes() as $ttype){
 			if (file_exists($tloc . '/' . $ttype . '/' . $thumb)){

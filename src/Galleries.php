@@ -32,7 +32,7 @@ class Galleries
 		$this->pdo = $container['pdo'];
 		$this->asseta = $container['asseta'];
 		$this->assets = $container['assets'];
-		$this->thumbs = $container['thumbs'];
+		$this->thumbs = $container['assetv'];
 		$this->templates = $container['templates'];
 		$this->member = $container['member'];
 
@@ -66,7 +66,7 @@ class Galleries
 
 		foreach ($aids as $aid){
 			//echo "Gallery block $aid goes here";
-			echo $this->thumbs->getAssetBlock($aid,'galleries',false) ;
+			echo $this->thumbs->getAssetBlock($aid,'medium',false) ;
 		}
 		echo "</div>";
 	}
@@ -179,7 +179,7 @@ EOT;
 			  		// ok try first asset in gallery asset list
 			  		$aid = u\range_to_list($gdata['gallery_items'])[0];
 			  		if ($aid) {
-			 			if ($image = $this->assets->getThumbUrl($aid,'thumbs') ) {
+			 			if ($image = $this->assets->getThumbUrl($aid,'small') ) {
 			 				$image_data = "<img src='$image' />";
 			 			} else {
 			 				return "<div class='asset'>Could not create thumbnail for gallery</div>";
