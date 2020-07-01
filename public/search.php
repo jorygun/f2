@@ -126,7 +126,7 @@ function search_news($term,$back,$pdo) {
 		if ($result) {
 			$context = exec("grep  -Ri '$sterm' $result"); // get context
 			echo "<a href='$url' target='news'> Issue $issue ($hdate) </a>: " . BR;
-			echo nl2br($context) . BR . BRNL;
+			echo strip_tags($context) . BR . BRNL;
 
 		}
 // 		  if ( $files = exec($exec ) ) {
