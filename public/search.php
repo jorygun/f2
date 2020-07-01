@@ -124,7 +124,7 @@ function search_news($term,$back,$pdo) {
 		//echo $exec . BRNL;
 		$result = exec($exec);
 		if ($result) {
-			$context = grep -C '$sterm' $result; // get context
+			$context = exec("grep -C '$sterm' $result"); // get context
 			echo "<a href='$url' target='news'> Issue $issue ($hdate) </a>: " . BR;
 			echo nl2br($context) . BR . BRNL;
 
