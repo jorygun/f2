@@ -254,10 +254,10 @@ EOT;
 
 		}
 
-exit;
+
 
        $allowed = array(
-       	'id','title','caption','vintage','gallery_items','thumb_file',
+       	'id','title','caption','vintage','gallery_items',
        	'thumb_id','contributor_id');
 
        	// set contributor id if one not set yet and
