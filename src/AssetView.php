@@ -144,6 +144,7 @@ EOT;
 		if (! file_exists(SITE_PATH . $this->local_src)){
 			return '';
 
+
 		$this -> buildGdImage($this->local_src,$thumb_loc, $ttype);
 		return $thumb_loc;
 
