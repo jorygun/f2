@@ -149,7 +149,7 @@ EOT;
 		//echo ".. building new. " . BRNL;
 
 		if ($id != $this->id) {
-			$load_error = $this->loadId($id) );
+			$load_error = $this->loadId($id) ;
 			if (!empty($load_error)){ // returned errors
 				return '**ERROR** ' . $load_error ;
 			}
