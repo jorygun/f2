@@ -122,10 +122,10 @@ function search_news($term,$back,$pdo) {
 		//$exec = "grep -iRl --include '*.html'  'springer' .* ";
 		//grep -iRl --include "*.html" 'springer' .*
 		//echo $exec . BRNL;
-		$result = explode("\n",shell_exec($exec); // file with matching term
-		if ($result) {
+		$results = explode("\n",shell_exec($exec)); // file with matching term
+		if ($results) {
 			echo "<a href='$url' target='news'> Issue $issue ($hdate) </a>: " . BR;
-			foreach ($result as $path){
+			foreach ($results as $path){
 				$context = shell_exec("grep  -Ri '$sterm' $path"); // get context, multiline
 				echo nl2br(strip_tags($context)) . BR ;
 			}
