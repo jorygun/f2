@@ -67,7 +67,9 @@ div.asset-row .asset {
 div.gallery .asset {
 	height:350px;
    width:350px;
-
+	 overflow:auto;
+  margin-right:6px;
+    float:left;
 
 	}
 div.asset-row .asset img {
@@ -76,7 +78,7 @@ div.asset-row .asset img {
 }
 
 div.gallery .asset img {
-	width:300px;
+	width:330px;
 }
 
 
