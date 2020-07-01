@@ -59,7 +59,7 @@ class Galleries
 		$aids = $this->getGalleryItems($row['gallery_items']);
 		if (empty($aids)){die ("No asset list for gallery $gid ");}
 
-		 echo "<div class = asset-row>";
+		 echo "<div class = gallery>";
 		echo "<h3>${row['title']}</h3>";
 		echo "<p>${row['caption']}</p>";
 		echo "<hr>" . NL;
