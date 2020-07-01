@@ -69,7 +69,7 @@ if (!$item_id || ! is_numeric($item_id) || !$item_id > 0) {
 }
 
 if (empty($adata = $assets->getAssetDataEnhanced($item_id)) {
-    die("Asset $id is missing");
+    die("Asset $id does not exist");
 }
 
 #u\echor ($adata, "Retrieve adata");
@@ -132,6 +132,9 @@ if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false)
    <p class='red'>Asset is on an external site.
    Please use the source link to access it.</p>
     ";
+} elseif (! file_exists(SITE_PATH . $url)){
+	$asset_display = "The source for this asset is missing.";
+
 } elseif (strpos($mime, 'video') !== false) {
           $asset_display = "<video src = '$url' controls autoplay style='max-width:1024px;'>
           Your browser is not displaying this video.</video>";
