@@ -8,10 +8,14 @@
 		<?=$username?> - From <?=$user_from?>.  Posted <?=$pdate?>
 	</div>
 	<?php if (!empty($asset)): ?>
-		<div class='asset-column'>
-			<?php foreach ($asset as $a): ?>
-			<?= $a['asset_blocks'] ?>
+		<?php foreach ($asset as $aset): ?>
+			<?= $aset['adiv'] ?>
+			<?php foreach ($aset['asset_blocks'] as $a) : ?>
+				<?= $a ?>
 			<?php endforeach; ?>
+			</div>
+		<?php endforeach; ?>
+
 
 		</div>
 	<?php endif; ?>
