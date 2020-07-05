@@ -119,7 +119,7 @@ while ($row = $stmta -> fetch() ) {
 	++$rc;
 	$b = $bnew; // new data set
 	$estatus = ''; // capture e and w codes
-	$ostatus = $row['status']; #old status
+
 
 	$id = $row['id'];
 	$tsrc = $src = '';
@@ -168,7 +168,7 @@ while ($row = $stmta -> fetch() ) {
 		}
 	}
 
-	$b['astatus'] = $estatus ?: $ostatus;
+	$b['astatus'] = $estatus ?: $b['astatus'];
 	$last_id = $id;
 	record_result($b);
 
