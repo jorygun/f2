@@ -122,11 +122,12 @@ class ArticleAdmin
 
 			foreach ($carray as $row) {
 			  //u\echor($row);
-				if (!empty($row['asset_list'])) {
+				if (!empty($row['asset_list'])) { #should only be one
 					 $row['asset'] = $this->getAssetDiv($row['asset_list']);
 				} else {
 					$row['asset'] = '';
 				}
+				u\echor($row);exit;
 				$dblock .= $this->templates->render('comment', $row);
 			}
 
@@ -219,7 +220,7 @@ class ArticleAdmin
 				";
 		}
 
-		u\echor($adata,'Article Data'); exit;
+		//u\echor($adata,'Article Data'); exit;
 		return $adata;
 
 	}

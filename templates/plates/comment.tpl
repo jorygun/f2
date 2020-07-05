@@ -9,7 +9,9 @@
 	</div>
 	<?php if (!empty($asset)): ?>
 		<div class='asset-column'>
+
 			<?= $asset ?>
+
 		</div>
 	<?php endif; ?>
 	<div class='comment left'><?=$comment?></div>
