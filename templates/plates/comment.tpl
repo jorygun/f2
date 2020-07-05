@@ -11,7 +11,7 @@
 		<div class='asset-column'>
 			<?php foreach ($asset as $a): ?>
 			<?= $a ?>
-			<?php endoreach; ?>
+			<?php endforeach; ?>
 
 		</div>
 	<?php endif; ?>
