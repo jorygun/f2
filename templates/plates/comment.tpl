@@ -7,14 +7,16 @@
 	<div class='presource'>
 		<?=$username?> - From <?=$user_from?>.  Posted <?=$pdate?>
 	</div>
-	<?php if (!empty($asset)): ?>
-		<?php foreach ($asset as $aset): ?>
-			<?= $aset['adiv'] ?>
-			<?php foreach ($aset['asset_blocks'] as $a) : ?>
-				<?= $a ?>
-			<?php endforeach; ?>
-			</div>
-		<?php endforeach; ?>
+	<?php if (!empty($asset)):
+	u\echor ($asset);
+		 // foreach ($asset as $aset):
+// 			echo $aset['adiv'] ;
+// 				 foreach ($aset['asset_blocks'] as $a) :
+// 				echo $a;
+// 			 endforeach;
+// 			echo "</div>" ;
+// 		 endforeach;
+	?>
 
 
 		</div>
