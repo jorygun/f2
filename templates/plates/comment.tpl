@@ -9,8 +9,9 @@
 	</div>
 	<?php if (!empty($asset)): ?>
 		<div class='asset-column'>
-
-			<?= $asset ?>
+			<?php foreach ($asset as $a): ?>
+			<?= $a ?>
+			<?php endoreach; ?>
 
 		</div>
 	<?php endif; ?>
