@@ -7,14 +7,13 @@
 	<div class='presource'>
 		<?=$username?> - From <?=$user_from?>.  Posted <?=$pdate?>
 	</div>
-	<?php if (!empty($asset)):
-//	\DigitalMx\echor ($asset);
-
-			echo $asset['adiv'] ;
-				 foreach ($asset['asset_blocks'] as $a) :
+	<?php if (!empty($asset)): ?>
+		<div class='<?=$asset['adiv']?>' >
+			<?php foreach ($asset['asset_blocks'] as $a) :
  				echo $a;
  			 endforeach;
-			echo "</div>" ;
+ 			?>
+		</div>
 
 	?>
 
