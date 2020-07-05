@@ -1,10 +1,7 @@
 <?php
 namespace digitalmx\flames;
 
-/* this script needs to run in the old site to copy assets to assets2,
- which the new site will use.
-	Rewritten 6/19 to remove trying to fix thumbs.  Need a separate fix_thumbs script.
-	Rewritten 6/27 to use asset and checking routines from AssetAdmiin
+/* this script translates assets to asset2, both in same db.
 
 */
 
@@ -194,7 +191,12 @@ echo "<a href='$logurl?$end_time' target = 'log'>Log</a>" . BRNL;
 exit;
 
 #######################
-
+// OLD STATUAT TO NEW STATUS IF DIFFERENT
+$asset_tran = array (
+	'R' => 'O',
+	'S' => 'O',
+	'D' => 'X',
+);
 
 
 
@@ -213,7 +215,7 @@ function translate_fields($a) {
 	$b['title'] = stripslashes($a['title']) ?: 'Untitled';
 	$b['caption'] = stripslashes($a['caption']);
 	if ( $b['title'] == $b['caption']) {$b['caption'] = '';}
-	$b['astatus'] = $ostatus;
+	$b['astatus'] = $asset_tran[$a['status']] ?? $ostatus;
 
 	//develop estatus during scan for errors and warnings.
 	// at the end set astataus = estatus || original status

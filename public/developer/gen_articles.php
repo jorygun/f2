@@ -4,7 +4,7 @@ namespace DigitalMx\Flames;
 ini_set('default_socket_timeout', 10);
 ini_set('display_errors',1);
 
-/* script to read news_items and produce articles table
+/* script to read news_items and produce articles table both in same db.
 
 */
 

@@ -27,7 +27,7 @@ class Definitions {
     'T' => 'temp holding',
     'E' => 'Missing Graphic or bad URL',
     'X' => 'Deleted',
-    'H' => 'Hidden',
+
 
     'U' => 'Updated. Needs Tag Review',
 

@@ -4,7 +4,7 @@ namespace DigitalMx\Flames;
 
 #ini_set('display_errors', 1);
 /*
-	Uses articles and read_table and json index file to build new pubs table
+	Uses articles and read_table in this db and json index in live site  to build new pubs table in this db.
 */
 
 //BEGIN START
