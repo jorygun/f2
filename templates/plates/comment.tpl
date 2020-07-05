@@ -10,7 +10,7 @@
 	<?php if (!empty($asset)): ?>
 		<div class='asset-column'>
 			<?php foreach ($asset as $a): ?>
-			<?= $a ?>
+			<?= $a['asset_blocks'] ?>
 			<?php endforeach; ?>
 
 		</div>
