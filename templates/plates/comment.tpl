@@ -8,7 +8,7 @@
 		<?=$username?> - From <?=$user_from?>.  Posted <?=$pdate?>
 	</div>
 	<?php if (!empty($asset)):
-	u\echor ($asset);
+	\DigitalMx\echor ($asset);
 		 // foreach ($asset as $aset):
 // 			echo $aset['adiv'] ;
 // 				 foreach ($aset['asset_blocks'] as $a) :
