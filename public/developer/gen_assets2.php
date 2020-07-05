@@ -202,7 +202,7 @@ $asset_tran = array (
 
 function translate_fields($a) {
 	// $a is existing assets data, returns new asset2 data
-	global $bsame,$bnew,$null;
+	global $bsame,$bnew,$null,$asset_tran;
 
 	// make new array 'b'
 	$b = $bnew;
