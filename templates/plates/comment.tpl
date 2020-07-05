@@ -8,16 +8,11 @@
 		<?=$username?> - From <?=$user_from?>.  Posted <?=$pdate?>
 	</div>
 	<?php if (!empty($asset)): ?>
-		<div class='<?=$asset['adiv']?>' >
+		<div class='<?=$asset['adiv']?> left' >
 			<?php foreach ($asset['asset_blocks'] as $a) :
  				echo $a;
  			 endforeach;
  			?>
-		</div>
-
-	?>
-
-
 		</div>
 	<?php endif; ?>
 	<div class='comment left'><?=$comment?></div>
