@@ -133,7 +133,7 @@ while ($row = $stmta -> fetch() ) {
 	$b = translate_fields($row);
 	// set mime type based on real url
 
-u\echor ($b);
+//u\echor ($b);
 
 	if ($estatus != 'E') {
 		if ( !$mime = u\url_exists($b['asset_url'] ) ) {
