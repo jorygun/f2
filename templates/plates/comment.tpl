@@ -9,13 +9,13 @@
 	</div>
 	<?php if (!empty($asset)):
 	\DigitalMx\echor ($asset);
-		 // foreach ($asset as $aset):
-// 			echo $aset['adiv'] ;
-// 				 foreach ($aset['asset_blocks'] as $a) :
-// 				echo $a;
-// 			 endforeach;
-// 			echo "</div>" ;
-// 		 endforeach;
+
+			echo $asset['adiv'] ;
+				 foreach ($asset['asset_blocks'] as $a) :
+ 				echo $a;
+ 			 endforeach;
+			echo "</div>" ;
+
 	?>
 
 
