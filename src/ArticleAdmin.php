@@ -219,7 +219,7 @@ class ArticleAdmin
 				";
 		}
 
-		//u\echor($adata,'Article Data');
+		u\echor($adata,'Article Data'); exit;
 		return $adata;
 
 	}
