@@ -40,15 +40,6 @@ class Definitions {
 
 public static $local_site = 'f2.local';
 
-// these emails are ok to send to from local_site (dev site)
-// all others will be blocked, to prevent embarrassing mistakes
-public static $test_emails = array(
-		'john@digitalmx.com',
-		'johnmx@me.com',
-		'jorygun@gmail.com',
-		'springerj@yahoo.com',
-		'john.scott.springer@gmail.com',
-);
 
 	public static $editor_id = 13145;
 	// userId for editor account.
@@ -208,13 +199,17 @@ public static $ems_codes = array(
 
 		);
 
-// emails that are safe for sending in test mode.
+// these emails are ok to send to from local_site (dev site)
+// all others will be blocked, to prevent embarrassing mistakes
+
 public static $safe_emails = [
 'john@digitalmx.com',
 'editor@amdflames.org',
 'johnmx@me.com',
 'springerj@yahoo.com',
 'jorygun@gmail.com',
+'johnscottspringer@gmail.com',
+'john.scott.springer@gmail.com',
 
 ];
 

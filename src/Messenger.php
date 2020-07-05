@@ -407,7 +407,7 @@ Click to Confirm
 		//  if running locally and not one of my email adderesses
 		if ($this->test
 			||
-			(SITE == Defs::$local_site && (! in_array($data['to'],Defs::$test_emails) ) )
+			(SITE == Defs::$local_site && (! in_array($data['to'],Defs::$safe_emails) ) )
 			) {
 		 	 u\echor ($data,'Mesenger in test mode. Data to send_mail:');
 		 	 return;

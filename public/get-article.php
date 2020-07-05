@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		 'user_id' => $_SESSION['login']['user_id'],
 		 'username' => $_SESSION['login']['username'],
 		 'on_db' => 'article',
-		 'mailto' => ['commenters','contributor','editor',13105],
+		 'mailto' => ['commenters','contributor','editor'],
 		 'single' => false,
 		 'on_id' => $id,
 		 'admin_note' => '',
