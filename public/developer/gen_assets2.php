@@ -192,17 +192,21 @@ exit;
 
 #######################
 // OLD STATUAT TO NEW STATUS IF DIFFERENT
-$asset_tran = array (
+function asset_tran($a) {
+
+	static $asset_tran = array (
 	'R' => 'O',
 	'S' => 'O',
 	'D' => 'X',
-);
+	);
+	return $asset_tran[$a] ?? $a;
+}
 
 
 
 function translate_fields($a) {
 	// $a is existing assets data, returns new asset2 data
-	global $bsame,$bnew,$null,$asset_tran;
+	global $bsame,$bnew,$null;
 
 	// make new array 'b'
 	$b = $bnew;
@@ -215,7 +219,7 @@ function translate_fields($a) {
 	$b['title'] = stripslashes($a['title']) ?: 'Untitled';
 	$b['caption'] = stripslashes($a['caption']);
 	if ( $b['title'] == $b['caption']) {$b['caption'] = '';}
-	$b['astatus'] = $asset_tran[$ostatus] ?? $ostatus;
+	$b['astatus'] = asset_tran($ostatus);
 	//develop estatus during scan for errors and warnings.
 	// at the end set astataus = estatus || original status
 	// this preserves the old status settings.
