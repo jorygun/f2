@@ -1,9 +1,12 @@
 
 <div style="width:100%;margin-left:30px;">
 
- <?php if (! $credential): ?>
-   <p>Insufficient Permission</p>
-<?php else: ?>
+ <?php if (! $credential):
+ 	echo "Permission Denied";
+ 	exit;
+	endif;
+?>
+
 
 <h1> AMD Flames Profile and Email Editor</h1>
 <p>Saving this form marks your email address and profile as confirmed. <br>
@@ -11,69 +14,58 @@ If you make changes to fields marked with an asterisk *, your profile will be li
 that will listed on the next newsletter as well.</p>
 <p>Fields in yellow are <span class='required'>required</span>.</p>
 
-	<h3 ><?= $username ?></h3>
-	<p>Profile last updated: <?= $profile_date ?>, last verified <?= $profile_valid_date?><br>
+	<h3><?= $username ?></h3>
+	<p>Profile last updated: <?= $profile_date ?>,
+	last verified <?= $profile_valid_date?><br>
 		Flame member since  <?= $join_date ?> (<?= $status_name ?>) <br>
 		</p>
 
-<?php if (!empty($warning)):
-   if ($profile_valid_age > $profile_warning): ?>
+<?php if (!empty($warning) && ($profile_valid_age > $profile_warning) ): ?>
+
    <div class='warning'>Your profile has not been updated since
    <?=$profile_date?>.  Please look it over and make edits as needed.  If everything
    is OK <i>including your email</i>, just click here to verify everything.  If you make any edits, click Update at the bottom of the page.<br>
    <?= $profile_verify_button ?>
    </div>
 
-
-<?php endif; endif; ?>
+<?php endif; ?>
 
 
 <form method='post' name='profile' id='profile' enctype="multipart/form-data" action='/profile.php'>
 	<input type='hidden' name='user_id' value='<?= $user_id ?>' >
 
 
-
-
 <table class='profile'>
 
  <tr><td colspan='2' ><h5>Quick Update</h5></td></tr>
 
-	<tr><td>* What's New?<br><span class='instr'>(Tweet-sized update)</span></td><td>
+	<!--
+<tr><td>* What's New?<br><span class='instr'>(Tweet-sized update)</span></td><td>
 			<textarea name='user_greet' class='input' rows=2 cols=80 ><?= $this->e($user_greet) ?></textarea></td></tr>
+ -->
+
+	<tr><td >* Briefly, what's new with you? </td>
+		<td><textarea  name='user_current' type='text' rows=3 cols=80 class='required'><?= $user_current ?></textarea>
+		</td></tr>
+
 
     <tr><td>* Your current location <br>City, State/Province/Region, Country</td>
 		<td><input class='required' size='96' id='location' name='user_from' type='text' value='<?= $this->e($user_from) ?>'>
 		</td></tr>
 
-
-
-	<tr><td >* Briefly, what you’re doing now </td>
-		<td><input size='96'  name='user_current' type='text' class='required' value="<?= $this->e($user_current) ?>">
-		</td></tr>
-
-
-	<tr><td> Photos</td>
-		<td>
-
-		</td><tr>
-
-
-
-<tr><td colspan='2' ><h5>Basic Information</h5></td></tr>
-
-
-<?php if ($email_status != 'Y'): ?>
+	<?php if ($email_status != 'Y'): ?>
 <tr><td colspan=2><div class='warning'>There is a problem with your current email
-address. You may change it below, or, if it is correct, just save/submit this page to confirm it. <?=$profile_verify_button?> </div></td></tr>
+address. You may change it here, or, if it is correct, just submit this page to confirm it. If you change it, be sure to respond to the confirmation email. Your current email status is <?= $email_status_name ?>.
+	</td></tr>
 <?php endif; ?>
-		<tr><td colspan='2'>Current email status: <?= $email_status_name ?><br>
-		    <span class='instr'>
-			If you change your email, you will receive a confirming email within a few minutes.  <b>You MUST respond</b> to confirm your new email.</span></td></tr>
 
-		<tr><td>Email:</td><td><input id='email' name='user_email' type='email' class='required' size='60' value='<?= $user_email ?>'><br>
+		<tr><td>My current Email:</td><td><input id='email' name='user_email' type='email' class='required' size='60' value='<?= $user_email ?>'><br>
 
 			</td></tr>
 
+<tr><td>Submit and Confirm email</td><td><input type='submit' name='submit' id='submit'></td></tr>
+
+<tr><td colspan='2' ><h5>Basic Information</h5></td></tr>
 
 		<tr><td colspan='2' class='instr' >
 		 Check here to prevent other Flames members from seeing your email address.  </td> </tr>
@@ -89,9 +81,26 @@ address. You may change it below, or, if it is correct, just save/submit this pa
          <tr><td > Your LinkedIn address. </td><td>	<input type='url' size='60' name='linkedin' value="<?= $linkedin ?>" placeholder='https://linkedin.com'  " </td></tr>
       <tr><td>Your personal very favorite web site</td><td><input type='url' size='60' name='user_web' value="<?= $user_web ?>" </td></tr>
 
-		<?php if (false): ?>
-      <tr><td>* Photo<br> <?= $member_photo ?><br>Upload new photo: <input type='file' name='linkfile'></td></tr>
-      <?php endif; ?>
+
+	<tr><td colspan='2'><h5>Photos</h5></td></tr>
+	<tr><td>Assets to show on my profile</td>
+		<td><input type='text' name='asset_list' id='asset_list' value='<?=$asset_list?>'><br>
+	To remove a photo from your profile, remove the asset id here.<br>
+	To find and add an existing asset, click here.
+	<button type='button' onclick="window.open('/asset_search.php?mode=j' ,'assets','width=1100,left=160');">Search Assets</button> <br>
+	To create and add a new asset, click here.
+	<button type = 'button' onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >Create a new asset</button>
+	</td></tr>
+	<div class='user-photos'>
+	<?php foreach ($photos as $aid=>$pdata) : ?>
+	<tr><td>Asset ID: <?=$aid?></td><td>
+		<?=$pdata['block']?>
+
+			</td><tr>
+		<?php endforeach ?>
+
+	</div>
+
 
     <tr><td colspan='2' ><h5>AMD Affiliation</h5></td></tr>
         <tr><td >Enter what you did at AMD, briefly:</td>
@@ -102,14 +111,16 @@ address. You may change it below, or, if it is correct, just save/submit this pa
 		<tr><td>Decades At AMD (check all applicable)</td><td><?= $decade_boxes ?><br></td></tr>
 		<tr><td>Locations (check all applicable)</td><td><?= $location_boxes ?><br></td></tr>
 		<tr><td>Departments (check all applicable)</td><td><?= $department_boxes ?><br></td></tr>
-
+		<tr><td>Remember your badge number?</td>
+			<td><input type='text' name='badge_no' value = '<?=$badge_no?>'>
+			</td></tr>
 
 		<tr><td colspan='2'><h5>Narratives (optional)</h5></td></tr>
-   	<tr><td><u>* My interests</u></td></td></tr>
+   	<tr><td><u>My interests</u></td></td></tr>
 		<tr><td colspan='2'><input size='96'  name='user_interests' type='text' value="<?= $this->e($user_interests) ?>">
 		</td></tr>
 
-        <tr><td ><u>* About Me</u></td><td  class='instr'>
+        <tr><td ><u>About Me</u></td><td  class='instr'>
 			Enter anything you'd like to say about yourself.  What was your career path? What keeps
 			you busy?
 			</td></tr>
@@ -117,7 +128,7 @@ address. You may change it below, or, if it is correct, just save/submit this pa
 			<textarea rows='15' cols='120' name='user_about' class='input useredit'> <?= $this->e($user_about) ?></textarea></td></tr>
 
 
-        <tr><td ><u>* What's great about working at AMD</u></td><td  class='instr'>
+        <tr><td ><u>What is/was great about working at AMD</u></td><td  class='instr'>
 			Share some memories.
 			</td></tr>
 			<tr><td colspan='2'><textarea rows='15' cols='96' name='user_memories' class='input useredit'  ><?= $this->e($user_memories) ?></textarea></td></tr>
@@ -134,9 +145,6 @@ address. You may change it below, or, if it is correct, just save/submit this pa
 
  <div class='float-clear'>
  </div>
-
-<?php endif; ?>
-
 
 
 

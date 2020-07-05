@@ -42,7 +42,7 @@ $adb = array(
 	'id',	'status',	'title',	'caption',	'keywords',	'mime',	'type',	'url',	'thumb_file',	'link',	'vintage',	'source',	'contributor',	'contributor_id',	'date_entered',	'mod_date',	'height',	'width',	'sizekb',	'notes',	'has_thumb',	'has_gallery',	'has_toon',	'review_ts',	'skip_ts',	'first_use_date',	'first_use_in',	'tags',	'reviews',	'up_votes',	'down_votes',	'votes',	'comment_count',	'gallery_items',	'user_info',	'temptest',
 	);
 $bnew = array (
-	'astatus' => 'N',
+	'astatus' => 'U',
 	'thumb_url' =>'',
 	'asset_url' => '',
 	'errors' => '',

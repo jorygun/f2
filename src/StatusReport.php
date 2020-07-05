@@ -130,30 +130,34 @@ class StatusReport {
     <div class='article'>
 		<div class='head'>
 		<p class='headline'>${row['username']} <span class='normal'>${row['email_public']} ${row['hidden_emailer']} </span><br>
-		<span class='normal'> ${row['user_current']} ... in ${row['user_from']}
+		Living in ${row['user_from']}<br>
+
 EOT;
-			if (! empty ($row['user_greet'])){
-			$story .= "<br /><i>${row['user_greet']}</i>";
-		}
+
+
 			$story .= "</span></p>\n";
 
 		$story .= "
 		</div>
 		<div class='content'>
 		";
+		$story .= "<p class='subhead'>Currently:</p>
+				<div class='subarticle'>${row['user_current']}</div>";
+
+		if (! empty ($row['user_interests']) ){
+			$story .= "<p class='subhead'>Interests:</p>
+			<div class='subarticle'>${row['user_interests']}</div>";
+		}
 
 		if (! empty ($row['user_about'])) {
 			$story .= "<p class='subhead'>About:</p>
 				<div class='subarticle'>${row['user_about']}</div>";
 		}
-		if (! empty ($row['user_interests']) ){
-			$story .= "<p class='subhead'>Interests:</p>
-			<div class='subarticle'>${row['user_interests']}</div>";
-		}
-		if (! empty ($row['user_memories']) ){
-			$story .= "<p class='subhead'>Memories:</p>
-			<div class='subarticle'>${row['user_memories']}</div>";
-		}
+
+		// if (! empty ($row['user_memories']) ){
+// 			$story .= "<p class='subhead'>Memories:</p>
+// 			<div class='subarticle'>${row['user_memories']}</div>";
+// 		}
 		$story .= <<<EOT
 	</div></div>
 

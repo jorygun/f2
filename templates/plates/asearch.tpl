@@ -1,7 +1,9 @@
 
 
 <div class='box'>
+<?php if($_SESSION['level'] >=7): ?>
 	<button type='button' onClick = "window.open('/asset_editor.php?id=0')">New Asset</button>
+<?php endif; ?>
 	<button type='button' onclick="clearForm('select_assets');">Clear Form</button>
 	<button type='button' name='SearchHelp' class='help-button' id ='help-button' value='asearch' >Help</button><br>
 	<b>Choose any of the parameters below to find photos, videos, and audio files.</b>

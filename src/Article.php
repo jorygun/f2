@@ -72,7 +72,7 @@ EOT;
 			$adata = $this->checkArticle($post);
 
 			 $id = $post['id'];
-u\echor($adata);
+//u\echor($adata);
         $prep = u\prepPDO($adata, [], 'id');
    //u\echor ($prep , 'PDO data');
 

@@ -78,7 +78,7 @@ echo $page->startBody();
 	<br><?=$publishaction?><br>
 
 <li>Check the latest news</a>, to make sure it published.
-<button type='button' onClick="window.open('/news/current','current')">Latest News</button></li>
+<button type='button' onClick="window.open('/news/current','news')">Latest News</button></li>
 
 
 <li>Run the bulk email to send out the Flame News Is Ready Email. Note: the email will pull "teasers"

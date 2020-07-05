@@ -28,7 +28,7 @@ echo <<<EOT
 	function open_article_edit (editid){
 		var editme = document.getElementById(editid).value;
 		var url = '/article_editor.php?id=' + editme;
-		window.open(url,'articleedit');
+		window.open(url,'aedit');
 
 		}
 </script>

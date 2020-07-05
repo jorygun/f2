@@ -192,7 +192,7 @@ EOT;
 		  $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
 		  $t .=    self::if_level (7, "<li><a href='/asset_search.php' target='asearch'>Asset Manager</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/gallery_edit.php' target='gallery'>Edit Gallery</a>");
-		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='_blank'>Web Stats</a>");
+		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='data'>Web Stats</a>");
 
 
 	$t .=  self::closeLine(7,$thisMenu);
@@ -235,9 +235,9 @@ EOT;
 	if ($userlevel >= 2){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu(2,$thisMenu);
 	$t .= self::if_level(2,"
-		 <li><a href='/news/current/' target='newsletter'>Latest Newsletter</a>
+		 <li><a href='/news/current/' target='news'>Latest Newsletter</a>
 		 <li><a href='/news/' target='nindex'>Newsletter Index</a>
-		<li><a href='/galleries.php' target='gallery'>Photo Galleries</a>
+		<li><a href='/galleries.php' target='galleries'>Photo Galleries</a>
 		<li><a href='/calendar.php' target='calendar'>Event Calendar</a>
 		 <li><a href='/special/' target='special'>Special Tributes</a>
 		 <li><a href='/galleries.php/?4547' target='_blank'>Our Great Ads</a>
@@ -256,7 +256,7 @@ EOT;
 		 <li><a href='/profile.php' target='profile'>View/Edit My Profile</a>
 		 ");
 	$t .= ($userlevel > 1 and !empty ($userlinkedin))?
-		"<li><a href='$userlinkedin' target='_blank'>My LinkedIn Page</a>" : '';
+		"<li><a href='$userlinkedin' target='linkedin'>My LinkedIn Page</a>" : '';
 
 	$t .= self::if_level(1,"
 		<li><a href='/?s=logout'>Log Out</a>

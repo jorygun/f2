@@ -23,15 +23,17 @@ class Definitions {
 		#days since last activity; triggers lost test
 
 	public static $asset_status = array(
-    'R' => 'Reviewed',
+
     'T' => 'temp holding',
     'E' => 'Missing Graphic or bad URL',
     'X' => 'Deleted',
-    'N' => 'New',
-    'U' => 'Updated. Needs Review',
-    'I' => 'OK, override asset url error',  //use for inacessible asset url
-    'W' => 'Warning but usable',
+    'H' => 'Hidden',
+
+    'U' => 'Updated. Needs Tag Review',
+
+    'W' => 'Warning but usable', // automatic
     'O' => 'OK',
+    'K' => 'OK, override asset url error',  //use for inacessible asset url
 
 );
 

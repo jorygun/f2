@@ -47,7 +47,7 @@ $image = $assetv->getThumb($id,'medium');
 u\echop($image);
 echo "<hr>" . NL;
 if (strpos($image,'ERROR') !== false){
-		$image_data = $image; // is error
+		$image_data = "$image" ; // is error
 } else {
 	$image_data = "<image src='$image' />";
 }

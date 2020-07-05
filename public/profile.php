@@ -45,6 +45,8 @@ if ($login->checkLogin(2)){
 
 		}
    </script>
+
+   <script src='/js/aq.js'></script>
 EOT;
 
 	echo $page->startBody();
@@ -52,6 +54,8 @@ EOT;
 
 //END START
 	 $ma = $container['membera'];
+	 $assetv = $container['assetv'];
+
 	 $templates = $container['templates'];
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -62,37 +66,52 @@ EOT;
 		exit;
    }
 
-   if (!empty ($uid = $_GET['edit'] ?? '' )){
-   // deliver the edit form
-   	 $profile_data = $ma->getProfileData($uid);
+// GET PROFILE
+
+	if (!empty($uid = $_GET['confirmed'] ?? '')){
+   	$ma->confirmProfile($uid);
+   }
+
+   $uid = $_GET['uid'] ?? $_GET['edit'] ?? $_GET['id']??  $_SESSION['login']['user_id'];
+//echo "(uid = $uid)" . BRNL;
+	if (empty($uid)){
+ 		echo "No profile requested"; exit;
+ 	}
+    $profile_data = $ma->getProfileData($uid);
+    $profile_data['user_about_linked'] = u\link_assets($profile_data['user_about']);
+
+    $assets = u\number_range($profile_data['asset_list']);
+
+	$uid = $_GET['edit'] ??'';
+   if (!empty ($uid) ){
+
+		$profile_data['photos'] = [];
+			foreach ($assets as $aid){
+				 $pdata = $assetv->getUserPhoto($aid,'edit');
+				// u\echor($pdata);
+				$profile_data['photos'][$aid] = $pdata; //'view' or 'edit'
+			}
+
+
+//		u\echor($profile_data,'profile data');
    	 echo  $templates->render('profile-edit', $profile_data);
    	 exit;
 
-   } elseif (!empty($uid = $_GET['confirmed'] ?? '')){
-
-   	$ma->confirmProfile($uid);
-
-   	$profile_data = $ma->getProfileData($uid);
+   } else { // is not an edit
+		$profile_data['photos'] = [];
+		foreach ($assets as $aid){
+			 $pdata = $assetv->getUserPhoto($aid,'view');
+			// u\echor($pdata);
+			$profile_data['photos'][$aid] = $pdata; //'view' or 'edit'
+		}
+//
 
 		echo  $templates->render('profile', $profile_data);
-		exit;
-
-	} elseif (
-		!empty($uid = $_GET['uid'] ?? $_SESSION['login']['user_id']) ){
-			$profile_data = $ma->getProfileData($uid);
-			 // scan for images or links in the about box
-		 $profile_data['user_about_linked'] = u\link_assets($profile_data['user_about']);
-
-			#u\echor($profile_data,'profile data'); exit;
-			echo  $templates->render('profile', $profile_data);
-			#u\echoAlert ("MA Site: " . SITE);
 
 			exit;
 
+}
 
- 	}else {
- 		echo "No profile requested"; exit;
- 	}
 
 
 

@@ -52,12 +52,16 @@ Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> 
 <tr><td>Item Title (<=64 chars)</td><td><input type='text' size='60' maxlength ='64' name='title' id='title' value="<?=$title?>"></td></tr>
 <tr><td>Caption (not reqd)</td><td><textarea  name='caption' rows=5 cols=60><?=$caption?></textarea></td></tr>
 <tr><td>Other Keywords (comma sep)</td><td><input type='text' name='keywords' value='<?=$keywords?>' size='60'/></td></tr>
-
-<tr><td>Status</td><td><select name='astatus'><?=$status_options?></select></td></tr>
-
+<?php if ($_SESSION['level'] >=7) : ?>
+<tr><td>Status (admin only)</td><td><select name='astatus'><?=$status_options?></select></td></tr>
+<?php else: ?>
+	<input type='hidden name='astatus' value = '<?=$astatus?>'?
+<?php endif; ?>
 <tr><td>Origin</td><td>Vintage: <input type='text' name='vintage' value = "<?=$vintage?>" size="6"> Attribute to <input type='text' name='source' value="<?=$source?>" size="40"> </td></tr>
 <tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' onfocus="form.contributor_id.value='';"
-    style = '$cont_style'> id: <input type='text' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ><br><?=$Aliastext?></td></tr>
+    style = '$cont_style'> id: <input type='text' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ><br>
+    Contributor aliases: <?=$Aliastext?><br>
+    Use 0 for non-member contributor id.</td></tr>
 
     <tr><td>Tags</td><td><?=$tag_options?></td></tr>
     <tr><td colspan='2'>&nbsp;</td></tr>

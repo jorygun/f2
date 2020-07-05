@@ -74,7 +74,7 @@ class ArticleAdmin
 				style='background:orange;'>Toggle Use</button>"
 				: "";
 			$row['view-button'] =
-				"<button type='button' onClick = window.open('/get-article.php?$id')>View</button>";
+				"<button type='button' onClick = window.open('/get-article.php?$id','article')>View</button>";
 
 			if ($credential) {
 				$editable[] = $row;
@@ -231,33 +231,45 @@ class ArticleAdmin
 
 	// builds html for a story
 
-        $id = $sdata['id']; // might be noew article, so orignal was id = 0
+      $id = $sdata['id']; // might be noew article, so orignal was id = 0
 
 #u\echor ($sdata,'sdata');exit;
         /* detect if story is already html.  If not, do nl2br.
         // otherwise use as is.
         */
 
-        if (strpos($sdata['content'], '<p>') === false
+
+		$adata['content'] = '';
+			//insert main graphic
+		if (!empty($sdata['asset_main'])){
+			$adata['content'] =
+			"<div class='asset-main'>"
+			. $this->assetv->getAssetBlock($sdata['asset_main'],'large')
+			. "</div>" . NL;
+		}
+
+		if (strpos($sdata['content'], '<p>') === false
             && strpos($sdata['content'], '<table>') === false) {
-            $sdata['content'] = nl2br($sdata['content']);
-        }
-        $sdata['ed_comment'] = nl2br($sdata['ed_comment']);
-        $sdata['content'] = u\makeLinks($sdata['content']);
+            $adata['content'] .= nl2br($sdata['content']);
+        } else {
+        		$adata['content'] .= $sdata['content'];
+		}
 
+      $adata['content'] = u\makeLinks($adata['content']);
 
-		$sdata['status_message'] = $this->setStatusMessage($sdata);
-		$sdata['sfrom'] = ($sdata['source']) ? "From " . $sdata['source'] : '';
+      $adata['ed_comment'] = nl2br($sdata['ed_comment']);
+		$adata['status_message'] = $this->setStatusMessage($sdata);
+		$adata['sfrom'] = ($sdata['source']) ? "From " . $sdata['source'] : '';
 
-        $sdata['more'] = '';
-        if (!empty($link = $sdata['link'])) {
+      $adata['more'] = '';
+      if (!empty($link = $sdata['link'])) {
             $ltitle = $sdata['link_title'] ?: 'web link';
 
-           $sdata['more'] = "<p class='more'> More: <a href='$link' onClick = 'return countClick(this,$id);' target='_blank'>$ltitle</a></p>";
-        }
+           $adata['more'] = "<p class='more'> More: <a href='$link' onClick = 'return countClick(this,$id);' target='_blank'>$ltitle</a></p>";
+      }
 
 
-        return $sdata;
+        return $adata;
     }
 
 	public function getPblock($cc,$pops) {
@@ -269,7 +281,7 @@ class ArticleAdmin
 
         if ($pops['take_comments']) {
         	// link to display aarticle page with comments at bottom
-            $pblock .= "<a href='/get-article.php?${id}d'>Comments</a> ($cc) ";
+            $pblock .= "<a href='/get-article.php?${id}d' target='article'>Comments</a> ($cc) ";
         }
         if ($pops['take_votes']) {
 
@@ -282,8 +294,11 @@ class ArticleAdmin
                 . $voteicons
                 ;
         }
-
-		return "<div class='pop'>" . $pblock . "</div>\n\n";
+		if (!empty($pblock)){
+			return "<div class='pop'>" . $pblock . "</div>\n\n";
+		} else {
+			return '';
+		}
 
 	}
 

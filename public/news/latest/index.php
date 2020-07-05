@@ -24,7 +24,7 @@ $news = $container['news'];
 $article = $container['article'];
 $opps = $container['opps'];
 $read = new ReadNews();
-$calendar = new Calendar();
+$calendar = $container['calendar'];
 $publish = $container['publish'];
 
 /*
@@ -114,7 +114,7 @@ foreach ($opps->linkOppList() as $opp) {
 	echo $opp . BRNL;
 }
 
-echo $calendar->build_calendar();
+echo $calendar->display_calendar();
 
 echo $read->news_head("Recent Activity");
 $read->echo_if ('recent_articles.html');

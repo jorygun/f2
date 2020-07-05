@@ -134,7 +134,7 @@ public function getIssueData($issue) {
 public function getLatestIssue(){
 	// returns array of issue and human date for last entry in pubs
 	$sql = "SELECT issue, url,
-	DATE_FORMAT(pubdate,'%b %d, %Y') as pubdate ,
+	DATE_FORMAT(pubdate,'%b %d, %Y') as date_published ,
 	last_scan
 	FROM `pubs` ORDER By pubdate DESC LIMIT 1";
 	$latest = $this->pdo->query($sql)->fetch();

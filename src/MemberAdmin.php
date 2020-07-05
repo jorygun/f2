@@ -42,6 +42,7 @@ class MemberAdmin {
 		$this->pdo = $container['pdo'];
 		$this->member = $container['member'];
 		$this->messenger = $container['messenger'];
+		$this->Assets= $container['assets'];
 
 
 	}
@@ -358,6 +359,7 @@ EOT;
 				$val = u\despecial($val);
 				if (strcmp($md['user_current'],$val) !== 0){
 				echo "Updating user's current info" . BRNL;
+				$profile_changed = true;
 				$this->member->setCurrent($uid,$val);
 				}
 				break;
@@ -544,7 +546,7 @@ public function showUpdate($uid) {
  	$row = $this->member->getMemberRecord($uid,true);
  	$tdata = $row; // put all retrieved data into template row
  	#u\echoAlert ("MA Site: " . SITE);
-# u\echor($row,'From Member');
+// u\echor($row,'From Member');
 
 
 
@@ -573,7 +575,7 @@ public function showUpdate($uid) {
   			&& $row['status'] != 'D';
 
     $button_text = <<<EOT
-		<button onClick = "window.open('/scripts/profile_update.php?id=$uid');">
+		<button onClick = "window.open('/scripts/profile_update.php?id=$uid'k,'pedit');">
 		Edit My Profile</button>
 EOT;
     $tdata['edit_button'] = ($credential )? $button_text : '';
@@ -624,6 +626,8 @@ EOT;
 		throw new Exception ("No uid supplied for save profile data");
 	}
 
+	u\echor($post,"Input to save profile"); //exit;
+
 /* check for errors
 	*/
 		$er_msg = [];
@@ -656,6 +660,7 @@ EOT;
 	$profile_changed = false;
 	$new_email = false;
 	$update=[];
+	$null = null;
 	// go through each key, see if it's changed, build update array
     foreach ($post as $key=>$val){
     	if (in_array($key,['Submit'])){continue;}
@@ -667,7 +672,14 @@ EOT;
     	}
 
     	// echo "testing $key: new = $val<br>existing = ${md[$key]} ... ";
-    	if ( strcmp($md[$key],$val) == 0){continue;} #no change
+
+    	if (!empty($md[$key]) &&  strcmp($md[$key],$val) == 0){
+    		//echo "same $key, ";
+    		continue;
+    		} else {
+    		echo "$key has changed. ";
+    		}
+
 
 #    	echo "Changed data in $key -> $val" . BRNL;
 
@@ -707,6 +719,7 @@ EOT;
 			case 'linkedin':
 			case 'email_hide':
 			case 'no_bulk':
+			case 'badge_no':
 				$update[$key] = $val;
 				break;
 			case 'amd_where':
@@ -716,27 +729,88 @@ EOT;
 				break;
 
 			case 'user_id' :
-			case 'profile_photo':
+			case 'submit':
 				#do nothing
 				break;
+
+			case 'badge_no' :
+			case 'asset_list' :
+					$update[$key] = $val;
+				break;
+			case 'badge_no' :
+					if (empty($val)) $val = 0;
+					$update[$key] = $val;
+				break;
+
 			default:
 				die ("Unrecognized field in profile update: $key");
 		}
 
 	}
 
-// won't happen until upload turned on ini form
-	if (isset($_FILES['linkfile'])){
-			// photo uploaded
-			// is there already an id for this
-			$asset_id = $md['photo_asset'] ?? 0;
-			$update['photo_asset'] = $this->save_profile_photo($asset_id,$md['username']);
+// Process photos
+	/* set up array for sending to save_asset
 
+	start with empty photo array.
+	put in caption and/or file and or status change
+	If anything in array, then add id and title.
+	Send to asset_admin->postAssetFromForm(array);
+
+
+*/
+		// will use this array to set up asset upload
+	$photo = array(
+
+	);
+
+	foreach (['A','B','C'] as $ptype){
+		$aid = $post["photo_$ptype"] ?? 0;
+
+
+		if(empty($aid )) {
+			// is possibly new photo
+			if (isset($FILES["image-$ptype"] )){
+				$photo ['file'] = true;
+				$photo ['caption'] = $post["caption-$ptype"];
+
+			}
+		} else {
+			// is an existing id
+
+			if (isset($post["remove_$ptype"])) {
+				// set asset to x; remove old files
+				$update["photo_$ptype"] = '';
+				// assets->delete??
+
+			} elseif (isset($FILES["image-$ptype"] )){
+				$photo ['file'] = true;
+				$photo['caption'] = $post["caption-$ptype"];
+
+			// just ßupdate caption ?
+			} elseif ($post["caption-$ptype"] != $post["oldcaption-$ptype"] ) {
+				$this->assets->updateCaption($aid,"caption=-ptype");
+
+			}
+			// possible image update
+
+
+		}
+
+		if (! empty($photo) ){
+			// add required fields and post to get asset id.
+				$photo['id'] = $aid;
+				$photo['title'] = $md['username'];
+				$photo['contributor_id'] = $md['user_id'];
+
+				$update["photo_$ptype"] = $this->asseta->postAssetFromForm($photo);
+
+		}
 	}
+
 
  // if change to profile or profile has never been updated
 	if ($profile_changed || $md['profile_updated'] == null){
-	  	 $update['profile_updated'] = sql_now();
+	  	 $update['profile_updated'] = date('Y-m-d H:i');
 
 	    $subj = "Profile Update " . $md['username'];
 	    $msg = $md['username'] . " has updated their profile";
@@ -747,7 +821,7 @@ EOT;
 
  //   #assume user also checked email
 
- 	 $update['profile_validated'] = sql_now();
+ 	 $update['profile_validated'] = date('Y-m-d H:i');
 	$update ['user_id'] = $uid;
 
 
@@ -755,27 +829,38 @@ EOT;
 #	 u\echor($update,'update array');
 
 
-	$prep = u\pdoPrep($update,[],'user_id');
+	$prep = u\prepPDO($update,[],'user_id');
 
- /**
- 	$prep = pdoPrep($post_data,$allowed_list,'id');
 
-    $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+/**
+including key field removes that field from udata and adds value to ukey
+PREP:
+   $prep = u\prepPDO ($post_data,allowed_list,'key_field_name');
+
+INSERT:
+		$sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']})";
+
+UPDATE:
+		$sql = "UPDATE `Table` SET ${prep['uset']} WHERE id = $prep['ukey'];";
+
+INSERT ON DUP UPDATE:
+   	$sql = INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} )
+    			ON DUPLICATE KEY UPDATE ${prep['uset']};
+    		";
+
+THEN:
+       $sth = $pdo->prepare($sql);
+THEN:
+		$sth->execute($prep['idata']); // for insert, or udata for update or merge for both
        $new_id = $pdo->lastInsertId();
-
-    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
-       $stmt = $pdo->prepare($sql)->execute($prep['data']);
-
-  **/
+**/
 
 
-
-  	$sql = "UPDATE `members_f2` SET ${prep['update']} WHERE user_id = ${prep['key']} ;";
+  	$sql = "UPDATE `members_f2` SET ${prep['uset']} WHERE user_id = ${prep['ukey']} ;";
   	//echo $sql . BRNL;
-  	u\echor ($prep['data'],' prep data'); exit;
+  	u\echor ($prep['udata'],$sql);
  $stmt = $this->pdo->prepare($sql);
- $stmt -> execute($prep['data']);
+ $stmt -> execute($prep['udata']);
 
   if ($new_email){
   	$this->messenger->sendMessages($uid,'E1',['informant'=>'profile update']);
@@ -790,20 +875,7 @@ EOT;
  }
 
 
- 	private function save_profile_photo($asset_id,$username){
 
-			$post_array = array (
-				'id' => $asset_id,
-				'title' => $username,
-				'type' => 'Member Photo',
-				'status' => 'N'
-			);
-
-			include REPO_PATH . '/public/scripts/asset_functions.php';
-			$id = post_asset($post_array);
-			return $id;
-
-	}
 	public function bounce_by_email($em){
 		if (empty($em)){return false;}
 		$sql = "UPDATE `members_f2` SET email_status = 'LB' where user_email = '$em';";

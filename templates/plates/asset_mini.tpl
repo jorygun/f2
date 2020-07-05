@@ -25,7 +25,7 @@
         onclick="takeAction('deleteAsset',<?=$id?>,'tbl<?=$id?>','resp')">
         Delete</button>
 
-			<?php if ($status != 'R') : ?>
+			<?php if ($status != 'O') : ?>
 			<button type='button' id='rb<?=$id?>' onclick="takeAction('markReviewed',<?=$id?>,'rb<?=$id?>','')">
 			Mark OK </button>
 			<?php endif; ?>

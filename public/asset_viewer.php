@@ -133,7 +133,7 @@ if (strpos($url, 'youtube.com') !== false || strpos($url, 'youtu.be') !== false)
    Please use the source link to access it.</p>
     ";
 } elseif (! file_exists(SITE_PATH . $url)){
-	$asset_display = "The source for this asset is missing.";
+	$asset_display = "<p class='red'>The source for this asset is missing.</p>";
 
 } elseif (strpos($mime, 'video') !== false) {
           $asset_display = "<video src = '$url' controls autoplay style='max-width:1024px;'>

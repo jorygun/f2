@@ -72,6 +72,7 @@ private $Assets;
 		*/
 
 		$this->Assets = $container['assets'];
+		$this->Member = $container['member'];
 
 	}
 
@@ -109,7 +110,11 @@ private $Assets;
 
 		}
 
-		if (!file_exists(SITE_PATH . $tdata['local_src']) ){
+		if (empty($tdata['local_src']) ){
+			return "No local source for id $id.";
+
+		}
+		if ( !file_exists(SITE_PATH . $tdata['local_src']) ){
 			return "Local thumb source $local_src for id $id does not exist";
 
 		}
@@ -141,7 +146,8 @@ EOT;
  	 //echo "Looking for $thumb_loc" . BRNL ;
 
 		if (file_exists(SITE_PATH . $thumb_loc)) {
-			return $thumb_loc;
+			return "<img src='$thumb_loc' />";
+
 		}
 
 
@@ -151,17 +157,84 @@ EOT;
 		if ($id != $this->id) {
 			$load_error = $this->loadId($id) ;
 			if (!empty($load_error)){ // returned errors
-				return '**ERROR** ' . $load_error ;
+				return "<p class='red'> **ERROR** " . $load_error . '</p>';
 			}
 		}
 		if (! file_exists(SITE_PATH . $this->local_src)){
-			return '**ERROR** local source does not exist';
+			return "<p class='red'> **ERROR** local source does not exist</p>";
 		}
 
-		$this -> buildGdImage($this->local_src,$thumb_loc, $ttype);
-		return $thumb_loc;
+		$this -> buildGdImage($id,$this->local_src, $ttype);
+		return "<img src='$thumb_loc' />";
 
 }
+
+public function getUserPhoto($aid,$type){
+	// type is view, edit, or new
+	//
+			$p = [];  // array to build day in
+			if (empty($aid)){
+				die ("no id for getUserPhoto");
+			}
+
+			$pdata = $this->Assets->getThumbData($aid) ;
+
+			if (empty($pdata))  {
+				return [];
+			}
+			$image_data = $this->getThumb($aid,'small');
+			$title = $pdata['title'];
+			$caption = $pdata['caption'];
+			//can edit graphic if yours or have admin status
+			$credential = $_SESSION['level'] > 6
+				|| $pdata['contributor_id'] == $_SESSION['login']['user_id'] ;
+
+			$p['id'] = $aid;
+			$p['title'] = $title;
+			$p['caption'] = $caption;
+			$p['image_data'] = $image_data; 	// <img ...> or **ERROR**
+
+
+				if ($type == 'view') {
+
+					$p['block'] = <<<EOT
+					<div class='asset'>
+					<div class='atitle'>$title</div>
+					<a href='/asset_viewer.php?$aid' target='assetv'>
+					$image_data </a>
+					<p><i>$caption'</i></p>
+					<p><small>(id: $aid)</small></p>
+					</div>
+EOT;
+					return $p;
+			} elseif ($type=='edit') {
+					$p['block'] = <<<EOT
+					<div class='asset' style='width:300px;'>
+					<div class='atitle'>$title</div>
+					<a href='/asset_viewer.php?$aid' target='assetv'>
+					$image_data </a>
+					<p><i>$caption'</i></p>
+EOT;
+			} else {
+				die ("Unknown type for getUserPhoto: '$type'") ;
+			}
+
+
+
+	if ($credential) {$p['block'] .= <<<EOT
+	<button type='button'
+				onClick = "window.open('/asset_editor.php?id=$aid','assete')" >
+				Edit asset $aid</button>
+
+EOT;
+	}
+			$p['block'] .= "</div>";
+
+
+			return $p;
+
+
+	}
 
 public function getAssetBlock($id,$style,$show_caption=false) {
 		/* returns a div with the asset and title in it.
@@ -179,7 +252,7 @@ public function getAssetBlock($id,$style,$show_caption=false) {
 		if ($id != $this->id) {
 			if (!empty($load_error = $this->loadId($id) )) { // returned errors
 				echo "Asset $id could not be loaded";
-				return '**ERROR** ' . $load_error ;
+				return "<p class='red'>**ERROR** " . $load_error . '</p>';
 			}
 		}
 
@@ -190,12 +263,8 @@ public function getAssetBlock($id,$style,$show_caption=false) {
 			"<div class='acaption'>" . $this->caption . "</div>" : '';
 
 
-		if ($image = $this->getThumb($id,$style) ) {
-			if (strpos($image,'**ERROR') !== false){
-					$image_data = $image . BR; // is error
-			} else {
-				$image_data =  "<img src='$image' />";
-			}
+		if ($image_data = $this->getThumb($id,$style) ) {
+
 			$src_data = ($this->source)? "<div class='asource'>--"
 				.  $this->source
 				. "</div>"
@@ -203,7 +272,7 @@ public function getAssetBlock($id,$style,$show_caption=false) {
 
 			$block = <<<EOT
 			<div class='asset'>
-				<a href='/asset_viewer.php?$id' target='viewer'>
+				<a href='/asset_viewer.php?$id' target='assetv'>
 				$image_data </a>
 				$src_data
 				<div class='atitle'>$this->title</div>
@@ -225,17 +294,19 @@ EOT;
 
 
 
-	public static function buildGdImage($srcurl,$desturl, $ttype) {
+	public static function buildGdImage($id,$srcurl,$ttype) {
 		// resize local image to thumbnail
 		// generall used to build thumb from local image
 
 		$mime = u\is_local($srcurl) ;
+
 		if (empty($mime) || strpos($mime,'image') === false ) {
-			throw new Exception ("Must have local image for thumb source");
+			throw new Exception ("Must have local image for thumb source '$srcurl'");
 		}
-		echo "Building image from $srcurl type $mime" . BRNL;
+		//echo "Building image from $srcurl type $mime" . BRNL;
 
 		$srcpath = SITE_PATH . $srcurl;
+		$desturl = "/thumbnails" . "/$ttype" . "/${id}.jpg";
 		$destpath = SITE_PATH . $desturl;
 		$max_dim = Defs::$thumb_width[$ttype];
 

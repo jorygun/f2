@@ -38,7 +38,7 @@ class AssetAdmin
 
 
 	private static $upload_types = array(
-		'uasset','uthumb','uuploads','uftp');
+		'uasset','uthumb','uuploads','uftp','image_old','image_now','image_fun');
 
 	public function __construct($container) {
 		$this->pdo =  $container['pdo'];
@@ -93,7 +93,7 @@ class AssetAdmin
 		if (empty ($id = $post['id'])) {
 				$id = $this->Assets->getNewID();
 				#echo "New id $id obtained." . BRNL;
-				$adata ['astatus'] = 'N';
+				$adata ['astatus'] = 'U';
 				$changed = true;
 		} elseif ($adata['asset_url'] != $post['old_aurl']
 			|| $adata['thumb_url'] != $post['old_turl'] ) {
@@ -149,20 +149,25 @@ class AssetAdmin
 
 
 		$adata['sizekb'] = 0;
-		if (1 || $adata['astatus'] != 'I' ){ #error override
+		$adata['mime'] = '';
+
+		// test assset_url
+		if (1 || $adata['astatus'] != 'K' ){ #error override
 
 				$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
 				$adata['type'] = Defs::getAssetType($adata['mime']);
-				if (!$adata['mime']){
-					$adata['status'] = 'E';
+				if ($adata['mime']){
+					if (u\is_local($adata['asset_url']) ) {
+						$path = SITE_PATH . $adata['asset_url'];
+						$size = filesize($path);
+						$adata['sizekb'] = (int)($size/1000);
+					} else {
+						$adata['status'] = 'E'; // not local
+					}
+				} else {
+					$adata['status'] = 'E';  /// cannot access the source url
 				}
 
-
-				if (u\is_local($adata['asset_url']) ) {
-					$path = SITE_PATH . $adata['asset_url'];
-					$size = filesize($path);
-					$adata['sizekb'] = (int)($size/1000);
-				}
 		}
 
 			if (!empty($post['tags']) && is_array ($post['tags'])){
@@ -170,11 +175,10 @@ class AssetAdmin
 				$adata['tags'] =  u\charListToString($post['tags']) ;
 			}
 
-	//	 $adata['needs'] = $this->checkThumbNeeds($adata,$new_thumbs);
 
-	#exit;
 
 		if ($changed) { //new or changed urls.  Make sure thumb sources are in place
+			echo "Asset sources have changed." . BRNL;
 			// remove eisting thumbs
 			foreach (
 				[FileDefs::asset_dir . '/thumb_generated' . "/${id}.jpg",
@@ -182,26 +186,23 @@ class AssetAdmin
 				FileDefs::thumb_dir .'/ medium'. "/${id}.jpg",
 				FileDefs::thumb_dir . '/large'. "/${id}.jpg",
 				] as $thumb) {
-				echo "checking $thumb .. ";
+				//echo "checking $thumb .. ";
 				if (file_exists($thumb)){
-					echo "removing <br>";
+					echo "removing old file $thumb <br>";
 					unlink ($thumb) ;
 				} else {
 				echo "<br>";
 				}
 			}
 
-
-			echo "Asset sources ahve changed." . BRNL;
 			$adata['local_src'] = $this->checkThumbSources
 				($id,$adata['asset_url'],$adata['thumb_url'],$adata['mime'] ) ;
 			if (!$adata['local_src'] ){ // could not verify thumb sources
-				throw new Exception ("Could not generate local source for asset $id");
-
+				throw new Exception ("Could not determine local source for asset $id thumb.");
 			}
 			// geneerate small thumb always
 			$desturl = "/thumbnails/small/${id}.jpg";
-			$this->Assetv::buildGdImage($adata['local_src'],$desturl, 'small');
+			$this->Assetv::buildGdImage($id,$adata['local_src'], 'small');
 
 
 		}
@@ -305,7 +306,7 @@ public function checkAssetData($adata) {
 				if (empty($val)) {
 					die ("Id $id: No source for asset specified");
 				}
-				if ($adata['astatus'] != 'I' ) { #over-ride inaccessible source
+				if ($adata['astatus'] != 'K' ) { #over-ride inaccessible source
 					$amime = u\url_exists ($val);
 					//echo "$val is mime '$amime'";
 					if ($amime === false) {
@@ -333,7 +334,7 @@ public function checkAssetData($adata) {
 				 	throw new Exception ("Id $id: Vintage is not a number");
 				 }
 				 if ( $val > 2050 ){ #to cast as numeric
-						throw new Exception ("Id $id: Vintage is not a valid year");
+						throw new Exception ("Id $id: Vintage is not a valid year $val");
 					}
 				break;
 			case 'astatus':
@@ -343,7 +344,8 @@ public function checkAssetData($adata) {
 				break;
 
 			case 'contributor_id' :
-				if (! $this->Member->getMemberBasic($val) ){ #0 is allowed
+				if (! $this->Member->getMemberBasic($val) ){
+					#0 is allowed; returns "not a member"
 					throw new Exception ("Id $id: No user found for contributor id " . $val);
 				}
 				break;
@@ -360,7 +362,7 @@ public function checkAssetData($adata) {
 			case 'mime':
 
 				if (!in_array($val,Defs::getAcceptedMime() ) )
-			 		throw new Exception ("Id $id: Source mime $val is not acceptable: " . $val);
+			 		throw new Exception ("Id $id: Source mime is not acceptable: " . $val);
 			 	break;
 
 			default: #do nothing

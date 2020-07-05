@@ -4,7 +4,7 @@
  // use aq1 for comments (only 1 asset) and aq for article editor (multiples.)
 */
 
-window.addEventListener("message", receiveMessage, false);
+$(window).addEventListener("message", receiveMessage, false);
 
 function receiveMessage(event) {
   var id = event.data;

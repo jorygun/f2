@@ -388,7 +388,7 @@ private static $update_fields = array(
 		$member_photo = '';
 		// $member_photo = (isset($row['photo_asset'])) ?
 //    		 get_asset_by_id($row['photo_asset'],'photo') : '' ;
-   	$linkedinlink = ($row['linkedin'])? "<a href='${row['linkedin']}'>
+   	$linkedinlink = ($row['linkedin'])? "<a href='${row['linkedin']}' target='linkedin'>
    		<img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /> </a>" : '' ;
         $addons= array(
 
@@ -1188,6 +1188,7 @@ public function getLogins($tag) {
         	);
    }
 
+
     public function getLastLogin($tag)
     {
         $md = $this->getMemberData($tag);
@@ -1381,16 +1382,14 @@ public function getLogins($tag) {
 		$list = array();
 		$sql = "SELECT user_id FROM `members_f2`
 			WHERE status in ($member_status_set)
-			$test_clause
+			AND test_status = ''
 			AND profile_updated > '$since'
 			AND joined < '$since';";
 
 
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
-		// foreach ($result as $row){
-// 			$list[] = $this->enhanceData($row);
-//
-// 		}
+			//u\echor($result,$sql);
+
 		return $result;
 	}
 	public function getDeceased ($since,$test=false) {

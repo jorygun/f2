@@ -109,7 +109,7 @@ class Assets {
 		'title' => '',
 		'source' => '',
 		'contributor_id' => '',
-		'astatus' => 'N',
+		'astatus' => 'U',
 		'asset_url' => '',
 		'thumb_url' => '',
 		'caption' => '',
@@ -241,7 +241,7 @@ class Assets {
 			case 'T':
 				return "Temporary Asset";
 				break;
-			case 'D':
+			case 'X':
 				return "Asset Deleted";
 				break;
 		}
@@ -261,7 +261,7 @@ class Assets {
 			$thumb .= "?nocache=$time";
 		}
 		$result = <<<EOF
-		<a href='$link' target="assetl">
+		<a href='$link' target="assetv">
 		<img src='$thumb'>
 		</a>
 EOF;
@@ -315,7 +315,7 @@ EOF;
 	public function getAssetSummaryFromList($id_list){
 		// returns minimal set of asset data
 		$in_ids = join(',' , $id_list);
-		$sql = "SELECT id,title,caption,asset_url,contributor_id,type, , astatus
+		$sql = "SELECT id,title,caption,asset_url,contributor_id,type, astatus
 			FROM `assets2` WHERE id in ($in_ids)";
 		#	echo $sql . BRNL;
 		$d = $this->pdo->query($sql)->fetchAll();
@@ -365,14 +365,14 @@ EOF;
 
 public function getThumbData($id) {
 	$sql = "SELECT asset_url,mime, astatus,
-	local_src,title, caption,source
+	local_src,title, caption,source,contributor_id
 	FROM `assets2`
 	WHERE id = $id";
 
 	if ($result = $this->pdo->query($sql)->fetch( ) ){
 		return $result;
 	} else {
-	echo "Canot get thumbdata for id $id" . BRNL;
+
 		return [];
 	}
 }
@@ -395,6 +395,13 @@ public function getThumbData($id) {
 		 $im->writeImage(SITE_PATH . "/assets/$ttype/$thumb");
 
 		 return $thumb;
+	}
+
+	public function updateCaption($id,$caption) {
+		$sql = "UPDATE `assets2` set caption = '$caption'
+			WHERE id = '$id';" ;
+		$this->pdo->query($sql);
+		return true;
 	}
 
 

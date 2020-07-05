@@ -6,7 +6,7 @@ body  {
 
 	font-family: "New Times Roman",Times,serif;
 	font-size: 1em; color: black;
-	max-width:1000px;
+	max-width:1100px;
 	 width:95vw;
 	padding:5px;
 	color:black;
@@ -351,7 +351,8 @@ table.row-lines td{
 	border-top:1px solid gray;
 	padding:6px;
 }
-table td.gtop {border-top:1px solid gray;}
+
+table tr.top td {border-top:1px solid gray;}
 
 table.article_list {
 	padding:3px; border:1px solid green;
@@ -392,7 +393,7 @@ div.comment_background {
 .headline {
 	font: bold 1em arial,serif;
 	margin-top:3px;
-	margin-left:1em;
+	margin-left:0;
 }
 
 
@@ -432,7 +433,7 @@ div.comment_background {
  .article {
 	margin-left:1em;
 	border-top:1px solid #360;
-    max-width:1000px;
+    max-width:900px;
 }
 
  .story {

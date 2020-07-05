@@ -116,10 +116,10 @@ $sql = "
 	  a.date_entered, m.username as contributor
 	  FROM `assets2` a
 	  LEFT JOIN `members_f2` m on a.contributor_id = m.user_id
-	  WHERE  a.astatus in ('R','S')
+	  WHERE  a.astatus  in ('W','O','K')
 			AND a.tags is NOT NULL
 			AND a. tags REGEXP '[$archival_tags]'
-			AND date_entered > '$from_date'
+			AND date_modified > '$from_date'
 	  ORDER BY date_entered DESC
 	  LIMIT $limit;
 	  ";

@@ -49,6 +49,7 @@ class Calendar {
 
 	public function __construct ($container) {
 		$this->pdo = $container['pdo'];
+		$this->templates= $container['templates'];
 
 	}
 
@@ -153,7 +154,7 @@ class Calendar {
 		$data['citems'] = $this->getItems();
 		$data['credential'] = false;
 
-		return $container['templates']->render('calendar',$data);
+		return $this->templates->render('calendar',$data);
 	}
 
 }

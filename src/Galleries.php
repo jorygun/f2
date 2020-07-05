@@ -182,22 +182,14 @@ EOT;
 			  	}
 				if ($aid) {
 					//echo "getting thumb for asset $aid" . BRNL;
-					if ($image = $this->assetv->getThumb($aid,'medium') ) {
-						if (strpos($image,'**ERROR') !== false){
-							$image_data = $image . BR; // is error
-						} else {
-						$image_data = "<img src='$image' />";
-						}
-					} else {
-						$image_data =  "Could not create thumbnail for gallery.";
-					}
+					$image_data = $this->assetv->getThumb($aid,'medium') ;
 				} else {
 					throw new Exception ("No assets are listed for gallery $gid");
 				}
 
 			$edit_button = '';
 		if ($this->credential) {
-			$edit_button = "<button type='button' onClick = window.open('/galleries.php?id=$gid&mode=edit')>Edit</button>
+			$edit_button = "<button type='button' onClick = window.open('/galleries.php?id=$gid&mode=edit','gedit')>Edit</button>
 			";
 			}
 		$attr_block = $this->getAttribute($gdata['contributor']);

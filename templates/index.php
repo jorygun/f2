@@ -24,7 +24,7 @@ $news = $container['news'];
 $article = $container['article'];
 $opps = $container['opps'];
 $read = new ReadNews();
-$calendar = new Calendar();
+$calendar = $container['calendar'];
 $publish = $container['publish'];
 
 /*
@@ -41,24 +41,20 @@ $publish = $container['publish'];
 */
 
 
-// get enclosing folder name
+// get issue data using current folder path
+
 $issue = 0; $preview = false;
-$ndir = basename(dirname(__FILE__));
-if (preg_match('/(\d+)$/',$ndir,$m) ){
-	$issue = (string)$m[1];
-} elseif ($ndir == 'next') {
-	$issue = '1'; #preview
-	$preview = true;
-} else {
-	die ("No issue no. in $ndir");
+$dir = dirname(__FILE__);
+$strindex = strpos($dir,'/news'); // news or newsp
+
+$url = substr($dir,$strindex);
+
+$sql = "SELECT * from pubs where url = '$url'";
+if (! $issue_data = $pdo->query($sql)->fetch() ) {
+	die ("No issue at url $url");
 }
 
-if (! $issue_data = $news->getIssueData($issue) ) {
-	die ("No issue $issue defined");
-}
-//echo "Issue: $issue" . BRNL;
-
-//u\echor($issue_data);
+$issue=$issue_data['issue'];
 
 $page_title = 'Flame News ';
 $page_options = ['ajax'];
@@ -69,35 +65,34 @@ echo $page->startBody(1,$subtitle,$preview);
 
 
 $rcount = 0;
-if ($issue != '1'){
-	$news->incrementReads($issue);
-	$rcount = $news->getReads($issue);
+if ($issue == '1'){
+	$artlist = $article->getArticleIds('next');
+} else {
+	$rcount = $news->incrementReads($issue);
+	// get array of all articles for issue, sorted in display
+	// order and with topics and section info
+	$artlist = json_decode($issue_data['stories'] )?: []; #list of ids
+
 }
 
-#breaking news added after publication
-//$read->echo_if('breaking.html');
-
-
+//u\echor($artlist, 'artlist');
 echo $read->user_welcome();
-
-// get array of all articles for issue, sorted in display
-// order and with topics and section info
-$stories = $issue_data['stories']; #list of ids
-
-$artlist = $article->getArticleList('issue',$stories);
 
  // now display all the articles tied to this issue.
 $last_section = '';
-foreach ($artlist as $art) {
+$show = 'pops';
+foreach ($artlist as $aid) {
+	//$art = $article->getArticleList($aid);
 	//echo "$artid, "; continue;
-	//$art = $article->getArticle($id);
+	$art = $article->getArticle($aid);
+//u\echor($art);
 	$sec_name = $art['section_name'];
 	$id = $art['id'];
 	if ($sec_name != $last_section) {
 		echo "<h2>$sec_name</h2>";
 		$last_section = $sec_name;
 	}
-	$sdata = $container['articlea']->buildStory($id);
+	$sdata = $container['articlea']->getLiveArticle($aid,$show);
 	$sdata['mode'] = 's'; #don't show comments
 	$sdata['credential'] = false; #don't show edit buttons
 	echo $container['templates']->render('article', $sdata);
@@ -119,12 +114,11 @@ foreach ($opps->linkOppList() as $opp) {
 	echo $opp . BRNL;
 }
 
-echo $calendar->build_calendar();
+echo $calendar->display_calendar();
 
 echo $read->news_head("Recent Activity");
-$read->echo_if('recent_assets.html');
-
 $read->echo_if ('recent_articles.html');
+$read->echo_if('recent_assets.html');
 echo "<div style='clear:both'></div>\n";
 
 

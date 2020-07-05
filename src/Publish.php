@@ -50,7 +50,7 @@ class Publish {
 	private $archive_path;
 
 	public static $previewbutton = <<<EOT
-		<button type='button' onClick='window.open("/news/next" )'>
+		<button type='button' onClick='window.open("/news/next","preview" )'>
 		Preview
 		</button>
 EOT;

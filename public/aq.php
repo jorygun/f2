@@ -69,9 +69,9 @@ if (isset($_POST['submit'])){
 <h4>Quick Asset <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='qassets' >Help</button></h4>
 
 <form  method="POST" enctype="multipart/form-data"  name="asset_form" id="asset_form" action = '/aq.php'>
-
+<input type='hidden' name='old_status' value='<?=$astatus?>' >
 <input type='hidden' name ='id' value = '0' >
-<input type='hidden' name ='astatus' value = 'N' >
+<input type='hidden' name ='astatus' value = 'U' >
 <input type='hidden' name='contributor_id' value = '<?=$contributor_id?>' >
 <input type='hidden' name='contributor' value = '' >
 

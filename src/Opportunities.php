@@ -111,7 +111,7 @@ class Opportunities
 		$buttonlink = "/opp-manager.php?id=$id&edit=true";
 		$bname = ($id==0)? 'New Opportunity' : 'Edit';
 		$button = "<button type='button' "
-				.	"onClick=window.open('$buttonlink')>$bname</button>\n";
+				.	"onClick=window.open('$buttonlink','oppe')>$bname</button>\n";
 		return $button;
 
 	}

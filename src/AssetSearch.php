@@ -169,8 +169,8 @@ private static $empty_search = array (
    if (!empty($son = $data['status'])){
       //echo "son $son" . BRNL;
    	if ($son == 'active') $qp[] =  " astatus  not in ('T','X','E') ";
-   	elseif ($son == 'errors') $qp[] =  " astatus  not in ('T','X') ";
-      elseif ($son == 'unreviewed')$qp[] =   " astatus in ('N','O','K') " ;
+   	elseif ($son == 'errors') $qp[] =  " astatus  in ('E','K','W') ";
+      elseif ($son == 'unreviewed')$qp[] =   " astatus = 'U' " ;
       else {$qp[] = "astatus = '$son'";}
 
 

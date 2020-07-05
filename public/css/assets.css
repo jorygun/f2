@@ -32,18 +32,49 @@ div.asset-column {
 	margin-right:1em;
 }
 
+div.asset-main {
+
+	display:block;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+
 div.asset-column .asset {
 /* make assets consistent width
 use inside a div that floats left.
 Assets do not float (but the whole block does)
 assets  grow in lenght as needed. - no restriction
 */
-    width:210px;
+    width:220px;
 
    }
 
 .asset-column .asset img {
-        width:200px;
+/*         width:200px; */
+}
+
+div.user-photos {  /*for user photos on profile */
+	display:block;
+}
+div.user-photos::after {
+	clear:both;
+	content:"";
+}
+
+
+div.user-photos .asset {
+/* make thumbs consistent height to floaters line up. */
+  /*  height:240px; */
+   max-width:220px;
+    overflow:auto;
+  margin-right:6px;
+    float:left;
+
+}
+
+div.user-photos .asset img {
+/*         width:200px; */
 }
 
 div.asset_row {
@@ -58,39 +89,30 @@ div.asset-row::after {
 div.asset-row .asset {
 /* make thumbs consistent height to floaters line up. */
    height:240px;
-   width:210px;
+   max-width:220px;
     overflow:auto;
   margin-right:6px;
     float:left;
 
 }
+
+div.asset-row .asset img {
+        max-height:200px;
+
+}
+
+div.gallery .asset img {
+	/* width:330px; */
+}
+
 div.gallery .asset {
 	height:350px;
-   width:350px;
+  /*  width:350px; */
 	 overflow:auto;
   margin-right:6px;
     float:left;
 
 	}
-div.asset-row .asset img {
-        max-height:200px;
-        width:200px;
-}
-
-div.gallery .asset img {
-	width:330px;
-}
-
-
-div.asset-center .asset {
-    width:100%;
-    max-width:440px;
-    margin:auto;
-
-}
-.asset-center .asset img {
-        width:100%;
-}
 
 
 .atitle {

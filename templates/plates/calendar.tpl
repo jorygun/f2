@@ -10,8 +10,8 @@ To place an item on the calendar, click here. <button type='button' onClick=wind
 
 <?php foreach ($citems as $row) :
  ?>
-<tr class='first'>
-	<td colspan=2 class='event'><?= $row['event'] ?></td>
+<tr class='top'>
+	<td colspan=2 class='event'><b><?= $row['event'] ?></b></td>
 	<td class='date'> <?= $row['edate'] ?> <?= $row['etime'] ?></td>
 
 

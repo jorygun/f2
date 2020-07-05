@@ -11,7 +11,7 @@ namespace DigitalMx\Flames;
 $login->checkLevel(0);
 
 $latest = $container['news']->getLatestIssue();
-
+//u\echor($latest); exit;
 $latest_url = $latest['url'];
 //echo "location:$latest_url"; exit;
 header("location:$latest_url");
