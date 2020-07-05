@@ -304,7 +304,7 @@ public function checkAssetData($adata) {
 
 			case 'asset_url':
 				if (empty($val)) {
-					die ("Id $id: No source for asset specified");
+					throw new Exception ("Id $id: No source for asset specified");
 				}
 				if ($adata['astatus'] != 'K' ) { #over-ride inaccessible source
 					$amime = u\url_exists ($val);
@@ -339,7 +339,7 @@ public function checkAssetData($adata) {
 				break;
 			case 'astatus':
 				if (! in_array($val,array_keys(Defs::$asset_status))){
-					die ("Id $id: Unknown asset status $val");
+					throw new Exception ("Id $id: Unknown asset status $val");
 				}
 				break;
 

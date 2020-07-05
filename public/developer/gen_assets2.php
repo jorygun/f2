@@ -198,6 +198,7 @@ function asset_tran($a) {
 	'R' => 'O',
 	'S' => 'O',
 	'D' => 'X',
+	'N' => 'U',
 	);
 	return $asset_tran[$a] ?? $a;
 }
