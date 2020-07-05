@@ -133,6 +133,7 @@ while ($row = $stmta -> fetch() ) {
 	$b = translate_fields($row);
 	// set mime type based on real url
 
+u\echor ($b);
 
 	if ($estatus != 'E') {
 		if ( !$mime = u\url_exists($b['asset_url'] ) ) {
@@ -214,8 +215,7 @@ function translate_fields($a) {
 	$b['title'] = stripslashes($a['title']) ?: 'Untitled';
 	$b['caption'] = stripslashes($a['caption']);
 	if ( $b['title'] == $b['caption']) {$b['caption'] = '';}
-	$b['astatus'] = $asset_tran[$a['status']] ?? $ostatus;
-
+	$b['astatus'] = $asset_tran[$ostatus] ?? $ostatus;
 	//develop estatus during scan for errors and warnings.
 	// at the end set astataus = estatus || original status
 	// this preserves the old status settings.
