@@ -127,7 +127,7 @@ class ArticleAdmin
 				} else {
 					$row['asset'] = '';
 				}
-				u\echor($row);exit;
+				//u\echor($row);exit;
 				$dblock .= $this->templates->render('comment', $row);
 			}
 
