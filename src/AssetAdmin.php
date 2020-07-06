@@ -129,7 +129,7 @@ class AssetAdmin
 				#echo "Relocating $type... " ;
 				try {
 				$url = $this->relocateUpload($id,$type);
-				} catch (Exception $e) {
+				} catch (\Exception $e) {
 					echo "Upload failed for $id, $type. <br> " . $e -> getMessage();
 					continue;
 				}
@@ -584,7 +584,7 @@ private function buildImagicImage ($src_url,$dest_url){
 			throw new Exception ("Calling relocate Upload without an id");
 		}
 
-		if (! $this->checkUploads($type)) {exit;}
+		$this->checkUploads($type);
 		$orig_path = $_FILES[$type]['tmp_name'];
 		$orig_mime = $this->mimeinfo->file($orig_path) ;
 		$orig_name = $_FILES[$type]['name'];
@@ -620,8 +620,8 @@ private function buildImagicImage ($src_url,$dest_url){
 		 	throw new \RuntimeException('No file of type $utype found in _FILES.');
 		 }
 		 if ($_FILES[$utype]['error'] != UPLOAD_ERR_OK ){
-		 	u\echor ($_FILES[$utype], "Error: Files array for $utype");
-			exit;
+		 	throw new \RuntimeException("Error: Files array for $utype");
+
 		 	}
 		 switch ($_FILES[$utype]['error']) {
 			  case UPLOAD_ERR_OK:
