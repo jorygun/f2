@@ -301,7 +301,7 @@ EOT;
 		$mime = u\is_local($srcurl) ;
 
 		if (empty($mime) || strpos($mime,'image') === false ) {
-			throw new Exception ("Must have local image for thumb source '$srcurl'");
+			throw new Exception ("Must have local image for thumb source '$srcurl'. Mime '$mime' ");
 		}
 		//echo "Building image from $srcurl type $mime" . BRNL;
 
