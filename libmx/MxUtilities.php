@@ -763,8 +763,13 @@ function is_valid_url($url) {
 
  function full_copy( $source, $target ) {
  	// copies entire directories.. like cp -r
+
 	if ( is_dir( $source ) ) {
-			if (!is_dir($target)){mkdir($target);}
+			if (!is_dir($target)){
+				if(!mkdir($target,0775,true)){
+					die ("cant make target $target.");
+				}
+			}
 
 			$d = dir( $source );
 

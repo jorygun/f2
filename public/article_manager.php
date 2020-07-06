@@ -80,6 +80,7 @@ if (!empty($_POST['toggle_use'])) {
 	}
 	$d = $articlea->getArticleList($cat,$stories);
 	$d['ioptions'] = u\buildOptions($ilist);
+	$d['preview_button'] = $publish::$previewaction;
 
 	//u\echor($d); exit;
 	echo $templates->render('article_list', $d);

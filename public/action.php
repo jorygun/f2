@@ -162,6 +162,9 @@ if (! empty ($_POST)) {
 	  	case 'publish':
 	  		echo  $publish->publishNews();
 	  		break;
+	  	case 'preview':
+	  		echo $publish->preview();
+	  		break;
 	  	case 'restore':
 	  		echo system(REPO_PATH . '/crons/restore_dev.sh');
 	  		break;

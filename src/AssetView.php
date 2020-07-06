@@ -303,11 +303,12 @@ EOT;
 		if (empty($mime) || strpos($mime,'image') === false ) {
 			throw new Exception ("Must have local image for thumb source '$srcurl'. Mime '$mime' ");
 		}
-		//echo "Building image from $srcurl type $mime" . BRNL;
+
 
 		$srcpath = SITE_PATH . $srcurl;
 		$desturl = "/thumbnails" . "/$ttype" . "/${id}.jpg";
 		$destpath = SITE_PATH . $desturl;
+		echo "Building image from $srcurl type $mime to $desturl ". BRNL;
 		$max_dim = Defs::$thumb_width[$ttype];
 
 		$simage = null;

@@ -38,7 +38,8 @@ One Issue:
 		<th>Assets (only 1 shown)</th><th>Manage</th></tr>
 	<?php foreach ($$estat as $row) : ?>
 		<?php if ($row['use_msg'] != $lastmsg): ?>
-			<tr><td colspan='5' style='background-color:#CFC;'><b><?=$row['use_msg']?></b></td></tr>
+			<tr><td colspan='4' style='background-color:#CFC;'><b><?=$row['use_msg']?></b></td>
+			<td><?=$preview_button?></td></tr>
 		<?php $lastmsg = $row['use_msg']; endif; ?>
 
 		<tr>

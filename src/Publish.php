@@ -49,10 +49,17 @@ class Publish {
 	private $pubdate;
 	private $archive_path;
 
+
 	public static $previewbutton = <<<EOT
 		<button type='button' onClick='window.open("/news/next","preview" )'>
 		Preview
 		</button>
+EOT;
+	public static $previewaction = <<<EOT
+		<button type="button" onclick= "
+			takeAction('preview','0','','');
+			 window.open('/news/next','preview');
+			">Preview</button>
 EOT;
 
 
@@ -68,6 +75,15 @@ EOT;
 	}
 
 
+	public function preview() {
+		// get article list and put into the pub 1 record
+		$storylist = $this->article->getArticleIds('next');
+		$stories = implode (' ',$storylist);
+		$sql = "UPDATE pubs SET stories = '$stories' WHERE issue = 1";
+		//echo $sql . BRNL; exit;
+		$this->pdo->query($sql);
+		return false;
+	}
 
 
 	public function setNextTitle($title) {
@@ -123,9 +139,12 @@ EOT;
 	public function publishNews() {
 
 /*
-    copy news/next to new archive and to news/latest
-    add new issue to pubs db
+	create new archive
+    copy news/next to new archive
+  	 get article list
     set pub date on all articles
+     set first use date/in on all assets for all articles
+     add new issue/archive to pubs db, with article list
     set first use date/in on all assets for all articles
 
     remove everything from next and copy the index template
@@ -138,18 +157,22 @@ EOT;
 // 		}
 
 
-// copy news/next to news/latest
+// copy news/next to news/latest - copies reports and stuff
 		$this->copyNextToLatest();
+
+// get list of stories to publsh
+//	$storylist = $this->article->getArticleIds('next');
+
 // copy news/latest into the new archive newsp/news_yymmdd
 		$this->copyLatestToArchive($this->archive);
 // create a new pub record with some info from preview issue
 // storylist is list of stories in this issue
-		$storylist = $this->addArchiveToPubs($this->archive,$this->issue);
+		$storylist = $this->createNewPub($this->archive,$this->issue);
 
 // mark all the stories published and set first use date on any assets referenced.
-		$this->publishStories($storylist);
+		 $this->publishStories($storylist);
 // sets issue 1 data to defaults
-		$this->initializePreview();
+//		$this->initializePreview();
 
 
 	}
@@ -161,6 +184,7 @@ EOT;
 	public function copyNextToLatest() {
 	// copy the news_next to the news_latest directory
 		if (file_exists (FileDefs::latest_dir)) {
+		echo "deleting old news/latest";
 			u\deleteDir(FileDefs::latest_dir);
 		}
 		u\full_copy(FileDefs::next_dir,FileDefs::latest_dir);
@@ -187,14 +211,14 @@ EOT;
 
 
 		foreach ($storylist as $story) {
-			// $arth->execute([$story]);
+			 $arth->execute([$story]);
 			//echo "Getting assets from $story" . BRNL;
 			$asseth->execute([$story]);
 			$assets = $asseth->fetchColumn();
 			$alist = u\range_to_list($assets);
 			// u\echor($alist, 'Assets in ' . $story);
 			foreach ($alist as $asset){
-				if ($fuh->execute([$asset]) ) {
+				if ( !empty($asset) && $fuh->execute([$asset]) ) {
 					echo "Updating first use: asset $asset in story $story." . BRNL;
 				}
 
@@ -208,10 +232,10 @@ EOT;
 
 
 	}
-	private function addArchiveToPubs($archive,$issue) {
+	private function createNewPub($archive,$issue) {
 		$preview = $this->news->getIssueData(1);
-		$storylist = $this->article->getArticleIds('next');
-		//u\echor($storylist,'stories');
+
+		//u\echor($preview,'preview');
 
 		$newpub = array(
 		'issue' => $issue,
@@ -220,7 +244,7 @@ EOT;
 		'rcount' => 0,
 		'last_scan' => $preview['last_scan'],
 		'url' => '/newsp/' . $archive,
-		'stories' => implode (' ',$storylist),
+		'stories' => $preview['stories'],
 		);
 	//u\echor($newpub,'newpub');
 		$sql = "DELETE FROM pubs WHERE issue='$issue'";
@@ -228,6 +252,8 @@ EOT;
 
 		$prep = u\pdoPrep($newpub,'');
 		$sql = "INSERT into `pubs` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+		// u\echor($prep['data'],$sql);
+
        $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
  /**
  	$prep = pdoPrep($post_data,$allowed_list,'id');
@@ -240,12 +266,8 @@ EOT;
        $stmt = $pdo->prepare($sql)->execute($prep['data']);
 
   **/
-
-
-
-		return $storylist;
-
-
+  		$story_list = explode (" ",$preview['stories']);
+  		return $story_list;
 
 	}
 
@@ -256,7 +278,7 @@ EOT;
 			title = 'Preview',
 			rcount = 0,
 			last_scan = null,
-			url = null,
+			url = '/news/next',
 			stories = ''
 		WHERE issue = 1 ;";
 		//u\echor($prep,$sql); exit;
@@ -269,6 +291,7 @@ EOT;
 	// used to update the archive directory if changes are made in latest.
 	// full_copy creates the target directory
 		if (!$archive) {
+			echo "No archive requested; getting latest issue";
 			$latest = $this->news->getLatestIssue();
 			$archive = str_replace('/newsp','',$latest['url']); // after /newsp
 		}
