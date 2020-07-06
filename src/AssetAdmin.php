@@ -547,7 +547,7 @@ private function buildImagicImage ($src_url,$dest_url){
 			echo " Using icon for $amime on id $id $tsrc." . BRNL;
 		// return generic icon for amime type
 		  $icon = Defs::getIconForMime($amime) ;
-			$local_src =  "/assets/grahpics/icons/$icon";
+			$local_src =  "/assets/graphics/icons/$icon";
 		}
 //echo "Local source $local_src" . BRNL;
 		return $local_src;
