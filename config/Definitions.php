@@ -100,6 +100,7 @@ public static $local_site = 'f2.local';
 		'video/x-youtube' => 'Video',
 		'video/x-m4v' => 'Video',
 		'audio/x-m4a' => 'Audio',
+		'text/plain' => 'Document',
 	);
 
 	private static $mime_icons = array(
@@ -118,6 +119,7 @@ public static $local_site = 'f2.local';
 		'video/x-youtube' => 'mov.jpg',
 		'video/x-m4v' => 'mp4.jpg',
 		'audio/x-m4a' => 'm4a.jpg',
+		'text/plain' => 'text.png',
 	);
 
 
