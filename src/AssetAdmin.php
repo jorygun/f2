@@ -127,7 +127,12 @@ class AssetAdmin
 		foreach (self::$upload_types as $type){
 			if (isset($_FILES[$type]) && !empty ($_FILES[$type]['name'] )){
 				#echo "Relocating $type... " ;
+				try {
 				$url = $this->relocateUpload($id,$type);
+				} catch (Exception $e) {
+					echo "Upload failed for $id, $type. <br> " . $e -> getMessage();
+					continue;
+				}
 				#echo "to: $url" . BRNL;
 
 				if ($type == 'uthumb'){
