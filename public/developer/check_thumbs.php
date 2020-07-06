@@ -220,7 +220,7 @@ if (!is_object($assets)) die ("No asset class");
 
 				} elseif ($icon = get_generic_thumb ($id,$amime) ) {
 					// set thumb source to generic icon
-						$thumburl = "/assets/icons/$icon"; // new thumb source
+						$thumburl = "/assets/graphics/icons/$icon"; // new thumb source
 						if (! file_exists(SITE_PATH . $thumburl)) {
 							$estatus = 'E';
 							$b['errors'] .= logrec($id, $estatus,"Tried to set non-existent icon as thumb source: $icon");

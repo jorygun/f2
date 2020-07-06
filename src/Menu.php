@@ -167,7 +167,7 @@ $version = $this->get_version();
 EOT;
 	#$t .= "nav header: " . $this->header;
 	if ($this->header == 1){ $t .=
-	"<p><img src='/graphics/logo69x89.png' ><span style='font-size:1.5em;'>AMD Flames - The AMD Alumni Site </span> </p>";
+	"<p><img src='/assets/graphics/logo69x89.png' ><span style='font-size:1.5em;'>AMD Flames - The AMD Alumni Site </span> </p>";
 	}
 
 	$t .=  "<ul>\n";

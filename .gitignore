@@ -12,11 +12,17 @@
 #ignore site-specific config in .htaccess
 .user.ini
 test.php
+.htaccess
 #favicon.ico
 
 #ignore backup files
 *~
 ~*
+
+#ignore asset files
+public/assets
+public/newsp
+public/thumbnails
 
 
 #ignore vendor directory - will be reconstruted on site

@@ -137,7 +137,7 @@ EOF;
 <hr style="width: 100%; height: 2px;clear:both;">
 
  <div class='toon' style='width:800px'>
-        <img src='/graphics/misc/anixter.jpg' >
+        <img src='/assets/graphics/misc/anixter.jpg' >
         <p style="font-size:0.8em;font-style:italic;">(photo courtesty Elliott Sopkin.) </p>
 
 

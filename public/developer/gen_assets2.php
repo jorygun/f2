@@ -113,6 +113,7 @@ $scount = array (
 	'N' => 0,
 	'O' => 0,
 	'K' => 0,
+	'U' => 0,
 	);
 	// count of status codes
 while ($row = $stmta -> fetch() ) {

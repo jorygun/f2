@@ -70,7 +70,7 @@ $month = array(
 
 
 #$count_file = SITE_PATH . "/views_data/reads.txt";
-$out_file = REPO_PATH . "/var/graphic/views.png";
+$out_file = SITE_PATH . FileDefs::view_chart_url;
 
 #update the access counts
 #get the last 52 entries, then reorder Ascending.

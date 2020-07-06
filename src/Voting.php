@@ -29,31 +29,31 @@ class Voting {
 		if($user_vote < 0 ) {
 			$button_div .= <<<EOT
 			<button type='button' title='Up' class='up no-margin' onClick='addVote($item_id,"up");' >
-			<img src='/graphics/up24.png' class='no-margin'/>
+			<img src='/assets/graphics/up24.png' class='no-margin'/>
 			</button>
 
 			<button type='button' title='Down' class='down no-margin' onClick='addVote($item_id,"down-off");'  >
-			<img src='/graphics/down-on24.png' class='no-margin'/>
+			<img src='/assets/graphics/down-on24.png' class='no-margin'/>
 			</button>
 EOT;
 		}
 		elseif($user_vote > 0) {
 			$button_div.= <<<EOT
 			<button type='button' title='Up' class='up no-margin' onClick='addVote($item_id,"up-off");' >
-			<img src='/graphics/up-on24.png' class='no-margin'/>
+			<img src='/assets/graphics/up-on24.png' class='no-margin'/>
 			</button>
 			<button type='button' title='Down' class='down no-margin' onClick='addVote($item_id,"down");'  >
-			<img src='/graphics/down24.png' class='no-margin' />
+			<img src='/assets/graphics/down24.png' class='no-margin' />
 			</button>
 EOT;
 		}
 		else { #if not found or 0
 			$button_div .= <<<EOT
 			<button type='button' title='Up' class='up no-margin' onClick='addVote($item_id,"up");' >
-			<img src='/graphics/up24.png' class='no-margin'/>
+			<img src='/assets/graphics/up24.png' class='no-margin'/>
 			</button>
 			<button type='button' title='Down' class='down no-margin' onClick='addVote($item_id,"down");'  >
-			<img src='/graphics/down24.png' class='no-margin'/>
+			<img src='/assets/graphics/down24.png' class='no-margin'/>
 			</button>
 EOT;
 		}
@@ -110,31 +110,31 @@ EOT;
 		if($user_vote < 0 ) {
 			$button_div .= <<<EOT
 			<button type='button' title='Up' class='up' onClick='addVote($item_id,"up");' >
-			<img src='/graphics/up.png' />
+			<img src='/assets/graphics/up.png' />
 			</button>
 
 			<button type='button' title='Down' class='down' onClick='addVote($item_id,"down-off");'  >
-			<img src='/graphics/down-on.png' />
+			<img src='/assets/graphics/down-on.png' />
 			</button>
 EOT;
 		}
 		elseif($user_vote > 0) {
 			$button_div.= <<<EOT
 			<button type='button' title='Up' class='up' onClick='addVote($item_id,"up-off");' >
-			<img src='/graphics/up-on.png' />
+			<img src='/assets/graphics/up-on.png' />
 			</button>
 			<button type='button' title='Down' class='down' onClick='addVote($item_id,"down");'  >
-			<img src='/graphics/down.png' />
+			<img src='/assets/graphics/down.png' />
 			</button>
 EOT;
 		}
 		else { #if not found or 0
 			$button_div .= <<<EOT
 			<button type='button' title='Up' class='up' onClick='addVote($item_id,"up");' >
-			<img src='/graphics/up.png' />
+			<img src='/assets/graphics/up.png' />
 			</button>
 			<button type='button' title='Down' class='down' onClick='addVote($item_id,"down");'  >
-			<img src='/graphics/down.png' />
+			<img src='/assets/graphics/down.png' />
 			</button>
 EOT;
 		}

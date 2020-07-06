@@ -33,7 +33,7 @@ down_notice();
 <p id="update"><?=$mod_date?></p>
 
 <br />
-<img src='/graphics/code_toon.jpg' style='margin-left:auto;margin-right:auto;'>
+<img src='/assets/graphics/code_toon.jpg' style='margin-left:auto;margin-right:auto;'>
 <br />
 </div>
 </body></html>

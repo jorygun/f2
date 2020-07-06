@@ -8,9 +8,9 @@ class FileDefs {
 	const  archive_dir = REPO_PATH . "/public/newsp";
 	const  current_dir = REPO_PATH . '/public/news/current';
 	const template_dir = REPO_PATH . '/templates';
-	const shared_dir = PROJ_PATH . '/shared';
-	const asset_dir = self::shared_dir .'/assets';
-	const thumb_dir = self::shared_dir . '/thumbnails';
+
+	const asset_dir = REPO_PATH .'/public/assets';
+	const thumb_dir = REPO_PATH . '/public/thumbnails';
 
 // model for newsletter index file
 	const  news_template = REPO_PATH . "/templates/news_index.php";
@@ -60,5 +60,5 @@ class FileDefs {
 	const git_ignore = REPO_PATH . "/templates/gitignore";
 
 //
-	const view_chart_url =   "/graphic_data/views.png";
+	const view_chart_url =   "/data/views.png";
 }

@@ -5,14 +5,14 @@
 */
 .btn-votes button {border: 0; background: transparent;}
 /*
-.up {background:url('/graphics/up.png')}
-.down {background:url('/graphics/down.png')}
-.meh {background:url('/graphics/q-icon.png')}
+.up {background:url('/assets/graphics/up.png')}
+.down {background:url('/assets/graphics/down.png')}
+.meh {background:url('/assets/graphics/q-icon.png')}
 */
 /*
-.meh:disabled {background:url('/graphics/meh_off.png')}
-.up:disabled {background:url('/graphics/up_off.png')}
-.down:disabled {background:url('/graphics/down_off.png')}
+.meh:disabled {background:url('/assets/graphics/meh_off.png')}
+.up:disabled {background:url('/assets/graphics/up_off.png')}
+.down:disabled {background:url('/assets/graphics/down_off.png')}
 */
 /*
 .meh:disabled {background:none}

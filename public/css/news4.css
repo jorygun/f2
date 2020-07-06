@@ -532,17 +532,17 @@ div.vpanel {display:inline;}
 
 /* collapsible lists */
 .collapsibleList li{
-		  list-style-image:url('/graphics/button.png');
+		  list-style-image:url('/assets/graphics/button.png');
 		  cursor:auto;
 		}
 
 li.collapsibleListOpen{
-		  list-style-image:url('/graphics/tri_down_18.png');
+		  list-style-image:url('/assets/graphics/tri_down_18.png');
 		  cursor:pointer;
 		}
 
 li.collapsibleListClosed{
-		  list-style-image:url('/graphics/tri_right_18.png');
+		  list-style-image:url('/assets/graphics/tri_right_18.png');
 		  cursor:pointer;
 		}
 .collapsibleList li ul li {margin-bottom:4px;}

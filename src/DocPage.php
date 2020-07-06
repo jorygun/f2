@@ -115,7 +115,7 @@ EOT;
                 $t .= <<<EOT
 <div style="color: #009900; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">
 <div style="position:relative;float:left;vertical-align:bottom;margin-left:100px;">
-   <div style=" float:left;"><img alt="" src="/graphics/logo-FLAMEs.gif"></div>
+   <div style=" float:left;"><img alt="" src="/assets/graphics/logo-FLAMEs.gif"></div>
    <div style= 'position:absolute; bottom:0;margin-left:100px;width:750px;'>FLAMES - The Official AMD Alumni Site </div>
 </div>
 <p style="font-size:14pt;clear:both;text-align:center;width:750px;margin-left:100px;">
@@ -130,7 +130,7 @@ EOT;
             case 1: #for newsletter
             case 'nl':
                 $t .= "
-         <img class='left' alt='AMD Flames' src='/graphics/logo-FLAMEs.gif'>
+         <img class='left' alt='AMD Flames' src='/assets/graphics/logo-FLAMEs.gif'>
          <p class='title'>$title<br>
          <span style='font-size:0.5em;'>$subtitle</span>
          </p>";
@@ -145,7 +145,7 @@ EOT;
             case 4:
             case 'small':
                 $t .= <<<EOT
-         <img class='left' alt='AMD Flames' src='/graphics/logo69x89.png'>
+         <img class='left' alt='AMD Flames' src='/assets/graphics/logo69x89.png'>
          <p class='title'>$title<br>
          <span style='font-size:0.5em;'>$subtitle</span>
          </p>
@@ -154,7 +154,7 @@ EOT;
                 break;
             case 0: #nothing at top of page
                 $t .= <<<EOT
-          <img class='left' alt='AMD Flames' src='/graphics/logo69x89.png'>
+          <img class='left' alt='AMD Flames' src='/assets/graphics/logo69x89.png'>
          <p class='title'>$title</p>
 
 EOT;
