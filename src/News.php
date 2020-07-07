@@ -133,7 +133,7 @@ public function getIssueData($issue) {
 }
 public function getLatestIssue(){
 	// returns array of issue and human date for last entry in pubs
-	$sql = "SELECT issue, url,
+	$sql = "SELECT issue, title, url,
 	DATE_FORMAT(pubdate,'%b %d, %Y') as date_published ,
 	last_scan
 	FROM `pubs` ORDER By pubdate DESC LIMIT 1";
