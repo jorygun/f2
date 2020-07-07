@@ -104,15 +104,19 @@ else { #IS POST; set up the job
 	$queue = FileDefs::bulk_queue;
 
 // get editiion name
-	$titlefile = FileDefs::latest_dir . '/title.txt';
-	if (file_exists($titlefile)){
-   	$edition_name = trim(file_get_contents($titlefile));
-   }
-    else {
-    	$edition_name = explode('|',trim(file_get_contents(FileDefs::pubfile)))[0];
-    	// pub date human
+	// $titlefile = FileDefs::latest_dir . '/title.txt';
+//
+// 	if (file_exists($titlefile)){
+//    	$edition_name = trim(file_get_contents($titlefile));
+//    }
+//     else {
+//     	$edition_name = explode('|',trim(file_get_contents(FileDefs::pubfile)))[0];
+//     	// pub date human
+//
+//     }
+	$latest = $edition_name = $news->getLatestIssue();
+	$edition_name = $latest['title'] ?: $latest['date_published'];
 
-    }
  	echo "Edition name: $edition_name" . BRNL;
 
 
