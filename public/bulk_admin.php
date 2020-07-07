@@ -114,7 +114,7 @@ else { #IS POST; set up the job
 //     	// pub date human
 //
 //     }
-	$latest = $edition_name = $news->getLatestIssue();
+	$latest = $edition_name = $container['news']->getLatestIssue();
 	$edition_name = $latest['title'] ?: $latest['date_published'];
 
  	echo "Edition name: $edition_name" . BRNL;
