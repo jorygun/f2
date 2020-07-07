@@ -145,7 +145,7 @@ class BulkMail {
 	}
 
 	public function assemble_teaser() {
-		$teaser =''
+		$teaser ='';
 		foreach ($this->teaser_files as $tfile){
 			if (file_exists($tfile)){
 				$teaser .= file_get_contents($tfile);
