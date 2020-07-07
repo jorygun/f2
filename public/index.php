@@ -22,6 +22,7 @@
 			header("location:$latest_url");
 			exit;
 		}
+	}
 
 
 
