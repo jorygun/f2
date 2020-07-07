@@ -19,6 +19,6 @@ if (file_exists(SITE_PATH . $latest_url)) {
 //echo "location:$latest_url"; exit;
 	header("location:$latest_url");
 } else {
-	header ("location:/");
+	echo "The newsletter $latest_url is not present on this site." . BRNL;
 }
 
