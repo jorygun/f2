@@ -288,7 +288,7 @@ EOT;
 			 SELECT n.id, n.use_me as use_me, n.topic, s.section_sequence,
              if (n.use_me > 0,1,0) as `cat`,
                  n.title, n.asset_list, n.asset_main, n.status,n.source,
-                 n.contributor_id,m.username,
+                 n.contributor_id,m.username as contributor,
                  DATE_FORMAT('%y %m %d',n.date_published) as pubdate,
                  t.topic_name as topic_name,s.section_name,
                  count(c.id) as comment_count

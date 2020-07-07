@@ -153,9 +153,26 @@ class Calendar {
 	public function display_calendar() {
 		$data['citems'] = $this->getItems();
 		$data['credential'] = false;
-
+		$this->get_upcoming();
 		return $this->templates->render('calendar',$data);
 	}
+
+	public function get_upcoming() {
+		$sql = "SELECT DATE_FORMAT (datetime,'%M %e') as date, event FROM events
+		WHERE datetime > now() limit 2";
+		$eh = $this->pdo->query($sql);
+		$text = "Upcoming Events: \n ";
+			foreach ($eh as $ev ){
+				$text .= $ev['date'] . ": " . $ev['event'] . NL;
+			}
+		$text .= NL;
+		file_put_contents(FileDefs::tease_calendar,$text);
+		//echo $text . BRNL;
+
+		return true;
+	}
+
+
 
 }
 //EOF;

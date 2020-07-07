@@ -15,7 +15,7 @@ ini_set('display_errors', 1);
 
 $mode = $_GET['mode'] ?? '';  // j when opened by javascript
 
-$login->checkLevel(0);
+$login->checkLevel(1);
 
    $page_title = 'Search Assets';
 	$page_options=['ajax','help']; #ajax, votes, tiny

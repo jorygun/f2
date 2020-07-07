@@ -43,6 +43,8 @@ $publish = $container['publish'];
 
 // get issue data using current folder path
 
+$login->checkLevel(1);
+
 $issue = 0; $style = 5;
 
 $strindex = strpos(__DIR__,'/news'); // first news or newsp

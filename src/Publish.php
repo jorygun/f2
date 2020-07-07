@@ -171,6 +171,9 @@ EOT;
 
 // mark all the stories published and set first use date on any assets referenced.
 		 $this->publishStories($storylist);
+
+		 $this->buildTeaser($storylist);
+
 // sets issue 1 data to defaults
 //		$this->initializePreview();
 
@@ -178,7 +181,19 @@ EOT;
 	}
 
 
+	public function buildTeaser($storylist) {
+		$artlist = $this->article->getArticleList('list',$storylist);
+		$t = "News Stories: \n------------------\n";
+		$nbsp5 = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
+		u\echor ($artlist); //exit;
+		foreach ($artlist as $article) {
+			$t .= $nbsp5 . $article['title'] . " (" . $article['contributor'] . ")" . NL;
+		}
+		$t .= "\n";
+		file_put_contents(FileDefs::tease_news,$t);
+
+	}
 
 
 	public function copyNextToLatest() {

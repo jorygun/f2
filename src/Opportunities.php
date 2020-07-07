@@ -23,7 +23,10 @@ class Opportunities
 		$this->level = $_SESSION['level'];
 		$this->templates = $container['templates'];
 		$this->opp_list = $this->createOppList(); #indexed by id
-		 $this->opp_count = count($this->opp_list);
+		$this->opp_count = count($this->opp_list);
+		file_put_contents(FileDefs::tease_opps,
+		  	"<p>There are $this->opp_count employment opportunities listed.</p>");
+
 		# echo $this->opp_count . " Opps retrieved" . BRNL; exit;
 	}
 
@@ -37,6 +40,7 @@ class Opportunities
 					active = 1 and expired > NOW();";
 
 		 $opp_table = $this->pdo -> query($sql) -> fetchAll(\PDO::FETCH_UNIQUE);
+
 		 #u\echor($opp_table); exit;
 		 return $opp_table;
 
