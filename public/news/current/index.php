@@ -13,5 +13,12 @@ $login->checkLevel(0);
 $latest = $container['news']->getLatestIssue();
 //u\echor($latest); exit;
 $latest_url = $latest['url'];
+
+// if latest newsletter doesn't exist, switch to home page
+if (file_exists(SITE_PATH . $latest_url)) {
 //echo "location:$latest_url"; exit;
-header("location:$latest_url");
+	header("location:$latest_url");
+} else {
+	header ("location:/");
+}
+
