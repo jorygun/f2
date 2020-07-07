@@ -31,7 +31,7 @@ namespace DigitalMx\Flames;
 class DocPage
 {
     private $title;
-    public function __construct($title = 'Someone forgot to put in the title')
+    public function __construct($title = 'AMD Flames')
     {
         // add the repo name to the title if its not live
         if (REPO != 'live') {
@@ -48,7 +48,7 @@ class DocPage
          'ajax' = include jquery, ajax
          'votes' = iinclude voting script/css
       */
-        $title = $this->title;
+
         if (! is_array($options)) {
             throw new RuntimeException("start head options not an array");
         }
@@ -63,7 +63,7 @@ class DocPage
    <meta charset="utf-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-   <title>$title</title>
+   <title>$this->title</title>
    <link rel='stylesheet' href = '/css/news4.css' />
 
    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
@@ -79,41 +79,50 @@ EOT;
          	<script src='/js/tiny_init.js'></script>
          ";
         }
-//  <script src='/jsmx/tinymce/tinymce.min.js'></script>
-
-     //    if (!empty($options) && in_array('help', $options)) {
-//             $t .= "
-//         <script src='/js/help.js'></script>
-//         ";
-//         }
-
-
 
         return $t;
     }
 
 
 
-    public function startBody($style = 2, $subtitle = '', $preview=false)
+    public function startBody($style = 5, $subtitle = '', $sub2title='')
     {
+
+    		$preview = ($style == 6 ) ? true:false;
      //style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page, 4 for collapsible list
+     // 5 is new style, 6 is preview new style
         $title = $this->title;
 
-        if ($style == 4) {
-            $t = '<script type="text/javascript" src="/js/collapsibleLists.js"></script>';
-            $t .= "\n</head>\n<body onload='CollapsibleLists.apply();' >\n";
-        } else {
-               $t = "\n</head>\n<body>\n";
+			$t= '' ; // build head here
+
+			// before body tag
+		switch ($style) {
+			case 4:
+			case 'cl':
+            $t .= <<<EOT
+            <script type="text/javascript" src="/js/collapsibleLists.js"></script>
+            </head>
+           <body onload='CollapsibleLists.apply()'>
+EOT;
+				break;
+			default:
+				$t .= <<<EOT
+				</head>
+				<body>
+EOT;
+				break;
+
         }
 
-        $t .= "<div class='page_head'>\n";
+      // after body tag, build page head
 
      #choose a style by number
         switch ($style) {
             case 3: #for home page
             case 'hp':
                 $t .= <<<EOT
-<div style="color: #009900; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">
+                <div class='page_head'>
+<div style="color: #090; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">
 <div style="position:relative;float:left;vertical-align:bottom;margin-left:100px;">
    <div style=" float:left;"><img alt="" src="/assets/graphics/logo-FLAMEs.gif"></div>
    <div style= 'position:absolute; bottom:0;margin-left:100px;width:750px;'>FLAMES - The Official AMD Alumni Site </div>
@@ -124,12 +133,16 @@ EOT;
 </p>
 
 </div>
-$this->menubar
+			$this->menubar
+         <hr style='width: 100%; height: 2px;clear:both;'>
+			</div>
+
 EOT;
                 break;
             case 1: #for newsletter
             case 'nl':
                 $t .= "
+                <div class='page_head'>
          <img class='left' alt='AMD Flames' src='/assets/graphics/logo-FLAMEs.gif'>
          <p class='title'>$title<br>
          <span style='font-size:0.5em;'>$subtitle</span>
@@ -137,36 +150,67 @@ EOT;
 			if ($preview) {
 					$t .= "<p class='preview'><b>Preview</b> " . date('M j, Y') . '</p>';
 				}
-
-         $t .= $this->menubar;
+			$t .= <<<EOT
+			$this->menubar
+			<hr style='width: 100%; height: 2px;clear:both;'>
+			</div>
+EOT;
                 break;
 
             case 2: #other pages
             case 4:
             case 'small':
                 $t .= <<<EOT
+                <div class='page_head'>
          <img class='left' alt='AMD Flames' src='/assets/graphics/logo69x89.png'>
          <p class='title'>$title<br>
          <span style='font-size:0.5em;'>$subtitle</span>
          </p>
           $this->menubar
+         <hr style='width: 100%; height: 2px;clear:both;'>
+			</div>
+
 EOT;
                 break;
+
+
             case 0: #nothing at top of page
                 $t .= <<<EOT
+                <div class='page_head'>
           <img class='left' alt='AMD Flames' src='/assets/graphics/logo69x89.png'>
          <p class='title'>$title</p>
+         <hr style='width: 100%; height: 2px;clear:both;'>
+			</div>
 
 EOT;
                 break;
+				case 2:
+				case 4:
+				case 0:
+				case 1:
+            case 5: #new style
+            case 6:
 
-            default:
-                $t .= '';
-        }
+           	$t .= <<<EOT
 
-        $t .= "<hr style='width: 100%; height: 2px;clear:both;'>";
+           <div class='page_head'>
+<img class='logo' src='/assets/graphics/amdheart-grn72.png'>
+<div style='float:right; text-align:right; vertical-align:bottom;'>
+<p class='head'>$title</p>
+<p class='subhead'>$subtitle</p>
+<p class='sub2head'>$sub2title</p>
+$this->menubar
+</div>
+<hr style='width: 100%; height: 2px;clear:both;'>
+</div>
+EOT;
+					break;
 
-        $t .= "</div>\n";
+				default:
+				// nothiing
+
+       }
+
 
         return $t;
     }

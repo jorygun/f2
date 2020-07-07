@@ -105,7 +105,7 @@ class News {
  }
 
 public function getNewsIndex() {
-	$sql = "SELECT issue,url,title, pubdate, DATE_FORMAT(pubdate,'%d %b, %Y') as hdate FROM `pubs` ORDER BY pubdate DESC";
+	$sql = "SELECT issue,url,title, pubdate, DATE_FORMAT(pubdate,'%d %b, %Y') as hdate FROM `pubs` WHERE issue > 19980000 ORDER BY pubdate DESC";
 	$stmt = $this->pdo->query($sql);
 	$lyear = 0;
 	$listcode = "<ul class='collapsibleList' style='margin-bottom:6px;'>\n";

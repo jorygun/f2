@@ -275,7 +275,7 @@ EOT;
 
 		$sql = "UPDATE `pubs` SET
 			pubdate = null,
-			title = 'Preview',
+			title = '',
 			rcount = 0,
 			last_scan = null,
 			url = '/news/next',

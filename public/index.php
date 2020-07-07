@@ -14,10 +14,10 @@
 
 
 
- //   if ($_SESSION['level'] > 0){
-//     	header('location:/news/current');
-//
-// }
+   if ($_SESSION['level'] > 0){
+    	header('location:/news/current');
+
+}
 
 	$page_title = 'AMD Flames';
 	$page_options = ['ajax','no-cache']; # ajax, votes, tiny

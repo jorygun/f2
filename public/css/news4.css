@@ -8,13 +8,16 @@ body  {
 	font-size: 1em; color: black;
 	max-width:1100px;
 	 width:95vw;
-	padding:5px;
+	padding:6px;
 	color:black;
 	font-style: normal;
 	font-weight: normal;
 	margin-left:1em;
 	margin-right:1em;
 	}
+body {background-color:#FFE;
+
+}
  .normal {
 	font-family: "New Times Roman",Times,serif;
 	font-size: 1em;
@@ -177,8 +180,10 @@ div.inline {
 	padding:3px;
 }
 
-div.page_head {margin:auto;
+div.page_head {
+	margin:auto;
    vertical-align:bottom;
+   padding: 6px;
    }
 p.title {
 	text-align:center; color: #396;
@@ -554,3 +559,37 @@ div#in_bulk_queue ul li.cancelled{color:blue;}
 div#in_bulk_queue ul li.running {color:orange;}
 
 
+img.logo   {
+/* 	margin:1em; */
+	float:right;
+	display: inline-block;
+	margin-left:1em;
+/* 	padding-top:1em; */
+}
+.page_head .head {
+	font-family: "helvetica,arial,san-serif";
+	color: #000;
+	font-weight: bold;
+	margin-top:6px;
+	margin-bottom:6px;
+	font-size:2em;
+
+}
+
+.page_head .subhead {
+	font-family: "times,serif";
+	font-size:1em;
+	margin-top:6px;
+	margin-bottom:6px;
+
+	font-weight:normal;
+}
+.page_head .sub2head {
+	font-family: "times,serif";
+	font-size:0.8em;
+	font-style: italic;
+	margin-top:6px;
+	margin-bottom:6px;
+
+	font-weight:normal;
+}

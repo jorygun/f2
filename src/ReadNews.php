@@ -128,8 +128,7 @@ function get_sections(){
 		if (!empty($err)) {
 			$t .= "<p><span class='red'>There are some problems
 			with your account.</span> <br>
-			You can fix these by
-				editing your profile under your name in the menu bar.</p>
+			You can fix these by updating and saving your profile, which is listed under your name in the menu bar.  </p>
 				<ul>";
 			foreach ($err as $e){
 				$t .= '<li>' . $e;

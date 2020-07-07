@@ -188,8 +188,10 @@ EOT;
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");
 
+	$previewclk = "takeAction('preview','0','','');";
 
 		  $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
+
 		  $t .=    self::if_level (7, "<li><a href='/asset_search.php' target='asearch'>Asset Manager</a>");
 		  $t .=    self::if_level (7, "<li><a href='/scripts/gallery_edit.php' target='gallery'>Edit Gallery</a>");
 		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='data'>Web Stats</a>");
