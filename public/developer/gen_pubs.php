@@ -206,7 +206,7 @@ CREATE TABLE `pubs` (
   `pubdate` datetime DEFAULT NULL,
   `url` varchar(64) DEFAULT NULL,
   `stories` varchar(255) DEFAULT NULL,
-  `updated` datetime DEFAULT NULL  ON UPDATE CURRENT_TIMESTAMP,
+  `updated` datetime DEFAULT CURRENT_TIMESTAMP  ON UPDATE CURRENT_TIMESTAMP,
   `last_scan` datetime DEFAULT NULL,
 
   PRIMARY KEY (`issue`),
@@ -220,7 +220,7 @@ CREATE TABLE `pubs` (
 
 
 	// add the preview issue to the db
-	$sql2 = "INSERT INTO `pubs` (issue,title,url) VALUES (1,'Preview','/news/next') ";
+	$sql2 = "INSERT INTO `pubs` (issue,title,url) VALUES (1,'','/news/next') ";
 	$pdo->query($sql2);
 
 	}

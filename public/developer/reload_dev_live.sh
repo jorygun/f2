@@ -14,15 +14,15 @@ PWmac=milstd883
 sqltemp=/tmp/f2temp.sql
 
 
-
+$tables = " assets news_items read_table  ";
 if [[ $HOME == '/Users/john' ]] ; then
 	SITEPATH=$HOME/Sites/flames/f2/public
 
 	#mac settings
-	echo "Updating mac dev db";
+	echo "Updating mac dev tables: $tables";
 
 	if [[ ! -f $sqltemp ]] ; then
-	/usr/local/mysql/bin/mysqldump -h "localhost" -u "admin" -p${PWmac} f2 assets news_items read_table > "$sqltemp"
+	/usr/local/mysql/bin/mysqldump -h "localhost" -u "admin" -p${PWmac} f2 $tables > "$sqltemp"
 	fi
 
 	/usr/local/mysql/bin/mysql -h "localhost" -u "admin" -p${PWmac} f2dev < $"sqltemp"
@@ -40,7 +40,8 @@ if [[ $HOME == '/Users/john' ]] ; then
 #EOT
 	echo "Mac Done."
 else
-	echo "Updating pair dev db";
+
+	echo "Updating pair dev tables: $tables";
 
 	SITEPATHL=$HOME/Sites/flames/live/public
 	SITEPATHD=$HOME/Sites/flames/dev/public
@@ -48,7 +49,7 @@ else
 
 
 	if [[ ! -f $sqltemp ]] ; then
-	/usr/local/bin/mysqldump -hdb151d.pair.com -udigitalm_r -p${PWlive} digitalm_db1 assets news_items read_table > $sqltemp 2>/dev/null
+	/usr/local/bin/mysqldump -hdb151d.pair.com -udigitalm_r -p${PWlive} digitalm_db1 $tables > $sqltemp 2>/dev/null
 	fi
 
 	/usr/local/bin/mysql -hdb158.pair.com -udigitalm_6 -p${PWdev} digitalm_f2dev < $sqltemp 2>/dev/null
