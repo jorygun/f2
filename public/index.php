@@ -15,9 +15,15 @@
 
 
    if ($_SESSION['level'] > 0){
-    	header('location:/news/current');
+  	 	$latest = $container['news']->getLatestIssue();
+		$latest_url = $latest['url'];
+		if (file_exists(SITE_PATH . $latest_url)) {
+//echo "location:$latest_url"; exit;
+			header("location:$latest_url");
+			exit;
+		}
 
-}
+
 
 	$page_title = 'AMD Flames';
 	$page_options = ['ajax','no-cache']; # ajax, votes, tiny
