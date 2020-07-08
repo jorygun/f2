@@ -65,11 +65,13 @@ class DocPage
 
    <title>$this->title</title>
    <link rel='stylesheet' href = '/css/news4.css' />
+   <link rel='stylesheet' href = '/css/navbar2.css' />
 
    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
 	<script src='/js/f2js.js'></script>
 	<script src='/js/ajax.js'></script>
 	<script src='/js/help.js'></script>
+	<script src='/js/navbar.js'></script>
 
 EOT;
         if (!empty($options) && in_array('tiny', $options)) {
@@ -118,90 +120,98 @@ EOT;
 
      #choose a style by number
         switch ($style) {
-            case 3: #for home page
-            case 'hp':
-                $t .= <<<EOT
-                <div class='page_head'>
-<div style="color: #090; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">
-<div style="position:relative;float:left;vertical-align:bottom;margin-left:100px;">
-   <div style=" float:left;"><img alt="" src="/assets/graphics/logo-FLAMEs.gif"></div>
-   <div style= 'position:absolute; bottom:0;margin-left:100px;width:750px;'>FLAMES - The Official AMD Alumni Site </div>
-</div>
-<p style="font-size:14pt;clear:both;text-align:center;width:750px;margin-left:100px;">
-        Keeping thousands of ex-AMDers connected since 1997<br>
-    <span style="font-size:12pt;color:#030;font-style:italic;">AMD was probably the best place any of us ever worked.</span>
-</p>
+           //  case 3: #for home page
+//             case 'hp':
+//                 $t .= <<<EOT
+//                 <div class='page_head'>
+// <div style="color: #090; font-family: helvetica,arial,sans-serif; font-size: 24pt; font-weight:bold; ">
+// <div style="position:relative;float:left;vertical-align:bottom;margin-left:100px;">
+//    <div style=" float:left;"><img alt="" src="/assets/graphics/logo-FLAMEs.gif"></div>
+//    <div style= 'position:absolute; bottom:0;margin-left:100px;width:750px;'>FLAMES - The Official AMD Alumni Site </div>
+// </div>
+// <p style="font-size:14pt;clear:both;text-align:center;width:750px;margin-left:100px;">
+//         Keeping thousands of ex-AMDers connected since 1997<br>
+//     <span style="font-size:12pt;color:#030;font-style:italic;">AMD was probably the best place any of us ever worked.</span>
+// </p>
+//
+// </div>
+// 			$this->menubar
+//          <hr style='width: 100%; height: 2px;clear:both;'>
+// 			</div>
+//
+// EOT;
+//                 break;
+//             case 1: #for newsletter
+//             case 'nl':
+//                 $t .= "
+//                 <div class='page_head'>
+//          <img class='left' alt='AMD Flames' src='/assets/graphics/logo-FLAMEs.gif'>
+//          <p class='title'>$title<br>
+//          <span style='font-size:0.5em;'>$subtitle</span>
+//          </p>";
+// 			if ($preview) {
+// 					$t .= "<p class='preview'><b>Preview</b> " . date('M j, Y') . '</p>';
+// 				}
+// 			$t .= <<<EOT
+// 			$this->menubar
+// 			<hr style='width: 100%; height: 2px;clear:both;'>
+// 			</div>
+// EOT;
+//                 break;
+//
+//             case 2: #other pages
+//             case 4:
+//             case 'small':
+//                 $t .= <<<EOT
+//                 <div class='page_head'>
+//          <img class='left' alt='AMD Flames' src='/assets/graphics/logo69x89.png'>
+//          <p class='title'>$title<br>
+//          <span style='font-size:0.5em;'>$subtitle</span>
+//          </p>
+//           $this->menubar
+//          <hr style='width: 100%; height: 2px;clear:both;'>
+// 			</div>
+//
+// EOT;
+//                 break;
+//
+//
+//             case 0: #nothing at top of page
+//                 $t .= <<<EOT
+//                 <div class='page_head'>
+//           <img class='left' alt='AMD Flames' src='/assets/graphics/logo69x89.png'>
+//          <p class='title'>$title</p>
+//          <hr style='width: 100%; height: 2px;clear:both;'>
+// 			</div>
+//
+// EOT;
+//                 break;
 
-</div>
-			$this->menubar
-         <hr style='width: 100%; height: 2px;clear:both;'>
-			</div>
 
-EOT;
-                break;
-            case 1: #for newsletter
-            case 'nl':
-                $t .= "
-                <div class='page_head'>
-         <img class='left' alt='AMD Flames' src='/assets/graphics/logo-FLAMEs.gif'>
-         <p class='title'>$title<br>
-         <span style='font-size:0.5em;'>$subtitle</span>
-         </p>";
-			if ($preview) {
-					$t .= "<p class='preview'><b>Preview</b> " . date('M j, Y') . '</p>';
-				}
-			$t .= <<<EOT
-			$this->menubar
-			<hr style='width: 100%; height: 2px;clear:both;'>
-			</div>
-EOT;
-                break;
-
-            case 2: #other pages
-            case 4:
-            case 'small':
-                $t .= <<<EOT
-                <div class='page_head'>
-         <img class='left' alt='AMD Flames' src='/assets/graphics/logo69x89.png'>
-         <p class='title'>$title<br>
-         <span style='font-size:0.5em;'>$subtitle</span>
-         </p>
-          $this->menubar
-         <hr style='width: 100%; height: 2px;clear:both;'>
-			</div>
-
-EOT;
-                break;
-
-
-            case 0: #nothing at top of page
-                $t .= <<<EOT
-                <div class='page_head'>
-          <img class='left' alt='AMD Flames' src='/assets/graphics/logo69x89.png'>
-         <p class='title'>$title</p>
-         <hr style='width: 100%; height: 2px;clear:both;'>
-			</div>
-
-EOT;
-                break;
+				case 6:
+					$title = "Preview: $title";
 				case 2:
 				case 4:
+				case 3:
 				case 0:
 				case 1:
             case 5: #new style
-            case 6:
+
 
            	$t .= <<<EOT
+<div class='page'>
+<div class='page_head'>
+	<div style='text-align:right;'>
+		<div class='page_top'>
+			<p >AMD Flames</p>
+			$this->menubar
+		</div>
+		<img  class='logo' src='/assets/graphics/amdheart-grn72.png' >
+	</div>
 
-           <div class='page_head'>
-<img class='logo' src='/assets/graphics/amdheart-grn72.png'>
-<div style='float:right; text-align:right; vertical-align:bottom;'>
-<p class='head'>$title</p>
-<p class='subhead'>$subtitle</p>
-<p class='sub2head'>$sub2title</p>
-$this->menubar
-</div>
-<hr style='width: 100%; height: 2px;clear:both;'>
+	<hr style='width: 100%; height: 2px;clear:both;'>
+	<p class='head'>$title</p>
+	<p class='subhead'>$subtitle</p>
 </div>
 EOT;
 					break;

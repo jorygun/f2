@@ -122,15 +122,7 @@ EOT;
 	}
 
 
-	private function choose_css($username, $experimental_users){
 
-		if (in_array ($username, $experimental_users)){
-			$stylelink =  '/css/navbar2.css' ;
-		} else {
-			$stylelink =  '/css/navbar2.css' ;
-		}
-		return $stylelink;
-	}
 
 
 	public function setMenuBar($login)
@@ -147,21 +139,9 @@ $version = $this->get_version();
 		$this->userlevel = $userlevel;
 		$userlinkedin = $login['linkedin'] ?? '';
 
-		$css_file = $this->choose_css($username, $this->expnames);
+
 
 		$t = <<<EOT
-		<link rel='stylesheet' href='$css_file'>
-		<script>
-		function closeMenu(close_list){
-			for (var i=0;i < close_list.length;i++){
-				document.getElementById(close_list[i]).blur();
-				document.getElementById(close_list[i] +'_child').blur();
-				//alert ("Closing item " + close_list[i]);
-			}
-				return false;
-		}
-
-		</script>
 
 		<nav id='nav'>
 EOT;
@@ -210,7 +190,7 @@ EOT;
 	$t .=  self::closeLine(6, $thisMenu) ;
 
 	$opp_rows = $this->opps->getOppCount();
-	$thisMenu = "Opportunities ($opp_rows)";
+	$thisMenu = "Opportunities";
 	$menulist[] = $thisMenu;
 	$opp_list = $this->opps->linkOppList();
 	$t .= self::addMenu (0,$thisMenu,$thisMenu,'/opp-manager.php');

@@ -115,7 +115,7 @@ private $Assets;
 
 		}
 		if ( !file_exists(SITE_PATH . $tdata['local_src']) ){
-			return "Local thumb source $local_src for id $id does not exist";
+			return "Local thumb source ${tdata['local_src']} for id $id does not exist";
 
 		}
 

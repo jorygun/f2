@@ -112,7 +112,7 @@ function get_sections(){
 		$ems = $user['email_status'];
 		$age = $user['profile_age'];
 
-		$t = "<div class='box'>";
+		$t = "<div >";
 		$t .= "<p>Welcome back  ${user['username']}.
 		Flames member since ${user['join_date']}</p>";
 

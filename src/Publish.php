@@ -195,7 +195,6 @@ EOT;
 
 	}
 
-
 	public function copyNextToLatest() {
 	// copy the news_next to the news_latest directory
 		if (file_exists (FileDefs::latest_dir)) {

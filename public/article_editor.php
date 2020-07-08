@@ -52,6 +52,14 @@ try {
             echo "<button type='button'  onclick = 'history.back();'>back</button>" . BRNL;
             exit;
 }
+$credential = $_SESSION['level'] > 7
+	|| $_SESSION['login']['user_id'] == $adata['contributor_id'];
+
+if (!$credential) {
+	echo "Permission Denied";
+	echo "<button type='button'  onclick = 'history.back();'>back</button>" . BRNL;
+            exit;
+}
 
 $adata['Aliastext'] = Defs::getMemberAliasList();
 // admin users get more choices on topics
@@ -67,6 +75,7 @@ $adata['queue_options' ] =
 $adata['votes_checked'] = $adata['take_votes'] ? 'checked' : '';
 $adata['comments_checked'] = $adata['take_comments'] ? 'checked' : '';
 $adata['contributor'] = ($adata['contributor_id'] == 0) ? $_SESSION['login']['username'] : $member->getMemberName($adata['contributor_id']);
+$adata['status_name'] = Defs::$news_status[$adata['status']];
 echo $container['templates']->render('article_edit', $adata);
 
 

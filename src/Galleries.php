@@ -143,21 +143,24 @@ EOT;
 		 $gall = $this->getGalleryData(); // all data  if no gid
 
 		 $last_vintage = 0;
-		 echo "<div class = asset-row>";
+		 echo "<div class = 'asset-row'>";
 		 foreach ($gall as $gdata) {
 		// u\echor($gdata);
-		 	$vintage = $gdata['vintage'];
+			$vintage = $gdata['vintage'];
 		 	if ($vintage != $last_vintage){
 					 if (empty($vintage )){$vintage = "Multiple Years";}
-					echo "<div class='clear'><br><p style='background:#393;color:white;font-size:1.2em;'  >$vintage</p>";
-			  }
+					echo "<div class='clear'><br>
+					<p style='background:#393;color:white;font-size:1.2em;'  >$vintage</p></div>";
+			}
 
 		 	echo $this->makeGalleryBlock($gdata) ;
 			$last_vintage = $vintage;
 		}
-
-
+		echo "</div>\n";
 	}
+
+
+
 
 	public function makeGalleryBlock($gdata) {
 		/* returns an asset block, but linked to the gallery gid instead of

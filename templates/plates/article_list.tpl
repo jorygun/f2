@@ -50,7 +50,7 @@ One Issue:
 			</td>
 		<td ><?=$row['id']?></td>
 			<td><b><?=$row['title']?></b><br>
-			 From: <?=$row['username']?><br>
+			 From: <?=$row['contributor']?><br>
 			  <i><?=$row['source']?></i><br>
 
 			 </td>

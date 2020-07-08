@@ -33,12 +33,12 @@ p {margin-top: 1em;
 
 h1 {}
 
-h2 {font-family: Arial,san-serif; font-size: 2em; color: black;
-	border-top:5px solid green; border-bottom:5px solid green;
+h2 {font-family: Arial,san-serif; font-size: 1.5em; color: black;
+	border-top:2px solid green; border-bottom:5px solid green;
 	}
 h3 {font-family: Arial,san-serif;
-	font-size: 1.5em; color: black;
-	border-bottom: 2px solid green;
+	font-size: 1.25em; color: black;
+	border-bottom: 1px solid green;
 	}
 
 h4 {font-family: Arial,san-serif; font-size: 1.0em; color: black;}
@@ -62,8 +62,8 @@ li {margin-bottom:0.5em;}
 .right {text-align:right;}
 div.right {float:right;}
 
-.divh2 {font-family: Arial,san-serif; font-size: 2em; color: black; font-weight:bold;
-	border-top:5px solid green;
+.divh2 {font-family: Arial,san-serif; font-size: 1.5em; color: black; font-weight:bold;
+	border-top:2px solid green;
 	margin-top:1em;
 	}
 
@@ -172,7 +172,7 @@ div.help {
 	margin:3px;
 	border:2px solid #060;
 	padding: 1em;
-	background:#DFD;
+	background:#DDF;
 
 }
 div.inline {
@@ -310,7 +310,7 @@ div.thumb {
 .thumb .caption {
     font-size:0.9em;text-align:center;
     font-style:normal;
-    font-family:Helvetica,Arial,sanserif;
+    font-family:Helvetica,Arial,sans-serif;
     margin:3px;
     max-width:190px;
     }
@@ -561,35 +561,42 @@ div#in_bulk_queue ul li.running {color:orange;}
 
 img.logo   {
 /* 	margin:1em; */
-	float:right;
+
 	display: inline-block;
 	margin-left:1em;
 /* 	padding-top:1em; */
 }
-.page_head .head {
-	font-family: "helvetica,arial,san-serif";
+.page_head {
+	font-family: Arial, Helvetica, sans-serif;
 	color: #000;
 	font-weight: bold;
+
+}
+.page_head .head {
 	margin-top:6px;
 	margin-bottom:6px;
 	font-size:2em;
+}
 
+.page_top {
+	text-align:right;
+	height:100px;
+	display:inline-block;
+}
+/*amd flames*/
+.page_head .page_top p {
+
+	font-weight: bold;
+	font-size: 1.5em;
+	margin-bottom:6px;
 }
 
 .page_head .subhead {
-	font-family: "times,serif";
+	font-family: times,serif;
 	font-size:1em;
 	margin-top:6px;
 	margin-bottom:6px;
 
 	font-weight:normal;
 }
-.page_head .sub2head {
-	font-family: "times,serif";
-	font-size:0.8em;
-	font-style: italic;
-	margin-top:6px;
-	margin-bottom:6px;
 
-	font-weight:normal;
-}

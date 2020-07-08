@@ -49,7 +49,7 @@ Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> 
 
 <table class='assettable' style='width:750px;'>
 
-<tr><td>Item Title (<=64 chars)</td><td><input type='text' size='60' maxlength ='64' name='title' id='title' value="<?=$title?>"></td></tr>
+<tr><td>Item Title (<=64 chars)</td><td><input type='text' size='60' maxlength ='64' name='title' id='title' value="<?=$title?>"> </td></tr>
 <tr><td>Caption (not reqd)</td><td><textarea  name='caption' rows=5 cols=60><?=$caption?></textarea></td></tr>
 <tr><td>Other Keywords (comma sep)</td><td><input type='text' name='keywords' value='<?=$keywords?>' size='60'/></td></tr>
 <?php if ($_SESSION['level'] >=7) : ?>

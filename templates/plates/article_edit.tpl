@@ -25,7 +25,12 @@ Status: <?=$status_name?> <?=$date_published?><br>
 
 <tr><td >Item Title (required)</td><td><input type='text' size='60' name='title' class='input required' id='title' value="<?=$title?>"></td></tr>
 
+<?php if ($_SESSION['level'] > 7 ) : ?>
 <tr><td>Status</td><td><select name = 'status'><?=$status_options?></select></td></tr>
+<?php else: ?>
+<tr><td>Status</td><td><input type='hidden' name= 'status' value='<?=$status?>' ><?=$status_name?></td></tr>
+<?php endif; ?>
+
 <tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' onfocus="form.contributor_id.value='';"
     style = '$cont_style'> id: <input type='text' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ><br><?=$Aliastext?></td></tr>
 

@@ -2,7 +2,8 @@
 
 	<form method='post'>
 	<h3>Edit/Create calendar item</h3>
-	<input type='text' name = 'id' READONLY value='<?= $row['id'] ?>'>
+	Calendar ID: <?= $row['id'] ?>
+	<input type='hidden' name = 'id'  value='<?= $row['id'] ?>'>
 	<input type='hidden' name='contributor_id'
 		value = '<?=$_SESSION['login']['user_id']?>'>
 	<table>
