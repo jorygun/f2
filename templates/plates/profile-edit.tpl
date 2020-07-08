@@ -64,7 +64,7 @@ address. You may change it here, or, if it is correct, just submit this page to 
 
 			</td></tr>
 
-<tr><td>Submit and Confirm email</td><td><input type='submit' name='submit' id='submit'></td></tr>
+<tr><td>Submit and Confirm email</td><td><input type='submit' name='submit' id='submit'> This button submits the whole form, same as the one at the bottom, but if you don't want to change anything else, you can submit now.</td></tr>
 
 <tr><td colspan='2' ><h5>Basic Information</h5></td></tr>
 

@@ -165,7 +165,9 @@ div.float-left {
 	overflow:auto;
 	}
 
-div.hidden {display:none; border:2px solid green;}
+div.hidden {display:none; border:2px solid green;
+	padding:3px;
+}
 
 div.help {
 	display:block;

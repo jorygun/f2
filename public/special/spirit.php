@@ -58,17 +58,20 @@ $star_articles = array(
 	1761,1738,1745,1748,1749,1750,1755,1757);
 $star_set = "'" . implode("','",$star_articles) . "'";
 
-$sql =
-	"SELECT n.id,n.title,m.username,n.source
-	FROM `articles` n
-	INNER JOIN `members_f2` m ON m.user_id = n.contributor_id
-	WHERE n.id in ($star_set)
-	ORDER BY FIELD (n.id,$star_set);";
-$result = $pdo->query($sql);
+// $sql =
+// 	"SELECT n.id,n.title,m.username,n.source
+// 	FROM `articles` n
+// 	INNER JOIN `members_f2` m ON m.user_id = n.contributor_id
+// 	WHERE n.id in ($star_set)
+// 	ORDER BY FIELD (n.id,$star_set);";
+// $result = $pdo->query($sql);
+$alist = $container['article']->getArticleList('list',$star_articles);
+//u\echor ($alist); exit;
+
 $stars = '<ul>';
-foreach ($result as $row){
-	$link = "<a href='/scripts/news_article_c.php/?id=${row['id']}' target = 'story'>${row['title']} </a><br>";
-	$attr = $row['username'];
+foreach ($alist as $row){
+	$link = "<a href='/get-article.php/?id=${row['id']}' target = 'story'>${row['title']} </a><br>";
+	$attr = $row['contributor'];
 	#$oldsters .= get_asset_by_id($row['asset_id']);
 	$stars .= " <li><b>$attr</b>  $link" . BRNL;
 }
@@ -76,17 +79,17 @@ $stars .= "</ul>\n";
 
 #get others
 $sql =
-	"SELECT n.id,n.title,m.username,n.source
+	"SELECT n.id,n.title,m.username as contributor,n.source
 	FROM `articles` n
 	INNER JOIN `members_f2` m ON m.user_id = n.contributor_id
-	WHERE n.type='spirit'   and n.id not in ($star_set)
+	WHERE n.topic ='spirit'   and n.id not in ($star_set)
 	ORDER BY n.date_published DESC";
 
 	$result = $pdo->query($sql);
 $articles = '<ul>';
 foreach ($result as $row){
-	$link = "<a href='/scripts/news_article_c.php/?id=${row['id']}' target = 'story'>${row['title']} </a><br>";
-	$attr = $row['username'];
+	$link = "<a href='/get-article.php/?id=${row['id']}' target = 'story'>${row['title']} </a><br>";
+	$attr = $row['contributor'];
 	#$oldsters .= get_asset_by_id($row['asset_id']);
 	$articles .= " <li><b>$attr</b>  $link" . BRNL;
 }
@@ -94,9 +97,6 @@ $articles .= "</ul>\n";
 
 ?>
 
-
-</head>
-<body >
 
 
 <p class='clear'>This page is devoted to the spirit of AMD &mdash; the company ethos that drove it to success, sustained it through rough times, and left so many people like you feeling that AMD was the best company they ever worked for.</p>
@@ -112,7 +112,7 @@ $articles .= "</ul>\n";
 <hr class='clear'>
 
 
-<img src='/assets/toons/4054.jpg' class='centered' />
+<img src='/thumbnails/medium/4054.jpg' class='centered' />
 
 
 
@@ -138,23 +138,30 @@ $result = $pdo->query($sql);
 $textlimit = 240;
 foreach ($result as $row){
 	$mem = $row['user_memories'];
-	if (strlen($mem) > $textlimit){
-		$mem = substr($mem,0,$textlimit)
-		. ' ... '
-		. "<a href='my_amd.php?${row['user_id']}' ><i>Read more</i></a>"
-		;
+	$mid = 'mem' . $row['user_id'];
+	$shortmem = $longmem = '';
+	if (strlen($mem) <= $textlimit){
+		$shortmem = $mem;
+		$longmem = '';
+		$membutton = '';
+	} else {
+		$trialmem = substr($mem,0,$textlimit);
+		$brpos = strrpos($trialmem, ' ');
+		$shortmem = substr($mem,0,$brpos);
+		$longmem = substr ($mem,$brpos);
+		$membutton =
+	"	 ...<button type='button' onClick=showDiv('$mid');>More</button>";
 	}
 
 
+
 	echo <<<EOT
-
-<p class='brief'>$mem</p>
-<p class='bsource'>-- ${row['username']}, ${row['user_amd']} </p>
-
-<p></p>
+	<p class='brief'>$shortmem $membutton</p>
+	<div id='$mid' class='hidden' style='border:0'>$longmem</div>
+	<p class='bsource'>-- ${row['username']}, ${row['user_amd']} </p>
+	<br>
 EOT;
 }
 
 
-
-
+#################
