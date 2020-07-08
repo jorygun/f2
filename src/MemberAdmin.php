@@ -605,6 +605,7 @@ EOT;
 	$tdata['credential'] = $credential;
 	$tdata['warning'] = f\getWarning();
 
+
  	return $tdata;
 
  }
@@ -738,7 +739,7 @@ EOT;
 					$update[$key] = $val;
 				break;
 			case 'badge_no' :
-					if (empty($val)) $val = 0;
+					//if (empty($val)) $val = 0;  // was an int field, now texxt
 					$update[$key] = $val;
 				break;
 
@@ -748,64 +749,6 @@ EOT;
 
 	}
 
-// Process photos
-	/* set up array for sending to save_asset
-
-	start with empty photo array.
-	put in caption and/or file and or status change
-	If anything in array, then add id and title.
-	Send to asset_admin->postAssetFromForm(array);
-
-
-*/
-		// will use this array to set up asset upload
-	$photo = array(
-
-	);
-
-	foreach (['A','B','C'] as $ptype){
-		$aid = $post["photo_$ptype"] ?? 0;
-
-
-		if(empty($aid )) {
-			// is possibly new photo
-			if (isset($FILES["image-$ptype"] )){
-				$photo ['file'] = true;
-				$photo ['caption'] = $post["caption-$ptype"];
-
-			}
-		} else {
-			// is an existing id
-
-			if (isset($post["remove_$ptype"])) {
-				// set asset to x; remove old files
-				$update["photo_$ptype"] = '';
-				// assets->delete??
-
-			} elseif (isset($FILES["image-$ptype"] )){
-				$photo ['file'] = true;
-				$photo['caption'] = $post["caption-$ptype"];
-
-			// just ßupdate caption ?
-			} elseif ($post["caption-$ptype"] != $post["oldcaption-$ptype"] ) {
-				$this->assets->updateCaption($aid,"caption=-ptype");
-
-			}
-			// possible image update
-
-
-		}
-
-		if (! empty($photo) ){
-			// add required fields and post to get asset id.
-				$photo['id'] = $aid;
-				$photo['title'] = $md['username'];
-				$photo['contributor_id'] = $md['user_id'];
-
-				$update["photo_$ptype"] = $this->asseta->postAssetFromForm($photo);
-
-		}
-	}
 
 
  // if change to profile or profile has never been updated

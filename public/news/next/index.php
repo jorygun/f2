@@ -64,12 +64,15 @@ $page_options = ['ajax'];
 $pubtime = strtotime($issue_data['pubdate']) ?: time();
 
 $published = date('d M, Y', $pubtime);
-$subtitle = $issue_data['title'] . " &middot; " . $published;
+if (!empty($issue_data['title'])){
+	$subtitle = $issue_data['title'] . " &middot; " . $published;
+} else {
+	$subtitle = $published;
+}
 
 $page = new DocPage($page_title);
 echo $page -> startHead($page_options);
 echo $page->startBody($style,$subtitle);
-
 
 
 $rcount = 0;

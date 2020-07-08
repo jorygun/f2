@@ -82,6 +82,7 @@ EOT;
 
     $assets = u\number_range($profile_data['asset_list']);
 
+
 	$uid = $_GET['edit'] ??'';
    if (!empty ($uid) ){
 
@@ -93,7 +94,7 @@ EOT;
 			}
 
 
-//		u\echor($profile_data,'profile data');
+		//u\echor($profile_data,'profile data'); exit;
    	 echo  $templates->render('profile-edit', $profile_data);
    	 exit;
 
@@ -104,6 +105,13 @@ EOT;
 			// u\echor($pdata);
 			$profile_data['photos'][$aid] = $pdata; //'view' or 'edit'
 		}
+		if (empty($profile_data['photos'] )){
+				// not photos so get a random one
+				$random = $container['assetsearch']->getRandomAsset($profile_data['username']);
+
+				$pdata = $assetv->getUserPhoto($random,'view');
+				$profile_data['photos'][$random] = $pdata;
+			}
 //
 
 		echo  $templates->render('profile', $profile_data);

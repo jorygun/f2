@@ -42,6 +42,7 @@ private static $empty_search = array (
 		$this->assets = $container['assets'];
 		$this->asseta = $container['asseta'];
 		$this->assetv = $container['assetv'];
+		$this->pdo 	= $container['pdo'];
 
 
 
@@ -51,7 +52,22 @@ private static $empty_search = array (
 		return self::$empty_search;
 	}
 
+	public function getRandomAsset($phrase) {
+		$sqlt = $this->token_search ($phrase);
 
+		$sql = "SELECT id from `assets2`
+		WHERE $sqlt
+		ORDER BY RAND()
+		LIMIT 1
+		;
+		";
+
+		$id = $this->pdo->query($sql)->fetchColumn();
+
+		return $id;
+
+
+	}
 	public function  prepareSearch($sdata){
 		// fill in blank fields
 		$asdata = array_merge(self::$empty_search,$sdata);
