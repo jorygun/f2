@@ -9,6 +9,7 @@
 
 
 <h1> AMD Flames Profile and Email Editor</h1>
+<button type='button' name='SearchHelp' class='help-button' id ='help-button' value='profile' >Help</button>
 <p>Saving this form marks your email address and profile as confirmed. <br>
 If you make changes to fields marked with an asterisk *, your profile will be listed as an update on the next newsletter. If you change your email address,
 that will listed on the next newsletter as well.</p>
@@ -116,11 +117,11 @@ address. You may change it here, or, if it is correct, just submit this page to 
 			</td></tr>
 
 		<tr><td colspan='2'><h5>Narratives (optional)</h5></td></tr>
-   	<tr><td><u>My interests</u></td></td></tr>
+   	<tr><td><u>* My interests</u></td></td></tr>
 		<tr><td colspan='2'><input size='96'  name='user_interests' type='text' value="<?= $this->e($user_interests) ?>">
 		</td></tr>
 
-        <tr><td ><u>About Me</u></td><td  class='instr'>
+        <tr><td >* <u>About Me</u></td><td  class='instr'>
 			Enter anything you'd like to say about yourself.  What was your career path? What keeps
 			you busy?
 			</td></tr>
