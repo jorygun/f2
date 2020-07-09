@@ -94,7 +94,7 @@ private $Assets;
 
 		}
 
-u\echor($tdata); exit;
+//u\echor($tdata); exit;
 
 		foreach ($tdata as $var=>$val) {
 			$this->$var = $val;
