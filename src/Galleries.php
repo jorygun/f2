@@ -197,7 +197,7 @@ EOT;
 			}
 		$attr_block = $this->getAttribute($gdata['contributor']);
 		$block = <<<EOT
-				<div class='asset '>
+				<div class='asset' style='height:300px;'>
 					<a href='/galleries.php?$gid' target='gallery'>
 					$image_data </a>
 					$attr_block
