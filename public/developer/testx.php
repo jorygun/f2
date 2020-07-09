@@ -12,14 +12,13 @@ require_once '../init.php';
 	use digitalmx\flames\FileDefs;
 
 
-$publish = $container['publish'];
+$news = $container['news'];
 
-$articlelist = array(
-	2270,2271,2273
-	);
+$opt = $news->getTopicOptions('spirit') ;
+// $optesc = htmlspecialchars($opt);
+// u\echopre ($optesc);
 
-$t = $publish->buildTeaser($articlelist);
 
-u\echop ($t);
 
-exit;
+echo "<select name='topic'>$opt</select>";
+

@@ -261,7 +261,8 @@ public function getTopics($access=''){
 // access = 'A' for all current topics
 // access = 'U' for user accessible topics
 
-	$sql = "SELECT `topic`,`topic_name` from `news_topics` t
+	$sql = "SELECT t.topic,t.topic_name
+		FROM `news_topics` t
 		INNER JOIN news_sections  s
 		ON t.section = s.section ";
 	if ($access == 'A'){ $sql .= " WHERE `access` in ('A','U') "; }
@@ -271,6 +272,36 @@ public function getTopics($access=''){
 	$topics = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 
 	return $topics;
+}
+
+
+public function buildTopicOptions ($checkme = '', $access='' ) {
+	// builds list of options divided by sections
+	$sql = "SELECT t.topic,t.topic_name,s.section_name
+		from `news_topics` t
+		INNER JOIN news_sections  s
+		ON t.section = s.section ";
+	if ($access == 'A'){ $sql .= " WHERE `access` in ('A','U') "; }
+	elseif ($access == 'U'){ $sql .= " WHERE `access` = 'U' "; }
+	$sql .= " ORDER BY s.section_sequence, t.topic ";
+	echo $sql . BRNL;
+	echo "<style>select optgroup  { color:green;} </style> ";
+	if (! $topicsh = $this->pdo->query($sql) ){
+		die ("got nothing");
+	}
+	$last_section = '';
+	$opt = "<option value=''>Choose One...</option>";
+	foreach ( $topicsh as $row){
+		if ($row['section_name'] != $last_section) {
+			$opt .= "<optgroup label='--{$row['section_name']}--'>" . NL;
+			$last_section = $row['section_name'];
+		}
+		$checked = ($row['topic'] == $checkme) ? 'selected' : '';
+		$opt .= "<option value='{$row['topic']}' $checked >{$row['topic_name']}</option>" . NL;
+	}
+
+	return $opt;
+
 }
 
 private function getTopicToSection () {

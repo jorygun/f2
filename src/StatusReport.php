@@ -141,17 +141,17 @@ EOT;
 		</div>
 		<div class='content'>
 		";
-		$story .= "<p class='subhead'>Currently:</p>
-				<div class='subarticle'>${row['user_current']}</div>";
+		$story .= "<div class='subarticle'><u> Currently:</u>
+				${row['user_current']}</div>";
 
 		if (! empty ($row['user_interests']) ){
-			$story .= "<p class='subhead'>Interests:</p>
-			<div class='subarticle'>${row['user_interests']}</div>";
+			$story .= "<div class='subarticle'><u>Interests:</u>
+			${row['user_interests']}</div>";
 		}
 
 		if (! empty ($row['user_about'])) {
-			$story .= "<p class='subhead'>About:</p>
-				<div class='subarticle'>${row['user_about']}</div>";
+			$story .= "<div class='subarticle'><u>About:</u>
+				${row['user_about']}</div>";
 		}
 
 		// if (! empty ($row['user_memories']) ){
