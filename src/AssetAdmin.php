@@ -384,6 +384,10 @@ public function checkAssetData($adata) {
 		$thumb = "${id}.jpg";
 		$tloc = SITE_PATH . "/thumbnails";
 		$ttypes = [];
+		if (!file_exists("${tloc}/small/$thumb") ){
+			// make small thumb.  Everyone needs one
+			$this->Assetv->getThumb($id,'small');
+		}
 		foreach (Defs::getThumbTypes() as $ttype){
 			if (file_exists($tloc . '/' . $ttype . '/' . $thumb)){
 				$ttypes[] = $ttype;

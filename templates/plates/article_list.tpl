@@ -1,29 +1,34 @@
 <script>
- $("#editme").change(function(){
-        var str = $("#editme").val();
-        alert(str);
+ $('#alist_form').on('change','#editme', function(){
+        let str = $("#editme").val();
+
+        if (str == 0) {
+        	$('#editlabel').text('New');
+        } else {
+        	$('#editlabel').text('Edit');
+        }
     });
 </script>
 <?php $lastmsg=''; $lastestat='';?>
-<h3>Create New Article or Search for Existing
+<h3>Create New Article or Edit An Existing One
 <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='article_list' >Help</button></h3>
 
 <form id='alist_form' method='post'>
-<p class='bold'>Create New Article or Edit Any Article</p>
-
-Enter Article Id (use 0 for new article): <input type='text' size=6 id='editme' name='editme' value='0'  >
+<p class='bold'>Edit Any Article or Create New</p>
+<div class='indent'>Article Id (use 0 to create new article): <input type='text' size=6 id='editme' name='editme' value='0'  >
 <button  name='edit_this' onClick="open_article_edit('editme')">
-Go</button>
-
+<span id="editlabel"><b>Go</b></span></button>
+</div>
 <br> OR <br>
 
-<p class='bold'>Select a List:</p>
+<p class='bold'>Choose from a List of Articles:</p>
+<div class='indent'>
 <button  name='cat' value='unpub'>All Unpublished</button>
 <button  name='cat' value='recent'>Recently Published</button>
 One Issue:
 	<select name='issue'><?=$ioptions?></select>
-	<button name='cat' value='issue'> Go: </button>
-
+	<button name='cat' value='issue'> Get Issue </button>
+</div>
 </form>
 
 <h3><?=$emsg['selected']?></h3>
