@@ -159,7 +159,9 @@ class AssetAdmin
 		// test assset_url
 		if (1 || $adata['astatus'] != 'K' ){ #error override
 
-				$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
+			$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
+	//echo $adata['mime'] . " mime from url " . $adata['asset_url']; exit;
+
 				$adata['type'] = Defs::getAssetType($adata['mime']);
 				if ($adata['mime']){
 					if (u\is_local($adata['asset_url']) ) {
@@ -367,7 +369,7 @@ public function checkAssetData($adata) {
 			case 'mime':
 
 				if (!in_array($val,Defs::getAcceptedMime() ) )
-			 		throw new Exception ("Id $id: Source mime is not acceptable: " . $val);
+			 		throw new Exception ("Id $id: Source mime '$val' is not acceptable"  );
 			 	break;
 
 			default: #do nothing
@@ -384,7 +386,7 @@ public function checkAssetData($adata) {
 		$thumb = "${id}.jpg";
 		$tloc = SITE_PATH . "/thumbnails";
 		$ttypes = [];
-		if (!file_exists("${tloc}/small/$thumb") ){
+		if ($id > 0 && !file_exists("${tloc}/small/$thumb") ){
 			// make small thumb.  Everyone needs one
 			$this->Assetv->getThumb($id,'small');
 		}
@@ -533,7 +535,8 @@ private function buildImagicImage ($src_url,$dest_url){
 			$tmime = u\is_http($aurl);
 			if ($tmime) {
 				//echo "http tmime $tmime" . BRNL;
-				$sizem = u\get_info_from_curl($aurl)['size'] / 1000000; #MB
+				$size = u\get_info_from_curl($aurl)['size'] ?? 0;
+				$sizem = $size / 1000000; #MB
 				if ( $sizem <= 2 && strpos($tmime,'image') !== false) { //MB
 					if (! @copy ($aurl ,  $genurl) ) {
 						throw new Exception ("Failed to copy $aurl on id $id");

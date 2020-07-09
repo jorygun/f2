@@ -750,9 +750,10 @@ function is_http ($url) {
 	// valid url an it exists.  returns mime type
 	 if(filter_var($url, FILTER_VALIDATE_URL) == FALSE)  {return false;}
 	 $cinfo =  get_info_from_curl($url);
-	 if (!$cinfo){ return '';}
+//echor($cinfo);
+	 if (empty($cinfo)){ return 'text/html';}
 	 $mime = $cinfo['mime'];
-	 //echo "mime from curl $mime" . BRNL;
+//	 echo "mime from curl $mime" . BRNL;
  	return $mime;
 }
 
@@ -996,6 +997,7 @@ function get_mime_from_url($url) {
 
 	if (!$mime) {
 		$mime = is_http($url) ;
+		if ($mime === false){echo "failed http filter";}
 		//echo "<br>http mime '$mime'" . BRNL;
 		// ok
 	}
