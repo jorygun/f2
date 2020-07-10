@@ -64,7 +64,8 @@ One Issue:
 			<td>
 				<?=$row['view-button']?>
 				<?=$row['edit-button']?><br>
-				<?=$row['use-button']?>
+				<?=$row['use-button']?><?=$row['status']?><br>
+
 
 			</td>
 		</tr>
