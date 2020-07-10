@@ -108,9 +108,13 @@ EOT;
 		if (empty($profile_data['photos'] )){
 				// not photos so get a random one
 				$random = $container['assetsearch']->getRandomAsset($profile_data['username']);
+				if (!empty($random)){
+					$pdata = $assetv->getUserPhoto($random,'view');
 
-				$pdata = $assetv->getUserPhoto($random,'view');
-				$profile_data['photos'][$random] = $pdata;
+					$pdata['title'] = "random";
+						//u\echor($pdata);
+					$profile_data['photos'][$random] = $pdata;
+				}
 			}
 //
 

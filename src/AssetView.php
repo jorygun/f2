@@ -327,12 +327,28 @@ EOT;
 				$simage = null;
 		}
 
+		$exif = @exif_read_data($srcpath);
 
-		if ($timage = imagescale($simage,$max_dim )) {
+		if ($exif && !empty($exif['Orientation']))
+		{
+			 switch($exif['Orientation']) {
+				  case 8:
+						$simage = imagerotate($simage, 90, 0);
+				  break;
+				  case 3:
+						$simage = imagerotate($simage, 180, 0);
+				  break;
+				  case 6:
+						$simage = imagerotate($simage, -90, 0);
+				  break;
+			 }
+		}
+
+		$timage = imagescale($simage,$max_dim );
 			imagejpeg($timage, $destpath, 90);
 			imagedestroy($simage);
 			imagedestroy($timage);
-		}
+
 
 	}
 

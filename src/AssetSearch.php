@@ -57,6 +57,7 @@ private static $empty_search = array (
 
 		$sql = "SELECT id from `assets2`
 		WHERE $sqlt
+		AND astatus in ('U','W','O','K')
 		ORDER BY RAND()
 		LIMIT 1
 		;

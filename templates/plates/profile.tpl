@@ -52,7 +52,12 @@
 	<div class='user-photos'>
 	<p><b>Photos</b></p>
 	<?php foreach ($photos as $aid=>$pdata) :
+			if($pdata['title'] == 'random') :
+				echo "(Random Photo)<br>";
+			endif;
 			echo $pdata['block'];
+
+
 	endforeach; ?>
 	</div><div class='clear'></div>
 <?php endif; ?>
