@@ -69,7 +69,7 @@ class ArticleAdmin
 				"<button type='button' onClick=window.open('/article_editor.php?id=$id','aedit')>Edit</button>"
 				: '';
 			// news admin can add remove article from queue
-			$row['use-button'] = ($_SESSION['level']>= 7 && in_array($row['status'], ['N','Q'] ) ?
+			$row['use-button'] = ($_SESSION['level']>= 7 && in_array($row['status'], ['N','Q'] ) )?
 				"<button type='submit' form='alist_form' name='toggle_use' value = $id
 				style='background:orange;'>Toggle Use</button>"
 				: "";
