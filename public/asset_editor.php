@@ -75,7 +75,8 @@ if (!empty($_POST['submit'] )) {
 
 	}
 	elseif ($_POST['submit'] == 'new' ) {
-	// skip displayed asset, no effect on list, display new
+	// remove displayed asset from list and open new
+		$asseta->removeFromList($last_id);
 		$next_id = 0;
 		$list_note = '';
 
@@ -93,7 +94,7 @@ if (!empty($_POST['submit'] )) {
 
 if (isset ($_GET['id'])) {
 	$id = $_GET['id'] ;
-	$asseta->removeFromList($id);
+	//$asseta->removeFromList($id);  // only remove on post, not get
 	$list_note = '(Retrieved next id _GET)';
 // if next id set in post command, that's where to go next
 // may be 0

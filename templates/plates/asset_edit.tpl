@@ -12,7 +12,7 @@ Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> 
 <button name='submit' value='save'>Save and Review</button>
 <button name='submit' value='next'> Save and Go Next</button>
 <button name='submit' value='skip'>Skip and Go Next</button>
-<button name='submit' value = 'new'>New Asset</button>
+<button name='submit' value = 'new'>Skip and open New</button>
 <br>
 <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='assets' >Help</button>
 </div>
