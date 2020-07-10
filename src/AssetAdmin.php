@@ -209,7 +209,7 @@ class AssetAdmin
 			}
 			// geneerate small thumb always
 			$desturl = "/thumbnails/small/${id}.jpg";
-			$this->Assetv::buildGdImage($id,$adata['local_src'], 'small');
+
 
 
 		}
@@ -217,6 +217,7 @@ class AssetAdmin
 
 
 		try {
+				$this->Assetv::buildGdImage($id,$adata['local_src'], 'small');
 				 $this->checkAssetData($adata);
 
 		} catch (Exception $e) {
@@ -388,7 +389,10 @@ public function checkAssetData($adata) {
 		$ttypes = [];
 		if ($id > 0 && !file_exists("${tloc}/small/$thumb") ){
 			// make small thumb.  Everyone needs one
-			$this->Assetv->getThumb($id,'small');
+			$th = $this->Assetv->getThumb($id,'small');
+			if (strpo($th,'**ERROR') != false){
+				echo "<p class='red'>$th</p>" . NL;
+			}
 		}
 		foreach (Defs::getThumbTypes() as $ttype){
 			if (file_exists($tloc . '/' . $ttype . '/' . $thumb)){

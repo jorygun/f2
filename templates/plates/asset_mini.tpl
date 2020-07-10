@@ -35,7 +35,7 @@
 
 
 	</td><td>
-	 <a href='imagelink' target='image'><?= $image ?></a>
+	 <a href='<?=$imagelink?>' target='image'><?= $image ?></a>
 	 </td></tr>
 	</table>
 

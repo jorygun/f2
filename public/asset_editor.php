@@ -94,10 +94,12 @@ if (!empty($_POST['submit'] )) {
 if (isset ($_GET['id'])) {
 	$id = $_GET['id'] ;
 	$asseta->removeFromList($id);
+	$list_note = '(Retrieved next id _GET)';
 // if next id set in post command, that's where to go next
 // may be 0
 } elseif (isset($next_id)) {
 	$id = $next_id;
+	$list_note = '(Retrieved next id from go next input)';
 // else looks for get id (may be 0, for new asset)
 
 // else, just get next id off the stack
@@ -106,6 +108,7 @@ if (isset ($_GET['id'])) {
 	$list_note = '(Retrieved next id from current search list)';
 } else {
 	$id = 0;
+	$list_note = '(No next id, creating new.)';
 }
 
 
