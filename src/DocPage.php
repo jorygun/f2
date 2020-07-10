@@ -90,7 +90,7 @@ EOT;
     public function startBody($style = 5, $subtitle = '', $sub2title='')
     {
 
-    		$preview = ($style == 6 ) ? true:false;
+    		$preview_text = ($style == 6 ) ? 'Preview' : '';
      //style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page, 4 for collapsible list
      // 5 is new style, 6 is preview new style
         $title = $this->title;
@@ -189,7 +189,7 @@ EOT;
 
 
 				case 6:
-					$title = "Preview: $title";
+				$title = "(PREVIEW) " . $title;
 				case 2:
 				case 4:
 				case 3:
