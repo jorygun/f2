@@ -15,13 +15,14 @@
 
 <form id='alist_form' method='post'>
 <p class='bold'>Edit Any Article or Create New</p>
-<div class='indent'>Article Id (use 0 to create new article): <input type='text' size=6 id='editme' name='editme' value='0'  >
+<div class='indent'>Edit this Article Id : <input type='text' size=6 id='editme' name='editme' value='0'  >
 <button  name='edit_this' onClick="open_article_edit('editme')">
-<span id="editlabel"><b>Go</b></span></button>
+<span id="editlabel"><b>Go</b></span></button><br>
+(Use id 0 to create new article.)
 </div>
 <br> OR <br>
 
-<p class='bold'>Choose from a List of Articles:</p>
+<p class='bold'>Choose one from a list of Articles:</p>
 <div class='indent'>
 <button  name='cat' value='unpub'>All Unpublished</button>
 <button  name='cat' value='recent'>Recently Published</button>
