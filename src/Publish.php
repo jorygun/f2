@@ -59,7 +59,7 @@ EOT;
 		<button type="button" onclick= "
 			takeAction('preview','0','','');
 			 window.open('/news/next','preview');
-			">Preview</button>
+			">Show News Preview</button>
 EOT;
 
 
