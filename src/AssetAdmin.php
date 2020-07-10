@@ -390,7 +390,7 @@ public function checkAssetData($adata) {
 		if ($id > 0 && !file_exists("${tloc}/small/$thumb") ){
 			// make small thumb.  Everyone needs one
 			$th = $this->Assetv->getThumb($id,'small');
-			if (strpo($th,'**ERROR') != false){
+			if (strpos($th,'**ERROR') != false){
 				echo "<p class='red'>$th</p>" . NL;
 			}
 		}
