@@ -43,25 +43,36 @@ $publish = $container['publish'];
 
 // get issue data using current folder path
 
-$issue = 0; $preview = false;
-$dir = dirname(__FILE__);
-$strindex = strpos($dir,'/news'); // news or newsp
+$login->checkLevel(1);
 
-$url = substr($dir,$strindex);
+$issue = 0; $style = 5;
+
+$strindex = strpos(__DIR__,'/news'); // first news or newsp
+$url = substr(__DIR__,$strindex);
+$preview = (strpos(__DIR__,'/news/next') !== false) ;
 
 $sql = "SELECT * from pubs where url = '$url'";
 if (! $issue_data = $pdo->query($sql)->fetch() ) {
 	die ("No issue at url $url");
 }
-
+if ($preview) {$style = 6;}
+// is preview issue; changes page head
 $issue=$issue_data['issue'];
 
 $page_title = 'Flame News ';
 $page_options = ['ajax'];
-$subtitle = $issue_data['title'];
+$pubtime = strtotime($issue_data['pubdate']) ?: time();
+
+$published = date('d M, Y', $pubtime);
+if (!empty($issue_data['title'])){
+	$subtitle = $issue_data['title'] . " &middot; " . $published;
+} else {
+	$subtitle = $published;
+}
+
 $page = new DocPage($page_title);
 echo $page -> startHead($page_options);
-echo $page->startBody(1,$subtitle,$preview);
+echo $page->startBody($style,$subtitle);
 
 
 $rcount = 0;

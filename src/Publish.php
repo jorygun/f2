@@ -78,8 +78,8 @@ EOT;
 	public function preview() {
 		// get article list and put into the pub 1 record
 		$storylist = $this->article->getArticleIds('next');
-		$stories = implode (' ',$storylist);
-		$sql = "UPDATE pubs SET stories = '$stories' WHERE issue = 1";
+		$jstories = json_encode($storylist);
+		$sql = "UPDATE pubs SET stories = '$jstories' WHERE issue = 1";
 		//echo $sql . BRNL; exit;
 		$this->pdo->query($sql);
 		return false;
@@ -175,7 +175,7 @@ EOT;
 		 $this->buildTeaser($storylist);
 
 // sets issue 1 data to defaults
-//		$this->initializePreview();
+		$this->initializePreview();
 
 
 	}
@@ -186,7 +186,7 @@ EOT;
 		$t = "News Stories: \n------------------\n";
 		$nbsp3 = "&nbsp;&nbsp;&nbsp;";
 
-		u\echor ($artlist); //exit;
+		//u\echor ($artlist); //exit;
 		foreach ($artlist as $article) {
 			$t .= $nbsp3 . $article['title'] . " (" . $article['contributor'] . ")" . NL;
 		}
@@ -206,6 +206,7 @@ EOT;
 	}
 	private function publishStories($storylist) {
 		// mark each story as published, and set first use for any assets it references
+		echo "Updating articles" . BRNL;
 		$sql = "UPDATE articles
 			SET date_published = '$this->pubdate',
 				status = 'P',
@@ -213,10 +214,12 @@ EOT;
 				pub_issue = '$this->issue'
 			WHERE id = ?";
 		$arth = $this->pdo->prepare($sql);
+
 		$sql = "SELECT CONCAT (asset_list, ' ', asset_main)
 				from articles
 			WHERE id = ?";
 		$asseth = $this->pdo->prepare($sql);
+
 		$sql = "UPDATE assets2
 			SET first_use_date = '$this->pubdate',
 				first_use_in = '$this->archive_url'
@@ -258,7 +261,7 @@ EOT;
 		'rcount' => 0,
 		'last_scan' => $preview['last_scan'],
 		'url' => '/newsp/' . $archive,
-		'stories' => $preview['stories'],
+		'stories' => $preview['stories'], // is json
 		);
 	//u\echor($newpub,'newpub');
 		$sql = "DELETE FROM pubs WHERE issue='$issue'";
@@ -280,8 +283,8 @@ EOT;
        $stmt = $pdo->prepare($sql)->execute($prep['data']);
 
   **/
-  		$story_list = explode (" ",$preview['stories']);
-  		return $story_list;
+  		$storylist = json_decode($preview['stories']);
+  		return $storylist;
 
 	}
 
@@ -293,7 +296,7 @@ EOT;
 			rcount = 0,
 			last_scan = null,
 			url = '/news/next',
-			stories = ''
+			stories = '[]'
 		WHERE issue = 1 ;";
 		//u\echor($prep,$sql); exit;
        $stmt = $this->pdo->query($sql);
