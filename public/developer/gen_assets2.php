@@ -198,9 +198,9 @@ echo "<a href='$logurl?$end_time' target = 'log'>Log</a>" . BRNL;
 
 echo "No first use found: " . BR;
 u\echor ($no_first);
-file_put_contents ($logfile,"\nNo First Use:\n");
+file_put_contents ($logfile,"\nNo First Use:\n", FILE_APPEND);
 foreach ($no_first as $rec) {
-	file_put_contents($logfile,sprintf("  %s\n",$rec));
+	file_put_contents($logfile,sprintf("  %s\n",$rec), FILE_APPEND);
 }
 
 exit;

@@ -14,7 +14,8 @@ PWmac=milstd883
 sqltemp=/tmp/f2temp.sql
 
 
-$tables = " assets news_items read_table  ";
+$tables = "";
+
 if [[ $HOME == '/Users/john' ]] ; then
 	SITEPATH=$HOME/Sites/flames/f2/public
 

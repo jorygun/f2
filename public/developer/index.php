@@ -54,7 +54,7 @@ if (isset($_GET['run'])) {
 onClick = "window.open('/developer/update_galleries.php','geng');return false;" value='galleries'>Add galleries to first used.</button>
 
 <li><button name='run' value='refresh'>Refresh</button>
-Refresh tables from live db to dev
+Refresh all tables from live db to dev
 
 <li><button name='run'
 onClick = "window.open('/developer/gen_articles.php','genn');return false;" value='articles'>Build Articles</button>
