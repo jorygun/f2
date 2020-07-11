@@ -1008,6 +1008,7 @@ function get_mime_from_url($url) {
 		if ($lmime !== false){
 			$mime = $lmime;
 		// ok
+		}
 	}
 	if ($mime === false) {
 		echo "cannot determine local/yt/http" . BRNL;
