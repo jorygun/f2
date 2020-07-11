@@ -162,7 +162,7 @@ echo "{$adata['astatus']}" . BRNL;
 
 			$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
 	//echo $adata['mime'] . " mime from url " . $adata['asset_url']; exit;
-echo "mime " $adata['mime'] . BRNL;
+echo "mime " . $adata['mime'] . BRNL;
 
 				$adata['type'] = Defs::getAssetType($adata['mime']);
 				if ($adata['mime']){
