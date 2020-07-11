@@ -155,6 +155,7 @@ class AssetAdmin
 
 		$adata['sizekb'] = 0;
 		$adata['mime'] = '';
+echo "$adata['astatus']" . BRNL;
 
 		// test assset_url
 		if (0 || $adata['astatus'] != 'K' ){ #error override
