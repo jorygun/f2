@@ -495,7 +495,7 @@ echo "Building local source" . BRNL;
 			$tsrc = $aurl;
 		}
 
-echo "tsrc: $tsrc" . BRNL
+echo "tsrc: $tsrc" . BRNL;
 
 		$tmime = '';
 		$local_src = '';
