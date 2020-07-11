@@ -55,15 +55,15 @@ if (! $file_index = json_decode (file_get_contents($index_json),true) ) {
 }
 
 $pubindex = [];
-echo "Rebuild Pubs version " . date('m/d H:i',filemtime(__FILE__)) . " at " . date('M d Y H:i') . BRNL;
+echo "Rebuild Issues and Links version " . date('m/d H:i',filemtime(__FILE__)) . " at " . date('M d Y H:i') . BRNL;
 
  echo count($file_index) . " records in json index" . BRNL;
 
 		$getreadssql = "SELECT read_cnt from `read_table` where issue = ?  LIMIT 1;";
 		$getreadsprep = $pdo->prepare($getreadssql);
 
-   $insertsql = "INSERT INTO pubs (issue, rcount, title, pubdate, url, stories)
-		VALUES (:issue, :rcount, :title, :pubdate, :url, :stories);";
+   $insertsql = "INSERT INTO issues (issue, rcount, title, pubdate, url)
+		VALUES (:issue, :rcount, :title, :pubdate, :url );";
 	$insertprep = $pdo->prepare($insertsql);
 
 	$artsql = "SELECT id FROM articles
@@ -74,120 +74,110 @@ echo "Rebuild Pubs version " . date('m/d H:i',filemtime(__FILE__)) . " at " . da
 		$art_stmt = $pdo->prepare($artsql);
 
 
+// file index is bult from newp directory entries: datecode -> url
+	  foreach ($file_index as $dcode => $path){
+			//echo "$dcode => $f . ";
+			$path = str_replace('/index.php','',$path);
+
+			$url = "/newsp/$path";
+			if(! $dt = \DateTime::createFromFormat('Ymd',$dcode) ){
+				echo "Cannot convert date on $dcode:$f" . BRNL;
+				continue;
+			}
+
+			$year = $dt->format('Y');
+			$cdate = $dt->format('M j, Y');
+			$sdate = $dt->format('Y-m-d');
 
 
-        foreach ($file_index as $dcode => $f){
-            //echo "$dcode => $f . ";
-				$f = str_replace('/index.php','',$f);
 
-            $url = "/newsp/$f";
-            if(! $dt = \DateTime::createFromFormat('Ymd',$dcode) ){
-            	echo "Cannot convert date on $dcode:$f" . BRNL;
-            	continue;
-            }
-
-            $year = $dt->format('Y');
-            $cdate = $dt->format('M j, Y');
-            $sdate = $dt->format('Y-m-d');
-
-
-
-		// retrieve reads from old reads table
-				$reads = 0;
-				if (substr($dcode,0,4) >= 2016)  {
-					$oldissue =  (int)substr($dcode,2);
-					try {
-						if ($getreadsprep->execute([$oldissue]) ) {
-							$reads = $getreadsprep->fetchColumn() ;
-						}
-					} catch (\PDOException $e) {
-						$reads = 0;
-						echo $e->getMessage(); exit;
+	// retrieve reads from reads table, starts in 2016
+			$reads = 0;
+			if (substr($dcode,0,4) >= 2016)  {
+				$oldissue =  substr($dcode,2);
+				try {
+					if ($getreadsprep->execute([$oldissue]) ) {
+						$reads = $getreadsprep->fetchColumn() ;
 					}
+				} catch (\PDOException $e) {
+					$reads = 0;
+					echo $e->getMessage(); exit;
 				}
-		$pubindex[$sdate] = $dcode; // date to issue
+			}
 
-	// retrieve articles with this pub date
-		$stories = '';$idsj = ''; $ids=[];
-
-
-		$art_stmt->bindvalue(':sdate',$sdate);
-		$art_stmt->bindvalue(':sdate1',$sdate);
-
-
-
-		if (!$art_stmt->execute() ) {
-				echo "art_seelct failed on $sdate";
-
-		} elseif ($ids = $art_stmt->fetchAll(\PDO::FETCH_COLUMN) )  {
-				//u\echor($ids,$sdate); exit;
-				$stories = join(',',$ids);
-				$idsj = json_encode($ids);
-
-
-		} else {
-			//echo "No stories for $sdate" . BRNL;
-		}
+			$pubindex[] = $dcode; // date to issue. used for article index
 
 
 
 // look for title file if the url is a subdir of newsp
-				$title = '';
-				$dir = dirname($url);
-				if (substr($dir,-5) != 'newsp') {
-					#echo "path $dir" . BRNL;
-						$titlefile = SITE_PATH . $dir . '/title.txt';
-						#echo "looking for $titlefile" . BRNL;
-						if (file_exists($titlefile)) {
-							$title = file_get_contents($titlefile);
-						}
-				}
+			$title = '';
+			$dir = dirname($url);
+			if (substr($dir,-5) != 'newsp') { // not directly in newsp.
+				#echo "path $dir" . BRNL;
+					$titlefile = SITE_PATH . $dir . '/title.txt';
+					#echo "looking for $titlefile" . BRNL;
+					if (file_exists($titlefile)) {
+						$title = file_get_contents($titlefile);
+					}
+			}
 
-				$pdovars = array(
-					':issue' => (int)$dcode,
-					':url' => $url,
-					':pubdate' => $sdate,
-					':rcount' => (int)$reads,
-					':title' => $title,
-					':stories' => $idsj,
-					);
+			$pdovars = array(
+				':issue' => $dcode,
+				':url' => $url,
+				':pubdate' => $sdate,
+				':rcount' => (int)$reads,
+				':title' => $title,
 
-            	#u\echor($pdovars,'pdovars');
-            $insertprep->execute($pdovars);
+				);
+
+				#u\echor($pdovars,'pdovars');
+			$insertprep->execute($pdovars);
 
 
 
-        }
+	  } // end foreach
 //u\echor($pubindex);
-			echo "Pubs built; now looking for matching articles"  . BRNL;
+
+			echo "Issues built;"  . BRNL;
          check_articles($pdo,$pubindex);
 
          exit;
 
    #############################
 
+
+
+
+
+
 function check_articles($pdo,$pubindex) {
 	// index is date -> issue
-	$sql = "SELECT id, date_published FROM articles";
+	$sql = "SELECT id, DATE_FORMAT(date_published,'%Y%m%d') as pubdate FROM articles";
 	$arts = $pdo->query($sql);
 	$no_issue = []; $nocount=0;
 
+	$sql = "INSERT into publinks SET issue = ?, article = ?;";
+	$storyinsert = $pdo->prepare($sql);
+
+
 	while ($row = $arts->fetch() ) {
 		$aid = $row['id'];
-		$pdate = $row['date_published'];
+		$pdate = $row['pubdate'];
 
 
-		if (empty($pubindex[$pdate] )) {
+		if (!in_array($pdate, $pubindex) ) {
 			$no_issue[$pdate][] = $aid;
 			++$nocount ;
+		} else {
+			$storyinsert->execute([$pdate,$aid]);
 		}
-		//else { echo "$aid found $pdate";}
 	}
 	echo $nocount . " articles found with no matching pubdate" . BRNL;
 	echo "PUBDATE.......ARTICLES" . BRNL;
 	foreach ($no_issue as $pdate=>$alist){
 		echo "$pdate : " . join(',',$alist)  . BRNL;
 	}
+
 }
 
 
@@ -195,17 +185,17 @@ function check_articles($pdo,$pubindex) {
 
 function create_pubs($pdo) {
 
-	$pdo->query("DROP TABLE IF EXISTS `pubs`;");
+	$pdo->query("DROP TABLE IF EXISTS `publinks`;");
+	$pdo->query("DROP TABLE IF EXISTS `issues`;");
 
 	$sql = "
 
-CREATE TABLE `pubs` (
+CREATE TABLE `issues` (
   `issue` int(11) NOT NULL COMMENT 'yymmdd',
   `rcount` int(11) NOT NULL DEFAULT '0',
   `title` varchar(255) DEFAULT NULL,
   `pubdate` datetime DEFAULT NULL,
   `url` varchar(64) DEFAULT NULL,
-  `stories` varchar(255) DEFAULT NULL,
   `updated` datetime DEFAULT CURRENT_TIMESTAMP  ON UPDATE CURRENT_TIMESTAMP,
   `last_scan` datetime DEFAULT NULL,
 
@@ -217,10 +207,21 @@ CREATE TABLE `pubs` (
 
 	$pdo->query($sql);
 
-
+	$sql = "
+	CREATE TABLE `publinks` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `issue` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `article` varchar(8) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `issue` (`issue`) USING BTREE,
+  KEY `article` (`article`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+";
+		$pdo->query($sql);
 
 	// add the preview issue to the db
-	$sql2 = "INSERT INTO `pubs` (issue,title,url) VALUES (1,'','/news/next') ";
+	$sql2 = "INSERT INTO `issues` (issue,title,url) VALUES (1,'','/news/next') ";
 	$pdo->query($sql2);
 
 	}

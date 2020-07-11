@@ -74,7 +74,7 @@ $out_file = SITE_PATH . FileDefs::view_chart_url;
 
 #update the access counts
 #get the last 52 entries, then reorder Ascending.
-$sql = "SELECT DATE_FORMAT(pubdate,'%m/%d'), rcount FROM pubs
+$sql = "SELECT DATE_FORMAT(pubdate,'%m/%d'), rcount FROM issues
 	WHERE pubdate >= DATE_SUB(NOW(),INTERVAL 1 year)
     ORDER by pubdate DESC;";
 

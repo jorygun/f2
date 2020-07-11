@@ -34,7 +34,8 @@ p {margin-top: 1em;
 h1 {}
 
 h2 {font-family: Arial,san-serif; font-size: 1.5em; color: black;
-	border-top:2px solid green; border-bottom:5px solid green;
+	border-top:2px solid green;
+	/* border-bottom:5px solid green; */
 	}
 h3 {font-family: Arial,san-serif;
 	font-size: 1.25em; color: black;

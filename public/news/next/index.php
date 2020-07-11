@@ -77,12 +77,12 @@ echo $page->startBody($style,$subtitle);
 
 $rcount = 0;
 if ($issue == '1'){
-	$artlist = $article->getArticleIds('next');
+	$artlist = $publish->getArticleIds('next');
 } else {
 	$rcount = $news->incrementReads($issue);
 	// get array of all articles for issue, sorted in display
 	// order and with topics and section info
-	$artlist = json_decode($issue_data['stories'] )?: []; #list of ids
+	$artlist = $publish->getArticleList('$issue');?: []; #list of ids
 
 }
 

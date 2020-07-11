@@ -105,7 +105,7 @@ class News {
  }
 
 public function getNewsIndex() {
-	$sql = "SELECT issue,url,title, pubdate, DATE_FORMAT(pubdate,'%d %b, %Y') as hdate FROM `pubs` WHERE issue > 19980000 ORDER BY pubdate DESC";
+	$sql = "SELECT issue,url,title, pubdate, DATE_FORMAT(pubdate,'%d %b, %Y') as hdate FROM `issues` WHERE issue > 19980000 ORDER BY pubdate DESC";
 	$stmt = $this->pdo->query($sql);
 	$lyear = 0;
 	$listcode = "<ul class='collapsibleList' style='margin-bottom:6px;'>\n";
@@ -125,7 +125,7 @@ public function getNewsIndex() {
 }
 
 public function getIssueData($issue) {
-	$sql = "SELECT * FROM pubs where issue = '$issue' LIMIT 1;";
+	$sql = "SELECT * FROM issues where issue = '$issue' LIMIT 1;";
 	$issue_data = $this->pdo->query($sql)->fetch();
 	//echo "Issue $issue: " ; u\echor($issue_data) ; exit;
 
@@ -136,7 +136,7 @@ public function getLatestIssue(){
 	$sql = "SELECT issue, title, url,
 	DATE_FORMAT(pubdate,'%b %d, %Y') as date_published ,
 	last_scan
-	FROM `pubs` ORDER By pubdate DESC LIMIT 1";
+	FROM `issues` ORDER By pubdate DESC LIMIT 1";
 	$latest = $this->pdo->query($sql)->fetch();
 	if (empty($latest['last_scan'])){
 			$latest['last_scan'] = date('M d, Y H:i',strtotime('- 8 days'));
@@ -146,7 +146,7 @@ public function getLatestIssue(){
 
 public function getTitle($issue){
 
-	$sql = "SELECT title from pubs where issue = '$issue'";
+	$sql = "SELECT title from issues where issue = '$issue'";
 	$title = $this->pdo->query($sql)->fetchColumn();
 
 	return $title;
@@ -155,7 +155,7 @@ public function getTitle($issue){
 
 public function incrementReads($issue) {
 	// sets and uses last_insert_id to return the new value
-	$sql = "UPDATE `pubs` SET rcount = last_insert_id(rcount+1) WHERE issue = '$issue';";
+	$sql = "UPDATE `issues` SET rcount = last_insert_id(rcount+1) WHERE issue = '$issue';";
 	$this->pdo->query($sql);
 	$new_val = $this->pdo->lastInsertId();
 
@@ -163,7 +163,7 @@ public function incrementReads($issue) {
 
 }
 public function getReads($issue) {
- $sql = "SELECT rcount from `pubs` where issue ='$issue';";
+ $sql = "SELECT rcount from `issues` where issue ='$issue';";
  $rcount = $this->pdo->query($sql)->fetchColumn();
  return $rcount;
 }
@@ -191,7 +191,7 @@ $out_file = SITE_PATH . $chart_url;
 
 #update the access counts
 #get the last 52 entries, then reorder Ascending.
-$sql = "SELECT `issue`,`rcount` FROM `pubs` ORDER BY issue DESC LIMIT 60";
+$sql = "SELECT `issue`,`rcount` FROM `issues` ORDER BY issue DESC LIMIT 60";
 
 $result = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_ASSOC);
 

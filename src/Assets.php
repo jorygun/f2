@@ -99,7 +99,7 @@ class Assets {
 
 	// these fields are updated by special methods
 	public static $external_fields = array (
-		'first_use_date',
+
 		'first_use_in',
 
 		'temptest',
@@ -202,14 +202,13 @@ class Assets {
 
 	// set first_use text
    	$adata['first_use'] = "Never.";
-   	if  (! empty($fud = $adata['first_use_date'])) {
-   		$fud = $adata['first_use_date'];
+   	if  (! empty($fud = $adata['first_use_in'])) {
+
    		$fin = $adata['first_use_in'];
    	}
    	if ($fud){
    		$adata['first_use'] =
-   		"On " . date('d M Y',strtotime($fud) )
-   		. " In " . "<a href='" . $fin . "'>" . $fin . "</a>";
+   			" In " . "<a href='" . $fin . "'>" . $fin . "</a>";
    	}
 
 

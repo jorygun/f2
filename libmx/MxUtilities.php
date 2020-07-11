@@ -748,9 +748,10 @@ function is_local ($url) {
 function is_http ($url) {
 	if (!substr($url,0,4) == 'http') {return false;}
 	// valid url an it exists.  returns mime type
-	 if(filter_var($url, FILTER_VALIDATE_URL) == FALSE)  {return false;}
+	// if(filter_var($url, FILTER_VALIDATE_URL) == FALSE)  {return false;}
 	 $cinfo =  get_info_from_curl($url);
 //echor($cinfo);
+	if ($cinfo === false ) {return '';}
 	 if (empty($cinfo)){ return 'text/html';}
 	 $mime = $cinfo['mime'];
 //	 echo "mime from curl $mime" . BRNL;
@@ -980,28 +981,30 @@ function get_mime_from_url($url) {
 	// or false if invalid url
 
 	$mime = false;
-//echo "staring url exists on $url" . BRNL;
+	//echo "starting url exists on $url ... " ;
 	$mime=is_local($url);
-	if (!empty($mime) ) {
-		#ok
-		//echo "local mime $mime" . BRNL;
+	if ($mime !== false)  {
+		#ok, but may be empty
+		//echo "is local  mime $mime" . BRNL;
 	}
 
-	if (!$mime) {
+	if ($mime === false) {
 		$vid = get_youtube_id($url);
 		if ($vid) {
 			$mime = 'video/x-youtube';
-			//echo "yt mime $mime" . BRNL;
+			//echo "is yt  mime $mime" . BRNL;
 		}
 	}
 
-	if (!$mime) {
+	if ($mime === false) {
 		$mime = is_http($url) ;
 		if ($mime === false){echo "failed http filter";}
-		//echo "<br>http mime '$mime'" . BRNL;
+		//echo "<br>is http  mime '$mime'" . BRNL;
 		// ok
 	}
-
+	if ($mime === false) {
+		echo "cannot determine local/yt/http" . BRNL;
+	}
 	return $mime;
 }
 

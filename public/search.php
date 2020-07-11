@@ -98,34 +98,36 @@ function search_news($term,$back,$pdo) {
  	}
 
  // set up search term.  will use grep
-	$sterm = trim($term);
+	$term = trim($term);
 	//$sterm = preg_quote($term,'/'); #escape regex specials
 	$issue_count = 0;
 	$last_issue = '';
 	$hits = [];
-
-	foreach ($issuest as $issued) {
+if (0) {
+	foreach ($issuest as $issuedata) {
 		// set vars
-		$issue = $issued['issue'];
+		$issue = $issuedata['issue'];
+
+// grep in old directories
+
 		if (!empty($hits) && $last_issue && $last_issue != $issue){
 			// get context
-			echo "<a href='$url' target='news'> Issue $last_issue ($hdate) </a>: " . BR;
+			echo "<a href='$url' target='news'> Issue $last_issue ($pdate) </a>: " . BR;
 			foreach ($hits as $hit){
-				$context = shell_exec("grep  -hi '$sterm' $hit"); // get context, multiline
+				$context = shell_exec("grep  -hi '$term' $hit"); // get context, multiline
 				echo nl2br(strip_tags($context)) . BR ;
 			}
 			echo BRNL;
 			++$issue_count;
 			$hits = [];
 		}
+// set these after the new issue test
+		$url = $issuedata['url'];
+		$pdate = $issuedata['pdate'];
 
-		foreach (['url','pdate'] as $var){
-			$$var = $issued[$var];
-		}
 
-		$hdate = date('M d, Y',strtotime($pdate));
 
-		$search_path = FileDefs::shared_dir . $url; // file or  folder
+		$search_path = SITE_PATH. $url; // file or  folder
 
 		//echo "Searching in $search_path" . BR;
 
@@ -138,7 +140,7 @@ function search_news($term,$back,$pdo) {
 			}
 		}
 */
-		$exec = "grep -iRl --include '*.html'  '$sterm' $search_path ";
+		$exec = "grep -iRl --include '*.html'  '$term' $search_path ";
 		//$exec = "grep -iRl --include '*.html'  'springer' .* ";
 		//grep -iRl --include "*.html" 'springer' .*
 		//echo $exec . BRNL;
@@ -146,115 +148,37 @@ function search_news($term,$back,$pdo) {
 		if (!empty($hit)) {$hits[]=$hit;}
 		$last_issue = $issue;
 
-// 		  if ( $files = exec($exec ) ) {
-// 		 	$filesall[$url][] = explode("\n",$files);
-// 		 }
+	}
+	if (1) { // find new material in db
+		$sql = "SELECT DATE_FORMAT(date_published,'%Y%m%d') as pubcode from articles
+			WHERE concat (' ',content,title) = '%$term%' ";
+		$pdates = $pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+		u\echor($pdates);
+	}
+
 
 
 
 
 	}
-/*
-      $filenames = array($filename); #array of files to look in
-        if (stripos($filename,'index.php')>0){
-            $testfile = $filename;
-            $filenames[]=$filename;
-            $filenames[] = str_replace('index.php','updates.html',$filename);
-				$filenames[] = str_replace('index.php','news_amd.html',$filename);
-				$filenames[] = str_replace('index.php','news_govt.html',$filename);
-				$filenames[] = str_replace('index.php','news_people.html',$filename);
-				$filenames[] = str_replace('index.php','news_technology.html',$filename);
-				$filenames[] = str_replace('index.php','news_remember.html',$filename);
-
-				$filenames[] = str_replace('index.php','news_modern.html',$filename);
-            $filenames[] = str_replace('index.php','news_news.html',$filename);
-            $filenames[] = str_replace('index.php','news_flames.html',$filename);;
-            $filenames[] = str_replace('index.php','news_sad.html',$filename);;
-        $filenames[] = str_replace('index.php','news_know.html',$filename);;
-            $filenames[] = str_replace('index.php','news_mail.html',$filename);;
-            $filenames[] = str_replace('index.php','news_fun.html',$filename);;
-        }
-
-        $found_some = 0;
-   		$this_issue = '';
-        foreach ($filenames as $testfile ){
-            $reloc = "/newsp/$testfile";
-            if (! file_exists(SITE_PATH . "/newsp/$testfile")){continue;}
-            else {
-             #echo "getting $show_date $testfile<br>\n";
-            }
-
-             $get_file = "/newsp/$testfile";
-
-                $buffer = file_get_contents(SITE_PATH . "/newsp/$testfile");
-               # echo "..$testfile buffered..";
-
-               #$buffer = stristr($buffer,'<body'); #clip the buffer head
-               # $buffer = preg_replace('/<!--.*?-->/', '', $buffer); #remove html comments
-                $buffer = preg_replace ('/[\w\.\-]+\@[\w\.\-]+/','',$buffer); #remove emails
-                $buffer = strip_tags($buffer); #remove all html tags
 
 
-            // Match all occurences of the target string, plus 20 characters before and after for context
-                    if ($found_count = preg_match_all("/$rx/im", $buffer, $m)){
-                        $found_some = 1;
-
-                        for($i=0;$i<$found_count;++$i){
-                            $string = $m[1][$i] . "<span class='red'>$sterm</span>" . $m[2][$i];
-                            $this_issue .= "...$string...<br>";
-                        }
-                    }
-
-
-
-            }
-
-		if ($found_some){
-			$out .= "<li><a href='/newsp/$filename'>newsletter $show_date</a><br>
-			$this_issue<br></li>";
-
-			++$found;
-	// Note if any of the matches are followed by a Picture Mark (<!--P-->)
-
-		 }
-
-
-    }
-    */
-
-
-	if ($issue_count){return "$issue_count newsletters had '$term' in them.";}
-	else {return "Nothing Found.<br>";}
+	if ($issue_count){echo "$issue_count newsletters had '$term' in them.";}
+	else {echo "Nothing Found.<br>";}
+	echo show_news_search();
  }
 #show search screen
-?>
 
+echo "<h3>Search For Members or Topics </h3>" . NL;
+echo show_member_search();
+echo show_news_search();
+echo show_asset_search();
 
-<hr>
-<h3>Search For Members or Topics </h3>
+exit;
+##########################
 
-<h4>Locate a Member in the Member Database</h4>
-To find a member enter name or email address.  Partials work. Not case sensitive. Limited to 100 found.
-<form  method = 'POST'>
-<table >
-<tr><th>Find by name: </th><th>Find by email:</th></tr>
-<tr>
-
-    <td> <input type='text' name = 'name' ></td>
-    <td><input type='text' name='email'></td>
- </table>
-<input type=submit name='search' value='Search DB'>
-</form>
-<hr>
-<h4>Locate a Member in the Photo/Asset Library</h4>
-<form  method = 'POST'>
-<table >
-<tr><th>Find by name: </th></tr>
-<tr>
-    <td> <input type='text' name = 'name' ></td>
- </table>
-<input type=submit name='search' value='Search Assets'>
-</form>
+function show_news_search() {
+return <<<EOT
 <hr>
 <h4>Locate references to a member (or any term) in past newsletters</h4>
 
@@ -279,4 +203,41 @@ Search In<br>
 </table>
 <input type=submit name='search' value='Search News'>
 </form>
+EOT;
+}
+function show_member_search() {
+return <<<EOT
+<hr>
+<h4>Locate a Member in the Member Database</h4>
+To find a member enter name or email address.  Partials work. Not case sensitive. Limited to 100 found.
+<form  method = 'POST'>
+<table >
+<tr><th>Find by name: </th><th>Find by email:</th></tr>
+<tr>
+
+    <td> <input type='text' name = 'name' ></td>
+    <td><input type='text' name='email'></td>
+ </table>
+<input type=submit name='search' value='Search DB'>
 </form>
+EOT;
+}
+function show_asset_search() {
+return <<<EOT
+<hr>
+<h4>Locate a Member in the Photo/Asset Library</h4>
+<form  method = 'POST'>
+<table >
+<tr><th>Find by name: </th></tr>
+<tr>
+    <td> <input type='text' name = 'name' ></td>
+ </table>
+<input type=submit name='search' value='Search Assets'>
+</form>
+EOT;
+}
+
+?>
+
+
+

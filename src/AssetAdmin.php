@@ -201,32 +201,24 @@ class AssetAdmin
 				echo "<br>";
 				}
 			}
-
-			$adata['local_src'] = $this->checkThumbSources
+			try {
+				$adata['local_src'] = $this->checkThumbSources
 				($id,$adata['asset_url'],$adata['thumb_url'],$adata['mime'] ) ;
-			if (!$adata['local_src'] ){ // could not verify thumb sources
-				throw new Exception ("Could not determine local source for asset $id thumb.");
-			}
-			// geneerate small thumb always
-			$desturl = "/thumbnails/small/${id}.jpg";
 
-
-
-		}
-	//u\echor($adata,"Precheck save data");
-
-
-		try {
+				if (!$adata['local_src'] ){ // could not verify thumb sources
+					throw new Exception ("Could not determine local source for asset $id thumb.");
+				}
+				$desturl = "/thumbnails/small/${id}.jpg";
 				$this->Assetv::buildGdImage($id,$adata['local_src'], 'small');
-				 $this->checkAssetData($adata);
-
-		} catch (Exception $e) {
+				$this->checkAssetData($adata);
+				$this->Assets->saveAsset($adata);
+			}  catch (\Exception $e) {
 				echo "Error in asset data. Asset not saved." . BRNL;
 				echo $e->getMessage();
-				exit;
-		}
+				$id='';
+			}
 
-		$this->Assets->saveAsset($adata);
+		}
 
 
 		return $id;
@@ -547,7 +539,11 @@ private function buildImagicImage ($src_url,$dest_url){
 					}
 					$local_src = $genurl;
 				} elseif ($sizem <= 16 && strpos($tmime,'pdf') !== false) {
-					if (!$this->buildImagicImage($aurl.'[0]', $genurl) ) {
+					try {
+						$this->buildImagicImage($aurl.'[0]', $genurl) ;
+					} catch (\ImagickException $e) {
+						echo "Imagick failed on remote document" . BR;
+						echo $e->getMessage();
 						throw new Exception ("Failed to build imiage of pdf id $id");
 					}
 					$local_src = $genurl;

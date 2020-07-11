@@ -43,19 +43,19 @@ $bnew = array (
 	'thumb_url' =>'',
 	'asset_url' => '',
 	'errors' => '',
-
+	'first_use_in'=>'',
 	'mime'=>'',
 	'type'=>'Other',
 	'local_src' => '',
 	);
 
 $bsame = array( // 8
-	'id',	'keywords','vintage','source','notes','first_use_in', 'mime',
+	'id',	'keywords','vintage','source','notes', 'mime',
 
 	);
 $bchanged = array ( //10
 	'title','caption','astatus','sizekb','date_entered','contributor_id',
-	'first_use_date','asset_url','type','thumb_url','tags'
+	'asset_url','type','thumb_url','tags', 'first_use_in',
 );
 $bauto = array ( //2
 	'date_modified', 'errors'
@@ -93,6 +93,7 @@ $start_human = $dt->format ('M d, Y H:i') ;
 file_put_contents($logfile,
 "Gen_assets2 starting $start_human" . NL . NL);
 
+
 echo "Starting from $start_id at $start_human" . BRNL;
 
 if ($start_id == 0 ) {
@@ -100,12 +101,19 @@ if ($start_id == 0 ) {
 	create_assets2($pdo) ;
 }
 
-$sql = "SELECT * from `$asset_db` WHERE  status not in ('T','X','D') order by id";
+$sql = "
+	SELECT * from `$asset_db`
+	WHERE  status not in ('T','X','D')
+/*	AND id > 1760 */
+	ORDER BY id
+/* LIMIT 10 */
+	;";
+
 $stmta = $pdo->query($sql);
 $cnt = $stmta->rowCount();
 echo "$cnt records in $asset_db" . BRNL;
 
-
+$no_first = []; // array to capture assets with no first use
 $estatus = '';
 $rc = 0;
 $scount = array (
@@ -131,7 +139,7 @@ while ($row = $stmta -> fetch() ) {
 
 
 
-	$b = translate_fields($row);
+	$b = translate_fields($row,$pdo);
 	// set mime type based on real url
 
 //u\echor ($b);
@@ -188,6 +196,12 @@ u\echor($scount);
 
 echo "<a href='$logurl?$end_time' target = 'log'>Log</a>" . BRNL;
 
+echo "No first use found: " . BR;
+u\echor ($no_first);
+file_put_contents ($logfile,"\nNo First Use:\n");
+foreach ($no_first as $rec) {
+	file_put_contents($logfile,sprintf("  %s\n",$rec));
+}
 
 exit;
 
@@ -206,10 +220,10 @@ function asset_tran($a) {
 
 
 
-function translate_fields($a) {
+function translate_fields($a,$pdo) {
 	// $a is existing assets data, returns new asset2 data
-	global $bsame,$bnew,$null;
-
+	global $bsame,$bnew,$null,$no_first;
+	$aid = $a['id'];
 	// make new array 'b'
 	$b = $bnew;
 
@@ -232,11 +246,46 @@ function translate_fields($a) {
 	$b['date_entered'] =  $a['date_entered'] ?: date('Y-m-d');
 	$b['contributor_id'] = $a['contributor_id'] ?: Defs::$editor_id;
 
-	$fud = $a['first_use_date'];
-	if (empty($fud) || $fud == '0000-00-00') {
-		$fud = $null;
+// first use in
+
+	$afu = $a['first_use_in'];
+	if (!empty($afu)){
+		$afu = str_replace('/galleries/?','/galleries.php/?',$afu);
+		$afu = str_replace('id=','',$afu);
+		$b['first_use_in'] = $afu;
 	}
-	$b['first_use_date'] = $fud;
+
+
+	// try looking in asset fireld of article
+	if (empty($b['first_use_in'])) {
+		$sql = "SELECT l.issue FROM news_items n
+			LEFT JOIN publinks l ON l.article = n.id
+
+			WHERE CONCAT (n.asset_id,' ', n.asset_list) LIKE '%$aid%'
+			ORDER BY n.id DESC LIMIT 1";
+
+		if ($issue = $pdo->query($sql)->fetchColumn() ) {
+//			echo "Found first use aid $aid in issue $issue. ". BR;
+
+		$sql = "SELECT url FROM issues WHERE issue = $issue";
+		$url = $pdo->query($sql)->fetchColumn();
+//		echo "url: $url" . BR. BRNL;
+		$b['first_use_in'] = $url;
+
+		}
+	}
+
+
+if (empty($b['first_use_in'])) {
+		$no_first []="asset $aid: " . $a['title'] . " " . $a['date_entered'] ;
+	}
+
+
+	// $fud = $a['first_use_date'];
+// 	if (empty($fud) || $fud == '0000-00-00') {
+// 		$fud = $null;
+// 	}
+// 	$b['first_use_date'] = $fud;
 
 	$b['tags'] = '';
 
@@ -266,6 +315,7 @@ function translate_fields($a) {
 }
 
 
+
 function record_result($b) {
 	global $pdo,$null;
 	global $verbose;
@@ -290,9 +340,9 @@ function record_result($b) {
 
 		try {
 			$prep = u\pdoPrep($b,[],''); #no key field.  Must retain id
-			if (empty($prep['data']['first_use_date']) ) {
-				$prep['data']['first_use_date'] = $null;
-			}
+			// if (empty($prep['data']['first_use_date']) ) {
+// 				$prep['data']['first_use_date'] = $null;
+// 			}
 			if ($track) u\echor ($prep['data'],$sqli);
 			$stmti->execute($prep['data']) ;
 		} catch (\PDOException $e) {
@@ -327,8 +377,6 @@ function create_assets2 ($pdo) {
 
 	$pdo->query("DROP TABLE IF EXISTS `assets2`;");
 
-	try {
-
 	$sql = <<<EOT
 	CREATE TABLE `assets2` (
 	  `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -342,13 +390,14 @@ function create_assets2 ($pdo) {
 	  `asset_url` text COLLATE utf8mb4_unicode_ci,
 	  `vintage` int(4) DEFAULT NULL,
 	  `source` mediumtext COLLATE utf8mb4_unicode_ci,
+	  `first_use_in` mediumtext NOT NULL COLLATE utf8mb4_unicode_ci,
 	  `contributor_id` smallint(4) DEFAULT NULL,
 	  `date_entered` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
 	  `date_modified` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	  `sizekb` int(11) DEFAULT NULL,
 	  `notes` mediumtext COLLATE utf8mb4_unicode_ci,
-	  `first_use_date` timestamp NULL DEFAULT NULL,
-	  `first_use_in` mediumtext COLLATE utf8mb4_unicode_ci,
+
+
 	  `tags` tinytext COLLATE utf8mb4_unicode_ci,
 	  `errors` mediumtext COLLATE utf8mb4_unicode_ci,
 	  `local_src` mediumtext COLLATE utf8mb4_unicode_ci,
@@ -357,17 +406,11 @@ function create_assets2 ($pdo) {
 	) ENGINE=InnoDB AUTO_INCREMENT=5405 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 EOT;
 
-	if ($pdo->query($sql)) {
-			echo "Rebuilding assets2" . BRNL;
-			return true;
-		}
-		echo "Rebuilding table failed";
-		return false;
-	} catch (\PDOException $e) {
-		echo "PDO error ";
-		echo $e->getMessage() . BRNL;
-		exit;
-	}
+
+	$pdo->query($sql);
+
+	echo "Rebuilding assets2" . BRNL;
+
 }
 
 function show_form() {

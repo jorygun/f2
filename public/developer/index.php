@@ -50,8 +50,11 @@ if (isset($_GET['run'])) {
 <h3>Developer Applications</h3>
 <form method='GET'>
 <ul>
+<li><button name='run'
+onClick = "window.open('/developer/update_galleries.php','geng');return false;" value='galleries'>Add galleries to first used.</button>
+
 <li><button name='run' value='refresh'>Refresh</button>
-Refresh assets, news_items, read_table and index.json from live db to dev
+Refresh tables from live db to dev
 
 <li><button name='run'
 onClick = "window.open('/developer/gen_articles.php','genn');return false;" value='articles'>Build Articles</button>

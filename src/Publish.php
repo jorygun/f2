@@ -78,16 +78,19 @@ EOT;
 	public function preview() {
 		// get article list and put into the pub 1 record
 		$storylist = $this->article->getArticleIds('next');
-		$jstories = json_encode($storylist);
-		$sql = "UPDATE pubs SET stories = '$jstories' WHERE issue = 1";
-		//echo $sql . BRNL; exit;
+		$sql = "DELETE from publinks WHERE issue = 1;"
 		$this->pdo->query($sql);
-		return false;
+		$sql = "INSERT into publinks SET issue = ? ,article = ? ";
+		$pubin = $this->pdo->prepare($sql);
+		foreach ($storylist as $story) {
+			$pubin->execute(['1',$story]);
+		}
+
 	}
 
 
 	public function setNextTitle($title) {
-		$sql = "UPDATE pubs SET title = '$title' WHERE issue = 1";
+		$sql = "UPDATE issues SET title = '$title' WHERE issue = 1";
 		if ($this->pdo->query($sql) ) {
 			return "OK";
 		} else {
@@ -221,9 +224,9 @@ EOT;
 		$asseth = $this->pdo->prepare($sql);
 
 		$sql = "UPDATE assets2
-			SET first_use_date = '$this->pubdate',
+			SET
 				first_use_in = '$this->archive_url'
-			WHERE id = ? AND first_use_date is NULL";
+			WHERE id = ? AND first_use_in is NULL";
 		$fuh = $this->pdo->prepare($sql);
 
 
@@ -250,56 +253,51 @@ EOT;
 
 	}
 	private function createNewPub($archive,$issue) {
-		$preview = $this->news->getIssueData(1);
+	/* change references to preview (issue 1)
+		to the new issue.
 
-		//u\echor($preview,'preview');
+		issues: issue 1 -> issue issue
+		publinks: issue 1 -> issue issue
+		publinks issue [publdate] = now;
+	*/
 
-		$newpub = array(
-		'issue' => $issue,
-		'pubdate' => $this->pubdate,
-		'title' => $preview['title'],
-		'rcount' => 0,
-		'last_scan' => $preview['last_scan'],
-		'url' => '/newsp/' . $archive,
-		'stories' => $preview['stories'], // is json
-		);
-	//u\echor($newpub,'newpub');
-		$sql = "DELETE FROM pubs WHERE issue='$issue'";
+
+		$sql = "UPDATE issues Set issue = '$issue' WHERE issue = '1'";
 		$this->pdo->query($sql);
 
-		$prep = u\pdoPrep($newpub,'');
-		$sql = "INSERT into `pubs` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-		// u\echor($prep['data'],$sql);
+		$sql = "UPDATE publinks set issue= '$issue' WHERE issue = '1'";
+ 		$this->pdo->query($sql);
 
-       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
- /**
- 	$prep = pdoPrep($post_data,$allowed_list,'id');
+ 		$sql = "UPDATE issues
+ 			SET pubdate = '$this->pubdate', url = '$this->archive_url'
+ 			WHERE issue = '$issue'";
+ 		$this->pdo->query($sql);
 
-    $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
-       $new_id = $pdo->lastInsertId();
 
-    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
-       $stmt = $pdo->prepare($sql)->execute($prep['data']);
+		$this->initializePreview();
 
-  **/
-  		$storylist = json_decode($preview['stories']);
+
   		return $storylist;
 
 	}
 
 	private function initializePreview () {
 
-		$sql = "UPDATE `pubs` SET
+		$sql = "UPDATE `issues` SET
 			pubdate = null,
 			title = '',
 			rcount = 0,
 			last_scan = null,
-			url = '/news/next',
-			stories = '[]'
+			url = '/news/next'
 		WHERE issue = 1 ;";
 		//u\echor($prep,$sql); exit;
        $stmt = $this->pdo->query($sql);
+	}
+
+	public function getArticleList($issue);
+		$sql = "SELECT article from publinks where issue = '$issue'";
+		$storylist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+		return $storylist;
 	}
 
 
@@ -322,12 +320,11 @@ EOT;
 	}
 
 	public function getArticlesFromIssue($issue) {
-		$sql = "SELECT stories from pubs
+		$sql = "SELECT stories from publinks
 			WHERE issue = '$issue'
 		";
-		$stories = $this->pdo->query($sql)->fetchColumn();
-		$story_list = u\number_range($stories);
-		return $story_list;
+		$storylist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+		return $storylist;
 
 	}
 
@@ -335,8 +332,8 @@ EOT;
 		// returns array of issues and dates that have articles listed
 		// in the last year
 		$sql = "SELECT issue,DATE_FORMAT(pubdate,'%Y %M %d') as pubdate
-			FROM pubs
-			WHERE stories is not null AND pubdate > DATE_SUB(NOW(),INTERVAL 1 year)
+			FROM issues
+			WHERE  pubdate > DATE_SUB(NOW(),INTERVAL 1 year)
 			ORDER BY pubdate DESC
 			";
 		$list = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
@@ -345,7 +342,7 @@ EOT;
 	}
 	public function setLastScan(){
 
-		$sql = "UPDATE pubs set last_scan = NOW() WHERE issue = 1";
+		$sql = "UPDATE issues set last_scan = NOW() WHERE issue = 1";
 		$this->pdo->query($sql);
 		return true;
 	}
