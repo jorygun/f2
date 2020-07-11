@@ -294,7 +294,7 @@ EOT;
        $stmt = $this->pdo->query($sql);
 	}
 
-	public function getArticleList($issue);
+	public function getArticleList ($issue) {
 		$sql = "SELECT article from publinks where issue = '$issue'";
 		$storylist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
 		return $storylist;
