@@ -753,7 +753,10 @@ function is_http ($url) {
 //echor($cinfo);
 	if ($cinfo === false ) {return '';}
 	 if (empty($cinfo)){ return 'text/html';}
+
 	 $mime = $cinfo['mime'];
+	 // shorten additional info in html mime
+	 if (strpos('text/html/',$mime) !== false) { return 'text/html';}
 //	 echo "mime from curl $mime" . BRNL;
  	return $mime;
 }
