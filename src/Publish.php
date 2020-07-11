@@ -78,7 +78,7 @@ EOT;
 	public function preview() {
 		// get article list and put into the pub 1 record
 		$storylist = $this->article->getArticleIds('next');
-		$sql = "DELETE from publinks WHERE issue = 1;"
+		$sql = "DELETE from publinks WHERE issue = 1;";
 		$this->pdo->query($sql);
 		$sql = "INSERT into publinks SET issue = ? ,article = ? ";
 		$pubin = $this->pdo->prepare($sql);
