@@ -63,6 +63,7 @@ class AssetAdmin
 	#u\echor($post,'post data in');
 
 		$changed = false;
+		if (isset($post['rebuild'])) { $changed = true; }
 
 		if (! isset ($post['id'])){
 				throw new Exception ("attempt to post asset with no id set");
@@ -152,42 +153,52 @@ class AssetAdmin
 		}
 
 
+		if (!empty($post['tags']) && is_array ($post['tags'])){
+			// convert to string
+			$adata['tags'] =  u\charListToString($post['tags']) ;
+		}
+
+
 
 		$adata['sizekb'] = 0;
 		$adata['mime'] = '';
+
 echo "{$adata['astatus']}" . BRNL;
 
-		// test assset_url
-		if (1 || $adata['astatus'] != 'K' ){ #error override
+		// get asset mime
 
-			$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
-	//echo $adata['mime'] . " mime from url " . $adata['asset_url']; exit;
-echo "mime " . $adata['mime'] . BRNL;
-
-				$adata['type'] = Defs::getAssetType($adata['mime']);
-				if ($adata['mime']){
-					if (u\is_local($adata['asset_url']) ) {
-						$path = SITE_PATH . $adata['asset_url'];
-						$size = filesize($path);
-						$adata['sizekb'] = (int)($size/1000);
-					} else {
-						$adata['astatus'] = 'E'; // not local
-					}
+		if ($adata['astatus'] != 'K' ){ #error override for source data
+		// in this section check validity of source data.
+		// if status is k, ignore asset url
+		//
+			$lmime = is_local($adata['asset_url']);
+			if ($lmime !== false) { // is local, but ma not have mime
+				if (empty($lmime)){
+				// no file at that location
+				$adata['astatus'] = 'E';
 				} else {
-					$adata['astatus'] = 'E';  /// cannot access the source url
+					$mime = $lmime;
+					$path = SITE_PATH . $adata['asset_url'];
+					$size = filesize($path);
+					$adata['sizekb'] = (int)($size/1000);
 				}
-
+			} elseif ($lmime = is_youtube($adata['asset_url']) ) {
+					$mime = $lmime;
+			} else {
+				$lmime = is_http($adata['asset_url']) ;
+				if ($lmime !== false) {
+					$mime = $lmime;
+					$size = u\get_info_from_curl($adata['asset_url'])['size'] ?? 0;
+					$adata['sizekb'] = $size / 1000; #MB
+				}
+			}
+			if (empty($mime)){
+				$adata['astatus'] = 'E';
+			}
 		}
 
-			if (!empty($post['tags']) && is_array ($post['tags'])){
-				// convert to string
-				$adata['tags'] =  u\charListToString($post['tags']) ;
-			}
-
-
-
 		if ($changed) { //new or changed urls.  Make sure thumb sources are in place
-			echo "Asset sources have changed." . BRNL;
+			echo "Rebuilding thumbs." . BRNL;
 			// remove eisting thumbs
 			foreach (
 				[FileDefs::asset_dir . '/thumb_generated' . "/${id}.jpg",
@@ -479,11 +490,10 @@ echo "Building local source" . BRNL;
 		$gurl = (file_exists(SITE_PATH . $genurl) ) ? $genurl : '';
 
 		$tsrc = '';
+
 		if (!empty($turl)){
 			if (!file_exists(SITE_PATH . $turl)){
 				throw new Exception ("Deisngated thumb url on id $id does not exist");
-			} elseif (! u\is_local($turl)) {
-				throw new Exception ("Thumb url is not local file");
 			} else {
 			$tsrc = $turl;
 			}
@@ -495,6 +505,7 @@ echo "Building local source" . BRNL;
 		if (empty ($tsrc) && !empty($aurl)) {
 			$tsrc = $aurl;
 		}
+
 
 echo "tsrc: $tsrc" . BRNL;
 
@@ -508,17 +519,19 @@ echo "tsrc: $tsrc" . BRNL;
 			if (strpos($tmime,'image') !== false) {
 				// is an image file.  Ok to use as is
 				$local_src = $tsrc;
-
+				if (empty($tmime)){ throw new Exception ("Can't get mime for $tsrc");}
 			}
 			elseif (strpos($tmime,'pdf') !== false) {
 				// is pdf.  Use imagic to make image and put it in thumb sources
-				$this->buildImagicImage($tsrc.'[0]', $genurl);
+				if (! $this->buildImagicImage($tsrc.'[0]', $genurl) ) {
+					throw new Exception ("Can't build image for pdf $tsrc");
+				}
 				$local_src = $genurl;
 			}
 		}
 		if (empty($local_src)){
 			$ytid = u\youtube_id_from_url($aurl) ;
-			if (!empty($ytid)){
+			if ($ytid !== false){ // is youtube
 				//echo "$aurl is youtube" . BRNL;
 				$tmime = 'video/x-youtube';
 			// get url to youtube's thumb file for this video
@@ -531,9 +544,12 @@ echo "tsrc: $tsrc" . BRNL;
 			}
 		}
 
-		if (!$local_src ) {
+		if (empty($local_src )) {
 			$tmime = u\is_http($aurl);
-			if ($tmime) {
+			if ($tmime !== false) {
+				if (empty($tmime)){
+					throw new Exception ("Cannot generate thumb.  Sourve $aurl is inacessible");
+				}
 				//echo "http tmime $tmime" . BRNL;
 				$size = u\get_info_from_curl($aurl)['size'] ?? 0;
 				$sizem = $size / 1000000; #MB
@@ -559,6 +575,9 @@ echo "tsrc: $tsrc" . BRNL;
 		// return generic icon for amime type
 		  $icon = Defs::getIconForMime($amime) ;
 			$local_src =  "/assets/graphics/icons/$icon";
+		}
+		if (u\is_local($tsrc) === false) {
+				throw new Exception ("Thumb url is not local file");
 		}
 //echo "Local source $local_src" . BRNL;
 		return $local_src;

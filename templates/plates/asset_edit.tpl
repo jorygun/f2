@@ -95,7 +95,8 @@ Upload file <input type="file" name="uasset" > <br>
 
 <tr><td>Thumb Images</td>
 	<td>
-	Local Source: <?=$local_src?><br>
+
+	Local Source: <?=$local_src?> Rebuild: <input type = 'checkbox' name='rebuild'><br>
 	<table class='thumbtable'>
 
 	<tr><th>Form</th><th>Exists</th></tr>
