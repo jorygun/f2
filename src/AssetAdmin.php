@@ -155,7 +155,7 @@ class AssetAdmin
 
 		$adata['sizekb'] = 0;
 		$adata['mime'] = '';
-echo "{$adata['astatus']}" . BRNL;
+//echo "{$adata['astatus']}" . BRNL;
 
 		// test assset_url
 		if (0 || $adata['astatus'] != 'K' ){ #error override
@@ -170,10 +170,10 @@ echo "{$adata['astatus']}" . BRNL;
 						$size = filesize($path);
 						$adata['sizekb'] = (int)($size/1000);
 					} else {
-						$adata['status'] = 'E'; // not local
+						$adata['astatus'] = 'E'; // not local
 					}
 				} else {
-					$adata['status'] = 'E';  /// cannot access the source url
+					$adata['astatus'] = 'E';  /// cannot access the source url
 				}
 
 		}
@@ -472,6 +472,7 @@ private function buildImagicImage ($src_url,$dest_url){
 			also will create small thumb, as every asset needs one.
 		*/
 
+echo "Building local source" . BRNL;
 
 		$genurl = "/assets/thumb_generated/$id.jpg" ;
 		$gurl = (file_exists(SITE_PATH . $genurl) ) ? $genurl : '';
@@ -494,12 +495,13 @@ private function buildImagicImage ($src_url,$dest_url){
 			$tsrc = $aurl;
 		}
 
+echo "tsrc: $tsrc" . BRNL
 
 		$tmime = '';
 		$local_src = '';
 
 		$tmime = u\is_local($tsrc) ;
-		if ($tmime ) {
+		if ($tmime !== false ) {
 			//echo "$tsrc is local $tmime" . BR;
 			// is local file
 			if (strpos($tmime,'image') !== false) {
