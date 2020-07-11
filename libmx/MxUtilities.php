@@ -985,8 +985,12 @@ function get_mime_from_url($url) {
 
 	$mime = false;
 	//echo "starting url exists on $url ... " ;
-	$mime=is_local($url);
-	if ($mime !== false)  {
+
+	if ($mime === false)  {
+		$lmime=is_local($url);
+		if ($lmime !== false) {
+			$mime = $lmime;
+		}
 		#ok, but may be empty
 		//echo "is local  mime $mime" . BRNL;
 	}
@@ -1000,9 +1004,9 @@ function get_mime_from_url($url) {
 	}
 
 	if ($mime === false) {
-		$mime = is_http($url) ;
-		if ($mime === false){echo "failed http filter";}
-		//echo "<br>is http  mime '$mime'" . BRNL;
+		$lmime = is_http($url) ;
+		if ($lmime !== false){
+			$mime = $lmime;
 		// ok
 	}
 	if ($mime === false) {
