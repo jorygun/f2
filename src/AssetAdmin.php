@@ -155,13 +155,14 @@ class AssetAdmin
 
 		$adata['sizekb'] = 0;
 		$adata['mime'] = '';
-//echo "{$adata['astatus']}" . BRNL;
+echo "{$adata['astatus']}" . BRNL;
 
 		// test assset_url
-		if (0 || $adata['astatus'] != 'K' ){ #error override
+		if (1 || $adata['astatus'] != 'K' ){ #error override
 
 			$adata['mime']  = u\get_mime_from_url ($adata['asset_url'] );
 	//echo $adata['mime'] . " mime from url " . $adata['asset_url']; exit;
+echo $adata['mime'] . BRNL;
 
 				$adata['type'] = Defs::getAssetType($adata['mime']);
 				if ($adata['mime']){
