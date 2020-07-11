@@ -153,7 +153,7 @@ if ($id > 0 && ! u\url_exists($asset_data['asset_url']) ){
 
 
 
-#u\echor ($asset_data);
+u\echor ($asset_data);
 echo $container['templates']->render('asset_edit',$asset_data);
 
 

@@ -375,7 +375,7 @@ public function checkAssetData($adata) {
 			case 'mime':
 
 				if (!in_array($val,Defs::getAcceptedMime() ) )
-			 		throw new Exception ("Id $id: Source mime '$val' is not acceptable"  );
+			 		echo "Id $id: Source mime '$val' is not acceptable" ;
 			 	break;
 
 			default: #do nothing

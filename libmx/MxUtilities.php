@@ -746,7 +746,7 @@ function is_local ($url) {
 
 
 function is_http ($url) {
-	if (!substr($url,0,4) == 'http') {return false;}
+	if (substr($url,0,4) != 'http') {return false;}
 	// valid url an it exists.  returns mime type
 	// if(filter_var($url, FILTER_VALIDATE_URL) == FALSE)  {return false;}
 	 $cinfo =  get_info_from_curl($url);
