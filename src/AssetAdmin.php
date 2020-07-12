@@ -196,6 +196,7 @@ echo "{$adata['astatus']}" . BRNL;
 				$adata['astatus'] = 'E';
 			} else {
 				$adata['mime'] = $mime;
+				$adata['type'] = Defs::$asset_types[$mime];
 			}
 		}
 
