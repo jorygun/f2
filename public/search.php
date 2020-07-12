@@ -1,7 +1,7 @@
 <?php
 
 namespace DigitalMx\Flames;
-#ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
