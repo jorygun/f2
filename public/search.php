@@ -119,9 +119,9 @@ function search_news($term,$back,$pdo) {
 				AND a.content REGEXP '\\\b{$term}\\\b'
 			ORDER BY pubdate DESC
 			";
-			//echo $sql . BR;
+			echo $sql . BR;
 		$selected = $pdo -> query($sql)->fetchAll();
-	//	u\echor($selected);
+		u\echor($selected);
 
 
 		foreach ($selected as $data) {
