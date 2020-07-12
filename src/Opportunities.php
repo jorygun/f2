@@ -144,7 +144,7 @@ class Opportunities
 		$prep = u\prepPDO($post,$allowed,'id');
 
 		if ($post['id'] == 0){
-			 $sql = "INSERT into `opportunities` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
+			 $sql = "INSERT into `opportunities` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} );";
        	$stmt = $this->pdo->prepare($sql)->execute($prep['idata']);
        	$new_id = $this->pdo->lastInsertId();
       }
@@ -157,26 +157,31 @@ class Opportunities
 
  /**
 including key field removes that field from udata and adds value to ukey
+
 PREP:
    $prep = u\prepPDO ($post_data,allowed_list,'key_field_name');
 
 INSERT:
 		$sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']})";
+		$sth = $pdo->prepare($sql);
+		$sth->execute($prep['idata']);
+		$new_id = $pdo->lastInsertId();
 
 UPDATE:
 		$sql = "UPDATE `Table` SET ${prep['uset']} WHERE id = $prep['ukey'];";
+		$sth = $pdo->prepare($sql);
+		$sth->execute($prep['udata']);
 
 INSERT ON DUP UPDATE:
-   	$sql = INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} )
-    			ON DUPLICATE KEY UPDATE ${prep['uset']};
-    		";
+   		$sql = INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} )
+    			ON DUPLICATE KEY UPDATE ${prep['uset']};";
+    	$sth = $pdo->prepare($sql);
+		$sth->execute(array_merge($prep['udata'],$prep['idata']);
+		$new_id = $pdo->lastInsertId();
 
-THEN:
-       $sth = $pdo->prepare($sql);
-THEN:
-		$sth->execute($prep['idata']); // for insert, or udata for update or merge for both
-       $new_id = $pdo->lastInsertId();
+
 **/
+
 
 	return $new_id;
 	}
