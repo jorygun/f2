@@ -194,6 +194,8 @@ echo "{$adata['astatus']}" . BRNL;
 			}
 			if (empty($mime)){
 				$adata['astatus'] = 'E';
+			} else {
+				$adata['mime'] = $mime;
 			}
 		}
 
