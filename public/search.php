@@ -120,8 +120,12 @@ function search_news($term,$back,$pdo) {
 	/*			AND a.content REGEXP '\\\b{$term}\\\b' */
 			ORDER BY pubdate DESC
 			";
-			/* AND a.content REGEXP '\\\b{$term}\\\b' */
-			echo $sql . BR;
+			/* mysql < 8.0.4 uses the old style char classes;
+				later versions use the more standard escaped chars.
+				The newer version also supports unicode and mb chars and the old
+				one doesn't
+			*/
+	//	echo $sql . BR;
 		$selected = $pdo -> query($sql)->fetchAll();
 		//u\echor($selected);
 
