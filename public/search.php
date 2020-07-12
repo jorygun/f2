@@ -84,89 +84,127 @@ echo "Getting profile";
 
 function search_news($term,$back,$pdo) {
 
-	$this_year = date('Y');
-	$limit_year = $this_year - $back;
+// always come here from a post
+
 	$found = 0;
-	if (empty($term)){return "No search term";}
-	echo "<h3>Search for '$term' in newsletters published in $limit_year or later</h3>";
+//	if (empty($term)){return "No search term";}
+	echo "<h3>Search for '$term' in newsletters published in last $back years</h3>";
 
-// get the urls for the newsletters to search
-	$sql = "SELECT issue,url,DATE_FORMAT(pubdate,'%M %d, %Y') as pdate from pubs WHERE pubdate > '${limit_year}-01-01' ";
-
- 	if(! $issuest = $pdo->query($sql)->fetchAll() ) {
- 		die ("No issues found");
- 	}
-
- // set up search term.  will use grep
 	$term = trim($term);
 	//$sterm = preg_quote($term,'/'); #escape regex specials
 	$issue_count = 0;
 	$last_issue = '';
 	$hits = [];
-if (0) {
-	foreach ($issuest as $issuedata) {
-		// set vars
-		$issue = $issuedata['issue'];
 
-// grep in old directories
+/* determine which routines to use:
+	for issues before 5 july 2015, use the text search
+	for issues after that date, use the sql search
 
-		if (!empty($hits) && $last_issue && $last_issue != $issue){
-			// get context
-			echo "<a href='$url' target='news'> Issue $last_issue ($pdate) </a>: " . BR;
-			foreach ($hits as $hit){
-				$context = shell_exec("grep  -hi '$term' $hit"); // get context, multiline
-				echo nl2br(strip_tags($context)) . BR ;
-			}
-			echo BRNL;
-			++$issue_count;
-			$hits = [];
-		}
-// set these after the new issue test
-		$url = $issuedata['url'];
-		$pdate = $issuedata['pdate'];
-
-
-
-		$search_path = SITE_PATH. $url; // file or  folder
-
-		//echo "Searching in $search_path" . BR;
-
-/*
-		$files =  exec "grep -Ril $sterm $search"
-			foreach $files as $file {
-				print file info
-				grep -C1 $sterm $file
-				print results
-			}
-		}
 */
-		$exec = "grep -iRl --include '*.html'  '$term' $search_path ";
-		//$exec = "grep -iRl --include '*.html'  'springer' .* ";
-		//grep -iRl --include "*.html" 'springer' .*
-		//echo $exec . BRNL;
-		$hit = exec($exec); // file with matching term
-		if (!empty($hit)) {$hits[]=$hit;}
-		$last_issue = $issue;
 
-	}
-	if (1) { // find new material in db
-		$sql = "SELECT DATE_FORMAT(date_published,'%Y%m%d') as pubcode from articles
-			WHERE concat (' ',content,title) = '%$term%' ";
-		$pdates = $pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
-		u\echor($pdates);
+	// find new material in db
+	$term = addslashes($term);
+	if ($back == 0){
+		$dcompare = "'" . date('Y') . '-01-01' . "'";
+	} else {
+		$dcompare = "NOW() - interval $back year";
 	}
 
+	if (1 ) { // do the sql search
+		$sql = "SELECT a.content,a.id, i.issue,a.title, DATE_FORMAT(i.pubdate,'%M %d, %Y') as pdate
+			FROM publinks l
+			INNER JOIN  articles a on a.id = l.article
+			INNER JOIN issues i on l.issue = i.issue
+			WHERE i.pubdate > $dcompare
+				AND a.content REGEXP '\\\b{$term}\\\b'
+			ORDER BY pubdate DESC
+			";
+			//echo $sql . BR;
+		$selected = $pdo -> query($sql)->fetchAll();
+	//	u\echor($selected);
 
 
+		foreach ($selected as $data) {
+		//u\echor($data);
+
+			// set vars
+			$aid = $data['id'];
+			echo "<p> In <a href='/get-article.php?id=$aid' target='_blank'>" . $data['title'] . "</a> (" . $data['pdate'] . ')</p>';
+
+			echo show_matches($term,$data['content']);
+		}
+	}
+// for text files
+	if ($back > 5) {
+		echo "<p><b><i>Newsletters below this point are not divided into articles.</i></b></p><hr>" . NL;
+
+		$sql = "SELECT issue,url,DATE_FORMAT(pubdate,'%M %d, %Y') as pdate from issues
+			WHERE pubdate < '2015-07-05'
+				;";
+		$issuest = $pdo->query($sql)->fetchAll();
+
+		foreach ($issuest as $issuedata) {
+			// set vars
+			$issue = $issuedata['issue'];
+
+
+			if (!empty($hits) && $last_issue && $last_issue != $issue){
+				// get context
+				echo "<a href='$url' target='news'> Issue $last_issue ($pdate) </a>: " . BR;
+				foreach ($hits as $hit){
+					echo show_matches($term,file_get_contents($hit));
+
+				}
+				echo BRNL;
+				++$issue_count;
+				$hits = [];
+			}
+	// set these after the new issue test
+			$url = $issuedata['url'];
+			$pdate = $issuedata['pdate'];
+			$search_path = SITE_PATH. $url; // file or  folder
+
+			$filesrch = "grep -iRl --include '*.html'  '$term' $search_path ";
+			//$exec = "grep -iRl --include '*.html'  'springer' .* ";
+			//grep -iRl --include "*.html" 'springer' .*
+			//echo $exec . BRNL;
+			$hit = exec($filesrch); // file with matching term
+			if (!empty($hit)) {$hits[]=$hit;}
+			$last_issue = $issue;
+
+		}
 
 
 	}
-
-
-	if ($issue_count){echo "$issue_count newsletters had '$term' in them.";}
-	else {echo "Nothing Found.<br>";}
 	echo show_news_search();
- }
+
+}
+
+function show_matches ($term, $content ) {
+		$clean_content = strip_tags($content);
+		$t = "<ul>";
+
+		preg_match_all(
+		'/\b' . $term . '\b/i',
+		$clean_content,$m,PREG_OFFSET_CAPTURE
+		);
+
+//		u\echor($m);
+
+		foreach ($m[0] as $match){
+			$offset = $match[1];
+			$st_from_end = min (strlen($clean_content) ,strlen($clean_content) - $offset +20);
+
+			$start = strrpos($clean_content,' ',-$st_from_end); // first space before
+			$phrase = substr($clean_content,$start,60);
+			$phrase = preg_replace("/\b{$term}\b/i","<b>$0</b>",$phrase);
+
+			$t .= "<li>" . $phrase;
+		}
+		$t .= "</ul>";
+		return $t;
+	}
+
 #show search screen
 
 echo "<h3>Search For Members or Topics </h3>" . NL;
@@ -197,7 +235,7 @@ Search In<br>
 <option value="3">3 years back</option>
 <option value="4">4 years back</option>
 <option value="5">5 years back</option>
-<option value="20">For All Time</option>
+<option value="99">For All Time</option>
 </select>
 </td></tr>
 </table>
@@ -236,8 +274,4 @@ return <<<EOT
 </form>
 EOT;
 }
-
-?>
-
-
 
