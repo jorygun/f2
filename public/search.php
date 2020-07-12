@@ -116,7 +116,8 @@ function search_news($term,$back,$pdo) {
 			INNER JOIN  articles a on a.id = l.article
 			INNER JOIN issues i on l.issue = i.issue
 			WHERE i.pubdate > $dcompare
-				AND a.content REGEXP '\\\b{$term}\\\b'
+				/* AND a.content REGEXP '\\\b{$term}\\\b' */
+				AND a.content REGEXP ' jeff '
 			ORDER BY pubdate DESC
 			";
 			echo $sql . BR;
