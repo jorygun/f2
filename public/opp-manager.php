@@ -37,11 +37,7 @@ EOT;
 
 
 	$opp_id = $_GET['id'] ?? 0;
-	/* set type as user, admin or public
-		user can edittheir own
-		admin can edit any
-		public cannot edit any
-	*/
+
 
 	if (isset($_POST['id'])){
 		#save data
@@ -63,7 +59,7 @@ EOT;
 
 	else {#display opp list for edits
 		if (!$opp_list = $opps->getOppList() ){
-			throw new Exception ("No opp list");
+			echo "No Current Listings";
 		}
 		#u\echor ($opp_list,'opps');
 		echo "<p>You may create new opportunities or edit opportunities that you created.</p>";
