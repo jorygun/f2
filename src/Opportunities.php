@@ -141,32 +141,42 @@ class Opportunities
 		$post['expired'] = $xdt->format('Y-m-d');
 
 		$allowed = array(); #accept all fields
-		$prep = u\pdoPrep($post,$allowed,'id');
+		$prep = u\prepPDO($post,$allowed,'id');
 
 		if ($post['id'] == 0){
 			 $sql = "INSERT into `opportunities` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-       	$stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+       	$stmt = $this->pdo->prepare($sql)->execute($prep['idata']);
        	$new_id = $this->pdo->lastInsertId();
       }
       else {
-      	 $sql = "UPDATE `opportunities` SET ${prep['updateu']} WHERE id = ${prep['key']} ;";
+      	 $sql = "UPDATE `opportunities` SET ${prep['uset']} WHERE id = ${prep['ukey']} ;";
       	// u\echor($prep,$sql); exit;
        	$stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
 
        }
 
  /**
- 	$prep = pdoPrep($post_data,$allowed_list,'id');
+including key field removes that field from udata and adds value to ukey
+PREP:
+   $prep = u\prepPDO ($post_data,allowed_list,'key_field_name');
 
-    $sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivals']} );";
-       $stmt = $this->pdo->prepare($sql)->execute($prep['data']);
+INSERT:
+		$sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']})";
+
+UPDATE:
+		$sql = "UPDATE `Table` SET ${prep['uset']} WHERE id = $prep['ukey'];";
+
+INSERT ON DUP UPDATE:
+   	$sql = INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} )
+    			ON DUPLICATE KEY UPDATE ${prep['uset']};
+    		";
+
+THEN:
+       $sth = $pdo->prepare($sql);
+THEN:
+		$sth->execute($prep['idata']); // for insert, or udata for update or merge for both
        $new_id = $pdo->lastInsertId();
-
-    $sql = "UPDATE `Table` SET ${prep['update']} WHERE id = ${prep['key']} ;";
-       $stmt = $pdo->prepare($sql)->execute($prep['data']);
-
-  **/
-
+**/
 
 	return $new_id;
 	}
