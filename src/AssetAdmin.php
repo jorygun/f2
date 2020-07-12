@@ -171,7 +171,7 @@ echo "{$adata['astatus']}" . BRNL;
 		// in this section check validity of source data.
 		// if status is k, ignore asset url
 		//
-			$lmime = is_local($adata['asset_url']);
+			$lmime = u\is_local($adata['asset_url']);
 			if ($lmime !== false) { // is local, but ma not have mime
 				if (empty($lmime)){
 				// no file at that location
@@ -182,10 +182,10 @@ echo "{$adata['astatus']}" . BRNL;
 					$size = filesize($path);
 					$adata['sizekb'] = (int)($size/1000);
 				}
-			} elseif ($lmime = is_youtube($adata['asset_url']) ) {
+			} elseif ($lmime = u\is_youtube($adata['asset_url']) ) {
 					$mime = $lmime;
 			} else {
-				$lmime = is_http($adata['asset_url']) ;
+				$lmime = u\is_http($adata['asset_url']) ;
 				if ($lmime !== false) {
 					$mime = $lmime;
 					$size = u\get_info_from_curl($adata['asset_url'])['size'] ?? 0;
