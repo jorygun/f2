@@ -94,7 +94,15 @@ EOT;
      //style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page, 4 for collapsible list
      // 5 is new style, 6 is preview new style
         $title = $this->title;
-
+		$site_warning = '';
+		$warning_file = REPO_PATH . "/var/site_warning.txt";
+		if (file_exists($warning_file)){
+			$site_warning =
+				"<p style='color:orange;'>"
+				. file_get_contents($warning_file)
+				. '</p>'
+				. NL;
+		}
 			$t= '' ; // build head here
 
 			// before body tag
@@ -203,6 +211,7 @@ EOT;
 <div class='page_head'>
 	<div style='text-align:right;'>
 		<div class='page_top'>
+		$site_warning
 			<p >AMD Flames</p>
 			$this->menubar
 		</div>

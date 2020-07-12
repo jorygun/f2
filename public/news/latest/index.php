@@ -51,7 +51,7 @@ $strindex = strpos(__DIR__,'/news'); // first news or newsp
 $url = substr(__DIR__,$strindex);
 $preview = (strpos(__DIR__,'/news/next') !== false) ;
 
-$sql = "SELECT * from pubs where url = '$url'";
+$sql = "SELECT * from issues where url = '$url'";
 if (! $issue_data = $pdo->query($sql)->fetch() ) {
 	die ("No issue at url $url");
 }
@@ -76,15 +76,12 @@ echo $page->startBody($style,$subtitle);
 
 
 $rcount = 0;
-if ($issue == '1'){
-	$artlist = $article->getArticleIds('next');
-} else {
-	$rcount = $news->incrementReads($issue);
-	// get array of all articles for issue, sorted in display
-	// order and with topics and section info
-	$artlist = json_decode($issue_data['stories'] )?: []; #list of ids
 
-}
+	$artlist = $publish->getArticleList('1') ?: [];
+
+	if ($issue != '1'){
+		$rcount = $news->incrementReads($issue);
+	}
 
 //u\echor($artlist, 'artlist');
 echo $read->user_welcome();

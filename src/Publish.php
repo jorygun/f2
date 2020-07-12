@@ -80,17 +80,18 @@ EOT;
 		$storylist = $this->article->getArticleIds('next');
 		$sql = "DELETE from publinks WHERE issue = 1;";
 		$this->pdo->query($sql);
-		$sql = "INSERT into publinks SET issue = ? ,article = ? ";
+		$sql = "INSERT into publinks SET issue = 1 ,article = ? ";
 		$pubin = $this->pdo->prepare($sql);
 		foreach ($storylist as $story) {
-			$pubin->execute(['1',$story]);
+			$pubin->execute([$story]);
 		}
 
 	}
 
 
 	public function setNextTitle($title) {
-		$sql = "UPDATE issues SET title = '$title' WHERE issue = 1";
+		$title = u\special($title);
+		$sql = "UPDATE issues SET title = '$title' WHERE issue = '1' ";
 		if ($this->pdo->query($sql) ) {
 			return "OK";
 		} else {
@@ -170,15 +171,20 @@ EOT;
 		$this->copyLatestToArchive($this->archive);
 // create a new pub record with some info from preview issue
 // storylist is list of stories in this issue
-		$storylist = $this->createNewPub($this->archive,$this->issue);
+
+		$storylist = $this->getArticleList('1');
+		$this->createNewPub($this->archive,$this->issue);
+		// sets issue 1 data to defaults
+		$this->initializePreview();
+
+
 
 // mark all the stories published and set first use date on any assets referenced.
 		 $this->publishStories($storylist);
 
 		 $this->buildTeaser($storylist);
 
-// sets issue 1 data to defaults
-		$this->initializePreview();
+
 
 
 	}
@@ -277,7 +283,6 @@ EOT;
 		$this->initializePreview();
 
 
-  		return $storylist;
 
 	}
 
