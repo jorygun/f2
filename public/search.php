@@ -89,6 +89,7 @@ function search_news($term,$back,$pdo) {
 	$found = 0;
 //	if (empty($term)){return "No search term";}
 	echo "<h3>Search for '$term' in newsletters published in last $back years</h3>";
+echo "<p>(Note: this search requires mysql 5.x.  Code must be changed for version 8.x.)</p>";
 
 	$term = trim($term);
 	//$sterm = preg_quote($term,'/'); #escape regex specials
@@ -126,6 +127,7 @@ function search_news($term,$back,$pdo) {
 				one doesn't
 			*/
 	//	echo $sql . BR;
+	echo "<p>(Note: this search requires mysql 5.x.  Code must be changed for version 8.x.)</p>";
 		$selected = $pdo -> query($sql)->fetchAll();
 		//u\echor($selected);
 

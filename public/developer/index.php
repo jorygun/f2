@@ -15,7 +15,7 @@ namespace DigitalMx\Flames;
 
 
 
-$login->checkLevel(0);
+$login->checkLevel(7);
 
 $page_title = 'Developer';
 $page_options=[]; #ajax, votes, tiny
@@ -43,9 +43,12 @@ if (isset($_GET['run'])) {
 
 	}
 }
-
+$repo_file = REPO_PATH . '/var/repo_warning.txt';
+if (isset($_POST['repo_warn'])){
+	file_put_contents($repo_file, $_POST['repo_warn']);
+}
 ###########################
-
+$repo_warn = (file_exists($repo_file)) ? file_get_contents( $repo_file ) : '';
 ?>
 <h3>Developer Applications</h3>
 <form method='GET'>
@@ -70,6 +73,11 @@ onClick = "window.open('/developer/gen_assets2.php','gena');return false;" value
 Build new Assets2 table from Assets
 
 </ul>
+</form>
+<form method='post'>
+Warning message to display at top of each page in this repo:<br>
+<input type=text name='repo_warn' size='60' value='<?=$repo_warn?>'>
+<input type=submit>
 </form>
 
 

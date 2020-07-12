@@ -94,14 +94,18 @@ EOT;
      //style 0 for no graph, 1 for flames news, 2 for all other pages, 3 for home page, 4 for collapsible list
      // 5 is new style, 6 is preview new style
         $title = $this->title;
-		$site_warning = '';
-		$warning_file = REPO_PATH . "/var/site_warning.txt";
+
+		$warning_file = REPO_PATH . "/var/repo_warning.txt";
+		$repo_warning = '';
 		if (file_exists($warning_file)){
-			$site_warning =
-				"<p style='color:orange;'>"
-				. file_get_contents($warning_file)
-				. '</p>'
-				. NL;
+			$repo_warning = file_get_contents($warning_file);
+			if (!empty($repo_warning)){
+				$repo_warning =
+					"<p style='color:orange;'>"
+					. $repo_warning
+					. '</p>'
+					. NL;
+			}
 		}
 			$t= '' ; // build head here
 
@@ -211,7 +215,7 @@ EOT;
 <div class='page_head'>
 	<div style='text-align:right;'>
 		<div class='page_top'>
-		$site_warning
+		$repo_warning
 			<p >AMD Flames</p>
 			$this->menubar
 		</div>
