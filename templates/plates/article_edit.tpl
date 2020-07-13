@@ -10,7 +10,7 @@
 ID: <input type='text' name = 'id' value='<?=$id?>' READONLY><br>
 Entered: <?=$date_entered?><br>
 Status: <?=$status_name?> <?=$date_published?><br>
-<input type='hidden' name= 'status' value='<?=$status?>'
+<input type='hidden' name= 'status' value='<?=$status?>'>
 </div>
 
 <hr>
