@@ -233,8 +233,7 @@ function get_sections(){
 
 			if ($_SESSION['level']>7){ return;} #don't count admin access
 
-			$sql3 = "INSERT INTO read_table (issue,read_cnt) VALUES ($issue,1)
-				 ON DUPLICATE KEY UPDATE read_cnt = read_cnt + 1";
+			$sql3 = "UPDATE issues set rcount = rcount + 1 where issue = 'issue';";
 			$this->pdo->query($sql3);
 
 			return 1;
