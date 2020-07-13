@@ -7,7 +7,7 @@
 	<input type='hidden' name='contributor_id'
 		value = '<?=$_SESSION['login']['user_id']?>'>
 	<table>
-	<tr><td>Date and Time</td><td><input type=text name='datetime' value = '<?=$row['datetime'] ?>'> (Local Time at Event)</td></tr>
+	<tr><td>Date and Time (eg., July 1, 2020 1:30pm)</td><td><input type=text name='datetime' value = '<?=$row['datetime'] ?>'> (Local Time at Event)</td></tr>
 	<tr><td>Event Name</td><td><input type=text name='event' size=40 value = '<?= $row['event'] ?>'></td></tr>
 	<tr><td>Region/City</td><td><input type=text name='city' value = '<?= $row['city'] ?>'></td></tr>
 	<tr><td>Specific Location </td><td><textarea name='location' rows=3 cols=40><?= $row['location'] ?></textarea><br>

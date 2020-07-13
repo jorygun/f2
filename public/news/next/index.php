@@ -82,7 +82,7 @@ $rcount = 0;
 	$artlist = $publish->getArticleList($issue) ?: [];
 
 	if ($issue != '1'){
-		$rcount = $news->incrementReads($issue);
+		$news->incrementReads($issue);
 	}
 
 //u\echor($artlist, 'artlist');
