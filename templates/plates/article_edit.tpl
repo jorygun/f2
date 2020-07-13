@@ -50,8 +50,8 @@ Status: <?=$status_name?> <?=$date_published?><br>
 	<button type='button' onclick="window.open('/asset_search.php?mode=j' ,'assets','width=1100,left=160');">Search Assets</button>
 </td></tr>
 
-<tr><td>Surrounding asset ids (left/top)</td>
-   <td> First two will be on left of article; remaining ones across the top.</br><input type=text name='asset_list' id='asset_list' size = 40 value='<?=$asset_list?>'>
+<tr><td>Surrounding asset ids (left/top of content)</td>
+   <td>Separate multiple asset ids with spaces.</br><input type=text name='asset_list' id='asset_list' size = 40 value='<?=$asset_list?>'>
    </td></tr>
 
 <tr><td>Central asset id (in body):</td>
