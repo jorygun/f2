@@ -204,7 +204,7 @@ function get_sections(){
 						'|<!-- comment (\d+) -->|',
 						function ($matches){
 							$cp = "
-						 <a href='/get-article.php?id=$matches[1]' target='article'>Discuss this article </a>";
+						 <a href='/get-article.php?id={$matches[1]}d' target='article'>Discuss this article </a>";
 							$cp .=  '<br />' . $this->get_commenters($matches[1]);
 							return $cp;
 						}
