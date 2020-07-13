@@ -78,7 +78,9 @@ Allow Votes? <input type='checkbox' value='1' name='take_votes' <?= $votes_check
 
 </table>
 <input type='submit' value='Submit Article' style='background:#CFC;'>
+<?php if ($id > 0): ?>
 <button type='button' style='background:#CFC;' onClick ='window.open("/get-article.php?<?=$id?>")'>View Article</button>
+<?php endif; ?>
 
 </form>
 </div>
