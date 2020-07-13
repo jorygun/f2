@@ -11,26 +11,26 @@ namespace DigitalMx\Flames;
 	use DigitalMx\Flames\Definitions as Defs;
 	use DigitalMx\Flames\DocPage;
 	use DigitalMx\Flames\FileDefs;
-	
+
 	use DigitalMx\Flames\Calendar;
-	
-	
+
+
 
 if ($login->checkLogin(4)){
    $page_title = 'Calendar Admin';
-	$page_options=[]; #ajax, votes, tiny 
-	
+	$page_options=[]; #ajax, votes, tiny
+
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
-	
+
 	echo $page->startBody();
 }
-	
+
 //END START
 
 
-$calendar = new Calendar();
+$calendar = $container['calendar'];
 
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 	}
 	else {die ("Request not understood");}
 
-	
+
 }
 else { #edit item
 	$id = $_GET['id']  ?? 0;
