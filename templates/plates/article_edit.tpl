@@ -25,7 +25,7 @@ Status: <?=$status_name?> <?=$date_published?><br>
 
 <tr><td >Item Title (required)</td><td><input type='text' size='60' name='title' class='input required' id='title' value="<?=$title?>"></td></tr>
 
-<?php if ($_SESSION['level'] > 7 ) : ?>
+<?php if ($_SESSION['level'] > 9 ) : ?>
 <tr><td>Status</td><td><select name = 'status'><?=$status_options?></select></td></tr>
 <?php else: ?>
 <tr><td>Status</td><td><input type='hidden' name= 'status' value='<?=$status?>' ><?=$status_name?></td></tr>
