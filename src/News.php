@@ -318,7 +318,7 @@ public function buildTopicOptions ($checkme = '', $access='' ) {
 	if ($access == 'A'){ $sql .= " WHERE `access` in ('A','U') "; }
 	elseif ($access == 'U'){ $sql .= " WHERE `access` = 'U' "; }
 	$sql .= " ORDER BY s.section_sequence, t.topic ";
-	echo $sql . BRNL;
+//	echo $sql . BRNL;
 	echo "<style>select optgroup  { color:green;} </style> ";
 	if (! $topicsh = $this->pdo->query($sql) ){
 		die ("got nothing");
