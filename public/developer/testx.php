@@ -10,15 +10,11 @@ require_once '../init.php';
 	use digitalmx as u;
 	use digitalmx\flames as f;
 	use digitalmx\flames\FileDefs;
-
-
-$news = $container['news'];
-
-$opt = $news->getTopicOptions('spirit') ;
-// $optesc = htmlspecialchars($opt);
-// u\echopre ($optesc);
+	use DigitalMx\Flames\Recent;
 
 
 
-echo "<select name='topic'>$opt</select>";
+
+$recent = new Recent($container);
+$recent -> run();
 

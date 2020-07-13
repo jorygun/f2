@@ -48,9 +48,11 @@ $login->checkLevel(1);
 $issue = 0; $style = 5;
 
 $strindex = strpos(__DIR__,'/news'); // first news or newsp
+// get url of this directory.  that will be used to identify the issue.
 $url = substr(__DIR__,$strindex);
 $preview = (strpos(__DIR__,'/news/next') !== false) ;
 
+// get issue data inc - title mostly
 $sql = "SELECT * from issues where url = '$url'";
 if (! $issue_data = $pdo->query($sql)->fetch() ) {
 	die ("No issue at url $url");
@@ -77,10 +79,10 @@ echo $page->startBody($style,$subtitle);
 
 $rcount = 0;
 
-	$artlist = $publish->getArticleList('1') ?: [];
+	$artlist = $publish->getArticleList($issue) ?: [];
 
 	if ($issue != '1'){
-		$rcount = $news->incrementReads($issue);
+		$news->incrementReads($issue);
 	}
 
 //u\echor($artlist, 'artlist');

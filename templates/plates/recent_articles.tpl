@@ -6,7 +6,7 @@
 <?php if (!empty ($articles)) : ?>
    <table class='alternate article_list'>
 
-        <tr><th>Article</th><th>Contributor</th><th>Published</th>
+        <tr><th>Article</th><th>Published</th>
         <th>Comments</th><th>Link Clicks</th><th>Interesting?</th></tr>
 
     <?php foreach ($articles as $row) : ?>
@@ -14,11 +14,11 @@
        <tr><td style='text-align:left;'>
        <a href='/get-article.php?id=<?=$row['id']?>&mode=d' target='discussion'>
         <?=$row['title'] ?></a> </td>
-      <td><?= $row['contributor']?> </td>
+
       <td><?= $row['pubdate'] ?> </td>
       <td><?= $row['comment_count'] ?> </td>
 
-      <td>clicks</td>
+      <td><?= $row['clicks'] ?></td>
       <td ><?= $row['votes'] ?></td>
 
       </tr>

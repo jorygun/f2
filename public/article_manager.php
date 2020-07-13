@@ -82,7 +82,7 @@ if (!empty($_POST['toggle_use'])) {
 	$d['ioptions'] = u\buildOptions($ilist);
 	$d['preview_button'] = $publish::$previewaction;
 
-	//u\echor($d); exit;
+//	u\echor($d); exit;
 	echo $templates->render('article_list', $d);
 	echo "<hr>\n";
 

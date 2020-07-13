@@ -104,6 +104,42 @@ class News {
 
  }
 
+public function getRecentArticles ($days_ago) {
+// set starting date to look from
+	$from_dt = new \DateTime("- $days_ago day");
+	$from_date = $from_dt->format('Y-m-d');
+	$to_date = u\sqlnow();
+
+
+
+	$sql = "SELECT a.id as id, a.title,
+			DATE_FORMAT(i.pubdate, '%M %e') as pubdate,
+			count(c.id) as comment_count,
+			if (a.take_votes,sum(v.vote_rank),'n/a') as votes,
+			sum(k.count) as clicks
+
+			FROM publinks l
+			join issues i on i.issue = l.issue
+			join articles a on a.id = l.article
+			left join comments c on a.id = c.item_id and c.on_db='news_items'
+			left join votes v on a.id = v.news_fk
+			left join links k on a.id = k.article_id
+
+			WHERE i.pubdate >= '$from_date' AND i.pubdate < '$to_date'
+			GROUP BY a.id,i.pubdate
+
+         LIMIT 15;
+	";
+
+
+    $rlist = $this->pdo->query($sql)->fetchAll();
+
+
+	return $rlist;
+
+}
+
+
 public function getNewsIndex() {
 	$sql = "SELECT issue,url,title, pubdate, DATE_FORMAT(pubdate,'%d %b, %Y') as hdate FROM `issues` WHERE issue > 19980000 ORDER BY pubdate DESC";
 	$stmt = $this->pdo->query($sql);

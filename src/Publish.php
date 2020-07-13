@@ -175,7 +175,8 @@ EOT;
 		$storylist = $this->getArticleList('1');
 		$this->createNewPub($this->archive,$this->issue);
 		// sets issue 1 data to defaults
-		$this->initializePreview();
+		// not needed.  preview is reset in createNewPub
+	//	$this->initializePreview();
 
 
 
@@ -266,18 +267,31 @@ EOT;
 		publinks: issue 1 -> issue issue
 		publinks issue [publdate] = now;
 	*/
+	// get issue 1 data
+		$issuedata = $this->pdo->query(
+			"Select title, last_scan from issues where issue = '1' "
+			) ->fetch();
+		$title = $issuedata['title'];
+		$last_scan = $issuedata['last_scan'];
+
+		$sql = "INSERT INTO issues
+			SET issue = '$issue',
+				rcount=0,
+				title='$title',
+				pubdate='$this->pubdate',
+				url = '$this->archive_url',
+				last_scan = '$last_scan'
+				";
+		$this->pdo->query($sql);
 
 
-		$sql = "UPDATE issues Set issue = '$issue' WHERE issue = '1'";
+		$sql = "UPDATE issues Set title = '' WHERE issue = '1'";
 		$this->pdo->query($sql);
 
 		$sql = "UPDATE publinks set issue= '$issue' WHERE issue = '1'";
  		$this->pdo->query($sql);
 
- 		$sql = "UPDATE issues
- 			SET pubdate = '$this->pubdate', url = '$this->archive_url'
- 			WHERE issue = '$issue'";
- 		$this->pdo->query($sql);
+
 
 
 		$this->initializePreview();

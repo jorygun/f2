@@ -85,15 +85,15 @@ $rcount = 0;
 		$news->incrementReads($issue);
 	}
 
-//u\echor($artlist, 'artlist');
+// u\echor($artlist, 'artlist'); exit;
 echo $read->user_welcome();
 
  // now display all the articles tied to this issue.
 $last_section = '';
 $show = 'pops';
 foreach ($artlist as $aid) {
-	//$art = $article->getArticleList($aid);
-	//echo "$artid, "; continue;
+	if (!$aid){continue;}
+
 	$art = $article->getArticle($aid);
 //u\echor($art);
 	$sec_name = $art['section_name'];
