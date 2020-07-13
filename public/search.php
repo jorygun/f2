@@ -189,6 +189,11 @@ echo "<p>(Note: this search requires mysql 5.x.  Code must be changed for versio
 }
 
 function show_matches ($term, $content ) {
+	/* matches term in content, and return a ul
+		showing 50 characters of matched line with the term
+		in the middle
+	*/
+
 		$clean_content = strip_tags($content);
 		$t = "<ul>";
 

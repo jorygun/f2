@@ -325,7 +325,7 @@ EOT;
 	}
 
 	public function getArticlesFromIssue($issue) {
-		$sql = "SELECT stories from publinks
+		$sql = "SELECT article from publinks
 			WHERE issue = '$issue'
 		";
 		$storylist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
