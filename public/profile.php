@@ -108,7 +108,7 @@ EOT;
 		if (empty($profile_data['photos'] )){
 				// not photos so get id for random id with users name in it
 				$random = $container['assetsearch']->getRandomAsset($profile_data['username']);
-				echo "Random id: $random" . BRNL;
+				//echo "Random id: $random" . BRNL;
 				if (!empty($random)){
 					$pdata = $assetv->getUserPhoto($random,'view');
 

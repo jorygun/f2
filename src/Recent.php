@@ -36,12 +36,14 @@ class Recent
 		$this->report_dir = REPO_PATH . '/public/news/current';
 		$this->news = $container['news'];
 
-		$this->run;
+		$this->run();
 
 	}
 	public function setShow() {
 		$this->show = true;
 	}
+
+
  public function run(){
 
 
@@ -61,7 +63,7 @@ class Recent
 
 	$rlist = $this->news->getRecentArticles($from);
 
-u\echor($rlist, $sql);
+//  u\echor($rlist, $sql);
 	$data['articles'] = $rlist;
 	$data['run_date'] = date('d M H:i');
 	$report = $this->templates->render('recent_articles',$data);
@@ -90,7 +92,7 @@ $sql = "
 	  WHERE  a.astatus  in ('W','O','K')
 			AND a.tags is NOT NULL
 			AND a. tags REGEXP '[$archival_tags]'
-			AND date_modified > '$from_date'
+			AND date_entered > '$from_date'
 	  ORDER BY date_entered DESC
 	  LIMIT 50;
 	  ";
