@@ -46,10 +46,10 @@
 
 	</div>
 <?php endif ?>
-<div class='clear'></div>
+
 
 <?php if(!empty($photos)) :?>
-	<div class='user-photos'>
+	<div class='user-photos left'>
 	<p><b>Photos</b></p>
 	<?php foreach ($photos as $aid=>$pdata) :
 			if($pdata['title'] == 'random') :
