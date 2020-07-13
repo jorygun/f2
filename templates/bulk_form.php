@@ -9,7 +9,8 @@ echo <<<EOT
 <li>::scode:: users_code
 <li>::newslink:: link to latest newsletter for this user
 <li>::name::  User's name in db
-<li>::profile_date:: Date user's profile last updated <br>
+<li>::profile_date:: Date user's profile last updated
+<li> [image nn] Insert small thumb for image id nn
 
 <li>::teaser::  Combination of highlights from current newsletter
 </ul></td><td><ul>

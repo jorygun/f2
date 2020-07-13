@@ -161,7 +161,7 @@ class Calendar {
 		$sql = "SELECT DATE_FORMAT (datetime,'%M %e') as date, event FROM events
 		WHERE datetime > now() limit 2";
 		$eh = $this->pdo->query($sql);
-		$text = "Upcoming Events: \n ";
+		$text = "Upcoming Events: \n-------------------\n ";
 			foreach ($eh as $ev ){
 				$text .= $ev['date'] . ": " . $ev['event'] . NL;
 			}

@@ -395,10 +395,10 @@ public function checkAssetData($adata) {
 		$thumb = "${id}.jpg";
 		$tloc = SITE_PATH . "/thumbnails";
 		$ttypes = [];
-		if ($id > 0 && !file_exists("${tloc}/small/$thumb") ){
+		if ($id > 0 ){
 			// make small thumb.  Everyone needs one
 			$th = $this->Assetv->getThumb($id,'small');
-			if (strpos($th,'**ERROR') != false){
+			if (strpos($th,'**ERROR') !== false){
 				echo "<p class='red'>$th</p>" . NL;
 			}
 		}

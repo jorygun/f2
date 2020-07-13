@@ -546,7 +546,7 @@ public function showUpdate($uid) {
  	$row = $this->member->getMemberRecord($uid,true);
  	$tdata = $row; // put all retrieved data into template row
  	#u\echoAlert ("MA Site: " . SITE);
-// u\echor($row,'From Member');
+// u\echor($row,'From Member'); exit;
 
 
 

@@ -185,7 +185,11 @@ EOT;
 			  	}
 				if ($aid) {
 					//echo "getting thumb for asset $aid" . BRNL;
-					$image_data = $this->assetv->getThumb($aid,'medium') ;
+					$th = $this->assetv->getThumb($aid,'medium') ;
+
+					if (strpos($th,'**') !== false) {$image_data = $th;}
+					else {$image_data = "<img src='$th' />";}
+
 				} else {
 					throw new Exception ("No assets are listed for gallery $gid");
 				}

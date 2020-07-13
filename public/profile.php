@@ -81,12 +81,12 @@ EOT;
     $profile_data['user_about_linked'] = u\link_assets($profile_data['user_about']);
 
     $assets = u\number_range($profile_data['asset_list']);
-
+	$profile_data['photos'] = [];
 
 	$uid = $_GET['edit'] ??'';
    if (!empty ($uid) ){
 
-		$profile_data['photos'] = [];
+
 			foreach ($assets as $aid){
 				 $pdata = $assetv->getUserPhoto($aid,'edit');
 				// u\echor($pdata);
@@ -106,17 +106,17 @@ EOT;
 			$profile_data['photos'][$aid] = $pdata; //'view' or 'edit'
 		}
 		if (empty($profile_data['photos'] )){
-				// not photos so get a random one
+				// not photos so get id for random id with users name in it
 				$random = $container['assetsearch']->getRandomAsset($profile_data['username']);
+				echo "Random id: $random" . BRNL;
 				if (!empty($random)){
 					$pdata = $assetv->getUserPhoto($random,'view');
 
-					$pdata['title'] = "random";
 						//u\echor($pdata);
 					$profile_data['photos'][$random] = $pdata;
 				}
 			}
-//
+//  u\echor ($profile_data); exit;
 
 		echo  $templates->render('profile', $profile_data);
 

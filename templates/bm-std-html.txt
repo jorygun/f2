@@ -2,12 +2,12 @@ The Flame News is Ready for ::name::
 <html><body>
 Dear ::name::,
 <table style='border:0;width:90%;'><tr><td >
-<img src='https://amdflames.org/graphics/logo69x89.png' /></td><td>
+<img src='https://amdflames.org/assets/graphics/amdheart-grn72.png' /></td><td>
 <p>The AMD FLAMEs News, ::edition:: edition, is ready. <br>
 Here's your personal link to this new edition:</p>
    <p style='margin-left:2em;'> ::newslink:: </p>
 
-(To view any of the nearly 1000 back issues, 
+(To view any of the nearly 1000 back issues,
 log in and choose Dig In > Newsletter Index.)
 
 </td></tr><tr><td colspan='2'>::profile::</td></tr>

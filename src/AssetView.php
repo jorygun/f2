@@ -134,19 +134,21 @@ EOT;
 
 
 	public function getThumb($id,$ttype) {
-		/* returns url assets/thumbs/type/id,jpg if exists
+		/* returns url or error text
+			url is /thumbnails/type/id,jpg if exists
 			otherwise creates it using gd for the sources available
 			(thumb_url, asset_url, or autourl)
 			returns url to icon for mime if those aren't available
 			return **ERROR** if there is an error
 		*/
+		$styletext = (!empty($style)) ? "style='$style'" : '' ;
 
 
 		$thumb_loc = "/thumbnails/$ttype/${id}.jpg";
  	 //echo "Looking for $thumb_loc" . BRNL ;
 
 		if (file_exists(SITE_PATH . $thumb_loc)) {
-			return "<img src='$thumb_loc' />";
+			return $thumb_loc;
 
 		}
 
@@ -165,14 +167,14 @@ EOT;
 		}
 
 		$this -> buildGdImage($id,$this->local_src, $ttype);
-		return "<img src='$thumb_loc' />";
+		return $thumb_loc;
 
 }
 
 public function getUserPhoto($aid,$type){
 	// type is view, edit, or new
 	//
-			$p = [];  // array to build day in
+			$p = [];  // array to build data in
 			if (empty($aid)){
 				die ("no id for getUserPhoto");
 			}
@@ -180,14 +182,22 @@ public function getUserPhoto($aid,$type){
 			$pdata = $this->Assets->getThumbData($aid) ;
 
 			if (empty($pdata))  {
-				return [];
-			}
-			$image_data = $this->getThumb($aid,'small');
+
+			$title = "(missing graphic)";
+			$caption = '';
+			$image_data = "*** Graphic $aid Not Found ** "; 	// <img ...> or **ERROR**
+			} else {
+
+			$th = $this->getThumb($aid,'small');
+			if (strpos($th,'**') !== false) {$image_data = $th;}
+			else {$image_data = "<img src='$th' />";}
+
 			$title = $pdata['title'];
 			$caption = $pdata['caption'];
 			//can edit graphic if yours or have admin status
 			$credential = $_SESSION['level'] > 6
 				|| $pdata['contributor_id'] == $_SESSION['login']['user_id'] ;
+			}
 
 			$p['id'] = $aid;
 			$p['title'] = $title;
@@ -263,7 +273,9 @@ public function getAssetBlock($id,$style,$show_caption=false) {
 			"<div class='acaption'>" . $this->caption . "</div>" : '';
 
 
-		if ($image_data = $this->getThumb($id,$style) ) {
+		if ($th = $this->getThumb($id,$style) ) {
+			if (strpos($th,'**') !== false) {$image_data = $th;}
+			else {$image_data = "<img src='$th' />";}
 
 			$src_data = ($this->source)? "<div class='asource'>--"
 				.  $this->source

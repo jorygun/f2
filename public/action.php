@@ -241,7 +241,7 @@ function getTemplate($type)
 {
    // return text message for bulk mail setup script
     $tp_path = REPO_PATH . "/templates/${type}.txt";
-   #return "Getting $tp_path";
+
     if (!$message = file_get_contents($tp_path) ) {
     	throw new Exception ("File $tp_path does not exist") ;
     }

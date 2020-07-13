@@ -123,11 +123,14 @@ echo "Checking for files in $queue" . BRNL;
 		$message
 		);
 
-#get address of current newsletter
-	if (file_exists("$job_dir/pointer.txt" )){
-		$pointer = file_get_contents("$job_dir/pointer.txt") ;
+// get latest newsletter data
+	if (! $latest = $container['news'] -> getLatestIssue() ) {
+		die ("Cannot get latest issue data");
 	}
-	else {throw new Exception("No pointer file in job directory");}
+
+#get address of current newsletter
+	$pointer = $latest['url'];
+
 
  #set up mail object
    $mail = new PHPMailer;
@@ -158,7 +161,7 @@ EOT;
 	$verify_message = <<<EOT
 ------------------------------------------------------------------
    You haven't logged in for a while.  Are you getting our
-   emails?  Please click the link below to verify.
+   emails?  Please click the link below to verify this is your email.
 
        https://amdflames.org/action.php?V::uid::
 
@@ -199,14 +202,13 @@ EOT;
 				$logincode="s=$scode";
 				$login_link = SITE_URL . "/?s=$scode";
 
-				$news_url = SITE_URL . "/news" . "/?s=$scode";
-				#$news_link = "<a href='$news_url'>$news_url</a>";
+
 
 				$news_this = SITE_URL . $pointer . "/?s=$scode";
 				$link_news_this = "<a href='$news_this'>$news_this</a>";
 
 
-				$profile_link = SITE_URL . "/scripts/edit_profile.php/?s=$scode";
+				$profile_link = SITE_URL . "/profile.php/?s=$scode";
 				list($profile_age,$profile_date) = u\age_and_date($profile_updated);
 				$profile_date = u\make_date($profile_updated);
 

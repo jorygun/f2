@@ -88,11 +88,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'){
 	$now = date('M d, Y H:i');
 
 // get latest newsletter pointer
-	$pointerfile = FileDefs::latest_pointer;
-	$pointer = '';
-	if (file_exists($pointerfile)){
-		$pointer = trim(file_get_contents($pointerfile));
-	}
+	$latest = $container['news']->getLatestIssue();
+	$pointer = $latest['url'];
+
 
 include ('../templates/bulk_form.php');
 }
@@ -103,18 +101,9 @@ else { #IS POST; set up the job
 	$working = FileDefs::bulk_jobs;
 	$queue = FileDefs::bulk_queue;
 
-// get editiion name
-	// $titlefile = FileDefs::latest_dir . '/title.txt';
-//
-// 	if (file_exists($titlefile)){
-//    	$edition_name = trim(file_get_contents($titlefile));
-//    }
-//     else {
-//     	$edition_name = explode('|',trim(file_get_contents(FileDefs::pubfile)))[0];
-//     	// pub date human
-//
-//     }
-	$latest = $edition_name = $container['news']->getLatestIssue();
+
+
+	$latest = $container['news']->getLatestIssue();
 	$edition_name = $latest['title'] ?: $latest['date_published'];
 
  	echo "Edition name: $edition_name" . BRNL;
@@ -122,6 +111,7 @@ else { #IS POST; set up the job
 
 #set up job as datecode based on UTC and make sure it doesn't already exist
 	$job = false; $c = 0;
+	$assetv = $container['assetv'];
 	while (! $job){
 		$now_dt = new \DateTime();
 		$now_dt->setTimestamp(time());
@@ -168,11 +158,16 @@ else { #IS POST; set up the job
 
 	// replacements in univeral message
 	// replace ref to image with image
-	$message = preg_replace(
+	$message = preg_replace_callback(
 		'/\[image (\d+)\]/',
-		"<img src='https://amdflames.org/thumbnails/small/$1.jpg' style='margin-right:auto;margin-left:auto;text-align:center;'>",
-		$message
-		);
+		function ($m) use ($assetv) {
+			$th= $assetv->getThumb($m[1],'small');
+			if (strpos($th,'**') !== false) {
+				return '';
+			}
+			$imageurl = SITE_URL . $th;
+			return "<img src='$imageurl' />";
+		}, $message);
 
 
 	$start_dt = new \DateTime(); #sets to PDT because server
@@ -258,6 +253,7 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
     }
 
 }
+
 
 
  function runtime_msg($count,$interval){

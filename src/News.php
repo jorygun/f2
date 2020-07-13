@@ -155,11 +155,9 @@ public function getTitle($issue){
 
 public function incrementReads($issue) {
 	// sets and uses last_insert_id to return the new value
-	$sql = "UPDATE `issues` SET rcount = last_insert_id(rcount+1) WHERE issue = '$issue';";
+	$sql = "UPDATE `issues` SET rcount = rcount+1 WHERE issue = '$issue';";
 	$this->pdo->query($sql);
-	$new_val = $this->pdo->lastInsertId();
 
-	return $new_val;
 
 }
 public function getReads($issue) {
