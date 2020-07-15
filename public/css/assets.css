@@ -107,7 +107,7 @@ div.gallery .asset img {
 
 div.gallery .asset {
 	height:350px;
-  /*  width:350px; */
+   max-width:350px;
 	 overflow:auto;
   margin-right:6px;
     float:left;
