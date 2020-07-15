@@ -291,6 +291,8 @@ function show_asset_search() {
 return <<<EOT
 <div class='sf'>
 <h4>Locate a Member in the Photo/Asset Library</h4>
+(Searches in the title and caption for assets; not in
+the contributor field.)
 <form  method = 'POST'>
 
 Find by name: <input type='text' name = 'name' ><br>

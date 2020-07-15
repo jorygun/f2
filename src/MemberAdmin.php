@@ -256,7 +256,7 @@ here. Name and email can be partials.
     <th>Find by Email Status</th><th>Admin Status</th></tr>
 <tr>
 
-    <td> <input type='text' name = 'name' ></td>
+    <td> <input type='text' name = 'name' autofocus></td>
     <td><input type='text' name='email'></td>
     <td><select type='text' name='status'>$status_options</select></td>
    <td><select type='text' name='ems'>$ems_options</select></td>
