@@ -25,8 +25,8 @@
 
 
 		<td>
-			<?=$row['login_code']?>
-			<input type='hidden' name='login' id='login-<?=$row['user_id']?>' value = '<?= $row['user_login_link'] ?>'>
+
+			<input type='text' READONLY name='login' id='login-<?=$row['user_id']?>' value = '<?= $row['user_login_link'] ?>'>
 			</td><td>
 			<?= $row['send_login_button'] ?>
 			</td><td>
