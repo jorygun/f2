@@ -1,8 +1,8 @@
  <?php if ($info == 0): ?>
    <p>No Matching Members</p>
 <?php else: ?>
-    <p>Matches: <?= $info ?></p>	
-       
+    <p>Matches: <?= $info ?></p>
+
 
     <table style='border-collapse:collapse;'>
 
@@ -21,10 +21,16 @@
         <tr><td style='border-top:3px solid green' colspan='8'></td></tr>
 		<tr>
 		<td colspan='2'><b><?= $row['username'] ?></b</td>
-		<td colspan='2' ><?= $row['email_linked'] ?> </td>
-		
-		
-		<td colspan='4'><a href='<?= $row['user_login_link'] ?>' target='_blank'><?= $row['user_login_link'] ?></a> <?= $row['send_login_button'] ?>
+		<td  ><?= $row['email_linked'] ?> </td>
+
+
+		<td>
+			<?=$row['login_code']?>
+			<input type='hidden' name='login' id='login-<?=$row['user_id']?>' value = '<?= $row['user_login_link'] ?>'>
+			</td><td>
+			<?= $row['send_login_button'] ?>
+			</td><td>
+			<button type='button' onClick = copyField('login-<?=$row['user_id']?>')>Copy Login</button>
 		    </td></tr>
 
 
@@ -53,9 +59,9 @@
 		</tr>
 
         <?php endforeach; ?>
-      
+
           </table>
 <?php endif; ?>
 <hr>
 
-    
+

@@ -143,6 +143,7 @@ class MemberAdmin {
 			$row['cdate_id'] = $cdate_id;
 			$row['emver_id'] = $emver_id;
 			$row['emstat_id'] = $emstat_id;
+			$row['login_code']=$row['upw'] . $row['user_id'];
 
 
 			$row['status_id'] = $status_id;
