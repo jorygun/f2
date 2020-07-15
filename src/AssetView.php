@@ -114,10 +114,10 @@ private $Assets;
 			return "No local source for id $id.";
 
 		}
-		if ( !file_exists(SITE_PATH . $tdata['local_src']) ){
-			return "Local thumb source ${tdata['local_src']} for id $id does not exist";
-
-		}
+		// if ( !file_exists(SITE_PATH . $tdata['local_src']) ){
+// 			return "Local thumb source ${tdata['local_src']} for id $id does not exist";
+//
+// 		}
 
 		$info =  <<<EOT
 		LOADED id: $id,
