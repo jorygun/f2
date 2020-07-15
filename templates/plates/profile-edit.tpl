@@ -60,7 +60,9 @@ listed in the next newsletter.</p>
 <tr><td>Submit and Confirm email</td><td><input type='submit' name='submit' id='submit'> This button submits the whole form, same as the one at the bottom. <br>Submitting now will verify the email above, and if you changed the *'ed fields, will also mark your profile as updated.</td></tr>
 
 <tr><td colspan='2' ><h5>Basic Information</h5></td></tr>
-
+		<tr><td> Your user name </td>
+			<td> <input type='text' name='username' value='<?=$username?>'>
+			</td></tr>
 		<tr><td colspan='2' class='instr' >
 		 Check here to prevent other Flames members from seeing your email address.  </td> </tr>
 		 <tr><td>Hide Email</td><td><input type='checkbox' id='vis' value = '1' name='email_hide'  <?= $hide_checked ?> >Hide Email</td>

@@ -767,6 +767,7 @@ EOT;
 			case 'email_hide':
 			case 'no_bulk':
 			case 'badge_no':
+			case 'username':
 				$update[$key] = $val;
 				break;
 			case 'amd_where':
