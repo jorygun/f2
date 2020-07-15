@@ -108,7 +108,7 @@ function copyField (id ){
   document.execCommand("copy");
 
   /* Alert the copied text */
-  alert("Copied the text: " + copyText.value);
+  alert("Copied: " + copyText.value);
 }
 
 function new_edit_win(url,winname){
