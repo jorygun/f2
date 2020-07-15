@@ -172,7 +172,7 @@ private static $empty_search = array (
     }
     if (!empty($son = trim($data['contributor']))){
     		if (! $memid = $this->member->getMemberId($son)[0] ){
-    			echo "Contributor $son not found; ignored" . BRNL;
+    			echo "Contributor $son not found. " . BRNL; exit;
     		} else {
         		$qp[] = "contributor_id = '$memid'";
         }

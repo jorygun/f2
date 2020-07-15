@@ -61,13 +61,16 @@ if (isset($_POST['search'])){
 		$name = $_POST['name'];
 		$alist = $assets->getAssetListByName($name);
 		echo "<h4>Assets with '$name'  </h4>";;
-		echo "<div class='asset-row'>";
-		#u\echor($alist,'assets');
-		foreach ($alist as $id){
-			echo $thumbs->getAssetBlock($id,'small',false);
+		if (empty($alist)){
+			echo "No assets found" . BRNL;
+		} else {
+			echo "<div class='asset-row'>";
+			#u\echor($alist,'assets');
+			foreach ($alist as $id){
+				echo $thumbs->getAssetBlock($id,'small',false);
+			}
+			echo "</div><div class='clear'></div>";
 		}
-		echo "</div><div class='clear'></div>";
-
 
 	}
 	elseif ($_POST['search'] == 'Search News'){
