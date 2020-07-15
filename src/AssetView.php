@@ -163,7 +163,7 @@ EOT;
 			}
 		}
 		if (! file_exists(SITE_PATH . $this->local_src)){
-			return "<p class='red'> **ERROR** local source does not exist for $id</p>";
+			return "<p class='red'> **ERROR** id $id local source does not exist.</p>";
 		}
 
 		$this -> buildGdImage($id,$this->local_src, $ttype);

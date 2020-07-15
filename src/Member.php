@@ -1014,6 +1014,21 @@ public function getLogins($tag) {
 		return $row;
 	}
 
+	public function getMemberWarnings($uid) {
+		// delivers current ems and profile age
+		$sql = "SELECT username, email_status, profile_validated, profile_updated,
+			DATE_FORMAT(joined,'%M %d, %Y') as jdate
+			FROM `members_f2` WHERE user_id = $uid";
+		$row = $this->pdo->query($sql) -> fetch();
+		$row['vdays'] = u\days_ago($row['profile_validated']);
+		$row['udays'] = u\days_ago($row['profile_updated']);
+
+
+		return $row;
+
+
+	}
+
 
 
 
@@ -1036,6 +1051,7 @@ public function getLogins($tag) {
     	 	email_last_validated = NOW()
             WHERE user_id = $id;";
 		  $stmt = $this->pdo->query($sql);
+
 
         return  date ('M d Y');
 	}

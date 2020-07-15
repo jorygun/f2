@@ -108,23 +108,27 @@ function get_sections(){
 	}
 
 	public function user_welcome() {
-		$user = $_SESSION['login'];
-		$ems = $user['email_status'];
-		$age = $user['profile_age'];
+		$uid = $_SESSION['login']['user_id'];
+		if ($uid == 0) {die;}
+
+		$row= $this->member->getMemberWarnings($uid);
+
 
 		$t = "<div >";
-		$t .= "<p>Welcome back  ${user['username']}.
-		Flames member since ${user['join_date']}</p>";
+		$t .= "<p>Welcome back {$row['username']}.
+		Flames member since ${row['jdate']}.</p>";
 
 		$err = [];
-		if ($ems != 'Y'){
+		if ($row['email_status'] != 'Y'){
 			$err[] = "There is an issue with your email address: "
-				 . Defs::getEmsName($ems)
+				 . Defs::getEmsName($row['email_status'])
 				 . NL;
 		}
-		if ($age > 360) {
-			$err[] = "Your profile has not been updated in over a year.  Please have a look.";
+		if ($row['udays'] > 720) {
+			$err[] = "Your profile has not been updated for two years.  Please have a look.";
 		}
+
+
 		if (!empty($err)) {
 			$t .= "<p><span class='red'>There are some problems
 			with your account.</span> <br>
