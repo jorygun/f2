@@ -36,7 +36,7 @@ listed in the next newsletter.</p>
 
 <table class='profile'>
 
- <tr><td colspan='2' ><h5>Quick Update</h5></td></tr>
+ <tr><td colspan='2' ><h3>Quick Update</h3></td></tr>
 
 	<!--
 <tr><td>* What's New?<br><span class='instr'>(Tweet-sized update)</span></td><td>
@@ -59,7 +59,9 @@ listed in the next newsletter.</p>
 
 <tr><td>Submit and Confirm email</td><td><input type='submit' name='submit' id='submit'> This button submits the whole form, same as the one at the bottom. <br>Submitting now will verify the email above, and if you changed the *'ed fields, will also mark your profile as updated.</td></tr>
 
-<tr><td colspan='2' ><h5>Basic Information</h5></td></tr>
+<tr><td colspan='2' ><h3>Basic Information</h3></td></tr>
+<tr><td colspan='2' class='instr' >
+		 This is your name as it appears in many places on the site.  You can change it here.  It does not affect your login.  </td> </tr>
 		<tr><td> Your user name </td>
 			<td> <input type='text' name='username' value='<?=$username?>'>
 			</td></tr>
@@ -70,7 +72,7 @@ listed in the next newsletter.</p>
 
 
 		<tr><td colspan='2' class='instr'>
-		 <u>Weekly Email</u> We send out an email whenever a new newsletter is published, typically weekly.
+		 We send out an email whenever a new newsletter is published, typically weekly.
 		 Check here to OPT OUT of the weekly email.  (Please don't, because we can lose contact with you, and you will not hear about updates posted by your co-workers.
 		 <b>You will still receive occasional emails.</b> If you don't want to hear from this site ever, then you should go inactive.  Contact the admin to be set to inactive. </td></tr>
 		 <tr><td>No Weekly Email</td><td><input type='checkbox' id='nobulk' name='no_bulk' value=1 <?= $no_bulk_checked ?> > Do Not Send Weekly Email.</td></tr>
@@ -78,14 +80,17 @@ listed in the next newsletter.</p>
       <tr><td>Your personal very favorite web site</td><td><input type='url' size='60' name='user_web' value="<?= $user_web ?>" </td></tr>
 
 
-	<tr><td colspan='2'><h5>Photos</h5></td></tr>
-	<tr><td>Show these assets on my profile:</td>
-		<td><input type='text' name='asset_list' id='asset_list' value='<?=$asset_list?>'><br>
-		This is a list of integers, separated by spaces, representing the
-		asset ids you want to show. <br>
-		To remove a photo from your profile, just remove its id from the list. <br>
+	<tr><td colspan='2' ><h3>Photos</h3></td>
+	<tr><td class='instr' colspan='2'>
+	This is a list of integers, separated by spaces, representing the
+		asset ids you want to show on your profile.
+		To remove a photo from your profile, just remove its id from the list.
 		To add one, just type in the id, or use one of the tools below.<br>
 		DON'T FORGET TO SAVE THIS PAGE IF YOU MAKE ANY CHANGES TO THE LIST.
+		</td></tr>
+	<tr><td>Show these assets on my profile:</td>
+		<td><input type='text' name='asset_list' id='asset_list' value='<?=$asset_list?>'><br>
+
 		<br>
 	<button type='button' onclick="window.open('/asset_search.php?mode=j' ,'assets','width=1100,left=160');">Search Assets</button> Click to find an existing asset. Search, then choose one from the search results.
 	<br>
@@ -103,7 +108,7 @@ listed in the next newsletter.</p>
 	</div>
 
 
-    <tr><td colspan='2' ><h5>AMD Affiliation</h5></td></tr>
+    <tr><td colspan='2' ><h3>AMD Affiliation</h3></td></tr>
         <tr><td >Enter what you did at AMD, briefly:</td>
             <td><textarea class='required' name='user_amd' rows='3' cols='60'><?= $this->e($user_amd) ?></textarea></td></tr>
         <tr><td colspan='2' class='instr'> The checkboxes below are so
@@ -116,7 +121,7 @@ listed in the next newsletter.</p>
 			<td><input type='text' name='badge_no' value = '<?=$badge_no?>'>
 			</td></tr>
 
-		<tr><td colspan='2'><h5>Narratives (optional)</h5></td></tr>
+		<tr><td colspan='2'><h3>Narratives (optional)</h3></td></tr>
    	<tr><td><u>* My interests</u></td></td></tr>
 		<tr><td colspan='2'><input size='96'  name='user_interests' type='text' value="<?= $this->e($user_interests) ?>">
 		</td></tr>
