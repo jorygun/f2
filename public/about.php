@@ -73,7 +73,7 @@ Many members can write articles and upload graphics to the site. If you&rsquot;d
     <li>all the member data
     <li>all the news articles (since 2014)
     <li>a table of assets (files, title, caption, thumbnail, contributor)
-    <li>a list of links, so I can record what links people click on: (<a href='https://amdflames.org/scripts/view_links.php' target='links'>links</a>).
+    <li>a list of links, so I can record what links people click on.
     <li>a table of comments. ( I tried using Disqus for comments for a while, but it was awkward.  Much better to just role my own.  Comments can be attached to an article or graphic.  Users can make multiple comments on an article or be restricted to one.  Other people can get notified when a comment is posted.  Seems to work OK now. )
     </ul>
 

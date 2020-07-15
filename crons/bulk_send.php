@@ -157,20 +157,17 @@ EOT;
     then 'Edit'.</p>
         ";
 
+	$verify_line = <<<EOT
+       SITE_URL . '/action.php?V::uid::';
 
 	$verify_message = <<<EOT
 ------------------------------------------------------------------
    You haven't logged in for a while.  Are you getting our
    emails?  Please click the link below to verify this is your email.
 
-       https://amdflames.org/action.php?V::uid::
+       $verify_line
 
 -------------------------------------------------------------------
-EOT;
-
-	$verify_line = <<<EOT
-       https://amdflames.org/action.php?V::uid::
-
 EOT;
 
 

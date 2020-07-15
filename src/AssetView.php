@@ -185,7 +185,8 @@ public function getUserPhoto($aid,$type){
 
 			$title = "(missing graphic)";
 			$caption = '';
-			$image_data = "*** Graphic $aid Not Found ** "; 	// <img ...> or **ERROR**
+			$image_data = "*** Graphic $aid Not Found ** ";
+			$credential = false;// <img ...> or **ERROR**
 			} else {
 
 			$th = $this->getThumb($aid,'small');
@@ -205,18 +206,18 @@ public function getUserPhoto($aid,$type){
 			$p['image_data'] = $image_data; 	// <img ...> or **ERROR**
 
 
-				if ($type == 'view') {
+			if ($type == 'view') {
 
-					$p['block'] = <<<EOT
-					<div class='asset'>
-					<div class='atitle'>$title</div>
-					<a href='/asset_viewer.php?$aid' target='assetv'>
-					$image_data </a>
-					<p><i>$caption'</i></p>
-					<p><small>(id: $aid)</small></p>
-					</div>
+				$p['block'] = <<<EOT
+				<div class='asset'>
+				<div class='atitle'>$title</div>
+				<a href='/asset_viewer.php?$aid' target='assetv'>
+				$image_data </a>
+				<p><i>$caption'</i></p>
+				<p><small>(id: $aid)</small></p>
+				</div>
 EOT;
-					return $p;
+				return $p;
 			} elseif ($type=='edit') {
 					$p['block'] = <<<EOT
 					<div class='asset' style='width:300px;'>
@@ -225,19 +226,19 @@ EOT;
 					$image_data </a>
 					<p><i>$caption'</i></p>
 EOT;
+					if ($credential) {$p['block'] .= <<<EOT
+						<button type='button'
+						onClick = "window.open('/asset_editor.php?id=$aid','assete')" >
+						Edit asset $aid</button>
+EOT;
+					}
 			} else {
 				die ("Unknown type for getUserPhoto: '$type'") ;
 			}
 
 
 
-	if ($credential) {$p['block'] .= <<<EOT
-	<button type='button'
-				onClick = "window.open('/asset_editor.php?id=$aid','assete')" >
-				Edit asset $aid</button>
 
-EOT;
-	}
 			$p['block'] .= "</div>";
 
 

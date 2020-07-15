@@ -69,7 +69,16 @@ echo "<br>";
 echo "<b>sitedir:</b> " . $sitedir . "<br>\n";
 echo "<b>projdir:</b> " . $projdir . "<br>";
 echo "<b>repo:</b> " . $reponame . "<br>";
-echo "<b>Site:</b> " . SITE . "<br>";
+
+foreach (['SITE_PATH','SITE_URL','REPO_PATH','REPO'] as $var) {
+	echo "$var : " . constant($var) . BRNL;
+}
+echo "<b>SITE:</b> " . SITE . "<br>";
+
+
+
+
+
 echo "<br>\n";
 
 if (!empty($ldata = $_SESSION['login'])){
@@ -105,7 +114,7 @@ if ($verbose) {
 	u\echor ($server_adds,'Added to $_SERVER');
 	u\echor ($_SESSION,'$_SESSION');
 
-	u\echor ($GLOBALS,'$GLOBALS');
+//	u\echor ($GLOBALS,'$GLOBALS');
 
 
 

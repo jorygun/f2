@@ -28,6 +28,7 @@ class ReadNews {
 		$this->pdo = $container['pdo'];
 		$this->member = $container['member'];
 		$this->opps = $container['opps'];
+		$this->membera = $container['membera'];
 
 	}
 
@@ -111,34 +112,13 @@ function get_sections(){
 		$uid = $_SESSION['login']['user_id'];
 		if ($uid == 0) {die;}
 
-		$row= $this->member->getMemberWarnings($uid);
-
 
 		$t = "<div >";
-		$t .= "<p>Welcome back {$row['username']}.
-		Flames member since ${row['jdate']}.</p>";
+		$t .= "<p>Welcome back {$_SESSION['login']['username']}.
+		Flames member since {$_SESSION['login']['join_date']}.</p>";
 
-		$err = [];
-		if ($row['email_status'] != 'Y'){
-			$err[] = "There is an issue with your email address: "
-				 . Defs::getEmsName($row['email_status'])
-				 . NL;
-		}
-		if ($row['udays'] > 720) {
-			$err[] = "Your profile has not been updated for two years.  Please have a look.";
-		}
+		$t .= $this->membera->getWarnings($uid,false);
 
-
-		if (!empty($err)) {
-			$t .= "<p><span class='red'>There are some problems
-			with your account.</span> <br>
-			You can fix these by updating and saving your profile, which is listed under your name in the menu bar.  </p>
-				<ul>";
-			foreach ($err as $e){
-				$t .= '<li>' . $e;
-			}
-			$t .= "</ul>" . NL;
-		}
 		$t .= "</div>" . NL;
 	return $t;
 }

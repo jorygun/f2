@@ -163,7 +163,7 @@ EOT;
 		  $t .= self::if_level (7,"<li><a href='/news_admin.php' target='news_admin'>News Admin</a>");
 		  $t .= self::if_level (7,"<li><a href='/calendar.php' target='cal_admin'>Calendar Admin</a>");
 			$t .= self::if_level(7,"<li><a href='/developer/' target='developer'>Developer</a>");
-		 $t .= self::if_level(8,"<li><a href='/varinfo.php?v' target='varinfo'>Var Info</a>");
+
 
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/scripts/view_links.php'  target='data'>Link Activity</a>");

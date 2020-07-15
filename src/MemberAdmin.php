@@ -76,7 +76,7 @@ class MemberAdmin {
 			$cdate = date('d M Y', $contribute_time);
 		}
 		$login = $row['upw'] . $row['user_id'];
-		$user_login_link = "https://amdflames.org/?s=$login";
+		$user_login_link = SITE_URL . "/?s=$login";
 
 
 		$o = "<tr><td style='border-top:3px solid green' colspan='8'></td></tr>";
@@ -159,7 +159,7 @@ class MemberAdmin {
 			$row['cdate'] = u\make_date($row['contributed']);
 
 			$login = $row['upw'] . $row['user_id'];
-			$row['user_login_link'] = "https://amdflames.org/?s=$login";
+			$row['user_login_link'] = SITE_URL . "/?s=$login";
 			$row['send_login_button'] =  f\actionButton('Send Login','sendLogin',$uid,'','resp');
 			$row['x-out-button'] = f\actionButton('X-out','xout',$uid,$status_id) ;
 			$data[] = $row;
@@ -403,7 +403,7 @@ public function showMemberSummary($mdd) {
 
 	$username = $mdd ['username'];
 	$uid = $mdd['user_id'];
-    $login_string = "https://amdflames.org/?s=${mdd['upw']}${mdd['user_id']}";
+    $login_string = SITE_URL . "/?s=${mdd['upw']}${mdd['user_id']}";
 	$sendLoginButton = f\actionButton('Send Login','sendLogin',$uid);
  $summary = "
  	<div id='memberSummary'>
@@ -603,7 +603,7 @@ EOT;
 
 
 	$tdata['credential'] = $credential;
-	$tdata['warning'] = f\getWarning();
+	$tdata['warning'] = $this->getWarnings($uid,false);
 
 
  	return $tdata;
@@ -616,6 +616,51 @@ EOT;
 
 
  }
+
+ public function getWarnings($uid, $view_once = true) {
+ 	if (0 && $view_once && !empty($_SESSION['warning_seen'])){return '';}
+	if (empty($_SESSION['login'])) {return '';}
+	if ($_SESSION['login']['seclevel'] < 1 ){return '';}
+
+	$warning = [];
+
+	$row = $this->member->getMemberRecord($uid,true); //enhanced
+	$err = [];
+	$ems = $row['email_status'];
+	$t = '';
+
+	if ($ems == 'E1'){
+			$err[] = "Your email has been changed. Please be sure to respond to the verification email.";
+	} elseif ($row['email_status'] != 'Y') {
+			$err[] = "There is an issue with your email address: "
+				 . Defs::getEmsName($row['email_status'])
+				 . NL;
+	}
+
+//	echo "is " . $row['profile_age'] . ' cf ' . Defs::$profile_warning . BRNL;
+
+	if ($row['profile_age'] > Defs::$profile_warning) {
+			$err[] = "Your profile has not been updated for a good long while.  Please have a look.";
+	}
+
+
+	if (!empty($err)) {
+			$t = "<div>
+			<p class='red'>There are some problemswith your account.</p>
+				<ul>";
+			foreach ($err as $e){
+				$t .= '<li>' . $e;
+			}
+			$t .= "</ul>" . NL;
+			$t .= "You can fix these by updating and saving your profile, which is listed under your name in the menu bar.  </p>";
+			$t .= "</div>" . NL;
+
+			$_SESSION['warning_seen'] = true;
+		}
+
+		return $t;
+
+	}
 
  public function saveProfileData($post) {
 

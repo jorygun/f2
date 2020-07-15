@@ -371,7 +371,7 @@ private static $update_fields = array(
 
       $profile_date =  u\make_date($row['profile_updated']);
 
-      $profile_age = u\days_ago($row['profile_validated']);
+      $profile_age = u\days_ago($row['profile_updated']);
 
 
       $decade_choices = u\decompress($row['amd_when'],Defs::$decades);
@@ -1013,23 +1013,6 @@ public function getLogins($tag) {
 		if ($enhanced){$row = $this->enhanceData($row);}
 		return $row;
 	}
-
-	public function getMemberWarnings($uid) {
-		// delivers current ems and profile age
-		$sql = "SELECT username, email_status, profile_validated, profile_updated,
-			DATE_FORMAT(joined,'%M %d, %Y') as jdate
-			FROM `members_f2` WHERE user_id = $uid";
-		$row = $this->pdo->query($sql) -> fetch();
-		$row['vdays'] = u\days_ago($row['profile_validated']);
-		$row['udays'] = u\days_ago($row['profile_updated']);
-
-
-		return $row;
-
-
-	}
-
-
 
 
 

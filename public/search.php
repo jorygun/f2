@@ -21,6 +21,16 @@ if ($login->checkLevel(4)){
 	$page = new DocPage($page_title);
 	echo $page -> startHead($page_options);
 	# other heading code here
+echo <<<EOT
+	<style>
+	.searchforms .sf {
+		float:left;
+		width:30%;
+		min-width:275px;
+		padding:3px;
+	}
+	</style>
+EOT;
 
 	echo $page->startBody();
 }
@@ -89,7 +99,7 @@ function search_news($term,$back,$pdo) {
 	$found = 0;
 //	if (empty($term)){return "No search term";}
 	echo "<h3>Search for '$term' in newsletters published in last $back years</h3>";
-echo "<p>(Note: this search requires mysql 5.x.  Code must be changed for version 8.x.)</p>";
+//echo "<p>(Note: this search requires mysql 5.x.  Code must be changed for version 8.x.)</p>";
 
 	$term = trim($term);
 	//$sterm = preg_quote($term,'/'); #escape regex specials
@@ -127,7 +137,7 @@ echo "<p>(Note: this search requires mysql 5.x.  Code must be changed for versio
 				one doesn't
 			*/
 	//	echo $sql . BR;
-	echo "<p>(Note: this search requires mysql 5.x.  Code must be changed for version 8.x.)</p>";
+	#echo "<p>(Note: this search requires mysql 5.x.  Code must be changed for version 8.x.)</p>";
 		$selected = $pdo -> query($sql)->fetchAll();
 		//u\echor($selected);
 
@@ -219,28 +229,29 @@ function show_matches ($term, $content ) {
 	}
 
 #show search screen
-
+echo "<div class='searchforms'>";
 echo "<h3>Search For Members or Topics </h3>" . NL;
 echo show_member_search();
 echo show_news_search();
 echo show_asset_search();
-
+echo "</div>" . NL;
 exit;
 ##########################
 
 function show_news_search() {
 return <<<EOT
-<hr>
-<h4>Locate references to a member (or any term) in past newsletters</h4>
+<div class='sf'>
+<h4>Locate a phrase (e.g., member name) in past newsletters</h4>
 
 <form  method = 'POST'>
-Enter the text you're looking for (NOT case-sensitive) and the range
+Enter the text you're looking for (NOT case-sensitive)<br> and the range
 of years to search in.
-<table>
-<tr><td>Search for<br>
- <input type="text" name="news_name" ></td>
-<td>
-Search In<br>
+
+Search for:
+ <input type="text" name="news_name" >
+ <br>
+
+Search In
 <select name='back'>
 <option value=0>This year</option>
 <option value="1">1 year back</option>
@@ -250,41 +261,39 @@ Search In<br>
 <option value="5">5 years back</option>
 <option value="99">For All Time</option>
 </select>
-</td></tr>
-</table>
+
+<br>
 <input type=submit name='search' value='Search News'>
 </form>
+</div>
 EOT;
 }
 function show_member_search() {
 return <<<EOT
-<hr>
+<div class='sf'>
 <h4>Locate a Member in the Member Database</h4>
-To find a member enter name or email address.  Partials work. Not case sensitive. Limited to 100 found.
+To find a member enter name or email address. Partials work. Not case sensitive. Limited to 100 found.
 <form  method = 'POST'>
-<table >
-<tr><th>Find by name: </th><th>Find by email:</th></tr>
-<tr>
 
-    <td> <input type='text' name = 'name' ></td>
-    <td><input type='text' name='email'></td>
- </table>
+By name: <input type='text' name = 'name' ><br>
+OR<br>
+By email: <input type='text' name='email'><br>
+
 <input type=submit name='search' value='Search DB'>
 </form>
+</div>
 EOT;
 }
 function show_asset_search() {
 return <<<EOT
-<hr>
+<div class='sf'>
 <h4>Locate a Member in the Photo/Asset Library</h4>
 <form  method = 'POST'>
-<table >
-<tr><th>Find by name: </th></tr>
-<tr>
-    <td> <input type='text' name = 'name' ></td>
- </table>
+
+Find by name: <input type='text' name = 'name' ><br>
 <input type=submit name='search' value='Search Assets'>
 </form>
+</div>
 EOT;
 }
 

@@ -72,6 +72,9 @@ Build new Pubs table from live version of index.json and Articles and read_table
 onClick = "window.open('/developer/gen_assets2.php','gena');return false;" value='assets'>Build Assets2</button>
 Build new Assets2 table from Assets
 
+<li><button name='run'
+onClick = "window.open('/developer/varinfo.php/?v','vars');return false;" value='varinfo'>Run Varinfo</button>
+
 </ul>
 </form>
 <form method='post'>
@@ -79,6 +82,7 @@ Warning message to display at top of each page in this repo:<br>
 <input type=text name='repo_warn' size='60' value='<?=$repo_warn?>'>
 <input type=submit>
 </form>
+
 
 
 

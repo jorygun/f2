@@ -10,10 +10,17 @@
 
 <h1> AMD Flames Profile and Email Editor</h1>
 <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='profile' >Help</button>
-<p>Saving this form marks your email address and profile as confirmed. <br>
-If you make changes to fields marked with an asterisk *, your profile will be listed as an update on the next newsletter. If you change your email address,
-that will listed on the next newsletter as well.</p>
-<p>Fields in yellow are <span class='required'>required</span>.</p>
+<p>Saving this form marks your email address as confirmed. <br>
+Making changes to fields marked with an asterisk *, "updates" your profile.<br>
+If you change your email address or update your profile, the changes will be
+listed in the next newsletter.</p>
+
+<?php if (!empty($warning) ):
+	echo $warning;
+	endif;
+?>
+
+<p>Fields in yellow are <span class='required'>required</span>. Changes to fields with * 'update' your profile.</p>
 
 	<h3><?= $username ?></h3>
 	<p>Profile last updated: <?= $profile_date ?>,
@@ -21,15 +28,6 @@ that will listed on the next newsletter as well.</p>
 		Flame member since  <?= $join_date ?> (<?= $status_name ?>) <br>
 		</p>
 
-<?php if (!empty($warning) && ($profile_valid_age > $profile_warning) ): ?>
-
-   <div class='warning'>Your profile has not been updated since
-   <?=$profile_date?>.  Please look it over and make edits as needed.  If everything
-   is OK <i>including your email</i>, just click here to verify everything.  If you make any edits, click Update at the bottom of the page.<br>
-   <?= $profile_verify_button ?>
-   </div>
-
-<?php endif; ?>
 
 
 <form method='post' name='profile' id='profile' enctype="multipart/form-data" action='/profile.php'>
@@ -54,17 +52,12 @@ that will listed on the next newsletter as well.</p>
 		<td><input class='required' size='96' id='location' name='user_from' type='text' value='<?= $this->e($user_from) ?>'>
 		</td></tr>
 
-	<?php if ($email_status != 'Y'): ?>
-<tr><td colspan=2><div class='warning'>There is a problem with your current email
-address. You may change it here, or, if it is correct, just submit this page to confirm it. If you change it, be sure to respond to the confirmation email. Your current email status is <?= $email_status_name ?>.
-	</td></tr>
-<?php endif; ?>
 
 		<tr><td>My current Email:</td><td><input id='email' name='user_email' type='email' class='required' size='60' value='<?= $user_email ?>'><br>
 
 			</td></tr>
 
-<tr><td>Submit and Confirm email</td><td><input type='submit' name='submit' id='submit'> This button submits the whole form, same as the one at the bottom, but if you don't want to change anything else, you can submit now.</td></tr>
+<tr><td>Submit and Confirm email</td><td><input type='submit' name='submit' id='submit'> This button submits the whole form, same as the one at the bottom. <br>Submitting now will verify the email above, and if you changed the *'ed fields, will also mark your profile as updated.</td></tr>
 
 <tr><td colspan='2' ><h5>Basic Information</h5></td></tr>
 
@@ -87,7 +80,7 @@ address. You may change it here, or, if it is correct, just submit this page to 
 	<tr><td>Assets to show on my profile</td>
 		<td><input type='text' name='asset_list' id='asset_list' value='<?=$asset_list?>'><br>
 	To remove a photo from your profile, remove the asset id here.<br>
-	To find and add an existing asset, click here.
+	To find and add an existing asset, click here.  Be sure to Save after changing photo list.
 	<button type='button' onclick="window.open('/asset_search.php?mode=j' ,'assets','width=1100,left=160');">Search Assets</button> <br>
 	To create and add a new asset, click here.
 	<button type = 'button' onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >Create a new asset</button>
@@ -129,14 +122,14 @@ address. You may change it here, or, if it is correct, just submit this page to 
 			<textarea rows='15' cols='120' name='user_about' class='input useredit'> <?= $this->e($user_about) ?></textarea></td></tr>
 
 
-        <tr><td ><u>What is/was great about working at AMD</u></td><td  class='instr'>
-			Share some memories.
+        <tr><td colspan = 2 ><u>What is/was great about working at AMD</u><br>
+        	<span  class='instr'>Share some memories.</span>
 			</td></tr>
 			<tr><td colspan='2'><textarea rows='15' cols='96' name='user_memories' class='input useredit'  ><?= $this->e($user_memories) ?></textarea></td></tr>
 
 
 
-			<tr><td colspan='2' class='h3'><input name='Submit' value='Update' style="background:#9F9;" type='submit'>
+			<tr><td colspan='2' class='h3'><input name='Submit' value='Save Update' style="background:#9F9;" type='submit'>
 				<input type='button' name='Cancel' value='Cancel' onclick="window.location.href='/profile.php/uid<?= $user_id ?>'; "></td></tr>
 		</table>
 	</form>

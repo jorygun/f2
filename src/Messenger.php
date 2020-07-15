@@ -332,7 +332,7 @@ EOF;
 	private function buildPlaceholders ($row) {
 		$login = $row['login_string'] ;
 		$uid = f\splitLogin($login)[0];
-		$this->replacements ['::login::'] = 'https://amdflames.org/?s=' . $login;
+		$this->replacements ['::login::'] = SITE_URL . '/?s=' . $login;
 
 		$this->replacements ['::verify::'] = SITE_URL . "/action.php?V" . $uid;
 		$this->replacements ['::signup::'] = SITE_URL . "/action.php?S" . $uid;

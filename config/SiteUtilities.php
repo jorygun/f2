@@ -62,36 +62,5 @@ function isLogin($login) {
 }
 
 
-function getWarning () {
-	//retrurns warning message if set and not seen
-	if (!empty($_SESSION['warning_seen'])){return '';}
-	if (empty($_SESSION['login']['seclevel'])){return '';}
-	if ($_SESSION['login']['seclevel'] < 1 ){return '';}
 
-			$warning = [];
-		$msgs = [];
-
-
-		if ($_SESSION['login']['email_status'] == 'E1'){
-			$msgs[] = "Your email has been changed. Please be sure to respond to the verification email.";
-
-		}
-		elseif ($_SESSION['login']['email_status'] != 'Y'){
-			$msgs[] = "There is a problem with your email.  Please check your profile.";
-
-		}
-
-		if ($_SESSION['login']['profile_valid_age']> Defs::$profile_warning){
-			$msgs [] = "Your profile is getting a bit long in the tooth.  How about an update? ";
-
-		}
-		if (!empty($msgs)){
-			#$msgs[] = "Please choose go to your profile (under your name in the menu bar)  and choose 'Edit Profile'.";
-			$warning = join (" ",$msgs);
-
-		}
-
-		return $warning;
-
-}
 
