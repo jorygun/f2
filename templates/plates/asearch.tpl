@@ -69,7 +69,7 @@
 		<tr $hideme>
 			<td>Contributor Name </td>
 			<td><input type='text' name='contributor' id='contributor' value='<?=$contributor?>'>
-			<br><small>(must match Flames user name)</small></td>
+			<br><small>(must exactly match flames user name)</small></td>
 		</tr>
 		<tr>
 			<td>First Use Date</td>

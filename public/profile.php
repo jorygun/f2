@@ -81,6 +81,8 @@ EOT;
     $profile_data['user_about_linked'] = u\link_assets($profile_data['user_about']);
 
     $assets = u\number_range($profile_data['asset_list']);
+   // u\echor ($assets); exit;
+
 	$profile_data['photos'] = [];
 
 	$uid = $_GET['edit'] ??'';
@@ -88,7 +90,15 @@ EOT;
 
 
 			foreach ($assets as $aid){
+				if (! u\isInteger($aid) ){
+					$pdata=array(
+						'title' => 'ERROR',
+						'image' => "id $aid is not valid",
+					);
+				}else {
+
 				 $pdata = $assetv->getUserPhoto($aid,'edit');
+				}
 				// u\echor($pdata);
 				$profile_data['photos'][$aid] = $pdata; //'view' or 'edit'
 			}
@@ -100,6 +110,7 @@ EOT;
 
    } else { // is not an edit
 		$profile_data['photos'] = [];
+
 		foreach ($assets as $aid){
 			 $pdata = $assetv->getUserPhoto($aid,'view');
 			// u\echor($pdata);

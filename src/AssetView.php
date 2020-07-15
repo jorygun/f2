@@ -175,11 +175,11 @@ public function getUserPhoto($aid,$type){
 	// type is view, edit, or new
 	//
 			$p = [];  // array to build data in
-			if (empty($aid)){
-				die ("no id for getUserPhoto");
+			$pdata = [];
+			if (!empty($aid)){
+				 $pdata = $this->Assets->getThumbData($aid) ;
 			}
 
-			$pdata = $this->Assets->getThumbData($aid) ;
 
 			if (empty($pdata))  {
 
