@@ -264,31 +264,35 @@ public static $user_aliases = array (
 
 // code => [name, seclevel]
 
-private static $member_codes = array (
+public static $member_codes = array (
 	'N' => array ('New Signup', 1),
 
 	'G' => array ('Guest', 2),
-	'GA'	=> array ('Anonymous Guest', 2),
-	'M' => array ('Member', 4),
 
+	'M' => array ('Member', 4),
 	'MC' => array ('Contributor', 6),
 	'MN' => array ('News Admin', 7),
 	'MU' => array ('User Admin', 8),
 	'MA' => array ('Admin Admin', 9),
-	'MI' => array ('Inactive Member', 2),
+
 
 	'I' => array ('Inactive', 2),
 	'T' => array ('test user (like member)', 4),
 	'L' => array ('lost ', 1),
 	'D' => array ('deceased', 0),
 
-	'H' => array ('hidden', 0),
+
 	'X' => array ('to be deleted', 0),
 	'Y' => array ('Non-member', 0),
 	'YA' => array ('Alumni non-member', 0),
 
-	'H' => array ('??' ,4),
 	);
+
+#these member status codes are considered members
+	public static $member_array = array(
+	'M', 'MA','MN','MC','MU','G'
+	);
+
 
 	public static $signup_status_names = array(
 
@@ -299,12 +303,8 @@ private static $member_codes = array (
 			'Z' => 'Other',
 		);
 
-#these member status codes are considered members
-	private static $member_array = array(
-	'M', 'MA','MN','MC','MU','R','G'
-	);
 
-public static $test = 'you win';
+
 
 #####################
 public static function getMimeGroup($mime) {
