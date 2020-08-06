@@ -117,7 +117,7 @@ if (! empty ($_POST)) {
 			break;
 		case 'runStatus':
 			$test = false;
-			echo runStatusReport($container, $_POST['ptime']);
+			echo runStatusReport($_POST['ptime'], $container);
 			// uid used to transfer the starting date
 			break;
 		case 'indexNews':
@@ -333,9 +333,9 @@ function cancel_bulk($job)
     echo $bulkmail -> show_bulk_jobs();
 }
 
-function runStatusReport($container, $var) {
-	if (empty($var)){return "Error: no date supplied";}
-	$since = date('Y-m-d H:i',strtotime($var));
+function runStatusReport($ptime,$container) {
+	if (empty($ptime)){return "Error: no date supplied";}
+	$since = date('Y-m-d H:i',strtotime($ptime));
 	if ($sr = new StatusReport($container, $since) ) {
 		return "Report Run";
 
