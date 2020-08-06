@@ -2,6 +2,13 @@
 
 namespace DigitalMx\Flames;
 
+/*
+	updates assets setting first use in = gallery if it is in the gallery list and
+	no first use currently
+
+*/
+
+
 #ini_set('display_errors', 1);
 
 //BEGIN START

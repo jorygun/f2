@@ -32,7 +32,7 @@ echo $page->startBody();
 //END START
 
 $asset_db = 'assets2'; #local copy of product assets table
-$logurl = '/developer/log.thumb_check.log';
+$logurl = '/developer/logs/log.thumb_check.log';
 $logpath = SITE_PATH . $logurl;
 $assets = $container['assets'];  //Assets Class
 
