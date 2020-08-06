@@ -121,6 +121,7 @@ function verifyEmail(uid) {
 
 function runStatus(pid) {
     var ptime = $('#'+pid).val();
+    alert ("ptime " + ptime); exit;
    $.ajax ({
     url: "/action.php",
     data: 'ajax=runStatus&ptime=' + ptime,
