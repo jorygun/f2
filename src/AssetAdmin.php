@@ -579,8 +579,8 @@ echo "tsrc: $tsrc" . BRNL;
 		  $icon = Defs::getIconForMime($amime) ;
 			$local_src =  "/assets/graphics/icons/$icon";
 		}
-		if (u\is_local($tsrc) === false) {
-				throw new Exception ("Thumb url is not local file");
+		if (u\is_local($local_src) === false) {
+				throw new Exception ("Thumb source is not local file");
 		}
 //echo "Local source $local_src" . BRNL;
 		return $local_src;
