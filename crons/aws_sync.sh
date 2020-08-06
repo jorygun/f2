@@ -7,8 +7,9 @@ export LANG=en_US.UTF-8
 export LANGUAGE=en_US
 export LC_ALL=en_US.UTF-8
 
-/usr/home/digitalm/bin/aws s3 sync /usr/home/digitalm/Sites/flames/shared/assets s3://amdflames/assets  --profile aws-web --quiet
-/usr/home/digitalm/bin/aws s3 sync /usr/home/digitalm/Sites/flames/shared/newsp s3://amdflames/newsp  --profile aws-web
+/usr/home/digitalm/bin/aws s3 sync /usr/home/digitalm/Sites/flames/shared/assets/ s3://amdflames/assets/  --profile aws-web --quiet
 
+
+/usr/home/digitalm/bin/aws s3 sync /usr/home/digitalm/Sites/flames/shared/newsp s3://amdflames/newsp  --profile aws-web
 
 

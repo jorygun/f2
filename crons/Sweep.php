@@ -1,34 +1,51 @@
 <?php
 
+/* preload these files:
+	Messenger
+	Member
+	MyPDO.php
+	Definitions
+	MxUtilities
+	
+*/
 
 #ini_set('display_errors', 1);
 #set_time_limit(300); // 30sec. is default 0 is none;
 
-
-use DigitalMx\Flames\Definitions as Defs;
-use DigitalMx as u;
-
-
-$repoloc = dirname(__FILE__,2);
-require_once "$repoloc/public/init.php";
+$script = basename(__FILE__);
+$dir=dirname(__FILE__);
 
 
-if (! defined ('INIT')) { die ("Sweep halting. Init did not succeed ");}
+
+use digitalmx\flames\Definitions as Defs;
+use digitalmx as u;
+use digitalmx\flames\Messenger;
+use digitalmx\flames\Member;
+use digitalmx\MyPDO;
+
+
+if (! defined ('INIT')) { echo "Running cron-ini \n";
+	include "$dir/cron-ini.php";
+}
+if (! defined ('INIT')) { die ("$script halting. Init did not succeed ");}
 
 /* Sweep runs as a cron job every night
 	It checks status of member (and signup) tables and send out
 	messages to users and admin as appropriate
-
+	
 	It runs these tests:
 	check member database for x-ed out (status: delete) members  and delete
 	test members for each of the 'in process' email statuses and
 		use messenger to send an email to user (and maybe admin)
 	test signups for validated new signups
 	test members for long inactivty and start the aged-out test sequence
-
+	
 */
 
-$sweep = new Sweep($container);
+$sweep = new Sweep($dir,$test,$pdo);
+$sweep -> runSweep();
+
+
 
 class Sweep{
 
@@ -37,68 +54,65 @@ class Sweep{
 	private $members;
 	private $test;
 	private $mode;
-
+	
 	private $member_status_set;
-	private $inactivity_limie;
+
 	private $now_sql;
 
 
-
+	
 	private $log; #var used to capture log records
 	private $sweep_log; #file path for log file
-
+	
 	private static $log_format1 = "(%s) %-25s  %-20s (id %4d) status %2s %4d days. Change to %s.\n";
 	private static $log_format2 = "(%s) %-25s  %-20s (id %4d) Ems %2s. Change to %s. \n\tLogin %10s; Em-valid %10s; Prof-valid %10s.\n";
 
-
+	
 	private static $sleep_interval = 10;// delay in seconds between emails.
 	private static $ems_test_sequence = array ('N1','E1','A3','A2','A1','B1','D');
 
 
-
+	
 // set older test flags
-/*  if this script set to mode test, then it will report actions,
- 	 but not actually update the db.
- 	 If messenger is set to test, it will report but not actually send emails.
-*/
 
-	public function __construct($container) {
+	public function __construct($dir,$test, $pdo) {
 		#	$test = true;
-		$test = false;
 		$this->test = $test;
 		$mode = ($test)? 'Test':'Real';
 		$this->mode = $mode;
-		$this->member = $container['member'];
-		//$this->member->setTestMode();
+		$this->member = new Member();
+		$this->messenger = new Messenger(); 
+		$this->messenger->setTestMode($test); #true = test mode
+		//$this->pdo = MyPDO::instance();
+		$this->pdo = $pdo;
+	
 
-		$this->messenger = $container['messenger'] ;
-		$this->messenger->setTestMode();
-
-		$this->inactivity_limit = ($test)? 3 : Defs::$inactivity_limit;
-		$this->pdo = $container['pdo'];
+		
 		$this->member_status_set = Defs::getMemberInSet();
 
 		$dt = new DateTime();
 		$this->now_sql = $dt->format('Y-m-d');
 		$now_datestamp = $dt->format('Ymd_His');
 		$now_human = $dt->format("M j, H:i a");
-
+		
+		
 		$sweep_log_dir = REPO_PATH . "/var/logs";
 		$this->sweep_log = $sweep_log_dir . '/sweep-' . "${now_datestamp}-${mode}.txt";
 		$this->log = sprintf ("Sweep run %s at %s\n\n",$this->mode,$now_human);
-		$this->runSweep();
+
+		
 	}
 
-
+    
 	public function runSweep(){
 		$incidents = 0;  #actual number of incidentst
 		//remove x-ed out records
-		$count = $this->removex();
+		$count = $this->removex(); 
 		echo "$count X-ed out records found.\n\n";
 		$incidents += $count;
 
 		// test for each of the transitional status ages
-		$count = $this->main();
+		$count = $this->main(); 
 		echo "$count expired email status records found.\n\n";
 		$incidents += $count;
 
@@ -114,7 +128,9 @@ class Sweep{
 
 		$this->close_sweep($incidents);
 		exit;
-	}
+		
+		
+	}	
 
 function close_sweep($incidents) {
 	$sweep_log_dir = dirname($this->sweep_log);
@@ -146,29 +162,29 @@ EOF;
 ########################################################
 	function new_members() {
 		$this->log .= "\n#### Testing new users validated but not welcomed\n";
-		$sql = "SELECT id, username, user_email
+		$sql = "SELECT id, username, user_email 
 			FROM `signups` WHERE
 				 status = 'A' ;
 			";
-
+	 
 		$result = $this->pdo->query($sql);
 		$rows_found = $result->rowCount();
 		$this->log .=  "Users to welcome: $rows_found\n" ;
 		if ($rows_found > 0){
 			$msg = "
-Sweeps has encountered entries in Signups with validated email,
+Sweeps has encountered entries in Signups with validated email, 
 These users have not been processed.\n
 ";
-
+		
 			foreach($result as $row){
 				$uid = $row['id'];
 				$username = $row['username'];
 				$user_email = $row['user_email'];
+		
+				$this->log .=  sprintf ( self::$log_format1, $this->mode, $user_email,$username,$id,'','','Approve');
 
-				$this->log .=  sprintf ( self::$log_format1, $this->mode, $user_email,$username,$uid,'','','Approve');
-
-				$msg .= sprintf ("   %10s %-15s \n" ,$uid, $username);
-
+				$msg .= sprintf ("   %10s %-15s \n" ,$id, $username);
+		
 			}
 
 			mail('admin@amdflames.org',"New users need welcome", $msg,"From: admin@amdflames.org\n\r");
@@ -179,11 +195,11 @@ These users have not been processed.\n
 function aged_out($max_records =0) {
 	// changed 9/2019 to simpler test: last login > 1year
 	// max_records if >0 is max records to return.
-
+	
 	$this->log .=  "\n#### Testing last activity more than $this->inactivity_limit days\n";
 	$limit = ($max_records > 0)? "LIMIT $max_records" : '' ;
-
-
+	
+	$inactivity_limit = Defs::$inactivity_limit;
 	$sweep_fields = '
 		id,
 		user_id,
@@ -196,7 +212,7 @@ function aged_out($max_records =0) {
 		email_last_validated,
 		profile_validated
 	';
-
+	
 
 
 	$sql = "SELECT $sweep_fields FROM `members_f2` WHERE
@@ -205,64 +221,63 @@ function aged_out($max_records =0) {
 		AND
 			(last_login IS NULL
 			OR
-			last_login < NOW() - INTERVAL $this->inactivity_limit DAY
+			last_login < NOW() - INTERVAL $inactivity_limit DAY
 			)
 		AND
 			(
 			email_last_validated is NULL
 			OR
-			email_last_validated < NOW() - INTERVAL $this->inactivity_limit DAY
+			email_last_validated < NOW() - INTERVAL $inactivity_limit DAY
 			)
-
+	
 		";
 		if ($this->test){$sql .= " AND test_status != '' ";}
-
+	
       $sql .= "
 			ORDER BY email_last_validated
-
+			
 			$limit
 			;";
-
+			
 		#echo $sql,"<br>";
-
-
+	
+	
 		$result = $this->pdo->query($sql) ;
 		$rows_found = $result->rowCount();
-		$this->log .= "No activity for $this->inactivity_limit days: $rows_found\n";
+		$this->log .= "No activity for $inactivity_limit days: $rows_found\n";
 		#echo "$rows_found aged out users found.\n";
-
+      
 		foreach ($result as $row){
 			#echo "Processing ${row['username']}\n";
 			$uid = $row['user_id'];
 			$username = $row['username'];
-
+			
 
 			$user_email = $row['user_email'];
 			$next_ems = 'A1';
 
 			//$ems_date = u\make_date($row['email_status_time'],'human'); #is a datestamp
 			$ems_age = u\days_ago($row['email_status_time']);
-			$this->messenger->sendMessages($uid,$next_ems);
-
+			 $this->messenger->sendMessages($uid,$next_ems);
 			if ($this->test ){
-				echo "Test: $username ($user_email) age $ems_age to $next_ems\n";
+				echo "Test only: $username ($user_email) age $ems_age\n";
 			} elseif (
-				 $this->member->setEmailStatus($uid,$next_ems)
+				 $this->member->setEmailStatus($uid,$next_ems) 
 				 ){
 				#ok
 			 } else {
-				  echo "Member::setEmailStatus failed on uid $uid to status $next_ems.\n" ;
+				  echo "update_ems failed on uid $uid to status $next_ems.\n" ;
 			 }
-
+			 
 			$last_login_date = substr($row['last_login'],0,10);
-
+			
 			$this->log .=  sprintf ( self::$log_format2, $this->mode, $row['user_email'],$row['username'],$uid,$row['email_status'],$next_ems,$last_login_date,$row['email_last_validated'], $row['profile_validated']
 			);
 		}
 		return $rows_found;
 	}
-
-
+	
+	
 	function main () {
 		$sweep_fields = '
 			id,
@@ -283,7 +298,7 @@ function aged_out($max_records =0) {
 			AND email_status = ?
 			AND email_status_time <  DATE_SUB(NOW(), INTERVAL ? day)
 			";
-		 if ($this->test){
+		 if ($this->test){ 
 			$sql .=  " AND test_status != '' ";
 		 }
 		$main_stmt = $this->pdo->prepare($sql);
@@ -298,44 +313,46 @@ function aged_out($max_records =0) {
 				++$tags;
 				 $uid = $row['user_id'];
 				 $username=$row['username'];
-
+		
 				 $ems_date = u\make_date($row['email_status_time'],'human' ); #is a time stamp
 				$ems_age = u\days_ago($row['email_status_time']);
 				$this->messenger->sendMessages($uid,$next_ems);
 				if ($this->test){
-					echo "Test: would update $uid $username to $next_ems\n";
-				} elseif ($this->member->setEmailStatus($uid,$next_ems)){
-						$this->log .= "\t(Real) Updated $uid $username to $next_ems\n";
+					echo "testing: would update $uid $username to $next_ems\n";
+				} elseif (
+				 $this->member->setEmailStatus($uid,$next_ems) 
+					){
+						$this->log .= "\t($this->mode) Updated $uid $username to $next_ems\n";
 				} else {
-						$this->log .=  "Member::setEmailStatus failed  on uid $uid to status $next_ems.\n" ;
+						$this->log .=  "Failed update_ems  on uid $uid to status $next_ems.\n" ;
 				}
 			}
-
+			
 			$count += $tags;
 			$this->log .= "    $tags members aged out of status $this_ems found.\n";
 		}
 		return $count;
-
+	 
  	}
-
-
+ 	
+ 	
 	function removex() {
 		$this->log .=  "\n#### Testing x-ed out records\n";
 		$where = "status like 'X%' ";
 		if ($this->test){$where .= " AND test_status != '' ";}
-
+	
 		$sql = "SELECT count(*) FROM members_f2 WHERE $where";
 		$incident_count = $this->pdo->query($sql)->fetchColumn();
-
+	
 		if ( $incident_count ){
-
+			 
 			if (! $this->test ){
-				$this->log .=  " Deleting $incident_count records\n";
+				$this->log .=  "Deleting $incident_count records\n";
 				$sql = "DELETE from `members_f2` WHERE $where";
 				 $this->pdo->query($sql);
 			 }
-			 else {
-				echo "Test: $incident_count records found but not deleted\n";
+			 else { 
+				echo "Test mode: $incident_count records found but not deleted\n";
 			 }
 		}
 		return $incident_count;
