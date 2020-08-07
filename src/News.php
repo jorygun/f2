@@ -98,7 +98,7 @@ public function getRecentArticles ($days_ago) {
 
 
 	$sql = "SELECT a.id as id, a.title,
-			DATE_FORMAT(i.pubdate, '%M %e') as pubdate,
+			DATE_FORMAT(a.date_published, '%M %e') as pubdate,
 			count(c.id) as comment_count,
 			if (a.take_votes,sum(v.vote_rank),'n/a') as votes,
 			sum(k.count) as clicks
