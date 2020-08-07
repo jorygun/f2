@@ -63,6 +63,7 @@ class Recent
 
 	$rlist = $this->news->getRecentArticles($from);
 
+
 //  u\echor($rlist, $sql);
 	$data['articles'] = $rlist;
 	$data['run_date'] = date('d M H:i');

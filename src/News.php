@@ -112,7 +112,7 @@ public function getRecentArticles ($days_ago) {
 			WHERE i.pubdate >= '$from_date' AND i.pubdate < '$to_date'
 
 
-         LIMIT 15;
+         LIMIT 20;
 	";
 
 
