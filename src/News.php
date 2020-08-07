@@ -95,7 +95,6 @@ public function getRecentArticles ($days_ago) {
 	$to_date = u\sqlnow();
 
 
-
 	$sql = "SELECT a.id as id, a.title,
 			DATE_FORMAT(i.pubdate, '%M %e') as pubdate,
 			count(c.id) as comment_count,
@@ -110,7 +109,7 @@ public function getRecentArticles ($days_ago) {
 			left join links k on a.id = k.article_id
 
 			WHERE i.pubdate >= '$from_date' AND i.pubdate < '$to_date'
-
+			group by a.id
 
          LIMIT 20;
 	";
