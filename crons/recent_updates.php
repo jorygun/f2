@@ -10,7 +10,7 @@ ini_set('display_errors', 1);
     * recent_assets.html - archival assets added to assets
     * recent_articles.html - comments and votes on recent articles.
      (replaces old recent_assets and recent_articles)
-     
+
     does two things: it retrieves
     * the title and link for the most recently published
     * articles, AND
@@ -19,7 +19,7 @@ ini_set('display_errors', 1);
     *
     *
     *This script is run by cron or other triggers
-    
+
 */
 
 /*  needs: Defs, pdo
@@ -29,6 +29,11 @@ ini_set('display_errors', 1);
 
 $script = basename(__FILE__);
 $dir=dirname(__FILE__);
+
+$repoloc = dirname(__FILE__,2);
+require_once "$repoloc/public/init.php";
+
+
 
 if (! @defined ('INIT')) {
 	include "$dir/cron-ini.php";
@@ -55,7 +60,7 @@ $dt_to = new \DateTime('@' . $latest_pub);
 $dt_to -> modify('-1 day');
 $to = $dt_to->format('Y-m-d');
 
-if(! $quiet) echo "From $from To $to\n"; 
+if(! $quiet) echo "From $from To $to\n";
 #build asset report
 
 if( $recent_asset_report = report_recent_assets ($from,0,30 ) ){
@@ -84,9 +89,9 @@ if ($recent_article_report = report_recent_articles ($from,$to,30,$test) ){
 function report_recent_articles ( $from, $to, $max=0,$test) {
 // from and to need to be in sql format already
 	$pdo = MyPDO::instance();
-	
+
 	// get article links into an array
-	$link_counts = count_links($pdo);	
+	$link_counts = count_links($pdo);
 #	u\echor ($link_counts, 'link counts');
 
     $limit = ($max>0) ? " LIMIT $max" : '';
@@ -95,20 +100,20 @@ function report_recent_articles ( $from, $to, $max=0,$test) {
     	$tomorrow = new \DateTime('+2 days');
     	$to_date = $tomorrow->format('Y-m-d');
    }
-   
+
    $from_date = $from ;
 
 
-    $sql = "SELECT n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source, 
+    $sql = "SELECT n.id,n.title,n.contributor,n.date_published,n.take_votes,n.source,
        c.comments, v.net_votes
 	    FROM news_items n
         LEFT JOIN  (
             SELECT item_id, on_db, count(*) as comments
-            FROM `comments` 
+            FROM `comments`
             GROUP BY item_id , on_db
             ) c ON c.item_id = n.id AND c.on_db = 'news_items'
         LEFT JOIN (
-            SELECT news_fk, sum(vote_rank) as net_votes 
+            SELECT news_fk, sum(vote_rank) as net_votes
             FROM `votes`
             GROUP BY news_fk
             ) v ON v.news_fk = n.id
@@ -124,11 +129,11 @@ if ($test) {echo "starting article report from $from_date to $to_date.\n" ; }
     if (!$pst = $pdo->query ($sql) ){return false;}
     $rowc = $pst -> rowCount();
      if ($rowc == 0) {return false;}
-     
+
      $report = "<div style='margin-left:2em;float:left'>";
     $report .=  "<h4>Recent Article Activity</h4>";
-   
-   
+
+
      $report .=  "<table class='alternate article_list'>";
      $report .= "
         <tr><th>Article</th><th>Contributor</th><th>Published</th>
@@ -160,7 +165,7 @@ if ($test) {echo "starting article report from $from_date to $to_date.\n" ; }
 EOT;
       }
       $report .=  "</table>\n";
-    
+
      $report .= "<small>Updated ". date('d M H:i T') . "</small></div>\n\n";
 
 
@@ -175,7 +180,7 @@ EOT;
 
 function count_links($pdo) {
 	#retrieves clicks on urls on articles
-	$sql = "Select article_id, count from `links` 
+	$sql = "Select article_id, count from `links`
 		where last > now() - interval 4 week";
 	$result = $pdo->query($sql)->fetchAll(\PDO::FETCH_KEY_PAIR);
 	// result should be array of id, count
@@ -183,7 +188,7 @@ function count_links($pdo) {
 }
 
 function count_comments_cron($id,$pdo){
-     
+
     $sql = "SELECT count(*) from `comments` where on_db = 'news_items' and item_id = $id;";
     $nRows = $pdo->query($sql)->fetchColumn();
     return $nRows;
@@ -201,7 +206,7 @@ function report_recent_assets ($from,$to,$max=0) {
     $to_date = ($to) ? date('Y-m-d') : date('Y-M-d',strtotime($to));
    $from_date = $from;
    $archival_tags = Defs::$archival_tags;
-   
+
 // any tag ('UI') has code ('U') contained in the set of archival_tags ('ABCUW');
 // regexp [abc] matches if string contains any of those characters.
  $sql = "
@@ -214,17 +219,17 @@ function report_recent_assets ($from,$to,$max=0) {
 	  ";
 
 
-if (! $pst = $pdo -> query ($sql) ) {return false;} 
+if (! $pst = $pdo -> query ($sql) ) {return false;}
  $rowc = $pst -> rowCount();
  # echo  "$rowc articles found.\n";
  if ($rowc == 0) { return false;}
- 
+
     if (!$asset_tags = Defs::$asset_tags) {
     	die ("Did not get asset_tags");
     }
-   
 
-    
+
+
 	$report = "<div style='margin-left:2em;float:left'>";
 	$report .=  "<h4>$rowc new Archival Assets</h4>";
 	$report .= "<p style='font-size:0.9em;'>(This list shows archival assets only, not all assets.  Find any asset on the site by using Search &gt; Search Graphics/Video. 'Multimedia' means streaming audio/video. )</p>";
@@ -242,7 +247,7 @@ if (! $pst = $pdo -> query ($sql) ) {return false;}
 
 			$tagnames=[];
         if ($tags = $row['tags'] ){
-        
+
 			  foreach (str_split($tags) as $tag){
 					$tagnames[] =  $asset_tags[$tag];
 			  }
@@ -250,7 +255,7 @@ if (! $pst = $pdo -> query ($sql) ) {return false;}
 			}
         $vintage = (empty($row['vintage']))?'?':$row['vintage'];
 			$sizemb = round($row['sizekb'] / 1000,0);
-		
+
         $report .=  <<<EOT
  <tr >
 	<td>$link</td>
