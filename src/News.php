@@ -92,7 +92,9 @@ public function getRecentArticles ($days_ago) {
 // set starting date to look from
 	$from_dt = new \DateTime("- $days_ago day");
 	$from_date = $from_dt->format('Y-m-d');
-	$to_date = u\sqlnow();
+	$to_dt = new \DateTime("- 1 day");
+	$to_date = $to_dt->format('Y-m-d');
+
 
 
 	$sql = "SELECT a.id as id, a.title,
