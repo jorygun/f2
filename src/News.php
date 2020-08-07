@@ -110,7 +110,7 @@ public function getRecentArticles ($days_ago) {
 			left join links k on a.id = k.article_id
 
 			WHERE i.pubdate >= '$from_date' AND i.pubdate < '$to_date'
-			GROUP BY a.id,i.pubdate
+
 
          LIMIT 15;
 	";
