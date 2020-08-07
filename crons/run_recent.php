@@ -16,5 +16,5 @@ require_once $repodir . '/public/init.php';
 
 
 $recent = new Recent($container);
-$recent -> run();
+
 
