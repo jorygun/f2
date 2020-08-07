@@ -126,7 +126,7 @@ public function getRecentArticles ($days_ago) {
 public function getIssueArticles ($issue) {
 
 
-	$sql = "SELECT l.id as id
+	$sql = "SELECT l.article as aid
 
 			FROM publinks l
 			join articles a on a.id = l.article
