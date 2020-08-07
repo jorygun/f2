@@ -86,23 +86,7 @@ class News {
 		return $popnews;
 	}
 
- public function getNewsIdsForIssue($issue) {
- 	if ($issue == 1) {
- 		// preview
- 		$where = "use_me > 0";
- 	} else {
- 		$where = "issue = '$issue' ";
- 	}
- 	$sql = "SELECT id from `articles`
- 		WHERE $where";
- 	try {
- 		$artlist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
- 	} catch (PDOException $e) {
- 		return [];
- 	}
- 	return $artlist;
 
- }
 
 public function getRecentArticles ($days_ago) {
 // set starting date to look from
@@ -139,6 +123,28 @@ public function getRecentArticles ($days_ago) {
 
 }
 
+public function getIssueArticles ($issue) {
+
+
+	$sql = "SELECT l.id as id
+
+			FROM publinks l
+			join articles a on a.id = l.article
+			join news_topics t on a.topic = t.topic
+			join news_sections s on s.section = t.section
+
+			WHERE l.issue = '$issue'
+			ORDER BY s.section_sequence ASC,t.topic;
+			;
+	";
+
+
+    $rlist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+
+
+	return $rlist;
+
+}
 
 public function getNewsIndex() {
 	$sql = "SELECT issue,url,title, pubdate, DATE_FORMAT(pubdate,'%d %b, %Y') as hdate FROM `issues` WHERE issue > 19980000 ORDER BY pubdate DESC";

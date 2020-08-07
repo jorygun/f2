@@ -79,7 +79,7 @@ echo $page->startBody($style,$subtitle);
 
 $rcount = 0;
 
-	$artlist = $publish->getArticleList($issue) ?: [];
+	$artlist = $news->getIssueArticles($issue) ?: [];
 
 	if ($issue != '1'){
 		$news->incrementReads($issue);
