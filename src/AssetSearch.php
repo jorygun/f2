@@ -63,6 +63,7 @@ private static $empty_search = array (
 		;
 		";
 
+
 		$id = $this->pdo->query($sql)->fetchColumn();
 
 		return $id;
@@ -302,12 +303,14 @@ private function token_search ($searchstring){
 //         . implode("%' OR $concat LIKE '%", $keyword_tokens) . "%'"
 //         . ')';
    $token = array_pop($keyword_tokens); #get first token
+   $token = addslashes($token);
    $sql =  "( INSTR ($concat ,'${token}') > 0 ";
 
 	foreach ($keyword_tokens as $token){ #OR any additional toekns
 		$sql .=  " AND INSTR ($concat ,'${token}') > 0 ";
 	}
 	$sql .= " ) ";
+
     return $sql;
 }
 

@@ -63,7 +63,7 @@ listed in the next newsletter.</p>
 <tr><td colspan='2' class='instr' >
 		 This is your name as it appears in many places on the site.  You can change it here.  It does not affect your login.  </td> </tr>
 		<tr><td> Your user name </td>
-			<td> <input type='text' name='username' value='<?=$username?>'>
+			<td> <input type='text' name='username' value='<?=$this->e($username)?>'>
 			</td></tr>
 		<tr><td colspan='2' class='instr' >
 		 Check here to prevent other Flames members from seeing your email address.  </td> </tr>
