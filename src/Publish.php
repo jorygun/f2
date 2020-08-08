@@ -350,7 +350,7 @@ EOT;
 	public function getIssueList() {
 		// returns array of issues and dates that have articles listed
 		// in the last year
-		$sql = "SELECT issue,DATE_FORMAT(pubdate,'%Y %M %d') as pubdate
+		$sql = "SELECT issue,DATE_FORMAT(pubdate,'%Y %M %d') as pdate
 			FROM issues
 			WHERE  pubdate > DATE_SUB(NOW(),INTERVAL 1 year)
 			ORDER BY pubdate DESC

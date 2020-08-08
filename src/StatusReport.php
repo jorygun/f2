@@ -131,6 +131,7 @@ class StatusReport {
 		<div class='head'>
 		<p class='headline'>${row['username']} <span class='normal'>${row['email_public']} ${row['hidden_emailer']} </span><br>
 		Living in ${row['user_from']}<br>
+		At AMD: ${row['user_amd']}<br>
 
 EOT;
 
