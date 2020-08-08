@@ -17,7 +17,7 @@ class Definitions {
 
 	// days before warnings start on profile or email
 
-	public static $profile_warning = 365;
+	public static $profile_warning = 720;
 		#days since update; warning on login and bulk email
 	public static $inactivity_limit = 366;
 		#days since last activity; triggers lost test
