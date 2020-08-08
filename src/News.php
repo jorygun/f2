@@ -119,7 +119,7 @@ public function getRecentArticles ($days_ago) {
 
 
     $rlist = $this->pdo->query($sql)->fetchAll();
-	u\echor($rlist,"From $from_date");
+	// u\echor($rlist,"From $from_date");
 
 	return $rlist;
 
