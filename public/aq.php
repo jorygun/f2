@@ -39,7 +39,7 @@ if (isset($_POST['submit'])){
 <script>
 
         // wait for the DOM to be loaded
-        $( function() {
+        $( document).ready (function() {
             // bind 'myForm' and provide a simple callback function
             $('#asset_form').ajaxForm(function(responseText, statusText, xhr, $form) {
             	if(statusText != 'success') {alert ('Failed'); return false;}
@@ -52,7 +52,7 @@ if (isset($_POST['submit'])){
             		var newid = matches[1];
             	}
 
-                alert('ID: ' + newid);
+                alert('New ID is ' + newid);
                 var target = window.opener;
                 target.postMessage(newid);
 
