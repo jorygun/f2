@@ -163,7 +163,7 @@ class AssetAdmin
 		$adata['sizekb'] = 0;
 		$adata['mime'] = '';
 
-echo "{$adata['astatus']}" . BRNL;
+// echo "{$adata['astatus']}" . BRNL;
 
 		// get asset mime
 
@@ -201,7 +201,7 @@ echo "{$adata['astatus']}" . BRNL;
 		}
 
 		if ($changed) { //new or changed urls.  Make sure thumb sources are in place
-			echo "Rebuilding thumbs." . BRNL;
+			//echo "Rebuilding thumbs." . BRNL;
 			// remove eisting thumbs
 			foreach (
 				[FileDefs::asset_dir . '/thumb_generated' . "/${id}.jpg",
@@ -211,14 +211,14 @@ echo "{$adata['astatus']}" . BRNL;
 				] as $thumb) {
 				//echo "checking $thumb .. ";
 				if (file_exists($thumb)){
-					echo "removing old file $thumb <br>";
+					//echo "removing old file $thumb <br>";
 					unlink ($thumb) ;
 				} else {
-				echo "<br>";
+				//echo "<br>";
 				}
 			}
 		}
-		try {
+
 			$adata['local_src'] = $this->checkThumbSources
 			($id,$adata['asset_url'],$adata['thumb_url'],$adata['mime'] ) ;
 
@@ -227,6 +227,7 @@ echo "{$adata['astatus']}" . BRNL;
 			}
 			$desturl = "/thumbnails/small/${id}.jpg";
 			$this->Assetv::buildGdImage($id,$adata['local_src'], 'small');
+		try {
 			$this->checkAssetData($adata);
 			$this->Assets->saveAsset($adata);
 		}  catch (\Exception $e) {
