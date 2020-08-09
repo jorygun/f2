@@ -60,7 +60,7 @@ class AssetAdmin
 	public function postAssetFromForm($post) {
 	// prepare data and then send to asset to post
 
-	#u\echor($post,'post data in');
+	//u\echor($post,'post data in');
 
 		$changed = false;
 		if (isset($post['rebuild'])) { $changed = true; }
@@ -217,24 +217,25 @@ echo "{$adata['astatus']}" . BRNL;
 				echo "<br>";
 				}
 			}
-			try {
-				$adata['local_src'] = $this->checkThumbSources
-				($id,$adata['asset_url'],$adata['thumb_url'],$adata['mime'] ) ;
-
-				if (!$adata['local_src'] ){ // could not verify thumb sources
-					throw new Exception ("Could not determine local source for asset $id thumb.");
-				}
-				$desturl = "/thumbnails/small/${id}.jpg";
-				$this->Assetv::buildGdImage($id,$adata['local_src'], 'small');
-				$this->checkAssetData($adata);
-				$this->Assets->saveAsset($adata);
-			}  catch (\Exception $e) {
-				echo "Error in asset data. Asset not saved." . BRNL;
-				echo $e->getMessage();
-				$id='';
-			}
-
 		}
+		try {
+			$adata['local_src'] = $this->checkThumbSources
+			($id,$adata['asset_url'],$adata['thumb_url'],$adata['mime'] ) ;
+
+			if (!$adata['local_src'] ){ // could not verify thumb sources
+				throw new Exception ("Could not determine local source for asset $id thumb.");
+			}
+			$desturl = "/thumbnails/small/${id}.jpg";
+			$this->Assetv::buildGdImage($id,$adata['local_src'], 'small');
+			$this->checkAssetData($adata);
+			$this->Assets->saveAsset($adata);
+		}  catch (\Exception $e) {
+			echo "Error in asset data. Asset not saved." . BRNL;
+			echo $e->getMessage();
+			$id='';
+		}
+
+
 
 
 		return $id;

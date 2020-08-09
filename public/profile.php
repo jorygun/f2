@@ -122,6 +122,7 @@ EOT;
 				//echo "Random id: $random" . BRNL;
 				if (!empty($random)){
 					$pdata = $assetv->getUserPhoto($random,'view');
+					$pdata['random'] = true;
 
 						//u\echor($pdata);
 					$profile_data['photos'][$random] = $pdata;
