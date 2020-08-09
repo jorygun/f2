@@ -58,11 +58,11 @@ EOT;
 	public static $previewaction = <<<EOT
 		<button type="button" onclick= "
 			takeAction('preview','0','','');
-			 window.open('/news/next','preview');
-			">Show News Preview</button>
+			window.open('/news/next','preview');
+			">Set News Preview</button>
 EOT;
 
-
+// window.open('/news/next','preview');
 
 	public function __construct($container){
 		foreach (['pdo','news','article'] as $dclass) {
@@ -75,14 +75,23 @@ EOT;
 	}
 
 
-	public function preview() {
-		// get article list and put into the pub 1 record
+	public function setPreview() {
+		/* get list or articles marked as next and set issue to 1;
+		1 for preview, xxxx for publsihed
+
+
+		*/
+		echo "Setting preview" . BRNL;
+		// gets id sequenced by section topic priority
 		$storylist = $this->article->getArticleIds('next');
-		$sql = "DELETE from publinks WHERE issue = 1;";
+		// remove old issue 1 tags
+		$sql = "UPDATE articles set issue = 0 where issue = 1";
 		$this->pdo->query($sql);
-		$sql = "INSERT into publinks SET issue = 1 ,article = ? ";
+
+		$sql = "UPDATE articles SET issue = '1' where id = ? ";
 		$pubin = $this->pdo->prepare($sql);
 		foreach ($storylist as $story) {
+			//echo "sertting $story to issue 1" . BRNL;
 			$pubin->execute([$story]);
 		}
 
@@ -99,6 +108,7 @@ EOT;
 		}
 
 	}
+
 	public function wrapupNews() {
 		// these routines clean up everything once
 		// publish is successful
@@ -156,34 +166,28 @@ EOT;
 */
 
 
-		// if (file_exists($this->archive_path)){
-// 			die ("$this->archive directory already exists. Please remove before proceeding");
-// 		}
-
-
-// copy news/next to news/latest - copies reports and stuff
+// copy news/next to news/latest  and to new archive- copies reports and stuff
 		$this->copyNextToLatest();
-
-// get list of stories to publsh
-//	$storylist = $this->article->getArticleIds('next');
-
-// copy news/latest into the new archive newsp/news_yymmdd
 		$this->copyLatestToArchive($this->archive);
-// create a new pub record with some info from preview issue
-// storylist is list of stories in this issue
 
-		$storylist = $this->getArticleList('1');
+// create a new issue record with some info from preview issue
 		$this->createNewPub($this->archive,$this->issue);
-		// sets issue 1 data to defaults
-		// not needed.  preview is reset in createNewPub
-	//	$this->initializePreview();
+
+// update stories to new issue
+
+	// mark all the stories published and set first use date on any assets referenced.
+
+		$this->buildTeaser();
+
+		 $this->publishStories();
 
 
 
-// mark all the stories published and set first use date on any assets referenced.
-		 $this->publishStories($storylist);
 
-		 $this->buildTeaser($storylist);
+
+	$this->initializePreview();
+
+
 
 
 
@@ -191,8 +195,13 @@ EOT;
 	}
 
 
-	public function buildTeaser($storylist) {
-		$artlist = $this->article->getArticleList('list',$storylist);
+	public function buildTeaser() {
+		$sql = "SELECT a.title,u.username as contributor
+		FROM articles a
+		JOIN members_f2 u on a.contributor_id = u.user_id
+		where issue = '1' ";
+		$artlist = $this->pdo->query($sql);
+
 		$t = "News Stories: \n------------------\n";
 		$nbsp3 = "&nbsp;&nbsp;&nbsp;";
 
@@ -214,14 +223,15 @@ EOT;
 		u\full_copy(FileDefs::next_dir,FileDefs::latest_dir);
 
 	}
-	private function publishStories($storylist) {
+	private function publishStories() {
 		// mark each story as published, and set first use for any assets it references
-		echo "Updating articles" . BRNL;
+		$storylist = $this->getPreviewArticles();
+		echo "Publishing articles" . BRNL;
 		$sql = "UPDATE articles
 			SET date_published = '$this->pubdate',
 				status = 'P',
 				use_me = 0,
-				pub_issue = '$this->issue'
+				issue = '$this->issue'
 			WHERE id = ?";
 		$arth = $this->pdo->prepare($sql);
 
@@ -233,11 +243,12 @@ EOT;
 		$sql = "UPDATE assets2
 			SET
 				first_use_in = '$this->archive_url'
-			WHERE id = ? AND first_use_in is NULL";
+			WHERE id = ? ";
 		$fuh = $this->pdo->prepare($sql);
 
 
 		foreach ($storylist as $story) {
+			// update status, issue, pubdate
 			 $arth->execute([$story]);
 			//echo "Getting assets from $story" . BRNL;
 			$asseth->execute([$story]);
@@ -251,28 +262,22 @@ EOT;
 
 			}
 		}
-
-
-
-
-
-
-
 	}
+
+
 	private function createNewPub($archive,$issue) {
 	/* change references to preview (issue 1)
 		to the new issue.
 
 		issues: issue 1 -> issue issue
-		publinks: issue 1 -> issue issue
-		publinks issue [publdate] = now;
+
 	*/
 	// get issue 1 data
-		$issuedata = $this->pdo->query(
+		$prevdata = $this->pdo->query(
 			"Select title, last_scan from issues where issue = '1' "
 			) ->fetch();
-		$title = $issuedata['title'];
-		$last_scan = $issuedata['last_scan'];
+		$title = $prevdata['title'];
+		$last_scan = $prevdata['last_scan'];
 
 		$sql = "INSERT INTO issues
 			SET issue = '$issue',
@@ -283,21 +288,6 @@ EOT;
 				last_scan = '$last_scan'
 				";
 		$this->pdo->query($sql);
-
-
-		$sql = "UPDATE issues Set title = '' WHERE issue = '1'";
-		$this->pdo->query($sql);
-
-		$sql = "UPDATE publinks set issue= '$issue' WHERE issue = '1'";
- 		$this->pdo->query($sql);
-
-
-
-
-		$this->initializePreview();
-
-
-
 	}
 
 	private function initializePreview () {
@@ -313,8 +303,8 @@ EOT;
        $stmt = $this->pdo->query($sql);
 	}
 
-	public function getArticleList ($issue) {
-		$sql = "SELECT article from publinks where issue = '$issue'";
+	public function getPreviewArticles() {
+		$sql = "SELECT id from articles where issue = '1'";
 		$storylist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
 		return $storylist;
 	}
@@ -338,14 +328,6 @@ EOT;
 
 	}
 
-	public function getArticlesFromIssue($issue) {
-		$sql = "SELECT article from publinks
-			WHERE issue = '$issue'
-		";
-		$storylist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
-		return $storylist;
-
-	}
 
 	public function getIssueList() {
 		// returns array of issues and dates that have articles listed

@@ -103,9 +103,9 @@ public function getRecentArticles ($days_ago) {
 			if (a.take_votes,sum(v.vote_rank),'n/a') as votes,
 			sum(k.count) as clicks
 
-			FROM publinks l
-			join issues i on i.issue = l.issue
-			join articles a on a.id = l.article
+			FROM articles a
+			join issues i on i.issue = a.issue
+
 			left join comments c on a.id = c.item_id and c.on_db='news_items'
 			left join votes v on a.id = v.news_fk
 			left join links k on a.id = k.article_id
@@ -128,14 +128,13 @@ public function getRecentArticles ($days_ago) {
 public function getIssueArticles ($issue) {
 
 
-	$sql = "SELECT l.article as aid
+	$sql = "SELECT a.id as aid
 
-			FROM publinks l
-			join articles a on a.id = l.article
+			FROM articles a
 			join news_topics t on a.topic = t.topic
 			join news_sections s on s.section = t.section
 
-			WHERE l.issue = '$issue'
+			WHERE a.issue = '$issue'
 			ORDER BY s.section_sequence ASC,t.topic;
 			;
 	";

@@ -163,7 +163,7 @@ if (! empty ($_POST)) {
 	  		echo  $publish->publishNews();
 	  		break;
 	  	case 'preview':
-	  		echo $publish->preview();
+	  		echo $publish->setPreview() ;
 	  		break;
 	  	case 'restore':
 	  		echo system(REPO_PATH . '/crons/restore_dev.sh');
@@ -174,12 +174,8 @@ if (! empty ($_POST)) {
 		case 'click':
 			echo count_click($_POST,$container);
 			break;
-		case 'preview':
-			$publish->buildPreview();
-			break;
-		case 'publish':
-			echo $publish->publishNews();
-			break;
+
+
 		default:
 			echo "Unknown attempt at ajax update : <pre>\n" . print_r($_POST, true);
 	}

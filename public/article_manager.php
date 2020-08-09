@@ -69,7 +69,7 @@ if (!empty($_POST['toggle_use'])) {
 	if ($cat == 'issue'){
 			#get articles from POST['issue']
 			$issue = $_POST['issue'];
-			if (!$stories = $publish->getArticlesFromIssue($issue) ){
+			if (!$stories = $articles->getArticleIds('issue',[$issue]) ){
 				die ("Did not get any stories for issue $issue");
 			}
 

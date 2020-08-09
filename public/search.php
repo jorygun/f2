@@ -126,13 +126,12 @@ function search_news($term,$back,$pdo) {
 
 	if (1 ) { // do the sql search
 		$sql = "SELECT a.content,a.id, i.issue,a.title, DATE_FORMAT(i.pubdate,'%M %d, %Y') as pdate
-			FROM publinks l
-			INNER JOIN  articles a on a.id = l.article
-			INNER JOIN issues i on l.issue = i.issue
+			FROM articles a
+			INNER JOIN issues i on a.issue = i.issue
 			WHERE i.pubdate > $dcompare
 				AND a.content REGEXP '[[:<:]]{$term}[[:>:]]'
 	/*			AND a.content REGEXP '\\\b{$term}\\\b' */
-			ORDER BY pubdate DESC
+			ORDER BY i.pubdate DESC
 			";
 			/* mysql < 8.0.4 uses the old style char classes;
 				later versions use the more standard escaped chars.
