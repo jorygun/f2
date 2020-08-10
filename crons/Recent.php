@@ -39,7 +39,7 @@ class Recent
 		$this->templates = $container['templates'];
 		$this->report_dir = REPO_PATH . '/public/news/current';
 		$this->news = $container['news'];
-
+		$this->show = true;
 		$this->run();
 
 	}
