@@ -1,6 +1,7 @@
 <?php
 namespace DigitalMx\Flames;
 
+
 use DigitalMx\Flames\Definitions as Defs;
 use DigitalMx as u;
 
@@ -20,8 +21,11 @@ use DigitalMx as u;
 */
 
 /*  STARTUP */
-
+require_once  '../public/init.php';
 if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
+new Recent($container);
+
+
 
 class Recent
 {
