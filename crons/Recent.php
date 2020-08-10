@@ -66,7 +66,7 @@ class Recent
     /*
     $from = days ago
     */
-	echo "Starting articlew report". NL;
+	echo "Starting article report". NL;
 
 
 	$from_dt = new \DateTime("- $days_ago day");
@@ -95,7 +95,8 @@ class Recent
 	";
 
 
-    $rlist = $this->pdo->query($sql)->fetchAll();
+    if (!$rlist = $this->pdo->query($sql)->fetchAll() ) {
+    	die ("pdo failed"); }
 
 
   u\echor($rlist, $sql);
