@@ -25,11 +25,14 @@ Status: <?=$status_name?> <?=$date_published?><br>
 
 <tr><td >Item Title (required)</td><td><input type='text' size='60' name='title' class='input required' id='title' value="<?=$title?>"></td></tr>
 
-
+<?php if ($_SESSION['level'] > 6) : ?>
 <tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' onfocus="form.contributor_id.value='';"
     style = '$cont_style'> id: <input type='text' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ><br><?=$Aliastext?></td></tr>
 
-
+<?php else: ?>
+<tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' READONLY
+    style = '$cont_style'> id: <input type='hidden' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ></td></tr>
+<?php endif; ?>
 
 <tr><td >Source</td><td><input type='text' name='source' value="<?=$source?>" size="30"> date: <input type='text' name='source_date' value = "<?=$source_date?>" size="15"></td></tr>
 
