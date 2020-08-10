@@ -182,9 +182,9 @@ EOT;
 	$thisMenu = 'Authoring';
 	if ($userlevel >= 6){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu (6,$thisMenu);
-		$t .= self::if_level(6,"<li><a href='/article_manager.php' target='article_manager'>Create/Edit Articles</a> ");
+		$t .= self::if_level(6,"<li><a href='/user_article_manager.php' target='article_manager'>Create/Edit Articles</a> ");
 		 $t .=  self::if_level(6,"<li><a href='/asset_search.php' target='asearch'>Add/Find Graphics</a> ");
-		 $t .=  self::if_level(6,"<li><a href='/views.php' target='data'>Count of Views by Issue</a> ");
+
 
 
 	$t .=  self::closeLine(6, $thisMenu) ;

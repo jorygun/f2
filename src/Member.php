@@ -1373,7 +1373,8 @@ public function getLogins($tag) {
 		return $list;
 	}
 	public function getUpdatedProfiles($since,$test=false) {
-
+		// returns user_ids for members with profiles update
+		// after 'since' and not reported since update.
 		$member_status_set = Defs::getMemberInSet();
 		$test_clause =  ($test)?
 		"AND test_status != '' " : "AND test_status = '' ";
@@ -1383,10 +1384,11 @@ public function getLogins($tag) {
 			WHERE status in ($member_status_set)
 			AND test_status = ''
 			AND profile_updated > '$since'
-			AND joined < '$since';";
+			AND joined < '$since';
+			AND (profile_reported is NULL OR profile_reported < profile_updated) ";
 
 
-		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_ASSOC) ;
+		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_COLUMN) ;
 			//u\echor($result,$sql);
 
 		return $result;

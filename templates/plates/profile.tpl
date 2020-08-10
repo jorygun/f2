@@ -29,7 +29,8 @@
 
 	<p><b>Now</b> <br><?=$this->nl2br($user_current )?></p>
 
-	<p><b>At AMD: </b><br><?=$this->e($user_amd )?><br><br>Short version: <?= $at_amd ?><br><br>
+	<p><b>At AMD: </b> <?= $at_amd ?><br>
+		<?=$this->e($user_amd )?><br>
 		Badge No: <?=$badge_no?></p>
 
 	<p><b>Interests:</b><br><?=$this->e($user_interests )?></p>

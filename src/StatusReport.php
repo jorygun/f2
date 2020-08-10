@@ -61,7 +61,7 @@ class StatusReport {
 		file_put_contents(FileDefs::next_dir . '/status_report.html',$report);
 
 	// create html article of profile updates
-		$report = $this->report_profiles($this->since);
+		$report = $this->report_profiles($this->since,20); #no more than 20 in one report
 		file_put_contents(FileDefs::next_dir . '/profile_updates.html',$report);
 
 	// create list of updates for email teasers
@@ -112,7 +112,7 @@ class StatusReport {
     }
 
 
-    private function report_profiles ($since) {
+   private function report_profiles ($since,$limit) {
     	/* builds a story file from updated profiles */
     	// get list of user_ids of updated profiles
     	$list = $this->member->getUpdatedProfiles($since,$this->test);
@@ -121,50 +121,58 @@ class StatusReport {
     	if (empty ($list)){return;}
     	list ($titletext,$subtitle) = explode ('|',self::$type_titles['profile']);
 
-    	// now create a story fle to drop into newx/next
-    	$story = "";
+		//prepare marker for profile_reported.
+		$sql = "UPDATE members_f2 set profile_reported = NOW() WHERE user_id = ?";
+		$updateh = $this->pdo->prepare($sql);
 
-    	foreach ($list as $profile){
-    		$row = $this->member_admin->getProfileData($profile['user_id']);
+    	// now create a story fle to drop into news/next
+    	$limitm = min($count,$limit)
+    	$story = "<p class='subhead'>Reporting on $limitm of $count profile updates.</p>";
+
+		$r = 0;
+    	foreach ($list as $uid){
+    		++$r;
+    		$row = $this->member_admin->getProfileData($uid);
     		$story.= <<<EOT
     <div class='article'>
 		<div class='head'>
 		<p class='headline'>${row['username']} <span class='normal'>${row['email_public']} ${row['hidden_emailer']} </span><br>
 		Living in ${row['user_from']}<br>
 		At AMD: ${row['user_amd']}<br>
-
+		<a href='/profile.php?id=$uid'>View Full Profile</a>
+		</p>
 EOT;
 
-
-			$story .= "</span></p>\n";
-
-		$story .= "
-		</div>
-		<div class='content'>
-		";
-		$story .= "<div class='subarticle'><u> Currently:</u>
+			$story .= "
+			</div>
+			<div class='content'>
+			";
+			$story .= "<div class='subarticle'><u> Currently:</u>
 				${row['user_current']}</div>";
 
-		if (! empty ($row['user_interests']) ){
-			$story .= "<div class='subarticle'><u>Interests:</u>
-			${row['user_interests']}</div>";
-		}
+			if (! empty ($row['user_interests']) ){
+				$story .= "<div class='subarticle'><u>Interests:</u>
+				${row['user_interests']}</div>";
+			}
 
-		if (! empty ($row['user_about'])) {
-			$story .= "<div class='subarticle'><u>About:</u>
-				${row['user_about']}</div>";
-		}
+			if (! empty ($row['user_about'])) {
+				$story .= "<div class='subarticle'><u>About:</u>
+					${row['user_about']}</div>";
+			}
 
 		// if (! empty ($row['user_memories']) ){
 // 			$story .= "<p class='subhead'>Memories:</p>
 // 			<div class='subarticle'>${row['user_memories']}</div>";
 // 		}
-		$story .= <<<EOT
+			$story .= <<<EOT
 	</div></div>
 
 	</div>
 EOT;
-	$this->namelist[] = $row['username'];
+			$this->namelist[] = $row['username'];
+			// mark reported.
+			$updateh->execute([$uid]);
+			if ($r >= $limitm) {return $story};
 		}
 
 		return $story;
