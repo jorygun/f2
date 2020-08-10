@@ -34,12 +34,10 @@ Status: <?=$status_name?> <?=$date_published?><br>
     style = '$cont_style'> <input type='hidden' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ></td></tr>
 <?php endif; ?>
 
-<tr><td >Source</td><td><input type='text' name='source' value="<?=$source?>" size="30"> date: <input type='text' name='source_date' value = "<?=$source_date?>" size="15"></td></tr>
+<tr><td >News Source</td><td><input type='text' name='source' value="<?=$source?>" size="30"> date: <input type='text' name='source_date' value = "<?=$source_date?>" size="15"></td></tr>
 
-<tr><td>url for more info</td><td><input type='text' name='link' value = "<?=$link?>" size="60"></td></tr>
-
-
-<tr><td >title for above url</td><td><input type='text' size='60' name='link_title' value="<?=$link_title?>"></td></tr>
+<tr><td>URL for more info</td><td><input type='text' name='link' value = "<?=$link?>" size="60"></td></tr>
+<tr><td >Title for above url</td><td><input type='text' size='60' name='link_title' value="<?=$link_title?>"></td></tr>
 
 
 <tr><td style="vertical-align:top;">Content</td><td><textarea cols=60 rows=10 name='content' class='useredit' ><?=$content?></textarea></td><tr>
@@ -57,11 +55,11 @@ Status: <?=$status_name?> <?=$date_published?><br>
    <td>Separate multiple asset ids with spaces.</br><input type=text name='asset_list' id='asset_list' size = 40 value='<?=$asset_list?>'>
    </td></tr>
 
-<tr><td>Central asset id (in body):</td>
+<tr><td>One central asset id (will fill width of article body):</td>
 	<td><input type=text name='asset_main' id=size=8 value='<?=$asset_main?>'>
 	</td></tr>
 
-
+<tr><td colspan='2'>Check here to allow other users to add comments or up-votes</td></tr>
 <tr><td colspan='2'>Allow Comments? <input type='checkbox' value='1' name='take_comments' <?= $comments_checked ?>> &bull;
 Allow Votes? <input type='checkbox' value='1' name='take_votes' <?= $votes_checked ?>></td></tr>
 
