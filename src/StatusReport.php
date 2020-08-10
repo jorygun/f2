@@ -56,6 +56,7 @@ class StatusReport {
 		$this->member = $container['member'];
 		$this->member_admin = $container['membera'];
 
+
 	// create report of member status updates
 		$report = $this->createReport($this->since);
 		file_put_contents(FileDefs::next_dir . '/status_report.html',$report);
@@ -122,8 +123,7 @@ class StatusReport {
     	list ($titletext,$subtitle) = explode ('|',self::$type_titles['profile']);
 
 		//prepare marker for profile_reported.
-		$sql = "UPDATE members_f2 set profile_reported = NOW() WHERE user_id = ?";
-		$updateh = $this->pdo->prepare($sql);
+
 
     	// now create a story fle to drop into news/next
     	$limitm = min($count,$limit);
@@ -173,7 +173,8 @@ EOT;
 EOT;
 			$this->namelist[] = $row['username'];
 			// mark reported.
-			$updateh->execute([$uid]);
+			$this->member->setProfileReported($uid);
+
 			if ($r >= $limitm) {return $story;}
 		}
 
