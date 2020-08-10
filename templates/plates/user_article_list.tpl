@@ -3,7 +3,10 @@
 <h3>Create New Article or Edit An Existing One
 <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='article_list' >Help</button></h3>
 
-<button onClick="window.open('/article_editor.php?id=0','article_edit');" type='button'><b>New Article</b></button>
+Click here to start a new article: <button onClick="window.open('/article_editor.php?id=0','article_edit');" type='button'><b>New Article</b></button>
+<br> OR <br>
+Edit one of the existing articles below.  You can "manage" articles that you created.
+Articles "Queued for Next" are set to appear in the next newsletter.
 
 <h3><?=$emsg['selected']?></h3>
 <?php foreach (['editable','noneditable'] as $estat): ?>
