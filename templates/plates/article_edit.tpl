@@ -31,7 +31,7 @@ Status: <?=$status_name?> <?=$date_published?><br>
 
 <?php else: ?>
 <tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' READONLY
-    style = '$cont_style'> id: <input type='hidden' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ></td></tr>
+    style = '$cont_style'> <input type='hidden' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ></td></tr>
 <?php endif; ?>
 
 <tr><td >Source</td><td><input type='text' name='source' value="<?=$source?>" size="30"> date: <input type='text' name='source_date' value = "<?=$source_date?>" size="15"></td></tr>
