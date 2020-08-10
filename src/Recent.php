@@ -51,6 +51,7 @@ class Recent
 		file_put_contents ($this->report_dir. '/recent_assets.html',$report);
 
 		$report =$this->report_recent_articles();
+		if($this->show) {echo $report;}
 		file_put_contents ($this->report_dir. '/recent_articles.html',$report);
 
 }
