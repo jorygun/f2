@@ -384,7 +384,7 @@ function deleteAsset ($aid,$container){
 
 function markReviewed($aid,$container) {
 	$assets = $container['assets'];
-	if($assets->updateStatus($aid,'R') ) return "Reviewed";
+	if($assets->updateStatus($aid,'O') ) return "Reviewed";
 	return "Failed";
 }
 
