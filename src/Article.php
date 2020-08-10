@@ -211,7 +211,7 @@ EOT;
                 'id' => 0,
                 'title' => '',
             'source' => '',
-            'source_date' => date('M d, Y'),
+            'source_date' => '',
             'link' => '',
             'link_title' => '',
             'topic' => '',
