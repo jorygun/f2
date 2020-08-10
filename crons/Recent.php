@@ -31,7 +31,7 @@ new Recent($container);
 class Recent
 {
 
-	private $show = true;
+	private $show = false;
 
 
 	public function __construct($container) {
