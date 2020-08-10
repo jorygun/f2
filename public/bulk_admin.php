@@ -143,7 +143,7 @@ else { #IS POST; set up the job
 
 
 // concatenate all the teaser file in news/latest
-	$teaser = $bulkmail->assemble_teaser();
+	$teaser = assemble_teaser();
 // get the pointer
 	$pointer = $_POST['pointer'] ?? '';
 
@@ -263,3 +263,22 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
         return $msg;
 }
 
+ function assemble_teaser() {
+		$teaser ='';
+		$latest= FileDefs::latest_dir;
+		$teaser_files = array(
+			'tease_calendar',
+			'tease_news',
+			'tease_opps',
+			'tease_status',
+		);
+
+		foreach ($this->teaser_files as $tfile){
+			$path = $latest .'/' . $tfile;
+			if (file_exists($path)){
+				$teaser .= file_get_contents($path);
+			}
+
+		}
+		return $teaser;
+	}

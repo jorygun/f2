@@ -13,26 +13,20 @@ class FileDefs {
 	const thumb_dir = REPO_PATH . '/public/thumbnails';
 
 // model for newsletter index file
-	const  news_template = REPO_PATH . "/templates/news_index.php";
+	const  news_template = REPO_PATH . "/templates/index.php";
 
-// url of latest newsletter (/newsp/news_yymmdd);
-	const  latest_pointer =  self::current_dir . "/pointer.txt";
 
-// title of newsletter (travels with newsdir
-	const  titlefile = self::next_dir . "/title.txt";
+
 
 // teaser of newsletter headlines (create in next, travels
-	const tease_news =  self::current_dir . "/tease_news.txt";
+	const tease_news =  self::next_dir . "/tease_news.txt";
 
-//#publish date; created in latest at publish time
-// contains publish date human|date_code.  Stays with newsletter
-	const  pubfile =  self::latest_dir . "/publish.txt";
 
-// tease files are created in news/next and then retrieved by news/index
-// as files are copied to news/latest and newsp/archive
+// tease files are created in news/next and then retrieved by bulk mail
+// files are copied to news/latest and newsp/archive
 	const status_report =  self::next_dir . "/status_report.html"; #member updates
-	const tease_status =  self::current_dir . "/tease_status.txt"; #member updates
-	const tease_opps =  self::current_dir . '/tease_opps.txt';
+	const tease_status =  self::next_dir . "/tease_status.txt"; #member updates
+	const tease_opps =  self::next_dir . '/tease_opps.txt';
 
 
 // breaking news
@@ -44,7 +38,7 @@ class FileDefs {
 
 // files for calendar
 	const calendar_html =self::current_dir . '/calendar.html';
-   const tease_calendar = self::current_dir . '/tease_calendar.txt';
+   const tease_calendar = self::next_dir . '/tease_calendar.txt';
 
 // timestamps
 	const  rtime_file = self::current_dir . "/last_update_run.txt";

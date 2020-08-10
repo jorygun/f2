@@ -127,7 +127,7 @@ class StatusReport {
 
     	// now create a story fle to drop into news/next
     	$limitm = min($count,$limit);
-    	$story = "<p class='subhead'>Reporting on $limitm of $count profile updates.</p>";
+    	$story = "<p class='subhead'>Reporting on $limitm of $count recent profile updates. More in next newsletter.</p>";
 
 		$r = 0;
     	foreach ($list as $uid){

@@ -12,13 +12,7 @@ class BulkMail {
 	private static $sender_program = FileDefs::bulk_processor;
 
 
-	private $teaser_files = array(
-		FileDefs::tease_calendar,
-			FileDefs::tease_news,
-		FileDefs::tease_opps,
-		FileDefs::tease_status,
 
-	);
 
 
 	private static $news_latest = FileDefs::latest_dir;
@@ -144,16 +138,6 @@ class BulkMail {
 			return $joblist;
 	}
 
-	public function assemble_teaser() {
-		$teaser ='';
-		foreach ($this->teaser_files as $tfile){
-			if (file_exists($tfile)){
-				$teaser .= file_get_contents($tfile);
-			}
-
-		}
-		return $teaser;
-	}
 
 
 }
