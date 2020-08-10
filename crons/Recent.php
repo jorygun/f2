@@ -1,6 +1,6 @@
 <?php
 namespace DigitalMx\Flames;
-
+ini_set('display_errors', 1);
 
 use DigitalMx\Flames\Definitions as Defs;
 use DigitalMx as u;
@@ -23,7 +23,7 @@ use DigitalMx as u;
 /*  STARTUP */
 require_once  '../public/init.php';
 if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
-echo "init loaded";
+echo "init loaded.  ";
 new Recent($container);
 
 
@@ -31,7 +31,7 @@ new Recent($container);
 class Recent
 {
 
-	private $show = false;
+	private $show = true;
 
 
 	public function __construct($container) {
@@ -40,7 +40,6 @@ class Recent
 		$this->templates = $container['templates'];
 		$this->report_dir = REPO_PATH . '/public/news/current';
 		$this->news = $container['news'];
-		$this->show = true;
 		$this->run();
 
 	}
