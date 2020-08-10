@@ -67,19 +67,8 @@ class Recent
     $from = days ago
     */
 	echo "Starting articlew report". NL;
-	$rlist = $this->getRecentArticles($from);
 
 
-  u\echor($rlist, $sql);
-	$data['articles'] = $rlist;
-	$data['run_date'] = date('d M H:i');
-	$report = $this->templates->render('recent_articles',$data);
- 	file_put_contents ($this->report_dir . '/recent_articles.html',$report);
- 	return $report;
-}
-
-public function getRecentArticles ($days_ago) {
-// set starting date to look from
 	$from_dt = new \DateTime("- $days_ago day");
 	$from_date = $from_dt->format('Y-m-d');
 	$to_dt = new \DateTime("- 1 day");
@@ -107,11 +96,18 @@ public function getRecentArticles ($days_ago) {
 
 
     $rlist = $this->pdo->query($sql)->fetchAll();
-	 u\echor($rlist,"From $from_date");
 
-	return $rlist;
 
+  u\echor($rlist, $sql);
+
+	$data['articles'] = $rlist;
+	$data['run_date'] = date('d M H:i');
+	$report = $this->templates->render('recent_articles',$data);
+
+ 	return $report;
 }
+
+
 
 
 function report_recent_assets ($from=21) {
