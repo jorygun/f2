@@ -60,7 +60,7 @@ class Recent
 
 }
 
- public function report_recent_articles ( $from=40) {
+ public function report_recent_articles ( $days_ago=40) {
 
     /*
     $from = days ago
@@ -75,7 +75,8 @@ class Recent
 
 
 
-	$sql = "DATE_FORMAT(a.date_published, '%M %e') as pubdate,
+	$sql = "SELECT a.id, a.title,
+			DATE_FORMAT(a.date_published, '%M %e') as pubdate,
 			(SELECT count(c.item_id) From comments c WHERE a.id = c.item_id AND c.on_db = 'news_items')as comment_count,
 			if (a.take_votes,sum(v.vote_rank),'n/a') as votes,
 			k.count as clicks
@@ -88,7 +89,7 @@ class Recent
 
 			WHERE i.pubdate >= '$from_date' AND i.pubdate < '$to_date'
 
-			group by a.id
+			group by a.id, k.count
 			order by i.pubdate DESC
          LIMIT 20;
 	";
