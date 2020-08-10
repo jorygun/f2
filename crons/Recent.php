@@ -23,7 +23,7 @@ use DigitalMx as u;
 /*  STARTUP */
 require_once  '../public/init.php';
 if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
-echo "init loaded.  ";
+#echo "init loaded.  ";
 new Recent($container);
 
 
@@ -50,7 +50,7 @@ class Recent
 
  public function run(){
 
-		echo "Starting reports";
+		#echo "Starting reports";
 		$report = $this->report_recent_assets();
 		file_put_contents ($this->report_dir. '/recent_assets.html',$report);
 
@@ -65,7 +65,7 @@ class Recent
     /*
     $from = days ago
     */
-	echo "Starting article report". NL;
+	#echo "Starting article report". NL;
 
 
 	$from_dt = new \DateTime("- $days_ago day");
@@ -99,7 +99,7 @@ class Recent
     	die ("pdo failed"); }
 
 
-  u\echor($rlist, $sql);
+ # u\echor($rlist, $sql);
 
 	$data['articles'] = $rlist;
 	$data['run_date'] = date('d M H:i');
