@@ -40,7 +40,7 @@ if (! defined ('INIT')) { die ("$script halting. Init did not succeed ");}
 
 */
 
-$sweep = new Sweep($container,true);
+$sweep = new Sweep($container,false);
 $sweep -> runSweep();
 
 
