@@ -126,7 +126,7 @@ class StatusReport {
 		$updateh = $this->pdo->prepare($sql);
 
     	// now create a story fle to drop into news/next
-    	$limitm = min($count,$limit)
+    	$limitm = min($count,$limit);
     	$story = "<p class='subhead'>Reporting on $limitm of $count profile updates.</p>";
 
 		$r = 0;
@@ -174,7 +174,7 @@ EOT;
 			$this->namelist[] = $row['username'];
 			// mark reported.
 			$updateh->execute([$uid]);
-			if ($r >= $limitm) {return $story};
+			if ($r >= $limitm) {return $story;}
 		}
 
 		return $story;

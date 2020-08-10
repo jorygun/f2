@@ -1384,8 +1384,9 @@ public function getLogins($tag) {
 			WHERE status in ($member_status_set)
 			AND test_status = ''
 			AND profile_updated > '$since'
-			AND joined < '$since';
-			AND (profile_reported is NULL OR profile_reported < profile_updated) ";
+			AND joined < '$since'
+			AND (profile_reported is NULL OR profile_reported < profile_updated)
+			;";
 
 
 		$result = $this->pdo->query($sql) -> fetchAll(\PDO::FETCH_COLUMN) ;
