@@ -29,7 +29,7 @@
 
 	<p><b>Now</b> <br><?=$this->nl2br($user_current )?></p>
 
-	<p><b>At AMD: </b> <?= $at_amd ?><br>
+	<p><b>At AMD: </b> <?= $at_amd ?>.<br><br>
 		<?=$this->e($user_amd )?><br>
 		Badge No: <?=$badge_no?></p>
 
