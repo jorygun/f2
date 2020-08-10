@@ -88,40 +88,6 @@ class News {
 
 
 
-public function getRecentArticles ($days_ago) {
-// set starting date to look from
-	$from_dt = new \DateTime("- $days_ago day");
-	$from_date = $from_dt->format('Y-m-d');
-	$to_dt = new \DateTime("- 1 day");
-	$to_date = $to_dt->format('Y-m-d');
-
-
-
-	$sql = "DATE_FORMAT(a.date_published, '%M %e') as pubdate,
-			(SELECT count(c.item_id) From comments c WHERE a.id = c.item_id AND c.on_db = 'news_items')as comment_count,
-			if (a.take_votes,sum(v.vote_rank),'n/a') as votes,
-			k.count as clicks
-
-			FROM articles a
-			join issues i on i.issue = a.issue
-
-			left join votes v on a.id = v.news_fk
-			left join links k on a.id = k.article_id
-
-			WHERE i.pubdate >= '$from_date' AND i.pubdate < '$to_date'
-
-			group by a.id
-			order by i.pubdate DESC
-         LIMIT 20;
-	";
-
-
-    $rlist = $this->pdo->query($sql)->fetchAll();
-	 u\echor($rlist,"From $from_date");
-
-	return $rlist;
-
-}
 
 public function getIssueArticles ($issue) {
 
