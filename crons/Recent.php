@@ -50,7 +50,7 @@ class Recent
 
  public function run(){
 
-
+		echo "Starting reports";
 		$report =$this->report_recent_assets();
 		file_put_contents ($this->report_dir. '/recent_assets.html',$report);
 
