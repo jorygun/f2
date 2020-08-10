@@ -23,7 +23,7 @@ use DigitalMx as u;
 /*  STARTUP */
 require_once  '../public/init.php';
 if (! @defined ('INIT')) { throw new Exception ("Init did not load"); }
-echo "init loaded";
+echo "init loaded"; exit;
 new Recent($container);
 
 
