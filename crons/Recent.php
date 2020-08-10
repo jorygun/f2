@@ -52,7 +52,7 @@ class Recent
  public function run(){
 
 		echo "Starting reports";
-		$report =$this->report_recent_assets();
+		$report = $this->report_recent_assets();
 		file_put_contents ($this->report_dir. '/recent_assets.html',$report);
 
 		$report =$this->report_recent_articles();
@@ -66,7 +66,7 @@ class Recent
     /*
     $from = days ago
     */
-
+	echo "Starting articlew report". NL;
 	$rlist = $this->news->getRecentArticles($from);
 
 
