@@ -228,8 +228,8 @@ EOT;
             'asset_list'  => '',
             'ed_comment'  => '',
             'use_me'  => '0',
-            'take_comments' => 0,
-            'take_votes'  => 0,
+            'take_comments' => 1,
+            'take_votes'  => 1,
             'date_entered' => date('Y-m-d'),
         );
         return $adata;
