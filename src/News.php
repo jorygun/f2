@@ -97,16 +97,14 @@ public function getRecentArticles ($days_ago) {
 
 
 
-	$sql = "SELECT a.id as id, a.title,
-			DATE_FORMAT(a.date_published, '%M %e') as pubdate,
-			count(c.id) as comment_count,
+	$sql = "DATE_FORMAT(a.date_published, '%M %e') as pubdate,
+			(SELECT count(c.item_id) From comments c WHERE a.id = c.item_id AND c.on_db = 'news_items')as comment_count,
 			if (a.take_votes,sum(v.vote_rank),'n/a') as votes,
-			sum(k.count) as clicks
+			k.count as clicks
 
 			FROM articles a
 			join issues i on i.issue = a.issue
 
-			left join comments c on a.id = c.item_id and c.on_db='news_items'
 			left join votes v on a.id = v.news_fk
 			left join links k on a.id = k.article_id
 
