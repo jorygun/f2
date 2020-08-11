@@ -165,8 +165,10 @@ EOT;
 
 */
 
-
+	// put news teaser in next; will be retrieved from latest.
+		$this->buildTeaser();
 // copy news/next to news/latest  and to new archive- copies reports and stuff
+
 		$this->copyNextToLatest();
 		$this->copyLatestToArchive($this->archive);
 
@@ -177,20 +179,11 @@ EOT;
 
 	// mark all the stories published and set first use date on any assets referenced.
 
-		$this->buildTeaser();
+
 
 		 $this->publishStories();
 
-
-
-
-
-	$this->initializePreview();
-
-
-
-
-
+		$this->initializePreview();
 
 	}
 

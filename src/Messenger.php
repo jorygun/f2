@@ -153,8 +153,8 @@ and change it in your profile.
 		// setTestMode is run to turn it on.
 
 	}
-	public function setTestMode() {
-		$this->test = true;
+	public function setTestMode($mode) {
+		$this->test = $mode;
 	}
 
 	public function sendHiddenEmail ($id,$subject,$message) {
