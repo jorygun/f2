@@ -65,9 +65,9 @@ class StatusReport {
 		$report = $this->report_profiles($this->since,20); #no more than 20 in one report
 		file_put_contents(FileDefs::next_dir . '/profile_updates.html',$report);
 
-	// create list of updates for email teasers
+	// create list of updated names for email
 		$report  = $this->createNameReport();
-		file_put_contents(FileDefs::tease_status,$report);
+		file_put_contents(FileDefs::next_dir . '/tease_status.txt',$report);
 
 		// update timestamp on next pub record
 		$container['publish']->setLastScan();

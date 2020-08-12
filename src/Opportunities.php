@@ -24,7 +24,7 @@ class Opportunities
 		$this->templates = $container['templates'];
 		$this->opp_list = $this->createOppList(); #indexed by id
 		$this->opp_count = count($this->opp_list);
-		file_put_contents(FileDefs::tease_opps,
+		file_put_contents(FileDefs::next_dir . '/tease_opps.txt',
 		  	"<p>There are $this->opp_count employment opportunities listed.</p>");
 
 		# echo $this->opp_count . " Opps retrieved" . BRNL; exit;
