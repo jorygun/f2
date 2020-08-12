@@ -116,9 +116,10 @@ class StatusReport {
    private function report_profiles ($since,$limit) {
     	/* builds a story file from updated profiles */
     	// get list of user_ids of updated profiles
+    	// managing limited number got too complicated.
     	$list = $this->member->getUpdatedProfiles($since,$this->test);
     	$count = count($list);
-    	echo "$count profile updates" . BRNL;
+    	echo "$count profile updates since last issue." . BRNL;
     	if (empty ($list)){return;}
     	list ($titletext,$subtitle) = explode ('|',self::$type_titles['profile']);
 
@@ -127,7 +128,7 @@ class StatusReport {
 
     	// now create a story fle to drop into news/next
     	$limitm = min($count,$limit);
-    	$story = "<p class='subhead'>If there are more than 20 in since last issue, only the first 20 are reported here; the balance will be published in subsequent weeks.  <br>Now reporting on $limitm of $count recent profile updates. </p>";
+    	$story = "<p class='subhead'>$count recent profile updates. </p>";
 
 		$r = 0;
     	foreach ($list as $uid){
@@ -176,7 +177,7 @@ EOT;
 			// mark reported.
 			$this->member->setProfileReported($uid);
 
-			if ($r >= $limitm) {return $story;}
+			//if ($r >= $limitm) {return $story;}
 		}
 
 		return $story;

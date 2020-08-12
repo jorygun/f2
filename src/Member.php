@@ -1373,18 +1373,21 @@ public function getLogins($tag) {
 		return $list;
 	}
 
-	public function setProfileReported($uid) {
-		$sql = "UPDATE members_f2
-		set profile_reported = NOW()
-		WHERE user_id = '$uid' ";
-
-		$this->pdo->query($sql);
-		return true;
-	}
+	// public function setProfileReported($uid) {
+// 		$sql = "UPDATE members_f2
+// 		set profile_reported = NOW()
+// 		WHERE user_id = '$uid' ";
+//
+// 		$this->pdo->query($sql);
+// 		return true;
+// 	}
 
 	public function getUpdatedProfiles($since,$test=false) {
 		// returns user_ids for members with profiles update
 		// after 'since' and not reported since update.
+
+		// was marking the ones reported as "profile reported" but
+		// got way to complicated to kee p track of.  reported field now ignored.
 		$member_status_set = Defs::getMemberInSet();
 		$test_clause =  ($test)?
 		"AND test_status != '' " : "AND test_status = '' ";
@@ -1395,7 +1398,7 @@ public function getLogins($tag) {
 			AND test_status = ''
 			AND profile_updated > '$since'
 			AND joined < '$since'
-			AND (profile_reported is NULL OR profile_reported < profile_updated)
+
 			;";
 
 
