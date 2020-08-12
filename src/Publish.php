@@ -185,6 +185,12 @@ EOT;
 
 		$this->initializePreview();
 
+		// set index of current to latest
+		file_put_contents(FileDefs::current_dir . "/index.php",
+			"<?php
+			header('Location:" . $this->archive_url . "');" . NL
+		);
+
 	}
 
 
