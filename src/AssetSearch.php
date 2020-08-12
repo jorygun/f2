@@ -53,8 +53,9 @@ private static $empty_search = array (
 	}
 
 	public function getRandomAsset($phrase) {
+		if (stristr('$phrase','zelencik') !== false) {$phrase = 'Zelencik';}
 		$sqlt = $this->token_search ($phrase);
-		if (stristr('$phrase','zelencik') !=false) {$phrase = 'Zelencik';}
+
 		$sql = "SELECT id from `assets2`
 		WHERE $sqlt
 		AND astatus in ('U','W','O','K')
