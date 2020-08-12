@@ -265,12 +265,12 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
 
  function assemble_teaser() {
 		$teaser ='';
-		$latest= FileDefs::latest_dir;
+
 		$teaser_files = array(
-			'tease_calendar',
-			'tease_news',
-			'tease_opps',
-			'tease_status',
+			FileDefs::tease_calendar,
+			FileDefs::tease_news,
+			FileDefs::tease_opps,
+			FileDefs::tease_status,
 		);
 
 		foreach ($teaser_files as $tfile){

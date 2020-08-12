@@ -19,14 +19,14 @@ class FileDefs {
 
 
 // teaser of newsletter headlines (create in next, travels
-	const tease_news =  self::next_dir . "/tease_news.txt";
+	const tease_news =  self::latest_dir . "/tease_news.txt";
 
 
 // tease files are created in news/next and then retrieved by bulk mail
 // files are copied to news/latest and newsp/archive
 	const status_report =  self::next_dir . "/status_report.html"; #member updates
-	const tease_status =  self::next_dir . "/tease_status.txt"; #member updates
-	const tease_opps =  self::next_dir . '/tease_opps.txt';
+	const tease_status =  self::latest_dir . "/tease_status.txt"; #member updates
+	const tease_opps =  self::latest_dir . '/tease_opps.txt';
 
 
 // breaking news
@@ -38,7 +38,7 @@ class FileDefs {
 
 // files for calendar
 	const calendar_html =self::current_dir . '/calendar.html';
-   const tease_calendar = self::next_dir . '/tease_calendar.txt';
+   const tease_calendar = self::latest_dir . '/tease_calendar.txt';
 
 // timestamps
 	const  rtime_file = self::current_dir . "/last_update_run.txt";
