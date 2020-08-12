@@ -137,7 +137,6 @@ class StatusReport {
     <div class='article'>
 		<div class='head'>
 		<p class='headline'>${row['username']} <span class='normal'>${row['email_public']} ${row['hidden_emailer']} </span></p>
-		At AMD: ${row['user_amd']}
 
 		</p>
 EOT;
@@ -146,6 +145,8 @@ EOT;
 			</div>
 			<div class='content'>
 			";
+			$story .= "<div class='subarticle'><u>At AMD: </u> ${row['user_amd']}
+				</div>" . NL;
 			$story .= "<div class='subarticle'><u> Currently:</u>
 			Living in ${row['user_from']}<br>
 				${row['user_current']}</div>";
