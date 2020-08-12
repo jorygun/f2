@@ -64,7 +64,7 @@ private static $empty_search = array (
 		;
 		";
 
-echo $sql;
+//echo $sql;
 		$id = $this->pdo->query($sql)->fetchColumn();
 
 		return $id;
