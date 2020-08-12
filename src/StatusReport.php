@@ -175,7 +175,7 @@ EOT;
 EOT;
 			$this->namelist[] = $row['username'];
 			// mark reported.
-			$this->member->setProfileReported($uid);
+			//$this->member->setProfileReported($uid);
 
 			//if ($r >= $limitm) {return $story;}
 		}
