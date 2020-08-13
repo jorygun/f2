@@ -19,7 +19,7 @@ if ($login->checkLevel(4)) {
     $page = new DocPage($page_title);
     echo $page -> startHead($page_options);
     # other heading code here
-	echo  "<script src='/js/aq.js'></script>";
+	echo  "<script src='/js/aqx.js'></script>";
     echo $page->startBody();
 }
 

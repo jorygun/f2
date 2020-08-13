@@ -54,7 +54,8 @@ if (isset($_POST['submit'])){
 
                 alert('New ID is ' + newid);
                 var target = window.opener;
-                target.postMessage(newid);
+
+                target.addAsset(newid);
 
                window.close();
             });

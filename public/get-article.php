@@ -46,7 +46,7 @@ $login->checkLevel(4);
  // use aq1 for comments (only 1 asset) and aq for article editor (multiples.)
 
 echo  "<script src='/js/aq1.js'></script>";
-//echo  "<script src='/js/aq.js'></script>";
+//echo  "<script src='/js/aqx.js'></script>";
  echo $page->startBody();
 
 

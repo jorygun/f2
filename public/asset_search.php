@@ -27,7 +27,7 @@ $login->checkLevel(1);
 <script>
   function send_id(aid) {
   	var target = window.opener;
-   target.postMessage(aid);
+   target.addAsset(aid);
     window.close();
    return true;
   	}

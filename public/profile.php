@@ -46,7 +46,7 @@ if ($login->checkLogin(2)){
 		}
    </script>
 
-   <script src='/js/aq.js'></script>
+   <script src='/js/aqx.js'></script>
 EOT;
 
 	echo $page->startBody();
