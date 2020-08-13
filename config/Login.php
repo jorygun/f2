@@ -130,7 +130,12 @@ class Login
         $user_level = $_SESSION['level'] ?? 0;
         if ($user_level < $min) {
             #failed security
-                #u\echor ($_SESSION['login'], 'login');
+            	echo "<h3>403 Denied</h3>
+            		Permission denied.  Please contact the admin.
+            		";
+                u\echor ($_SESSION['login'], 'login');
+                exit;
+
                 header ( "location:/403.html");
 
         }
