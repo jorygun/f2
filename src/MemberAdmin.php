@@ -641,19 +641,19 @@ EOT;
 //	echo "is " . $row['profile_age'] . ' cf ' . Defs::$profile_warning . BRNL;
 
 	if ($row['profile_age'] > Defs::$profile_warning) {
-			$err[] = "Your profile has not been updated for a good long while.  Please have a look.";
+			$err[] = "Your profile has not been updated for a good long while.  Please have a look to see if it's current.";
 	}
 
 
 	if (!empty($err)) {
 			$t = "<div>
-			<p class='red'>There are some problemswith your account.</p>
+			<p class='red'>Your account could use some attention.</p>
 				<ul>";
 			foreach ($err as $e){
 				$t .= '<li>' . $e;
 			}
 			$t .= "</ul>" . NL;
-			$t .= "You can fix these by updating and saving your profile, which is listed under your name in the menu bar.  </p>";
+			$t .= "You can make these warnings go away by updating and saving your profile, which is listed under your name in the menu bar.  </p>";
 			$t .= "</div>" . NL;
 
 			$_SESSION['warning_seen'] = true;
