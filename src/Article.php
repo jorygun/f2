@@ -84,7 +84,7 @@ EOT;
         } else {
             $sql = "UPDATE `articles` SET ${prep['uset']}
                 WHERE id =  ${prep['ukey']} ;";
-           u\echor($prep['udata'] , $sql);
+          // u\echor($prep['udata'] , $sql);
 
             $stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
         }
@@ -132,6 +132,9 @@ EOT;
         $adata['title'] = ucwords($post['title']);
         $adata['id'] = $id = $post['id']?? 0;
         $adata['topic'] = $post['topic'];
+        $adata['source'] = $post['source'];
+        $adata['source_date'] = $post['source_date'];
+
         if (empty($adata['topic'])) {
             throw new Exception("Article must have a topic");
         }
