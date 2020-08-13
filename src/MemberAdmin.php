@@ -674,12 +674,17 @@ EOT;
 		throw new Exception ("No uid supplied for save profile data");
 	}
 
-	u\echor($post,"Input to save profile"); //exit;
+	//u\echor($post,"Input to save profile"); //exit;
 
 /* check for errors
 	*/
 		$er_msg = [];
+	if (!empty($post['asset_list'])){
+		 if (! preg_match ('/^\d+([,\s]+\d+)*$/',$post['asset_list'])){ // digit [, ] digit ...
+		 	$er_msg[] = 'Asset list must consist of integers separated by , or space';
+		 }
 
+	}
 		if ($er_msg){
 			echo "<p>There were some problems with your data. Please go back
 			and re-enter</p>";
