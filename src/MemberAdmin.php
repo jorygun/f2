@@ -631,7 +631,8 @@ EOT;
 	$t = '';
 
 	if ($ems == 'E1'){
-			$err[] = "Your email has been changed. Please be sure to respond to the verification email.";
+			$err[] = "Your email has been changed and you have not yet responded to the
+			verification email. ";
 	} elseif ($row['email_status'] != 'Y') {
 			$err[] = "There is an issue with your email address: "
 				 . Defs::getEmsName($row['email_status'])
@@ -647,13 +648,13 @@ EOT;
 
 	if (!empty($err)) {
 			$t = "<div>
-			<p class='red'>Your account could use some attention.</p>
+			<p class='red'>Your account needs some attention.</p>
 				<ul>";
 			foreach ($err as $e){
 				$t .= '<li>' . $e;
 			}
 			$t .= "</ul>" . NL;
-			$t .= "You can make these warnings go away by updating and saving your profile, which is listed under your name in the menu bar.  </p>";
+			$t .= "You can make this notice go away by updating and saving your profile, which is listed under your name in the menu bar.  </p>";
 			$t .= "</div>" . NL;
 
 			$_SESSION['warning_seen'] = true;

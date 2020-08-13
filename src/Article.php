@@ -84,7 +84,7 @@ EOT;
         } else {
             $sql = "UPDATE `articles` SET ${prep['uset']}
                 WHERE id =  ${prep['ukey']} ;";
-           //u\echor($prep['udata'] , $sql);
+           u\echor($prep['udata'] , $sql);
 
             $stmt = $this->pdo->prepare($sql)->execute($prep['udata']);
         }
