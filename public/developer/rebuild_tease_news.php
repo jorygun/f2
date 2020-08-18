@@ -27,7 +27,7 @@ echo $page -> startHead($page_options);
 
 echo $page->startBody();
 
-echo "Starting teaser";
+echo "Starting __SCRIPT__ ";
 
 buildTeaser();
 
