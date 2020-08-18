@@ -37,7 +37,7 @@ buildTeaser();
 
 
 //EOF
-function buildTeaser() {
+function buildTeaser($pdo) {
 		$sql = "SELECT a.title,u.username as contributor
 		FROM articles a
 		JOIN members_f2 u on a.contributor_id = u.user_id
