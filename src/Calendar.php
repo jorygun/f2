@@ -166,7 +166,7 @@ class Calendar {
 				$text .= $ev['date'] . ": " . $ev['event'] . NL;
 			}
 		$text .= NL;
-		file_put_contents(FileDefs::tease_calendar,$text);
+		file_put_contents(FileDefs::next_dir . '/' . FileDefs::tease_calendar,$text);
 		//echo $text . BRNL;
 
 		return true;

@@ -209,7 +209,7 @@ EOT;
 			$t .= $nbsp3 . $article['title'] . " (" . $article['contributor'] . ")" . NL;
 		}
 		$t .= "\n";
-		file_put_contents(FileDefs::tease_news,$t);
+		file_put_contents(FileDefs::next_dir . '/' . FileDefs::tease_news,$t);
 
 	}
 
