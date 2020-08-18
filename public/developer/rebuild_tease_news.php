@@ -29,7 +29,7 @@ echo $page->startBody();
 
 echo "Starting __SCRIPT__ ";
 $pdo = $container['pdo'];
-buildTeaser();
+buildTeaser($pdo);
 
 
 //END START
