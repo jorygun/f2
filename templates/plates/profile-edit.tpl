@@ -82,19 +82,19 @@ listed in the next newsletter.</p>
 
 	<tr><td colspan='2' ><h3>Photos</h3></td>
 	<tr><td class='instr' colspan='2'>
-	This is a list of integers, separated by spaces, representing the
-		asset ids you want to show on your profile.
-		To remove a photo from your profile, just remove its id from the list.
-		To add one, just type in the id, or use one of the tools below.<br>
-		DON'T FORGET TO SAVE THIS PAGE IF YOU MAKE ANY CHANGES TO THE LIST.
-		</td></tr>
-	<tr><td>Show these assets on my profile:</td>
-		<td><input type='text' name='asset_list' id='asset_list' value='<?=$asset_list?>'><br>
-
-		<br>
+	To add a photo to your profile, it must have an "asset id" - a 4-digit number assigned to every photo/video/pdf file, etc on the site.  You can upload a photo a get an asset id by clicking here :
+	<div class='indent'><button type = 'button' onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >Create new asset</button> Click to upload a new asset.
+	</div>
+	OR<br>
+	You can search for an existing asset (there's thousands) by clicking here:
+	<div class='indent'>
 	<button type='button' onclick="window.open('/asset_search.php?mode=j' ,'assets','width=1100,left=160');">Search Assets</button> Click to find an existing asset. Search, then choose one from the search results.
-	<br>
-	<button type = 'button' onClick = 'window.open("/aq.php","quick_asset","width=600,height=400,left=300,top=100,resizable,scrollbars");' >Create new asset</button> Click to create a new asset. Its id will be added to your list when you save it.
+
+	</div>
+
+		</td></tr>
+	<tr><td>Show these assets on my profile (1 to 3 id numbers separated by spaces):</td>
+		<td><input type='text' name='asset_list' id='asset_list' value='<?=$asset_list?>'><br>
 
 	</td></tr>
 	<div class='user-photos'>

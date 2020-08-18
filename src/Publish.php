@@ -184,6 +184,7 @@ EOT;
 		 $this->publishStories();
 
 		$this->initializePreview();
+		$this->initializeNext();
 
 		// set index of current to latest
 		file_put_contents(FileDefs::current_dir . "/index.php",
@@ -301,6 +302,13 @@ EOT;
 		//u\echor($prep,$sql); exit;
        $stmt = $this->pdo->query($sql);
 	}
+
+	public function initializeNext() {
+		unlink (FileDefs::next_dir .'/*');
+		copy (FileDefs::news_template, FileDefs::next_dir);
+
+	}
+
 
 	public function getPreviewArticles() {
 		$sql = "SELECT id from articles where issue = '1'";
