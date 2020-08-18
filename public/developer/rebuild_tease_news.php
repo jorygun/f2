@@ -42,7 +42,7 @@ function buildTeaser() {
 		FROM articles a
 		JOIN members_f2 u on a.contributor_id = u.user_id
 		where issue = '20200817' ";
-		$artlist = $this->pdo->query($sql);
+		$artlist = $pdo->query($sql);
 		u\echor ($artlist,$sql);
 
 
