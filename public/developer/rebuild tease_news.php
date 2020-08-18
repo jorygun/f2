@@ -2,7 +2,7 @@
 
 namespace DigitalMx\Flames;
 
-#ini_set('display_errors', 1);
+ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
@@ -26,6 +26,8 @@ echo $page -> startHead($page_options);
 # other heading code here
 
 echo $page->startBody();
+
+echo "Starting teaser";
 
 buildTeaser();
 
