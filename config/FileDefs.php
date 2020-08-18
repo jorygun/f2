@@ -33,9 +33,7 @@ class FileDefs {
 // breaking news
 	const breaking_news = self::current_dir . '/breaking.html';
 
-// file for index of all newsletters
-	const news_index_inc = self::current_dir . "/index_inc.html";
-	const news_index_json = self::current_dir . "/news_index.json";
+
 
 // files for calendar
 	const calendar_html =self::current_dir . '/calendar.html';

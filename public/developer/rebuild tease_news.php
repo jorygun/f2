@@ -43,6 +43,8 @@ function buildTeaser() {
 		JOIN members_f2 u on a.contributor_id = u.user_id
 		where issue = '20200817' ";
 		$artlist = $this->pdo->query($sql);
+		u\echor ($artlist);
+
 
 		$t = "News Stories: \n------------------\n";
 		$nbsp3 = "&nbsp;&nbsp;&nbsp;";
@@ -52,6 +54,8 @@ function buildTeaser() {
 			$t .= $nbsp3 . $article['title'] . " (" . $article['contributor'] . ")" . NL;
 		}
 		$t .= "\n";
+		echo $t  . BRNL;
+
 		file_put_contents(FileDefs::next_dir . '/' . FileDefs::tease_news,$t);
 
 	}
