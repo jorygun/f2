@@ -263,9 +263,12 @@ EOT;
 					$where = "n.id = " . $shift($data) ;
 					break;
 				case 'list':
-				case 'issue':
+
 					$idlist = u\make_inlist_from_list($data);
 					$where = "n.id in ($idlist)";
+					break;
+				case 'issue':
+					$where = "n.issue = '$data'";
 					break;
 				default:
 					throw new Exception ("Unrecognized list style '$catcommand'");
