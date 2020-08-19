@@ -284,7 +284,7 @@ EOT;
 							WHERE $where";
 
 		$list = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
-		u\echor($list,$sql);
+		#u\echor($list,$sql);
 		return $list;
 	}
 

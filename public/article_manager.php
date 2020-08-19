@@ -73,9 +73,9 @@ if (!empty($_POST['toggle_use'])) {
 				die ("Did not get any stories for issue $issue");
 			}
 
-			$cat .= " " . $ilist[$issue];  // add the issue to the command so
+		#	$cat .= " " . $ilist[$issue];  // add the issue to the command so
 			// it will be in the title
-
+		$cat = 'list';
 
 	}
 	$d = $articlea->getArticleList($cat,$stories);
