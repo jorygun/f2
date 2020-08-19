@@ -54,10 +54,10 @@ class ArticleAdmin
 			$row['image'] = $image;
 			$row['asset_count'] = $asset_count;
 			if ($row['status'] == 'P' ) {
-				$row['use_msg'] = '';
+				$row['use_msg'] = 'Published';
 			} else {
 				$row['use_msg'] = ($row['use_me'] > 0 ) ?
-					"Queued For Next" : "Not Scheduled";
+					"Queued For Next Issue" : "Not Scheduled";
 			}
 			// move status message to another function
 			//$row['smsg'] = $this->setStatusMessage($row);

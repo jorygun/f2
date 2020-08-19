@@ -341,6 +341,10 @@ EOT;
 				if ($val == 'D'){
 					$this->member->setEmailStatus($uid,'LD');
 				}
+				if ($val == 'I'){
+					$this->member->setNoBulk($uid,'1');
+				}
+
 				break;
 			case 'email_status':
 				echo "Updating users Email Status and sending messages." . BRNL;
