@@ -55,7 +55,7 @@ Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> 
 <?php if ($_SESSION['level'] >=7) : ?>
 <tr><td>Status (admin only)</td><td><select name='astatus'><?=$status_options?></select></td></tr>
 <?php else: ?>
-	<input type='hidden name='astatus' value = '<?=$astatus?>'?
+	<input type='hidden' name='astatus' value = '<?=$astatus?>'?
 <?php endif; ?>
 <tr><td>Origin</td><td>Vintage: <input type='text' name='vintage' value = "<?=$vintage?>" size="6"> Attribute to <input type='text' name='source' value="<?=$source?>" size="40"> </td></tr>
 <tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' onfocus="form.contributor_id.value='';"
