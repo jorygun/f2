@@ -282,6 +282,7 @@ EOT;
 		$sql = "SELECT n.id
 							FROM articles n
 							WHERE $where";
+		echo $sql;
 		$list = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
 		return $list;
 	}
