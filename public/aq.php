@@ -34,7 +34,7 @@ if (isset($_POST['submit'])){
 </style>
 <link rel='stylesheet' href='/css/news4.css'>
 <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js'></script>
-<script src='https://malsup.github.com/jquery.form.js'></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
 <script src='/js/help.js'></script>
 <script>
 
