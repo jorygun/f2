@@ -277,7 +277,7 @@ EOT;
 
 		return $where;
 	}
-	public function getArticleIds($cat,$data=[]) {
+	public function getArticleIds($cat,$data='') {
 		$where = $this->getWhereForCat($cat,$data);
 		$sql = "SELECT n.id
 							FROM articles n
