@@ -1,19 +1,36 @@
+<script>
+ $('#alist_form').on('change','#editme', function(){
+        let str = $("#editme").val();
 
+        if (str == 0) {
+        	$('#editlabel').text('New');
+        } else {
+        	$('#editlabel').text('Edit');
+        }
+    });
+</script>
 <?php $lastmsg=''; $lastestat='';?>
-<h3>Create or Edit a News Article</h3>
+<h3>Create New Article or Edit An Existing One
 <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='article_list' >Help</button></h3>
 
-
+<form id='alist_form' method='post'>
 <p class='bold'>Edit Any Article or Create a New One</p>
-<button onClick = "window.open('article_editor.php?id=0','article_edit')"
-	type='button'>New Article</button>
+<div class='indent'>Edit this Article Id (Use id 0 to create new article): <input type='text' size=6 id='editme' name='editme' value='0'  >
+<button  name='edit_this' onClick="open_article_edit('editme')">
+<span id="editlabel"><b>Go</b></span></button><br>
 
-
+</div>
 <br> OR <br>
 
-<p class='bold'>Choose an article from the list below:</p>
-
-
+<p class='bold'>Choose an article from one of these lists:</p>
+<div class='indent'>
+<button  name='cat' value='unpub'>All Unpublished</button>
+<button  name='cat' value='recent'>Recently Published</button>
+A single newsletter:
+	<select name='issue'><?=$ioptions?></select>
+	<button name='cat' value='issue'> Load Issue </button>
+</div>
+</form>
 
 <h3><?=$emsg['selected']?></h3>
 <?php foreach (['editable','noneditable'] as $estat): ?>

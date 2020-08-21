@@ -83,7 +83,11 @@ if (!empty($_POST['toggle_use'])) {
 	$d['preview_button'] = $publish::$previewaction;
 
 //	u\echor($d); exit;
-	echo $templates->render('article_list', $d);
+	if ($_SESSION['level'] >7) {
+		echo $templates->render('article_manage', $d);
+	} else {
+		echo $templates->render('article_list', $d);
+	}
 	echo "<hr>\n";
 
 

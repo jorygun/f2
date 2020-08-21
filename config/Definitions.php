@@ -237,10 +237,11 @@ public static $locations = array(
 
 public static $departments = array (
 	'A'	=>	'Engineering',
-	'B'	=>	'Marketing/Sales/Rep',
+	'B'	=>	'Marketing/Sales',
 	'C'	=>	'Manufacturing',
 	'D'	=>	'Finance/HR/Legal',
 	'E' =>  'Contractor/Vendor',
+	'F' =>  'Executive',
 	'X' =>	'Other'
 );
 
