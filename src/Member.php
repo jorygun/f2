@@ -382,7 +382,7 @@ private static $update_fields = array(
 		if (!empty($department_choices) || !empty($location_choices) ||  !empty($decade_choices) ) {
 		$amd_box_data .= "I worked at AMD ";
 		}
-		$amd_box_data .= (!empty($department_choices)) ? "in " . $department_choices :'';
+		$amd_box_data .= (!empty($department_choices)) ? "in the " . $department_choices . 'Department ':'';
 		$amd_box_data .= (!empty($location_choices)) ? " in " . $location_choices : '';
 		$amd_box_data .= (!empty($decade_choices)) ? " during the " . $decade_choices: '' ;
 		$member_photo = '';
