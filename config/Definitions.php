@@ -242,7 +242,8 @@ public static $departments = array (
 	'D'	=>	'Finance/HR/Legal',
 	'E' =>  'Contractor/Vendor',
 	'F' =>  'Executive',
-	'X' =>	'Another'
+	'G' => 'Administrative',
+	'X' =>	'Other'
 );
 
 public static $user_aliases = array (
