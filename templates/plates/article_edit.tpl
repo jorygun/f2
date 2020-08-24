@@ -42,7 +42,7 @@ Status: <?=$status_name?> <?=$date_published?><br>
 
 <tr><td style="vertical-align:top;">Text of the Article</td><td><textarea cols=60 rows=10 name='content' class='useredit' ><?=$content?></textarea></td><tr>
 
-<tr><td>Contributor (you) Comment on the article</td><td><textarea cols=60 rows=3 name='ed_comment'><?=$ed_comment?></textarea></td><tr>
+<tr><td>Your (contributor) comment on the article</td><td><textarea cols=60 rows=3 name='ed_comment'><?=$ed_comment?></textarea></td><tr>
 
 <tr><td><b>Assets</b></td>
 	<td>Assign asset ids to surround the article content, and/or assign 1 asset to occupy the full width of the article.  You can find existing assets or create a new one here.<br>

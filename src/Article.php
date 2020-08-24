@@ -166,14 +166,16 @@ EOT;
                 }
             }
         }
-       // add /ed to editorial comment if it's not already commented
-        if (! empty($post['ed_comment'])) {
+
+
             $adata['ed_comment'] = $post['ed_comment'];
-            if (! preg_match('/.*\n--\/[\w ]+\s*$/s', $post['ed_comment'])) {
-                $commenter_name = $adata['contributor'] ?? $_SESSION['login']['username'];
-                $adata['ed_comment'] .= "\n--/$commenter_name\n";
-            }
-        }
+           //  if (! preg_match('/.*\n--\/[\w ]+\s*$/s', $post['ed_comment'])) {
+//                 $commenter_name = $adata['contributor'] ?? $_SESSION['login']['username'];
+//                 $adata['ed_comment'] .= "\n--/$commenter_name\n";
+//             }
+//         } else {
+//         	$adata['ed_comment']  = '';
+//         }
 
         $status = $post['status'];
         if (! in_array($status, array_keys(Defs::$news_status))) {
