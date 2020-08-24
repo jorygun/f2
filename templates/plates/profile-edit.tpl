@@ -43,8 +43,8 @@ listed in the next newsletter.</p>
 			<textarea name='user_greet' class='input' rows=2 cols=80 ><?= $this->e($user_greet) ?></textarea></td></tr>
  -->
 
-	<tr><td >* Briefly, what's new with you? </td>
-		<td><textarea  name='user_current' type='text' rows=3 cols=80 class='required'><?= $user_current ?></textarea>
+	<tr><td >* Briefly, what's new with you? <br> Max 512 chars; use 'About Me' section instead of you need more room. </td>
+		<td><textarea  name='user_current' type='text' rows=5 cols=80 maxlength = '512' class='required'><?= $user_current ?></textarea>
 		</td></tr>
 
 
