@@ -63,7 +63,7 @@ if (!$credential) {
 
 $adata['Aliastext'] = Defs::getMemberAliasList();
 // admin users get more choices on topics
-$user_level = ($_SESSION['level'] > 4)? 'A' : 'U' ;
+$user_level = ($_SESSION['level'] > 6)? 'A' : 'U' ;
 $mytopics = $news->getTopics($user_level);
 $adata['topic_options'] = $news->buildTopicOptions($adata['topic'],$user_level);
 $adata['status_options'] = u\buildOptions(Defs::$news_status, $adata['status']);
