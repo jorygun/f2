@@ -44,7 +44,7 @@ listed in the next newsletter.</p>
  -->
 
 	<tr><td >* Briefly, what's new with you? <br> Max 512 chars; use 'About Me' section instead of you need more room. </td>
-		<td><textarea  name='user_current' type='text' rows=5 cols=80 maxlength = '512' class='required'><?= $user_current ?></textarea>
+		<td><textarea  name='user_current' type='text' rows=6 cols=80 maxlength = '860' class='required'><?= $user_current ?></textarea>
 		</td></tr>
 
 
