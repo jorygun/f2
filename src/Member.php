@@ -1549,7 +1549,7 @@ public function getNewLost($since,$test=false) {
 				if (strlen($tag) != 1 ){
 					throw new Exception("Invalid tag $tag for sending to admin tags.");
 				}
-				$sql .= "AND admin_tag LIKE '%$tag%' ";
+				$sql .= "AND admin_status LIKE '%$tag%' ";
 				echo "Sending to admin status with $tag." . BRNL;
 				break;
 			case 'aged_out':
