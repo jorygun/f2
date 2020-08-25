@@ -255,14 +255,14 @@ EOT;
 		<li>$version";
 
 
-	$t .=  self::closeLine(0, $thisMenu);
-
-	$js_menulist = json_encode ($menulist);
-
-	$t .= "
-	<li><button type='button' onClick='closeMenu($js_menulist)' title='Close open menus (for touchscreen users)' class='xbutton'> X </button>
-	<ul><li>Touchscreen users <a href='#' onClick='closeMenu($js_menulist)' style='text-decoration:underline;'>click</a> to close open menus </ul>
-";
+	// $t .=  self::closeLine(0, $thisMenu);
+//
+// 	$js_menulist = json_encode ($menulist);
+//
+// 	$t .= "
+// 	<li><button type='button' onClick='closeMenu($js_menulist)' title='Close open menus (for touchscreen users)' class='xbutton'> X </button>
+// 	<ul><li>Touchscreen users <a href='#' onClick='closeMenu($js_menulist)' style='text-decoration:underline;'>click</a> to close open menus </ul>
+// ";
 
 	$t .=  "	</ul>\n";
 

@@ -230,7 +230,7 @@ private static $update_fields = array(
  );
 
  	private static $no_member = array(
- 	'username' => 'Not a Member',
+ 	'username' => 'Not Logged In',
  	'user_id' => 0,
  	'user_email' => '',
  	'seclevel' => 0,
