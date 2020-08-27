@@ -652,7 +652,7 @@ private static $update_fields = array(
 			$row['user_id'] = $new_uid;
 
 
-			$prep = u\pdoPrep($row,'','id');
+			$prep = u\pdoPrep($row,'','user_id');
  /**
  	$prep = u\pdoPrep($post_data,$allowed_list,'id');
 
