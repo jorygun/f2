@@ -134,10 +134,10 @@ class Login
             		<p>Permission denied.<br>
 
             		";
-               # u\echor ($_SESSION['login'], 'login'); exit;
+               # u\echor ($_SESSION['login'], 'login');
 
                 header ( "location:/403.html");
-
+					exit;
         }
         return true;
 }
