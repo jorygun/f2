@@ -392,7 +392,7 @@ public static function getAssetTypes() {
         }
     }
    # echo "No alias." . BR;
-    return $alias;
+    return '';
  }
 
 	public static function getArchivalTagList()  {

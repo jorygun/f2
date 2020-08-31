@@ -1167,7 +1167,7 @@ public function getLogins($tag) {
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
          $ncid = $ncname = '';
-         echo "Setting contributor from ($cid, $cname)" . BR;
+
 
         if (!empty($cid) ) {
         	$ncid = $cid;
@@ -1175,16 +1175,19 @@ public function getLogins($tag) {
 
 
         } elseif (!empty($cname)) {
-        		if ($cid = Definitions::replaceAlias($cname) ) {
-        			$ncid = $cid;
+        		$ncid = Definitions::replaceAlias($cname);
+
+        		if (!empty($ncid)) {
         			$ncname = $this->getNameFromUid($ncid);
+
         		} else {
         			$ncid = $this->getUidFromName($cname);
+
         			$ncname = $cname;
         		}
         	}
 
-         if (!$ncid || !$ncname) {
+         if (empty($ncid) || empty($ncname) ) {
             u\echoAlert("Cannot identify contributor ($ncid, $ncname)");
             $ncid = 0; $ncname='';
         }
