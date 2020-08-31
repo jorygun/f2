@@ -133,8 +133,7 @@ class Login
             	echo "<h3>403 Denied</h3>
             		Permission denied.  Please contact the admin.
             		";
-                u\echor ($_SESSION['login'], 'login');
-                exit;
+               # u\echor ($_SESSION['login'], 'login'); exit;
 
                 header ( "location:/403.html");
 
