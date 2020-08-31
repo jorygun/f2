@@ -386,12 +386,15 @@ public static function getAssetTypes() {
 	public static function replaceAlias ($alias){
     // looks for maybe in alias list and replaces with alias name if any
     $alias = strtolower($alias) ; #all aliases are lower case
+    echo "checking for alias for $alias" . BR;
     if (preg_match('/^\w+$/',$alias)){ # match alias format
         if (in_array($alias,array_keys(Definitions::$user_aliases))){
             $lookup = Definitions::$user_aliases[$alias];
+            echo "Found $lookup". BR;
             return $lookup;
         }
     }
+    echo "No alias." . BR;
     return $alias;
  }
 
