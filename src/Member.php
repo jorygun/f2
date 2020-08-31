@@ -1182,13 +1182,10 @@ public function getLogins($tag) {
         		}
         	}
 
-
-
-
          if (!$ncid || !$ncname) {
             u\echoAlert("Cannot identify contributor");
             $ncid = 0; $ncname='';
-        }s
+        }
         return array(
         	'contributor_id' => $ncid,
         	'contributor' => $ncname,
