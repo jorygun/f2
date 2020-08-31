@@ -1167,6 +1167,8 @@ public function getLogins($tag) {
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
          $ncid = $ncname = '';
+         echo "Setting contributor from ($cid, $cname)" . BR;
+
         if (!empty($cid) ) {
         	$ncid = $cid;
         	$ncname = $this->getNameFromUid($cid);
