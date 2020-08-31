@@ -1085,8 +1085,9 @@ public function getLogins($tag) {
     	//check for alias first
     	$name = trim($name);
 
-    $name =  Defs::replaceAlias($name) ?? $name;
-   #echo "getting id for name $name" . BR;
+     if ($ncid =  Defs::replaceAlias($name) ){
+     	$ncname = $this->get
+
         $md = $this->getMemberData($name,'name_exact');
 
         if (empty($md['count']) or !empty($mb['error'])) {
@@ -1165,6 +1166,17 @@ public function getLogins($tag) {
 
         	);
     }
+	public function getUidFromName ($name) {
+		$sql = "SELECT user_id from `members_f2` WHERE username = '$name'";
+		$uid = $this->pdo->query($sql)->fetchColumn();
+		return $uid;
+	}
+
+	public function getNameFromUid($uid) {
+		$sql = "SELECT username from `members_f2` WHERE user_id = '$uid'";
+		$name = $this->pdo->query($sql)->fetchColumn();
+		return $name;
+	}
 
 	public function setContributor($cid,$cname) {
    // set contributor id if one not set yet and
@@ -1173,14 +1185,26 @@ public function getLogins($tag) {
          $ncid = $ncname = '';
         if (!empty($cid) ) {
         	$ncid = $cid;
-         $ncname = $this->getMemberBasic($cname)[0] ;
-        } elseif (!empty($cname)) {
-           list( $ncid, $ncname) = $this->getMemberId($cname) ;
+        	$ncname = $this->getNameFromUid($cid);
 
-        } else {
-            u\echoAlert("No contributor name or id listed");
+
+        } elseif (!empty($cname)) {
+        		if ($cid = Definitions::replaceAlias($cname) ) {
+        			$ncid = $cid;
+        			$ncname = $this->getNameFromUid($ncid);
+        		} else {
+        			$ncid = $this->getUidFromName($cname);
+        			$ncname = $cname;
+        		}
+        	}
+
+
+
+
+         if (!$ncid || !$ncname) {
+            u\echoAlert("Cannot identify contributor");
             $ncid = 0; $ncname='';
-        }
+        }s
         return array(
         	'contributor_id' => $ncid,
         	'contributor' => $ncname,

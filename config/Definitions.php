@@ -380,7 +380,8 @@ public static function getAssetTypes() {
 	}
 
 	public static function replaceAlias ($alias){
-    // looks for maybe in alias list and replaces with alias name if any
+    // looks for maybe in alias list and replaces with alias id if any
+    // was a name replacement, but changed to id so user names can be changed.
     $alias = strtolower($alias) ; #all aliases are lower case
    # echo "checking for alias for $alias" . BR;
     if (preg_match('/^\w+$/',$alias)){ # match alias format
