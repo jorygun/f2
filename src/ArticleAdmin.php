@@ -73,6 +73,11 @@ class ArticleAdmin
 				"<button type='submit' form='alist_form' name='toggle_use' value = $id
 				style='background:orange;'>Toggle Use</button>"
 				: "";
+			$row['delete-button'] = ($_SESSION['level']>= 7  )?
+				"<button type='submit' form='alist_form' name='delete_article' value = $id
+				style='background:red;'>Delete</button>"
+				: "";
+
 			$row['view-button'] =
 				"<button type='button' onClick = window.open('/get-article.php?$id','article')>View</button>";
 

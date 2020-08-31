@@ -210,6 +210,15 @@ EOT;
         );
     }
 
+    public function deleteArticle($id)
+    {
+    	$sql = "Update articles set status = 'X' where id = '$id'";
+    	$this->pdo->query($sql);
+    	return true;
+
+    }
+
+
     public function getNewArticle()
     {
         $adata = array(

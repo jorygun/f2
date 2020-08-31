@@ -61,6 +61,11 @@ if (!empty($_POST['toggle_use'])) {
 	$article->toggle_use($id);
 }
 
+if (!empty($_POST['delete_article'])) {
+	$id = $_POST['delete_article'];
+	$article->deleteArticle($id);
+}
+
 	$cat='unpub'; //defaullt
 	if (!empty($_POST['cat'])) {
 		$cat = $_POST['cat'];
@@ -81,6 +86,7 @@ if (!empty($_POST['toggle_use'])) {
 	$d = $articlea->getArticleList($cat,$stories);
 	$d['ioptions'] = u\buildOptions($ilist);
 	$d['preview_button'] = $publish::$previewaction;
+
 
 //	u\echor($d); exit;
 	if ($_SESSION['level'] >7) {

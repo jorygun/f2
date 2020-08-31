@@ -72,6 +72,7 @@ A single newsletter:
 				<?=$row['view-button']?>
 				<?=$row['edit-button']?><br>
 				<?=$row['use-button']?><?=$row['status']?><br>
+				<?=$row['delete-button']?>
 
 
 			</td>
