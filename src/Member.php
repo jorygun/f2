@@ -1079,23 +1079,7 @@ public function getLogins($tag) {
     }
 
     // returns [username,id]
-    public function getMemberId($name)
-    {
-    	#required username or alias\
-    	//check for alias first
-    	$name = trim($name);
 
-     if ($ncid =  Defs::replaceAlias($name) ){
-     	$ncname = $this->get
-
-        $md = $this->getMemberData($name,'name_exact');
-
-        if (empty($md['count']) or !empty($mb['error'])) {
-            return false;
-        }
-
-        return [ $md['data']['user_id'], $md['data']['username'] ];
-    }
 
 
     public function getMemberBasic ($tag)

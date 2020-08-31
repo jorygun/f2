@@ -173,7 +173,7 @@ private static $empty_search = array (
         $qp[] = $this->use_vintage($data['vintage'],$data['plusminus']);
     }
     if (!empty($son = trim($data['contributor']))){
-    		if (! $memid = $this->member->getMemberId($son)[0] ){
+    		if (! $memid = $this->member->getUidFromName($son)){
     			echo "Contributor $son not found. " . BRNL; exit;
     		} else {
         		$qp[] = "contributor_id = '$memid'";
