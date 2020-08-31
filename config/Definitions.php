@@ -246,20 +246,16 @@ public static $departments = array (
 	'X' =>	'Other'
 );
 
+//set user_id for these aliases.
 public static $user_aliases = array (
-            'z' => 'Steve Zelencik',
-            'bob' => 'Bob McConnell',
-            'js' => 'John Springer',
-            'editor' => 'Flames Editor',
-            'admin' => 'Flames Admin',
-            'rick' => 'Rick Marz',
-            'dave' => 'David Laws',
-            'es' => 'Elliott Sopkin',
-            'jm' => 'John McKean',
-            'glen' => 'Glen Balzer',
-            'jeff' => 'Jeff Drobman',
-            'amdc' => 'AMD Communications',
-            'kc' => 'K.C. Murphy',
+            'z' => 11344,
+            'bob' => 10144,
+            'js' => 11602,
+            'editor' => 13145,
+            'admin' => 13146,
+            'jeff' => 10608,
+            'amdc' => 13282,
+
 
         );
 
