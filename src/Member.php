@@ -1086,13 +1086,13 @@ public function getLogins($tag) {
     	$name = trim($name);
 
     $name =  Defs::replaceAlias($name) ?? $name;
-  # echo $tag;exit;
+   echo "getting id for name $name" . BR;
         $md = $this->getMemberData($name,'name_exact');
-       # u\echor ($md);
+
         if (empty($md['count']) or !empty($mb['error'])) {
             return false;
         }
-
+echo "{$md['data']['user_id']}" . BR;
         return [ $md['data']['user_id'], $md['data']['username'] ];
     }
 
