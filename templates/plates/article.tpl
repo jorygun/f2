@@ -20,7 +20,7 @@
 			<span class='contributor'> -- Contributed by <?=$contributor?> on <?=$date_entered_human?></span></p>
 
 		<?php if (!empty($ed_comment)) : ?>
-			<div class='ed_comment'> <?=$ed_comment?><br />--/<?=$contributor?></div>
+			<div class='ed_comment'> <?=$ed_comment?></div>
 		<?php endif; ?>
 
 	</div>

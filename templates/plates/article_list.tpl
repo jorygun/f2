@@ -54,7 +54,7 @@
 			<td>
 				<?=$row['view-button']?>
 				<?=$row['edit-button']?><br>
-				<?=$row['use-button']?><?=$row['status']?><br>
+				<?=$row['use-button']?><br>
 
 
 			</td>

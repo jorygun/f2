@@ -161,6 +161,10 @@ EOT;
 				$story .= "<div class='subarticle'><u>About:</u>
 					${row['user_about']}</div>";
 			}
+			if (! empty ($row['asset_list'])) {
+				$story .= "<div class='subarticle'><u>Photos:</u>
+					Yes. </div>";
+			}
 
 			$story .= "<p><a href='/profile.php?id=$uid'>View Full Profile</a></p>" . NL;
 

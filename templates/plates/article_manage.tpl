@@ -64,6 +64,7 @@ A single newsletter:
 			<td><b><?=$row['title']?></b><br>
 			 From: <?=$row['contributor']?><br>
 			  <i><?=$row['source']?></i><br>
+			  <?=$row['delete-button']?>
 
 			 </td>
 
@@ -71,8 +72,8 @@ A single newsletter:
 			<td>
 				<?=$row['view-button']?>
 				<?=$row['edit-button']?><br>
-				<?=$row['use-button']?><?=$row['status']?><br>
-				<?=$row['delete-button']?>
+				<?=$row['use-button']?><br>
+
 
 
 			</td>
