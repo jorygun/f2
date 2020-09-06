@@ -265,8 +265,10 @@ class ArticleAdmin
 
 		// ADD comment tag if none present
 		$ed_comment = trim($sdata['ed_comment']);
-		if (! preg_match ('/\n--\/\w.*$/',$ed_comment)) {
-			$ed_comment .= "\n&nbsp;&nbsp;--/editor";
+		if (!empty($ed_comment)){
+			if (! preg_match ('/\n--\/\w.*$/',$ed_comment)) {
+				$ed_comment .= "\n&nbsp;&nbsp;--/editor";
+			}
 		}
       $adata['ed_comment'] = nl2br($ed_comment);
 
