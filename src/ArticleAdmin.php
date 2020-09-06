@@ -263,7 +263,13 @@ class ArticleAdmin
 
       $adata['content'] = u\makeLinks($adata['content']);
 
-      $adata['ed_comment'] = nl2br($sdata['ed_comment']);
+		// ADD comment tag if none present
+		$ed_comment = trim($sdata['ed_comment']);
+		if (! preg_match ('/\n--\/\w.*$/',$ed_comment)) {
+			$ed_comment .= "\n&nbsp;&nbsp;--/editor";
+		}
+      $adata['ed_comment'] = nl2br($ed_comment);
+
 		$adata['status_message'] = $this->setStatusMessage($sdata);
 		$adata['sfrom'] = ($sdata['source']) ? "From " . $sdata['source'] : '';
 

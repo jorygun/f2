@@ -496,11 +496,12 @@ div.comment_background {
 
  .ed_comment {
 
-    font-size: 0.9em;
     text-align:left;
     margin-left:2em;
     margin-right:2em;
     margin-top:6px;
+    font-style:italic;
+    color:#063;
 
     }
 
