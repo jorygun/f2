@@ -1,8 +1,6 @@
 
 <h3>Create/Edit News Article <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='article' >Help</button></h3>
 
-
-
 <form  method="POST"  onsubmit="return check_form(['title','topic']);">
 
 <div style='background-color:#ccc;border:1px solid black;'>
@@ -11,6 +9,9 @@ ID: <input type='text' name = 'id' value='<?=$id?>' READONLY><br>
 Entered: <?=$date_entered?><br>
 Status: <?=$status_name?> <?=$date_published?><br>
 <input type='hidden' name= 'status' value='<?=$status?>'>
+
+FLAME contributor: <?=$contributor?>
+
 </div>
 
 <hr>
@@ -25,14 +26,6 @@ Status: <?=$status_name?> <?=$date_published?><br>
 
 <tr><td >Item Title (required)</td><td><input type='text' size='60' name='title' class='input required' id='title' value="<?=$title?>"></td></tr>
 
-<?php if ($_SESSION['level'] > 6) : ?>
-<tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' onfocus="form.contributor_id.value='';"
-    style = '$cont_style'> id: <input type='text' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ><br><?=$Aliastext?></td></tr>
-
-<?php else: ?>
-<tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' READONLY
-    style = '$cont_style'> <input type='hidden' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ></td></tr>
-<?php endif; ?>
 
 <tr><td >News Source</td><td><input type='text' name='source' value="<?=$source?>" size="30"> date: <input type='text' name='source_date' value = "<?=$source_date?>" size="15"></td></tr>
 
@@ -64,13 +57,22 @@ Allow Votes? <input type='checkbox' value='1' name='take_votes' <?= $votes_check
 
 
 
-<?php if ( $_SESSION['level'] > 4): ?>
+<?php if ( $_SESSION['level'] >= 7): ?>
 	<tr><td colspan='2'><hr></td></tr>
    <tr> <td >
     Queue for next </td><td> <select name='queue'><?=$queue_options?></select>
 
     </td></tr>
 <tr><td>Editor's comment on the article</td><td><textarea cols=60 rows=3 name='ed_comment'><?=$ed_comment?></textarea></td><tr>
+
+<tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' onfocus="form.contributor_id.value='';"
+    style = '$cont_style'> id: <input type='text' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ><br><?=$Aliastext?></td></tr>
+
+<?php else: ?>
+
+<input type='hidden' name='contributor' value='<?=$contributor?>'>
+<input type='hidden' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' >
+<input type='hidden' name='queue' value='<?=$queue_select?>' >
 <?php endif; ?>
 
 </table>

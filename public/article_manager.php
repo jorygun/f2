@@ -83,16 +83,17 @@ if (!empty($_POST['delete_article'])) {
 		$cat = 'list';
 
 	}
-	$d = $articlea->getArticleList($cat,$stories);
+	$d = $articlea->getSortedArticleList($cat,$stories);
+//	u\echor($d);
+
 	$d['ioptions'] = u\buildOptions($ilist);
 	$d['preview_button'] = $publish::$previewaction;
 
-
 //	u\echor($d); exit;
 	if ($_SESSION['level'] >7) {
-		echo $templates->render('article_manage', $d);
+		echo $templates->render('article_list_admin', $d);
 	} else {
-		echo $templates->render('article_list', $d);
+		echo "Not Allowed";
 	}
 	echo "<hr>\n";
 

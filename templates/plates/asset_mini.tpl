@@ -5,6 +5,7 @@
        <i>Caption:</i> <?= $caption ?><br>
         <i>Source url:</i> <?= $asset_url ?>  <br>
         <i>Type:</i> <?= $type ?>  <i>Vintage</i> <?= $vintage ?>  <i>Size</i> <?= $sizekb ?> KB <br>
+         <i>Used: </i><?=$first_use?>  <br>
         <i>Status:</i> <?= $status_label ?>  <?=$warning?><br>
         <i>Tags</i> <?= $tags ?><br>
 

@@ -43,33 +43,28 @@ $asseta = $container['asseta'];
 $articlea = $container['articlea'];
 $publish = $container['publish'];
 
-// if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-// 	u\echor ($_POST,'post'); exit;
-// }
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+	if (!empty($_POST['toggle_use'])) {
+	$id = $_POST['toggle_use'];
+	$article->toggle_use($id);
+	}
+}
 
-$d = [];
-$ilist = $publish->getIssueList();
-// date -> issue
-//u\echor($ilist);
 
-//$ioptions = u\buildOptions(['one' => 1]);
 
 $stories = [];
 
 
 
 	$cat='unpub'; //defaullt
-	if (!empty($_POST['cat'])) {
-		$cat = $_POST['cat'];
-	}
 
+	$d = $articlea->getSortedArticleList($cat);
 
-	$d = $articlea->getArticleList($cat,$stories);
-	$d['ioptions'] = u\buildOptions($ilist);
 	$d['preview_button'] = $publish::$previewaction;
 
 //	u\echor($d); exit;
-	echo $templates->render('user_article_list', $d);
+	#echo $templates->render('user_article_list', $d);
+	echo $templates->render('article_list_user', $d);
 	echo "<hr>\n";
 
 

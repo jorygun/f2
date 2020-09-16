@@ -61,6 +61,8 @@ if (!$credential) {
             exit;
 }
 
+//u\echor ($adata);
+
 $adata['Aliastext'] = Defs::getMemberAliasList();
 // admin users get more choices on topics
 $user_level = ($_SESSION['level'] > 6)? 'A' : 'U' ;
@@ -69,7 +71,9 @@ $adata['topic_options'] = $news->buildTopicOptions($adata['topic'],$user_level);
 $adata['status_options'] = u\buildOptions(Defs::$news_status, $adata['status']);
 $adata['status_name'] = Defs::$news_status[$adata['status']];
 // convert use_me to a string (its retreived integer in db).
-$queue_select = $news->getQueueOptions($adata['use_me']);
+$queue_select = $news->getQueueOption($adata['use_me']);
+echo "qs: $queue_select" . BR;
+$adata['queue_select'] = $queue_select;
 $adata['queue_options' ] =
   u\buildOptions($news->getQueueOptions(), $queue_select, false);
 $adata['votes_checked'] = $adata['take_votes'] ? 'checked' : '';

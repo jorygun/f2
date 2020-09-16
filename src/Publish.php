@@ -56,10 +56,11 @@ class Publish {
 		</button>
 EOT;
 	public static $previewaction = <<<EOT
-		<button type="button" onclick= "
+		<button type="button" style='background:yellow;'
+		onclick= "
 			takeAction('preview','0','','');
 			window.open('/news/next','preview');
-			">Set News Preview</button>
+			">Preview Next</button>
 EOT;
 
 // window.open('/news/next','preview');

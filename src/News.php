@@ -66,6 +66,10 @@ class News {
         return self::$queueOptions;
     }
 
+	public function getQueueOption($ind = 0)
+    {
+            return self::$queueOptions[$ind] ?? 'No';
+    }
 
 	public function getNewsSummary ($where) {
 		if (empty($where)){throw new Exception ("No where clause for getNewsSummary");}

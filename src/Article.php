@@ -55,9 +55,9 @@ EOT;
     }
 
 	public function toggle_use($aid) {
-		// change item use_me between 0 and 2
-		$sql1 = "UPDATE `articles` SET use_me =
-			IF(use_me>0, 0, 2)
+		// change item status between Q and N (queued and new)
+		$sql1 = "UPDATE `articles` SET status =
+			IF(status = 'Q','N','Q')
 			WHERE id = $aid;";
 		$this->pdo->query($sql1);
 		return true;
@@ -72,6 +72,8 @@ EOT;
 			$adata = $this->checkArticle($post);
 
 			 $id = $post['id'];
+
+
 //u\echor($adata);
         $prep = u\prepPDO($adata, [], 'id');
    //u\echor ($prep , 'PDO data');
@@ -169,7 +171,7 @@ EOT;
         }
 
 
-            $adata['ed_comment'] = $post['ed_comment'];
+            $adata['ed_comment'] = $post['ed_comment'] ?? '' ;
            //  if (! preg_match('/.*\n--\/[\w ]+\s*$/s', $post['ed_comment'])) {
 //                 $commenter_name = $adata['contributor'] ?? $_SESSION['login']['username'];
 //                 $adata['ed_comment'] .= "\n--/$commenter_name\n";
@@ -178,12 +180,6 @@ EOT;
 //         	$adata['ed_comment']  = '';
 //         }
 
-        $status = $post['status'];
-        if (! in_array($status, array_keys(Defs::$news_status))) {
-            throw new Exception("Unknown status code $status");
-        }
-
-        $adata['status'] = $status;
 
          // use use-me field as numeric priority
          // convert queue text to priority
@@ -198,6 +194,19 @@ EOT;
          // not set from form post: date_published, comment_count, net_votes
 
        // u\echor($adata, 'After check');
+       if ($post['status'] = 'Q' && $pri == 0) {
+					$status = 'N';
+			} elseif ($post['status'] = 'N' && $pri > 0) {
+					$status = 'Q';
+			} else {
+        	$status = $post['status'];
+        	}
+        if (! in_array($status, array_keys(Defs::$news_status))) {
+            throw new Exception("Unknown status code $status");
+        }
+
+        $adata['status'] = $status;
+
         $this->adata = $adata;
         return $adata;
     }
@@ -269,7 +278,7 @@ EOT;
 					$where = " n.status = 'P' AND n.date_published > NOW() - INTERVAL 2 week";
 					break;
 				case  'next':
-					$where = "n.use_me > 0 AND n.status not in ('P','X','T')";
+					$where = "n.status = 'Q' ";
 					break;
 				case 'article':
 					$where = "n.id = " . $shift($data) ;
@@ -304,14 +313,17 @@ EOT;
 		$where = $this->getWhereForCat($cat,$data);
 
 	//echo "where: $where" . BRNL;
+		$uid = $_SESSION['login']['user_id'];
+		$level = $_SESSION['level'];
 		$sql = <<<EOT
-			 SELECT n.id, n.use_me as use_me, n.topic, s.section_sequence,
+			 SELECT n.id, n.use_me as use_me, n.topic, s.section_sequence,n.take_votes,n.take_comments,
              if (n.use_me > 0,1,0) as `cat`,
-                 n.title, n.asset_list, n.asset_main, n.status,n.source,
-                 n.contributor_id,m.username as contributor,
-                 DATE_FORMAT('%y %m %d',n.date_published) as pubdate,
-                 t.topic_name as topic_name,s.section_name,
-                 count(c.id) as comment_count
+				  n.title, n.asset_list, n.asset_main, n.status,n.source,
+				  n.contributor_id,m.username as contributor,
+				  DATE_FORMAT('%y %m %d',n.date_published) as pubdate,
+				  t.topic_name as topic_name,s.section_name,
+				  count(c.id) as comment_count,
+				  if (n.contributor_id = $uid OR $level >= 7, 1, 0) as `credential`
 
             FROM articles n
              LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
@@ -321,9 +333,10 @@ EOT;
             WHERE
            		$where
 				GROUP BY n.id
-            ORDER BY `cat` DESC, section_sequence, topic_name, use_me DESC
+            ORDER BY status DESC, section_sequence, topic_name, use_me DESC
             LIMIT 50;
 EOT;
+// removed cat and credential from sort.  credential not needed at all.
 //echo $sql . BRNL;
 		$alist = $this->pdo->query($sql)->fetchAll();;
 
