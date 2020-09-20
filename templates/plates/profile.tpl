@@ -27,7 +27,10 @@
 	<p><b>Email:</b> <?=$email_public?> <em><?=$email_status_name?></em> <?=$hidden_emailer?>
 		</p>
 
-	<p><b>Now</b> <br><?=$this->nl2br($user_current )?></p>
+	<p><b>Now:</b> At: <?=$user_from?>
+	<br><?=$this->nl2br($user_current )?>
+			</p>
+
 
 	<p><b>At AMD: </b> <br><?= $at_amd ?>.<br><br>
 		<?=$this->e($user_amd )?><br>
