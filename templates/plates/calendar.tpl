@@ -1,6 +1,6 @@
 
 <div class='calendar'>
-<h3>Calendar Items</h3>
+<h2>Calendar Items</h2>
 To place an item on the calendar, click here. <button type='button' onClick=window.location='/calendar.php?edit=new'>New Item</button>
 <?php if (empty($citems)) : ?>
 	<p>No Item on the Calendar</p>
