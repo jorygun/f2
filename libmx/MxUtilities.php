@@ -751,7 +751,7 @@ function is_http ($url) {
 	// if(filter_var($url, FILTER_VALIDATE_URL) == FALSE)  {return false;}
 	 $cinfo =  get_info_from_curl($url);
 //echor($cinfo);
-	if ($cinfo === false ) {return '';}
+	#if ($cinfo === false ) {return '';}
 	 if (empty($cinfo)){ return 'text/html';}
 
 	 $mime = $cinfo['mime'];
