@@ -63,7 +63,9 @@ else: ?>
 		?>
 
 		<tr><td colspan='5' style='background-color:#CFC;'><b><?=$statushead[$status]?></b></td>
-
+			<?php if ( $status == 'Q') :?>
+					<td><?=$preview_button?></td></tr>
+			<?php	endif; ?>
 			</tr>
 		<?php endif; ?>
 
