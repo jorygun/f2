@@ -183,7 +183,7 @@ class AssetAdmin
 					$adata['sizekb'] = (int)($size/1000);
 				}
 			} elseif ($lmime = u\is_youtube($adata['asset_url']) ) {
-					$mime = $lmime;
+					$mime = 'video/x-youtube';
 					echo "Is youtube.  mime $mime.";
 
 			} else {
