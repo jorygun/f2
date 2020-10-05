@@ -184,6 +184,8 @@ class AssetAdmin
 				}
 			} elseif ($lmime = u\is_youtube($adata['asset_url']) ) {
 					$mime = $lmime;
+					echo "Is youtube.  mime $mime.";
+
 			} else {
 				$lmime = u\is_http($adata['asset_url']) ;
 				if ($lmime !== false) {
