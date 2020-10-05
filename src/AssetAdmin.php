@@ -112,7 +112,7 @@ class AssetAdmin
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
         $cd = $this->Member->setContributor($post['contributor_id'], $post['contributor']);
-       // u\echor($cd); exit;
+        u\echor($cd); exit;
 
         //put the new contrib info into the adata array
  			$adata = array_merge($adata,$cd);

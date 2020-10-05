@@ -305,8 +305,9 @@ EOT;
 	}
 
 	public function initializeNext() {
-		unlink (FileDefs::next_dir .'/*');
-		copy (FileDefs::news_template, FileDefs::next_dir);
+		//unlink (FileDefs::next_dir .'/*'); doesn't work
+		array_walk(glob(FileDefs::next_dir .'/*'), 'unlink');
+		copy (FileDefs::news_template, FileDefs::next_dir . '/index.php');
 
 	}
 
