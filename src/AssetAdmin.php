@@ -112,7 +112,7 @@ class AssetAdmin
             // valid member name is in the contributo name field
             // no contributor (=0) is not an error
         $cd = $this->Member->setContributor($post['contributor_id'], $post['contributor']);
-        u\echor($cd); exit;
+       // u\echor($cd); exit;
 
         //put the new contrib info into the adata array
  			$adata = array_merge($adata,$cd);
@@ -537,7 +537,7 @@ echo "tsrc: $tsrc" . BRNL;
 		if (empty($local_src)){
 			$ytid = u\youtube_id_from_url($aurl) ;
 			if ($ytid !== false){ // is youtube
-				//echo "$aurl is youtube" . BRNL;
+				echo "$aurl is youtube" . BRNL;
 				$tmime = 'video/x-youtube';
 			// get url to youtube's thumb file for this video
 				$yturl = "http://img.youtube.com/vi/$ytid/mqdefault.jpg";
