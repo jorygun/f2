@@ -143,9 +143,10 @@ EOT;
 			  if (empty ($post ['source_date'] ) ) {
 			  	$adata['source_date'] = date ('d M Y');
 			  } else {
-			  	if (! $adata['source_date'] = date('d M Y',strtotime($post['source_date'])) ) {
+			  	if (strtotime($post['source_date'])== false)  {
 			  		throw new Exception ("Invalid text in source date");
 			  	}
+			  	$adata['source_date']  = date('d M Y', strtotime($post['source_date']) );
 			  }
 			}
 
