@@ -135,13 +135,20 @@ EOT;
         $adata['id'] = $id = $post['id']?? 0;
         $adata['topic'] = $post['topic'];
         $adata['source'] = $post['source'];
-        if (! empty ( $post ['source_date'] ) ) {
-        	$adata['source_date'] = date('d M Y',strtotime($post['source_date']));
-        } elseif ($adata['id'] == 0 && !empty ($adata['source'])  ) {
-        	$adata['source_date'] = date('d M Y');
-        } else {
+
+        // SET Source data if there is a source identified
+        if (empty ($post ['source'])){
         	$adata['source_date'] = '';
-        }
+        } else {
+			  if (empty ($post ['source_date'] ) ) {
+			  	$adata['source_date'] = date ('d M Y');
+			  } else {
+			  	if (! $adata['source_date'] = date('d M Y',strtotime($post['source_date'])) ) {
+			  		throw new Exception ("Invalid text in source date");
+			  	}
+			  }
+			}
+
 
 
         if (empty($adata['topic'])) {
