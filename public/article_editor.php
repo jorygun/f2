@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
    try {
    	$id = $article->saveArticle($post);
-   } catch Throwable ($e) {
+   } catch (Throwable $e) {
    	echo "Error saving article. " . $e->getMessage();
    	exit;
    }
