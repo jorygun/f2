@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    	$id = $article->saveArticle($post);
    } catch (Exception $e) {
    	echo "Error saving article. " . $e->getMessage();
+   	echo "<button type='button'  onclick = 'history.back();'>back</button>" . BRNL;
    	exit;
    }
     $_GET['id'] = $id;
