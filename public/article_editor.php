@@ -33,7 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $post['take_votes'] =  (isset($post['take_votes']))? 1 : 0;
     $post['take_comments'] =  (isset($post['take_comments']))? 1 : 0;
 
-     $id = $article->saveArticle($post);
+   try {
+   	$id = $article->saveArticle($post);
+   } catch Throwable ($e) {
+   	echo "Error saving article. " . $e->getMessage();
+   	exit;
+   }
     $_GET['id'] = $id;
     // comment out echo line below to reload eidt window with new content
     // window.close only works if page opened with js, which it normally is.
