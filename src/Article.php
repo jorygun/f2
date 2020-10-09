@@ -135,7 +135,14 @@ EOT;
         $adata['id'] = $id = $post['id']?? 0;
         $adata['topic'] = $post['topic'];
         $adata['source'] = $post['source'];
-        $adata['source_date'] = $post['source_date'];
+        if (! empty ( $post ['source_date'] ) ) {
+        	$adata['source_date'] = date('d M Y',strtotime($post['source_date']));
+        } elseif ($adata['id'] == 0 && !empty ($adata['source'])  ) {
+        	$adata['source_date'] = date('d M Y');
+        } else {
+        	$adata['source_date'] = '';
+        }
+
 
         if (empty($adata['topic'])) {
             throw new Exception("Article must have a topic");
