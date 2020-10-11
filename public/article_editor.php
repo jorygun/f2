@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // comment out echo line below to reload eidt window with new content
     // window.close only works if page opened with js, which it normally is.
 
-   // echo "<script>window.close()</script>\n"; exit;
+    echo "<script>window.close()</script>\n"; exit;
 }
 
 $id = $_GET['id'] ?? 0;

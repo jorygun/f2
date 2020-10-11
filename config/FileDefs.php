@@ -15,7 +15,8 @@ class FileDefs {
 // model for newsletter index file
 	const  news_template = REPO_PATH . "/templates/index.php";
 
-
+// old news index tests for the existence of this file.  Force true;
+	const pubfile = REPO_PATH . "/public/index.php";
 
 
 // teaser of newsletter headlines (create in next, travels
