@@ -8,6 +8,12 @@
         	$('#editlabel').text('Edit');
         }
     });
+
+    // to cause page to refresh after doing something else.
+    var blurred = false;
+	window.onblur = function() { blurred = true; };
+	window.onfocus = function() { blurred && (location.reload()); };
+
 </script>
 <?php
 	$laststatus = '';

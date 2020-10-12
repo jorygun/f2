@@ -10,6 +10,12 @@
 
 ?>
 
+<script>
+    // to cause page to refresh after doing something else.
+    var blurred = false;
+	window.onblur = function() { blurred = true; };
+	window.onfocus = function() { blurred && (location.reload()); };
+</script>
 
 <h3>Create New Article or Edit An Existing One
 <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='article_list' >Help</button></h3>
