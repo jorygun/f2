@@ -47,9 +47,10 @@ echo "<table>" . BRNL;
 echo "<tr><th>Article</th><th>Last Click</th><th>Clicks</th></tr>" . NL;
 
 foreach ($ll as $ld){
+	$aid = $ld['article_id'];
 
 	echo "<tr>
-	<td>${ld['title']}</td>
+	<td><a href='#' onClick = window.open('/get-article.php?$aid','article')>${ld['title']}</a></td>
 	<td>${ld['last']}</td>
 	<td class='centered'> ${ld['count']}</td>
 
