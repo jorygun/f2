@@ -167,6 +167,7 @@ EOT;
 
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/links.php'  target='links'>Link Activity</a>");
+		   $t .=   self::if_level(7,"<li><a href='/news/current/recent_articles.html'  target='activity'>Recent Article Activity</a>");
 
 	$previewclk = "takeAction('preview','0','','');";
 
