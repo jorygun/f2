@@ -34,7 +34,7 @@ echo $page->startBody();
 //EOF
 
 
-$sql = "SELECT l.*,a.title, DATE_FORMAT(l.last,'%M %d %Y') as last from links l
+$sql = "SELECT l.*,a.title, DATE_FORMAT(l.last,'%d %b %Y') as last from links l
 	JOIN articles a on a.id = l.article_id
 	WHERE l.last > NOW() - INTERVAL 60 day
 	ORDER BY last DESC
