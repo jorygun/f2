@@ -1,71 +1,63 @@
 <?php
+
+namespace DigitalMx\Flames;
+
 #ini_set('display_errors', 1);
 
-/* Link program;
-    Used to count the clicks on links in the newsletter.
-	caled with links.php?url_encoded_link
-	decode link
-	return location header
-	increment link counter in db
-
-*/
-
 //BEGIN START
-	require_once 'init.php';
-	if (f2_security_below(0)){exit;}
+	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
+
+	use DigitalMx as u;
+	use DigitalMx\Flames as f;
+	use DigitalMx\Flames\Definitions as Defs;
+	use DigitalMx\Flames\DocPage;
+
+
+
+
+$login->checkLevel(3);
+
+$page_title = 'Recent Links';
+$page_options=[]; #ajax, votes, tiny
+
+$page = new DocPage($page_title);
+echo $page -> startHead($page_options);
+# other heading code here
+
+echo $page->startBody();
+
+
 //END START
-	use DigitalMx\MyPDO;
 
 
 
+//EOF
 
 
-$root = $_SERVER['DOCUMENT_ROOT'];
+$sql = "SELECT l.*,a.title, DATE_FORMAT(l.last,'%M %d %Y') as last from links l
+	JOIN articles a on a.id = l.article_id
+	WHERE l.last > NOW() - INTERVAL 60 day
+	ORDER BY last DESC
+	;";
 
+$ll = $pdo->query($sql)->fetchAll();
 
+//u\echor ($ll);
+echo "<table>" . BRNL;
+echo "<tr><th>Article</th><th>Last Click</th><th>Clicks</th></tr>" . NL;
 
-    if (isset ($_GET['url'])){
-        $url = urldecode($_GET['url']);
-        $article_id = $_GET['aid'];
-    }
-    else {
-        $url = urldecode($_SERVER['QUERY_STRING']);
-        $article_id = 0;
-    }
+foreach ($ll as $ld){
 
-    if (empty($url)){
-        echo "Links.php called without a url.";
-        exit;
-    }
+	echo "<tr>
+	<td>${ld['title']}</td>
+	<td>${ld['last']}</td>
+	<td class='centered'> ${ld['count']}</td>
 
-#echo "Updating $url, $article_id, $my_name<br>";
-
-
-	update_link_db($url,$article_id);
-
-echo header("Location: $url");
-
-
-	exit;
-
-	#######################
-
-function update_link_db($url,$article_id){
-		#if url exists, update it; otherwise add
-
-       $pdo = MyPDO::instance();
-        $add_user_cnt  =   (empty ($_SESSION['login']['username'])) ? 0 : 1 ;
-
-	$sql_user = "INSERT INTO links
-		    (url, article_id, count, user_count, last)
-		VALUES ('$url',$article_id,1,$add_user_cnt, NOW() )
-		ON DUPLICATE KEY UPDATE
-		     article_id = $article_id,
-		     count=count + 1,
-		    user_count= user_count + $add_user_cnt,
-		    last= NOW()
-		   ;";
-		   
-      $st = $pdo -> query($sql_user);
-      
+	</tr>\n";
 }
+echo "</table>";
+
+
+exit;
+
+

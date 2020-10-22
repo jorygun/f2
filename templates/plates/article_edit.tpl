@@ -35,6 +35,11 @@ FLAME contributor: <?=$contributor?>
 
 <tr><td style="vertical-align:top;">Text of the Article</td><td><textarea cols=60 rows=10 name='content' class='useredit' ><?=$content?></textarea></td><tr>
 
+<tr><td colspan='2'>Check here to allow other users to add comments or up-votes</td></tr>
+<tr><td colspan='2'>Allow Comments? <input type='checkbox' value='1' name='take_comments' <?= $comments_checked ?>> &bull;
+Allow Votes? <input type='checkbox' value='1' name='take_votes' <?= $votes_checked ?>></td></tr>
+
+
 
 <tr><td><b>Assets</b></td>
 	<td>Assign asset ids to surround the article content, and/or assign 1 asset to occupy the full width of the article.  You can find existing assets or create a new one here.<br>
@@ -50,10 +55,6 @@ FLAME contributor: <?=$contributor?>
 <tr><td>One central asset id (will fill width of article body):</td>
 	<td><input type=text name='asset_main' id=size=8 value='<?=$asset_main?>'>
 	</td></tr>
-
-<tr><td colspan='2'>Check here to allow other users to add comments or up-votes</td></tr>
-<tr><td colspan='2'>Allow Comments? <input type='checkbox' value='1' name='take_comments' <?= $comments_checked ?>> &bull;
-Allow Votes? <input type='checkbox' value='1' name='take_votes' <?= $votes_checked ?>></td></tr>
 
 
 

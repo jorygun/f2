@@ -1,7 +1,7 @@
 
 
 <div class='box'>
-<?php if($_SESSION['level'] >=7): ?>
+<?php if($_SESSION['level'] >=4): ?>
 	<button type='button' onClick = "window.open('/asset_editor.php?id=0')">New Asset</button>
 <?php endif; ?>
 	<button type='button' onclick="clearForm('select_assets');">Clear Form</button>

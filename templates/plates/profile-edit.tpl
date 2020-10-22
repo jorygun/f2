@@ -57,7 +57,7 @@ listed in the next newsletter.</p>
 
 			</td></tr>
 
-<tr><td>Submit and Confirm email</td><td><input type='submit' name='submit' id='submit'> This button submits the whole form, same as the one at the bottom. <br>Submitting now will verify the email above, and if you changed the *'ed fields, will also mark your profile as updated.</td></tr>
+<!-- <tr><td>Submit and Confirm email</td><td><input name='Submit' value='Save Update' style="background:#9F9;" type='submit'> This button submits the whole form, same as the one at the bottom. <br>Submitting now will verify the email above, and if you changed the *'ed fields, will also mark your profile as updated.</td></tr> -->
 
 <tr><td colspan='2' ><h3>Basic Information</h3></td></tr>
 <tr><td colspan='2' class='instr' >

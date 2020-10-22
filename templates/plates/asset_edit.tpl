@@ -6,16 +6,9 @@ table {border:1px solid black; }
 
 <form  method="POST" enctype="multipart/form-data"  name="asset_form" id="asset_form">
 
-<div style='background:#FFC; border=1px solid black;'>
-<p>Current search result list: <?=$current_count?> assets.
-Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> </p>
-<button name='submit' value='save'>Save and Review</button>
-<button name='submit' value='next'> Save and Go Next</button>
-<button name='submit' value='skip'>Skip and Go Next</button>
-<button name='submit' value = 'new'>Skip and open New</button>
-<br>
+
 <button type='button' name='SearchHelp' class='help-button' id ='help-button' value='assets' >Help</button>
-</div>
+
 
 <?php if ($id>0): ?>
 	<h2>Existing ID <?=$id?></h2>
@@ -35,10 +28,13 @@ Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> 
 
 </table>
 <br>
-<?php else:?>
+<?php else:
+$link = '';
+?>
 
 	<h4>Create New Asset</h4>
 	<p><b>ID:</b> <?=$id?>  <b>Status:</b> <?=$astatus?> <?=$status_name?> <b>Entered:</b> <?=$date_entered?> </p>
+
 <?php endif;?>
 <hr>
 <input type='hidden' name ='id' value ='<?=$id?>'>
@@ -52,16 +48,25 @@ Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> 
 <tr><td>Item Title (<=64 chars)</td><td><input type='text' size='60' maxlength ='64' name='title' id='title' value="<?=$title?>"> </td></tr>
 <tr><td>Caption (not reqd)</td><td><textarea  name='caption' rows=5 cols=60><?=$caption?></textarea></td></tr>
 <tr><td>Other Keywords (comma sep)</td><td><input type='text' name='keywords' value='<?=$keywords?>' size='60'/></td></tr>
+<tr><td>Origin</td><td>Vintage: <input type='text' name='vintage' value = "<?=$vintage?>" size="6"> Attribute to <input type='text' name='source' value="<?=$source?>" size="40"> </td></tr>
+
 <?php if ($_SESSION['level'] >=7) : ?>
 <tr><td>Status (admin only)</td><td><select name='astatus'><?=$status_options?></select></td></tr>
 <?php else: ?>
 	<input type='hidden' name='astatus' value = '<?=$astatus?>'?
 <?php endif; ?>
-<tr><td>Origin</td><td>Vintage: <input type='text' name='vintage' value = "<?=$vintage?>" size="6"> Attribute to <input type='text' name='source' value="<?=$source?>" size="40"> </td></tr>
+
+<?php if ($_SESSION['level'] >=7) : ?>
 <tr><td>FLAME contributor:</td><td><input type='text' name='contributor' value='<?=$contributor?>' onfocus="form.contributor_id.value='';"
     style = '$cont_style'> id: <input type='text' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' ><br>
     Contributor aliases: <?=$Aliastext?><br>
     Use 0 for non-member contributor id.</td></tr>
+<?php else: ?>
+<tr><td>FLAME contributor:</td><td>
+<input type='text' name='contributor' value='<?=$contributor?>' READONLY>
+<input type='hidden' name='contributor_id' id='contributor_id' value='<?=$contributor_id?>' >
+    </td></tr>
+<?php endif; ?>
 
     <tr><td>Tags</td><td><?=$tag_options?></td></tr>
     <tr><td colspan='2'>&nbsp;</td></tr>
@@ -112,8 +117,15 @@ Upload file <input type="file" name="uasset" > <br>
 
 </table>
 
-
-[Submit is at top of screen]
+<div style='background:#FFC; border=1px solid black;'>
+<p>Current search result list: <?=$current_count?> assets.
+Next To Edit: <input type='text' name='next_edit' size=6 value=<?=$next_edit?>> </p>
+<button name='submit' value='save'>Save and Review</button>
+<button name='submit' value='next'> Save and Go Next</button>
+<button name='submit' value='skip'>Skip and Go Next</button>
+<button name='submit' value = 'new'>Skip and open New</button>
+<br>
+</div>
 </form>
 <br>
 <?=$link?>
