@@ -174,7 +174,7 @@ EOT;
 		  $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
 
 		  $t .=    self::if_level (7, "<li><a href='/asset_search.php' target='asearch'>Asset Manager</a>");
-		  $t .=    self::if_level (7, "<li><a href='/scripts/gallery_edit.php' target='gallery'>Edit Gallery</a>");
+
 		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='data'>Web Stats</a>");
 
 

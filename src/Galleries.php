@@ -137,9 +137,12 @@ class Galleries
 		 get the "full resolution" version, whatever it is.</p>
 		 <p>Galleries are ordered by year, except for multi-year collections, which
 		 are at the end.</p>
-
-
 EOT;
+	if ($_SESSION['level'] >=7 ) { echo <<<EOT
+		<button type='button' onClick="window.open('/galleries.php?id=0&mode=edit')">New Gallery</button>
+EOT;
+	}
+
 		 $gall = $this->getGalleryData(); // all data  if no gid
 
 		 $last_vintage = 0;
@@ -241,15 +244,15 @@ EOT;
 	#make sure there are gallery files for each photo
 
 		$aids = $this->getGalleryItems($post['gallery_items']);
-	u\echor($aids);
+	//u\echor($aids);
 
 		foreach ($aids as $aid) {
 			if (! $post['thumb_id'] ) {
 				$post['thumb_id'] = $aid;
 			}
-			if (! file_exists(SITE_PATH . '/assets/galleries' . "/$aid.jpg")) {
-				echo "Need new gallery file at $aid.jpg";
-			}
+			// if (! file_exists(SITE_PATH . '/assets/galleries' . "/$aid.jpg")) {
+// 				echo "Need new gallery file at $aid.jpg";
+// 			}
 
 		}
 
@@ -266,21 +269,50 @@ EOT;
         //put the new contrib info into the adata array
  			$post = array_merge($post,$cd);
 
-		$prep = u\pdoPrep($post,$allowed,'id');
+		$prep = u\prepPDO($post,$allowed,'id');
+/**
+including key field removes that field from udata and adds value to ukey
+
+PREP:
+   $prep = u\prepPDO ($post_data,allowed_list,'key_field_name');
+
+INSERT:
+		$sql = "INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']})";
+		$sth = $pdo->prepare($sql);
+		$sth->execute($prep['idata']);
+		 $new_id = $pdo->lastInsertId();
+
+UPDATE:
+		$sql = "UPDATE `Table` SET ${prep['uset']} WHERE id = $prep['ukey'];";
+		$sth = $pdo->prepare($sql);
+		$sth->execute($prep['udata']);
+
+INSERT ON DUP UPDATE:
+   		$sql = INSERT into `Table` ( ${prep['ifields']} ) VALUES ( ${prep['ivalues']} )
+    			ON DUPLICATE KEY UPDATE ${prep['uset']};";
+    	$sth = $pdo->prepare($sql);
+		$sth->execute(array_merge($prep['udata'],$prep['idata']);
+		$new_id = $pdo->lastInsertId();
+
+
+**/
 
 
        $sql = "INSERT into `galleries` ( ${prep['ifields']} )
-    		VALUES ( ${prep['ivals']} )
-    		ON DUPLICATE KEY UPDATE ${prep['updateu']};
+    		VALUES ( ${prep['ivalues']} )
+    		ON DUPLICATE KEY UPDATE ${prep['uset']};
     		";
-		$combined = array_merge($prep['data'],$prep['udata']);
-u\echor($combined,$sql);
-       $stmt = $this->pdo->prepare($sql)->execute($combined);
-       $new_id = $post['id'] ?: $this->pdo->lastInsertId();
+
+    		$sth = $this->pdo->prepare($sql);
+		$sth->execute(array_merge($prep['udata'],$prep['idata']));
+		$new_id = $this->pdo->lastInsertId();
 
 
-        echo "New Gallery id: $new_id" . BRNL;
-        return $new_id;
+       $id = $post['id'] ?: $new_id;
+
+
+        echo "New Gallery id: $id" . BRNL;
+        return $id;
 
   }
 }

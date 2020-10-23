@@ -35,6 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 if ($gid = $_SERVER['QUERY_STRING']){
 
 	if (u\isInteger($gid)) {
+
 		$galleries->display_gallery($gid);
 		exit;
 	}

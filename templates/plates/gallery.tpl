@@ -1,4 +1,8 @@
 <h4>Edit Gallery</h4>
+<?php if ($id == 0): ?>
+<b>New Gallery</b>
+<?php endif;?>
+
 <form  method="POST"  style="border:1px solid black;padding:6px;" name="gallery_form" >
 <input type='hidden' name = 'id' value='<?= $id ?>'>
 <table>

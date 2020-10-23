@@ -102,7 +102,7 @@ echo f\actionButton('publish->next-to-latest ','move-next',0,'','resp');
 <hr>
 <h3>Utilities</h3>
 <p>Update News/next Index from template <?=$indexaction?></p>
-<p>Rebuild Newsletter Index from scratch <?=$rebuildaction?></p>
+
 <p>Copy news/latest (updated) to copy in archive <?=$updateaction?></p>
 
 
