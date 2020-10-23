@@ -16,7 +16,7 @@ namespace DigitalMx\Flames;
 	$news = $container['news'];
 
 $login->checkLevel(4);
-$page_title = 'News Admin';
+$page_title = 'Publishing Procedure';
 $page_options=['ajax']; #ajax, votes, tiny
 
 $page = new DocPage($page_title);
