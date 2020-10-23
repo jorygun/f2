@@ -6,11 +6,11 @@ echo <<<EOT
 <p>You may use the following placeholders:</p>
 <table><tr><td><ul>
 <li>::link::  User's personal link to log in
-<li>::scode:: users_code
-<li>::newslink:: link to latest newsletter for this user
+<li>::scode:: users_code (?s=scode)
+<li>::newslink:: link to latest newsletter including scode
 <li>::name::  User's name in db
 <li>::profile_date:: Date user's profile last updated
-<li> [image nn] Insert small thumb for image id nn
+<li>::profile:: Text block reminding user to update stale information
 
 <li>::teaser::  Combination of highlights from current newsletter
 </ul></td><td><ul>
