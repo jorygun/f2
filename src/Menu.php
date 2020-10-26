@@ -163,7 +163,7 @@ EOT;
 
 		  $t .= self::if_level (7,"<li><a href='/news_admin.php' target='news_admin'>Newsletter Admin</a>");
 
-		  $t .=  self::if_level (7, "<li><li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
+		  $t .=  self::if_level (7, "<li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
 
 	// $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
 	// doesnt work because need to tag active articles as use_me first.
