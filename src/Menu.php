@@ -157,24 +157,30 @@ EOT;
 
 		$t .= self::addMenu(7,$thisMenu);
 		if ($userlevel >= 7){$menulist[] = $thisMenu;}
-		$t .=    self::if_level (7, "<li><li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
 
 		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='member_admin'>User Admin</a>");
-		  $t .= self::if_level (7,"<li><a href='/news_admin.php' target='news_admin'>Publishing Procedure</a>");
+		 $t .=    self::if_level (7, "<li><a href='/asset_search.php' target='asearch'>Asset Admin</a>");
+
+		  $t .= self::if_level (7,"<li><a href='/news_admin.php' target='news_admin'>Newsletter Admin</a>");
+		  $t .=    self::if_level (7, "<li><li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
+
+	 $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
+
 		  $t .= self::if_level (7,"<li><a href='/calendar.php' target='cal_admin'>Calendar Admin</a>");
-			$t .= self::if_level(7,"<li><a href='/developer/' target='developer'>Developer</a>");
 
 
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/links.php'  target='links'>Link Activity</a>");
 		   $t .=   self::if_level(7,"<li><a href='/news/current/recent_articles.html'  target='activity'>Recent Article Activity</a>");
 
-	$previewclk = "takeAction('preview','0','','');";
+// ??	$previewclk = "takeAction('preview','0','','');";
 
-		  $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
 
-		  $t .=    self::if_level (7, "<li><a href='/asset_search.php' target='asearch'>Asset Manager</a>");
 
+
+		  $t .= self::if_level(7,"<li><a href='/developer/' target='developer'>Developer</a>");
+
+			 $t .=  self::if_level (7, "<li><a href='/asset_bulk.php' target='_blank'>Bulk Asset Creation</a>");
 		  $t .=   self::if_level (7, "<li><a href='/WWW/amdflames.org.html' target='data'>Web Stats</a>");
 
 
