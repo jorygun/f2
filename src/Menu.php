@@ -162,12 +162,14 @@ EOT;
 		 $t .=    self::if_level (7, "<li><a href='/asset_search.php' target='asearch'>Asset Admin</a>");
 
 		  $t .= self::if_level (7,"<li><a href='/news_admin.php' target='news_admin'>Newsletter Admin</a>");
-		  $t .=    self::if_level (7, "<li><li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
 
-	 $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
+		  $t .=  self::if_level (7, "<li><li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
+
+	// $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
+	// doesnt work because need to tag active articles as use_me first.
+	// use the Preview from news admin or the preview button on article manager.
 
 		  $t .= self::if_level (7,"<li><a href='/calendar.php' target='cal_admin'>Calendar Admin</a>");
-
 
 		 $t .=  self::if_level(7,"<li><a href='/views.php' target='data'>Count of Views by Issue</a>");
 		  $t .=   self::if_level(7,"<li><a href='/links.php'  target='links'>Link Activity</a>");
