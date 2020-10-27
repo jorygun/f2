@@ -274,9 +274,9 @@ $ml_handle = fopen ("$bmail_list",'w') or die ("Failed to open $bmail_list");
 		);
 
 		foreach ($teaser_files as $tfile){
-			$path = $latest .'/' . $tfile;
-			if (file_exists($path)){
-				$teaser .= file_get_contents($path);
+
+			if (file_exists($tfile)){
+				$teaser .= file_get_contents($tfile);
 			}
 
 		}
