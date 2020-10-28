@@ -170,12 +170,14 @@ class ArticleAdmin
 			$row['take_c'] = ($row['take_comments'] )? 'yes' : 'no';
 			$row['take_v'] = ($row['take_votes'] ) ? 'yes' : 'no';
 
-			if ($row['status'] == 'P' ) {
-				$row['use_msg'] = 'Published';
-			} else {
-				$row['use_msg'] = ($row['use_me'] > 0 ) ?
-					"Queued For Next Issue" : "Not Scheduled";
-			}
+
+
+			// if ($row['status'] == 'P' ) {
+// 				$row['use_msg'] = 'Published';
+// 			} else {
+// 				$row['use_msg'] = ($row['use_me'] > 0 ) ?
+// 					"Queued For Next Issue" : "Not Scheduled";
+// 			}
 
 			$mylist['list'][] = $row;
 

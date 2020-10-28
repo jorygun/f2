@@ -22,6 +22,7 @@
 		'Q' => "Queued for Next Issue",
 		'N' => "Entered, But Not Queued",
 	);
+	use DigitalMx\Flames\Definitions as Defs;
 	$admincred = ($_SESSION['level'] > 7) ? true:false;
 
 
@@ -62,13 +63,15 @@ else: ?>
 
 <?php foreach ($list as $row) :
 		$status = $row['status'];
+		//$status_name = $row['use_msg'];
+
 		?>
 
 		<?php if ($status != $laststatus):
 			$laststatus = $status;
 		?>
 
-		<tr><td colspan='5' style='background-color:#CFC;'><b><?=$statushead[$status]?></b></td>
+		<tr><td colspan='5' style='background-color:#CFC;'><b><?=Defs::$article_status[$row['status']]?></b></td>
 			<?php if ( $status == 'Q') :?>
 					<td><?=$preview_button?></td></tr>
 			<?php	endif; ?>

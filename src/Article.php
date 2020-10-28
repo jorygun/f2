@@ -56,8 +56,8 @@ EOT;
 
 	public function toggle_use($aid) {
 		// change item status between Q and N (queued and new)
-		$sql1 = "UPDATE `articles` SET status =
-			IF(status = 'Q','N','Q')
+		$sql1 = "UPDATE `articles`
+			SET status = IF(status = 'Q','N','Q')
 			WHERE id = $aid;";
 		$this->pdo->query($sql1);
 		return true;
@@ -216,7 +216,7 @@ EOT;
 			} else {
         	$status = $post['status'];
         	}
-        if (! in_array($status, array_keys(Defs::$news_status))) {
+        if (! in_array($status, array_keys(Defs::$article_status))) {
             throw new Exception("Unknown status code $status");
         }
 
@@ -323,41 +323,41 @@ EOT;
 		#u\echor($list,$sql);
 		return $list;
 	}
-
-	public function getArticleList($cat, $data=[]) {
-		$where = $this->getWhereForCat($cat,$data);
-
-	//echo "where: $where" . BRNL;
-		$uid = $_SESSION['login']['user_id'];
-		$level = $_SESSION['level'];
-		$sql = <<<EOT
-			 SELECT n.id, n.use_me as use_me, n.topic, s.section_sequence,n.take_votes,n.take_comments,
-             if (n.use_me > 0,1,0) as `cat`,
-				  n.title, n.asset_list, n.asset_main, n.status,n.source,
-				  n.contributor_id,m.username as contributor,
-				  DATE_FORMAT('%y %m %d',n.date_published) as pubdate,
-				  t.topic_name as topic_name,s.section_name,
-				  count(c.id) as comment_count,
-				  if (n.contributor_id = $uid OR $level >= 7, 1, 0) as `credential`
-
-            FROM articles n
-             LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
-				LEFT JOIN members_f2 m on m.user_id = n.contributor_id
-				LEFT JOIN comments c on n.id = c.item_id and c.on_db = 'news_items'
-
-            WHERE
-           		$where
-				GROUP BY n.id
-            ORDER BY status DESC, section_sequence, topic_name, use_me DESC
-            LIMIT 50;
-EOT;
-// removed cat and credential from sort.  credential not needed at all.
-//echo $sql . BRNL;
-		$alist = $this->pdo->query($sql)->fetchAll();;
-
-		return $alist;
-
-	}
+// function is in article admin
+// 	public function getArticleList($cat, $data=[]) {
+// 		$where = $this->getWhereForCat($cat,$data);
+//
+// 	//echo "where: $where" . BRNL;
+// 		$uid = $_SESSION['login']['user_id'];
+// 		$level = $_SESSION['level'];
+// 		$sql = <<<EOT
+// 			 SELECT n.id, n.use_me as use_me, n.topic, s.section_sequence,n.take_votes,n.take_comments,
+//              if (n.use_me > 0,1,0) as `cat`,
+// 				  n.title, n.asset_list, n.asset_main, n.status,n.source,
+// 				  n.contributor_id,m.username as contributor,
+// 				  DATE_FORMAT('%y %m %d',n.date_published) as pubdate,
+// 				  t.topic_name as topic_name,s.section_name,
+// 				  count(c.id) as comment_count,
+// 				  if (n.contributor_id = $uid OR $level >= 7, 1, 0) as `credential`
+//
+//             FROM articles n
+//              LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
+// 				LEFT JOIN members_f2 m on m.user_id = n.contributor_id
+// 				LEFT JOIN comments c on n.id = c.item_id and c.on_db = 'news_items'
+//
+//             WHERE
+//            		$where
+// 				GROUP BY n.id
+//             ORDER BY status DESC, section_sequence, topic_name, use_me DESC
+//             LIMIT 50;
+// EOT;
+// // removed cat and credential from sort.  credential not needed at all.
+// //echo $sql . BRNL;
+// 		$alist = $this->pdo->query($sql)->fetchAll();;
+//
+// 		return $alist;
+//
+// 	}
 
 
 

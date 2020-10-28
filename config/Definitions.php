@@ -46,12 +46,12 @@ public static $local_site = 'f2.local';
 		public static $admin_id = 13146;
 	// userId for admin account.
 
-	public static $news_status = array(
-		'N'	=> 'New',
-		'Q'	=> 'Queued Next',
-		'P'	=> 'Published',
-		'X'	=>	'To Delete',
 
+public static $article_status = array(
+		'P' => "Published",
+		'Q' => "Queued for Next",
+		'N' => "Entered, Not Queued",
+		'X' => "Delete",
 	);
 
 	 public static $thumb_width = array(

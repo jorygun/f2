@@ -79,18 +79,22 @@ echo $page->startBody($style,$subtitle);
 
 $rcount = 0;
 
-	$artlist = $news->getIssueArticles($issue) ?: [];
 
 	if ($issue != '1'){
 		$news->incrementReads($issue);
 	}
 
-// u\echor($artlist, 'artlist'); exit;
+
 echo $read->user_welcome();
 
  // now display all the articles tied to this issue.
 $last_section = '';
 $show = 'pops';
+
+	$artlist = $news->getIssueArticles($issue) ?: [];
+// u\echor($artlist, 'artlist'); exit;
+
+
 foreach ($artlist as $aid) {
 	if (!$aid){continue;}
 

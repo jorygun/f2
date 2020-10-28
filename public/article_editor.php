@@ -82,8 +82,8 @@ $adata['Aliastext'] = Defs::getMemberAliasList();
 $user_level = ($_SESSION['level'] > 6)? 'A' : 'U' ;
 $mytopics = $news->getTopics($user_level);
 $adata['topic_options'] = $news->buildTopicOptions($adata['topic'],$user_level);
-$adata['status_options'] = u\buildOptions(Defs::$news_status, $adata['status']);
-$adata['status_name'] = Defs::$news_status[$adata['status']];
+$adata['status_options'] = u\buildOptions(Defs::$article_status, $adata['status']);
+$adata['status_name'] = Defs::$article_status[$adata['status']];
 // convert use_me to a string (its retreived integer in db).
 $queue_select = $news->getQueueOption($adata['use_me']);
 echo "qs: $queue_select" . BR;
@@ -93,7 +93,7 @@ $adata['queue_options' ] =
 $adata['votes_checked'] = $adata['take_votes'] ? 'checked' : '';
 $adata['comments_checked'] = $adata['take_comments'] ? 'checked' : '';
 $adata['contributor'] = ($adata['contributor_id'] == 0) ? $_SESSION['login']['username'] : $member->getMemberName($adata['contributor_id']);
-$adata['status_name'] = Defs::$news_status[$adata['status']];
+
 echo $container['templates']->render('article_edit', $adata);
 
 

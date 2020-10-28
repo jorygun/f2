@@ -95,14 +95,18 @@ class News {
 
 public function getIssueArticles ($issue) {
 
-
+	if ($issue == 1) {
+		$where = "a.status = 'Q' ";
+	} else {
+		$where = "a.issue = '$issue'";
+	}
 	$sql = "SELECT a.id as aid
 
 			FROM articles a
 			join news_topics t on a.topic = t.topic
 			join news_sections s on s.section = t.section
 
-			WHERE a.issue = '$issue'
+			WHERE $where
 			ORDER BY s.section_sequence ASC,t.topic;
 			;
 	";
