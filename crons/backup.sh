@@ -46,12 +46,21 @@ ls -tp1 weekly.devsql.* | tail -n +3 |  xargs -r -d '\n' rm --
 
 
 #clean up old logs and mailings
-#for dir in public_html/amdflames.org/logs  bmail ; do
-    #find /usr/home/digitalm/$dir/ -type f -mtime +30 -delete;
-    #find /usr/home/digitalm/$dir/ -type d -empty -delete;
+repo=/usr/home/digitalm/Sites/flames/live
+f2=/Users/john/Sites/flames/f2
+
+if [ -e "$f2" ] ; then
+	repo=$f2;
+fi
+
+echo "Removing old logs in repo " $repo "."
+
+for dir in var/mono var/bulk_jobs var/logs ; do
+    find $repo/$dir/ -type f -mtime +30 -delete;
+    find $repo/$dir/ -type d -empty -delete;
     #ls  /usr/home/digitalm/public_html/amdflames.org/$dir ;
 
-#done
+done
 
 
 
