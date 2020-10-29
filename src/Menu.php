@@ -165,8 +165,8 @@ EOT;
 
 		  $t .=  self::if_level (7, "<li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
 
-	// $t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
-	// doesnt work because need to tag active articles as use_me first.
+	$t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
+
 	// use the Preview from news admin or the preview button on article manager.
 
 		  $t .= self::if_level (7,"<li><a href='/calendar.php' target='cal_admin'>Calendar Admin</a>");

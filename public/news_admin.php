@@ -74,7 +74,7 @@ echo $page->startBody();
 
 
 <li> Check the newsletter carefully before you publish.<br>
-	<?=Publish::$previewaction?></li>
+	<?=Publish::$previewbutton?></li>
 
 <li>Publish the newsletter.  This script assembles the pieces in news_next, places it into a directory at /news/news_latest, and copies that directory to newsp/news_yymmdd (the normal repository for news), and sets the path to that directory in news/current/index.php as a relocate command. It also rebuilds the news index.
 	<br><?=$publishaction?><br>

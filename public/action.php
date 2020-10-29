@@ -128,7 +128,7 @@ if (! empty ($_POST)) {
 			return xoutUser($_POST['uid'], $container);
 		  break;
 
-	  case 'installNextIndex':
+	  case 'copyIndex':
 	  		// copy news index template to new next
 	  		echo copyIndex();
 	  		break;
@@ -277,7 +277,7 @@ function copyIndex() {
 
 	echo "copying $index to $nextindex";
 	copy ($index,$nextindex);
-	return "Done";
+	return "$index copied";
 }
 
 function initNext()

@@ -45,7 +45,7 @@ $publish = $container['publish'];
 
 $login->checkLevel(1);
 
-$issue = 0; $style = 5;
+$issue = 0;
 
 $strindex = strpos(__DIR__,'/news'); // first news or newsp
 // get url of this directory.  that will be used to identify the issue.
@@ -57,11 +57,18 @@ $sql = "SELECT * from issues where url = '$url'";
 if (! $issue_data = $pdo->query($sql)->fetch() ) {
 	die ("No issue at url $url");
 }
-if ($preview) {$style = 6;}
+
 // is preview issue; changes page head
 $issue=$issue_data['issue'];
 
-$page_title = 'Flame News ';
+if ($preview) {
+	$style = 5;
+	$page_title = 'Preview';
+}else {
+	$page_title = 'Flame News ';
+	$style = 5;
+
+}
 $page_options = ['ajax'];
 $pubtime = strtotime($issue_data['pubdate']) ?: time();
 
@@ -79,18 +86,22 @@ echo $page->startBody($style,$subtitle);
 
 $rcount = 0;
 
-	$artlist = $news->getIssueArticles($issue) ?: [];
 
 	if ($issue != '1'){
 		$news->incrementReads($issue);
 	}
 
-// u\echor($artlist, 'artlist'); exit;
+
 echo $read->user_welcome();
 
  // now display all the articles tied to this issue.
 $last_section = '';
 $show = 'pops';
+
+	$artlist = $news->getIssueArticles($issue) ?: [];
+// u\echor($artlist, 'artlist'); exit;
+
+
 foreach ($artlist as $aid) {
 	if (!$aid){continue;}
 

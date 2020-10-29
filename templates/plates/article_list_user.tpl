@@ -66,7 +66,7 @@ Edit one of the existing articles below.
 			<td>
 				<?=$row['view-button']?></td>
 				<td>
-				<?php if ($row['contributor_id'] == $_SESSION['login']['user_id'] ) : ?>
+				<?php if ($row['credential'] ) : ?>
 					<?php if ($status == 'N'): ?>
 						<?=$row['edit-button']?><br>
 					<?php endif; ?>

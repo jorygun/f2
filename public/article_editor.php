@@ -85,11 +85,10 @@ $adata['topic_options'] = $news->buildTopicOptions($adata['topic'],$user_level);
 $adata['status_options'] = u\buildOptions(Defs::$article_status, $adata['status']);
 $adata['status_name'] = Defs::$article_status[$adata['status']];
 // convert use_me to a string (its retreived integer in db).
-$queue_select = $news->getQueueOption($adata['use_me']);
-echo "qs: $queue_select" . BR;
+$queue_select = $adata['use_me'];
 $adata['queue_select'] = $queue_select;
 $adata['queue_options' ] =
-  u\buildOptions($news->getQueueOptions(), $queue_select, false);
+  u\buildOptions([0,1,2,3], $queue_select, false);
 $adata['votes_checked'] = $adata['take_votes'] ? 'checked' : '';
 $adata['comments_checked'] = $adata['take_comments'] ? 'checked' : '';
 $adata['contributor'] = ($adata['contributor_id'] == 0) ? $_SESSION['login']['username'] : $member->getMemberName($adata['contributor_id']);

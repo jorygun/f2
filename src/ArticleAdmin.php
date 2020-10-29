@@ -24,98 +24,98 @@ class ArticleAdmin
 
 	}
 
-	public function getArticleList ($cat,$data=[]) {
+	// public function getArticleList ($cat,$data=[]) {
+//
+// 	$alist = $this->article->getArticleList($cat,$data);
+// 	//u\echor($alist, 'from article->getArticleList');
+// 	// add thumb image and image count to each item
+// 	// add action buttons to each item
+// 	// divide into editable and non-editable lists
+// 		$editable=[];$noneditable=[];
+// 		foreach ($alist as $row){
+// 			$id = $row['id'];
+//
+// 			$asset_count=0;
+// 			$asset_list = [];
+// 			$image='';
+// 			// count the assets and get one
+// 			$asset_center = $row['asset_main']?? '';
+// 			if (!empty($r = trim($asset_center . ' ' . $row['asset_list']) )) {
+// 				$asset_list = preg_split('/[\s,]+/',$r);
+//
+// 				$asset_count = count($asset_list);
+// 				$asset_id = array_shift($asset_list);
+//
+//
+// 				if ($asset_id) {
+// 					$image = $this->assetv->getAssetBlock($asset_id,'small',false);
+// 				}
+// 			}
+// 			$row['image'] = $image;
+// 			$row['asset_count'] = $asset_count;
+//
+// 			if ($row['status'] == 'P' ) {
+// 				$row['use_msg'] = 'Published';
+// 			} else {
+// 				$row['use_msg'] = ($row['use_me'] > 0 ) ?
+// 					"Queued For Next Issue" : "Not Scheduled";
+// 			}
+//
+// 			// use can edit if it's his own article or has news admin status
+// 			$credential = $_SESSION['level'] >= 7 || $_SESSION['login']['user_id'] == $row['contributor_id'];
+//
+// 			$row['edit-button'] = ($credential) ?
+// 				"<button type='button' onClick=window.open('/article_editor.php?id=$id','aedit')>Edit</button>"
+// 				: '';
+// 			// news admin can add remove article from queue
+// 			$row['use-button'] = ($_SESSION['level']>= 7 && in_array($row['status'], ['N','Q'] ) )?
+// 				"<button type='submit' form='alist_form' name='toggle_use' value = $id
+// 				style='background:orange;'>Toggle Queued</button>"
+// 				: "";
+// 			$row['delete-button'] = ($_SESSION['level']>= 7  )?
+// 				"<button type='submit' form='alist_form' name='delete_article' value = $id
+// 				style='background:red;'>Delete</button>"
+// 				: "";
+//
+// 			$row['view-button'] =
+// 				"<button type='button' onClick = window.open('/get-article.php?$id','article')>View</button>";
+//
+// 			if ($credential) {
+// 				$editable[] = $row;
+// 			} else {
+// 				$noneditable[] = $row;
+// 			}
+// 		}
+//
+// 		// get title message for the listing
+// 			$seltok = trim(strtok($cat, ' '));
+// 			switch ($seltok) {
+// 				case 'unpub':
+// 					$selmsg = "Unpublished Articles";
+// 					break;
+// 				case  'current' :
+// 					$selmsg = 'Recently Published';
+// 					break;
+// 				case 'issue':
+// 					$selmsg = 'From ' . $cat ;
+// 					break;
+// 				default:
+// 					$selmsg = $cat;
+// 		};
+//
+// 		$mylist['editable'] = $editable;
+// 		$mylist['noneditable'] = $noneditable;
+//
+//
+//
+// 		$mylist['emsg']['editable'] = "Articles You Can Manage";
+// 		$mylist['emsg']['noneditable'] = "Articles Managed By Others";
+// 		$mylist['emsg']['selected'] = $selmsg;
+// 		return $mylist;
+//
+// 	}
 
-	$alist = $this->article->getArticleList($cat,$data);
-	//u\echor($alist, 'from article->getArticleList');
-	// add thumb image and image count to each item
-	// add action buttons to each item
-	// divide into editable and non-editable lists
-		$editable=[];$noneditable=[];
-		foreach ($alist as $row){
-			$id = $row['id'];
-
-			$asset_count=0;
-			$asset_list = [];
-			$image='';
-			// count the assets and get one
-			$asset_center = $row['asset_main']?? '';
-			if (!empty($r = trim($asset_center . ' ' . $row['asset_list']) )) {
-				$asset_list = preg_split('/[\s,]+/',$r);
-
-				$asset_count = count($asset_list);
-				$asset_id = array_shift($asset_list);
-
-
-				if ($asset_id) {
-					$image = $this->assetv->getAssetBlock($asset_id,'small',false);
-				}
-			}
-			$row['image'] = $image;
-			$row['asset_count'] = $asset_count;
-
-			if ($row['status'] == 'P' ) {
-				$row['use_msg'] = 'Published';
-			} else {
-				$row['use_msg'] = ($row['use_me'] > 0 ) ?
-					"Queued For Next Issue" : "Not Scheduled";
-			}
-
-			// use can edit if it's his own article or has news admin status
-			$credential = $_SESSION['level'] >= 7 || $_SESSION['login']['user_id'] == $row['contributor_id'];
-
-			$row['edit-button'] = ($credential) ?
-				"<button type='button' onClick=window.open('/article_editor.php?id=$id','aedit')>Edit</button>"
-				: '';
-			// news admin can add remove article from queue
-			$row['use-button'] = ($_SESSION['level']>= 7 && in_array($row['status'], ['N','Q'] ) )?
-				"<button type='submit' form='alist_form' name='toggle_use' value = $id
-				style='background:orange;'>Toggle Queued</button>"
-				: "";
-			$row['delete-button'] = ($_SESSION['level']>= 7  )?
-				"<button type='submit' form='alist_form' name='delete_article' value = $id
-				style='background:red;'>Delete</button>"
-				: "";
-
-			$row['view-button'] =
-				"<button type='button' onClick = window.open('/get-article.php?$id','article')>View</button>";
-
-			if ($credential) {
-				$editable[] = $row;
-			} else {
-				$noneditable[] = $row;
-			}
-		}
-
-		// get title message for the listing
-			$seltok = trim(strtok($cat, ' '));
-			switch ($seltok) {
-				case 'unpub':
-					$selmsg = "Unpublished Articles";
-					break;
-				case  'current' :
-					$selmsg = 'Recently Published';
-					break;
-				case 'issue':
-					$selmsg = 'From ' . $cat ;
-					break;
-				default:
-					$selmsg = $cat;
-		};
-
-		$mylist['editable'] = $editable;
-		$mylist['noneditable'] = $noneditable;
-
-
-
-		$mylist['emsg']['editable'] = "Articles You Can Manage";
-		$mylist['emsg']['noneditable'] = "Articles Managed By Others";
-		$mylist['emsg']['selected'] = $selmsg;
-		return $mylist;
-
-	}
-
-	public function getSortedArticleList ($cat,$data=[]) {
+	public function getArticleListEnhanced ($cat,$data=[]) {
 
 	$alist = $this->article->getArticleList($cat,$data);
 	//u\echor($alist, 'from article->getArticleList');
@@ -150,6 +150,7 @@ class ArticleAdmin
 
 			// use can edit if it's his own article or has news admin status
 			$credential = $_SESSION['level'] >= 7 || $_SESSION['login']['user_id'] == $row['contributor_id'];
+			$row['credential'] = $credential;
 
 			$row['edit-button'] =
 				"<button type='button' onClick=window.open('/article_editor.php?id=$id','aedit')>Edit</button>"
@@ -170,14 +171,6 @@ class ArticleAdmin
 			$row['take_c'] = ($row['take_comments'] )? 'yes' : 'no';
 			$row['take_v'] = ($row['take_votes'] ) ? 'yes' : 'no';
 
-
-
-			// if ($row['status'] == 'P' ) {
-// 				$row['use_msg'] = 'Published';
-// 			} else {
-// 				$row['use_msg'] = ($row['use_me'] > 0 ) ?
-// 					"Queued For Next Issue" : "Not Scheduled";
-// 			}
 
 			$mylist['list'][] = $row;
 
@@ -362,7 +355,7 @@ class ArticleAdmin
 		}
       $adata['ed_comment'] = nl2br($ed_comment);
 
-		$adata['status_message'] = $this->setStatusMessage($sdata);
+		$adata['status_message'] = $this->setStatusMessage($sdata['status']);
 		$adata['sfrom'] = ($sdata['source']) ? "From " . $sdata['source'] : '';
 
       $adata['more'] = '';
@@ -409,13 +402,8 @@ class ArticleAdmin
 
 	private function setStatusMessage($sdata) {
         // set status message
-        if ($sdata['status'] == 'P') {
-            $smsg = 'Published';
-        } elseif ($sdata['use_me'] > 0) {
-            $smsg = 'Queued for Next';
-        } else {
-            $smsg = ' Not Queued';
-        }
+        $smsg = Defs::$article_status[$sdata];
+
       return $smsg;
 	}
 

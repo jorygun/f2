@@ -58,9 +58,9 @@ $stories = [];
 
 	$cat='unpub'; //defaullt
 
-	$d = $articlea->getSortedArticleList($cat);
+	$d = $articlea->getArticleListEnhanced($cat);
 
-	$d['preview_button'] = $publish::$previewaction;
+	$d['preview_button'] = $publish::$previewbutton;
 
 //	u\echor($d); exit;
 	#echo $templates->render('user_article_list', $d);

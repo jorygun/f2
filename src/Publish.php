@@ -55,6 +55,7 @@ class Publish {
 		Preview
 		</button>
 EOT;
+//previewaction not needed any more.
 	public static $previewaction = <<<EOT
 		<button type="button" style='background:yellow;'
 		onclick= "

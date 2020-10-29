@@ -56,20 +56,6 @@ class News {
 
 
 
-	 public function getQueueOptions($ind = '')
-    {
-        // if called with an index no, returns the associated name
-        // otherwise returns the list
-        if (!empty($ind) and is_integer($ind)) {
-            return self::$queueOptions[$ind];
-        }
-        return self::$queueOptions;
-    }
-
-	public function getQueueOption($ind = 0)
-    {
-            return self::$queueOptions[$ind] ?? 'No';
-    }
 
 	public function getNewsSummary ($where) {
 		if (empty($where)){throw new Exception ("No where clause for getNewsSummary");}

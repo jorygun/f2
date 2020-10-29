@@ -17,11 +17,7 @@
 </script>
 <?php
 	$laststatus = '';
-	$statushead = array(
-		'P' => "Published",
-		'Q' => "Queued for Next Issue",
-		'N' => "Entered, But Not Queued",
-	);
+
 	use DigitalMx\Flames\Definitions as Defs;
 	$admincred = ($_SESSION['level'] > 7) ? true:false;
 
@@ -98,8 +94,9 @@ else: ?>
 			<td>
 				<?=$row['view-button']?> </td>
 			<td>
-
-				<?=$row['edit-button']?><br>
+				<?php if ($row['credential']): ?>
+					<?=$row['edit-button']?><br>
+				<?php endif; ?>
 				<?php if ($status != 'P'): ?>
 					<?=$row['use-button']?> <br>
 				<?php endif; ?>

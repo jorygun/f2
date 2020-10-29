@@ -67,6 +67,7 @@ if (!empty($_POST['delete_article'])) {
 }
 
 	$cat='unpub'; //defaullt
+	// cat can be unpub, recent, or issue
 	if (!empty($_POST['cat'])) {
 		$cat = $_POST['cat'];
 	}
@@ -80,14 +81,13 @@ if (!empty($_POST['delete_article'])) {
 
 		#	$cat .= " " . $ilist[$issue];  // add the issue to the command so
 			// it will be in the title
-		$cat = 'list';
-
+			$cat = 'list'; // change mode to list because already have ids
 	}
-	$d = $articlea->getSortedArticleList($cat,$stories);
+	$d = $articlea->getArticleListEnhanced($cat,$stories);
 //	u\echor($d);
 
 	$d['ioptions'] = u\buildOptions($ilist);
-	$d['preview_button'] = $publish::$previewaction;
+	$d['preview_button'] = $publish::$previewbutton;
 
 //	u\echor($d); exit;
 	if ($_SESSION['level'] >7) {
