@@ -209,13 +209,9 @@ EOT;
          // not set from form post: date_published, comment_count, net_votes
 
        // u\echor($adata, 'After check');
-       if ($post['status'] = 'Q' && $pri == 0) {
-					$status = 'N';
-			} elseif ($post['status'] = 'N' && $pri > 0) {
-					$status = 'Q';
-			} else {
+
         	$status = $post['status'];
-        	}
+
         if (! in_array($status, array_keys(Defs::$article_status))) {
             throw new Exception("Unknown status code $status");
         }

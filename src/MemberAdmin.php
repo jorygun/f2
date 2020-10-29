@@ -317,6 +317,7 @@ EOT;
 				break;
 			case 'user_email':
 				$extra = [];
+				$informant = 'you';
 				if (isset($post['suggested_email'])){
 					if (empty($informant = $post['informant'])){
 						$informant = 'another flames member';
