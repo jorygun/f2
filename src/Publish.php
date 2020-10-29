@@ -180,12 +180,9 @@ EOT;
 // update stories to new issue
 
 	// mark all the stories published and set first use date on any assets referenced.
-
-
-
 		 $this->publishStories();
 
-		$this->initializePreview();
+	//	$this->initializePreview();
 		$this->initializeNext();
 
 		// set index of current to latest
@@ -201,7 +198,7 @@ EOT;
 		$sql = "SELECT a.title,u.username as contributor
 		FROM articles a
 		JOIN members_f2 u on a.contributor_id = u.user_id
-		where issue = '1' ";
+		where a.status = 'Q' ";
 		$artlist = $this->pdo->query($sql);
 
 		$t = "News Stories: \n------------------\n";
@@ -227,12 +224,11 @@ EOT;
 	}
 	private function publishStories() {
 		// mark each story as published, and set first use for any assets it references
-		$storylist = $this->getPreviewArticles();
+		$storylist = $this->article->getArticleIds('next');
 		echo "Publishing articles" . BRNL;
 		$sql = "UPDATE articles
 			SET date_published = '$this->pubdate',
 				status = 'P',
-				use_me = 0,
 				issue = '$this->issue'
 			WHERE id = ?";
 		$arth = $this->pdo->prepare($sql);
@@ -289,7 +285,11 @@ EOT;
 				url = '$this->archive_url',
 				last_scan = '$last_scan'
 				";
-		$this->pdo->query($sql);
+		try {$this->pdo->query($sql);
+		} catch (\PDOException $e) {
+			echo " Error: Newsletter issue $issue could not be created.  Check for duplicate issue in issues table and delete.";
+			exit;
+		}
 	}
 
 	private function initializePreview () {
@@ -318,8 +318,7 @@ EOT;
 
 
 	public function getPreviewArticles() {
-		$sql = "SELECT id from articles where issue = '1'";
-		$storylist = $this->pdo->query($sql)->fetchAll(\PDO::FETCH_COLUMN);
+		$storylist = $this->article->getArticleIds('next');
 		return $storylist;
 	}
 
