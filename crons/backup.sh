@@ -53,7 +53,7 @@ if [ -e "$f2" ] ; then
 	repo=$f2;
 fi
 
-echo "Removing old logs in repo " $repo "."
+#echo "Removing old logs in repo " $repo "."
 
 for dir in var/mono var/bulk_jobs var/logs ; do
     find $repo/$dir/ -type f -mtime +30 -delete;

@@ -158,6 +158,7 @@ class Calendar {
 	}
 
 	public function get_upcoming() {
+	// builds teaser of upcoming events in the news/next directory
 		$sql = "SELECT DATE_FORMAT (datetime,'%M %e') as date, event FROM events
 		WHERE datetime > now() limit 2";
 		$eh = $this->pdo->query($sql);
