@@ -121,7 +121,7 @@ class Calendar {
 				</script>
 			";
 		}
-		$post['datetime'] =  date('Y-m-d H:i', $ctime);
+		$post['datetime'] =  date('Y-m-d g:i a', $ctime);
 
 		$id = $post['id'];
 		foreach ($post as $var => $val) {
