@@ -64,7 +64,7 @@ class Calendar {
 			$whereid =  ($select) ? " AND e.id = $select " : '';
 			$sql = "SELECT e.*,
 				DATE_FORMAT(e.datetime,'%M %d, %Y') as edate,
-				DATE_FORMAT(e.datetime,'%H:%i') as etime,
+				DATE_FORMAT(e.datetime,'%h:%i %p') as etime,
 				m.username,m.user_email
 				FROM `events` e
 				LEFT JOIN `members_f2` m  on m.user_id = e.contributor_id
