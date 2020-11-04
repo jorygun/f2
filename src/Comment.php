@@ -179,6 +179,7 @@ class Comment
 			$stmt_insert -> execute([$ucomment]);
 			$comment_action = 'Insert';
 			$inserted_rows = $stmt_insert->rowCount();
+			echo "<script>alert('Your comment has been added.');</script>";
 		}
 	// prepare to mail all the involved parties
 		$carray = $this->getComments($on_id,$on_db); #to buildd the list of comments
