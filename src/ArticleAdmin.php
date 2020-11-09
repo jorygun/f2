@@ -267,7 +267,7 @@ class ArticleAdmin
 		$pops = $this->article->getPops($id); // array take_votes, credential,etc
 //u\echor($pops,'pops');
 		$adata = $this->article->getArticle($id);
-u\echor($adata,'adata'); exit;
+//u\echor($adata,'adata'); exit;
 		$article = "<div class='article'>";
 
 		// adata asset block needs to a list of asset blocks
