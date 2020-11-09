@@ -21,7 +21,7 @@ class Article
             t.topic_name,s.section_name,s.section_sequence
 
             ,(SELECT count(*) FROM  comments c
-                WHERE n.id = c.item_id AND c.on_db = 'news_items') AS comment_count
+                WHERE n.id = c.item_id AND c.on_db = 'news_items' and c.status is null) AS comment_count
             , (SELECT count(*) FROM votes v
                 WHERE n.id = v.news_fk AND v.vote_rank <> 0) AS total_votes
             , (SELECT SUM(`vote_rank`) FROM votes v
@@ -339,7 +339,7 @@ EOT;
             FROM articles n
              LEFT JOIN news_topics t  JOIN news_sections s on t.section = s.section on t.topic = n.topic
 				LEFT JOIN members_f2 m on m.user_id = n.contributor_id
-				LEFT JOIN comments c on n.id = c.item_id and c.on_db = 'news_items'
+				LEFT JOIN comments c on n.id = c.item_id and c.on_db = 'news_items' AND c.status is null
 
             WHERE
            		$where
