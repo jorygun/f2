@@ -36,7 +36,7 @@ $asseta = $container['asseta'];
 $login->checkLevel(4);
 
  $page_title = 'News Article';
- $page_options=['votes','tiny','ajax']; #ajax, votes, tiny
+ $page_options=['votes','tiny','ajax','no-cache']; #ajax, votes, tiny
 
  $page = new DocPage($page_title);
  echo $page -> startHead($page_options);
@@ -49,11 +49,6 @@ echo  "<script src='/js/aq1.js'></script>";
 //echo  "<script src='/js/aqx.js'></script>";
 
 // prevent caching so new comments get displayed on refresh
-echo <<<EOT
-Cache-Control: no-store, must-revalidate
-Pragma: no-cache
-Expires: 0
-EOT;
 
  echo $page->startBody();
 

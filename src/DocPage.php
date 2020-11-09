@@ -47,14 +47,20 @@ class DocPage
          'tiny' = include tinymce
          'ajax' = include jquery, ajax
          'votes' = iinclude voting script/css
+         'no-cache' = send headers to prevent caching
       */
 
         if (! is_array($options)) {
             throw new RuntimeException("start head options not an array");
         }
 
-
-
+	$this->nc = 'Off';
+	if (!empty($options) && in_array('no-cache', $options) ) {
+		header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+		header("Pragma: no-cache"); // HTTP 1.0.
+		header("Expires: 0"); // Proxies.
+		$this->nc = 'No-cache On';
+	}
 
         $t =  <<<EOT
 <!DOCTYPE html>
@@ -124,7 +130,7 @@ EOT;
 				</head>
 				<body>
 EOT;
-				break;
+			break;
 
         }
 
@@ -234,7 +240,7 @@ EOT;
 
        }
 
-
+		$t .= $this->nc;
         return $t;
     }
 }
