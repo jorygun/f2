@@ -47,6 +47,14 @@ $login->checkLevel(4);
 
 echo  "<script src='/js/aq1.js'></script>";
 //echo  "<script src='/js/aqx.js'></script>";
+
+// prevent caching so new comments get displayed on refresh
+echo <<<EOT
+Cache-Control: no-store, must-revalidate
+Pragma: no-cache
+Expires: 0
+EOT;
+
  echo $page->startBody();
 
 

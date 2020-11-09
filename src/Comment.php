@@ -356,7 +356,7 @@ EOT;
             u.username,u.user_email,u.user_from
             FROM `comments` c
             JOIN `members_f2` u  on c.user_id = u.user_id
-            WHERE c.on_db = '$on_db' AND c.item_id = '$on_id'
+            WHERE c.on_db = '$on_db' AND c.item_id = '$on_id' AND c.status is null
             ORDER BY c.cdate;
             ";
 
