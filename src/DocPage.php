@@ -54,7 +54,7 @@ class DocPage
             throw new RuntimeException("start head options not an array");
         }
 
-	$this->nc = 'Off';
+	$this->nc = 'No-cache Off';
 	if (!empty($options) && in_array('no-cache', $options) ) {
 		header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
 		header("Pragma: no-cache"); // HTTP 1.0.
@@ -240,7 +240,7 @@ EOT;
 
        }
 
-		$t .= $this->nc;
+		//$t .= $this->nc;
         return $t;
     }
 }
