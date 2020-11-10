@@ -20,6 +20,9 @@ namespace DigitalMx\Flames;
     * Comment object is created for the logged in user and for a specific
     * database (news_items or assets or some non-db tag).
     *
+    * Comment status is normally null.  enter some other value to mark a
+    * comment as duplicat or invalid or whatever.  (Requires manual entry
+    * to table.)
 
 */
 
@@ -27,8 +30,12 @@ namespace DigitalMx\Flames;
  /**
     * Comment class needs to be able to add a comment,
     * retrieve all the comments for a particular asset or article,
+    * email contributor and other commenters (or others) when a comment is added.
 
-    * Comment object is created for the logged in user
+    * Was oroginally set up to allow comments in several places, but currently
+    * only uses news articles or tribute web pages.  The "on_db" field
+    * designated the location of the comment.
+
     * @package  FLames
    * @author   john springer <john@DigitalMx.com>
     */

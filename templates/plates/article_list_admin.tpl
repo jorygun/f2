@@ -29,9 +29,9 @@
 
 
 <p class='bold'>Edit Any Article or Create a New One</p>
-<div class='indent'>Edit this Article Id (Use id 0 to create new article): <input type='text' size=6 id='editme' name='editme' value='0'  >
+<div class='indent'>Edit this Article Id (Use id 0 to create new article): <input type='text' size=6 id='editme' name='editme' value='0' onChange="chg_edit_title(this)" >
 <button  name='edit_this' onClick="open_article_edit('editme')">
-<span id="editlabel"><b>Go</b></span></button><br>
+<span id="editlabel"><b>New</b></span></button><br>
 
 </div>
 <br> OR <br>

@@ -31,6 +31,23 @@ echo <<<EOT
 		editwin = window.open(url,'aedit');
 
 		}
+	function chg_edit_title (em) {
+		var title='New';
+		var val=parseInt(em.value);
+		//alert ("Value is " + val);
+		if (! Number.isInteger(val)){
+			alert ("Illegal value for article id");
+			return false;
+		}
+		if (val > 0){
+			title='Edit';
+		}
+		document.getElementById('editlabel').innerHTML = title;
+		return true;
+
+
+
+	}
 </script>
 EOT;
 	echo $page->startBody();
