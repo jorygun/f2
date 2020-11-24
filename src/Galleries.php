@@ -66,7 +66,7 @@ class Galleries
 
 		foreach ($aids as $aid){
 			//echo "Gallery block $aid goes here";
-			echo $this->assetv->getAssetBlock($aid,'medium',false) ;
+			echo $this->assetv->getAssetBlock($aid,'medium',true) ;
 		}
 		echo "</div>";
 	}
