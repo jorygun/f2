@@ -202,14 +202,19 @@ EOT;
 		$artlist = $this->pdo->query($sql);
 
 		$t = "News Stories: \n------------------\n";
+		$ht = "<p><b>News Stories</b><br>--------------------</p><ul>";
 		$nbsp3 = "&nbsp;&nbsp;&nbsp;";
 
 		//u\echor ($artlist); //exit;
 		foreach ($artlist as $article) {
 			$t .= $nbsp3 . $article['title'] . " (" . $article['contributor'] . ")" . NL;
+			$ht .= "<li>" . $article['title'] . " (" . $article['contributor'] . ")" . NL;
 		}
 		$t .= "\n";
+		$ht .= "</ul>\n";
+
 		file_put_contents(FileDefs::next_dir . '/' . FileDefs::tease_news,$t);
+		file_put_contents(FileDefs::next_dir . '/' . FileDefs::tease_news_ht,$ht);
 
 	}
 

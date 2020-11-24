@@ -254,7 +254,8 @@ public static $user_aliases = array (
             'editor' => 13145,
             'admin' => 13146,
             'jeff' => 10608,
-            'amdc' => 13282,
+            'amd' => 13282,
+            'dave' => 10341,
 
 
         );

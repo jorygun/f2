@@ -84,9 +84,11 @@ class AssetAdmin
 
 
 	//echo 'stat is ' . $post ['astatus'] . ' was ' . $post['old_status'] . BRNL;
+		if ($post['id'] != 0) {
 		if ($adata ['astatus'] != 'E' &&
 			$post['old_status'] == 'E') {
 				$adata['errors'] = '';
+		}
 		}
 
 		// must have id before all the data is saved to place files.

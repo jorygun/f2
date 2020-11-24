@@ -30,6 +30,7 @@ class FileDefs {
 	const tease_opps =   '/tease_opps.txt';
 	const tease_calendar = '/tease_calendar.txt';
 	const tease_news =   "/tease_news.txt";
+	const tease_news_ht = "/tease_news.html";
 
 // breaking news
 	const breaking_news = self::current_dir . '/breaking.html';

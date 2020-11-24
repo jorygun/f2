@@ -125,7 +125,7 @@ function get_titles($title_path) {
 			$default_caption = $params[1];
 			echo "Default title, caption: $default_title; $default_caption" . BRNL;
 			if (empty($default_title))
-				die ("Title not set in first record of titles.txt");
+				die ("No title in first record of titles.txt");
 		 }
 
 		 $gfile = $params[0];
@@ -137,9 +137,10 @@ function get_titles($title_path) {
 		}
 	}
 	fclose ($fh);
+	echo "File: title, caption" . BRNL;
 
 	foreach ($titles as $f => $t){
-	 echo "$f: " , join(',' ,$t) , BRNL;
+	 echo "$f: " , join(', ' ,$t) , BRNL;
 	}
 	echo BRNL;
 	return $titles;
@@ -150,18 +151,23 @@ function save_assets($dirpath,$filelist,$titles) {
 	global $container;
 
 	$finfomime = new \finfo(\FILEINFO_MIME_TYPE);
-
-	foreach ($filelist as $this_file){
+// go through filesi n title file; warn if files in directory are not listed
+	foreach (array_keys($titles) as $this_file){
         if (empty($this_file)) continue;
      	 echo "<b>Processing file $this_file</b>". BRNL;
+     	 $fake_upload = "$dirpath/$this_file";
+
+     	 if (! file_exists("$fake_upload")){
+     	 	echo "File $this_file not in directory" . BRNL;
+     	 	continue;
+     	 }
+     	 //copy data in post to $post
 		$post = $_POST;
         #build the post array, starting with stuff from form
         #make the chosen file look like it was an upload from asset form
         $post['id'] = 0;
         list($post['title'],$post['caption']) = $titles[$this_file];
         $post['notes'] = "Generated from $this_file.\n";
-
-        $fake_upload = "$dirpath/$this_file";
         $mimetype =  $finfomime->file($fake_upload);
         $_FILES['uuploads']  = array(
             'tmp_name' => $fake_upload,
@@ -170,14 +176,28 @@ function save_assets($dirpath,$filelist,$titles) {
             'size' => filesize($fake_upload),
             'type' => $mimetype,
         );
+
+
+
 		if (empty($post['contributor'])) die ("Contributor is required.");
-		if (empty($post['title'])) die ("No title");
-        // u\echor ($_FILES,'from asset_generator');
-//         u\echor ($post_array,'post array from asset gen');
+		if (empty($post['title'])) die ("No title for file $this_file");
+		u\echor ($post,'post array from asset gen');
 
        $ids[] =  $container['asseta']->postAssetFromForm($post);
+       // delete this file from file list
+       if (($key = array_search('$this_file', $filelist)) !== false) {
+    		unset($filelist[$key]);
+		}
+
+
+    }
+    // report any leftover files
+    if (! empty($filelist)){
+    	echo "These files in upload directory were not in title file so skipped". BRNL;
+    	echo join (", ",$filelist) . BRNL;
     }
     return $ids;
+
 
 
 }
