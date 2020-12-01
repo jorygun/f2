@@ -1,7 +1,8 @@
 <div class='article'>
+	<?php if ($topic != 'toon'): ?>
 	<p class='topic'><u><?= $topic_name ?></u> </p>
 	<p class='headline'> <?= $title ?></p>
-
+	<?php endif; ?>
 	<?php if (!empty($asset_blocks) ) : ?>
 		<div class='<?=$adiv?>'>
 		<?php foreach ($asset_blocks as $ablock): ?>
