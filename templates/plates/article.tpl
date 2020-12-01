@@ -1,5 +1,5 @@
 <div class='article'>
-	<p class='topic'><u><?= $topic_name ?></u> in <?=$section_name?></p>
+	<p class='topic'><u><?= $topic_name ?></u> </p>
 	<p class='headline'> <?= $title ?></p>
 
 	<?php if (!empty($asset_blocks) ) : ?>
