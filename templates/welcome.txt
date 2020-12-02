@@ -15,6 +15,10 @@ Your personal link to the FLAMEsite:
 a unique login for each user.  Your password is the
 part after "s=", but you don't generally need that.)
 
+You should log into the site now, using the link above,
+and in the menu underneath your name, you will see
+a link to View/Edit Profile.  Click this, and then Edit,
+to update your current information.
 
 We hope you will enjoy seeing what other current and
 former AMDers are up to, and hope you will contribute
@@ -22,4 +26,4 @@ your own news and opinions.
 
 
 
-::closing:: 
+::closing::
