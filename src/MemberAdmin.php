@@ -173,7 +173,16 @@ class MemberAdmin {
 
 	public function processSignups($post) {
 		# u\echor($post,'Incoming to process');
-
+ /*
+ $upd['source_message'] = sprintf("From %s at %s\n",$source_ip,date('Y-m-d H:i'));
+   $upd['username'] = $_POST['name'];
+   $upd['user_email'] = $email;
+   $upd['user_from'] =  $_POST['location'];
+   $upd['user_amd'] = $_POST['affiliation'];
+   $upd['IP'] = $source_ip;
+   $upd['comment'] = $_POST['comment'];
+   $upd['status'] = 'N';
+	*/
 
 		foreach ($post as $key=>$val){
 			if (substr($key,0,1) != 'D'){continue;} #find Dnn vars
@@ -190,29 +199,12 @@ class MemberAdmin {
 					break;
 				case 'M': #add as member or guest
 				case 'G':
-					$now = u\make_date('now','sql','datetime');
 					$sql = "SELECT * FROM `signups` WHERE id = $id;";
 					$row = $this->pdo->query($sql)->fetch();
-					$srow = array(
+					$row['status'] = $val;
 
-						'status' => $val,
-						'username' => $row['username'],
-						'user_email' => $row['user_email'],
-						'admin_note' => "Entered from : " . $row['IP'] . " on " . $row['entered'] . "\n"
-								. $row['comment'] . "\n",
-						'user_from' => $row['user_from'],
-						'user_amd' => $row['user_amd'],
-						'email_status' => 'Y',
-						'email_last_validated' => $now,
-					'profile_validated' => $now,
-					'joined' => $now,
+					$this->addMember($row);
 
-						);
-					$new_id = $this->member->addSignup($srow);
-					echo "New user_id: $new_id: ${srow['username']}" . BRNL;
-
-					// send welcome message
-					$this->messenger->sendMessages($new_id,'welcome');
 
 					#now remove processed drow from the signup list
 					$sql = "DELETE from `signups` WHERE id = $id";
@@ -232,6 +224,30 @@ class MemberAdmin {
 		 $stmt->rowCount() . " entries deleted". BRNL;
 
 	}
+
+	public function addMember($row) {
+					$now = u\make_date('now','sql','datetime');
+					$srow = array(
+
+						'status' => $row['status'],
+						'username' => $row['username'],
+						'user_email' => $row['user_email'],
+						'admin_note' => "Entered from : " . $row['IP'] . " on " . $row['entered'] . "\n"
+								. $row['comment'] . "\n",
+						'user_from' => $row['user_from'],
+						'user_amd' => $row['user_amd'],
+						'email_status' => 'Y',
+						'email_last_validated' => $now,
+					'profile_validated' => $now,
+					'joined' => $now,
+
+						);
+					$new_id = $this->member->addSignup($srow);
+					//echo "New user_id: $new_id: ${srow['username']}" . BRNL;
+
+					// send welcome message
+					$this->messenger->sendMessages($new_id,'welcome');
+			}
 
  public function showSearch(){
  	$status_options = "<option value=''>Choose...</option>";

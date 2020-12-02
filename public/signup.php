@@ -1,6 +1,6 @@
 <?php
 namespace DigitalMx\Flames;
-#ini_set('display_errors', 1);
+//ini_set('display_errors', 1);
 
 //BEGIN START
 	require_once $_SERVER['DOCUMENT_ROOT'] . '/init.php';
@@ -38,7 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 	After your membership is validated, you will be able to update your profile and communicate with other FLAMEsite members. </p><br>
 
 
-
+	<?php if ($_SESSION['level'] > 6) : ?>
+	<p><b>You are entering from an admin login.  Data will immediately be added as a member.</b></p>
+	<?php endif; ?>
 
 	<form  method="post"  >
 
@@ -83,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET'): ?>
 <?php elseif ($_SERVER['REQUEST_METHOD'] == 'POST') :
 
    // check data
-   if (strpos($_SERVER['SERVER_NAME'], 'amdflames.org') === false) {exit;}
+  // if (strpos($_SERVER['SERVER_NAME'], 'amdflames.org') === false) {exit;}
    #fail silently; stops access by ip.
 
       $err = '';
@@ -189,7 +191,19 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
    $upd['user_amd'] = $_POST['affiliation'];
    $upd['IP'] = $source_ip;
    $upd['comment'] = $_POST['comment'];
-   $upd['status'] = 'U';
+   $upd['status'] = 'N';
+ 	$upd['entered'] = date('Y-m-d');
+
+   // if data is entered by someone logged in as admin, then accept the
+   // login without verification
+   if ($_SESSION['level'] > 6) {
+   	$upd['status'] = 'MC';
+//echo "ready to add" . BRNL;
+//u\echor($upd);
+   	$container['membera']->addMember($upd);
+
+
+   } else {
 
    $allowed_list = ['username','user_email','user_from','user_amd','IP','comment'];
    	$prep = u\pdoPrep($upd,$allowed_list,'');
@@ -222,11 +236,14 @@ all else fails, <a href='mailto:admin@amdflames.org'>contact the admin</a>.</p>
 echo <<<EOT
 
 	 <h3>Signup Submitted - Thank You</h3>
-	 <p>You will receive an email in a few minutes confirming your registration.</p> <p>If you discovered you were already registered, ignore that email.  Otherwise, <b>you need to click the Verify Email link in that email within the next
+	 <p>You will receive an email in a few minutes confirming your registration. (If you discovered you were already registered, ignore that email.) </p>
+	 <p><b>You need to click the Verify Email link in that email within the next
 	 3 days</b>, so we know the email got through to you.</p>
 
-	 <p>A few days after you've verified your email, you will get a welcome message with your permanent login.</p>
+	 <p>A few days after you've verified your email, you will get a welcome message with your personal login code.</p>
 
 </body></html>
 EOT;
-endif;
+
+}
+endif; // end of if POST

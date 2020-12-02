@@ -188,7 +188,7 @@ EOT;
 
 	$t .=  self::closeLine(7,$thisMenu);
 
-	$thisMenu = 'Authoring';
+	$thisMenu = 'Add Content';
 	if ($userlevel >= 6){$menulist[] = $thisMenu;}
 	$t .=  self::addMenu (6,$thisMenu);
 		$t .= self::if_level(6,"<li><a href='/user_article_manager.php' target='article_manager'>Create/Edit Articles</a> ");
