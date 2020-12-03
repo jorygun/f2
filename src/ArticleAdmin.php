@@ -376,7 +376,7 @@ class ArticleAdmin
 		$id = $pops['article_id'];
 	    $pblock = '';
 
-        if ($pops['take_comments']) {
+        if ($pops['take_comments'] || $cc > 0) {
         	// link to display aarticle page with comments at bottom
             $pblock .= "<a href='/get-article.php?${id}d' target='article'>Comments</a> ($cc) ";
         }
