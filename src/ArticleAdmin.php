@@ -209,8 +209,10 @@ class ArticleAdmin
          ";
 
 			foreach ($carray as $row) {
-			  //u\echor($row);
+
+
 				if (!empty($row['asset_list'])) { #should only be one
+
 					 $row['asset'] = $this->getAssetDiv($row['asset_list']);
 				} else {
 					$row['asset'] = '';
@@ -231,13 +233,16 @@ class ArticleAdmin
 		return $story;
 	}
 
-	public function getAssetDiv($asset_list) {
+	public function getAssetDiv($asset_list,$is_asset_main=false) {
+	// get the assets in either a row or column. Row if more than two or
+	// if there is a main asset in article.  If main in article, don't have
+	// room for column on side.
 		$ablock = [];
 		if (!empty($asset_list)) {
             $alist = u\number_range($asset_list);
             $alistcnt = count($alist);
 
-            if ($alistcnt >2) {
+            if ($is_asset_main || $alistcnt >2 ) {
                 $adiv = 'asset-row';
             } elseif ($alistcnt > 0) {
                 $adiv = 'asset-column';
@@ -271,7 +276,8 @@ class ArticleAdmin
 		$article = "<div class='article'>";
 
 		// adata asset block needs to a list of asset blocks
-		$adata = array_merge($adata, $this->getAssetDiv($adata['asset_list'])); #2 rows
+		$is_asset_main = ! empty ($adata['asset_main']);
+		$adata = array_merge($adata, $this->getAssetDiv($adata['asset_list'],$is_asset_main)); #2 rows
 
 		$adata = array_merge($adata,$this->buildStory($adata) ); // date for story
 //u\echor($adata); exit;
@@ -333,7 +339,7 @@ class ArticleAdmin
 		if (!empty($sdata['asset_main'])){
 			$adata['content'] =
 			"<div class='asset-main'>"
-			. $this->assetv->getAssetBlock($sdata['asset_main'],'medium')
+			. $this->assetv->getAssetBlock($sdata['asset_main'],'large')
 			. "</div>" . NL;
 		}
 
