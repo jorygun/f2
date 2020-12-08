@@ -333,7 +333,7 @@ class ArticleAdmin
 		if (!empty($sdata['asset_main'])){
 			$adata['content'] =
 			"<div class='asset-main'>"
-			. $this->assetv->getAssetBlock($sdata['asset_main'],'large')
+			. $this->assetv->getAssetBlock($sdata['asset_main'],'medium')
 			. "</div>" . NL;
 		}
 
