@@ -388,8 +388,8 @@ private static $update_fields = array(
 		$member_photo = '';
 		// $member_photo = (isset($row['photo_asset'])) ?
 //    		 get_asset_by_id($row['photo_asset'],'photo') : '' ;
-   	$linkedinlink = ($row['linkedin'])? "<a href='${row['linkedin']}' target='linkedin'>
-   		<img src='https://static.licdn.com/scds/common/u/img/webpromo/btn_liprofile_blue_80x15.png' width='80' height='15' border='0' alt='profile on LinkedIn' /> </a>" : '' ;
+   	$linkedinlink = ($row['linkedin'])? "Linked In: <a href='${row['linkedin']}' target='linkedin'>
+   		${row['username']} </a>" : '' ;
         $addons= array(
 
         'seclevel' => Defs::getSecLevel($row['status']) ,

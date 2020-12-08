@@ -589,7 +589,7 @@ public function showUpdate($uid) {
 	$tdata['user_today'] = $user_today;
 
    $tdata['weblink'] = (!empty($row['user_web']))?
-   	"<p><a href='${row['user_web']}' target='_blank' >Favorite Web Site</a></p>"
+   	"<p>Favorite Web Site: <a href='${row['user_web']}' target='_blank' >${row['user_web']}</a></p>"
    	:
    	'';
    // see if user is editing their own or its an admin that  can edit it
