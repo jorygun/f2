@@ -26,17 +26,31 @@ echo $page -> startHead($page_options);
 
 echo $page->startBody();
 
-
 //END START
-$sql = "UPDATE members_f2 set admin_status = 'G' WHERE username = ? ";
+/*
+This script adds an admin status code to each user identified in the
+file 'uname_list.txt'.
+This sets a code that can be used to pull records for bulk email.
+
+It initially sets the admin_status to '' on all records; then sets the
+code for any username appearing the txt file.
+
+*/
+
+$acode = 'G';
+
+
+$sql = "UPDATE members_f2 set admin_status = '$acode' WHERE username = ? ";
 $sqlupd = $pdo->prepare($sql);
 
-$uname = 'Barry Fitzgerald';
+$uname = 'Barry Fitzgerald';  // for testing purposes
 $sqlget = $pdo->prepare("SELECT user_id from members_f2 where username = ? ");
 
 $unames = file('uname_list.txt');
 
 echo "Loaded " . count($unames) . " records. " . BRNL;
+
+$pdo->query("UPDATE members_f2 set admin_status = '' ");
 
 foreach ($unames as $uname){
 	//echo "Getting $uname... ";
