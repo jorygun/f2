@@ -45,7 +45,7 @@ if (isset($_POST['search'])){
 
 		$data['ipdig'] = $ipdig;
 
-		u\echor ($data);
+		// u\echor ($data);
 
 
 
