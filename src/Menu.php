@@ -158,12 +158,14 @@ EOT;
 		$t .= self::addMenu(7,$thisMenu);
 		if ($userlevel >= 7){$menulist[] = $thisMenu;}
 
-		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='member_admin'>User Admin</a>");
+		 $t .=  self::if_level (7, "<li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
+
+
 		 $t .=    self::if_level (7, "<li><a href='/asset_search.php' target='asearch'>Asset Admin</a>");
 
 		  $t .= self::if_level (7,"<li><a href='/news_admin.php' target='news_admin'>Newsletter Admin</a>");
+		$t .= self::if_level(8,"<li><a href='/member_admin.php' target='member_admin'>User Admin</a>");
 
-		  $t .=  self::if_level (7, "<li><a href='/article_manager.php' target='article_manager'>Manage Articles</a>");
 
 	$t .=   self::if_level (7, "<li><a href='/news/next/' target='preview'>Preview</a>");
 

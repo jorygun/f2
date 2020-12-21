@@ -37,20 +37,21 @@ code for any username appearing the txt file.
 
 */
 
-$acode = 'G';
 
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+$unames = texttolist($_POST['names']);
+$acode = $_POST['acode'] ?? '';
+if (empty($acode)){die ("no admin code specified");}
 
 $sql = "UPDATE members_f2 set admin_status = '$acode' WHERE username = ? ";
 $sqlupd = $pdo->prepare($sql);
 
-$uname = 'Barry Fitzgerald';  // for testing purposes
 $sqlget = $pdo->prepare("SELECT user_id from members_f2 where username = ? ");
 
-$unames = file('uname_list.txt');
-
-echo "Loaded " . count($unames) . " records. " . BRNL;
-
 $pdo->query("UPDATE members_f2 set admin_status = '' ");
+$success = 0;
 
 foreach ($unames as $uname){
 	//echo "Getting $uname... ";
@@ -65,15 +66,40 @@ foreach ($unames as $uname){
 	if (! $sqlupd->execute([$uname]) ){
 		echo "Failed on $uname" . BRNL;
 	} else {
-		//echo "Updated $uname" . BRNL;
+		echo "Updated $uname" . BRNL;
+		++ $success;
 	}
 }
-echo 'Done' . BRNL;
+echo BR . "$success users set.  All other users set to admin_status = ' '. " . BRNL;
+exit;
+}
+
+function texttolist($text) {
+	if (empty($text)){die ("No names in text");}
+	$nlist = explode("\r",$text);
+	$nlistt = array_filter(array_map('trim',$nlist));
+
+	if (empty($nlistt)){die ("No names in list");}
+	$ncnt = count ($nlistt);
+	echo "$ncnt names in list" . BR . BRNL;
+	return $nlistt;
+}
+
+?>
+
+<form method='post'>
+
+<p>Use this to set an admin status code for a list of user names. The primary use of this is to set a list of users for a bulk email list. </p>
+<p>Enter the desired single character <b>admin_status code</b> here:
+ <input type='text' name='acode' size='2' maxsize='1' value='G'> </p>
+
+Then enter a list of usernames, one name per line, in the textarea below. The listed names will be set to admin_status you specify, if found. All other
+users will be set to an empty admin_status.  </p>
+
+<b>Usernames:</b> <br><textarea name='names' rows='30' cols='60'></textarea>
+<br>
+<input type=submit>
+</form>
 
 
 
-//paste user names below
-
-
-
-//EOF

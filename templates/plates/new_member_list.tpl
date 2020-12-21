@@ -48,7 +48,9 @@
 		<tr>
 		<td ><?= $this->e($row['username']) ?></td>
 		<td  ><?= $row['user_email'] ?> </td>
-		<td  ><?= $row['IP'] ?> </td>
+		<td ><?php
+			echo $row['IP'] . '<br>' . $ipdig[$row['IP']]
+			?> </td>
 		<td> <?= $this->e($row['user_from'] )?></td>
 		<td> <?= $row['entered'] ?> </td>
 		 <td rowspan='4'>

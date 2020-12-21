@@ -34,6 +34,21 @@ if (isset($_POST['search'])){
 	if (isset($_POST['status']) &&  $_POST['status'] == 'N'){ #new members
 		$data['mdata'] = $pdo->query("SELECT * from `signups` ORDER BY status ;") -> fetchAll();
 		$data['heads'] = Defs::$signup_status_names;
+
+		// get ip info
+
+		$ipinfo = array();
+		foreach ($data['mdata'] as $row) {
+			$ip= $row['IP'];
+			$ipdig[$ip] = `dig +short -x $ip`;
+		}
+
+		$data['ipdig'] = $ipdig;
+
+		u\echor ($data);
+
+
+
 		echo $templates->render('new_member_list',$data);
 		exit;
 	}

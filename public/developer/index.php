@@ -58,6 +58,10 @@ onClick = "window.open('/developer/update_galleries.php','geng');return false;" 
 
 <li><button name='run' value='refresh'>Refresh</button>
 Refresh all tables from live db to dev
+<li><button name='run' onClick = "window.open('/developer/set_astatus.php','genn');return false;"
+>Set admin_status</button>
+Sets the admin status for all listed members.
+
 
 <li><button name='run'
 onClick = "window.open('/developer/gen_articles.php','genn');return false;" value='articles'>Build Articles</button>
