@@ -24,7 +24,7 @@
        <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>IP</th>
+            <th>IP/dig -x IP</th>
              <th>location</th>
              <th>Entered</th>
             <th>Disposition</th>
