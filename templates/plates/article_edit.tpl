@@ -24,7 +24,7 @@ FLAME contributor: <?=$contributor?>
 <tr><td width='160'>Topic: (required)</td><td><select name='topic' id='topic' class='input required'> <?=$topic_options?></select></td></tr>
 
 
-<tr><td >Item Title (required)</td><td><input type='text' size='60' name='title' class='input required' id='title' value="<?=$title?>"></td></tr>
+<tr><td >Item Title (required)</td><td><input type='text' size='60' name='title' class='input required' id='title' value="<?=$this->e($title)?>"></td></tr>
 
 
 <tr><td >News Source</td><td><input type='text' name='source' value="<?=$source?>" size="30"> date: <input type='text' name='source_date' value = "<?=$source_date?>" size="15"></td></tr>
