@@ -138,7 +138,7 @@ else { #IS POST; set up the job
 
 // get subject
     $subject = $_POST['subject']; // ?specchar??
-    if (empty($subject)){throw new Exception ("no subject for bulk message");}
+    if (empty($subject)){echo "No Subject for Email.  Cancelled."; exit;}
     $subject = str_replace('::edition::',$edition_name,$subject);
 
 

@@ -4,10 +4,11 @@ Dear ::name::,
 <table style='border:0;width:90%;'><tr><td >
 <img src='https://amdflames.org/assets/graphics/amdheart-grn72.png' /></td><td>
 <p>The AMD FLAMEs News, ::edition:: edition, is ready. <br>
-Here's your personal link to this new edition:</p>
-   <p style='margin-left:2em;'> ::newslink:: </p>
+Here's your personal login to the site:</p>
+   <p style='margin-left:2em;'> ::link:: </p>
 
-(To view any of the nearly 1000 back issues,
+(Your login will always take you to the latest edition.
+To view any of the nearly 1000 back issues,
 log in and choose Dig In > Newsletter Index.)
 
 </td></tr><tr><td colspan='2'>::profile::</td></tr>
