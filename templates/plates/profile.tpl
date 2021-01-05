@@ -1,7 +1,7 @@
 
 
 <div style="width:100%;margin-left:30px;">
- <h1> <?=$username ?></h1>
+ <h1> <?=$this->e($username) ?></h1>
 
 <p> -- Last Updated: <?= $profile_date ?>. (verified <span id='profver'><?= $profile_valid_date ?></span>)</p>
 
@@ -57,7 +57,7 @@
 	<p><b>Photos</b></p>
 	<?php foreach ($photos as $aid=>$pdata) :
 			if(isset($pdata['random'] ) ):
-				echo "(Random Photo)<br>";
+				echo "(Random Photo with " . htmlspecialchars($username) . ")<br>";
 			endif;
 			echo $pdata['block'];
 

@@ -264,7 +264,7 @@ EOT;
 							  <td>$contact</td></tr>
 EOT;
 
-						 if (in_array($type,array('new','profile','lost') )){
+						 if (in_array($type,array('new','profile') )){
 						  if ($greeting != ''){$report .= "
 								<tr><td class='tright'></td><td colspan = '2' >&ldquo;$greeting&rdquo;</td></tr>\n";
 							  $report .= "
