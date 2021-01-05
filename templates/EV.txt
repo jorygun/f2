@@ -1,0 +1,15 @@
+Thank you for verifying you AMD Flames Email.
+
+::name::,
+
+Your email address on the AMD Alumni site amdflames.org has
+been verified.
+
+Your personal login to the AMD Flames site:
+    ::login::
+
+::bulk::
+
+Use your login above to enter the site, see the latest newsletter,
+update your profile or change your email, or search for other members.
+

@@ -364,7 +364,7 @@ function verifyEmail($uid, $container)
 {
 	$r = $container['membera']->validate_email_with_notice($uid);
 
-  return "Verified " . $container['member']->verifyEmail($uid) ;
+  return "Verified " . $r ;
 }
 
 function markContribute($uid, $container)

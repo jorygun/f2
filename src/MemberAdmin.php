@@ -549,17 +549,20 @@ public function showUpdate($uid) {
     	$row = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC);
     	$ems = $row['email_status'];
 
-      if (in_array($ems ,[ 'A3','A4','LA'])){
-      	$msg = 'User ' . $row['username']
-      		.  ' has validated email '
-      		. $row['user_email'] . ' that was previously status '
-      		. $ems ;
-      	$subj = 'Email validated: ' . $row['username'];
-      	mail('admin@amdflames.org',$subj,$msg);
+     //  if (in_array($ems ,[ 'A3','A4','LA'])){
+//       	$msg = 'User ' . $row['username']
+//       		.  ' has validated email '
+//       		. $row['user_email'] . ' that was previously status '
+//       		. $ems ;
+//       	$subj = 'Email validated: ' . $row['username'];
+//       	mail('admin@amdflames.org',$subj,$msg);
+//       }
 
-      }
-      $this->member->verifyEmail($uid);
-      return  date ('M d Y');
+      $this->messenger->sendMessages($uid,'EV');
+
+
+      $vdate = $this->member->verifyEmail($uid);
+      return  $vdate;
 	}
 
 

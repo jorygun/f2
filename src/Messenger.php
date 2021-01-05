@@ -69,10 +69,12 @@ private static $admin_codes = array(
 	'LE' => "User never confirmed change of email.",
 	'D' => "Code D undefined",
 
+	'EV' => "Email Validated",
+
 	);
 
 
-    private static $admin_message =	<<<EOT
+    private static $admin_message_lost =	<<<EOT
 Lost AMD Alumni: ::name:: - ::event::
 
 Alert to FLAMES administrator:
@@ -88,7 +90,10 @@ User Info:
 
 EOT;
 
+    private static $admin_message_verified =	<<<EOT
+ Email Verified ::name:: -  was ::ems::
 
+EOT;
 	private static $template_dir = REPO_PATH . '/templates';
 
     private static $profile_message = "
@@ -281,8 +286,12 @@ EOF;
 		in the $admin_codes array
 		*/
 		if (!empty(self::$admin_codes[$event])){
-
-			$message = $this->replacePlaceholders(self::$admin_message);
+			if ($event == 'EV') {
+				$message = $this->replacePlaceholders(self::$admin_message_verified);
+			}
+			else {
+				$message = $this->replacePlaceholders(self::$admin_message_lost);
+			}
 			$message_subject = strtok($message,"\n"); #first line
 
 			$message = u\email_std($message);
@@ -337,7 +346,7 @@ EOF;
 		$this->replacements ['::verify::'] = SITE_URL . "/action.php?V" . $uid;
 		$this->replacements ['::signup::'] = SITE_URL . "/action.php?S" . $uid;
 	#	$this->replacements['::profile_edit::'] = SITE_URL . "/action.php?P" . $login;
-
+		$this->replacements['::ems::'] = $row['email_status'];
 		$this->replacements['::name::'] = $row['username'];
 		$this->replacements['::current_email::'] = $row['user_email'];
 		$this->replacements ['::prior_email::'] = $row['prior_email'];
@@ -409,7 +418,14 @@ Click to Confirm
 			||
 			(SITE == Defs::$local_site && (! in_array($data['to'],Defs::$safe_emails) ) )
 			) {
-		 	 u\echor ($data,'Mesenger in test mode. Data to send_mail:');
+				echo '<br><p>Mode: ';
+				echo  $this->test? 'true':'false' . '</p>' . BRNL;
+		 	 u\echor ($data,'Messenger in test mode ' );
+
+
+		 	 //u\echor (Defs::$safe_emails,'Safe EMails');
+
+		 	 	;
 		 	 return;
 		}
 

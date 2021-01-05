@@ -74,7 +74,7 @@ class Sweep{
 // set older test flags
 
 	public function __construct($container,$test=false) {
-		#	$test = true;
+			$test = false;
 		$this->test = $test;
 		$mode = ($test)? 'Test':'Real';
 		$this->mode = $mode;

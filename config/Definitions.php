@@ -194,8 +194,8 @@ public static $ems_codes = array(
 		'A2'	=> ['Revalidation requested (2nd attempt)','A3',7],
 		'A3'	=> ['Revalidation requested (Final attempt)','LA',3],
 		'A4'	=> ['Revalidation requested (Final attempt)','LA',3],
-		'E1'	=> ['Changed Email not yet validated','LE',3],
-		'E2'	=> ['Changed Email not yet validated (2nd)','LE',3],
+		'E1'	=> ['Changed Email not yet validated','E2',1],
+		'E2'	=> ['Changed Email not yet validated (2nd)','LE',2],
 		'N1'	=> ['New Signup','XN',2],
 		'D'  => ['Status D','D',1],
 
@@ -212,6 +212,7 @@ public static $safe_emails = [
 'jorygun@gmail.com',
 'johnscottspringer@gmail.com',
 'john.scott.springer@gmail.com',
+'admin@amdflames.org',
 
 ];
 
