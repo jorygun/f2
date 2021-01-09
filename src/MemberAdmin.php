@@ -543,22 +543,22 @@ public function showUpdate($uid) {
 
 	public function validate_email_with_notice($uid) {
     	#check current email status and notify admin
-    	# if validating an aged out address
+    	# if validating a previously bad email.
     	$sql = "SELECT username,user_email, email_status from `members_f2`
     		WHERE user_id = '$uid';";
     	$row = $this->pdo->query($sql)->fetch(\PDO::FETCH_ASSOC);
     	$ems = $row['email_status'];
 
-     //  if (in_array($ems ,[ 'A3','A4','LA'])){
+      if (! in_array($ems ,['Y','Q', 'A1','A2','E1'])){
 //       	$msg = 'User ' . $row['username']
 //       		.  ' has validated email '
 //       		. $row['user_email'] . ' that was previously status '
 //       		. $ems ;
 //       	$subj = 'Email validated: ' . $row['username'];
 //       	mail('admin@amdflames.org',$subj,$msg);
-//       }
+     		$this->messenger->sendMessages($uid,'EV');
+		}
 
-      $this->messenger->sendMessages($uid,'EV');
 
 
       $vdate = $this->member->verifyEmail($uid);
